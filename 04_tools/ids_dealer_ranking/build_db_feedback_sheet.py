@@ -587,7 +587,7 @@ def hit_list_dealers(model: dict, *, limit: int = HIT_LIST_MAX) -> list[dict]:
 
 
 def hit_list_why(d: dict) -> str:
-    """Short Mode A reason line for a hit-list row."""
+    """Short shared reason line for a hit-list row."""
     bits: list[str] = []
     if d.get("band"):
         bits.append(f"Band: {d['band']}")

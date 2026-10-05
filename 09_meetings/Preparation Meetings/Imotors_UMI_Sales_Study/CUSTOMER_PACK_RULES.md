@@ -2,7 +2,7 @@
 
 **Agent sync:** 2026-07-26 · Applies to `Imotors_UMI_Sales_Study` **V4+** (and legacy V3.1).
 
-Internal agent rules for building packs. **Customer-facing HTML/PDF/Excel = Mode A** — no agent slang, no “UTI≠UMI”, no “never blend”, no “IML v7” / “Model B”.
+Internal agent rules for building packs. **Customer-facing HTML/PDF/Excel = shared** — no agent slang, no “UTI≠UMI”, no “never blend”, no “IML v7” / “Model B”.
 
 ## Hard rules (do not regress)
 
@@ -13,8 +13,8 @@ Internal agent rules for building packs. **Customer-facing HTML/PDF/Excel = Mode
 5. **Source mix:** JP/TH/LOCAL share charts from Power BI when available (I Motors / UMI). Skip silently if no PBI sidecar.
 6. **Product family:** share **%** now vs past — never € bars. Customer text: “ISZE parts classification” — **never say PR00**.
 7. **PN:** FY vs FY (Apr–Mar), exclude REBATE / non-part / credit (SaTy CR·RE) lines.
-8. **PN depth (V4+):** for each customer, quantity-based vanished / new / continuing droppers, plus a **channel-shift test** on the largest qty crashes (customer Δ vs rest-of-network Δ). Mode A verdict labels only: customer-local decline / network-wide decline / volume shifted elsewhere.
-9. **UMI ≠ UTI (build rule)** — never emit the string `UTI` in the UMI external pack. Customer agenda Mode A: “IDS Israel covers the UMI network only.” Blunt UTI≠UMI only in `SPEAKER_NOTES_Jerome.md` (Mode B).
+8. **PN depth (V4+):** for each customer, quantity-based vanished / new / continuing droppers, plus a **channel-shift test** on the largest qty crashes (customer Δ vs rest-of-network Δ). shared verdict labels only: customer-local decline / network-wide decline / volume shifted elsewhere.
+9. **UMI ≠ UTI (build rule)** — never emit the string `UTI` in the UMI external pack. Customer agenda shared: “IDS Israel covers the UMI network only.” Blunt UTI≠UMI only in `SPEAKER_NOTES_Jerome.md` (internal).
 10. **Reconcile** Power BI SALES vs ISZE billing when overlapping figures exist; always state fiscal definition + billing max.
 11. **Scope:** V4 builds **all** in-scope distributors (see `DB_Sales_Order_Study/study_state.json`), not only meeting customers.
 

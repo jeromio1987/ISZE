@@ -1,0 +1,335 @@
+[
+  {
+    "schema_version": 1,
+    "scenario_id": "01_hold",
+    "title": "Hold both prices and quantities",
+    "scope": "all_volume",
+    "context": {
+      "synthetic": true,
+      "as_of": "2026-09-22",
+      "distributor_id": "SYNTHETIC-DISTRIBUTOR",
+      "family": "Oil filters - synthetic illustration",
+      "currency": "EUR",
+      "price_basis": "ISZE_to_distributor_net_ex_VAT",
+      "reference_period": {
+        "from": "2025-01-01",
+        "to": "2025-12-31"
+      },
+      "scenario_period": {
+        "from": "2026-10-01",
+        "to": "2027-09-30"
+      },
+      "baseline_volume_basis": "replayed_reference_quantities",
+      "source_ref": "Fabricated test inputs. No Isuzu commercial data.",
+      "cost_basis": {
+        "id": "SYNTHETIC-FORWARD-COST",
+        "source_ref": "Fabricated test costs",
+        "valid_from": "2026-10-01",
+        "valid_to": "2027-09-30"
+      },
+      "fleet": {
+        "vehicles": 1000,
+        "as_of": "2025-12-31",
+        "basis": "historical_snapshot",
+        "source_ref": "Fabricated fleet context; not a fleet forecast",
+        "description": "1,000 synthetic trucks; same service-unit basis for both product lines"
+      }
+    },
+    "lines": [
+      {
+        "id": "SYN-OIL-G",
+        "tier": "Genuine",
+        "unit_basis": "one equivalent oil-filter service element",
+        "pack_size": 10,
+        "baseline_quantity": 1000,
+        "baseline_net_price_eur": 100,
+        "scenario_net_price_eur": 100,
+        "unit_cost_eur": 60,
+        "lost_quantity": 0,
+        "recovered_quantity": 0
+      },
+      {
+        "id": "SYN-OIL-B",
+        "tier": "BVP",
+        "unit_basis": "one equivalent oil-filter service element",
+        "pack_size": 10,
+        "baseline_quantity": 200,
+        "baseline_net_price_eur": 60,
+        "scenario_net_price_eur": 60,
+        "unit_cost_eur": 35,
+        "lost_quantity": 0,
+        "recovered_quantity": 0
+      }
+    ],
+    "transfers": [],
+    "support_eur": 0
+  },
+  {
+    "schema_version": 1,
+    "scenario_id": "02_genuine_cut",
+    "title": "Cut Genuine price without assuming recovered business",
+    "scope": "all_volume",
+    "context": {
+      "synthetic": true,
+      "as_of": "2026-09-22",
+      "distributor_id": "SYNTHETIC-DISTRIBUTOR",
+      "family": "Oil filters - synthetic illustration",
+      "currency": "EUR",
+      "price_basis": "ISZE_to_distributor_net_ex_VAT",
+      "reference_period": {
+        "from": "2025-01-01",
+        "to": "2025-12-31"
+      },
+      "scenario_period": {
+        "from": "2026-10-01",
+        "to": "2027-09-30"
+      },
+      "baseline_volume_basis": "replayed_reference_quantities",
+      "source_ref": "Fabricated test inputs. No Isuzu commercial data.",
+      "cost_basis": {
+        "id": "SYNTHETIC-FORWARD-COST",
+        "source_ref": "Fabricated test costs",
+        "valid_from": "2026-10-01",
+        "valid_to": "2027-09-30"
+      },
+      "fleet": {
+        "vehicles": 1000,
+        "as_of": "2025-12-31",
+        "basis": "historical_snapshot",
+        "source_ref": "Fabricated fleet context; not a fleet forecast",
+        "description": "1,000 synthetic trucks; same service-unit basis for both product lines"
+      }
+    },
+    "lines": [
+      {
+        "id": "SYN-OIL-G",
+        "tier": "Genuine",
+        "unit_basis": "one equivalent oil-filter service element",
+        "pack_size": 10,
+        "baseline_quantity": 1000,
+        "baseline_net_price_eur": 100,
+        "scenario_net_price_eur": 90,
+        "unit_cost_eur": 60,
+        "lost_quantity": 0,
+        "recovered_quantity": 0
+      },
+      {
+        "id": "SYN-OIL-B",
+        "tier": "BVP",
+        "unit_basis": "one equivalent oil-filter service element",
+        "pack_size": 10,
+        "baseline_quantity": 200,
+        "baseline_net_price_eur": 60,
+        "scenario_net_price_eur": 60,
+        "unit_cost_eur": 35,
+        "lost_quantity": 0,
+        "recovered_quantity": 0
+      }
+    ],
+    "transfers": [],
+    "support_eur": 0
+  },
+  {
+    "schema_version": 1,
+    "scenario_id": "03_bvp_recovery",
+    "title": "Lower BVP price with 400 assumed recovered filter sales",
+    "scope": "all_volume",
+    "context": {
+      "synthetic": true,
+      "as_of": "2026-09-22",
+      "distributor_id": "SYNTHETIC-DISTRIBUTOR",
+      "family": "Oil filters - synthetic illustration",
+      "currency": "EUR",
+      "price_basis": "ISZE_to_distributor_net_ex_VAT",
+      "reference_period": {
+        "from": "2025-01-01",
+        "to": "2025-12-31"
+      },
+      "scenario_period": {
+        "from": "2026-10-01",
+        "to": "2027-09-30"
+      },
+      "baseline_volume_basis": "replayed_reference_quantities",
+      "source_ref": "Fabricated test inputs. No Isuzu commercial data.",
+      "cost_basis": {
+        "id": "SYNTHETIC-FORWARD-COST",
+        "source_ref": "Fabricated test costs",
+        "valid_from": "2026-10-01",
+        "valid_to": "2027-09-30"
+      },
+      "fleet": {
+        "vehicles": 1000,
+        "as_of": "2025-12-31",
+        "basis": "historical_snapshot",
+        "source_ref": "Fabricated fleet context; not a fleet forecast",
+        "description": "1,000 synthetic trucks; same service-unit basis for both product lines"
+      }
+    },
+    "lines": [
+      {
+        "id": "SYN-OIL-G",
+        "tier": "Genuine",
+        "unit_basis": "one equivalent oil-filter service element",
+        "pack_size": 10,
+        "baseline_quantity": 1000,
+        "baseline_net_price_eur": 100,
+        "scenario_net_price_eur": 100,
+        "unit_cost_eur": 60,
+        "lost_quantity": 0,
+        "recovered_quantity": 0
+      },
+      {
+        "id": "SYN-OIL-B",
+        "tier": "BVP",
+        "unit_basis": "one equivalent oil-filter service element",
+        "pack_size": 10,
+        "baseline_quantity": 200,
+        "baseline_net_price_eur": 60,
+        "scenario_net_price_eur": 55,
+        "unit_cost_eur": 35,
+        "lost_quantity": 0,
+        "recovered_quantity": 400
+      }
+    ],
+    "transfers": [],
+    "support_eur": 1000
+  },
+  {
+    "schema_version": 1,
+    "scenario_id": "04_bvp_transfer",
+    "title": "Same BVP total, but 200 recovered and 200 transferred from Genuine",
+    "scope": "all_volume",
+    "context": {
+      "synthetic": true,
+      "as_of": "2026-09-22",
+      "distributor_id": "SYNTHETIC-DISTRIBUTOR",
+      "family": "Oil filters - synthetic illustration",
+      "currency": "EUR",
+      "price_basis": "ISZE_to_distributor_net_ex_VAT",
+      "reference_period": {
+        "from": "2025-01-01",
+        "to": "2025-12-31"
+      },
+      "scenario_period": {
+        "from": "2026-10-01",
+        "to": "2027-09-30"
+      },
+      "baseline_volume_basis": "replayed_reference_quantities",
+      "source_ref": "Fabricated test inputs. No Isuzu commercial data.",
+      "cost_basis": {
+        "id": "SYNTHETIC-FORWARD-COST",
+        "source_ref": "Fabricated test costs",
+        "valid_from": "2026-10-01",
+        "valid_to": "2027-09-30"
+      },
+      "fleet": {
+        "vehicles": 1000,
+        "as_of": "2025-12-31",
+        "basis": "historical_snapshot",
+        "source_ref": "Fabricated fleet context; not a fleet forecast",
+        "description": "1,000 synthetic trucks; same service-unit basis for both product lines"
+      }
+    },
+    "lines": [
+      {
+        "id": "SYN-OIL-G",
+        "tier": "Genuine",
+        "unit_basis": "one equivalent oil-filter service element",
+        "pack_size": 10,
+        "baseline_quantity": 1000,
+        "baseline_net_price_eur": 100,
+        "scenario_net_price_eur": 100,
+        "unit_cost_eur": 60,
+        "lost_quantity": 0,
+        "recovered_quantity": 0
+      },
+      {
+        "id": "SYN-OIL-B",
+        "tier": "BVP",
+        "unit_basis": "one equivalent oil-filter service element",
+        "pack_size": 10,
+        "baseline_quantity": 200,
+        "baseline_net_price_eur": 60,
+        "scenario_net_price_eur": 55,
+        "unit_cost_eur": 35,
+        "lost_quantity": 0,
+        "recovered_quantity": 200
+      }
+    ],
+    "transfers": [
+      {
+        "from_line_id": "SYN-OIL-G",
+        "to_line_id": "SYN-OIL-B",
+        "quantity": 200,
+        "equivalence_basis": "documented_one_for_one_service_unit",
+        "equivalence_ref": "SYNTHETIC-EQUIVALENCE-ONLY"
+      }
+    ],
+    "support_eur": 1000
+  },
+  {
+    "schema_version": 1,
+    "scenario_id": "05_genuine_increase",
+    "title": "Raise Genuine price with 50 explicitly assumed lost filter sales",
+    "scope": "all_volume",
+    "context": {
+      "synthetic": true,
+      "as_of": "2026-09-22",
+      "distributor_id": "SYNTHETIC-DISTRIBUTOR",
+      "family": "Oil filters - synthetic illustration",
+      "currency": "EUR",
+      "price_basis": "ISZE_to_distributor_net_ex_VAT",
+      "reference_period": {
+        "from": "2025-01-01",
+        "to": "2025-12-31"
+      },
+      "scenario_period": {
+        "from": "2026-10-01",
+        "to": "2027-09-30"
+      },
+      "baseline_volume_basis": "replayed_reference_quantities",
+      "source_ref": "Fabricated test inputs. No Isuzu commercial data.",
+      "cost_basis": {
+        "id": "SYNTHETIC-FORWARD-COST",
+        "source_ref": "Fabricated test costs",
+        "valid_from": "2026-10-01",
+        "valid_to": "2027-09-30"
+      },
+      "fleet": {
+        "vehicles": 1000,
+        "as_of": "2025-12-31",
+        "basis": "historical_snapshot",
+        "source_ref": "Fabricated fleet context; not a fleet forecast",
+        "description": "1,000 synthetic trucks; same service-unit basis for both product lines"
+      }
+    },
+    "lines": [
+      {
+        "id": "SYN-OIL-G",
+        "tier": "Genuine",
+        "unit_basis": "one equivalent oil-filter service element",
+        "pack_size": 10,
+        "baseline_quantity": 1000,
+        "baseline_net_price_eur": 100,
+        "scenario_net_price_eur": 105,
+        "unit_cost_eur": 60,
+        "lost_quantity": 50,
+        "recovered_quantity": 0
+      },
+      {
+        "id": "SYN-OIL-B",
+        "tier": "BVP",
+        "unit_basis": "one equivalent oil-filter service element",
+        "pack_size": 10,
+        "baseline_quantity": 200,
+        "baseline_net_price_eur": 60,
+        "scenario_net_price_eur": 60,
+        "unit_cost_eur": 35,
+        "lost_quantity": 0,
+        "recovered_quantity": 0
+      }
+    ],
+    "transfers": [],
+    "support_eur": 0
+  }
+]

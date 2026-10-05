@@ -1,0 +1,267 @@
+{
+ "schema": "ship_receipt/v2",
+ "artifact_kind": "xlsx",
+ "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\ISUZU_UIO_Overview_2026_V20_CANDIDATE_2026-09-22b.xlsx",
+ "artifact_sha256_16": "5ec1ae2af7784743",
+ "artifact_bytes": 907923,
+ "artifact_mtime": "2026-09-22T21:28:52.457516",
+ "generated": "2026-09-22T21:29:10.761648",
+ "ok": true,
+ "open_cmd": "n/a - xlsx opened directly, no launcher required",
+ "qa_pending_cleared": true,
+ "candidate_status": "CANDIDATE - not promoted. V19 remains canonical.",
+ "checks": {
+  "workbook_opens": {
+   "status": "pass",
+   "note": "opened via openpyxl (13 sheets) and via Excel COM for recalculation; sheets: Cover, 1.UIO Overview, 2. Vehicle Volume, 3. UIO Calculation, 4. ITUK UIO Projection, Charts, Assumptions & Mapping, Data Sources, Changelog, V20 ASSUMPTIONS, V20 REGS USED, V20 PLAN ONLY, V20 CHANGE LOG"
+  },
+  "history_unchanged_1990_2025": {
+   "status": "pass",
+   "note": "0 cell mismatches vs V19 across rows 7:90 x 1990-2025"
+  },
+  "grand_total_reconciles": {
+   "status": "pass",
+   "note": "sum of rows 7:90 == row 2 formula, all five forecast years (2026 253145.15 ... 2030 225964.19)"
+  },
+  "v19_read_only": {
+   "status": "pass",
+   "note": "V19 mtime 2026-09-18T17:16:56.396761, size 789276 - unchanged; copied with shutil only"
+  },
+  "v18_archive_untouched": {
+   "status": "na",
+   "note": "mtime not found - never opened"
+  },
+  "candidate_a_intact": {
+   "status": "pass",
+   "note": "candidate a kept; sha256_16 7c4f5521685508fb, bytes 895732, mtime 2026-09-22T20:07:22.409115"
+  },
+  "locked_value_row25": {
+   "status": "pass",
+   "note": "CY2026F == 44926 (locked 44926, unchanged)"
+  },
+  "plan_only_out_of_grand_total": {
+   "status": "pass",
+   "note": "rows 27/52/80/89 all zero in 2026-2030; SUMPRODUCT untouched"
+  },
+  "israel_hook": {
+   "status": "pass",
+   "note": "rows 7/8 left as V19, marked in col AV"
+  },
+  "uk_cv_links_intact": {
+   "status": "pass",
+   "note": "rows 22/24 AQ:AU are live sheet-4 formulas (10 formulas)"
+  },
+  "fix1_r79_input_no_longer_flat": {
+   "status": "pass",
+   "note": "r79 regs_used = 19.93/20.03/19.92/20.11/20.05 (was a flat 20.0 x5); 2030 cell 107 -> 108"
+  },
+  "fix2_regs_used_sheet_written": {
+   "status": "pass",
+   "note": "sheet 'V20 REGS USED' present: 132 used-input rows + raw pre-smoothing block + UNRECONSTRUCTABLE block; 11 rows show a NEGATIVE recovered input, disclosed in assumptions log s.4.11"
+  },
+  "fix3_seam_detector_repaired": {
+   "status": "pass",
+   "note": "r54 seam 2005 (was undetected; negative cohorts 2005/2006/2012 retired), r90 seam 2014 (was undetected; 2014 retired). Scoped to those two rows."
+  },
+  "independent_harness": {
+   "status": "fail_reported_not_hidden",
+   "harness": "verify_uio_v20.py",
+   "verdict": "CONVICTED",
+   "n_fail": 1,
+   "failed": [
+    "check7_overstatement_curve"
+   ],
+   "statuses": {
+    "check9_self_cert_guard": "PASS",
+    "check1_method_consistency": "PASS",
+    "check2_ireland_rebuild": "PASS",
+    "check2b_ireland_2030": "PASS",
+    "check3_steady_state": "PASS",
+    "check4_vin_scrappage": "WARN",
+    "check5_flat_rule_present": "PASS",
+    "check6_totals_identity": "PASS",
+    "check7_overstatement_curve": "FAIL",
+    "check8_locked_values": "PASS"
+   },
+   "note": "Candidate a failed 3 of 10; live V19 fails 7 of 10; this candidate fails 1 of 10. check1 PASS (0 of 81 rows switch method, was 4). check5 PASS (0 rows show the 3% constant-ratio signature, was 2). check7 remains a STATED RESIDUAL: max |delta| 0.36 pp against a +/-1.5 pp band, 4 of 5 years inside; the band is narrower than the spread between three defensible implementations of the survival-curve method (harness recompute 31.5% / this candidate 36.8% / spec dashboard). Not forced. check4 WARN carried from candidate a (VIN register rebuilt 2026-09-18)."
+  },
+  "prism_share_file_untouched": {
+   "status": "pass",
+   "note": "uio_ld_n35_share.csv mtime 2026-09-20T07:40:04.251096, size 3397 - unchanged"
+  },
+  "thresholds_and_ceiling_untouched": {
+   "status": "pass",
+   "note": "verify_uio_v20.py not modified (mtime 2026-09-22T20:06:55.075956); no ceiling-chain file written"
+  }
+ },
+ "fix_pass": {
+  "scope": "three adjudicated defects only",
+  "FIX1": {
+   "row": 79,
+   "market": "GREECE CV LD",
+   "root_cause": "engine rounded the recovered input (UIO(t)-0.97*UIO(t-1)) to a whole number BEFORE the level-preserving 3-point smooth, collapsing its ~+/-1 unit scatter",
+   "action": "recovered input kept at full precision; repair applied engine-wide because the defect is in the engine",
+   "candidate_a_2030": [
+    51,
+    65,
+    79,
+    93,
+    107
+   ],
+   "candidate_b_2030": [
+    51,
+    65,
+    79,
+    93,
+    108
+   ],
+   "still_open": "no Greek CV LD registration series exists on disk (IML 6.CV Vol ctry 230 = zero 1990-2026). Row flagged INPUT DERIVED."
+  },
+  "FIX2": {
+   "sheet": "V20 REGS USED",
+   "content": "per row and year 2026-2030 the registration input actually used, the raw pre-smoothing input, the source of each, plus an explicit UNRECONSTRUCTABLE block",
+   "disclosed_residue": "11 rows recover a negative registration input; listed in assumptions log s.4.11, not fixed (would be a rebuild)"
+  },
+  "FIX3": {
+   "rows": [
+    54,
+    90
+   ],
+   "seams": {
+    "r54 PORTUGL LCV": 2005,
+    "r90 CYPRUS LCV": 2014
+   },
+   "root_cause": "the seam detector required a negative cohort > 25% of that year's fleet; PT 2005 was 0.25% and CY 2014 was 3.1%, so it never fired and the legacy block was double-counted",
+   "action": "detector replaced with the assumptions log's own rule (first materially negative implied cohort, < -1 unit), scoped to these two rows",
+   "candidate_a": {
+    "r54": [
+     5109,
+     5425,
+     5709,
+     5967,
+     6251
+    ],
+    "r90": [
+     2238,
+     2339,
+     2445,
+     2521,
+     2614
+    ]
+   },
+   "candidate_b": {
+    "r54": [
+     5022,
+     5438,
+     5976,
+     6384,
+     6691
+    ],
+    "r90": [
+     3252,
+     3506,
+     3708,
+     3811,
+     3868
+    ]
+   },
+   "still_open": "the seam years are UNRECONSTRUCTABLE from the sources on disk; no positive-number guess was made"
+  },
+  "closed_not_reopened": [
+   "r33 BELGIUM (CURVE)",
+   "r90 forecast behaviour (CURVE)"
+  ],
+  "out_of_scope_alternative_measured": "applying the corrected seam rule to all rows would move 22 rows and shift the 2030 Grand Total about +1.5%; recorded in assumptions log s.4.8, not done"
+ },
+ "totals": {
+  "grand_total": {
+   "v19": {
+    "2026": 269314.15,
+    "2027": 279501.5,
+    "2028": 289528.81,
+    "2029": 299448.44,
+    "2030": 309125.19
+   },
+   "candidate_a": {
+    "2026": 252218.15,
+    "2027": 245213.5,
+    "2028": 237872.81,
+    "2029": 230873.44,
+    "2030": 224270.19
+   },
+   "candidate_b": {
+    "2026": 253145.15,
+    "2027": 246392.5,
+    "2028": 239403.81,
+    "2029": 232583.44,
+    "2030": 225964.19
+   },
+   "b_minus_a": {
+    "2026": 927.0,
+    "2027": 1179.0,
+    "2028": 1531.0,
+    "2029": 1710.0,
+    "2030": 1694.0
+   },
+   "b_minus_a_pct": {
+    "2026": 0.3675,
+    "2027": 0.4808,
+    "2028": 0.6436,
+    "2029": 0.7407,
+    "2030": 0.7553
+   },
+   "v19_over_b_pct": {
+    "2026": 6.3872,
+    "2027": 13.4375,
+    "2028": 20.9374,
+    "2029": 28.7488,
+    "2030": 36.8027
+   }
+  },
+  "fivesum": {
+   "v19": 1446918.1,
+   "candidate_a": 1190448.1,
+   "candidate_b": 1197489.1,
+   "b_minus_a_pct": 0.5915,
+   "b_vs_v19_pct": -17.2386
+  }
+ },
+ "changed_cells_vs_v19": 170,
+ "side_car_files": [
+  {
+   "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\UIO_V20_ASSUMPTIONS_2026-09-22b.md",
+   "bytes": 42815,
+   "mtime": "2026-09-22T21:28:00.164179",
+   "sha256_16": "c1f51c127d20eb0a"
+  },
+  {
+   "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\UIO_V20_CHANGELOG_2026-09-22b.csv",
+   "bytes": 75946,
+   "mtime": "2026-09-22T21:26:39.612916",
+   "sha256_16": "ad4842882a8ea19f"
+  },
+  {
+   "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\UIO_V20_VERIFY_2026-09-22b.json",
+   "bytes": 77501,
+   "mtime": "2026-09-22T21:28:00.170499",
+   "sha256_16": "1a95938f61355963"
+  },
+  {
+   "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\_uio_v20_B_verification_report.json",
+   "bytes": 16216,
+   "mtime": "2026-09-22T21:29:07.917329",
+   "sha256_16": "a70122113eb59af4"
+  }
+ ],
+ "open_inputs_needed": [
+  "A Greek CV LD registration series (r79 currently V19-derived) - assumptions log s.8 item 6",
+  "A Cyprus LCV registration series after 2014 (r90) - s.8 item 7",
+  "Portugal LCV registrations before 2010 (r54); the SAP Matriculas file is vehicle-level, not registrations - s.8 item 8",
+  "A genuine registration source for the six rows whose recovered input goes negative (r28, r43, r53, r58, r59, r69) - s.4.11, s.8 item 10",
+  "Israeli MoT parc band table as data - s.8 item 1",
+  "A German registration series or parc history by year - s.8 item 2",
+  "Confirmation of the LCV age-12 survival value (0.10 or 0.00) - s.8 item 3",
+  "Written definition of the ISZE pickup perimeter used in the appendix - s.8 item 4",
+  "Owner of the June change that introduced the 3% rule - s.8 item 5"
+ ]
+}

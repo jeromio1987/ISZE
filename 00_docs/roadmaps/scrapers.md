@@ -1,6 +1,6 @@
 # Scrapers & tenders — roadmap
 
-**Last updated:** 2026-09-14
+**Last updated:** 2026-09-22 (roadmap states carried from main 2026-09-14)
 **Hub:** [`ISZE_ROADMAP.md`](../ISZE_ROADMAP.md) · **Location:** `04_tools/`
 **Owner:** Claude scheduled tasks (health report runs automatically)
 **Live register:** [`AUTOMATION_REGISTER.md`](../AUTOMATION_REGISTER.md)
@@ -60,4 +60,4 @@ Ordered. Jerome's standing priority: **portal coverage before cosmetic UI**.
 ## Dashboard integration (standing)
 
 - Tender JSON is auto-injected via `01_data/14_dashboards/tender_data.json` (alias `01_data/dashboards/`) — **the only live feed path**.
-- Competitive Pricing tab: top 50 PNs, IAM vs ISZE SP, Class C risk flags. Mode A needs the competitor **vintage labels** decision (hub §2, B10) before shipping.
+- Competitive Pricing tab: top 50 PNs, IAM vs ISZE SP, Class C risk flags. shared needs the competitor **vintage labels** decision (hub §2, B10) before shipping.

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>QA PROBE - vector basemap candidate - NOT THE PRODUCT</title>
+<!--
+  ===========================================================================
+  QA PROBE. THIS IS NOT THE PRODUCT PAGE.
+  ===========================================================================
+  This file exists only to prove, from rendered pixels, whether the candidate
+  keyless vector tile styles paint correctly on the vendored MapLibre GL JS
+  5.6.2 with globe projection. It is a throwaway.
+
+  It is NOT referenced by index.html, NOT loaded by OPEN_ISZE_Globe.cmd, and
+  NOT part of the globe product. The real page is ../index.html.
+
+  Query parameters:
+    ?style=ofm-positron | ofm-liberty | ofm-bright | carto-positron |
+           carto-voyager | ofm-dark | demo | raster-now | raster-retina |
+           raster-at2x
+    ?proj=globe | mercator        (default globe)
+    ?mode=style | overlay         (default style)
+
+  mode=style   builds the map with the vector style AS the style. Simple, but
+               it wipes the page's own layers. Only a candidate screener.
+  mode=overlay implements what the real page would actually do: keep the
+               page's own inline style (offline geojson + market columns),
+               call map.setGlyphs()/setSprite(), then add the vector style's
+               sources and layers BENEATH the offline geography. This is the
+               mechanism the spec proposes, so it is proven here rather than
+               asserted.
+  mode=real    the highest-fidelity proof: rebuilds the PRODUCT page's actual
+               layer id stack (bg, bm-land, bm-border, city-dots, markets-fill,
+               markets-edge, placeholder-dot, placeholder-ring) and inserts the
+               vector layers with beforeId "bm-land" - the exact insertion point
+               the spec prescribes - then draws real market columns from
+               ../data/market_spine.json on top. If anything about the stacking
+               is wrong, this mode shows it.
+
+  Machine-readable status lands on window.__probe for the driver script.
+  ===========================================================================
+-->
+<link rel="stylesheet" href="../_ui/maplibre-gl.css">
+<style>
+  html, body { margin: 0; height: 100%; font-family: Consolas, monospace; }
+  #map { position: absolute; inset: 0; }
+  #probe {
+    position: absolute; top: 10px; left: 10px; z-index: 20;
+    background: rgba(21, 35, 60, 0.93); color: #f7f4ee;
+    padding: 12px 14px; border-radius: 6px; font-size: 12px;
+    line-height: 1.5; max-width: 620px; white-space: pre-wrap;
+  }
+  #probe b { color: #ffd88a; }
+  #probe .bad { color: #ff9a8a; }
+  #probe .good { color: #9fe0a8; }
+  #errors {
+    position: absolute; bottom: 10px; left: 10px; right: 10px; z-index: 20;
+    background: rgba(80, 12, 12, 0.92); color: #ffe4dc;
+    padding: 8px 12px; border-radius: 6px; font-size: 12px;
+    max-height: 26%; overflow: auto; white-space: pre-wrap;
+  }
+  #errors:empty { display: none; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="probe">loading...</div>
+<div id="errors"></div>
+<script src="../_ui/maplibre-gl.js"></script>
+<script>
+/* The current live raster, exactly as index.html declares it today: 256 px
+   tiles with no retina flag. This is the "what Jerome sees now" control. */
+var RASTER_NOW = {
+  version: 8,
+  sources: {
+    live: {
+      type: "raster",
+      tiles: [
+        "https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
+        "https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png"
+      ],
+      tileSize: 256,
+      maxzoom: 19,
+      attribution: "Live tiles: CARTO Voyager, \u00a9 OpenStreetMap contributors."
+    }
+  },
+  layers: [{ id: "live-tiles", type: "raster", source: "live" }]
+};
+
+/* The same raster with the retina flag added, so the comparison can separate
+   "raster is grainy because the flag is missing" from "raster is grainy
+   because raster has no more detail to give".
+
+   NOTE (verified 2026-09-18, see vec_ratio_test.json): MapLibre GL JS 5.6.2
+   does NOT substitute the Mapbox-style `{r}` token. It requests the literal
+   path `.../2%7Br%7D.png`, and CARTO's CDN happens to answer that with the
+   1x tile, so this variant renders identically to RASTER_NOW and proves
+   nothing. RASTER_AT2X below hardcodes the "@2x" suffix instead, which is the
+   honest way to ask CARTO for a retina tile without the token. */
+var RASTER_RETINA = {
+  version: 8,
+  sources: {
+    live: {
+      type: "raster",
+      tiles: [
+        "https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+      ],
+      tileSize: 256,
+      maxzoom: 19,
+      attribution: "Live tiles: CARTO Voyager, \u00a9 OpenStreetMap contributors."
+    }
+  },
+  layers: [{ id: "live-tiles", type: "raster", source: "live" }]
+};
+
+/* Retail raster done as well as retail raster can be done: CARTO's real 512 px
+   @2x tiles, declared at tileSize 256 so they cover the same ground, plus
+   linear resampling. This is the fair "best case raster" control. */
+var RASTER_AT2X = {
+  version: 8,
+  sources: {
+    live: {
+      type: "raster",
+      tiles: [
+        "https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png"
+      ],
+      tileSize: 256,
+      maxzoom: 19,
+      attribution: "Live tiles: CARTO Voyager, \u00a9 OpenStreetMap contributors."
+    }
+  },
+  layers: [{
+    id: "live-tiles", type: "raster", source: "live",
+    paint: { "raster-resampling": "linear" }
+  }]
+};
+
+var STYLES = {
+  "ofm-positron":  { kind: "vector", url: "https://tiles.openfreemap.org/styles/positron" },
+  "ofm-liberty":   { kind: "vector", url: "https://tiles.openfreemap.org/styles/liberty" },
+  "ofm-bright":    { kind: "vector", url: "https://tiles.openfreemap.org/styles/bright" },
+  "carto-positron":{ kind: "vector", url: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json" },
+  "carto-voyager": { kind: "vector", url: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json" },
+  "ofm-dark":      { kind: "vector", url: "https://tiles.openfreemap.org/styles/dark" },
+  "demo":          { kind: "vector", url: "https://demotiles.maplibre.org/style.json" },
+  "raster-now":    { kind: "raster", inline: RASTER_NOW },
+  "raster-retina": { kind: "raster", inline: RASTER_RETINA },
+  "raster-at2x":   { kind: "raster", inline: RASTER_AT2X }
+};
+
+var params = new URLSearchParams(location.search);
+var styleKey = params.get("style") || "ofm-positron";
+var projKind = params.get("proj") || "globe";
+var mode = params.get("mode") || "style";
+var entry = STYLES[styleKey];
+
+/* The page's own style, copied from index.html initMap(): an inline style with
+   no sources, a paper background and NO glyphs URL. mode=overlay starts from
+   exactly this, so the proof matches the real page. */
+var PAGE_STYLE = {
+  version: 8,
+  sources: {},
+  layers: [{ id: "bg", type: "background", paint: { "background-color": "#e8e2d6" } }]
+};
+
+var VECTOR_URLS = {
+  "ofm-positron":  "https://tiles.openfreemap.org/styles/positron",
+  "ofm-liberty":   "https://tiles.openfreemap.org/styles/liberty",
+  "ofm-bright":    "https://tiles.openfreemap.org/styles/bright",
+  "ofm-dark":      "https://tiles.openfreemap.org/styles/dark",
+  "carto-positron":"https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
+  "carto-voyager": "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
+};
+
+/* The default view of the real page, copied from index.html: fitBounds over
+   the market points with padding {top:130,bottom:40,left:320,right:60} then
+   clamped to zoom <= 4.2. The initial camera in index.html is center [8,50]
+   zoom 3.1 pitch 42, which is what resetView() settles near. Copied, not
+   guessed. */
+var VIEW = { center: [8, 50], zoom: 3.1, pitch: 42, bearing: 0 };
+
+window.__probe = {
+  styleKey: styleKey,
+  styleKind: entry ? entry.kind : null,
+  styleUrl: entry ? (entry.url || "(inline)") : null,
+  projectionRequested: projKind,
+  ready: false,
+  errors: [],
+  mapErrors: [],
+  loaded: false,
+  idle: false,
+  sources: {},
+  renderedSymbolFeatures: 0,
+  glyphRequests: 0,
+  glyphFails: 0,
+  spriteRequests: 0,
+  spriteFails: 0,
+  vectorTileRequests: 0,
+  vectorTileFails: 0,
+  rasterTileRequests: 0,
+  rasterTileFails: 0
+};
+
+function logError(text) {
+  window.__probe.errors.push(text);
+  var box = document.getElementById("errors");
+  box.textContent = window.__probe.errors.join("\n");
+}
+
+if (!entry) {
+  logError("unknown ?style=" + styleKey);
+}
+
+var map = new maplibregl.Map({
+  container: "map",
+  style: mode === "overlay" ? PAGE_STYLE
+                            : (mode === "real" ? PAGE_STYLE
+                               : (entry && entry.inline ? entry.inline : entry.url)),
+  center: VIEW.center,
+  zoom: VIEW.zoom,
+  pitch: VIEW.pitch,
+  bearing: VIEW.bearing,
+  attributionControl: { compact: false },
+  antialias: true,
+  maxPitch: 72,
+  projection: { type: projKind }
+});
+
+/* Exposed only so the QA driver can move the camera to fixed views without
+   simulating input. The product page does not do this. */
+window.__probeMap = map;
+
+/* =========================================================================
+   mode=overlay - the mechanism the spec actually proposes
+   -------------------------------------------------------------------------
+   Keep the page's own style (offline geojson + columns). Copy the candidate
+   style's `sources` into the map with addSource, copy its `layers` with
+   addLayer(..., beforeId) so every one of them lands UNDER the offline
+   geography, and install the candidate's glyphs/sprite URLs. Nothing of the
+   page's own layers is touched.
+   ========================================================================= */
+function applyOverlay() {
+  var url = VECTOR_URLS[styleKey];
+  if (!url) { logError("mode=overlay needs a vector ?style=, got " + styleKey); return; }
+
+  fetch(url, { cache: "no-store" })
+    .then(function (r) {
+      if (!r.ok) throw new Error("style fetch HTTP " + r.status);
+      return r.json();
+    })
+    .then(function (style) {
+      window.__probe.overlaySourceNames = Object.keys(style.sources || {});
+
+      /* MapLibre only resolves a vector source's TileJSON (and therefore only
+         discovers its real tile URLs) if it is declared as `url`. MapLibre
+         5.6.2 has no addSourceUrl, so the source is added inside setStyle's
+         transformStyle step instead. Simpler and equivalent: add the sources
+         and layers, letting MapLibre resolve each source `url` itself. */
+      var firstBefore = null;
+      try {
+        /* the first real page layer, so everything we add lands under it */
+        var ids = map.getStyle().layers.map(function (l) { return l.id; });
+        firstBefore = ids[ids.length - 1] === "bg" ? null : ids[0];
+      } catch (e) { firstBefore = null; }
+
+      var added = [];
+      Object.keys(style.sources || {}).forEach(function (k) {
+        if (map.getSource(k)) return;
+        var src = Object.assign({}, style.sources[k]);
+        src.attribution = src.attribution || "";
+        try { map.addSource(k, src); added.push("source:" + k); }
+        catch (e) { logError("addSource " + k + ": " + e.message); }
+      });
+
+      /* glyphs and sprite: the page's own style has neither, so the vector
+         style's label layers would render nothing without this. */
+      try {
+        if (style.glyphs && map.setGlyphs) { map.setGlyphs(style.glyphs); added.push("glyphs"); }
+      } catch (e) { logError("setGlyphs: " + e.message); }
+      try {
+        if (style.sprite && map.setSprite) { map.setSprite(style.sprite); added.push("sprite"); }
+      } catch (e) { logError("setSprite: " + e.message); }
+
+      (style.layers || []).forEach(function (l) {
+        if (l.type === "background") return;   /* page already has one */
+        if (map.getLayer(l.id)) return;
+        var layer = JSON.parse(JSON.stringify(l));
+        delete layer.source;                     /* re-added below */
+        layer.source = l.source;
+        try {
+          if (firstBefore) map.addLayer(layer, firstBefore);
+          else map.addLayer(layer);
+          added.push("layer:" + l.id);
+        } catch (e) { logError("addLayer " + l.id + ": " + e.message); }
+      });
+
+      /* the page's offline geography, drawn as a simple fill, so the proof
+         shows the real stacking: vector basemap underneath, page geo on top */
+      try {
+        map.addSource("qa-basemap", {
+          type: "geojson", data: "../data/basemap_land.geojson"
+        });
+        map.addLayer({
+          id: "qa-bm-land", type: "fill", source: "qa-basemap",
+          filter: ["==", ["get", "layer"], "land"],
+          paint: { "fill-color": "#e6dfd0", "fill-opacity": 1 }
+        }, firstBefore);
+        map.addLayer({
+          id: "qa-bm-border", type: "line", source: "qa-basemap",
+          filter: ["==", ["get", "layer"], "border"],
+          paint: { "line-color": "#b3a893", "line-width": 0.6, "line-opacity": 0.9 }
+        }, firstBefore);
+        /* a fake market column, so the stacking above the basemap is visible */
+        map.addSource("qa-columns", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: [
+              { type: "Feature", properties: { cf: "#c0552d", hf: 400000 },
+                geometry: { type: "Polygon", coordinates: [[
+                  [7.2, 51.2], [7.9, 51.2], [7.9, 51.7], [7.2, 51.7], [7.2, 51.2]]] } },
+              { type: "Feature", properties: { cf: "#3f7d4f", hf: 250000 },
+                geometry: { type: "Polygon", coordinates: [[
+                  [3.6, 50.6], [4.3, 50.6], [4.3, 51.1], [3.6, 51.1], [3.6, 50.6]]] } }
+            ]
+          }
+        });
+        map.addLayer({
+          id: "qa-columns-fill", type: "fill-extrusion", source: "qa-columns",
+          paint: {
+            "fill-extrusion-color": ["get", "cf"],
+            "fill-extrusion-height": ["get", "hf"],
+            "fill-extrusion-base": 0,
+            "fill-extrusion-opacity": 0.9
+          }
+        });
+        added.push("qa layers");
+      } catch (e) { logError("qa layers: " + e.message); }
+
+      window.__probe.overlayAdded = added;
+      window.__probe.overlayApplied = true;
+      report();
+    })
+    .catch(function (e) { logError("overlay: " + e.message); });
+}
+
+if (mode === "overlay") {
+  map.on("load", function () { applyOverlay(); });
+}
+
+/* =========================================================================
+   mode=real - rebuild the PRODUCT page's layer stack, then insert the vector
+   layers with beforeId "bm-land", which is the insertion point the spec
+   prescribes. Nothing here is approximated: the layer ids, order and the
+   offline geojson source are the ones index.html uses.
+   ========================================================================= */
+function applyReal() {
+  var url = VECTOR_URLS[styleKey];
+  if (!url) { logError("mode=real needs a vector ?style="); return; }
+  var C = { land: "#e6dfd0", border: "#b3a893", paperDim: "#e8e2d6" };
+
+  fetch(url, { cache: "no-store" })
+    .then(function (r) {
+      if (!r.ok) throw new Error("style fetch HTTP " + r.status);
+      return r.json();
+    })
+    .then(function (style) {
+      /* 1. the product's own offline geography, exactly as setupLayers makes it */
+      map.addSource("basemap", { type: "geojson", data: "../data/basemap_land.geojson" });
+      map.addLayer({
+        id: "bm-land", type: "fill", source: "basemap",
+        filter: ["==", ["get", "layer"], "land"],
+        paint: { "fill-color": C.land, "fill-opacity": 1 }
+      });
+      map.addLayer({
+        id: "bm-border", type: "line", source: "basemap",
+        filter: ["==", ["get", "layer"], "border"],
+        paint: { "line-color": C.border, "line-width": 0.6, "line-opacity": 0.9 }
+      });
+
+      /* 2. the product's other page layers, in order */
+      map.addSource("globe-cities", {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: [
+          { type: "Feature", properties: { name: "London" },
+            geometry: { type: "Point", coordinates: [-0.13, 51.51] } },
+          { type: "Feature", properties: { name: "Paris" },
+            geometry: { type: "Point", coordinates: [2.35, 48.86] } },
+          { type: "Feature", properties: { name: "Jerusalem" },
+            geometry: { type: "Point", coordinates: [35.21, 31.77] } }
+        ] }
+      });
+      map.addLayer({
+        id: "city-dots", type: "circle", source: "globe-cities",
+        paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 3, 1.6, 6, 3],
+                 "circle-color": "#5d6b82", "circle-opacity": 0.75 }
+      });
+
+      /* 3. real market columns from the product's own data file */
+      return fetch("../data/market_spine.json", { cache: "no-store" })
+        .then(function (r) { return r.json(); })
+        .then(function (spine) {
+          var feats = (spine.columns || []).filter(function (c) { return c.geometry; })
+            .map(function (c) {
+              return { type: "Feature",
+                       properties: { mkey: c.id, cf: c.cf, hf: c.hf },
+                       geometry: c.geometry };
+            });
+          map.addSource("markets", {
+            type: "geojson", promoteId: "mkey",
+            data: { type: "FeatureCollection", features: feats }
+          });
+          map.addLayer({
+            id: "markets-fill", type: "fill-extrusion", source: "markets",
+            paint: { "fill-extrusion-color": ["get", "cf"],
+                     "fill-extrusion-height": ["get", "hf"],
+                     "fill-extrusion-base": 0,
+                     "fill-extrusion-opacity": 0.9 }
+          });
+          map.addLayer({
+            id: "markets-edge", type: "line", source: "markets",
+            paint: { "line-color": "rgba(21,35,60,0.5)", "line-width": 0.9 }
+          });
+
+          /* 4. NOW the vector basemap, inserted under bm-land. This is the
+                exact call the spec prescribes. */
+          map.setGlyphs(style.glyphs);
+          map.setSprite(style.sprite);
+          Object.keys(style.sources || {}).forEach(function (k) {
+            if (map.getSource(k)) return;
+            map.addSource(k, Object.assign({}, style.sources[k]));
+          });
+          var added = 0;
+          (style.layers || []).forEach(function (l) {
+            if (l.type === "background") return;
+            if (map.getLayer(l.id)) return;
+            try { map.addLayer(JSON.parse(JSON.stringify(l)), "bm-land"); added++; }
+            catch (e) { logError("addLayer " + l.id + ": " + e.message); }
+          });
+
+          window.__probe.overlayApplied = true;
+          window.__probe.overlayAdded = ["vector layers inserted before bm-land: " + added,
+                                         "columns: " + feats.length];
+          window.__probe.marketColumns = feats.length;
+          report();
+        });
+    })
+    .catch(function (e) { logError("real: " + e.message); });
+}
+
+if (mode === "real") {
+  map.on("load", function () { applyReal(); });
+}
+
+/* ------------------------------------------------------------------ errors */
+map.on("error", function (e) {
+  var msg = e && e.error ? String(e.error.message || e.error) : String(e);
+  window.__probe.mapErrors.push(msg);
+  logError("map.on(error): " + msg);
+});
+
+/* --------------------------------------------------------- request counting */
+try {
+  var OP = window.performance && window.performance.getEntriesByType ? "perf" : "none";
+  if (OP === "perf" && window.PerformanceObserver) {
+    new PerformanceObserver(function (list) {
+      list.getEntries().forEach(function (en) {
+        var u = en.name || "";
+        if (/\/fonts\/|\/font\//.test(u)) {
+          window.__probe.glyphRequests++;
+          if (en.responseStatus && en.responseStatus >= 400) window.__probe.glyphFails++;
+        } else if (/\/sprites?\//.test(u)) {
+          window.__probe.spriteRequests++;
+          if (en.responseStatus && en.responseStatus >= 400) window.__probe.spriteFails++;
+        } else if (/\.pbf|\.mvt/.test(u)) {
+          window.__probe.vectorTileRequests++;
+          if (en.responseStatus && en.responseStatus >= 400) window.__probe.vectorTileFails++;
+        } else if (/rastertiles/.test(u)) {
+          window.__probe.rasterTileRequests++;
+          if (en.responseStatus && en.responseStatus >= 400) window.__probe.rasterTileFails++;
+        }
+      });
+    }).observe({ type: "resource", buffered: true });
+  }
+} catch (obsErr) { logError("PerformanceObserver: " + obsErr.message); }
+
+/* ------------------------------------------------------------------- sky */
+map.on("load", function () {
+  window.__probe.loaded = true;
+  try {
+    map.setSky({
+      "sky-color": "#0d2137",
+      "horizon-color": "#cfe0f2",
+      "fog-color": "#f0ece2",
+      "sky-horizon-blend": 0.55,
+      "horizon-fog-blend": 0.45,
+      "fog-ground-blend": 0.9,
+      "atmosphere-blend": 0.6
+    });
+  } catch (e) { logError("setSky: " + e.message); }
+
+  var st = map.getStyle();
+  Object.keys(st.sources || {}).forEach(function (k) {
+    window.__probe.sources[k] = st.sources[k].type;
+  });
+
+  report();
+});
+
+/* Does a symbol layer actually place text? A style can declare label layers
+   and still paint none if the glyphs never arrive, so this is asserted rather
+   than assumed. */
+function countRenderedLabels() {
+  var n = 0;
+  try {
+    var st = map.getStyle();
+    var labelLayers = (st.layers || [])
+      .filter(function (l) {
+        return l.type === "symbol" &&
+          (l.layout && l.layout["text-field"]) &&
+          l.layout.visibility !== "none";
+      })
+      .map(function (l) { return l.id; })
+      .filter(function (id) { return !!map.getLayer(id); });
+    if (labelLayers.length) {
+      n = map.queryRenderedFeatures({ layers: labelLayers }).length;
+    }
+    window.__probe.labelLayers = labelLayers.length;
+  } catch (e) {
+    logError("queryRenderedFeatures: " + e.message);
+  }
+  return n;
+}
+
+map.on("idle", function () {
+  window.__probe.idle = true;
+  window.__probe.renderedSymbolFeatures = countRenderedLabels();
+  window.__probe.ready = true;
+  report();
+});
+
+/* also re-measure on moveend, so a driver can pan and re-read */
+map.on("moveend", function () {
+  window.__probe.renderedSymbolFeatures = countRenderedLabels();
+  report();
+});
+
+function report() {
+  var p = window.__probe;
+  /* re-snapshot the live source list, so overlay sources appear too */
+  try {
+    var st = map.getStyle();
+    Object.keys(st.sources || {}).forEach(function (k) {
+      p.sources[k] = st.sources[k].type;
+    });
+    p.layerCount = (st.layers || []).length;
+  } catch (e) { /* map not ready */ }
+  var srcs = Object.keys(p.sources).map(function (k) {
+    return k + "=" + p.sources[k];
+  }).join(", ") || "(none yet)";
+  var cls = p.errors.length ? "bad" : "good";
+  document.getElementById("probe").innerHTML =
+    "<b>QA PROBE - not the product</b>\n" +
+    "style     : " + p.styleKey + "  (" + p.styleKind + ")  mode=" + mode + "\n" +
+    "url       : " + p.styleUrl + "\n" +
+    "projection: " + p.projectionRequested + "\n" +
+    "loaded    : " + p.loaded + "   idle: " + p.idle +
+      "   overlayApplied: " + (p.overlayApplied || false) + "\n" +
+    "sources   : " + srcs + "\n" +
+    "layers    : " + (p.layerCount || 0) + " total in style\n" +
+    "labels    : " + p.renderedSymbolFeatures + " rendered symbol features " +
+      "from " + (p.labelLayers || 0) + " label layers\n" +
+    "glyphs    : " + p.glyphRequests + " req / " + p.glyphFails + " fail" +
+      "   sprites " + p.spriteRequests + " req / " + p.spriteFails + " fail\n" +
+    "<span class=\"" + cls + "\">errors    : " + p.errors.length + "</span>" +
+    (p.errors.length ? "\n" + p.errors.slice(0, 6).join("\n") : "");
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+{
+  "generated": "2026-09-17",
+  "window": {
+    "start": "2025-07-01",
+    "end": "2026-06-30"
+  },
+  "base": {
+    "rows": 47617,
+    "part_numbers": 15273,
+    "parts_billed_eur": 32595852.63,
+    "units": 1225500,
+    "source": "01_data/00_derived/price_bp_weighted_compare_pn.csv, in_scope and priced both sides"
+  },
+  "needs": {
+    "part_numbers": 126,
+    "parts_billed_eur": 1740556.56,
+    "units": 50988,
+    "share_of_parts_billed": 5.3,
+    "share_of_units": 4.2,
+    "source_in_model_only": 80,
+    "source_nowhere": 2,
+    "origin_not_in_reference_list": 5,
+    "origin_nowhere": 0
+  },
+  "september_origin_population": {
+    "thai_sourced_with_origin": 5330,
+    "japan_sourced_with_origin": 997,
+    "note": "the September file's origin column is populated far more densely on Thai-sourced parts"
+  },
+  "japan_master_file": {
+    "path": "01_data/01_Pricing/ISZJ_master_data_competitive_parts.xlsx",
+    "part_numbers_in_file": 15527,
+    "overlap_with_base_set": 517,
+    "parts_billed_eur_in_overlap": 2896393.64,
+    "note": "carries its own Origin and a Ship Loc. (J/T). Overlaps only a narrow slice of the billed book, so it fills none of the missing-source part numbers"
+  },
+  "origin_conflicts_with_japan_master_file": [
+    {
+      "part_number": "8980537880",
+      "reference_list": "KR",
+      "japan_master": "JP",
+      "parts_billed_eur": 20344.04
+    },
+    {
+      "part_number": "8980537900",
+      "reference_list": "KR",
+      "japan_master": "JP",
+      "parts_billed_eur": 9429.4
+    },
+    {
+      "part_number": "8980714210",
+      "reference_list": "JP",
+      "japan_master": "CN",
+      "parts_billed_eur": 8339.04
+    },
+    {
+      "part_number": "8979445641",
+      "reference_list": "JP",
+      "japan_master": "TH",
+      "parts_billed_eur": 2567.87
+    },
+    {
+      "part_number": "8971786092",
+      "reference_list": "PH",
+      "japan_master": "KR",
+      "parts_billed_eur": 1386.99
+    },
+    {
+      "part_number": "8982419120",
+      "reference_list": "BR",
+      "japan_master": "ID",
+      "parts_billed_eur": 1132.36
+    },
+    {
+      "part_number": "1883114030",
+      "reference_list": "CN",
+      "japan_master": "JP",
+      "parts_billed_eur": 874.4
+    },
+    {
+      "part_number": "1878313240",
+      "reference_list": "TH",
+      "japan_master": "JP",
+      "parts_billed_eur": 752.66
+    },
+    {
+      "part_number": "1878313090",
+      "reference_list": "TH",
+      "japan_master": "JP",
+      "parts_billed_eur": 413.66
+    },
+    {
+      "part_number": "1883113430",
+      "reference_list": "CN",
+      "japan_master": "JP",
+      "parts_billed_eur": 362.8
+    },
+    {
+      "part_number": "1821941060",
+      "reference_list": "CN",
+      "japan_master": "DE",
+      "parts_billed_eur": 340.86
+    },
+    {
+      "part_number": "8981602050",
+      "reference_list": "CN",
+      "japan_master": "DE",
+      "parts_billed_eur": 251.73
+    },
+    {
+      "part_number": "8944349260",
+      "reference_list": "TH",
+      "japan_master": "ID",
+      "parts_billed_eur": 103.39
+    },
+    {
+      "part_number": "8971345632",
+      "reference_list": "KR",
+      "japan_master": "JP",
+      "parts_billed_eur": 69.21
+    },
+    {
+      "part_number": "1471268130",
+      "reference_list": "CN",
+      "japan_master": "JP",
+      "parts_billed_eur": 66.51
+    },
+    {
+      "part_number": "8981837971",
+      "reference_list": "US",
+      "japan_master": "JP",
+      "parts_billed_eur": 39.34
+    },
+    {
+      "part_number": "8971345612",
+      "reference_list": "KR",
+      "japan_master": "JP",
+      "parts_billed_eur": 33.25
+    },
+    {
+      "part_number": "8943349870",
+      "reference_list": "ID",
+      "japan_master": "JP",
+      "parts_billed_eur": 23.9
+    },
+    {
+      "part_number": "1878305210",
+      "reference_list": "TH",
+      "japan_master": "JP",
+      "parts_billed_eur": 18.63
+    },
+    {
+      "part_number": "8981525880",
+      "reference_list": "CN",
+      "japan_master": "JP",
+      "parts_billed_eur": 9.02
+    },
+    {
+      "part_number": "8973273170",
+      "reference_list": "CN",
+      "japan_master": "JP",
+      "parts_billed_eur": 8.76
+    },
+    {
+      "part_number": "8973290920",
+      "reference_list": "CN",
+      "japan_master": "JP",
+      "parts_billed_eur": 1.36
+    },
+    {
+      "part_number": "8971799670",
+      "reference_list": "CN",
+      "japan_master": "JP",
+      "parts_billed_eur": 1.12
+    }
+  ],
+  "by_kind": {
+    "No source of supply in the price list (a value exists in the pricing model only)": {
+      "part_numbers": 80,
+      "parts_billed_eur": 1595027.45
+    },
+    "No source of supply anywhere we hold": {
+      "part_numbers": 2,
+      "parts_billed_eur": 1329.19
+    },
+    "No country of origin in the reference list (the September file fills it)": {
+      "part_numbers": 5,
+      "parts_billed_eur": 1673.63
+    },
+    "No country of origin recorded in any file": {
+      "part_numbers": 0,
+      "parts_billed_eur": 0.0
+    },
+    "Country of origin contradicts between the two origin files": {
+      "part_numbers": 14,
+      "parts_billed_eur": 95418.76
+    },
+    "Country of origin contradicts between the reference list and the Japan master file": {
+      "part_numbers": 23,
+      "parts_billed_eur": 46570.3
+    },
+    "Source of supply contradicts between two files": {
+      "part_numbers": 2,
+      "parts_billed_eur": 537.23
+    }
+  },
+  "by_part_group": {
+    "Steering": {
+      "part_numbers": 8,
+      "parts_billed_eur": 1184103.82
+    },
+    "Filters": {
+      "part_numbers": 6,
+      "parts_billed_eur": 156449.15
+    },
+    "Exhaust": {
+      "part_numbers": 5,
+      "parts_billed_eur": 143457.54
+    },
+    "Brake parts": {
+      "part_numbers": 9,
+      "parts_billed_eur": 66363.42
+    },
+    "Hydraulic / mechanical": {
+      "part_numbers": 6,
+      "parts_billed_eur": 47334.94
+    },
+    "Transmission parts": {
+      "part_numbers": 8,
+      "parts_billed_eur": 44948.59
+    },
+    "Miscellaneous": {
+      "part_numbers": 13,
+      "parts_billed_eur": 36204.03
+    },
+    "Body parts": {
+      "part_numbers": 12,
+      "parts_billed_eur": 10109.73
+    },
+    "Air conditioning": {
+      "part_numbers": 6,
+      "parts_billed_eur": 9822.0
+    },
+    "Hardware": {
+      "part_numbers": 17,
+      "parts_billed_eur": 9814.14
+    },
+    "Fuel system": {
+      "part_numbers": 3,
+      "parts_billed_eur": 8473.98
+    },
+    "Gaskets / seals": {
+      "part_numbers": 8,
+      "parts_billed_eur": 7876.3
+    },
+    "Injectors": {
+      "part_numbers": 1,
+      "parts_billed_eur": 7318.52
+    },
+    "Suspension": {
+      "part_numbers": 4,
+      "parts_billed_eur": 4827.52
+    },
+    "Lighting": {
+      "part_numbers": 10,
+      "parts_billed_eur": 1061.06
+    },
+    "Electrical sensors": {
+      "part_numbers": 4,
+      "parts_billed_eur": 926.3
+    },
+    "Consumables": {
+      "part_numbers": 2,
+      "parts_billed_eur": 741.51
+    },
+    "Air system": {
+      "part_numbers": 2,
+      "parts_billed_eur": 652.73
+    },
+    "Engine parts": {
+      "part_numbers": 1,
+      "parts_billed_eur": 61.93
+    },
+    "Clutch parts": {
+      "part_numbers": 1,
+      "parts_billed_eur": 9.35
+    }
+  },
+  "coverage": [
+    {
+      "What": "Source of supply",
+      "Where it is held": "Our price list",
+      "Part numbers with it": 15191,
+      "Share of part numbers": 99.5,
+      "Parts billed (EUR) with it": 30999495.990000002,
+      "Share of parts billed": 95.1,
+      "Units with it": 1188215.0
+    },
+    {
+      "What": "Source of supply",
+      "Where it is held": "Pricing model",
+      "Part numbers with it": 11689,
+      "Share of part numbers": 76.5,
+      "Parts billed (EUR) with it": 31050526.81,
+      "Share of parts billed": 95.3,
+      "Units with it": 1196069.0
+    },
+    {
+      "What": "Source of supply",
+      "Where it is held": "Pricing specification",
+      "Part numbers with it": 15273,
+      "Share of part numbers": 100.0,
+      "Parts billed (EUR) with it": 32595852.629999995,
+      "Share of parts billed": 100.0,
+      "Units with it": 1225500.0
+    },
+    {
+      "What": "Country of origin",
+      "Where it is held": "Reference price list",
+      "Part numbers with it": 15268,
+      "Share of part numbers": 100.0,
+      "Parts billed (EUR) with it": 32594179.0,
+      "Share of parts billed": 100.0,
+      "Units with it": 1225485.0
+    },
+    {
+      "What": "Country of origin",
+      "Where it is held": "September price update",
+      "Part numbers with it": 6328,
+      "Share of part numbers": 41.4,
+      "Parts billed (EUR) with it": 21083116.33,
+      "Share of parts billed": 64.7,
+      "Units with it": 584851.0
+    },
+    {
+      "What": "Country of origin",
+      "Where it is held": "Japan master file (narrow slice)",
+      "Part numbers with it": 517,
+      "Share of part numbers": 3.4,
+      "Parts billed (EUR) with it": 2896393.6399999997,
+      "Share of parts billed": 8.9,
+      "Units with it": 259856.0
+    }
+  ],
+  "conflict_examples": {
+    "source_of_supply": [
+      {
+        "part_number": "0911801060",
+        "price_list": "T",
+        "model": "J",
+        "parts_billed_eur": 470.27
+      },
+      {
+        "part_number": "0911802140",
+        "price_list": "J",
+        "model": "T",
+        "parts_billed_eur": 66.96
+      }
+    ],
+    "country_of_origin": [
+      {
+        "part_number": "8983320160",
+        "ie40": "TH",
+        "september": "TW",
+        "parts_billed_eur": 86262.54
+      },
+      {
+        "part_number": "8976624340",
+        "ie40": "VN",
+        "september": "TH",
+        "parts_billed_eur": 2162.57
+      },
+      {
+        "part_number": "8982734850",
+        "ie40": "JP",
+        "september": "TH",
+        "parts_billed_eur": 1739.49
+      },
+      {
+        "part_number": "8983464180",
+        "ie40": "ID",
+        "september": "TH",
+        "parts_billed_eur": 1589.05
+      },
+      {
+        "part_number": "8983040250",
+        "ie40": "VN",
+        "september": "TH",
+        "parts_billed_eur": 1563.0
+      },
+      {
+        "part_number": "8983464170",
+        "ie40": "ID",
+        "september": "TH",
+        "parts_billed_eur": 1019.24
+      },
+      {
+        "part_number": "8983464160",
+        "ie40": "ID",
+        "september": "TH",
+        "parts_billed_eur": 379.46
+      },
+      {
+        "part_number": "8980260840",
+        "ie40": "TH",
+        "september": "TW",
+        "parts_billed_eur": 225.55
+      },
+      {
+        "part_number": "8979421940",
+        "ie40": "TH",
+        "september": "TW",
+        "parts_billed_eur": 218.75
+      },
+      {
+        "part_number": "8981924670",
+        "ie40": "DE",
+        "september": "TH",
+        "parts_billed_eur": 90.53
+      },
+      {
+        "part_number": "8982754650",
+        "ie40": "TH",
+        "september": "PH",
+        "parts_billed_eur": 71.18
+      },
+      {
+        "part_number": "8980493620",
+        "ie40": "JP",
+        "september": "TH",
+        "parts_billed_eur": 42.41
+      },
+      {
+        "part_number": "8980413630",
+        "ie40": "JP",
+        "september": "TH",
+        "parts_billed_eur": 28.94
+      },
+      {
+        "part_number": "8982869730",
+        "ie40": "PH",
+        "september": "TH",
+        "parts_billed_eur": 26.05
+      }
+    ]
+  },
+  "outputs": [
+    "01_data\\01_Pricing\\Parts_needing_source_or_origin.xlsx",
+    "01_data\\01_Pricing\\OPEN_Parts_needing_source_or_origin.cmd"
+  ],
+  "not_inspected": [
+    "No SAP material master or purchasing-source table (MARC/EINA/EORD class) was found under 01_data/12_raw, 01_data/08_Distributor or 01_data/90_INBOX.",
+    "The SAP margin extract in 01_data/90_INBOX/margin_analysis_mail_pull carries a Plant column, but it maps one-to-one to the sales organisation (ISZ7=IE40, ISZ5=IE30, ISZ9=IE50), so it does not discriminate between a Japan and a Thailand source.",
+    "The grid of 12_raw subfolders was listed by name only; nothing under it was read."
+  ]
+}

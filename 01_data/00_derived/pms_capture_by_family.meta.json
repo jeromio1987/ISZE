@@ -1,0 +1,72 @@
+{
+  "snapshot": "2026-09-19",
+  "generated_at": "2026-09-24T06:02:01+00:00",
+  "generated_by": "02_dashboards/sales/_build/build_pms_capture_by_family.py",
+  "families": {
+    "n_series_truck": "N-series truck",
+    "heavy_truck": "Heavy truck (F-series and C&E)",
+    "light_vehicle": "Light vehicle (D-Max pickup and SUV)",
+    "shared_across_families": "Parts used across more than one family",
+    "unattributed": "No vehicle reference found"
+  },
+  "what_splits_by_family": {
+    "expected": "splits fully \u2014 the fleet has a measured three-way split per market",
+    "billed": "splits only where the part number resolves to exactly one family; a part fitting more than one family is pooled as shared_across_families and is never apportioned"
+  },
+  "family_resolution": {
+    "resolved_single_family": 371,
+    "pooled_shared": 54,
+    "no_vehicle_reference": 413,
+    "by_source": {
+      "epc_and_crossref_agree": 0,
+      "epc_only": 33,
+      "crossref_only": 338
+    },
+    "by_confidence": {
+      "low": 413,
+      "medium": 392,
+      "high": 33
+    },
+    "answered_from_a_wildcard_model_code": 231,
+    "both_sources_speak": {
+      "epc_and_crossref_both_name_one_family": 0,
+      "of_which_they_disagree": 0,
+      "note": "where the EPC and the cross-reference each name exactly one family, this many disagree; a disagreement is pooled and flagged rather than trusted to either source"
+    },
+    "rule": "one table, two sources \u2014 01_data/00_derived/vehicle_family_bands.csv, written by 03_analytics/Isuzu/prism/scripts/build_vehicle_family_bands.py. A part is placed when every source that names a vehicle for it agrees; a part that fits more than one family is pooled and never apportioned; a wildcard model code still names a family but is recorded at medium confidence."
+  },
+  "tie_out": {
+    "basis": "sum of the three named families against pms_capture_by_db_year.csv line_type=total expected_qty; the pooled shared value is the same ceiling and is excluded from the sum",
+    "rows_compared": 1008,
+    "rows_unmatched_in_published": 0,
+    "rows_unmatched_in_mine": 0,
+    "tolerance_units": 0.5,
+    "max_abs_delta": 0.05,
+    "fail_count": 0,
+    "source": "01_data/00_derived/pms_capture_by_db_year.csv line_type=total, expected_qty"
+  },
+  "tie_out_attributed_euro": {
+    "basis": "attributed billed euro over all five family values against pms_capture_by_db_year.csv line_type=total actual_rev_eur; every part number is placed in exactly one value, so the two must agree",
+    "rows_compared": 1008,
+    "tolerance_eur": 1.0,
+    "max_abs_delta_eur": 0.0,
+    "fail_count": 0,
+    "unmatched_in_published": 0,
+    "unmatched_in_attributed": 0
+  },
+  "sources": {
+    "fleet_split": "03_analytics/Isuzu/prism/data/uio_by_model_bucket.csv",
+    "visit_rates": "03_analytics/Isuzu/prism/modules/pms_capture_config.py BUCKET_SERVICES_PER_YEAR",
+    "vehicle_family": "01_data/00_derived/epc_decode_batch1_banded_20260919.csv + epc_decode_batch1_20260919.json + genuine_bvp_crossref.csv",
+    "billing": "01_data/00_derived/sales_fact.parquet",
+    "service_categories": "01_data/00_derived/bvp_pn_dimension.csv + prism/data/pms_capture_supplement.csv",
+    "published_capture": "01_data/00_derived/pms_capture_by_db_year.csv",
+    "gps": "01_data/00_derived/gps_spu_by_distributor.csv + prism/data/gps_model_targets.csv",
+    "competitor": "01_data/00_derived/lost_sales_competitor_pn.csv"
+  },
+  "not_attempted": [
+    "A 3.5 t versus 7.5 t split. 50 of 120 model codes in prism/data/model_code_to_tonnage.csv are unresolved and the unresolved ones include NN, NP and NHR \u2014 exactly the codes that separate N35 from N75. Splitting on them would be inference, so the N-series is reported as one family.",
+    "A fuel-filter answer by family. Fuel filters are the second-largest service family and almost none of their billing resolves to one vehicle family: the two decoded part numbers fit both the N-series and the heavy models, and the remaining part numbers in that family have no vehicle reference at all. The fuel-filter euro therefore sits in the pooled value, not in a family.",
+    "An oil-filter answer by family. Oil filters are the largest service family by units and their part numbers are shared across the truck families and the industrial engines, so the same pooled treatment applies."
+  ]
+}

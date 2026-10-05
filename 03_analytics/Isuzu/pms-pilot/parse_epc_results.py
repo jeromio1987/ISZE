@@ -3,36 +3,94 @@ Parse EPC scrape results into enriched FIG-KEY workbook columns.
 
 Input: epc_results.json — list of per-PN scrape dicts from window.__allResults
 Output: enrichment dict keyed by PN with derived columns.
-"""
-import json, re, sys
-from collections import defaultdict
 
-# Isuzu model series -> GVW class
-# Source: official Isuzu nomenclature, public spec sheets
-SERIES_TO_GVW = {
-    # N-series LCV (3.5-7.5t)
-    'NHR': 'LCV 3.5t', 'NLR': 'LCV 3.5t', 'NMR': 'LCV 5.5t',
-    'NKR': 'LCV 5.5t', 'NPR': 'LCV 7.5t', 'NQR': 'LCV 7.5t',
-    'NNR': 'LCV 5.5t', 'NRR': 'LCV 7.5t', 'NN': 'LCV', 'NP': 'LCV',
-    # F-series medium (10-26t)
-    'FRR': 'MCV 10-12t', 'FSR': 'MCV 12-14t', 'FSS': 'MCV 12-14t',
-    'FTR': 'MCV 12-18t', 'FTS': 'MCV 12-18t', 'FVR': 'HCV 18-26t',
-    'FVZ': 'HCV 24-26t', 'FVM': 'HCV 24t+', 'FVL': 'HCV',
-    # G-series (rare)
-    'GVR': 'HCV', 'GVZ': 'HCV', 'GVM': 'HCV',
-    # 810 / C&E heavy 26t+
-    'CVR': 'HCV 26t+', 'CXH': 'HCV 26t+', 'CYH': 'HCV 26t+',
-    'CXJ': 'HCV 26t+', 'CXY': 'HCV 26t+', 'CXZ': 'HCV 26t+',
-    'CYZ': 'HCV 26t+', 'CVS': 'HCV 26t+', 'CXW': 'HCV 26t+',
-    'CYW': 'HCV 26t+',
-    # Passenger pickup (D-Max predecessor)
-    'TFR': 'Pickup 2-2.5t', 'TFS': 'Pickup 2-2.5t',
-    # Passenger SUV
-    'UBS': 'SUV', 'UBR': 'SUV', 'UPS': 'SUV', 'UES': 'SUV',
-    'UER': 'SUV', 'UCS': 'SUV', 'UCR': 'SUV',
-    # Buses
-    'LT': 'Bus', 'LV': 'Bus', 'LR': 'Bus',
-}
+The series -> weight answer is NOT held in this file. It comes from the one authored map,
+`03_analytics/Isuzu/prism/data/series_to_band.csv`, read through
+`03_analytics/Isuzu/prism/modules/vehicle_bands.py`.
+
+Until 2026-09-24 this file carried its own `SERIES_TO_GVW` dictionary, typed by hand with no
+source. It disagreed with the map, and those answers are now gone:
+
+  * `NKR` was read as 5.5 t. Every sourced table says 3.5 t (the N35 Grafter rung).
+  * `NHR`, `NN` and `NP` were given a weight. The sources do not settle any of them, so the
+    map marks them unresolved and this file now records no weight for them.
+  * `NNR` was read as 5.5 t. The map puts it on the 7.5 t band, its own nominal GVW being 6.5 t.
+  * the heavy and bus codes were given an invented class (`HCV 26t+`, `Bus`, `SUV`) instead of
+    the map's own answer: outside the four bands ISZE ships.
+
+A series the map leaves unresolved stays without a weight. Nothing here falls back to a default,
+because a default is exactly what made the old table wrong.
+"""
+import importlib.util
+import json
+import re
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+_HERE = Path(__file__).resolve().parent
+
+
+def _load_vehicle_bands():
+    """The one reader of the authored map, loaded by file path.
+
+    Loaded by path, and registered in `sys.modules` before the spec is executed, so the module
+    resolves however this script is invoked - imported, run from another folder, or run by a
+    launcher. Same pattern as `01_data/07_UIO/vin/build_vin_register.py`.
+    """
+    prism = _HERE.parents[2] / "03_analytics" / "Isuzu" / "prism"
+    spec = importlib.util.spec_from_file_location(
+        "vehicle_bands", prism / "modules" / "vehicle_bands.py")
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["vehicle_bands"] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
+vehicle_bands = _load_vehicle_bands()
+
+
+def _series_vocabulary() -> frozenset:
+    """Every code the map names as a vehicle: the series an EPC row may legitimately carry.
+
+    The codes the map files under the `unresolved` *group* are the wildcard and stray tokens it
+    recorded so they could not be mistaken for a model code (`CV`, `TF`, `X2`, `R` ...). Those
+    are not a series vocabulary and are left out. A code whose *band* is unresolved (`NHR`,
+    `NN`, `NP`) is a real series and stays in: it is listed on the row and carries no weight.
+    """
+    return frozenset(
+        code for code, row in vehicle_bands.load_map().items()
+        if (row.get("vehicle_group") or "").strip() != vehicle_bands.GROUP_UNRESOLVED
+    )
+
+
+def _series_to_gvw() -> dict:
+    """{code: weight class label} for every code the map puts on a band.
+
+    A code the map leaves unresolved - or does not carry at all - is absent on purpose. The
+    caller records no weight for it rather than falling back to a default.
+    """
+    out = {}
+    rows = vehicle_bands.load_map()
+    for code in sorted(_series_vocabulary()):
+        band = vehicle_bands.band_for(code)
+        if band in vehicle_bands.BAND_LABEL:
+            out[code] = vehicle_bands.BAND_LABEL[band]
+        elif band == vehicle_bands.NOT_IN_SCOPE:
+            label = (rows[code].get("weight_label") or "").strip()
+            if label:
+                out[code] = label
+    return out
+
+
+# Derived from `series_to_band.csv`, not typed here. Edit the CSV to change a mapping.
+SERIES_VOCABULARY = _series_vocabulary()
+SERIES_TO_GVW = _series_to_gvw()
+
+
+def resolved_series_table() -> dict:
+    """The series -> weight answer this module exposes. Read-only, for verification."""
+    return dict(SERIES_TO_GVW)
 
 # Market keywords -> normalized market label
 MARKET_KEYWORDS = [
@@ -73,11 +131,11 @@ def parse_series(text: str) -> set:
     # Tokenize on common separators
     tokens = re.split(r'[\s\(\)/,]+', text.upper())
     for t in tokens:
-        if t in SERIES_TO_GVW:
+        if t in SERIES_VOCABULARY:
             found.add(t)
         # Also match prefixes like 'CYH(LHD)' -> 'CYH'
         m = re.match(r'^([A-Z]{2,4})', t)
-        if m and m.group(1) in SERIES_TO_GVW:
+        if m and m.group(1) in SERIES_VOCABULARY:
             found.add(m.group(1))
     return found
 

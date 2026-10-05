@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Service parts by vehicle family — demand, capture and sales per customer</title>
+<style>
+:root{--navy:#15233c;--terra:#c0552d;--paper:#f7f4ee;--ink:#222;--rule:#d8d2c6;--muted:#6b6257;
+      --amber:#b7791f;--green:#2f6b45;--red:#a33;--pale:#eef3f9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+     font:15px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+h1,h2,h3{font-family:Georgia,'Times New Roman',serif;color:var(--navy);margin:0}
+header{background:var(--navy);color:var(--paper);padding:26px 32px 22px}
+header h1{color:var(--paper);font-size:25px;line-height:1.25}
+header p{margin:8px 0 0;color:#cfd6e2;max-width:1020px;font-size:13.5px}
+.wrap{max-width:1400px;margin:0 auto;padding:0 32px 64px}
+section{margin:32px 0 0}
+h2{font-size:20px;margin-bottom:4px}
+.q{display:block;font-family:inherit;font-weight:400;color:var(--terra);font-size:13.5px;margin-top:3px}
+.card{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:18px 20px;margin-top:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:1040px){.grid2,.grid3{grid-template-columns:1fr}}
+.controls{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:14px 18px;margin-top:16px;
+          display:flex;gap:22px;flex-wrap:wrap;align-items:flex-end}
+.ctl{display:flex;flex-direction:column;gap:5px}
+.ctl label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+select{padding:8px 10px;border:1px solid var(--rule);border-radius:4px;background:#fff;color:var(--ink);
+       font-size:14px;min-width:200px;font-family:inherit}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:18px}
+.kpi{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:14px 16px;border-top:3px solid var(--navy)}
+.kpi .v{font-family:Georgia,serif;font-size:24px;color:var(--navy);line-height:1.15}
+.kpi .l{font-size:12px;color:var(--muted);margin-top:3px}
+.kpi.warn{border-top-color:var(--amber)}
+.kpi.bad{border-top-color:var(--terra)}
+.chartbox{position:relative;height:330px}
+.chartbox.tall{height:430px}
+.chartbox.short{height:265px}
+.chartbox.xs{height:210px}
+.note{font-size:13px;color:#4a443b;background:var(--pale);border-left:3px solid var(--navy);
+      padding:11px 14px;margin:14px 0 0;border-radius:0 4px 4px 0}
+.note.amber{background:#fdf6e6;border-left-color:var(--amber)}
+.note.red{background:#fbf0ef;border-left-color:var(--red)}
+.note b{color:var(--navy)}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+th{background:var(--navy);color:var(--paper);text-align:left;padding:9px 10px;font-weight:600;
+   font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+td{padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+tbody tr:nth-child(even){background:#faf8f4}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.db{font-weight:600;color:var(--navy)}
+.tag{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10.5px;font-weight:700;
+     letter-spacing:.03em;text-transform:uppercase}
+.tag.iml{background:#e8eef7;color:#2a4a7a}
+.tag.prism{background:#eaf3ec;color:var(--green)}
+.tag.agreed{background:#e8eef7;color:#2a4a7a}
+.tag.internal{background:#eaf3ec;color:var(--green)}
+.tag.small{background:#eee9df;color:var(--muted)}
+.tag.part{background:#fdf3e0;color:var(--amber)}
+.key{font-size:12.5px;color:#4a443b;margin-top:10px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.key i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.key .ln{display:inline-block;width:16px;height:0;border-top:2px dashed var(--terra);
+         margin-right:6px;vertical-align:3px}
+#tip{position:fixed;z-index:99;background:var(--navy);color:var(--paper);padding:9px 12px;border-radius:4px;
+     font-size:12.5px;max-width:330px;line-height:1.45;pointer-events:none;opacity:0;transition:opacity .1s;
+     border-left:3px solid var(--terra)}
+#tip b{color:#ffd9c4}
+.smgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:12px}
+@media(max-width:1180px){.smgrid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:820px){.smgrid{grid-template-columns:repeat(3,1fr)}}
+.sm{border:1px solid var(--rule);border-radius:5px;padding:8px 9px;background:#fff}
+.sm .t{font-size:11.5px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;
+       text-overflow:ellipsis}
+.sm .v{font-size:11px;color:var(--muted)}
+.sm .b{display:flex;align-items:flex-end;gap:2px;height:70px;margin-top:5px}
+.sm .b div{flex:1;border-radius:2px 2px 0 0;min-height:1px}
+footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--rule);font-size:12.5px;color:var(--muted)}
+.small{font-size:12.5px;color:var(--muted)}
+.legend{font-size:12.5px;color:var(--muted);margin-top:8px}
+</style></head>
+<body>
+<div id="tip"></div>
+<header>
+  <h1>Service parts by vehicle family — demand, capture and sales, per customer</h1>
+  <p>Which vehicle family is our service business growing on, and which is quietly shrinking.
+  Three families are reported: <b>N-series truck</b>, <b>heavy truck</b> (F-series and C&amp;E) and
+  <b>light vehicle</b> (D-Max pickup and SUV). Parts that fit more than one family are reported
+  together, never spread across them. Two service-interval schedules run side by side and are never
+  averaged. Snapshot <b>2026-09-19</b>; service demand is modelled from the fleet, sales are
+  measured from the billing.</p>
+</header>
+<div id="jserr" style="display:none;margin:16px 32px 0"></div>
+<div class="wrap">
+
+  <div class="controls">
+    <div class="ctl"><label for="selMarket">Customer</label><select id="selMarket"></select></div>
+    <div class="ctl"><label for="selClock">Year clock</label>
+      <select id="selClock">
+        <option value="CY">Calendar year (January to December)</option>
+        <option value="FY">ISZE year (April to March, named by the closing year)</option>
+      </select></div>
+  </div>
+  <div id="laneNotice"></div>
+  <div class="kpis" id="kpis"></div>
+
+  <section>
+    <h2>Is the N-series truck business growing or shrinking?
+      <span class="q">Billed euro by vehicle family, complete years only, against the first full year</span></h2>
+    <div class="card">
+      <div class="chartbox tall"><canvas id="c_trend"></canvas></div>
+      <div class="key" id="k_trend"></div>
+      <p class="note" id="n_trend"></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Is the light-vehicle business carrying all the growth?
+      <span class="q">The same three families as bars, so the size of each move is readable</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="font-size:15px">Change in billed euro, first full year to last</h3>
+        <div class="chartbox short"><canvas id="c_chg_eur"></canvas></div>
+        <div class="key"><span><i style="background:#2f6b45"></i>more billed</span>
+          <span><i style="background:#c0552d"></i>less billed</span></div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px">Change in units, first full year to last</h3>
+        <div class="chartbox short"><canvas id="c_chg_units"></canvas></div>
+        <div class="key"><span><i style="background:#2f6b45"></i>more units</span>
+          <span><i style="background:#c0552d"></i>fewer units</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15px">Every customer, N-series truck, billed euro a year
+        <span class="q">One shared scale, so the panels are comparable</span></h3>
+      <div class="smgrid" id="sm_grid"></div>
+      <div class="key" id="k_sm"></div>
+      <p class="note" id="n_sm"></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>How does this customer's fleet split, and what does each family imply?
+      <span class="q">Fleet is the denominator every euro below is measured against</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="font-size:15px">Vehicles in service, by family</h3>
+        <div class="chartbox short"><canvas id="c_fleet"></canvas></div>
+        <div class="key" id="k_fleet"></div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px">Service demand and what was billed, 2025</h3>
+        <div class="chartbox short"><canvas id="c_capture"></canvas></div>
+        <div class="key"><span><i style="background:#15233c"></i>implied by the fleet</span>
+          <span><i style="background:#c0552d"></i>billed</span></div>
+      </div>
+    </div>
+    <div class="card"><div id="t_fam"></div>
+      <p class="note" id="n_fam"></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Where can this customer's service billing be placed in a family at all?
+      <span class="q">Euro by service family, split into the three families and the pooled rest</span></h2>
+    <div class="card">
+      <div class="chartbox tall"><canvas id="c_cat"></canvas></div>
+      <div class="key" id="k_cat"></div>
+      <p class="note" id="n_cat"></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>How much does each vehicle in service spend on parts, and how far is that from the target?
+      <span class="q">Parts billed per vehicle a year against the target spend for that customer's fleet mix</span></h2>
+    <div class="card">
+      <div class="chartbox tall"><canvas id="c_gps"></canvas></div>
+      <div class="key" id="k_gps"></div>
+      <p class="note" id="n_gps"></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Where do we sit above an independent competitor, for the part numbers we can place?
+      <span class="q">Our reference dealer price divided by a real competing price, by vehicle family</span></h2>
+    <div class="card">
+      <div class="chartbox short"><canvas id="c_pos"></canvas></div>
+      <div class="key"><span>1.0 = level with the competing price</span>
+        <span><i style="background:#c0552d"></i>above the competing price</span>
+        <span><i style="background:#7a8ba6"></i>below it</span></div>
+      <p class="note" id="n_pos"></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>What can this page not show, and why?
+      <span class="q">Each limit named, with the size of the business it affects</span></h2>
+    <div class="card"><div id="t_limits"></div></div>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>/* [STRIPPED 196 KB] */</script>
+<script id="pmfe-data" type="application/json">/* [STRIPPED 166 KB] */</script>
+<script>/* [STRIPPED 28 KB] */</script>
+</body></html>

@@ -2,6 +2,7 @@
 
 **Date:** 2026-08-12 · **Owner:** VP Sales ISZE · **Roadmap:** [`roadmaps/ai_sales_intelligence.md`](roadmaps/ai_sales_intelligence.md) §5, §7.4
 **Status:** **AUTHORIZED 2026-08-12** (Jerome “go”) — P2a collector may run on own mailbox. Still does **not** cover P2b / P3 / P6 / shared mailboxes (**G0b**).
+**G0b pack (2026-09-22):** drafts to close the wider gate — DPIA, LIA, Art. 13/14 notice, retention schedule, works-council ask — are in [`governance/mail/`](governance/mail/00_README_GOVERNANCE_PACK.md). None is signed; this memo remains the only authority for local own-mailbox processing.
 
 This is the one-page record that makes the local collector a controlled activity rather than an ad-hoc script. It is deliberately narrow: everything that would widen it is listed in §7 as explicitly out of scope.
 

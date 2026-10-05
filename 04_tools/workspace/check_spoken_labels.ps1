@@ -27,6 +27,10 @@
 
    -Path    A file, a folder (scanned recursively), or a wildcard such as
             'ISZE\02_dashboards\*.html'.
+            An explicit path to ONE file is always scanned, wherever that file
+            sits - including a builder under a `_build` folder. Naming a file is
+            a deliberate request, so it overrules the allowlist below; the run
+            says so in its output instead of skipping it quietly.
    -Glob    Optional additional filter, e.g. -Glob 'Sales_*' or '*.md'.
    -AllowFileNames
             The language rule permits quoting a filename that contains a
@@ -59,7 +63,25 @@ param(
 
     [string]$Glob = '',
 
-    [switch]$AllowFileNames
+    [switch]$AllowFileNames,
+
+    # Report only files whose last write is within this many days. 0 = no filter.
+    # This is how a build gate checks the artifact that was just built instead of
+    # the whole legacy tree: -ChangedWithinDays 2 after a ship, 0 for a sweep.
+    [int]$ChangedWithinDays = 0,
+
+    # Extra folder names to skip, at any depth. Added to the built-in allowlist.
+    [string[]]$SkipDirs = @(),
+
+    # Extra file names to skip. Added to the built-in allowlist.
+    [string[]]$SkipFiles = @(),
+
+    # Ignore the built-in allowlist and scan every matched file.
+    [switch]$NoSkipList,
+
+    # Exit 1 when a violation is found. Default is report-only: exit 0 always, so
+    # the weekly audit can add a finding without failing. A build gate passes this.
+    [switch]$FailOnViolation
 )
 
 # Never let an unexpected failure turn into a non-zero exit; this is a reader.
@@ -71,8 +93,147 @@ $script:Advisories = 0
 $script:FileNamePasses = 0
 $script:RuleCounts = @{}
 $script:Errors = New-Object System.Collections.ArrayList
+$script:Skipped = 0
+$script:ExplicitCount = 0
 
 $AllowedExtensions = @('.html', '.htm', '.md', '.mdc', '.csv', '.json', '.txt', '.ps1', '.py', '.mjs')
+
+# ---------------------------------------------------------------------------
+# Allowlist - files that must name the banned words because their whole job is
+# to police them, or because they are inputs rather than anything a human reads.
+#
+# Why this exists: the 18 Sep register records that the checker fires on the rule
+# files themselves, on this script, and on QA scratch copies. A gate that blocks
+# on a legitimate file is worse than no gate, because it cannot be satisfied.
+#
+# Kept in step with LANG_SKIP_FILES in 04_tools\workspace\_overnight_angles.py,
+# which already carried this idea. Added here: the rule and memory folders that
+# quote a banned word while defining it, scratch/QA folders, and old backups.
+#
+# 19 Sep - `_build` is deliberately NOT skipped any more. Builders and
+# generators are the code that writes the pages, so a checker that skips them
+# reports a page clean while the banned wording sits in the thing that will put
+# it back on the next rebuild. That is exactly how two sales builders showed
+# zero while their pages carried 85 labels. A builder under `_build` is scanned
+# like any other .py.
+# ---------------------------------------------------------------------------
+$DefaultSkipDirNames = @(
+    '.cursor',          # the rule files themselves
+    '.claude',          # agent worktrees - parallel checkouts of this same tree
+    '.git',
+    '__pycache__',
+    '.venv', 'venv', 'node_modules',
+    '_archive',         # retired dashboards and retired builders, not shipped
+    '90_archive',
+    '_working',
+    '05_memory',        # internal notes and briefs, not read by Jerome as a pack
+    'context'           # generated deploy copy of the memory folder
+)
+
+$DefaultSkipFileNames = @(
+    'check_spoken_labels.ps1',        # this script names the words to detect them
+    '_overnight_angles.py',           # carries the same ban list
+    'isze_delegator_watch.ps1',
+    'isze_overnight_orchestrator.ps1',
+    'DELEGATOR_BOARD.md',
+    'DELEGATOR_REFRESH_HOWTO.md',
+    'isze-spoken-labels.mdc',
+    'isze-pricing-no-street-ui.mdc',
+    'PRICING_POLICY_PAPER_2026-09-17.md'
+)
+
+# Scratch and backup copies are not deliverables: an HTML written by a QA probe,
+# a browser DOM dump, or a .bak from an earlier edit. They repeat the page's own
+# wording, so flagging them doubles every real hit and cannot be acted on.
+$SkipFilePatterns = @(
+    '^_.*\.html$',        # _probe.html, _dom.html, _interaction.html
+    '^_.*\.mjs$',
+    '\.bak.*$',
+    '\.min\.js$'
+)
+
+# Namespace prefixes that really are generated or scratch, as opposed to a
+# hand-written builder. `_build` used to be in this list and must not come back:
+# the two sales builders live in `_build` folders, so skipping the folder meant
+# skipping the code that writes the pages.
+$SkipDirPatterns = @(
+    '^_qa',
+    '^_audit$',
+    '^_design$',
+    '^_composable$',
+    '^_tmp',
+    '^_probe',
+    '^_scratch',
+    '^_extracted$',
+    '^__pycache__$'
+)
+
+# Two different questions, which must not be conflated:
+#
+#   Test-IsBannedByJob  Does this file's whole job require it to name the banned
+#                       words (the rules, this script, its companion ban-lists),
+#                       or is it a non-deliverable (archive, scratch, backup)?
+#                       This applies even to an explicit path. Scanning the
+#                       checker against its own pattern table would produce a
+#                       fixed batch of false violations that no rebuild can
+#                       clear, which is exactly the unsatisfiable gate the
+#                       allowlist exists to prevent.
+#
+#   Test-IsSkipped      Does its folder normally get skipped when we sweep a
+#                       spread of files (QA output, scratch, generated caches)?
+#                       An explicit path overrides THIS list only, so a builder
+#                       under `_build` or `sales\_build` is scanned - the hole
+#                       fixed on 19 Sep.
+function Test-IsBannedByJob {
+    param([System.IO.FileInfo]$File)
+
+    foreach ($name in $DefaultSkipFileNames) {
+        if ($File.Name -ieq $name) { return $true }
+    }
+    foreach ($name in $SkipFiles) {
+        if (-not [string]::IsNullOrWhiteSpace($name) -and $File.Name -ieq $name) { return $true }
+    }
+    foreach ($pat in $SkipFilePatterns) {
+        if ($File.Name -match $pat) { return $true }
+    }
+    if ($NoSkipList) { return $false }
+    foreach ($name in $DefaultSkipDirNames) {
+        if ($File.DirectoryName -and ($File.DirectoryName -split '[\\/]') -contains $name) { return $true }
+    }
+    foreach ($name in $SkipDirs) {
+        if (-not [string]::IsNullOrWhiteSpace($name) -and
+            $File.DirectoryName -and ($File.DirectoryName -split '[\\/]') -contains $name) { return $true }
+    }
+    return $false
+}
+
+# Names a build gate should only apply to the artifact it just built.
+#
+# -Explicit is set when -Path named this exact file rather than a folder or a
+# wildcard. It overrides the folder-level skip only; see the comment above.
+function Test-IsSkipped {
+    param(
+        [System.IO.FileInfo]$File,
+        [switch]$Explicit
+    )
+
+    # Files whose job is to name the words, backups and archives are out either
+    # way - an explicit path does not override that.
+    if (Test-IsBannedByJob -File $File) { return $true }
+
+    # An explicit path overrides the folder-level skip: this is the case that was
+    # broken, where naming one builder under `_build` scanned nothing at all.
+    if ($Explicit) { return $false }
+
+    if (-not $NoSkipList) {
+        # Folder-pattern skips (QA output, scratch, extracted fragments).
+        foreach ($pat in $SkipDirPatterns) {
+            $dirs = if ($File.DirectoryName) { $File.DirectoryName -split '[\\/]' } else { @() }
+            foreach ($d in $dirs) { if ($d -match $pat) { return $true } }
+        }
+    }
+    return $false
+}
 
 # ---------------------------------------------------------------------------
 # Rule table.
@@ -161,7 +322,7 @@ $Rules = @(
     @{
         Id             = 'stale-share-37-3'
         Pattern        = '37\.3'
-        Replacement    = '37.0%'
+        Replacement    = '40.3%'
         Source         = 'isze-exec-aftersales-paper.mdc (hard failure 2)'
         Kind           = 'Violation'
         SkipIdentifier = $false
@@ -251,6 +412,9 @@ function Get-ScannedFiles {
 
     $files = New-Object System.Collections.ArrayList
     $hasWildcard = $Target -match '[\*\?]'
+    # -Path named one exact file rather than a folder or a wildcard. That file is
+    # scanned even if the allowlist would otherwise skip its folder.
+    $explicitFile = $false
 
     try {
         if ($hasWildcard) {
@@ -273,6 +437,8 @@ function Get-ScannedFiles {
             }
             else {
                 [void]$files.Add($item)
+                $explicitFile = $true
+                $script:ExplicitCount++
             }
         }
         else {
@@ -286,11 +452,14 @@ function Get-ScannedFiles {
     }
 
     $out = New-Object System.Collections.ArrayList
+    $cutoff = if ($ChangedWithinDays -gt 0) { (Get-Date).AddDays(-1 * $ChangedWithinDays) } else { $null }
     foreach ($f in $files) {
         if ($AllowedExtensions -notcontains $f.Extension.ToLower()) { continue }
         if (-not [string]::IsNullOrWhiteSpace($GlobFilter)) {
             if (-not ($f.Name -like $GlobFilter)) { continue }
         }
+        if (Test-IsSkipped -File $f -Explicit:$explicitFile) { $script:Skipped++; continue }
+        if ($cutoff -and $f.LastWriteTime -lt $cutoff) { continue }
         [void]$out.Add($f)
     }
     return $out.ToArray()
@@ -303,6 +472,9 @@ function Invoke-Scan {
     Write-Host ('check_spoken_labels - scanning: ' + $Target) -ForegroundColor Cyan
     if (-not [string]::IsNullOrWhiteSpace($GlobFilter)) {
         Write-Host ('  extra glob filter: ' + $GlobFilter) -ForegroundColor DarkGray
+    }
+    if ($script:ExplicitCount -gt 0) {
+        Write-Host '  explicit single-file path - allowlist bypassed, this file is scanned wherever it sits' -ForegroundColor DarkGray
     }
     Write-Host ('  file-name quoting: ' + $(if ($AllowFileNames) { 'allowed (OK-FILENAME)' } else { 'reported as a violation (default)' })) -ForegroundColor DarkGray
     Write-Host ''
@@ -418,6 +590,10 @@ catch {
 Write-Host ''
 Write-Host '-------------------------- summary --------------------------' -ForegroundColor Cyan
 Write-Host ("Files scanned          : {0}" -f $script:FilesScanned)
+Write-Host ("Files skipped (allowlist): {0}" -f $script:Skipped) -ForegroundColor DarkGray
+if ($script:ExplicitCount -gt 0) {
+    Write-Host ("Explicit path scans     : {0} (allowlist bypassed)" -f $script:ExplicitCount) -ForegroundColor DarkGray
+}
 Write-Host ("Violations             : {0}" -f $script:Violations) -ForegroundColor $(if ($script:Violations -gt 0) { 'Red' } else { 'Green' })
 Write-Host ("Advisories             : {0}" -f $script:Advisories) -ForegroundColor $(if ($script:Advisories -gt 0) { 'Yellow' } else { 'Green' })
 Write-Host ("File-name quotes passed: {0}" -f $script:FileNamePasses) -ForegroundColor DarkGray
@@ -444,4 +620,8 @@ else {
 Write-Host 'No files were modified.' -ForegroundColor DarkGray
 Write-Host '-------------------------------------------------------------' -ForegroundColor Cyan
 
+# Report-only by default so the weekly audit can add a finding without failing.
+# A build gate passes -FailOnViolation to turn the count into an exit code.
+if ($FailOnViolation -and $script:Violations -gt 0) { exit 1 }
 exit 0
+

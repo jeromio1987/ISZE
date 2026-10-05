@@ -1,0 +1,20 @@
+{
+  "angle": "excel_formula_errors",
+  "workbooks_checked": 10,
+  "findings": [
+    {
+      "severity": "high",
+      "workstream": "01_data/01_Pricing",
+      "what": "Price_increase_by_part_group_per_customer.xlsx sheet 'Checks' has a cached formula error: #VALUE!",
+      "evidence": "01_data/01_Pricing/Price_increase_by_part_group_per_customer.xlsx",
+      "action": "fix the formula and recalculate the workbook",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    }
+  ],
+  "generated_utc": "2026-09-18T05:21:10Z",
+  "description": "Cached formula errors in recently touched workbooks",
+  "findings_count": 1,
+  "recent_count": 0,
+  "backlog_count": 1
+}

@@ -37,13 +37,13 @@ def resolve_json(name: str) -> Path:
 
 
 def mode_a_text(s: str) -> str:
-    s = s.replace("Mode B / Jerome-only", "internal only")
-    s = s.replace("Mode B / Jerome-only work-in-progress", "internal work-in-progress")
+    s = s.replace("internal / Jerome-only", "internal only")
+    s = s.replace("internal / Jerome-only work-in-progress", "internal work-in-progress")
     s = s.replace("/ Jerome-only", "")
     s = s.replace("Jerome-only", "internal only")
     s = s.replace("Mode-B work-in-progress", "internal work-in-progress")
-    s = s.replace("explicitly a Mode B", "explicitly an internal")
-    s = s.replace("Mode B", "internal")
+    s = s.replace("explicitly a internal", "explicitly an internal")
+    s = s.replace("internal", "internal")
     s = s.replace("Mode-B", "internal")
     return s
 
@@ -70,7 +70,7 @@ def main() -> None:
         blocks.append(f'<script id="{sid}" type="application/json">{raw}</script>')
 
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    # Soften competitive note path jargon slightly for Mode A while keeping Eucon substance
+    # Soften competitive note path jargon slightly for shared while keeping Eucon substance
     body = body.replace(
         "Internal tool, not for distributor sharing without review",
         "Internal sales overview · offline self-contained · verify freshness before sharing",

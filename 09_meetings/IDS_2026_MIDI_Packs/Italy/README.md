@@ -14,7 +14,7 @@ Country-only dealer compare for ISZE / IMG colleagues. English UI.
 - Dealers: **41**
 - Geo pinned: 41 · missing: 0
 - Map: Leaflet + OpenStreetMap / CARTO (needs internet when opening HTML)
-- **No Country filter / By country / Country radar / Changelog** — Mode A colleague pack
+- **No Country filter / By country / Country radar / Changelog** — shared colleague pack
 - Benchmarks kept: dealer vs **Italy national average**, anonymous full-network average
 
 ## Network average

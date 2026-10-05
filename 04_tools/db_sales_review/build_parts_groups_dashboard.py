@@ -501,7 +501,7 @@ footer {{ font-size:11px; color:var(--muted); margin-top:20px; }}
     Source: {payload["meta"]["display"]} commercial billing H1 cuts (warranty/campaign PNs excluded via claim grain + text heuristic) ·
     Category = pr00_group from parts catalog · Kind = pr00_level3_type ·
     Model labels only when present on BVP/PMS application tables — never guessed ·
-    Mode A shareable view.
+    shared shareable view.
   </footer>
 </main>
 <script>
@@ -697,7 +697,7 @@ showTab('overview');
 """
     out_html.write_text(html, encoding="utf-8")
     https_hits = re.findall(r'(?:src|href)\s*=\s*["\']https?://', html, flags=re.I)
-    internal = "INTERNAL" in html.upper() and "Mode A" not in html  # soft check
+    internal = "INTERNAL" in html.upper() and "shared" not in html  # soft check
     print(f"Wrote {out_html}")
     print(f"  external https src/href count={len(https_hits)}")
     print(f"  size={out_html.stat().st_size:,} bytes")

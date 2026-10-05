@@ -7,8 +7,13 @@
 # CY_FILE_YEARS for the year-ownership rule that avoids double-counting 2024.
 # 2026-08-25: Q1FY2027.XLSX (Apr–Jun 2026) wired; 477,505 -> 514,037 rows.
 # Q1FY2027 extract has no SaTy column → overall SaTy coverage ~92.9%.
+# 2026-09-20: CY2025till31082026.XLSX registered for Jul/Aug 2026 ONLY; 514,037
+# -> 538,346 rows, billing horizon 2026-06-30 -> 2026-08-31.
+# NOTE the year set must stay {2026} on that file: CY_FILE_MONTHS is year-blind,
+# so {7, 8} with a {2025, 2026} year set re-adds Jul/Aug 2025 (+26,728 rows,
+# giving 565,074). All twelve 2025 months are already owned by CY2024-2025.XLSX.
 sales_fact:
-  row_count: 514037
+  row_count: 538346
   row_tolerance_pct: 0.5
   years: [2023, 2024, 2025, 2026]
   max_unmapped_pct: 1.0
@@ -58,13 +63,28 @@ ituk_pilot:
   uio_tolerance: 0
   # UIO × 0.5 svc/yr × 100% addressable (Jerome 2026-07-03).
   # Actuals = registry + BVP-catalog PMS PNs (incl. multi-model + cross-OEM) — do not strip sales.
+  #
+  # RE-BASED 2026-09-18 for the N35 / N75 interval split. N35 (NLR87 RZ4E) runs a 20,000 km factory
+  # interval and N75 (NPR75 4HK1) runs 40,000, so the blended cv_std rate for ITUK becomes
+  # 0.5 × (1 + 0.5051) = 0.7526 rather than a flat 0.5. Expected demand rises ~50% and the capture
+  # bands move DOWN accordingly.
+  #
+  # Scope note, because two lanes exist and this band governs only one of them:
+  #   * THIS band governs the PRISM lane (pms_capture_by_db_year.csv) only.
+  #   * The IML v7 lane (iml_v7_ituk_cy2025.yaml, oil-filter cover 35.1%, the externally published
+  #     deck) is NOT covered and is NOT changed.
+  # The two were already different by design (IML 35.1% vs PRISM 116.4%), so this correction does not
+  # create a divergence — it corrects the internal lane while leaving the agreed external one alone.
+  # NOTE: 35.1% is the IML v7 figure and is NOT this band. A PRISM-lane value of 35.1% would be a
+  # coincidence, so these bands are set from the measured PRISM-lane output (2024 56.4%, 2025 78.7%).
+  # Bands widened to +/-5% to absorb the fractional N35 split inherited from section 2.B.
   oil_filter_total_capture:
     "2024":
-      min: 0.82
-      max: 0.92
+      min: 0.52
+      max: 0.61
     "2025":
-      min: 1.15
-      max: 1.28
+      min: 0.74
+      max: 0.84
 
 required_derived:
   - sales_fact.parquet
@@ -101,6 +121,23 @@ required_derived:
   - parts_catalog_dimension.csv
   - sales_by_db_fig_key_year.csv
   - aim_gps_matrix.csv
+  - lost_sales_model.csv
+  - lost_sales_market.csv
+  - lost_sales_competitor_pn.csv
+  - lost_sales_competitor_coverage.csv
+
+uio_by_market_type_year:
+  # The fleet year axis. 2025 column must reproduce the derived fleet split the spend model
+  # reads; 1990-2024 is the actual range and must carry no gap or negative inside it.
+  required_columns: [distributor_code, market, vehicle_class, model_type, year, uio_units,
+                     is_actual, is_estimate, is_forecast, basis, source_note]
+  estimate_year: 2025
+  actual_through: 2024
+  # A gap from this year onward is a failure; an older hole is a named warning. The Denmark
+  # light-commercial row has no 2012-2013 in the workbook itself; nothing this rebuild divides by
+  # reaches back that far, and the hole is reported rather than filled.
+  hard_gap_from_year: 2023
+  reconcile_tolerance_units: 0.5
 
 aim_gps_matrix:
   min_rows: 50
@@ -174,6 +211,59 @@ capture_recovery_model:
   min_rows: 50
   gap_types: [substitution, under_service, catalog_gap]
 
+# Lost-sales model (2026-09-18). Ties out to the parts base and to the existing strategic
+# contracts, so a rebuild that silently drops a family or mis-joins the taxonomy fails here.
+lost_sales_model:
+  min_rows: 1000
+  max_billed_delta_eur: 1.0
+  max_price_residual_eur: 1.0
+  min_distinct_distributors: 18
+  # Billing cut-off this model must tie to, end-of-month. Added 2026-09-21.
+  # Deliberately frozen: it is the "billing horizon behind the parts base" that
+  # metrics_snapshot.json already publishes (sales.parts_base_data_through), so a period
+  # movement can never be mistaken for a method movement. It is moved by hand, together
+  # with the snapshot, only when the model is rebuilt on later billing.
+  # Before this line existed the tie-out compared the model against whatever billing was on
+  # file, so a EUR 5,511,194.53 period movement read as a broken check.
+  # 2026-09-22: moved 2026-06-30 -> 2026-08-31. The Jul/Aug 2026 billing (EUR 5,511,194.53)
+  # is now wired in and lost_sales_model.csv was rebuilt on it, so the parts base is
+  # EUR 117,600,501.42 at this cut-off and the model ties it to the cent again.
+  billing_cutoff: 2026-08-31
+  # A model sitting behind the cut-off is reported as stale (warn) naming the builder, rather
+  # than as a tie-out failure. A model that ties no month-end at all is still a fail.
+  stale_billing_is_warn: true
+  # A separate check, lost_sales.model_is_current, warns when the model ties the base at the
+  # cut-off but the billing now runs later than it. Tying the base is not the same as being
+  # current, and a pass on the tie-out must never read as "the model is up to date".
+  years: [2023, 2024, 2025, 2026]
+  require_gap_types: [substitution, under_service, catalog_gap]
+  max_pms_category_coverage_pct: 40.0
+  min_pms_category_coverage_pct: 5.0
+  down_trade_verdicts:
+    - stable
+    - bvp_share_up_volume_held
+    - bvp_share_up_volume_lost
+    - no_bvp_in_market
+    - insufficient_years
+    - pre_bvp_entry
+
+lost_sales_market:
+  min_rows: 40
+
+lost_sales_competitor_coverage:
+  min_rows: 2
+  max_median_index: 5.0
+  min_median_index: 1.0
+  require_sources: [KS trade (GBP to EUR), multi-brand bridge]
+
+lost_sales_pn_action:
+  min_rows: 50
+  levers:
+    - price_or_incentive_actionable
+    - below_margin_floor
+    - landed_cost_not_price
+    - insufficient_pricing_data
+
 distributor_geo:
   min_rows: 15
 
@@ -205,3 +295,245 @@ required_raw:
   - raw/sales/CY2024-2025.XLSX
   - raw/sales/sales_2026tillApril.XLSX
   - raw/reference/BVP PARTS CATALOG.xlsx
+
+freshness:
+  pairs:
+  - derived: nseries_tonnage_evolution.csv
+    inputs:
+    - sales_fact.parquet
+    - vehicle_family_bands.csv
+    - pms_tonnage_model.csv
+    - pms_capture_by_db_year.csv
+    - bvp_pn_dimension.csv
+    built_by: prism/scripts/build_nseries_tonnage_bands.py
+  - derived: epc_decode_nseries_banded.csv
+    inputs:
+    - sales_fact.parquet
+    - vehicle_family_bands.csv
+    - genuine_bvp_crossref.csv
+    - bvp_pn_dimension.csv
+    built_by: prism/scripts/build_nseries_tonnage_bands.py
+  - derived: vehicle_family_bands.csv
+    inputs:
+    - bvp_pn_dimension.csv
+    - genuine_bvp_crossref.csv
+    - sales_fact.parquet
+    inputs_abs:
+    - C:\Users\jerom\Desktop\claude\ISZE\03_analytics\Isuzu\prism\data\pms_capture_supplement.csv
+    built_by: prism/scripts/build_vehicle_family_bands.py
+  - derived: pms_tonnage_model.csv
+    inputs:
+    - pms_capture_by_db_year.csv
+    - sales_fact.parquet
+    - distributor_dimension.csv
+    - aim_master_v2.csv
+    inputs_abs:
+    - C:\Users\jerom\Desktop\claude\ISZE\03_analytics\Isuzu\prism\data\uio_ld_n35_share.csv
+    built_by: prism/scripts/build_pms_tonnage_model.py
+  # 2026-09-23: this pair and the one below are built by `_vehicle_band_applicability.py`, not
+  # by the retired probe `_tonnage_capable.py`. That probe kept its own `SERIES_BAND` dict with
+  # `NKR` on 5.5 t, which is wrong, so it no longer runs. `bvp_pn_dimension.csv` is gone from
+  # the inputs because the real builder does not read it.
+  #
+  # The two pairs share one builder and one input list. The builder and the map it reads are
+  # declared under `inputs_abs` because neither lives in 01_data/00_derived/.
+  #
+  # A warn naming this pair means one thing: the hand-edited map is newer than the table it
+  # feeds, so rebuild. It is a rebuild prompt, not a data defect - the numbers in the table move
+  # when the band a code sits on moves, not when an evidence note beside it is reworded. As
+  # written on 2026-09-23 the map is the OLDEST of the three files, so no warn fires.
+  - derived: tonnage_capable_part_numbers.csv
+    inputs:
+    - epc_decode_worklist.csv
+    - epc_decode_batch1_20260919.json
+    - epc_decode_batch2_20260919.json
+    - genuine_bvp_crossref.csv
+    - sales_fact.parquet
+    inputs_abs:
+    - C:\Users\jerom\Desktop\claude\ISZE\01_data\91_build\pn_ammo_probe_20260918\_vehicle_band_applicability.py
+    - C:\Users\jerom\Desktop\claude\ISZE\03_analytics\Isuzu\prism\data\series_to_band.csv
+    - C:\Users\jerom\Desktop\claude\ISZE\03_analytics\Isuzu\prism\modules\vehicle_bands.py
+    built_by: 01_data/91_build/pn_ammo_probe_20260918/_vehicle_band_applicability.py
+  # Added 2026-09-23. The neutral table: one row per part number, able to express a D-Max or an
+  # F-series part without calling it a rung of the N-series ladder. The legacy file above is
+  # kept only so its old readers still find it.
+  - derived: vehicle_band_applicability.csv
+    inputs:
+    - epc_decode_worklist.csv
+    - epc_decode_batch1_20260919.json
+    - epc_decode_batch2_20260919.json
+    - genuine_bvp_crossref.csv
+    - sales_fact.parquet
+    inputs_abs:
+    - C:\Users\jerom\Desktop\claude\ISZE\01_data\91_build\pn_ammo_probe_20260918\_vehicle_band_applicability.py
+    - C:\Users\jerom\Desktop\claude\ISZE\03_analytics\Isuzu\prism\data\series_to_band.csv
+    - C:\Users\jerom\Desktop\claude\ISZE\03_analytics\Isuzu\prism\modules\vehicle_bands.py
+    built_by: 01_data/91_build/pn_ammo_probe_20260918/_vehicle_band_applicability.py
+  - derived: pms_capture_by_family.csv
+    inputs:
+    - pms_capture_by_db_year.csv
+    - vehicle_family_bands.csv
+    - sales_fact.parquet
+    - bvp_pn_dimension.csv
+    built_by: 02_dashboards/sales/_build/build_pms_capture_by_family.py
+  - derived: gps_spu_by_distributor.csv
+    inputs:
+    - sales_fact.parquet
+    built_by: prism/scripts/enrich_gps_spu_v9.py
+  - derived: metrics_snapshot.json
+    inputs:
+    - sales_fact.parquet
+    - wallet_waterfall.csv
+    built_by: prism/scripts/build_metrics_snapshot.py
+  note: '_deep_billing_cache.parquet is deliberately NOT listed: build_family_evolution_v2.py rewrites
+    it with identical content on every run, so an mtime comparison against it false-alarms minutes after
+    a correct rebuild. sales_fact.parquet is the real input.'
+
+# ---------------------------------------------------------------------------------------------
+# Schema guard (added 2026-09-22).
+#
+# Compares the COLUMNS of the listed derived files against the list below. A column declared here
+# and absent from the file is a FAIL, not a warn: unlike staleness (where some delay is
+# deliberate), a vanished column is never deliberate and something downstream may already read
+# it. Reason it exists: on 2026-09-21 another workstream regenerated gps_spu_by_distributor.csv
+# and it silently lost period_basis and coverage_note. Every existing check reads values, so a
+# missing column was invisible; it surfaced a day later only when build_lost_sales_model.py
+# happened to name period_basis and raised KeyError "['period_basis'] not in index".
+#
+# Extra columns are reported in the check detail and never fail.
+#
+# `git_dir` is optional and only powers a second, best-effort arm: anything present in the
+# committed version of the file but missing from the working copy is reported too. The declared
+# list is the primary mechanism and does NOT need git.
+# ---------------------------------------------------------------------------------------------
+schema_required:
+  # Workspace root, so the git arm can be run without the module guessing.
+  repo_root: C:\Users\jerom\Desktop\claude\ISZE
+  files:
+    # The file that lost its columns. Both annotation columns are declared because they are the
+    # exact thing that went missing, and both are read by the lost-sales builder.
+    - file: gps_spu_by_distributor.csv
+      kind: csv
+      git_dir: 01_data/00_derived
+      required_columns:
+        - year
+        - distributor_code
+        - total_sales_eur
+        - uio_units
+        - spend_per_unit_eur
+        - max_spend_eur
+        - gps_capture_vs_max
+        - traffic_light_v9
+        - period_basis
+        - coverage_note
+
+    - file: lost_sales_model.csv
+      kind: csv
+      git_dir: 01_data/00_derived
+      required_columns:
+        - distributor_code
+        - year
+        - pms_category
+        - net_sales_eur
+        - gap_type
+        - gap_eur_at_genuine
+        - theoretical_wallet_eur
+        - ceiling_qualifier
+        - ceilings_are_market_level
+        - period_basis
+        - gps_capture_vs_max
+        - momentum_basis
+        - is_partial_year
+        - delta_total_eur
+        - delta_volume_eur
+        - delta_price_eur
+        - delta_mix_eur
+        - down_trade_verdict
+
+    - file: nseries_tonnage_evolution.csv
+      kind: csv
+      git_dir: 01_data/00_derived
+      required_columns:
+        - family_scope
+        - clock
+        - period
+        - distributor_code
+        - lane
+        - tonnage_band
+        - membership
+        - sums_to_n_series_total
+        - billed_eur
+        - units
+        - comparable_to_previous
+
+    - file: epc_decode_nseries_banded.csv
+      kind: csv
+      git_dir: 01_data/00_derived
+      required_columns:
+        - pn
+        - in_n_series_family
+        - series_all
+        - series_unresolved
+        - tonnage_band
+        - band_status
+        - band_reason
+        - eur_2025
+        - eur_2026
+
+    # The ITUK / oil-filter and PMS capture lane. A column lost here moves published capture.
+    - file: pms_capture_by_db_year.csv
+      kind: csv
+      git_dir: 01_data/00_derived
+      required_columns:
+        - year
+        - distributor_code
+        - pms_category
+        - line_type
+        - uio_units
+        - expected_qty
+        - actual_qty
+        - capture_rate
+        - revenue_gap_eur
+        - revenue_gap_quotable
+
+    # The published headline figures other packs quote. The keys of the `metrics` object, not
+    # the document root (which is only as_of / generator / metrics).
+    - file: metrics_snapshot.json
+      kind: json
+      key_path: metrics
+      git_dir: 01_data/00_derived
+      required_columns:
+        - sales.parts_base_eur
+        - sales.parts_base_data_through
+        - sales_fact.rows
+        - verify.pass
+        - verify.fail
+        - verify.generated
+        - waterfall.network.wallet_eur_2025
+        - waterfall.network.captured_eur_2025
+        - waterfall.network.gps_pct_2025
+        - ituk.oil_filter.uio_units
+        - ituk.oil_filter.expected_qty
+
+    # --- reported by Part 3 of the 2026-09-22 sweep as having shrunk; no column lost, but the
+    # --- columns that carry the distinction are the ones worth guarding.
+    - file: network_percentile.csv
+      kind: csv
+      git_dir: 01_data/00_derived
+      required_columns:
+        - distributor_code
+        - year
+        - metric
+        - raw_value
+        - percentile_rank
+        - network_median
+        - vs_median
+        - n_distributors
+
+    - file: bvp_pn_dimension.csv
+      kind: csv
+      git_dir: 01_data/00_derived
+      required_columns:
+        - part_number
+        - line_type
+        - pms_flag

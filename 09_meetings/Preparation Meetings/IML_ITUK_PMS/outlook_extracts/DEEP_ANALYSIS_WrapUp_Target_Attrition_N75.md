@@ -1,6 +1,6 @@
 # Deep analysis — Duncan Wrap-Up thread × Target Study × Attrition × N75 PMS
 
-**Mode B · Jerome only · 2026-07-26**  
+**internal · Jerome only · 2026-07-26**  
 Sources: Outlook verbatim (`Duncan_WrapUp_thread_verbatim_2026-04.md`) · Target Study + Attrition xlsx · N75 pack (Interval Model / CLEAR.xlsx / HTML).
 
 ---
@@ -102,7 +102,7 @@ Duncan’s delivery conditions map cleanly onto our pack:
 | Target categories IML vs non-IML | FIG-KEY / category cover (oil, fuel, air, brake, clutch) |
 | Dealer engagement | DLR cover **46%** oil vs DB **40%** — dealer already ahead on oil |
 | PMS promo support | Phase-one **brake + air** (air weak ~19% — promo candidate; brake ~62%) |
-| Higher-value beyond PMS | Explicit Mode A/B: stay honest — N75 study is PMS-first; don’t pretend it closes all £/UIO gap |
+| Higher-value beyond PMS | Explicit shared/B: stay honest — N75 study is PMS-first; don’t pretend it closes all £/UIO gap |
 
 ### 5. Isuzu IX 76% (orange cells)
 
@@ -145,7 +145,7 @@ Duncan: **notably ambitious**; needs parc + competitiveness step-change + roadma
 
 ---
 
-## What to say tomorrow (Mode B → Mode A filter)
+## What to say tomorrow (internal → shared filter)
 
 **If Target Study / stretch / F9 comes up (likely only if Masumi/Duncan digress):**
 
@@ -159,7 +159,7 @@ Duncan: **notably ambitious**; needs parc + competitiveness step-change + roadma
 
 > Attrition methodology still to agree (Duncan’s ask). IX 76% is outside this pilot pack — Duncan already called it ambitious.
 
-**Lead with (Mode A):** N75 pilot · 9,359 · oil 40/46 · gap ~€0.65M · brake+air · UTI separate · no personal names.
+**Lead with (shared):** N75 pilot · 9,359 · oil 40/46 · gap ~€0.65M · brake+air · UTI separate · no personal names.
 
 ---
 

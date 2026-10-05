@@ -1,0 +1,164 @@
+{
+  "angle": "gaps_need_context",
+  "files_scanned": 245,
+  "findings": [
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/hub",
+      "what": "unit count without euro, part family or fleet denominator: '510 units'",
+      "evidence": "02_dashboards/hub/ISZE_OS_Hub.html :: ...columns.     7 of 22  Markets with vehicle identities, not only a count   Formula vehicle register (7 markets, 3 238 VINs) plus the UK regis...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/ops",
+      "what": "unit count without euro, part family or fleet denominator: '197,666 units'",
+      "evidence": "02_dashboards/ops/ISZE_OS_Console.html :: ...Not bought 714,094 \u2014 71.6%  714094    Expected units across 14 scored service categories, 18 distributors, 2025:  996,890 . Of those, 282,79...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/pricing",
+      "what": "unit count without euro, part family or fleet denominator: '164,609 part numbers'",
+      "evidence": "02_dashboards/pricing/ISZE_AIM_Repertoire_Map_2026-09-17.html :: ...dow, so the tree is not the whole catalogue and this page does not pretend it is.\",\"A part number with no catalogue node is labelled UNCLASS...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": true,
+      "attribution": "recent: written at or after this toolkit's stamp. Not attributable to a specific agent - another agent may be writing concurrently."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/pricing",
+      "what": "unit count without euro, part family or fleet denominator: '164,609 part numbers'",
+      "evidence": "02_dashboards/pricing/ISZE_AIM_Repertoire_Spider_2026-09-17.html :: ...dow, so the tree is not the whole catalogue and this page does not pretend it is.\",\"A part number with no catalogue node is labelled UNCLASS...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": true,
+      "attribution": "recent: written at or after this toolkit's stamp. Not attributable to a specific agent - another agent may be writing concurrently."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/pricing",
+      "what": "unit count without euro, part family or fleet denominator: '164,667 part numbers'",
+      "evidence": "02_dashboards/pricing/ISZE_AIM_Truck_Catalogue_2026-09-18.html :: ...nd\n      15,812 of those sit in the tree. The zone totals describe the billing, not the catalogue\n      depth. \n     Israel is UMI and UTI s...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": true,
+      "attribution": "recent: written at or after this toolkit's stamp. Not attributable to a specific agent - another agent may be writing concurrently."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/pricing",
+      "what": "unit count without euro, part family or fleet denominator: '200 part numbers'",
+      "evidence": "02_dashboards/pricing/ISZE_Pricing_Policy_Paper.html :: ...about the competing price. \n     \n       30.0% &mdash; we hold the rival price \n       66.6% &mdash; rival named, no price \n       3.4%...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": true,
+      "attribution": "recent: written at or after this toolkit's stamp. Not attributable to a specific agent - another agent may be writing concurrently."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/pricing",
+      "what": "unit count without euro, part family or fleet denominator: '164,668 part numbers'",
+      "evidence": "02_dashboards/pricing/ISZE_Pricing_Proposal_v1.html :: ...t, currently a flat ~10% below PR00 and class-dependent.\"],\n parc:[\"Parc\",\"The population of vehicles in service. Parts demand is parc \u00d7 ser...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": true,
+      "attribution": "recent: written at or after this toolkit's stamp. Not attributable to a specific agent - another agent may be writing concurrently."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/sales",
+      "what": "unit count without euro, part family or fleet denominator: '107 part numbers'",
+      "evidence": "02_dashboards/sales/ISZE_AIM_Classification_Paper.html :: ...abbreviation the rule has never been taught ( ACL  for air cleaner) is invisible. \n     \n         \n\n     \n        Layer 3  The three le...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": true,
+      "attribution": "recent: written at or after this toolkit's stamp. Not attributable to a specific agent - another agent may be writing concurrently."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/sales",
+      "what": "unit count without euro, part family or fleet denominator: '100 part numbers'",
+      "evidence": "02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html :: ...distributors have no sales-to-dealer file and cannot be measured. Under-ordering and overstock are different problems and are not added into...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/sales",
+      "what": "unit count without euro, part family or fleet denominator: '130 PN'",
+      "evidence": "02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html :: ...elow reference. Coverage too thin to be share.   UNKNOWN  Independent unit volume. Vintage labels must stay honest on every shared price fil...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/sales",
+      "what": "unit count without euro, part family or fleet denominator: '715 PNs'",
+      "evidence": "02_dashboards/sales/ISZE_UTI_Replenishment_H2_2025.html :: ...illed qty)  \n \n \n   Same PNs, two sides of the warehouse. Sell-in is ISZE billed qty to UTI (sold-to SAP 1799). Sell-out is UTI network Part...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/_design/kpi_graph_lab",
+      "what": "unit count without euro, part family or fleet denominator: '996,890 units'",
+      "evidence": "02_dashboards/_design/kpi_graph_lab/KPI_Graph_Lab.html :: ...30; never bought 714,094, which is 71.6%. The expected quantity is the parts-model ceiling, not a sales forecast. Source: the parts-model ca...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/Data/01_Pricing",
+      "what": "unit count without euro, part family or fleet denominator: '160,909 unit'",
+      "evidence": "02_dashboards/Data/01_Pricing/BOOK_B_REVISION_REVIEW_20260819.html :: ...p among REVIEW_LEAKAGE rows.    8944627340  Top leakage PN  Gap 25,628 units  Highest qty gap among leakage review rows.    5  Action types...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/Data/90_INBOX/outlook_scan_masumi_hadi_2026",
+      "what": "unit count without euro, part family or fleet denominator: '173 units'",
+      "evidence": "02_dashboards/Data/90_INBOX/outlook_scan_masumi_hadi_2026/DIGEST_Masumi_Hadi_2026.md :: ...h with IMIT; bid ~19 Aug.\n- SPA waterfall discipline (Masumi 30 Jun): save-as with **YYYYMMDD** in filename under network BP folder.\n- Autow...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/Data/90_INBOX/_roomk_qa",
+      "what": "unit count without euro, part family or fleet denominator: '3809 PNs'",
+      "evidence": "02_dashboards/Data/90_INBOX/_roomk_qa/ITUK_dom.html :: ..._crossref.bvp_pn \u252c\u00c0 complete CY \u252c\u00c0 credits out \u252c\u00c0 whole book\", \"not_the_paired_basket\": true}, \"tooltip\": {\"formula\": \"BVP \u00d4\u00e9\u00bc148950.85 on 5...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "medium",
+      "workstream": "09_meetings/Preparation Meetings/IML_ITUK_PMS/outlook_extracts",
+      "what": "unit count without euro, part family or fleet denominator: '417 units'",
+      "evidence": "09_meetings/Preparation Meetings/IML_ITUK_PMS/outlook_extracts/Duncan_WrapUp_thread_verbatim_2026-04.md :: ...ure what vehicles are in this category.\n\nOverall, the rest of the structure provides a useful baseline for future parts sales potential, and...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "medium",
+      "workstream": "09_meetings/Preparation Meetings/IML_ITUK_PMS/mp/JEROME_ONLY/outlook_extracts",
+      "what": "unit count without euro, part family or fleet denominator: '417 units'",
+      "evidence": "09_meetings/Preparation Meetings/IML_ITUK_PMS/mp/JEROME_ONLY/outlook_extracts/Duncan_WrapUp_thread_verbatim_2026-04.md :: ...ure what vehicles are in this category.\n\nOverall, the rest of the structure provides a useful baseline for future parts sales potential, and...",
+      "action": "add euro, part family and the fleet base, or drop the count",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    }
+  ],
+  "generated_utc": "2026-09-18T05:40:03Z",
+  "description": "Unit counts with no euro, part family or fleet denominator",
+  "findings_count": 17,
+  "recent_count": 6,
+  "backlog_count": 11
+}

@@ -3,7 +3,7 @@
 **Status:** paste into a **new** Cursor/Claude session. Read-only unless Jerome says **rebuild** or **ship**.  
 **Sibling:** do not overwrite `00_docs/DASHBOARD_CAPTURE_AUDIT_PROMPT.md` — that audit is **chapter 1** of this story, not a duplicate home.  
 **Outlook:** draft-only. Never Send. Paste file: `01_data/90_INBOX/DRAFT_outlook_iam_capture_review_20260819.md`.  
-**Modes:** this file is **Mode B** (agent + Jerome). Anything that could be forwarded is labelled **Mode A** in the Outlook cover. Chat = B.
+**Modes:** this file is **internal** (agent + Jerome). Anything that could be forwarded is labelled **shared** in the Outlook cover. Chat = B.
 
 ---
 
@@ -107,7 +107,7 @@ This review pass: **prefer chat + canvas**. Do not ship new HTML unless Jerome s
 - Lead with genuine-only PMS.
 - Rebuild, sync_to_deploys, ingest hunt CSVs into `ks_results.csv` / `oem_peer_scrape_list.csv`, bump versions, or **Send** mail.
 - “Fix if safe.” Load line-level billing XLSX.
-- Say “street” in Mode A UI or in conclusions.
+- Say “street” in shared UI or in conclusions.
 
 ---
 
@@ -115,7 +115,7 @@ This review pass: **prefer chat + canvas**. Do not ship new HTML unless Jerome s
 
 Ignore `07_deploy/`. Prefer ISZE-root numbered folders.
 
-### (1) Capture audit — Mode B
+### (1) Capture audit — internal
 
 | What | Path | Notes |
 |------|------|--------|
@@ -125,12 +125,12 @@ Ignore `07_deploy/`. Prefer ISZE-root numbered folders.
 | Verify | `C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\_verification_report.json` | green 108/0/0 |
 | Headlines | `C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\metrics_snapshot.json` | |
 | PMS by DB | `C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\pms_capture_by_db_year.csv` | total first |
-| MD pack capture HTML | `C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\md_pack\ISZE_MD_Pack_Capture_FY27_FY28.html` | **Mode A**, stale 2026-07-16 — score freshness |
+| MD pack capture HTML | `C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\md_pack\ISZE_MD_Pack_Capture_FY27_FY28.html` | **shared**, stale 2026-07-16 — score freshness |
 | Related canvas | `C:\Users\jerom\.cursor\projects\c-Users-jerom-Desktop-claude-ISZE\canvases\ks-pms-parts-route.canvas.tsx` | 2026-08-18 10:17 |
 
 **OPEN_*.cmd:** none for the capture canvas. Part Groups (fat payload): `C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\sales\OPEN_PartGroups_Explorer.cmd`.
 
-### (2) ITUK brakes volume — Mode B (numbers); IML ask note may leave the building
+### (2) ITUK brakes volume — internal (numbers); IML ask note may leave the building
 
 | What | Path |
 |------|------|
@@ -143,7 +143,7 @@ Ignore `07_deploy/`. Prefer ISZE-root numbered folders.
 
 No OPEN_*.cmd for the canvas.
 
-### (3) KS / IAM price hunt — Mode B working files; Mode A engines already shipped (do not rebuild)
+### (3) KS / IAM price hunt — internal working files; shared engines already shipped (do not rebuild)
 
 | What | Path |
 |------|------|
@@ -160,14 +160,14 @@ No OPEN_*.cmd for the canvas.
 | Pipeline KS (do **not** ingest 18 Aug hunt into this) | `C:\Users\jerom\Desktop\claude\ISZE\04_tools\autodoc_scraper\ks_results.csv` (60.9 KB · 2026-08-17; gitignored) |
 | Eucon 2023 IAM workshop join | `C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\eucon_uk_survey_2023_price_gap.csv` + `.meta.json` |
 | Eucon QA | `C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\_raw\Eucon_PriceSurvey_2023_QA.md` |
-| Aftermarket live HTML | `C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\pricing\ISZE_Aftermarket_Live_Pricing_Dashboard.html` **Mode A** — **no OPEN_*.cmd found** (embed rule; do not rebuild) |
-| IAM quality ITUK | `C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\pricing\ISZE_IAM_Quality_Positioning_Engine_ITUK.html` **Mode A** |
+| Aftermarket live HTML | `C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\pricing\ISZE_Aftermarket_Live_Pricing_Dashboard.html` **shared** — **no OPEN_*.cmd found** (embed rule; do not rebuild) |
+| IAM quality ITUK | `C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\pricing\ISZE_IAM_Quality_Positioning_Engine_ITUK.html` **shared** |
 | OPEN ITUK engine | `C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\pricing\OPEN_ISZE_IAM_Quality_Positioning_Engine_ITUK.cmd` |
 | OPEN overview | `C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\pricing\OPEN_ISZE_IAM_Quality_Positioning_Overview.cmd` |
 
 Also: `ISZE_IAM_Quality_Positioning_Engine.html` + `.cmd`; IMOTORS / ISD siblings + their OPEN_*.cmd. `_build` templates = not client.
 
-### (4) OEM-peer DAF blanks — Mode B
+### (4) OEM-peer DAF blanks — internal
 
 | What | Path |
 |------|------|
@@ -177,7 +177,7 @@ Also: `ISZE_IAM_Quality_Positioning_Engine.html` + `.cmd`; IMOTORS / ISD sibling
 | Registry (internal; language still says old “street” in places — do not copy that word into conclusions) | `C:\Users\jerom\Desktop\claude\ISZE\03_analytics\isze_pricing\OEM_PEERS.md` |
 | Seed | `C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\_raw\oem_peer_basket_seed_20260810.csv` |
 
-### (5) Interchange / GIDSS / ITC C — Mode B until a Mode A pack is authorised
+### (5) Interchange / GIDSS / ITC C — internal until a shared pack is authorised
 
 | Fact | Evidence path |
 |------|----------------|
@@ -190,10 +190,10 @@ Transcript (search, do not dump): `C:\Users\jerom\.cursor\projects\c-Users-jerom
 
 ---
 
-## Paste-ready prompt (Mode B)
+## Paste-ready prompt (internal)
 
 ```
-You are in ISZE at C:\Users\jerom\Desktop\claude\ISZE. Mode B with Jerome.
+You are in ISZE at C:\Users\jerom\Desktop\claude\ISZE. internal with Jerome.
 Read INDEX.md → 00_docs/ROUTING.yaml (pricing + pms_programme) → AGENTS.md.
 Read 00_docs/IAM_CAPTURE_PRICE_HUNT_REVIEW_PROMPT.md in full and obey it.
 Read skills: answering-the-exact-question, locating-existing-artifacts, visueel-rapport

@@ -1,0 +1,367 @@
+{
+  "generated": "2026-09-17",
+  "purpose": "Step 1 - sales-weighted base-price comparison of the new PRICE CD against the prior base price. No FX applied to prices, no list change, no allocation run.",
+  "window": {
+    "start": "2025-07-01",
+    "end": "2026-06-30",
+    "basis": "last 12 months of available billing (sales_fact ends 2026-06-30)"
+  },
+  "fx": {
+    "jpy_per_eur": 163.7,
+    "as_of": "2025-10-01",
+    "use": "values the JPY step in EUR only; never mixed into a percentage"
+  },
+  "inputs": {
+    "new_price_cd": {
+      "path": "01_data\\01_Pricing\\_raw\\PRICE_CD_20260910.xlsx",
+      "sha256": "d7302dd5f1e0fb5193d20c082892af35ff22eb5bfe240f8aea83f07a6e39f74e",
+      "rows_read": 533400,
+      "duplicate_pn_rows_dropped": 0
+    },
+    "simulation": {
+      "path": "01_data\\01_Pricing\\_raw\\pricing_simulation_2026_5pct.xlsx",
+      "sha256": "00efaaa209a9e53d62b29a7b135a6e168da37c5dc379b948d0b943d34c9484f4",
+      "note": "byte-identical to the landed copy; used for l12m qty only"
+    },
+    "sales_fact": {
+      "path": "01_data\\00_derived\\sales_fact.parquet"
+    },
+    "prior_revision": {
+      "path": "01_data\\00_derived\\pricing_revision_cd.parquet",
+      "source_sheet": "PRICE CD 250912 (CY2026 revision)"
+    },
+    "customer_dimension": {
+      "path": "01_data\\00_derived\\distributor_dimension.csv"
+    }
+  },
+  "coverage": {
+    "pn_rows_l12m": 48653,
+    "pn_rows_matched_new_bp": 48248,
+    "pn_rows_missing_new_bp": 405,
+    "pn_rows_matched_prior_bp": 47757,
+    "pn_rows_priced_both": 47617,
+    "pn_rows_unpriced": 1036,
+    "qty_total": 1243227.0,
+    "qty_priced": 1225500.0,
+    "qty_coverage_pct": 98.57,
+    "eur_total": 34993609.39,
+    "eur_priced": 32595852.630000003,
+    "eur_coverage_pct": 93.15
+  },
+  "coverage_including_out_of_scope": {
+    "pn_rows_l12m": 50729,
+    "pn_rows_matched_new_bp": 50282,
+    "pn_rows_missing_new_bp": 447,
+    "pn_rows_matched_prior_bp": 49772,
+    "pn_rows_priced_both": 49622,
+    "pn_rows_unpriced": 1107,
+    "qty_total": 1255831.0,
+    "qty_priced": 1237949.0,
+    "qty_coverage_pct": 98.58,
+    "eur_total": 35693875.44,
+    "eur_priced": 33013291.559999995,
+    "eur_coverage_pct": 92.49
+  },
+  "unpriced_bucket": {
+    "rows": 1036,
+    "l12m_billed_eur": 2397756.76,
+    "l12m_qty": 17727,
+    "buckets": [
+      {
+        "bucket": "no_price_on_one_side",
+        "what": "Parts with no matching price on one side",
+        "why": "Genuine parts, but the two price lists do not both cover the number, so there is no pair to compare.",
+        "rows": 1010,
+        "l12m_billed_eur": 1110782.49,
+        "l12m_qty": 4794,
+        "pct_of_unpriced_eur": 46.3,
+        "rows_new_price_only": 631,
+        "rows_prior_price_only": 140,
+        "rows_no_price_either_side": 239,
+        "top_customers": {
+          "2575": 245898.0,
+          "2574": 207364.0,
+          "2181": 161724.0,
+          "1797": 125318.0,
+          "86": 56243.0
+        },
+        "n_customers": 23,
+        "top_customer_name": "ITUK",
+        "top_customer_share_pct": 22.1,
+        "top_customers_named": [
+          {
+            "code": "2575",
+            "label": "ITUK",
+            "eur": 245897.67,
+            "share_pct": 22.1
+          },
+          {
+            "code": "2574",
+            "label": "IUK",
+            "eur": 207364.0,
+            "share_pct": 18.7
+          },
+          {
+            "code": "2181",
+            "label": "SWEDEN",
+            "eur": 161723.8,
+            "share_pct": 14.6
+          },
+          {
+            "code": "1797",
+            "label": "UMI",
+            "eur": 125318.45,
+            "share_pct": 11.3
+          },
+          {
+            "code": "86",
+            "label": "NORWAY",
+            "eur": 56243.36,
+            "share_pct": 5.1
+          }
+        ]
+      },
+      {
+        "bucket": "rebate_or_non_part_admin",
+        "what": "Non-parts lines: rebates, transport, service fees",
+        "why": "Not parts at all, so no catalogue price sits behind them: annual rebate credits, transport charges and service fees.",
+        "rows": 19,
+        "l12m_billed_eur": 781252.09,
+        "l12m_qty": 1106,
+        "pct_of_unpriced_eur": 32.6,
+        "rows_new_price_only": 0,
+        "rows_prior_price_only": 0,
+        "rows_no_price_either_side": 19,
+        "top_customers": {
+          "86": 181659.0,
+          "2575": 142000.0,
+          "2181": 132768.0,
+          "2574": 95000.0,
+          "2679": 49724.0
+        },
+        "n_customers": 17,
+        "top_customer_name": "NORWAY",
+        "top_customer_share_pct": 23.3,
+        "top_customers_named": [
+          {
+            "code": "86",
+            "label": "NORWAY",
+            "eur": 181659.34,
+            "share_pct": 23.3
+          },
+          {
+            "code": "2575",
+            "label": "ITUK",
+            "eur": 142000.0,
+            "share_pct": 18.2
+          },
+          {
+            "code": "2181",
+            "label": "SWEDEN",
+            "eur": 132767.7,
+            "share_pct": 17.0
+          },
+          {
+            "code": "2574",
+            "label": "IUK",
+            "eur": 95000.0,
+            "share_pct": 12.2
+          },
+          {
+            "code": "2679",
+            "label": "FINLAND",
+            "eur": 49723.69,
+            "share_pct": 6.4
+          }
+        ]
+      },
+      {
+        "bucket": "lubricant_no_pr00_in_sap",
+        "what": "Lubricants and engine oil, UMI Israel",
+        "why": "The new price file carries no lubricant part numbers, so there is nothing to compare them against.",
+        "rows": 7,
+        "l12m_billed_eur": 505722.18,
+        "l12m_qty": 11827,
+        "pct_of_unpriced_eur": 21.1,
+        "rows_new_price_only": 0,
+        "rows_prior_price_only": 0,
+        "rows_no_price_either_side": 7,
+        "top_customers": {
+          "1797": 505722.0
+        },
+        "n_customers": 1,
+        "top_customer_name": "UMI",
+        "top_customer_share_pct": 100.0,
+        "top_customers_named": [
+          {
+            "code": "1797",
+            "label": "UMI",
+            "eur": 505722.18,
+            "share_pct": 100.0
+          }
+        ],
+        "pn_detail": [
+          {
+            "pn": "0550047337",
+            "description": "Rim R4L15W40 CK4_3*5L",
+            "qty": 11347,
+            "eur": 394763.22,
+            "customers": [
+              "1797"
+            ]
+          },
+          {
+            "pn": "0550047252",
+            "description": "Rim R4 L 15W40 CJ4_1*209L",
+            "qty": 176,
+            "eur": 83648.84,
+            "customers": [
+              "1797"
+            ]
+          },
+          {
+            "pn": "0550070445",
+            "description": "Rim R4L 15W40 CK4_1*20L JC_A246",
+            "qty": 200,
+            "eur": 11920.0,
+            "customers": [
+              "1797"
+            ]
+          },
+          {
+            "pn": "0550071985",
+            "description": "RimR7AX5W30_1*209L_A246",
+            "qty": 12,
+            "eur": 9003.72,
+            "customers": [
+              "1797"
+            ]
+          },
+          {
+            "pn": "0550070643",
+            "description": "RimulaR6LM10W40CK-4_1*20L JC_A246",
+            "qty": 60,
+            "eur": 4488.0,
+            "customers": [
+              "1797"
+            ]
+          },
+          {
+            "pn": "0550070645",
+            "description": "RimR6LMEPlus5W30CK4_1*20L JC_A246",
+            "qty": 20,
+            "eur": 1260.0,
+            "customers": [
+              "1797"
+            ]
+          },
+          {
+            "pn": "0550065935",
+            "description": "Tellus S2 MX 68_1*20L JC_A246",
+            "qty": 12,
+            "eur": 638.4,
+            "customers": [
+              "1797"
+            ]
+          }
+        ]
+      }
+    ],
+    "note": "priced_qty excludes these; they are the residual of the adjusted PR00 coverage, not a pricing decision"
+  },
+  "lubricant_rule": {
+    "signal_1_prefix": "SAP part number starts with 05",
+    "signal_2_description": "billed description names a lubricant: RIMULA, RIM R, RIMR, TELLUS, SHELL, HELIX, SPIRAX, OMALA, GADUS, A246 LUB",
+    "rows_former_prefix_rule": 7,
+    "rows_new_two_signal_rule": 7,
+    "pn_former_prefix_rule": 7,
+    "pn_new_two_signal_rule": 7,
+    "eur_new": 505722.18,
+    "qty_new": 11827,
+    "identical_to_former_rule": true,
+    "note": "the tighter test is used because the 05 prefix alone would classify any 05-numbered bolt as a lubricant"
+  },
+  "non_parts_excluded": {
+    "rows": 3,
+    "l12m_billed_eur": 180715.11,
+    "customers": [
+      "146",
+      "2970",
+      "373"
+    ],
+    "customers_named": [
+      {
+        "code": "146",
+        "label": "ISUZU TRUCK UK LIMITED"
+      },
+      {
+        "code": "2970",
+        "label": "sold-to 2970"
+      },
+      {
+        "code": "373",
+        "label": "IMIO"
+      }
+    ],
+    "note": "service fee / demurrage, not a priceable part (audit Check 1 exclusion)",
+    "what": "Non-part billing: service fee and demurrage",
+    "why": "Not a priceable part - a service charge, not goods."
+  },
+  "direct_account_excluded": {
+    "rows": 384,
+    "l12m_billed_eur": 142263.37,
+    "customers": [
+      "105"
+    ],
+    "customers_named": [
+      {
+        "code": "105",
+        "label": "IMG"
+      }
+    ],
+    "note": "trades but is not a network distributor",
+    "what": "Outside the network: direct account",
+    "why": "Trades with ISZE but is not a network distributor."
+  },
+  "class_mapping": {
+    "raw_codes_seen": 25,
+    "unmapped_raw_codes": [],
+    "unmapped_pn_rows": 0,
+    "null_or_blank_class_rows": 492,
+    "method": "build_pricing_enquiry_tables.map_cd_class (last char, else first)"
+  },
+  "class_coverage": {
+    "priced_rows_with_class": 47581,
+    "priced_rows_without_class": 36,
+    "step_eur_without_class": 1124.55,
+    "l12m_eur_without_class": 19123.96,
+    "note": "class-less rows are excluded from the class table by definition; named here"
+  },
+  "sensitivity": {
+    "prior_vintage": {
+      "note": "L12M opens before the CY2026 revision; weighting the whole year on the revision is the file-supported basis. The billed-vintage figure below is an approximation bound, not a measurement.",
+      "revision_effective": "2025-09-12",
+      "pre_revision_days_in_window": 73,
+      "value_step_eur_revised_basis": 1652140.71,
+      "value_step_eur_billed_basis": 2434725.13
+    },
+    "weight_base": {
+      "weighted_increase_pct_billing_qty": 5.9616,
+      "weighted_increase_pct_sim_l12m_qty": 6.064,
+      "weighted_increase_pct_billing_qty_paired_subset": 5.9622,
+      "paired_pn_rows": 43156,
+      "priced_pn_rows": 47617,
+      "note": "the simulation-vs-billing comparison is quoted on the paired rows only, so both bases cover the same population; the workbook headline is the all-priced-rows billing figure"
+    }
+  },
+  "caveats": [
+    "sold_to_sap is the customer key. The sold_to NAME column is unusable for Israel: it was relabelled 2026-04-01 and now reads UNIVERSAL MOTORS ISRAEL LTD for both 1797 and 1799.",
+    "Israel is reported as 1797 (UMI) and 1799 (UTI) separately plus a combined row. Never one blended Israel figure on its own.",
+    "The % is a base-price move, not a revenue or margin move. No elasticity coefficient is applied (Spec C1: elasticity is not quotable at ISZE->DB).",
+    "Unpriced part numbers are reported as a named bucket, not dropped."
+  ],
+  "outputs": [
+    "01_data\\00_derived\\price_bp_weighted_compare_pn.csv",
+    "01_data\\00_derived\\price_bp_weighted_compare_customer.csv"
+  ]
+}

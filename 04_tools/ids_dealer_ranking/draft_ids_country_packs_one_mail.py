@@ -103,7 +103,7 @@ def combined_body(manifest_rows: list[dict]) -> str:
         "national average\n"
         "  • National average and anonymous full-network average benchmarks\n"
         "  • Single-market scope — no Country filter tab\n"
-        "  • Changelog tab removed (colleague / Mode A packs)\n\n"
+        "  • Changelog tab removed (colleague / shared packs)\n\n"
         "Open the HTML with an internet connection so map tiles can load.\n\n"
         "Kind regards,\n"
         "Jérôme Van der Pluym\n"

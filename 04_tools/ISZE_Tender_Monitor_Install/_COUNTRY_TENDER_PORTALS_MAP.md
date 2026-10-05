@@ -46,7 +46,7 @@
 | **FR** | TED; **BOAMP** (boamp.fr / DILA OpenDataSoft); PLACE / regional profiles | TED FRA | BOAMP (national + many below) | TED + **France BOAMP** (OK 52) | **LIVE** | Public ODS **API** (no key) | Already wired — residual lift low (~+0–5); keep gate tight | Done / maintain |
 | **PL** | TED; **e-Zamówienia / BZP** (ezamowienia.gov.pl) | TED POL | BZP (`isTenderAmountBelowEU` common) | TED + **Poland BZP** (OK 38) | **LIVE** | Public mo-board **API** (no key) | Already wired — residual low–med | Done / maintain |
 | **IT** | TED; **PNCP** / ANAC **Pubblicità a valore legale** (pubblicitalegale.anticorruzione.it); MePA / Acquisti in Rete (execution); ANAC open data | TED ITA | PNCP is legal home for below-threshold (~majority by **count**) | TED + **Italy PNCP** (OK 32 raw → 2 gated) | **LIVE** | Public JSON `api/v0/avvisi` (no PDND); CKAN `dati.anticorruzione.it` still rejected | Wired 2026-08-25 — gate-tight; residual lift if search/CPV API params found | Maintain / tighten |
-| **ES** | TED; **PLACSP / PLACE** (contrataciondelestado.es / contrataciondelsectorpublico.gob.es); CCAA aggregated platforms | TED ESP | PLACSP profiles + regional aggregation (excl. many contratos menores) | TED + **Spain PLACSP** Atom | **LIVE** (2026-09-14 Atom HTTP 200 this runner; 2 keyword / 0 gated in rolling window) | Official **Atom/XML** (WAF on some other egress — detector kept) | Rolling Atom is thin vs a 30d API dump; residual lift if ZIP/open-data pagination works | Maintain / thicken |
+| **ES** | TED; **PLACSP / PLACE** (contrataciondelestado.es / contrataciondelsectorpublico.gob.es); CCAA aggregated platforms | TED ESP | PLACSP profiles + regional aggregation (excl. many contratos menores) | TED + **Spain PLACSP** (OK 216→10 gated, 2026-09-22) | **LIVE** | Official **Atom/XML** `rel=next` walk (monthly ZIP optional) | Wired 2026-09-22 — WAF cleared; residual if monthly ZIP lookback | Maintain |
 | **BE** | TED; **publicprocurement.be** (BOSA e-Notification / SEA) | TED BEL | SEA national | TED + **Belgium SEA** (OK 14) · RSS **RETIRED** | **LIVE** | Authenticated JSON **API** (SPA client credentials) | Already wired — residual low | Done / maintain |
 | **NL** | TED; **TenderNed** (tenderned.nl) | TED NLD | TenderNed mandatory national | TED + **TenderNed RSS** (OK 25) | **LIVE** | **RSS** (+ HTML); registration free for bidding | Already wired — residual low | Done / maintain |
 | **AT** | TED; **USP Ausschreibungssuche** (usp.gv.at / ausschreibungen.usp.gv.at) aggregating authority platforms | TED AUT | USP search (links out to procedure platforms) | TED + **Austria USP** (OK 23 → 4 gated) | **LIVE** | Public JSON `api/tenderlist` with `cpvList` + date window (text search ignored) | Wired 2026-08-25 overnight — residual if more CPV chips | Maintain |
@@ -117,9 +117,9 @@ From `_source_health.json` (same day):
 | Israel mr.gov.il | OK | 18 | IL national |
 | France BOAMP | OK | 52 | FR below/national |
 | Poland BZP | OK | 38 | PL below/national |
-| Italy PNCP | OK | 32 | IT below/national (2 gated) |
-| Spain PLACSP | OK | 2 | ES national Atom — LIVE 2026-09-14 (0 gated this window) |
-| Germany oeffentlichevergabe | OK | 545 | DE national BKMS Open Data (41 gated) |
+| Spain PLACSP | OK | 216 | ES national Atom (10 gated) |
+| Italy PNCP | OK | 22 | IT below/national (2 gated) |
+| Germany oeffentlichevergabe | OK | 590 | DE national BKMS Open Data (163 gated) |
 | Germany service.bund | OK | 12 | DE RSS crumb |
 | Romania SEAP | OK | 147 | RO national (13 gated) |
 | IEC global-iec.com | OK | 7 | IL utility abroad list |

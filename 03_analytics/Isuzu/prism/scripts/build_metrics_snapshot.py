@@ -65,6 +65,32 @@ def main() -> int:
     put("sales.parts_base_eur", round(float(parts["net_sales_value"].sum()), 0),
         "GPS-facing, parts only (line_kind=part), ex-credit-notes/returns", "the parts base")
 
+    # --- parts base bridge ---------------------------------------------------
+    # The parts base moves for two independent reasons: a new billing period, and
+    # any change to the exclusion rules. Recomputing 2026-09-17 showed the second
+    # one silently: NON_PARTS rows leaked EUR 180,715 into the base after the
+    # 2026-08-25 snapshot. Emit both cut-offs so a period movement can never be
+    # mistaken for a method movement again. See FACTS.md section 4.
+    if "billing_date" in parts.columns and parts["billing_date"].notna().any():
+        dmax = pd.Timestamp(parts["billing_date"].max())
+        # prior calendar quarter end (starting January) to the quarter holding dmax
+        q_idx = (dmax.month - 1) // 3
+        if q_idx == 0:
+            p_q_end_month, p_q_end_year = 12, dmax.year - 1
+        else:
+            p_q_end_month, p_q_end_year = q_idx * 3, dmax.year
+        prev_q_end = (pd.Timestamp(p_q_end_year, p_q_end_month, 1)
+                      + pd.offsets.MonthEnd(0))
+        prior = parts[parts["billing_date"] <= prev_q_end]
+        put("sales.parts_base_data_through",
+            dmax.strftime("%Y-%m-%d"),
+            "max billing_date in sales_fact", "billing horizon behind the parts base")
+        put("sales.parts_base_through_prior_quarter_eur",
+            round(float(prior["net_sales_value"].sum()), 0),
+            "GPS-facing, parts only, cut at the prior quarter end",
+            f"same method, data through {prev_q_end.strftime('%Y-%m-%d')} — "
+            "bridge companion to sales.parts_base_eur")
+
     # --- ITUK oil-filter capture (dispute anchor) ----------------------------
     cap = pd.read_csv(PMS_CAPTURE_BY_DB_CSV)
     m = cap[(cap["distributor_code"] == "ITUK") & (cap["pms_category"] == "oil_filter")]
@@ -76,9 +102,10 @@ def main() -> int:
         put(f"{k}.revenue_eur", round(float(r["actual_rev_eur"]), 0), PMS_CAPTURE_BY_DB_CSV.name)
     if not m.empty:
         put("ituk.oil_filter.uio_units", int(m["uio_units"].iloc[0]),
-            PMS_CAPTURE_BY_DB_CSV.name, "DVLA Mar 2026 override, constant across years")
+            PMS_CAPTURE_BY_DB_CSV.name, "model_bucket_split: cv_std 22,190.9 + f_series 877.0")
         put("ituk.oil_filter.expected_qty", round(float(m["expected_qty"].iloc[0]), 1),
-            PMS_CAPTURE_BY_DB_CSV.name, "22389 x 0.5 svc/yr x 70%")
+            PMS_CAPTURE_BY_DB_CSV.name,
+            "23068 bucket UIO; cv_std at 0.5 x (1 + N35 share) svc/yr (N35 on the 20,000 km interval), F-series 0.667; 100% addressable")
 
     # --- overall genuine/BVP mix CY2025 (crossref-authoritative) -------------
     xref = pd.read_csv(GENUINE_BVP_CROSSREF_CSV, dtype={"genuine_pn": str, "bvp_pn": str})

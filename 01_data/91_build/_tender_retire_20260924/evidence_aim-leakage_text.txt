@@ -1,0 +1,489 @@
+Home
+PRISM — AIM & BVP Leakage
+Street-Price Exposure
+PRISM — BI Gallery
+BVP Intelligence
+Customer Risk Ranking
+Data Integrity
+Parts Mix Per Distributor
+GPS — Spend Per Unit
+Cross-Module Insights
+ITUK PMS PN Audit
+ITUK PMS Story
+PRISM — Offset Insights
+PMS — Capture Rate
+Tender Pipeline
+UIO — Units In Operation
+Built with Evidence
+Home
+PRISM — AIM & BVP Leakage
+PRISM — AIM & BVP Leakage
+
+Where genuine loses — by distributor, family and order type. Fifteen boards off the AIM classifier, the genuine↔BVP crossref, and the order-type (saty) split. ← back to Offset Insights · BI Gallery
+
+BVP is Isuzu's own "Best Value Parts" line — a budget OEM range (Isuzu-format PNs), not third-party aftermarket. So "genuine vs BVP" below is internal cannibalisation of premium genuine by our own value brand, not loss to a rival. (The named external aftermarket comparison lives in Section D, the Eucon/AutoDoc probe.) Read the leakage honestly. The AIM scraper flags only ~1.0% (€313K) of 2025 revenue as direct aftermarket "high-risk", and it matches ~100% of revenue — so the scraper alone is not the leak story. The real battleground is the contested arena: €3.55M of revenue where a genuine and a BVP equivalent both sell, of which BVP already takes 36% network-wide — up to 92% at some distributors. "High-risk" and "contested" are derived from invoicing + the genuine↔BVP crossref; nothing here is attributed to a named competitor.
+ arena
+ 1 record with 5 properties
+
+Contested revenue (genuine vs BVP)
+
+€3,554,951
+ 
+
+BVP's share of the contested arena
+
+36%
+ 
+
+BVP revenue (retained at value tier)
+
+€1,279,837
+A · The contested battlefield — genuine vs BVP
+1 · The arena: genuine-only vs contested vs BVP (network)
+
+97% of revenue is uncontested genuine. The fight is in the thin contested slice — that's where the leverage is.
+
+ arena_split
+ 3 records with 2 properties
+2 · Where contested money is lost — by distributor
+
+Bubble = total revenue. Top-right = lots of contested money and losing most of it to BVP. That's the fix-first corner.
+
+ contested_db
+ 20 records with 4 properties
+3 · BVP capture of contested demand — ranked
+
+Where a genuine equivalent exists, this is the share BVP still wins. UTI and Kazakhstan give away >90% of the contested money.
+
+ capture_rank
+ 20 records with 3 properties
+4 · BVP share of total revenue — by distributor
+ bvp_pct_db
+ 22 records with 2 properties
+5 · Where BVP eats — top subgroups
+
+Subgroups with the most BVP revenue and the unit share BVP holds there. The product-side target list.
+
+ subs_sub
+ 15 records with 3 properties
+B · AIM scraper — exposure & blind spots
+6 · AIM high-risk revenue € — by distributor
+
+The scraper's direct aftermarket-risk flag. Small in absolute terms (€313K network) — IUK and Germany carry the most.
+
+ hr_eur
+ 22 records with 2 properties
+7 · AIM high-risk % of revenue — by distributor
+ hr_pct
+ 22 records with 2 properties
+8 · Scraper coverage — effectively complete
+
+Coverage is not the leak. The classifier matches 99.9%+ of revenue at every distributor — there is no blind-spot story at the revenue level. The leak is contested price (Section A), not parts the scraper can't see. Below: network match rate, and the only thing that varies — the tiny absolute unmatched € by distributor.
+
+ match_net
+ 1 record with 2 properties
+
+Network AIM match rate (revenue)
+
+95.7%
+ 
+
+Total unmatched revenue (network)
+
+€1,031,514
+ unmatched_db
+ 12 records with 2 properties
+9 · The blind spot — unclassified revenue, by suggested class
+
+€1.45M of revenue-bearing parts the scraper couldn't classify. This is where the gap-closer's suggested L1 would route them.
+
+ gap_l1
+ 7 records with 3 properties
+10 · Top-20 unclassified leak parts
+
+The biggest revenue parts AIM can't yet place — manual review priority.
+
+ gap_parts
+ 20 records with 3 properties
+		
+
+Part 
+	
+Description 
+	
+CY25 revenue 
+
+8.97B	TANK ASM; DEF	€116,501
+8.98B	RAIL; COMMON	€115,065
+5.87B	INTERFACE MX2-T	€87,707
+8.98B	GATE ASM; RR	€67,146
+1.88B	BESCO CLEAN SUPER (200L)	€59,019
+8.97B	RADIO CONTROL ASM; STEREO,AM-F	€44,125
+8.98B	RAIL;COMMON	€42,608
+8.98B	THROTTLE ASM; INT	€42,382
+8.98B	BODY ASM; REAR	€41,476
+8.98B	ELEMENT KIT; PCV	€32,695
+8.97B	RADIO CONTROL ASM; STEREO,AM-FM	€25,528
+7.55B	TRANSFER ASM	€25,525
+8.98B	TENSIONER; AUTO	€21,707
+1.48B	EXPANDER	€20,622
+8.98B	GATE ASM; RR	€19,618
+8.98B	CHAMBER; POWER	€18,395
+7.55B	KEY; BLANK	€17,809
+8.98B	BLADE; WIPER	€16,854
+8.98B	TRANSFER ASM	€15,663
+8.98B	ELEMENT KIT; PCV	€13,327
+C · Order-type (saty) — urgency as a leakage proxy
+11 · Network revenue by order type (saty)
+
+Stock orders (SOR) are healthy; VOR + RUSH are €20M+ of expedited demand — every urgent line is a stocking miss that invites an aftermarket alternative.
+
+ saty_rev
+ 9 records with 3 properties
+12 · VOR + urgent share of lines — by distributor vs network
+ vor_share
+ 22 records with 2 properties
+13 · Order-type mix by distributor (stacked)
+
+Standard vs urgent vs VOR, by distributor. A tall urgent/VOR stack = a network running on emergencies.
+
+ saty_db
+ 78 records with 3 properties
+14 · AIM family risk matrix
+
+By family: BVP revenue (x) vs the AIM high-risk share (y), bubble = genuine € at stake. Top-right defends first.
+
+ fam_risk
+ 7 records with 4 properties
+15 · Leakage priority quadrant — the so-what board
+
+Every distributor on one map: contested money at stake (x) × how badly BVP is winning it (y), sized by total revenue. Top-right = biggest, most-losing — fix these first.
+
+ priority
+ 21 records with 5 properties
+C+ · The down-trade truth — BVP is retained margin, not lost €
+Two different threats, never to be added together. BVP capture is INTERNAL down-trade — the customer still buys from ISZE, just one tier down, so we keep the sale at BVP margin. The only real cost is the GP delta per unit (genuine GP/unit − BVP GP/unit). The EXTERNAL walk-out (Section D, named aftermarket brands undercutting) is the genuine-€-out-the-door risk. Sections A–C count BVP revenue; this section converts it to profit actually eroded.
+
+On the contested PMS pairs that match into CY25 sell-in (genuine↔BVP crossref, SOrg IE40), BVP earns healthy margin — so the down-trade is far less painful than the revenue-share headline implies, and on oil filters it is margin-accretive (BVP GP/unit > genuine).
+
+ downtrade
+ 1 record with 3 properties
+
+BVP revenue — retained (not lost)
+
+€944,675
+ 
+
+BVP gross profit — retained
+
+€314,337
+ 
+
+Real down-trade GP gap (the only true cost)
+
+€110,391
+
+The GP gap assumes 1:1 unit substitution genuine↔BVP and covers only the 7 PMS categories where both sides match into CY25 (≈€0.93M of BVP revenue) — a floor, not the whole contested arena. It is dwarfed by the €2.21M external GP-at-risk in Section D.
+
+15b · Down-trade GP gap by category — where down-trading actually costs margin
+
+Bar = the genuine-minus-BVP gross-profit delta on the BVP units. Negative = down-trading earns more margin than genuine (oil filters). Positive = genuine margin genuinely forgone.
+
+ downtrade_cat
+ 7 records with 4 properties
+			
+
+PMS category 
+	
+Genuine GP/unit € 
+	
+BVP GP/unit € 
+	
+Down-trade GP gap € 
+
+fuel_filter	€4.84	€2.81	€73,847
+air_filter	€8.03	€5.50	€35,224
+brake_pad	€29.51	€12.89	€18,424
+clutch_pressure_plate	€38.09	€20.59	€11,816
+brake_shoe	€17.92	€5.00	€10,690
+clutch_disc	€37.34	€29.10	€5,209
+oil_filter	€1.22	€2.58	-€44,819
+D · The price layer — Eucon / AutoDoc aftermarket benchmark
+
+Sections A–C show where genuine loses share. This section adds the missing dimension: the actual price gap to named aftermarket brands, from the Eucon + AutoDoc scrape (eucon_pricing.xlsx → eucon_price_gap.csv).
+
+Coverage — read it straight. Eucon benchmarks only 44 Isuzu PNs. But those 44 are real volume: €12.9M = 13.3% of 3-yr network revenue, all sold. Of them — 25 PNs (€6.2M) the aftermarket sells cheaper than ISZE genuine; 10 are the genuine side of a contested (BVP-equivalent) pair; and 8 PNs (€2.33M) are both contested and price-undercut. Everything below is limited to these 44 benchmarked PNs; it is a price probe, not full network coverage. Delta is the aftermarket avg vs ISZE IE40 list: negative = competitor cheaper. Two margin layers. ISZE GP% is actual CY25 sell-in margin (EUR Amount − EUR Cost, Sales CY25.XLSX, SOrg IE40 = ISZE→distributor, 42/44 PNs matched). Dealer GP is a flat 27% assumption (your input, not measured) for the downstream dealer margin — the profit the dealer loses when they switch to aftermarket. Loss is measured in gross profit at both levels, not just revenue.
+ gap_kpi
+ 1 record with 6 properties
+
+Revenue on benchmarked parts (44 PNs)
+
+€12,913,693
+ 
+
+ISZE GP at risk (25 undercut PNs)
+
+€2,208,681
+ 
+
+Dealer GP at risk (27% assumed)
+
+€1,675,968
+16 · Price position map — revenue vs the gap to aftermarket
+
+x = our revenue on the part, y = aftermarket avg price vs ISZE (negative = they're cheaper), bubble = revenue. Bottom-right = big money where the aftermarket badly undercuts us. Reprice or defend first.
+
+ price_map
+ 42 records with 5 properties
+
+Two low-revenue outliers are excluded (+250% and +560% — genuine far cheaper than aftermarket, but tiny volume). Axis clipped to ±100% so the real spread is readable.
+
+17 · Where the aftermarket undercuts us most — ranked
+
+The 25 PNs where a named aftermarket brand sells cheaper than ISZE genuine. Bar = how far below us the aftermarket average sits.
+
+ undercut
+ 25 records with 3 properties
+18 · Double jeopardy — contested AND undercut on price
+
+The worst quadrant: genuine parts that have a BVP equivalent selling and the aftermarket is cheaper. €2.33M revenue / €890K gross profit at risk — losing share to a part that also wins on price. Defend list, ranked by GP at risk (the money that actually walks).
+
+ double_jeopardy
+ 8 records with 10 properties
+									
+
+Part 
+	
+Description 
+	
+ISZE rev 
+	
+ISZE GP% 
+	
+ISZE GP at risk 
+	
+Dealer GP (27%) 
+	
+ISZE € 
+	
+AM avg € 
+	
+Δ vs ISZE 
+	
+Brands seen 
+
+8.98B	FILTER; BLOWER UNIT	€515,673	46%	€236,126	€139,232	€16.33	€7.03	-57%	Blue Print, Herth+Buss Jakoparts
+8.98B	ELEMENT KIT; FUEL FILTER	€615,542	38%	€235,876	€166,196	€13.85	€10.06	-27%	AMC Filter, Ashika, Blue Print, Bogap, Bosch, Champion, Continental, Coopersfiaam, DJ Parts, Denckermann, Fast, Febi Bilstein, Filtron, Gocore, Hella, Hengst Filter, Japanparts, Kamoka, Kavo Parts, Knecht, Magneti Marelli, Mahle, Mahle Original, Master Sport, Maxgear, Meat Amp Doria, Nipparts, Purflux, Purro, Quinton Hazell, Ridex, Ridex Plus, Sofima, Stark, Valeo
+8.98B	PAD KIT; CALIPER,DISC BRK,FRT	€364,395	38%	€138,798	€98,387	€82.25	€61.61	-25%	ABS, Blue Print, Brembo, Delphi, Febi Bilstein, Ferodo, Herth+Buss Jakoparts, JapKo, Japanparts, Jurid, Kavo Parts Categories Bremseklos, Kraft Automotive, LPR, Metelli, Pagid, Rap Brakes, Remsa, Srline, Textar, Tomex Brakes, Triscan
+8.98B	FILTER; BLOWER UNIT	€254,004	42%	€105,463	€68,581	€23.02	€13.53	-41%	AMC Filter, Airmatik, Ashika, Bosch, Champion, Coopersfiaam, Corteco, Daco Germany, Drive, Gocore, Herth+Buss Jakoparts, JapKo, Japanparts, K&N Filters, Kamoka, Kavo Parts, Knecht, Kraft, Kraft Automotive, Mahle, Mahle Categories Kupéfilter Disc, Mahle Original, Mann Filter, Mapco, Master Sport, Maxgear, Meyle, Nipparts, Ridex, Ridex Plus, Sofima, Stark, Starline, Valeo
+8.98B	SHOE KIT; BRK,RR	€239,280	29%	€68,625	€64,605	€41.49	€40.59	-2%	ABS, Brembo, Delphi, F Becker, Febest, Herth+Buss Jakoparts, Kavo Parts, LPR, Samko
+8.98B	FILTER; BLOWER UNIT	€177,458	37%	€66,263	€47,914	€16.33	€10.75	-34%	Blue Print, Castrol Filters, Denckermann, Febi Bilstein, Herth+Buss Jakoparts, Sidat, Valeo
+8.98B	PAD KIT; CALIPER,DISC BRK,FRT	€73,343	30%	€21,724	€19,803	€82.25	€58.34	-29%	ABS, Blue Print, Brembo, Delphi, Febi Bilstein, Herth+Buss Jakoparts, JapKo, Japanparts, Metelli, Textar, Tomex Brakes
+8.98B	FILTER; ACL	€90,506	19%	€16,852	€24,436	€25.29	€16.31	-35%	AMC Filter, Alco Filter, Ashika, Blue Print, Bosch, Coopersfiaam, Denckermann, Drive, Febi Bilstein, Filtron, Fleetguard, Frankberg, Hengst Filter, Herth+Buss Jakoparts, JPN, JapKo, Japanparts, Kamoka, Kavo Parts, Mahle, Mahle Original, Mann Filter, Maxgear, Motaquip, Nipparts, Optimal, Purflux, Quinton Hazell, Red Line, Ridex, Stark, WIX Filters
+18b · Margin-weighted defend priority — GP at risk, ranked
+
+Revenue exposure is the wrong sort key when margins differ 8%→61%. This ranks all 25 undercut parts by gross profit at risk (revenue × CY25 GP%). High bar + deep undercut = defend first; a deeply undercut low-margin part may not be worth fighting.
+
+ gp_risk
+ 24 records with 3 properties
+19 · Counter-narrative — where genuine already wins on price
+
+Not all bad news: on 19 of the 44 benchmarked PNs, ISZE genuine is cheaper than the aftermarket average. These are parts to push hard — price is on our side.
+
+ genuine_wins
+ 15 records with 3 properties
+20 · Full benchmarked-parts table
+
+All 44 Eucon-benchmarked PNs with revenue, price position, competitor count and brands. The raw probe.
+
+Apples-to-apples: our ISZE € is the IE40 list price to the distributor — not what the customer pays. To compare against aftermarket at the counter we gross it up through the channel: distributor +40%, then dealer +27.5% (street = list × 1.40 × 1.275 = ×1.785). The Δ column is aftermarket avg vs that street genuine price — negative = aftermarket undercuts genuine at the counter. AM = Eucon aftermarket trade benchmark.
+ gap_full
+ 44 records with 11 properties
+									
+
+Part 
+	
+Description 
+	
+ISZE rev 
+	
+ISZE list € 
+	
++DB 40% € 
+	
++DLR 27.5% (street) € 
+	
+AM avg € 
+	
+Δ AM vs street 
+	
+# offers 
+	
+Contested 
+
+8.98B	ROTOR; DISC BRK,FRT	€1,602,977	€79.26	€110.96	€141.48	€87.99	-38% ▼	24	
+8.98B	PAD KIT; CALIPER,DISC BRK,FRT	€893,314	€82.25	€115.15	€146.82	€59.71	-59% ▼	17	
+8.98B	DPD ASM	€800,694	€1,281.85	€1,794.59	€2,288.10	€777.42	-66% ▼	8	
+8.98B	ELEMENT; OIL FILTER	€634,633	€6.80	€9.52	€12.14	€12.32	1% ▲	77	Y
+8.98B	ELEMENT KIT; FUEL FILTER	€615,542	€13.85	€19.39	€24.72	€10.06	-59% ▼	88	Y
+8.97B	FILTER; ACL	€588,666	€21.18	€29.65	€37.81	€24.95	-34% ▼	24	Y
+8.98B	FILTER; BLOWER UNIT	€515,673	€16.33	€22.86	€29.15	€7.03	-76% ▼	8	Y
+8.98B	NOZZLE ASM; INJ	€487,851	€257.37	€360.32	€459.41	€269.48	-41% ▼	4	
+8.98B	SILENCER ASM; EXH	€434,634	€155.28	€217.39	€277.17	€220.53	-20% ▼	5	
+8.98B	PAD KIT; CALIPER,DISC BRK,FRT	€376,748	€64.45	€90.23	€115.04	€74.01	-36% ▼	8	
+8.98B	PAD KIT; CALIPER,DISC BRK,FRT	€364,395	€82.25	€115.15	€146.82	€61.61	-58% ▼	72	Y
+8.98B	VALVE; EGR	€331,620	€156.94	€219.72	€280.14	€288.03	3% ▲	20	
+8.98B	VALVE; EGR	€316,473	€234.57	€328.40	€418.71	€379.22	-9% ▼	8	
+8.98B	NOZZLE ASM; INJ	€309,181	€183.10	€256.34	€326.83	€221.49	-32% ▼	4	
+5.88B	ELEMENT KIT; FUEL FILTER	€275,434	€7.01	€9.81	€12.51	€10.47	-16% ▼	35	
+Page  / 3
+E · Tender / R&M channel — opportunity pipeline
+
+The fourth leakage channel is fleet tender & R&M contracts (parts bundled into maintenance deals, priced outside list). The scored public-tender opportunities below are read live from the weekly tender feed — every one carries a decision, fit/win/econ scores, a suggested owner and parts/R&M signal.
+
+ tender_head
+ 1 record with 6 properties
+
+📋 Opportunities
+
+619
+
+🎯 Actionable (Attack/Selective/Watch)
+
+281
+
+🔩 Carry parts signal
+
+46%
+
+🔧 R&M contract
+
+45%
+This is a qualified-pipeline view — counts and scores are real for every row. Value is present on only 31 of 619 opportunities and deadlines on 128 , so we deliberately do not chart € pipeline or award prices. Awarded line items (the tenders_output.xlsx sheet) are still empty; when they land, win/loss-vs-aftermarket pricing slots on top of this.
+
+Superseded: this section used to read a flattened table built on 29 May 2026, which said 400 actionable and 352 R&M. It now reads the weekly live tender feed through PRISM's single reader; today that is 281 actionable and 279 R&M. The old table and its builder stay on disk, unread.
+
+E1 · Qualification funnel
+
+How the live opportunities sort out after scoring — most are noise, the work is the Attack + Selective band.
+
+ tender_decision
+ 4 records with 2 properties
+E2 · Where the live opportunities are
+
+Actionable (Attack/Selective/Watch) opportunities by country — where the bid effort should point.
+
+ tender_country
+ 12 records with 2 properties
+E3 · Owner workload
+
+Actionable opportunities by suggested regional lead — who is carrying the load.
+
+ tender_owner
+ 10 records with 2 properties
+E4 · Fit × Win — the qualification map
+
+Every non-ignored opportunity placed on fit (do we suit it) vs win-probability. Bubble = overall opportunity score, colour = decision. Top-right = pursue.
+
+ tender_scatter
+ 281 records with 5 properties
+E5 · Action queue
+
+Top Attack/Selective opportunities by overall score — the bid desk's queue. Deadline shown where the notice carried one.
+
+ tender_queue
+ 15 records with 7 properties
+					
+
+Opportunity 
+	
+Country 
+	
+Owner 
+	
+Score 
+	
+Decision 
+	
+Deadline 
+	
+Links
+
+ACORD CADRU PENTRU SERVICII DE REPARATII AUTOVEHICULE	Romania	CEE Lead	71	Attack	2026-10-23	
+See more
+
+Raamovereenkomst onderhoud en herstellingen voertuigen <3,5 ton	Belgium	Benelux Lead	69	Selective	2026-10-21	
+See more
+
+Raamovereenkomst voor het aankopen van vrachtwagens, diesel en zero-emissie, (met en zonder opbouw) inclusief wisselstukken en herstellingen (en optioneel een onderhoudscontract)	Belgium	Benelux Lead	64	Selective	2026-10-16	
+See more
+
+acord cadru furnizare „reactivi compatibili automat Bond-Max IHC,ISH si FISH”	Romania	CEE Lead	62	Attack	2026-10-22	
+See more
+
+Servicii de revizii si reparatii autovehicule	Romania	CEE Lead	62	Selective	2026-10-19	
+See more
+
+„Servicii de reparare si intretinere a autovehiculelor si echipamentelor conexe ale acestora si piese si accesorii pentru autovehicule si motoare de autovehicule.”	Romania	CEE Lead	62	Selective	2026-10-22	
+See more
+
+Rahmenvereinbarung zur Lieferung von Abfallsammelfahrzeugen (in 4 Losen) 80 - 90 Stück	Germany	DACH Lead	62	Selective	1970-01-01	
+See more
+
+Maintenance, réparations et dépannage de plate-formes élévatrices mobiles de personnel multi-marques montée sur un véhicule porteur	Belgium	Benelux Lead	60	Selective	2026-10-01	
+See more
+
+Servici de REPARARE SI INTRETINERE A AUTOVEHICULELOR din dotarea parcului auto al S.N. RADIOCOMUNICATII S.A. (S.N.R.) - 5 loturi	Romania	CEE Lead	60	Selective	2026-10-05	
+See more
+
+Servicii de reparare, piese si accesorii pentru autoturisme - DS Timis	Romania	CEE Lead	60	Selective	2026-10-07	
+See more
+
+Servicii de reparare, revizii si intretinere a autovehiculelor si echipamentelor conexe ale acestora - marca Renault	Romania	CEE Lead	60	Selective	2026-09-30	
+See more
+
+Ireland – Fleet management, repair and maintenance services – AP - 06/26 - Fleet Management Services	Ireland	UK/IE Lead	60	Selective	2026-10-01	
+See more
+
+Italy – Repair and maintenance services of motor vehicles and associated equipment – SERVIZIO DI RIPARAZIONE E MANUTENZIONE ORDINARIA E STRAORDINARIA DEGLI AUTOMEZZI IN USO DA TE.AM. TERAMO AMBIENTE S.P.A. PER UN PERIODO DI 24 MESI	Italy	Italy Lead	60	Selective	2026-09-30	
+See more
+
+Netherlands – Fleet management, repair and maintenance services – Europese aanbesteding Autolease Waterschap Amstel, Gooi en Vecht	Netherlands	Benelux Lead	60	Selective	2026-10-12	
+See more
+
+Norway – Repair and maintenance services of cars – Workshop services	Norway	Nordics Lead	60	Selective	2026-10-01	
+See more
+On this page
+A · The contested battlefield — genuine vs BVP
+1 · The arena: genuine-only vs contested vs BVP (network)
+2 · Where contested money is lost — by distributor
+3 · BVP capture of contested demand — ranked
+4 · BVP share of total revenue — by distributor
+5 · Where BVP eats — top subgroups
+B · AIM scraper — exposure & blind spots
+6 · AIM high-risk revenue € — by distributor
+7 · AIM high-risk % of revenue — by distributor
+8 · Scraper coverage — effectively complete
+9 · The blind spot — unclassified revenue, by suggested class
+10 · Top-20 unclassified leak parts
+C · Order-type (saty) — urgency as a leakage proxy
+11 · Network revenue by order type (saty)
+12 · VOR + urgent share of lines — by distributor vs network
+13 · Order-type mix by distributor (stacked)
+14 · AIM family risk matrix
+15 · Leakage priority quadrant — the so-what board
+C+ · The down-trade truth — BVP is retained margin, not lost €
+15b · Down-trade GP gap by category — where down-trading actually costs margin
+D · The price layer — Eucon / AutoDoc aftermarket benchmark
+16 · Price position map — revenue vs the gap to aftermarket
+17 · Where the aftermarket undercuts us most — ranked
+18 · Double jeopardy — contested AND undercut on price
+18b · Margin-weighted defend priority — GP at risk, ranked
+19 · Counter-narrative — where genuine already wins on price
+20 · Full benchmarked-parts table
+E · Tender / R&M channel — opportunity pipeline
+E1 · Qualification funnel
+E2 · Where the live opportunities are
+E3 · Owner workload
+E4 · Fit × Win — the qualification map
+E5 · Action queue

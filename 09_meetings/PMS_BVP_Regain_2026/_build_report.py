@@ -1,4 +1,4 @@
-"""Build Mode A PDF: PMS gaps where catalog-paired BVP can regain sales (per DB)."""
+"""Build shared PDF: PMS gaps where catalog-paired BVP can regain sales (per DB)."""
 from __future__ import annotations
 
 import json

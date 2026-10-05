@@ -88,6 +88,9 @@ def main() -> int:
         print(f"   FAILED: {e}", flush=True)
         failed += 1
 
+    # The lost-sales model is NOT built here. It reads wallet_waterfall.csv, which is rebuilt
+    # later in run_pipeline_and_verify.ps1, so building it here would attach the previous run's
+    # ceiling. It lives in scripts/build_lost_sales_model.py and is ordered after the ceiling.
     return 1 if failed else 0
 
 

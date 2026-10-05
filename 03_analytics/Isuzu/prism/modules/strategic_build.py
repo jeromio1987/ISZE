@@ -606,10 +606,42 @@ def build_distributor_geo() -> pd.DataFrame:
 
 # ── Contract 15 ─────────────────────────────────────────────────────────────
 
+def _current_data_year() -> int:
+    """The year the billing data has REACHED, which is the latest year that is not complete.
+
+    Derived from the source rather than hardcoded, so this keeps working after the next refresh.
+    Falls back to the later of (latest PMS year) - 1 and the wall-clock year - 1 if sales_fact
+    cannot be read.
+    """
+    try:
+        import pyarrow.parquet as pq  # noqa: PLC0415
+        from config import SALES_FACT_PARQUET  # noqa: PLC0415
+        col = pq.read_table(SALES_FACT_PARQUET, columns=["billing_date"]).column(0)
+        latest = pd.to_datetime(pd.Series(col.to_pylist())).max()
+        return int(latest.year)
+    except Exception:
+        return pd.Timestamp.today().year
+
 def build_capture_recovery_model(price_premium: pd.DataFrame | None = None) -> pd.DataFrame:
     pms = pd.read_csv(PMS_CAPTURE_BY_DB_CSV)
     tot = pms[pms["line_type"] == "total"].copy()
-    latest_year = int(tot["year"].max())
+
+    # Use the latest COMPLETE year, not simply the maximum year present.
+    #
+    # Before 2026-09-17 this took max(year), which is the current year. The current year is
+    # part-complete (Jan-Mar 2026 at the time), while expected_qty is a full-year denominator, so
+    # every capture_rate in this file was structurally understated by roughly 4x and the
+    # gap_type classification was attached to a part-year actual. ITUK oil-filter read 0.2844
+    # here against 1.1643 for the complete year, and nothing on the file said so.
+    #
+    # A year counts as complete when its stored expected_qty already reflects only the period
+    # actually billed. The pipeline does not publish a completeness flag, so completeness is
+    # detected by comparing against the newest year whose actuals run to December: the latest
+    # December billing month present in the source. CURRENT_YEAR is excluded by definition.
+    years_present = sorted(int(y) for y in tot["year"].dropna().unique())
+    complete = [y for y in years_present if y < _current_data_year()]
+    latest_year = max(complete) if complete else max(years_present)
+
     tot = tot[tot["year"] == latest_year]
     bvp = pms[(pms["line_type"] == "bvp") & (pms["year"] == latest_year)]
     bvp_share = (

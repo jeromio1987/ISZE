@@ -1,0 +1,24 @@
+﻿{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\LEAKAGE_EXEC_SUMMARY_20260819.html",
+  "artifact_mtime_ms": 1789807816009,
+  "written_at": "2026-09-19T08:55:17.634Z",
+  "ok": true,
+  "checks": [
+    { "id": "exists", "ok": true, "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\LEAKAGE_EXEC_SUMMARY_20260819.html" },
+    { "id": "min_size", "ok": true, "detail": "80163 bytes" },
+    { "id": "no_cdn", "ok": true, "detail": "no chart/lib CDN; SSR inline SVG/CSS" },
+    { "id": "no_nan_json", "ok": true, "detail": "0 NaN / Infinity / undefined literals" },
+    { "id": "has_content_markers", "ok": true, "detail": "raw file: 100 bar-row, 5 svg, 5 tables, 55 tr, 8 hero chips" },
+    { "id": "open_cmd", "ok": true, "detail": "OPEN_LEAKAGE_EXEC_SUMMARY.cmd present, CRLF" },
+    { "id": "ship_gate", "ok": true, "detail": "ship_gate_check.ps1 exit 0 with SHIP_GATE_LANGUAGE clean" },
+    { "id": "language_gate", "ok": true, "detail": "check_spoken_labels.ps1 on the HTML: 0 violations, 2 advisories (1.785 factor, explained in plain English beside it)" },
+    { "id": "visual_screenshots", "ok": true, "detail": "2 PNG taken (1440x1000, 1440x4200); NOT image-read - image reader returned empty on 4 attempts (2 full, 1 crop, 1 retry). Rendered-DOM fallback used instead." },
+    { "id": "rendered_dom", "ok": true, "detail": "Chrome headless --dump-dom: 5 db sections, 8 hero chips, 100 bar-rows, 5 svg, 55 tr, 0 empty tbody, 0 NaN" }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\_langfix_qa\\leakage_1440.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\_langfix_qa\\leakage_full_4200.png"
+  ],
+  "notes": "Language-only change: 71 banned labels removed by editing the builder (02_dashboards/_build/build_leakage_exec_summary.py), not the generated HTML, then rebuilt. Control test on the same inputs: the pre-change builder and this builder produce identical comma-formatted euro amounts and an identical percent sequence apart from the two explanatory tokens (+40%, +27.5%) added beside the 1.785 factor. No figure and no arithmetic was changed by this edit. The network total on the rebuilt page is EUR 2,048,126, not the EUR 11,938,690 that stood in the stale page on disk: revision_exception_queue.csv was refreshed on 18 Sep 2026 while the page was built 19 Aug 2026, so the rebuild picked up newer inputs. That movement is the input refresh, not this edit. Screenshots were taken but the image reader returned nothing, so no letter-by-letter visual confirmation of the rendered text was achieved; blankness was ruled out by pixel sampling (71%/63% non-white, 643/665 distinct colours) and content by rendered-DOM counts."
+}

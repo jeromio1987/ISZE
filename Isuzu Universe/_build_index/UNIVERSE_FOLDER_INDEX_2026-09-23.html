@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>ISUZU / UNIVERSE - Folder Index</title>
+<style>
+@page { size: A4; margin: 19mm 15mm 16mm 15mm; }
+* { box-sizing: border-box; }
+/* The plate that makes the page charcoal is drawn into the PDF afterwards; these two lines keep
+   the print area dark as well, so nothing pale shows through around the text. */
+html, body { background: #24282C; }
+body { font: 10.1pt/1.55 Arial, "Helvetica Neue", Helvetica, sans-serif;
+       color: #FFFFFF; margin: 0; }
+h1, h2, h3, h4 { font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+                 color: #FFFFFF; page-break-after: avoid; }
+h1 { font-size: 21pt; line-height: 1.16; margin: 0 0 4mm 0; letter-spacing: -.005em; }
+h1::after { content: ""; display: block; width: 34mm; border-top: 3pt solid #D71920;
+            margin-top: 3.2mm; }
+h2 { font-size: 12.6pt; margin: 7.5mm 0 2.4mm; border-bottom: 1.2pt solid #535B61;
+     padding-bottom: 1.4mm; }
+h3 { font-size: 10.8pt; margin: 5.2mm 0 1.6mm; color: #E6EAEC; }
+h4 { font-size: 10.1pt; margin: 4mm 0 1.4mm; color: #FF686D; }
+p { margin: 0 0 2.5mm; color: #FFFFFF; }
+hr { border: 0; border-top: .8pt solid #E4E9F0; opacity: .30; margin: 5mm 0; }
+strong { color: #FFFFFF; }
+em { color: #CCD1D2; }
+a { color: #FF686D; }
+code { font-family: Consolas, "Courier New", monospace; font-size: 8.9pt;
+       background: #353B3E; color: #FFFFFF; padding: 0 .7mm; }
+table { width: 100%; border-collapse: collapse; font-size: 8.9pt; margin: 2mm 0 4.5mm;
+        page-break-inside: avoid; }
+th { background: #353B3E; color: #FFFFFF; text-align: left; padding: 1.7mm 2mm;
+     font-weight: 700; font-size: 8.4pt; border-bottom: 1.2pt solid #D71920; }
+td { padding: 1.5mm 2mm; border-bottom: .6pt solid #454C51; vertical-align: top; color: #FFFFFF; }
+tr:nth-child(even) td { background: #2A3035; color: #E9ECEE; }
+blockquote { margin: 3mm 0; padding: 2.8mm 3.8mm; background: #353B3E;
+             border-left: 3pt solid #D71920; color: #FFFFFF; }
+ul, ol { margin: 0 0 3mm 5mm; padding: 0; }
+li { margin-bottom: 1.2mm; color: #FFFFFF; }
+.pagebreak { page-break-after: always; height: 0; }
+.chapter-start { page-break-before: always; height: 0; }
+.keep { page-break-inside: avoid; break-inside: avoid; }
+p { orphans: 3; widows: 2; }
+li, td { orphans: 2; widows: 2; }
+/* a long table may flow, with its header repeated and its rows intact */
+table.tbl-flow { page-break-inside: auto; }
+table.tbl-flow thead { display: table-header-group; }
+table.tbl-flow tr { page-break-inside: avoid; }
+
+/* the reading guide */
+.guide { width: 100%; border-collapse: collapse; font-size: 9.2pt; margin: 3mm 0 4mm; }
+.guide th { background: #353B3E; color: #FFFFFF; }
+.guide td { border-bottom: .6pt solid #3C4348; color: #FFFFFF; }
+.guide tr:nth-child(even) td { background: #282E33; }
+.guide td.pg { white-space: nowrap; width: 18mm; color: #FFFFFF; font-weight: 700; }
+
+/* the pale band, used only where the text on it is ink - never white on a pale panel */
+.chip { background: #F2F4F7; color: #24282C; padding: 2.4mm 3mm; margin: 3mm 0;
+        border-left: 3pt solid #15233C; font-size: 9.2pt; }
+.chip p, .chip li { color: #24282C; margin: 0; }
+.chip b { color: #15233C; }
+
+/* cover */
+.cover { height: 250mm; display: flex; flex-direction: column; page-break-after: always;
+         padding-top: 2mm; }
+.cover .org { font-size: 10pt; letter-spacing: .30em; text-transform: uppercase;
+              color: #CCD1D2; font-weight: 700; }
+.cover .family { font-size: 12pt; letter-spacing: .40em; text-transform: uppercase;
+                 color: #D71920; margin-top: 3mm; font-weight: 700; }
+.cover .rule { border-top: 3.4pt solid #D71920; margin: 6mm 0 10mm; }
+.cover .title { font-size: 46pt; line-height: 1.02; color: #FFFFFF; margin: 0;
+                letter-spacing: -.02em; }
+.cover .strap { font-size: 14pt; line-height: 1.5; color: #CCD1D2; margin: 7mm 0 0;
+                max-width: 150mm; }
+.cover .grow { flex: 1; }
+.cover .focus { border-top: 1pt solid #4A5257; padding-top: 5mm; }
+.cover .focus .h { font-size: 8.2pt; letter-spacing: .20em; text-transform: uppercase;
+                   color: #CCD1D2; margin-bottom: 3mm; }
+.cover .focus li { font-size: 10.4pt; color: #FFFFFF; margin-bottom: 2.2mm; }
+.cover .meta { border-top: 2.4pt solid #D71920; margin-top: 7mm; padding-top: 4mm;
+               font-size: 9.4pt; color: #FFFFFF; font-weight: 700; letter-spacing: .10em;
+               text-transform: uppercase; }
+.cover .meta2 { font-size: 8.2pt; color: #CCD1D2; margin-top: 2mm; letter-spacing: .10em;
+                text-transform: uppercase; }
+</style></head><body>
+
+<div class="cover">
+  <div class="org">ISZE / Parts Europe</div>
+  <div class="family">Folder Index</div>
+  <div class="rule"></div>
+  <div class="title">Universe</div>
+  <div class="strap">What is in this folder, which document to open,<br>and where the source text sits.</div>
+  <div class="grow"></div>
+  <div class="focus">
+    <div class="h">What this index covers</div>
+    <ul style="list-style:none;margin:0;padding:0"><li>Seven current documents, and what each one is for.</li><li>How to open each of them.</li><li>Where the source text and the working notes live.</li><li>The two withdrawn papers, kept on disk and not to be quoted.</li></ul>
+  </div>
+  <div class="meta">Folder index &nbsp;·&nbsp; 23 September 2026</div>
+  <div class="meta2">Internal &nbsp;·&nbsp; Isuzu Universe working folder</div>
+</div>
+
+<div class="keep"><h1>Isuzu Universe — folder index</h1>
+<p><strong>Internal</strong> · 23 September 2026 · what is in this folder, which document to open, and where the source text sits.</p></div>
+<div class="keep"><h2>What this folder is</h2>
+<p><code>Isuzu Universe\</code> holds one programme, written up in more than one way. It is not a set of competing plans: it is a single commercial idea, put in front of different readers, plus the working software and the evidence behind it.</p>
+<p>The idea is that ISZE should give its distributors and dealers tools worth using — a parts classification, a dealer self-assessment, market and fleet context, a defence for jobs that are being lost to competitors, and an early view of tenders — and in return earn the information that makes those tools better. The papers argue that case. The annex carries the design detail. The deck is for talking from. The showcase is the working screen.</p></div>
+<p>Why there are several papers rather than one:</p>
+<ul><li><strong>The white paper</strong> is the five-pillar evidence case: AIM, IDS, PRISM, DLOD and Tenders, each with its own worked example on real measured numbers. It is the long read, and it is the one to start with if the reader wants the evidence rather than the summary.</li><li><strong>Universe 3.0</strong> is the shorter commercial paper: the scope boundary, the five-tool portfolio, the money chapter, the participation assessment and the decision it asks for.</li><li><strong>The annex</strong> exists so that nothing was lost when the 80-page edition was withdrawn. The tender framework, the IDS chapter in full and the reference rules live there.</li><li><strong>The Yellow Paper</strong> is the operating paper underneath all of it: how the product is built, what surfaces a finding, how it is priced, and the stop condition.</li><li><strong>The deck and the showcase</strong> are the same argument in two other forms. The deck is for a room; the showcase is the screen a distributor would actually see.</li></ul>
+<p>The current editions are the ones dated 23 September 2026, together with the Yellow Paper v0.5 of 22 September. Two earlier papers have been withdrawn and stay on disk for reference only; they are named in the footnotes at the end of this index.</p>
+<div class="keep"><h2>What is in this index</h2><p>Every part of this index, and the one thing it settles.</p><table class="guide"><thead><tr><th>Part</th><th>Pages</th><th>What it settles</th></tr></thead><tbody><tr><td>What this folder is</td><td class="pg">2-3</td><td>The programme in one page, and why there are several papers.</td></tr><tr><td>The documents to read first</td><td class="pg">4</td><td>The current documents, how long each is, and what it is.</td></tr><tr><td>Opening them</td><td class="pg">4</td><td>How the launchers work, for a reader who has not seen this folder.</td></tr><tr><td>Where the sources live</td><td class="pg">5</td><td>The folder holding the source text of each document.</td></tr><tr><td>The GPT handover pack</td><td class="pg">5</td><td>The review pack that goes back to the external partner.</td></tr><tr><td>How these documents are made</td><td class="pg">6</td><td>Why a document is dated, and why a chart cannot drift.</td></tr><tr><td>Footnotes</td><td class="pg">6</td><td>The older showcase, and the two withdrawn papers.</td></tr><tr><td>The rest of the folder</td><td class="pg">6</td><td>The working programme, one line per folder.</td></tr></tbody></table></div>
+<div class="keep"><h2>The documents to read first</h2>
+<p>These are the current documents. Every one of them sits at the root of <code>Isuzu Universe\</code>.</p>
+<table class="tbl-flow"><thead><tr><th>Document</th><th>Length</th><th>What it is</th></tr></thead><tbody><tr><td><code>INDEX.md</code></td><td>folder map</td><td>The map of the folder: the two programmes it holds, the software component, and what is and is not backed up. Read this first, in an editor.</td></tr><tr><td><code>ISUZU_UNIVERSE_WHITE_PAPER_2026-09-23.pdf</code></td><td>64 pages</td><td>The five-pillar paper: AIM, IDS, PRISM, DLOD and Tenders, each with a worked example on measured numbers. Fourteen chapters, with a contents, a figure list and a table list at the front, on a charcoal field throughout.</td></tr><tr><td><code>ISUZU_UNIVERSE_3_0_2026-09-23.pdf</code></td><td>29 pages</td><td>The commercial vision and participation paper. The scope boundary, the five-tool portfolio, the economics and what the investment must earn, the participation score per step, and the decision. Carries the chapter schedule.</td></tr><tr><td><code>ISUZU_UNIVERSE_3_0_ANNEX_2026-09-23.pdf</code></td><td>15 pages</td><td>The design annex, in three parts: the tender and headquarters-support framework, the IDS Development Studio in full, and the reference rules — measures, periods, identities and record structures.</td></tr><tr><td><code>ISUZU_UNIVERSE_3_0_DECK_2026-09-23.pptx</code></td><td>24 slides</td><td>The talk deck. One idea per slide, with the argument carried in the speaker notes; a note is written on every one of the 24 slides. It uses the same charts as the paper, so the two cannot disagree.</td></tr><tr><td><code>ISUZU_UNIVERSE_3_0_SHOWCASE_2026-09-23.html</code></td><td>web page</td><td>The working showcase. It carries the current section list and points each tool at the section that answers its question.</td></tr><tr><td><code>Universe_Yellow_Paper_v0.5_2026-09-22.pdf</code></td><td>23 pages</td><td>The product and operating paper. A worked commercial case, the written rule for what surfaces an opportunity, the pricing arithmetic, the pilots, a go/no-go test and the stop condition.</td></tr></tbody></table></div>
+<p>Each finished document carries a short record of what was checked before it was issued, so a reader who needs to know whether a number was verified can find that out from the document itself.</p>
+<div class="keep"><h2>Opening them</h2>
+<p>Every document has a launcher sitting beside it in the same folder, and the launcher takes its name from the document it opens. So the way to open a paper is to look for the launcher whose name matches it, and double-click that. The showcase opens in a browser; the rest open in the reader for their file type. This index has a launcher beside it in the same way.</p>
+<p>Nothing needs to be installed and no server needs to be started. If a launcher is missing, the document itself can simply be opened directly from the folder.</p></div>
+<div class="keep"><h2>Where the sources live</h2>
+<p>The source text that each document is written in, and the working notes behind it, are all in <code>01_Strategy\</code>.</p>
+<table class="tbl-flow"><thead><tr><th>File</th><th>What it is</th></tr></thead><tbody><tr><td><code>ISUZU_UNIVERSE_WHITE_PAPER_2026-09-23.md</code></td><td>The source text of the 64-page white paper.</td></tr><tr><td><code>ISUZU_UNIVERSE_3_0_2026-09-23.md</code></td><td>The source text of the 29-page vision paper.</td></tr><tr><td><code>ISUZU_UNIVERSE_3_0_ANNEX_2026-09-23.md</code></td><td>The source text of the 15-page annex.</td></tr><tr><td><code>Universe_Yellow_Paper_v0.5_2026-09-22.md</code></td><td>The source text of the Yellow Paper.</td></tr><tr><td><code>DLOD_NETWORK_ROLLOUT_2026-09-23.md</code></td><td>A costed design for running DLOD across the ISZE network, and the evidence findings behind it. An internal note for the business owner.</td></tr><tr><td><code>UNIVERSE_WHITE_PAPER_KILLER_MEGAPROMPT_2026-09-23.md</code></td><td>The brief the white paper was written from: the five pillars, the figures wanted, and the audience.</td></tr><tr><td><code>WHITE_PAPER_WORKING_2026-09-23.md</code></td><td>The working file kept while the white paper was written: reconnaissance, the merge ledger, the pillar map and the figure plan.</td></tr><tr><td><code>Work_Efficiency_Audit_2026-09-23.md</code></td><td>The efficiency measurement of this folder: how much of what was written on 21 and 22 September is still in the current documents.</td></tr></tbody></table></div>
+<div class="keep"><h2>The GPT handover pack</h2>
+<p><code>GPT_HANDOVER_2026-09-23\</code> is the review pack that goes back to the partner who wrote the two withdrawn papers of 22 September. It reviews them finding by finding, and it is written for that partner because both papers came from their side and they have not seen what happened to them since.</p>
+<table class="tbl-flow"><thead><tr><th>File</th><th>What it is</th></tr></thead><tbody><tr><td><code>00_START_HERE.md</code></td><td>The note to paste into the chat before the critique: what the pack is, and what is in it.</td></tr><tr><td><code>UNIVERSE_3_0_CRITIQUE_2026-09-23.md</code></td><td>The critique itself, in markdown.</td></tr><tr><td><code>UNIVERSE_3_0_CRITIQUE_2026-09-23.pdf</code></td><td>The same critique rendered, 8 pages.</td></tr></tbody></table></div>
+<p>The pack carries its own record of what was checked before it was issued, alongside the documents above.</p>
+<div class="keep"><h2>How these documents are made</h2>
+<p>Each document is generated from its own source text rather than assembled by hand, and the charts in a paper are drawn from the same measured files the paper quotes. That is deliberate: it means a chart cannot drift away from the data behind it, and it means a rebuild after a correction cannot silently leave an old figure in place. Each finished document also carries a short record of what was checked before it was issued.</p>
+<p>A reader does not need any of this to use the folder. It is worth knowing only because it explains why the documents in here are dated, and why an undated copy of a paper should be treated as older rather than newer.</p></div>
+<div class="keep"><h2>Footnotes</h2>
+<p><strong>The older showcase.</strong> One earlier showcase file is kept on disk on purpose: <code>ISUZU_UNIVERSE_3_0_SHOWCASE_SUPERSEDED_2026-09-22.html</code>. It is not the current showcase and should not be opened as one. It is kept only because it still carries the withdrawn 80-page paper inside it, which is the last place that edition survives in a form that can be opened.</p>
+<p><strong>The withdrawn papers.</strong> <code>ISUZU_UNIVERSE_COMMERCIAL_VISION_3_0.pdf</code> (80 pages) and <code>ISUZU_UNIVERSE_COMMERCIAL_TOOLS_WHITE_PAPER.pdf</code> (33 pages) are the two editions of 22 September. Both are superseded by Universe 3.0 and must not be quoted as current. The first omitted the scope boundary; the second stated it but offered a different portfolio. What the review cut from the first, and is still worth keeping, now sits in the annex.</p></div>
+<div class="keep"><h2>The rest of the folder</h2>
+<p>Beyond the documents above, the folder carries the working programme. One line each; the full map is in <code>INDEX.md</code>.</p>
+<table class="tbl-flow"><thead><tr><th>Folder</th><th>What is in it</th></tr></thead><tbody><tr><td><code>05_AIM_Universe\</code></td><td>The maintained pricing-decision component, and the only part of this folder that is backed up. Its own notes say what is verified and what is not.</td></tr><tr><td><code>01_Strategy\</code></td><td>The strategy sources: the source texts listed above, the critique of them, the commercial and value-exchange drafts, and the pilot evidence pack.</td></tr><tr><td><code>02_Atlas\</code></td><td>The network and parts atlas, with its concept notes and shortcuts.</td></tr><tr><td><code>03_Packages\</code></td><td>The working packages R0 and R1, and their zip drops.</td></tr><tr><td><code>04_IDS_AIM_and_IMOTORS\</code></td><td>The IDS-to-AIM bridge, the IMOTORS pack, and the ITUK real-data page.</td></tr><tr><td><code>06_Working\</code></td><td>Working notes, export packs and PRISM screen grabs.</td></tr><tr><td><code>GPT_HANDOVER_2026-09-22\</code></td><td>The earlier handover pack to the same partner, superseded by the 23 September pack.</td></tr><tr><td><code>Universe_IDS_AIM_Cursor_Handoff\</code></td><td>The handoff bundle prepared for the external partner, plus its zip at this level.</td></tr></tbody></table></div>
+</body></html>

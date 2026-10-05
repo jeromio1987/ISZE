@@ -1,0 +1,86 @@
+{
+  "schema": "ship_receipt/v2",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Pricing_Policy_Paper_2026-10-02.html",
+  "artifact_mtime_ms": 1790935408761,
+  "sibling_pdf": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Pricing_Policy_Paper_2026-10-02.pdf",
+  "sibling_pdf_mtime_ms": 1790936985682,
+  "written_at": "2026-10-02T10:31:26.804Z",
+  "ok": true,
+  "screenshots_taken": 20,
+  "screenshots_read": 20,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Pricing_Policy_Paper_2026-10-02.html"
+    },
+    {
+      "id": "pdf_same_basename",
+      "ok": true,
+      "detail": "ISZE_Pricing_Policy_Paper_2026-10-02.pdf mtime 2026-10-02T12:29:45 size 520383"
+    },
+    {
+      "id": "pdf_matches_html_content",
+      "ok": true,
+      "detail": "PDF 20 pages; How to read this paper x1; Prices per parts category x2; Option B/IUK/AIM/captive/0.905/proposal move all x0"
+    },
+    {
+      "id": "banned_strings_html",
+      "ok": true,
+      "detail": "{\"Option A\": 0, \"Option B\": 0, \"Option C\": 0, \"Mode A\": 0, \"Mode B\": 0, \"captive\": 0, \"factory-led\": 0, \"0.905\": 0, \"proposal move\": 0, \"price class\": 0, \"AIM\": 0, \"IUK\": 0, \"ITUK\": 0, \"UMI\": 0, \"UTI\": 0, \"copy-price\": 0}"
+    },
+    {
+      "id": "banned_strings_pdf",
+      "ok": true,
+      "detail": "{\"Option A\": 0, \"Option B\": 0, \"Option C\": 0, \"Mode A\": 0, \"Mode B\": 0, \"captive\": 0, \"factory-led\": 0, \"0.905\": 0, \"proposal move\": 0, \"price class\": 0, \"AIM\": 0, \"IUK\": 0, \"ITUK\": 0, \"UMI\": 0, \"UTI\": 0, \"copy-price\": 0}"
+    },
+    {
+      "id": "decision_board_table",
+      "ok": true,
+      "detail": "10-row table The decisions: what each does, why, and what it is worth"
+    },
+    {
+      "id": "universe_board_row",
+      "ok": true,
+      "detail": "ISZE_UNIVERSE_BOARD.html L216 plink Pricing policy paper (2 Oct 2026)"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN_ISZE_Pricing_Policy_Paper_2026-10-02.cmd"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "screenshots_taken 20, screenshots_read 20 (agent image-Read all pg1-pg20); no blank pages; page 5 intentional whitespace after principles list"
+    },
+    {
+      "id": "no_commit",
+      "ok": true,
+      "detail": "verify did not git commit; HTML/PDF remain modified/uncommitted"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg1.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg2.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg3.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg4.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg5.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg6.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg7.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg8.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg9.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg10.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg11.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg12.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg13.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg14.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg15.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg16.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg17.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg18.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg19.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\pg20.png"
+  ],
+  "notes": "Item 11 brief checklist 2026-10-02 loop1/3. Acrobat had locked stale PDF; closed Acrobat, rebuilt PDF from live HTML via render_and_qa.py, image-read all 20 pages."
+}

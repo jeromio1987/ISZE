@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>AIM classification — the commercial map for ISZE</title>
+<style>
+:root{
+  --navy:#15233c; --ink:#1a2433; --paper:#f7f4ee; --cream:#fffdf8;
+  --terra:#c0552d; --teal:#2a6f6a; --gold:#b8892a; --line:#d5cfc4;
+  --mute:#5a6575; --ok:#2f6b4f; --warn:#9a6b1a;
+  --page-w:1080px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:"Segoe UI",system-ui,sans-serif;
+  color:var(--ink); background:#e8e4db;
+  line-height:1.45;
+}
+h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif; font-weight:600; color:var(--navy); margin:0 0 .4em}
+.nav{
+  position:sticky; top:0; z-index:50;
+  background:var(--navy); color:#f7f4ee;
+  display:flex; gap:.35rem; flex-wrap:wrap; padding:.55rem .9rem;
+  font-size:.72rem; letter-spacing:.02em;
+}
+.nav a{color:#cfd6e2; text-decoration:none; padding:.28rem .55rem; border-radius:4px}
+.nav a:hover,.nav a.on{background:#243552; color:#fff}
+.wrap{max-width:var(--page-w); margin:0 auto; padding:1.2rem .9rem 3rem}
+.page{
+  background:var(--cream); border:1px solid var(--line);
+  border-radius:10px; padding:2rem 2.1rem 2.2rem;
+  margin:0 0 1.35rem; box-shadow:0 8px 28px rgba(21,35,60,.07);
+  break-inside:avoid;
+}
+.kicker{font-size:.72rem; text-transform:uppercase; letter-spacing:.12em; color:var(--terra); font-weight:700; margin-bottom:.55rem}
+.lede{font-size:1.15rem; color:var(--mute); max-width:42rem}
+.hero-grid{display:grid; grid-template-columns:1.35fr .9fr; gap:1.4rem; margin-top:1.4rem; align-items:stretch}
+@media (max-width:820px){.hero-grid{grid-template-columns:1fr}}
+.verdict{
+  background:linear-gradient(145deg,#15233c 0%,#243552 55%,#2a6f6a 140%);
+  color:#f7f4ee; border-radius:12px; padding:1.4rem 1.5rem;
+}
+.verdict strong{color:#fff; font-size:1.35rem; display:block; margin:.35rem 0 .7rem; font-family:Georgia,serif}
+.verdict p{margin:0; color:#cfd6e2; font-size:.95rem}
+.stake{
+  border:1px solid var(--line); border-radius:12px; padding:1.1rem 1.2rem;
+  background:var(--paper);
+}
+.stake ol{margin:.5rem 0 0; padding-left:1.15rem}
+.stake li{margin:.35rem 0}
+.kpi-row{display:grid; grid-template-columns:repeat(4,1fr); gap:.7rem; margin-top:1.2rem}
+@media (max-width:820px){.kpi-row{grid-template-columns:1fr 1fr}}
+.kpi{
+  background:#fff; border:1px solid var(--line); border-radius:10px;
+  padding:.85rem .9rem; min-height:5.2rem;
+}
+.kpi .v{font-family:Georgia,serif; font-size:1.55rem; color:var(--navy); line-height:1.1}
+.kpi .l{font-size:.72rem; color:var(--mute); margin-top:.35rem; text-transform:uppercase; letter-spacing:.06em}
+.kpi .h{font-size:.8rem; color:var(--terra); margin-top:.25rem}
+
+/* two systems */
+.compare{display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem}
+@media (max-width:820px){.compare{grid-template-columns:1fr}}
+.panel{
+  border-radius:12px; padding:1.15rem 1.2rem; border:1px solid var(--line);
+  background:#fff; position:relative; overflow:hidden;
+}
+.panel.old{border-top:4px solid #8a9099}
+.panel.new{border-top:4px solid var(--teal)}
+.panel h3{font-size:1.05rem}
+.tag{
+  display:inline-block; font-size:.68rem; font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase; padding:.2rem .5rem; border-radius:4px; margin-bottom:.55rem;
+}
+.tag.old{background:#eceff3; color:#4a5565}
+.tag.new{background:#e4f1ef; color:var(--teal)}
+.letters{display:flex; flex-wrap:wrap; gap:.35rem; margin:.7rem 0}
+.letters span{
+  width:2.1rem; height:2.1rem; display:grid; place-items:center;
+  border-radius:6px; background:#eceff3; font-weight:700; color:var(--navy); font-size:.9rem;
+}
+.tree-mini{font-family:Georgia,serif; font-size:.95rem; margin:.6rem 0}
+.tree-mini .l1{color:var(--navy); font-weight:700}
+.tree-mini .l2{color:var(--teal); margin-left:1rem}
+.tree-mini .l3{color:var(--terra); margin-left:2rem}
+.vs{
+  text-align:center; font-weight:700; color:var(--mute); font-size:.8rem;
+  letter-spacing:.1em; text-transform:uppercase; margin:.2rem 0;
+}
+
+/* structure diagram */
+.structure{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:.8rem; margin-top:1rem;
+}
+@media (max-width:820px){.structure{grid-template-columns:1fr}}
+.lvl{
+  background:#fff; border:1px solid var(--line); border-radius:12px;
+  padding:1rem; min-height:11rem;
+}
+.lvl .n{font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--mute); font-weight:700}
+.lvl .t{font-family:Georgia,serif; font-size:1.15rem; margin:.25rem 0 .5rem}
+.lvl ul{margin:0; padding-left:1.05rem; font-size:.88rem; color:var(--mute)}
+.lvl.l1{border-bottom:4px solid var(--navy)}
+.lvl.l2{border-bottom:4px solid var(--teal)}
+.lvl.l3{border-bottom:4px solid var(--terra)}
+.arrow-flow{
+  display:flex; align-items:center; justify-content:center; gap:.5rem;
+  margin:1rem 0 .2rem; flex-wrap:wrap;
+}
+.chip{
+  background:var(--navy); color:#f7f4ee; padding:.45rem .85rem; border-radius:999px;
+  font-size:.82rem; font-weight:600;
+}
+.chip.mid{background:var(--teal)}
+.chip.end{background:var(--terra)}
+.arr{color:var(--mute); font-size:1.2rem}
+
+/* letter trap */
+.trap-grid{display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem}
+@media (max-width:820px){.trap-grid{grid-template-columns:1fr}}
+.trap{
+  background:#fff; border:1px solid var(--line); border-radius:12px; padding:1rem 1.1rem;
+}
+.trap h4{font-size:.95rem; margin-bottom:.55rem}
+.split-bars{display:flex; height:2.4rem; border-radius:8px; overflow:hidden; margin:.5rem 0}
+.split-bars .c{background:#3d5a80; color:#fff; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:700}
+.split-bars .v{background:var(--terra); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:700}
+.mix-pile{
+  display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.55rem;
+}
+.mix-pile i{
+  font-style:normal; font-size:.72rem; background:var(--paper);
+  border:1px solid var(--line); padding:.25rem .45rem; border-radius:4px;
+}
+.callout{
+  margin-top:1rem; padding:1rem 1.15rem; border-radius:10px;
+  background:#fff4ec; border-left:4px solid var(--terra);
+  font-size:.95rem;
+}
+
+/* bar rows */
+.bar-block{margin-top:1rem}
+.bar-row{
+  display:grid; grid-template-columns:9.5rem 1fr 4.2rem 3.6rem;
+  gap:.55rem; align-items:center; margin:.38rem 0; font-size:.86rem;
+}
+@media (max-width:700px){
+  .bar-row{grid-template-columns:1fr; gap:.15rem}
+  .bar-row .track{height:1.15rem}
+}
+.bar-row .lab{font-weight:600; color:var(--navy)}
+.bar-row .track{height:1.35rem; background:#ece8df; border-radius:6px; overflow:hidden}
+.bar-row .fill{height:100%; border-radius:6px; background:linear-gradient(90deg,#2a6f6a,#3d8a84)}
+.bar-row .fill.hot{background:linear-gradient(90deg,#c0552d,#d4784a)}
+.bar-row .fill.soft{background:linear-gradient(90deg,#6b7c93,#8a98ab)}
+.bar-row .eur,.bar-row .pct{text-align:right; font-variant-numeric:tabular-nums; font-weight:600}
+.bar-row .pct.up{color:var(--terra)}
+.bar-row .pct.dn{color:var(--teal)}
+.legend{display:flex; gap:1rem; font-size:.78rem; color:var(--mute); margin:.4rem 0 0; flex-wrap:wrap}
+.legend span::before{content:""; display:inline-block; width:.7rem; height:.7rem; border-radius:2px; margin-right:.35rem; vertical-align:-1px}
+.legend .a::before{background:#2a6f6a}
+.legend .b::before{background:#c0552d}
+
+/* dual metric cards */
+.dual{display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem}
+@media (max-width:820px){.dual{grid-template-columns:1fr}}
+.metric-card{
+  background:#fff; border:1px solid var(--line); border-radius:12px; padding:1.2rem;
+  text-align:center;
+}
+.metric-card .big{font-family:Georgia,serif; font-size:2.4rem; color:var(--navy); line-height:1}
+.metric-card .sub{color:var(--mute); font-size:.88rem; margin-top:.4rem}
+.metric-card.accent .big{color:var(--terra)}
+
+/* euro per truck visual */
+.truck-scale{margin-top:1.1rem}
+.truck-row{
+  display:grid; grid-template-columns:7.5rem 1fr 3.5rem;
+  gap:.5rem; align-items:center; margin:.45rem 0;
+}
+.truck-row .lab{font-size:.85rem; font-weight:600}
+.truck-row .dots{
+  height:1.6rem; display:flex; align-items:center; gap:2px; flex-wrap:nowrap; overflow:hidden;
+}
+.truck-row .dot{
+  width:8px; height:14px; border-radius:2px; background:var(--teal); opacity:.9;
+}
+.truck-row .dot.hot{background:var(--terra)}
+.truck-row .val{font-weight:700; text-align:right; font-variant-numeric:tabular-nums}
+
+/* method steps */
+.steps{display:grid; grid-template-columns:repeat(5,1fr); gap:.55rem; margin-top:1rem}
+@media (max-width:900px){.steps{grid-template-columns:1fr 1fr}}
+.step{
+  background:#fff; border:1px solid var(--line); border-radius:10px; padding:.85rem;
+  position:relative;
+}
+.step .num{
+  width:1.6rem; height:1.6rem; border-radius:50%; background:var(--navy); color:#fff;
+  display:grid; place-items:center; font-size:.75rem; font-weight:700; margin-bottom:.4rem;
+}
+.step p{margin:0; font-size:.8rem; color:var(--mute)}
+
+/* roadmap */
+.road{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:.8rem; margin-top:1rem;
+}
+@media (max-width:820px){.road{grid-template-columns:1fr}}
+.phase{
+  border-radius:12px; padding:1.15rem; border:1px solid var(--line); background:#fff;
+}
+.phase.now{border:2px solid var(--teal); box-shadow:0 0 0 4px rgba(42,111,106,.12)}
+.phase .ph{font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700; color:var(--teal)}
+.phase.later .ph{color:var(--mute)}
+.phase h3{margin-top:.3rem}
+.phase ul{margin:.5rem 0 0; padding-left:1.1rem; font-size:.88rem; color:var(--mute)}
+
+/* ask */
+.ask{
+  background:linear-gradient(135deg,#15233c,#1e334f);
+  color:#f7f4ee; border-radius:14px; padding:1.6rem 1.7rem; margin-top:.5rem;
+}
+.ask h2{color:#fff}
+.ask ul{margin:.7rem 0 0; padding-left:1.15rem}
+.ask li{margin:.4rem 0}
+.ask .keep{margin-top:1rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,.18); color:#cfd6e2; font-size:.92rem}
+
+.foot{font-size:.72rem; color:var(--mute); margin-top:1.2rem; border-top:1px solid var(--line); padding-top:.7rem}
+.note{font-size:.82rem; color:var(--mute); margin-top:.8rem}
+.two-col{display:grid; grid-template-columns:1.1fr .9fr; gap:1.2rem; margin-top:1rem}
+@media (max-width:820px){.two-col{grid-template-columns:1fr}}
+.table{width:100%; border-collapse:collapse; font-size:.84rem; margin-top:.6rem}
+.table th,.table td{padding:.4rem .45rem; border-bottom:1px solid var(--line); text-align:left}
+.table th{font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; color:var(--mute)}
+.table td.num{text-align:right; font-variant-numeric:tabular-nums; font-weight:600}
+.badge{
+  display:inline-block; background:#e4f1ef; color:var(--teal);
+  font-size:.68rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  padding:.2rem .5rem; border-radius:4px;
+}
+.importance{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:.7rem; margin-top:1rem;
+}
+@media (max-width:820px){.importance{grid-template-columns:1fr}}
+.imp{
+  background:#fff; border-radius:12px; padding:1rem; border:1px solid var(--line);
+}
+.imp .ico{
+  width:2.2rem; height:2.2rem; border-radius:8px; display:grid; place-items:center;
+  background:var(--paper); color:var(--terra); font-weight:800; margin-bottom:.5rem;
+  font-family:Georgia,serif;
+}
+
+.basis-strip{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 0 14px;padding:10px 14px;
+background:#eef3f9;border-left:4px solid #c0552d;font-size:12px;line-height:1.45;color:#222}
+.basis-strip b{color:#15233c;letter-spacing:.04em;text-transform:uppercase;font-size:10px;margin-right:4px}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Sections">
+  <a href="#p1">1 · Why this matters</a>
+  <a href="#p2">2 · Two systems</a>
+  <a href="#p3">3 · The tree</a>
+  <a href="#p4">4 · Letter trap</a>
+  <a href="#p5">5 · Euro proof</a>
+  <a href="#p6">6 · Filters</a>
+  <a href="#p7">7 · Per truck</a>
+  <a href="#p8">8 · How built</a>
+  <a href="#p9">9 · Path</a>
+  <a href="#p10">10 · Ask</a>
+</nav>
+
+<div class="wrap">
+<div class="basis-strip"><div><b>Observed</b> Parts billed through 30 June 2026</div><div><b>Modelled</b> Target spend / service demand where shown</div><div><b>Fleet</b> Historical fleet only — no forward forecast quoted</div></div>
+
+
+<!-- 1 -->
+<section class="page" id="p1">
+  <div class="kicker">ISZE internal · classification case</div>
+  <h1>AIM classification is how we will run the parts book</h1>
+  <p class="lede">Price-class letters build a list price. AIM tells us which product we are managing, where the euro sits, and how to talk to the network. This pack asks ISZE to adopt AIM as the internal commercial map. <b>This document is internal / private.</b> A customer-facing version would be a separate document, written after internal approval, with its own wording review.</p>
+
+  <div class="hero-grid">
+    <div class="verdict">
+      <div class="badge" style="background:rgba(255,255,255,.12);color:#f7f4ee">One sentence</div>
+      <strong>Price classes construct the list; functional families organise the business.</strong>
+      <p>We keep the letter factors for list construction. We use the functional families to describe what a part is, how a family moves, and what we bill. Exposure to the independent aftermarket is a <b>separate commercial attribute</b> evidenced per market, part and date — never read off a family name.</p>
+    </div>
+    <div class="stake">
+      <h3>Why this is important</h3>
+      <ol>
+        <li><b>One language</b> from ISZE packs to, later, IML and distributors.</li>
+        <li><b>Decisions in euro and family</b> — not in letter soup.</li>
+        <li><b>One spine</b> for target spend per truck, capture, and sales to dealer.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">€35.0M</div><div class="l">L12M parts billed</div><div class="h">Evidence window</div></div>
+    <div class="kpi"><div class="v">91.7%</div><div class="l">On a real catalogue node</div><div class="h">Ready to manage</div></div>
+    <div class="kpi"><div class="v">€13.2M</div><div class="l">Commercial tier (assigned)</div><div class="h">37.6% of the book</div></div>
+    <div class="kpi"><div class="v">3 levels</div><div class="l">Function → family → type</div><div class="h">Sweet spot</div></div>
+  </div>
+  <p class="note">Window: 1 July 2025 – 30 June 2026. Catalogue-full join. Network weighted base-price increase 5.96% ties the shipped revision total. Per-vehicle comparisons on later pages name their fleet base; a truck and a pickup rate are not like-for-like performance. Classification version for every family figure on this page: the functional hierarchy as dated in the basis note below.</p>
+</section>
+
+<!-- 2 -->
+<section class="page" id="p2">
+  <div class="kicker">Page 2 · What we are choosing between</div>
+  <h2>Two systems — different jobs</h2>
+  <p class="lede">Neither system is “wrong.” The mistake is using a pricing letter as if it were a product taxonomy.</p>
+
+  <div class="compare">
+    <div class="panel old">
+      <span class="tag old">Keep for maths</span>
+      <h3>Old price class</h3>
+      <p style="color:var(--mute);font-size:.9rem;margin:0 0 .6rem">IML-owned letter factor on the part. Answers: <b>which factor applies to this part number?</b></p>
+      <div class="letters">
+        <span>C</span><span>D</span><span>F</span><span>J</span><span>M</span><span>P</span><span>T</span><span>V</span>
+      </div>
+      <p style="font-size:.88rem;margin:.6rem 0 0;color:var(--mute)">Language to a distributor: “Class V.”</p>
+      <p style="font-size:.88rem;margin:.35rem 0 0;color:var(--mute)">Granularity: one letter for the whole catalogue.</p>
+    </div>
+    <div class="panel new">
+      <span class="tag new">Adopt for managing</span>
+      <h3>AIM catalogue classification</h3>
+      <p style="color:var(--mute);font-size:.9rem;margin:0 0 .6rem">Commercial product tree from the catalogue. Answers: <b>what kind of part is this, and how does that family move?</b></p>
+      <div class="tree-mini">
+        <div class="l1">Commercial attribute</div>
+        <div class="l2">→ Filters</div>
+        <div class="l3">→ Oil filter</div>
+      </div>
+      <p style="font-size:.88rem;margin:.6rem 0 0;color:var(--mute)">Language to a distributor: “Oil filters,” “Brake parts.”</p>
+      <p style="font-size:.88rem;margin:.35rem 0 0;color:var(--mute)">Granularity: posture → family → type.</p>
+    </div>
+  </div>
+
+  <div class="importance">
+    <div class="imp"><div class="ico">1</div><h4>Workshop thinks in families</h4><p style="margin:0;font-size:.88rem;color:var(--mute)">Service schedules and IAM quotes are oil filter / pad / disc — not letter codes.</p></div>
+    <div class="imp"><div class="ico">2</div><h4>Other OEMs run both</h4><p style="margin:0;font-size:.88rem;color:var(--mute)">Pricing factors for the list. Product taxonomy for capture and commercial dialogue.</p></div>
+    <div class="imp"><div class="ico">3</div><h4>Letters stay IML</h4><p style="margin:0;font-size:.88rem;color:var(--mute)">AIM does not change class factors. It sits beside them as the management axis.</p></div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="page" id="p3">
+  <div class="kicker">Page 3 · Structure</div>
+  <h2>Three levels — the sweet spot</h2>
+  <p class="lede">7 level-1 commercial values, 25 functional families, 172 types. Deep enough to manage, shallow enough to brief. Counts verified against the pricing catalogue (100% tie on 163,014 checked part numbers). <b>Function and commercial exposure are two axes, not one:</b> this page uses level 1 as a commercial attribute attached alongside the functional family, the same way price class is.</p>
+
+  <div class="arrow-flow">
+    <span class="chip">L1 Posture · 7 values</span><span class="arr">→</span>
+    <span class="chip mid">L2 Family · 25</span><span class="arr">→</span>
+    <span class="chip end">L3 Type · 172</span>
+  </div>
+
+  <div class="structure">
+    <div class="lvl l1">
+      <div class="n">Level 1</div>
+      <div class="t">Level 1 — a commercial attribute (assigned), not part identity</div>
+      <ul>
+        <li>Competitive parts — €13.16M</li>
+        <li>Repair — €7.22M</li>
+        <li>Accident — €6.42M</li>
+        <li>High value repair — €3.21M</li>
+        <li>… plus comfort, hardware, residuals</li>
+      </ul>
+    </div>
+    <div class="lvl l2">
+      <div class="n">Level 2</div>
+      <div class="t">Workshop family</div>
+      <ul>
+        <li>Brake parts — €3.55M</li>
+        <li>Exhaust — €2.48M</li>
+        <li>Filters — €2.35M</li>
+        <li>Steering — €1.63M</li>
+        <li>Cooling, clutch, suspension…</li>
+      </ul>
+    </div>
+    <div class="lvl l3">
+      <div class="n">Level 3</div>
+      <div class="t">Type inside the family</div>
+      <ul>
+        <li>Oil filter — €694k · +5.05%</li>
+        <li>Fuel filter — €959k · +2.26%</li>
+        <li>Other filter — €669k</li>
+        <li>Air filter — €28k (thin)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <b>What three levels unlock:</b> L1 groups the book by an <b>assigned commercial attribute</b> — a modelling choice about how exposed a line is to the independent aftermarket, not a measurement of it. L2 ranks functional families by euro and by price move. L3 separates types that behave differently inside one family — without dumping thousands of part numbers on the table. Where exposure is claimed, it must carry its market, its date and the quality of the price match; the family name alone proves nothing.
+  </div>
+  <div class="callout" style="background:#f4f1e9;border-left-color:#b8892a">
+    <b>Basis note.</b> Family euro figures in this pack are on the in-scope pricing base: parts billed 1 Jul 2025 – 30 Jun 2026, customers in scope, priced on both sides of the revision. 90.6% of billed euro sits on a governed catalogue node; the balance is a named residual and is not presented as a family. The audit window (1 Jan 2025 – 30 Jun 2026) gives different euro for the same families — see the basis annex.
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="page" id="p4">
+  <div class="kicker">Page 4 · Why letters fail as a map</div>
+  <h2>The letter trap — same code, different products</h2>
+  <p class="lede">Competitive parts are mostly letter <b>C (€6.79M)</b> and <b>V (€3.80M)</b>. That already mixes brakes, filters, exhaust, and steering. One letter cannot carry one commercial story.</p>
+
+  <div class="trap-grid">
+    <div class="trap">
+      <h4>Same product, split letters — Brake parts</h4>
+      <div class="split-bars">
+        <div class="c" style="width:55%">C · €1.76M</div>
+        <div class="v" style="width:45%">V · €1.45M</div>
+      </div>
+      <p style="margin:0;font-size:.85rem;color:var(--mute)">Ask “how did Class V move?” and you mix brake content with oil filters and more.</p>
+    </div>
+    <div class="trap">
+      <h4>Letter D is not a filter strategy</h4>
+      <p style="margin:0 0 .5rem;font-size:.9rem">Inside Filters, oil and fuel are essentially all <b>V</b>. The entire competitive <b>D</b> block (~€516k) is <b>Other filter</b> — DEF / hydraulic residue — not “filters” as a parts manager means them.</p>
+      <div class="mix-pile">
+        <i>Oil → V</i><i>Fuel → V</i><i>Air → V</i><i>Other → D</i>
+      </div>
+    </div>
+  </div>
+
+  <div class="trap" style="margin-top:1rem">
+    <h4>Same letter, different products — Class V and Class C</h4>
+    <div class="mix-pile" style="margin-top:.7rem">
+      <i>V · oil filters</i><i>V · fuel filters</i><i>V · large share of brakes</i>
+      <i>C · exhaust €1.86M</i><i>C · steering €1.57M</i><i>C · large share of brakes</i>
+    </div>
+    <p class="note" style="margin-top:.7rem;border:0;padding:0">Letters remain a retained attribute next to the node. They are not the storyboard.</p>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="page" id="p5">
+  <div class="kicker">Page 5 · Euro proof</div>
+  <h2>Which competitive family carries the euro — and which moved?</h2>
+  <p class="lede">On the same revision, brakes are large <b>and</b> hard-moving. Filters are large <b>and</b> soft-moving. A letter-only story cannot show that split.</p>
+  <div class="legend"><span class="a">Bar = L12M billed euro</span><span class="b">% = weighted base-price increase</span></div>
+
+  <div class="bar-block">
+    <div class="bar-row"><div class="lab">Brake parts</div><div class="track"><div class="fill hot" style="width:100%"></div></div><div class="eur">€3.55M</div><div class="pct up">+7.79%</div></div>
+    <div class="bar-row"><div class="lab">Exhaust</div><div class="track"><div class="fill" style="width:70%"></div></div><div class="eur">€2.48M</div><div class="pct up">+7.07%</div></div>
+    <div class="bar-row"><div class="lab">Filters</div><div class="track"><div class="fill soft" style="width:66%"></div></div><div class="eur">€2.35M</div><div class="pct dn">+3.75%</div></div>
+    <div class="bar-row"><div class="lab">Steering</div><div class="track"><div class="fill soft" style="width:46%"></div></div><div class="eur">€1.63M</div><div class="pct dn">+1.91%</div></div>
+    <div class="bar-row"><div class="lab">Cooling</div><div class="track"><div class="fill" style="width:23%"></div></div><div class="eur">€0.81M</div><div class="pct">+4.47%</div></div>
+    <div class="bar-row"><div class="lab">Clutch parts</div><div class="track"><div class="fill soft" style="width:22%"></div></div><div class="eur">€0.80M</div><div class="pct dn">+3.59%</div></div>
+    <div class="bar-row"><div class="lab">Suspension</div><div class="track"><div class="fill" style="width:19%"></div></div><div class="eur">€0.66M</div><div class="pct">+6.17%</div></div>
+    <div class="bar-row"><div class="lab">Fuel system</div><div class="track"><div class="fill hot" style="width:13%"></div></div><div class="eur">€0.46M</div><div class="pct up">+7.24%</div></div>
+  </div>
+
+  <div class="dual">
+    <div class="metric-card accent">
+      <div class="big">€243k</div>
+      <div class="sub">Brake parts step euro — largest competitive-family contributor on this revision</div>
+    </div>
+    <div class="metric-card">
+      <div class="big">€85k</div>
+      <div class="sub">Filters step euro — third-largest family by billed euro, softest large mover</div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="page" id="p6">
+  <div class="kicker">Page 6 · Drill to type</div>
+  <h2>Filters — one family, four commercial stories</h2>
+  <p class="lede">€2.35M filters = 17.9% of competitive parts and 6.7% of all in-scope billed parts. Oil moves almost twice as hard as fuel. Invisible in a C vs V cut.</p>
+
+  <div class="two-col">
+    <div>
+      <div class="bar-block">
+        <div class="bar-row"><div class="lab">Fuel filter</div><div class="track"><div class="fill soft" style="width:100%"></div></div><div class="eur">€959k</div><div class="pct dn">+2.26%</div></div>
+        <div class="bar-row"><div class="lab">Oil filter</div><div class="track"><div class="fill hot" style="width:72%"></div></div><div class="eur">€694k</div><div class="pct up">+5.05%</div></div>
+        <div class="bar-row"><div class="lab">Other filter</div><div class="track"><div class="fill" style="width:70%"></div></div><div class="eur">€669k</div><div class="pct">+4.68%</div></div>
+        <div class="bar-row"><div class="lab">Air filter</div><div class="track"><div class="fill soft" style="width:5%"></div></div><div class="eur">€28k</div><div class="pct dn">+0.80%</div></div>
+      </div>
+      <div class="callout">
+        <b>Honesty:</b> “Other filter” is a residual (DEF / hydraulic), not one product story. One part number is ~45% of that block. AIM makes the residual visible; letters bury it.
+      </div>
+    </div>
+    <div>
+      <table class="table">
+        <thead><tr><th>Type</th><th class="num">Read</th></tr></thead>
+        <tbody>
+          <tr><td>Fuel</td><td class="num">Softest large type</td></tr>
+          <tr><td>Oil</td><td class="num">Harder move, less euro than fuel</td></tr>
+          <tr><td>Other</td><td class="num">Do not treat as one family</td></tr>
+          <tr><td>Air</td><td class="num">Thin — anecdote only</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Oil-filter base-price also splits by distributor: a +9% cluster (IUK, DE, BE, NO, SE…) vs softer ITUK / UMI / UTI / PT. Two regimes inside one Level 3 type.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="page" id="p7">
+  <div class="kicker">Page 7 · Same family, different markets</div>
+  <h2>Filter euro per truck in service</h2>
+  <p class="lede">Same Level 2 family — Filters — and a tenfold gap between UTI and IUK. Letters cannot express that. AIM forces the right follow-up: mix, mileage, service practice.</p>
+
+  <div class="truck-scale">
+    <div class="truck-row">
+      <div class="lab">UTI (Israel CV)</div>
+      <div class="dots" aria-hidden="true"><!-- ~53 units --><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span><span class="dot hot"></span></div>
+      <div class="val">€52.8</div>
+    </div>
+    <div class="truck-row">
+      <div class="lab">ITUK</div>
+      <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      <div class="val">€30.0</div>
+    </div>
+    <div class="truck-row">
+      <div class="lab">Ireland</div>
+      <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      <div class="val">€25.4</div>
+    </div>
+    <div class="truck-row">
+      <div class="lab">Belgium</div>
+      <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      <div class="val">€8.4</div>
+    </div>
+    <div class="truck-row">
+      <div class="lab">UMI (Israel LCV)</div>
+      <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      <div class="val">€7.7</div>
+    </div>
+    <div class="truck-row">
+      <div class="lab">IUK</div>
+      <div class="dots"><span class="dot soft" style="background:#8a98ab"></span><span class="dot" style="background:#8a98ab"></span></div>
+      <div class="val">€5.0</div>
+    </div>
+  </div>
+  <p class="note">Israel always as two rows: UMI and UTI — never blended. IUK ≠ ITUK. Fleet = 2025 trucks in service. UTI filter mix is heavy in Other filter / DEF-type content (~40% of UTI filter euro).</p>
+</section>
+
+<!-- 8 -->
+<section class="page" id="p8">
+  <div class="kicker">Page 8 · Method</div>
+  <h2>How we built it — so the numbers can be audited</h2>
+  <p class="lede">Catalogue family → group → type from PR00, joined to every billed part. AIM workbook categories sit alongside. We quote the <b>full catalogue join</b> — not a thin source-flag slice that would drop to 13.5% of euro.</p>
+
+  <div class="steps">
+    <div class="step"><div class="num">1</div><p>Collect billed part numbers + PR00 classification extract</p></div>
+    <div class="step"><div class="num">2</div><p>Attach family / group / type by 10-character part key</p></div>
+    <div class="step"><div class="num">3</div><p>Attach Parts Master categories by clean description match</p></div>
+    <div class="step"><div class="num">4</div><p>Fill gaps with high-confidence suggestions or catalogue</p></div>
+    <div class="step"><div class="num">5</div><p>Join to L12M billed euro; tie out to shipped revision</p></div>
+  </div>
+
+  <div class="kpi-row" style="margin-top:1.2rem">
+    <div class="kpi"><div class="v">99.8%</div><div class="l">Rows matched</div></div>
+    <div class="kpi"><div class="v">91.7%</div><div class="l">Real catalogue node</div></div>
+    <div class="kpi"><div class="v">4.4%</div><div class="l">Other / review named</div></div>
+    <div class="kpi"><div class="v">0 unmatched</div><div class="l">Distributor tie-out</div></div>
+  </div>
+
+  <div class="callout">
+    <b>Verified on purpose:</b> every “Brake parts” Level 2 row sits under Competitive parts (no exception) — €3.55M family. Strict leak of brake-like content outside that bucket ≈ €24k. Price-class letter kept as a cross-attribute, not the axis.
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="page" id="p9">
+  <div class="kicker">Page 9 · Rollout path</div>
+  <h2>ISZE first — then IML — then distributors</h2>
+  <p class="lede">Today this pack is for ISZE. The same map is designed so that, once we approve it internally, we can send one language to customers.</p>
+
+  <div class="road">
+    <div class="phase now">
+      <div class="ph">Now</div>
+      <h3>ISZE internal</h3>
+      <ul>
+        <li>Default axis for management packs</li>
+        <li>Price-revision readouts by family</li>
+        <li>Capture and competitive ranking</li>
+        <li>Letters retained as attribute only</li>
+      </ul>
+    </div>
+    <div class="phase later">
+      <div class="ph">Next</div>
+      <h3>IML alignment</h3>
+      <ul>
+        <li>Show the map does not fight list maths</li>
+        <li>Same L1/L2/L3 in joint reviews</li>
+        <li>Clarify IML owns class factors</li>
+      </ul>
+    </div>
+    <div class="phase later">
+      <div class="ph">Then</div>
+      <h3>All distributors</h3>
+      <ul>
+        <li>One workshop language across the network</li>
+        <li>Sales-to-dealer mix in family terms</li>
+        <li>Euro per truck where fleet exists</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">Limits we keep visible (trust): Other filter residual; thin air filter; four markets without fleet counts (~€1.54M euro still in totals); ~8.3% still unattributed to a real node; no elasticity claimed here. Classification works — the old scoring layer is not this case.</div>
+</section>
+
+<!-- 10 -->
+<section class="page" id="p10">
+  <div class="kicker">Page 10 · Decision</div>
+  <div class="ask">
+    <h2>Closing ask</h2>
+    <p style="margin:0;color:#cfd6e2">Adopt <b style="color:#fff">AIM catalogue classification (Level 1 → Level 2 → Level 3)</b> as ISZE’s default commercial axis.</p>
+    <ul>
+      <li>Management packs and price-revision readouts</li>
+      <li>Competitive-family ranking and capture discussions</li>
+      <li>Distributor reviews and sales-to-dealer mix — when we go external</li>
+    </ul>
+    <p class="keep">Retain the old price-class letter <b style="color:#fff">only as an attribute next to the node</b>, never as the storyboard. That keeps IML’s pricing maths intact and gives ISZE — and later every customer — a product tree the business can act on.</p>
+  </div>
+
+  <div class="foot">
+    Evidence: L12M parts billed 2025-07-01 → 2026-06-30 · catalogue-full · network +5.9616% ties shipped revision.<br/>
+    Sources: <code>01_data/00_derived/aim_catalog_breakdown_NOTES.md</code> · <code>aim_catalog_x_priceclass.csv</code> · <code>aim_pn_classification.csv</code><br/>
+    Audience: ISZE internal. Path after approval: IML, then distributors.
+  </div>
+</section>
+
+</div>
+<script>
+(function(){
+  const links=[].slice.call(document.querySelectorAll('.nav a'));
+  const pages=[].slice.call(document.querySelectorAll('.page'));
+  function setOn(){
+    let cur=pages[0]&&pages[0].id;
+    const y=window.scrollY+80;
+    pages.forEach(p=>{ if(p.offsetTop<=y) cur=p.id; });
+    links.forEach(a=>a.classList.toggle('on', a.getAttribute('href')==='#'+cur));
+  }
+  window.addEventListener('scroll', setOn, {passive:true});
+  setOn();
+})();
+</script>
+</body>
+</html>

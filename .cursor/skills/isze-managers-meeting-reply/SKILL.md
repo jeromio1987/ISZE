@@ -95,7 +95,7 @@ Customer-facing Outlook drafts attach **only** what the customer can open and wi
 
 | OK | Forbidden |
 |----|-----------|
-| Meeting presentation `.pptx` / `.pdf` (Mode A) | `.cmd`, `.md`, `.csv`, `.zip` |
+| Meeting presentation `.pptx` / `.pdf` (shared) | `.cmd`, `.md`, `.csv`, `.zip` |
 | `.xlsx` **only if they asked** for a workbook | Agent scripts, internal packs, IDS zips, SPA working CSVs |
 
 If they asked only for the presentation → attach **that one file**. Keep zip/csv/scripts in an `_aside_do_not_attach/` subfolder so they are not sitting next to the draft body.
@@ -105,8 +105,8 @@ Scar (2026-09-15): Shelly asked for the 12 Aug presentation only; first draft wr
 ## Checklist before handoff
 
 - [ ] Structure mirrors Dirk/YN questions
-- [ ] Numbers traced to Outlook / xlsx / Margin / PBI / MoM (named in Mode B chat if needed; clean in draft)
+- [ ] Numbers traced to Outlook / xlsx / Margin / PBI / MoM (named in internal chat if needed; clean in draft)
 - [ ] Fact gate passed
 - [ ] Shell/UMI vs Europe CP not blended
-- [ ] Customer attach = Mode A pptx/pdf only (no zip/csv/cmd/md/scripts) unless they asked for a workbook
+- [ ] Customer attach = shared pptx/pdf only (no zip/csv/cmd/md/scripts) unless they asked for a workbook
 - [ ] Draft only in chat (or Outlook draft if he asked) — never Sent

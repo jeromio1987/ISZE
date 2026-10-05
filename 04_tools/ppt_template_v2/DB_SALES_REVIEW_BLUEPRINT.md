@@ -32,37 +32,45 @@ doesn't repeat the same rounds. Follow it in order; each section names the mista
 
 ---
 
-## 2. Deck structure (17-slide template, adjust count per DB's actual findings)
+## 2. Deck structure — meeting core + appendix (Sep 2026 craft)
 
-1. Cover
-2. Agenda
-3. Q period Sales Review — actual vs budget, actual vs prior year, by month. **Use official/accounting figures if the user supplies them, not a self-derived cut.**
-4. Parts Performance — **commercial / ex-warranty** category-level H1 movers (bar chart, up and down) **plus the largest-EUR PN drivers** for the increase and the decrease (PN + short description; model/application only when present in workspace BVP/PMS tables). Never review blended warranty+commercial demand as the sales cut.
-5+. One slide per material problem category (each ~-15% or worse) — same commercial basis; lead with category total then the **top PNs by EUR delta** driving that category move; see tone rules below for exact structure
-   - Growth slide: top growing PNs by EUR delta (prior > 0), not category totals alone
-   - One slide for "New Business" — PNs with zero sales in prior years, cross-checked they don't just have a timing/backdated-invoice artifact, and cross-checked against warranty claims before calling them "new" wins
-6. GPS Capture — one line, the clean number, nothing else (see tone rules)
-7. PMS Coverage — filter categories with real km intervals labeled, wear-item categories with confidence caveats
-8. Fleet trend (multi-year chart, real registrations if available)
-9. FY target build-up — **two separate tables, same €-level (both ISZE-net or both dealer-level, never mixed)**: (a) Market Potential = units × rate by segment, (b) Actual + Stretch = target. Never present these as one flat list of percentages that look like they should sum — they don't, and it will get challenged.
-10. Growth / Price / Incentive — lead with the DB's own organic growth as credit, state the price move plainly, disclose incentive status honestly (pending/approved/none), don't defend the math unless asked
-11. SPA — status/process cards, correct actual workflow, DB-attributed not person-attributed
-12. R&M (or equivalent commercial-programme topic) — discussion QUESTIONS, not a status statement
-13. Data request (if applicable) — card layout, lead with what's in it for them
-14. IDS / dealer network summary (if a pack exists)
-15. Next steps — pull every open item stated elsewhere in the deck into one list
-16. Closing
+**Reference:** `01_data/Presentaion style/ISZE_UMI_Customer_Executive_Redesign.pptx`. Skill detail: `.cursor/skills/isze-db-sales-review/presentation.md`.
+
+### Meeting core (≈10–12 slides — what you speak)
+
+1. Cover  
+2. **Executive storyline** — 3–4 facts + **3 joint decisions** (replaces topic agenda)  
+3. Performance — Q / YTD official cut; **headline = finding sentence**. **Use official/accounting figures if the user supplies them, not a self-derived cut.**  
+4. Mix — **commercial / ex-warranty** category H1 movers (bar chart). Finding headline: growth is real somewhere; leakage sits elsewhere. Largest-EUR PN names may appear in takeaways; full PN tables stay in appendix.  
+5. **Leakage** — one slide, top 2–3 declining categories as cards (from→to €, one question, **recommended first action**). Not one slide per family in the spoken path.  
+6. **Opportunities** — short growth list + **Repeatable / Protectable / Actionable** decision lens  
+7. GPS Capture — clean capture vs uncaptured € (or amount view) + one meeting question  
+8. Service-parts pilot — network gaps; agree first category  
+9. IDS / dealer network (if a pack exists)  
+10. Fleet + FY target build-up — **two separate tables, same €-level (both ISZE-net or both dealer-level, never mixed)**; headline finding on fleet direction  
+11. **Joint plan** — 3–4 workstreams (lubricants / pilot / SPA / part-level sales-to-dealer data)  
+12. Closing  
+
+### Appendix (after first close — prep / selective share)
+
+- Per-category PN decline and growth deep dives (was the old 5+ stage)  
+- New Business validation queue  
+- SPA process cards, R&M questions, detailed data-request cards  
+- Analytical deep dive (`build_full_deck.py` §7)  
+
+Never review blended warranty+commercial demand as the sales cut on movers.
 
 ### Locked FY2027 lenses
 
 - **FY-first:** Prefer fiscal-year figures on every customer slide when available;
   use calendar year only as fallback. Exception: parts H1 / slide-3 window stays
   **CY H1** (Jan–Jun). PMS **capture %** stays complete-CY (no FY capture model).
-- The customer-facing target is **Sales-to-Dealer** from Dashboard columns P:U:
-  `FY2026 Sales-to-Dealer × (1 + fleet movement) × 1.05 × 1.018`.
-  If FY2026 Sales-to-Dealer is unavailable, use FY2026 ISZE billing divided by 0.65
+- The customer-facing target is **sales to dealer** from Dashboard columns P:U:
+  `FY2026 sales to dealer × (1 + fleet movement) × 1.05 × 1.018`.
+  If FY2026 sales to dealer is unavailable, use FY2026 ISZE billing divided by 0.65
   and label the base as a working estimate. ISZE-to-distributor billing remains an
-  internal reconciliation measure, not the headline target.
+  internal reconciliation measure, not the headline target. Slide titles say
+  **sales to dealer**, never “sell-out” or “wallet”.
 - Growth tables require **prior-period sales above zero** and exclude credit notes.
   Prior-zero/current-positive parts move to a **New Business validation** slide;
   they are not described as incremental growth until new model, supersession,
@@ -73,7 +81,7 @@ doesn't repeat the same rounds. Follow it in order; each section names the mista
   `warranty_raw_grain.csv` claim lines for that DB (assess-month window = prior
   H1 opened 3 months early through current H1 end) **plus** the PN/description
   text heuristic (PM sensor / warranty / campaign / recall). Credits stay on the
-  net bridge (signed negative, out of movers). Label Mode A takeaways
+  net bridge (signed negative, out of movers). Label shared takeaways
   **commercial / ex-warranty**. Limitation: claim-matched PN exclusion drops all
   billing of that PN (including any genuine commercial demand); residual warranty
   on unmapped PNs can remain; grain assess-month coverage is uneven by DB/year.
@@ -99,7 +107,7 @@ doesn't repeat the same rounds. Follow it in order; each section names the mista
 
 - **Never name an internal colleague on a slide**, and never reference an internal person's uncertainty ("X asked what this means"). If a term needs defining, just define it.
 - **Never show internal QA/correction process on a slide** — no "old number vs corrected number" tables, no "PRISM master (flat) vs segment-priced" comparisons. State only the final, correct number. The correction trail stays in chat/memory.
-- **Formal, neutral titles for anything declining** — "Brake Parts Performance — H1 2026 vs H1 2025," not "-33%, and it's not a value-tier switch." Save the editorial framing for the takeaway bullets, not the headline.
+- **Headline = finding sentence** — "Three category gaps deserve a direct conversation," not a section label like "Parts Performance — Exhaust." Keep blame out of the title; put the open question on the card.
 - **Frame declines as open questions, grounded in what's realistic** — distributors essentially never source competitively at DB level, so lead with price/service questions, not "did you switch suppliers." Ask, don't assert a cause.
 - **If a genuine part is declining, ask whether a BVP alternative exists and is growing** — that's the real diagnostic question (value-tier switch vs real loss), not a rhetorical one.
 - **State a positive fact once.** Don't reinforce "your growth is good" twice on the same slide — it reads as buttering up, not as analysis.
@@ -210,9 +218,9 @@ They are listed here because they will bite again in any hand-rolled analysis.
 
 ---
 
-## 7. Full deck (Mode A + deep dive) — Aug 2026 blueprint
+## 7. Full deck (meeting core + appendix + analytical deep dive) — Sep 2026
 
-After Hungary (AutoWallis), the standard pack is **Mode A meeting deck + deep-dive annex** in one PPTX. Same shape for every DB.
+After Hungary (AutoWallis) and the UMI customer redesign, the standard pack is **meeting core + appendix + analytical deep dive** in one PPTX. Same shape for every DB.
 
 ### Run order
 
@@ -228,19 +236,19 @@ Outputs under `09_meetings\<DB>_Sales_Review_2026\`:
 
 | File | Role |
 |------|------|
-| `ISZE_<DB>_Sales_Review_FY2027.pptx` | Full = Mode A + deep dive |
-| `ISZE_<DB>_Sales_Review_FY2027_ModeA_only.pptx` | Customer-safe Mode A only |
+| `ISZE_<DB>_Sales_Review_FY2027.pptx` | Full = meeting core + appendix + analytical deep dive |
+| `ISZE_<DB>_Sales_Review_FY2027_shared_only.pptx` | Meeting core + appendix (no analytical annex) |
 | `_full_deck_manifest.json` | Slide counts + paths |
 | `_summary.json` | Parts / GPS / PMS inputs |
 
 `build_hungary_full_deck.py` is a thin wrapper around `build_full_deck.py --db HUNGARY`.
 
-### Deep-dive slide set (customer-shareable — no “INTERNAL” stamp)
+### Analytical deep-dive slide set (after appendix — selective share)
 
 1. Divider — prep detail; pick slides to share  
 2. Agenda  
 3. **GPS** — **max two FY lines**: fiscal-year GPS % + fiscal GPS **excl. warranty** (no calendar-year GPS line on the chart)  
-4–5. FY25→FY26 wallet mix (Genuine only / Genuine with BVP alternative / BVP)  
+4–5. FY25→FY26 parts mix (Genuine only / Genuine with BVP alternative / BVP) — say **parts billed**, not “wallet”  
 6–7. Drivers — plain English where the genuine drop sits **on FY**; top PN losers outside PMS  
 8. Service-parts **CY capture %** vs network (complete calendar year only — never YTD vs full-year expected; capture % has no FY twin)  
 9. Same five lines as **FY € billing** (so fiscal is visible even though capture % is CY)  
@@ -249,20 +257,21 @@ Outputs under `09_meetings\<DB>_Sales_Review_2026\`:
 12. Warranty — claim-price CY vs fiscal GPS expense (two lenses, labelled)  
 13. Meeting bridge table  
 
-### Locked language / lenses (from Hungary round)
+### Locked language / lenses (from Hungary + style pack)
 
-- **FY-first on all customer slides.** Prefer fiscal-year numbers when available; fall back to calendar year only when FY does not exist. **Exception:** Mode A slide 3 / parts H1 window stays **CY H1** (Jan–Jun like-for-like).  
+- **FY-first on all customer slides.** Prefer fiscal-year numbers when available; fall back to calendar year only when FY does not exist. **Exception:** parts H1 window stays **CY H1** (Jan–Jun like-for-like).  
 - **GPS deep-dive chart:** max **two** lines — FY GPS % and FY GPS % excl. warranty. Never a third CY GPS series.  
 - **Genuine with BVP alternative** — never “genuine contested” on slides.  
 - PMS primary = **total** capture; capture % remains **complete CY only** (by design).  
 - Fleet chart = calendar years (UIO source); FY2027 target bullets say so explicitly. No Total≈dominant-segment double line (≥90% → Total only + mix takeaway).  
 - No `INTERNAL` eyebrow — deep dive may be shared selectively.  
 - Israel: **UMI ≠ UTI** on any IDS-linked slide.  
-- PMS year = `latest_complete_pms_year()` (full CY only).
+- PMS year = `latest_complete_pms_year()` (full CY only).  
+- Never **Mode A / Mode B**, **wallet**, or **sell-out** on customer slides.
 
 ### Adding another customer
 
 1. Ensure `db_profiles.yaml` has `sold_to` (or resolvable `gps_key` in `gps_billing_fy_ALLCUSTOMERS.csv`).  
 2. Run the four commands above.  
-3. Read watch list + contact sheets; sharpen Mode A wording before send.  
+3. Read watch list + contact sheets; sharpen shared wording before send.  
 4. Ship only on explicit rebuild/ship OK from Jerome.

@@ -8,7 +8,7 @@
 
 **Doc quirk:** Word title says “Business Review Petros”; content is ISD/Germany.
 
-## Locked takeaways (Mode B)
+## Locked takeaways (internal)
 
 - FY27 StD proposal **~€6.52M** (fleet −2.1%/maybe −3%, +5% price, +1.8% natural) — pending Sebastian UIO refresh; ISZJ uses CY targets.
 - Genuine capture presented **~65.9%**; ISZJ method focuses ≤5yr fleet — methodology to be shared.

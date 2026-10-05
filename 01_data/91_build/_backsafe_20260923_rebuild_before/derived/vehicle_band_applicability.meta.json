@@ -1,0 +1,23 @@
+{
+  "generated_by": "01_data/91_build/pn_ammo_probe_20260918/_vehicle_band_applicability.py",
+  "mapping_source": "03_analytics/Isuzu/prism/data/series_to_band.csv (authored)",
+  "reader": "03_analytics/Isuzu/prism/modules/vehicle_bands.py",
+  "band_vocabulary": [
+    "LCV_D-Max",
+    "3.5t_N35",
+    "7.5t_N50_N62_N75",
+    "F_series_MD_heavy"
+  ],
+  "n_series_ladder": [
+    "3.5t_N35",
+    "5.5t_N50_N55",
+    "7.5t_N50_N62_N75"
+  ],
+  "note": "vehicle_bands covers all four vehicle groups; n_series_bands / band_list / bands keep their old three-rung meaning. A D-Max or F-series part is written with its own group and never as a rung of the N-series ladder.",
+  "routes": [
+    "epc_decode",
+    "crossref_vehicle_model",
+    "crossref_registry_model"
+  ],
+  "wildcards_are_never_converted": true
+}

@@ -28,7 +28,6 @@ from config import (  # noqa: E402
     DERIVED_DIR,
     GENUINE_BVP_CROSSREF_CSV,
     GPS_SPU_BY_DB_CSV,
-    ISZE_ROOT,
     SALES_FACT_PARQUET,
     resolve_mapping_path,
 )
@@ -74,7 +73,16 @@ YEAR = 2025
 # Native Excel loaders always included; long-CSV DBs auto-discovered and merged.
 NATIVE_DISTS = ("ITUK", "UTI")
 # Display / sort order when present (others append alphabetically).
-DIST_ORDER = ("ITUK", "UTI", "IRELAND", "IUK", "GREECE")
+DIST_ORDER = ("ITUK", "UTI", "IRELAND", "IUK", "GREECE", "PORTUGAL", "ROMANIA")
+CHANNEL = {
+    "ITUK": "CV trucks",
+    "UTI": "CV trucks",
+    "IUK": "LCV pickups",
+    "IRELAND": "CV+LCV",
+    "GREECE": "CV+LCV",
+    "PORTUGAL": "CV+LCV",
+    "ROMANIA": "LCV pickups",
+}
 # ITUK DVLA / UTI fallback if GPS row missing; others from gps_spu_by_distributor.
 UIO_FALLBACK = {"ITUK": 22_389.0, "UTI": 10_668.0}
 
@@ -386,6 +394,52 @@ def _tbl(headers: list[str], rows: list[list[str]], row_class: str = "") -> str:
     return h + body + "</table>"
 
 
+def _mix_bars_html(mix: list[dict]) -> str:
+    sell = [r for r in mix if r.get("layer") == "sellout_db_dlr"]
+    parts = []
+    for r in sell:
+        dist = r.get("distributor_code") or ""
+        bvp = (r.get("bvp_pct") or 0) * 100
+        gc = (r.get("genuine_contested_pct") or 0) * 100
+        go = (r.get("genuine_only_pct") or 0) * 100
+        parts.append(
+            f'<div class="bar-row"><span class="bar-lab">{_e(dist)}</span>'
+            f'<div class="bar-track" title="BVP {bvp:.0f}% / contested genuine {gc:.0f}% / genuine-only {go:.0f}%">'
+            f'<div class="bar-seg" style="width:{bvp:.1f}%;background:#c0552d"></div>'
+            f'<div class="bar-seg" style="width:{gc:.1f}%;background:#5a6d86"></div>'
+            f'<div class="bar-seg" style="width:{go:.1f}%;background:#d9d3c8"></div>'
+            f"</div></div>"
+        )
+    return "".join(parts) or "<p class='muted'>No sales-to-dealer mix rows.</p>"
+
+
+def _pms_bars_html(pms: list[dict], dists: tuple[str, ...]) -> str:
+    rows = list(pms)[:12]
+    max_q = 1.0
+    for r in rows:
+        for d in dists:
+            max_q = max(max_q, float(r.get(f"{d}_sellout_db_dlr_bvp_qty") or 0))
+    palette = ["#c0552d", "#15233c", "#2b4a78", "#8a6500", "#0f766e", "#7c3aed"]
+    legend = "".join(
+        f'<span class="leg"><i style="background:{palette[i % len(palette)]}"></i>{_e(d)}</span>'
+        for i, d in enumerate(dists)
+    )
+    body = []
+    for r in rows:
+        lab = r.get("category_label") or r.get("pms_category") or ""
+        segs = []
+        for i, d in enumerate(dists):
+            q = float(r.get(f"{d}_sellout_db_dlr_bvp_qty") or 0)
+            w = 100.0 * q / max_q if max_q else 0
+            segs.append(
+                f'<div class="mini"><div class="bar-seg" style="width:{w:.1f}%;background:{palette[i % len(palette)]}"></div></div>'
+            )
+        body.append(
+            f'<div class="bar-row pms"><span class="bar-lab">{_e(lab)}</span><div class="mini-stack">{"".join(segs)}</div></div>'
+        )
+    return f'<div class="legend">{legend}</div>' + "".join(body)
+
+
 def build_html(payload: dict) -> str:
     mix = payload["aim_mix_comparison"]
     proxy_note = payload.get("valuation_note", "")
@@ -469,79 +523,115 @@ def build_html(payload: dict) -> str:
     gen_top = "<div class='gridN'>" + "".join(gen_blocks) + "</div>"
 
     b_by = payload.get("benchmarks_by_dist") or {}
-    kpi_items = []
+    uti_row = next((r for r in mix if r.get("distributor_code") == "UTI" and r.get("layer") == "sellout_db_dlr"), None)
+    iuk_row = next((r for r in mix if r.get("distributor_code") == "IUK" and r.get("layer") == "sellout_db_dlr"), None)
+    kpi_bits = []
+    if uti_row and iuk_row:
+        kpi_bits.append(
+            (
+                "UTI BVP capture (CV trucks)",
+                _pct(uti_row.get("contested_bvp_capture")),
+                "BVP qty as a share of BVP + contested genuine on UTI sales to dealer. UTI is trucks. Compare to IUK as a tendency only.",
+            )
+        )
+        kpi_bits.append(
+            (
+                "IUK BVP capture (LCV pickups)",
+                _pct(iuk_row.get("contested_bvp_capture")),
+                "Same formula on IUK sales to dealer. IUK is D-Max pickups, not trucks. Not like-for-like with UTI.",
+            )
+        )
     for dist in dists:
         bb = b_by.get(dist) or {}
-        kpi_items.append((f"{dist} sales to dealer qty", _fmt(bb.get("qty"))))
-        kpi_items.append((f"{dist} BVP % of proxy", _pct(bb.get("bvp_pct"))))
+        kpi_bits.append(
+            (
+                f"{dist} sales-to-dealer qty",
+                _fmt(bb.get("qty")),
+                f"Reported dealer demand qty CY{YEAR}. ITUK is dealer×PN SSOT; Duncan network companion is a separate mix row.",
+            )
+        )
+        kpi_bits.append(
+            (
+                f"{dist} BVP % of proxy",
+                _pct(bb.get("bvp_pct")),
+                "BVP share of ISZE-denominated proxy (qty × median ISZE→DB price). Not dealer invoice €.",
+            )
+        )
     kpis = "".join(
-        f'<div class="kpi"><div class="val">{_e(v)}</div><div class="lbl">{_e(l)}</div></div>'
-        for l, v in kpi_items
+        f'<div class="kpi"><div class="val">{_e(v)}</div><div class="lbl">{_e(l)}</div><div class="tip">{_e(tip)}</div></div>'
+        for l, v, tip in kpi_bits
     )
-
-    chart_json = json.dumps(
-        _clean_nans(
-            {
-                "aim_mix": mix,
-                "pms_compare": payload.get("pms_compare", [])[:12],
-                "distributors": list(dists),
-            }
-        ),
-        allow_nan=False,
-    )
+    mix_bars = _mix_bars_html(mix)
+    pms_bars = _pms_bars_html(payload.get("pms_compare", []), dists)
     dist_label = " · ".join(dists)
 
-    html_out = f"""<!DOCTYPE html>
+    return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sales to dealer · mix · CY{YEAR}</title>
-<script>/*INLINE_CHART_JS*/</script>
+<title>Sales to dealer AIM · UTI CV vs IUK LCV · CY{YEAR}</title>
 <style>
-:root {{ --red:#CC0E1E; --bg:#f4f5f7; --card:#fff; --text:#1a1a1a; --muted:#5a5a5a; --border:#e4e4e7; }}
+:root {{ --navy:#15233c; --terra:#c0552d; --paper:#f7f4ee; --ink:#222; --muted:#5a5a5a; --border:#d9d3c8; }}
 * {{ box-sizing:border-box; }}
-body {{ margin:0; font-family:"Segoe UI",Calibri,sans-serif; background:var(--bg); color:var(--text); }}
-header {{ background:linear-gradient(135deg,var(--red),#9a0b17); color:#fff; padding:1.4rem 2rem; }}
-header h1 {{ margin:0.2rem 0; font-size:1.45rem; }}
+body {{ margin:0; font-family:"Segoe UI",Calibri,sans-serif; background:var(--paper); color:var(--ink); }}
+header {{ background:linear-gradient(155deg,#15233c 0%,#203759 55%,#2b4a78 100%); color:#f7f4ee; padding:1.4rem 2rem; }}
+header h1 {{ margin:0.2rem 0; font-size:1.55rem; font-family:Georgia,serif; color:#fff; font-weight:400; }}
 .badge {{ display:inline-block; margin-top:0.4rem; padding:0.2rem 0.55rem; background:rgba(0,0,0,0.25); border-radius:4px; font-size:0.72rem; }}
 .wrap {{ max-width:1400px; margin:0 auto; padding:1rem 1.25rem 2rem; }}
-section {{ background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1rem 1.2rem; margin-bottom:1rem; overflow-x:auto; }}
-section h2 {{ margin:0 0 0.6rem; font-size:1.02rem; color:var(--red); border-bottom:3px solid var(--red); padding-bottom:0.25rem; }}
+section {{ background:#fff; border:1px solid var(--border); border-radius:10px; padding:1rem 1.2rem; margin-bottom:1rem; overflow-x:auto; }}
+section h2 {{ margin:0 0 0.6rem; font-size:1.02rem; font-family:Georgia,serif; color:var(--navy); border-bottom:3px solid var(--terra); padding-bottom:0.25rem; }}
 section h3 {{ font-size:0.9rem; margin:0.5rem 0; color:var(--muted); }}
-.callout {{ padding:0.65rem 0.9rem; border-left:4px solid var(--red); background:#fff8f8; font-size:0.88rem; margin-bottom:1rem; }}
+.callout {{ padding:0.65rem 0.9rem; border-left:4px solid var(--terra); background:#fff; font-size:0.88rem; margin-bottom:1rem; color:var(--ink); }}
 .kpi-row {{ display:flex; flex-wrap:wrap; gap:0.55rem; }}
-.kpi {{ flex:1 1 140px; background:var(--bg); border-left:4px solid var(--red); padding:0.6rem 0.8rem; border-radius:6px; }}
-.kpi .val {{ font-size:1.05rem; font-weight:700; }}
+.kpi {{ flex:1 1 140px; background:#fff; border-left:4px solid var(--terra); padding:0.6rem 0.8rem; border-radius:6px; position:relative; cursor:help; color:var(--ink); }}
+.kpi .val {{ font-size:1.05rem; font-weight:700; color:var(--navy); }}
 .kpi .lbl {{ font-size:0.72rem; color:var(--muted); }}
+.basis-strip {{ display:flex; flex-wrap:wrap; gap:8px 18px; margin:10px 0 14px; padding:10px 14px; background:#eef3f9; border-left:4px solid #c0552d; font-size:12px; line-height:1.45; color:#222; }}
+.basis-strip b {{ color:#15233c; letter-spacing:.04em; text-transform:uppercase; font-size:10px; margin-right:4px; }}
+.kpi .tip {{ display:none; position:absolute; left:0; top:calc(100% + 6px); z-index:8; width:min(280px,70vw); background:#15233c; color:#f7f4ee; padding:10px 12px; font-size:12px; border-top:3px solid #c0552d; }}
+.kpi:hover .tip {{ display:block; }}
 .grid2 {{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; }}
 .gridN {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem; }}
 @media(max-width:900px){{ .grid2{{ grid-template-columns:1fr; }} }}
 .tbl {{ width:100%; border-collapse:collapse; font-size:0.74rem; }}
-.tbl th {{ background:var(--red); color:#fff; padding:0.35rem 0.45rem; text-align:left; white-space:nowrap; }}
-.tbl td {{ padding:0.3rem 0.45rem; border-bottom:1px solid var(--border); }}
-.tbl tr.bill td {{ background:#f0f4ff; }}
+.tbl th {{ background:#15233c; color:#f7f4ee; padding:0.35rem 0.45rem; text-align:left; white-space:nowrap; }}
+.tbl td {{ padding:0.3rem 0.45rem; border-bottom:1px solid var(--border); color:var(--ink); }}
+.tbl tr.bill td {{ background:#eef3f9; color:#222; }}
 .muted {{ color:var(--muted); font-size:0.85rem; }}
+.bar-row {{ display:flex; align-items:center; gap:8px; margin:7px 0; }}
+.bar-lab {{ width:110px; font-size:12px; flex-shrink:0; color:var(--ink); }}
+.bar-track {{ flex:1; display:flex; height:22px; background:#e8e4dc; border-radius:3px; overflow:hidden; }}
+.bar-seg {{ height:100%; }}
+.legend {{ display:flex; flex-wrap:wrap; gap:10px; font-size:12px; margin-bottom:8px; color:var(--ink); }}
+.legend i {{ display:inline-block; width:10px; height:10px; margin-right:4px; }}
+.mini-stack {{ flex:1; }}
+.mini {{ height:8px; background:#e8e4dc; margin:2px 0; border-radius:2px; overflow:hidden; display:flex; }}
+.bar-row.pms .bar-lab {{ width:130px; }}
 </style>
 </head>
 <body>
 <header>
-  <div style="font-weight:800;font-size:0.8rem;letter-spacing:0.08em;opacity:0.9">ISZE · billed vs sales to dealer · mix / GPS proxy</div>
-  <h1>BVP &amp; genuine — sales to dealer — {_e(dist_label)} (CY{YEAR})</h1>
+  <div style="font-weight:800;font-size:0.8rem;letter-spacing:0.08em;opacity:0.9">ISZE · DB→DLR · Second layer (sales to dealer · AIM / GPS)</div>
+  <h1>Sales to dealer — {_e(dist_label)} (CY{YEAR})</h1>
+  <p style="max-width:52rem;font-size:0.92rem;opacity:0.95">UTI CV vs IUK LCV is a <strong>tendency</strong>, not the same vehicle market. IUK is pickups. UTI and ITUK are trucks.</p>
   <span class="badge">Generated {payload.get("generated", "")}</span>
 </header>
 <div class="wrap">
-  <div class="callout">{_e(payload.get("scope_note", ""))}<br/><strong>{_e(proxy_note)}</strong></div>
-  <section><h2>Network summary</h2><div class="kpi-row">{kpis}</div></section>
+  <div class="basis-strip"><div><b>Observed</b> Sales to dealer CY{YEAR}</div><div><b>Scope</b> Listed distributors only — stocking, not final customer demand</div><div><b>Entities</b> ITUK ≠ IUK · UTI ≠ UMI</div></div>
+  <div class="callout"><b>Scope:</b> Sales-to-dealer files for the listed distributors only — distributor stocking, not final customer demand. ITUK ≠ IUK. UTI ≠ UMI.<br/>{_e(payload.get("scope_note", ""))}<br/><strong>{_e(proxy_note)}</strong></div>
+  <section><h2>Observed distributor subset — summary</h2><div class="kpi-row">{kpis}</div></section>
   <div class="grid2">
-    <section><h2>AIM mix by network</h2><canvas id="chartMix" height="260"></canvas></section>
-    <section><h2>PMS — BVP qty (sales to dealer)</h2><canvas id="chartPms" height="260"></canvas></section>
+    <section><h2>AIM mix by distributor (observed subset)</h2>
+      <div class="legend"><span class="leg"><i style="background:#c0552d"></i>BVP</span><span class="leg"><i style="background:#5a6d86"></i>Contested genuine</span><span class="leg"><i style="background:#d9d3c8"></i>Genuine-only</span></div>
+      {mix_bars}</section>
+    <section><h2>PMS — BVP qty (sales to dealer)</h2>{pms_bars}</section>
   </div>
-  <section><h2>AIM comparison (sales to dealer qty vs billed, ISZE-denom. proxy)</h2>
-    <p class="muted">We billed vs their sales to dealer. Difference is stock movement (year total only — do not add the months). IUK is pickup, ITUK is truck, Ireland is Ireland. BVP / genuine % on sales-to-dealer rows use the ISZE billed unit price as a mix proxy, not their invoice.</p>
-    {_tbl(["Network","Layer","Qty (reported)","ISZE-denom. / invoice","BVP %","Contested gen. %","Genuine-only %","BVP capture","Per truck"],
+  <section><h2>AIM comparison (sales-to-dealer qty vs ISZE-denom. proxy vs billing)</h2>
+    <p class="muted">Observed subset (not the full ISZE network). ITUK dealer file is the SSOT. Duncan 4 Sep 2026 file is the network companion (Customer Name=All, thru Aug 2026). IUK / IRELAND / GREECE from canonical long CSVs. Never blend IUK↔ITUK or IRELAND↔IUK. BVP / genuine % on sell-out rows use ISZE-denominated proxy only.</p>
+    {_tbl(["Distributor","Layer","Qty (reported)","ISZE-denom. / invoice","BVP %","Contested gen. %","Genuine-only %","BVP capture","Per vehicle"],
           [[_e(r["label"]),_e(r["layer"]),_fmt(r.get("qty_year")),
-            _isze_denom(r.get("total_eur")) if r.get("layer")=="sellout_db_dlr" else _invoice_eur(r.get("total_eur")),
+            _isze_denom(r.get("total_eur")) if r.get("layer") in ("sellout_db_dlr","sellout_duncan_network") else _invoice_eur(r.get("total_eur")),
             _pct(r.get("bvp_pct")),_pct(r.get("genuine_contested_pct")),_pct(r.get("genuine_only_pct")),
             _pct(r.get("contested_bvp_capture")),
             (_isze_denom(r.get("proxy_spend_per_truck"))+" proxy") if r.get("layer")=="sellout_db_dlr" else (_invoice_eur(r.get("billing_gps"))+" GPS invoice") if r.get("billing_gps") else "—"]
@@ -554,51 +644,10 @@ section h3 {{ font-size:0.9rem; margin:0.5rem 0; color:var(--muted); }}
   <section><h2>Top parts — contested genuine</h2>{gen_top}</section>
 </div>
 <footer class="muted" style="text-align:center;padding:1rem;font-size:0.75rem">
-  Rebuild: prism/scripts/build_dealer_sellout_aim_gps.py · 01_data/00_derived/sellout_aim_* · second layer
+  Reported quantities are the distributors' own sales to their dealers; ISZE euro is our invoiced price to the distributor.
 </footer>
-<script type="application/json" id="chart-data">{chart_json}</script>
-<script>
-function initCharts() {{
-  if (typeof Chart === 'undefined') return;
-  const D = JSON.parse(document.getElementById('chart-data').textContent);
-  const mix = D.aim_mix || [];
-  const sell = mix.filter(r => r.layer === 'sellout_db_dlr');
-  const dists = D.distributors || sell.map(r => r.distributor_code);
-  const palette = ['#CC0E1E','#9a0b17','#b45309','#1d4ed8','#0f766e','#7c3aed','#be123c'];
-  new Chart(document.getElementById('chartMix'), {{
-    type: 'bar',
-    data: {{
-      labels: sell.map(r => r.distributor_code),
-      datasets: [
-        {{ label: 'BVP %', data: sell.map(r => (r.bvp_pct||0)*100), backgroundColor: '#CC0E1E' }},
-        {{ label: 'Contested genuine %', data: sell.map(r => (r.genuine_contested_pct||0)*100), backgroundColor: '#64748b' }},
-        {{ label: 'Genuine-only %', data: sell.map(r => (r.genuine_only_pct||0)*100), backgroundColor: '#cbd5e1' }},
-      ],
-    }},
-    options: {{ responsive: true, scales: {{ x: {{ stacked: true }}, y: {{ stacked: true, max: 100 }} }} }},
-  }});
-  const pms = D.pms_compare || [];
-  new Chart(document.getElementById('chartPms'), {{
-    type: 'bar',
-    data: {{
-      labels: pms.map(r => r.category_label || r.pms_category),
-      datasets: dists.map((d, i) => ({{
-        label: d + ' BVP',
-        data: pms.map(r => r[d + '_sellout_db_dlr_bvp_qty'] || 0),
-        backgroundColor: palette[i % palette.length],
-      }})),
-    }},
-    options: {{ responsive: true, plugins: {{ legend: {{ position: 'bottom' }} }} }},
-  }});
-}}
-document.addEventListener('DOMContentLoaded', initCharts);
-window.addEventListener('load', initCharts);
-</script>
 </body>
 </html>"""
-    chart_path = ISZE_ROOT / "02_dashboards" / "_ui" / "chart.umd.min.js"
-    chart_js = chart_path.read_text(encoding="utf-8")
-    return html_out.replace("/*INLINE_CHART_JS*/", chart_js)
 
 
 def _entity_rows_from_network(mix_rows: list[dict]) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -724,7 +773,12 @@ def main() -> None:
         valued_by_dist[dist] = sell
 
         mix_rows.append(
-            aim_summary(sell, f"{dist} sales to dealer", dist, "sellout_db_dlr")
+            aim_summary(
+                sell,
+                f"{dist} sell-out ({CHANNEL.get(dist, 'network')})",
+                dist,
+                "sellout_db_dlr",
+            )
         )
 
         bill = load_billing_pn(dist, asp)
@@ -740,6 +794,36 @@ def main() -> None:
         aim_l1_parts.append(breakdown_table(sell, "aim_l1_report", dist, "sellout_db_dlr"))
         top_bvp[dist] = top_pn_table(sell, dist, "bvp")
         top_gen[dist] = top_pn_table(sell, dist, "genuine_contested")
+
+    net_path = DERIVED_DIR / f"dealer_sellout_long_ITUK_network_CY{YEAR}.csv"
+    if net_path.exists():
+        raw = pd.read_csv(net_path, dtype={"part_number": str}, low_memory=False)
+        if "period_grain" in raw.columns:
+            year_only = raw[raw["period_grain"].astype(str).str.lower() == "year"]
+            if not year_only.empty:
+                raw = year_only
+        companion = (
+            raw.groupby("part_number", as_index=False)["qty"]
+            .sum()
+            .rename(columns={"qty": "qty_year"})
+        )
+        companion["part_number"] = companion["part_number"].map(normalize_pn)
+        companion = companion.dropna(subset=["part_number"])
+        if not companion.empty:
+            companion = attach_pn_master(companion, dim, desc, xref)
+            companion = classify_pn(companion, xref_g, xref_b)
+            a = asp[asp["distributor_code"] == "ITUK"][["part_number", "asp_eur"]]
+            companion = companion.merge(a, on="part_number", how="left")
+            companion["valued_eur"] = companion["qty_year"] * companion["asp_eur"].fillna(0)
+            mix_rows.append(
+                aim_summary(
+                    companion,
+                    "ITUK Duncan network companion (All dealers, PN×month thru Aug)",
+                    "ITUK",
+                    "sellout_duncan_network",
+                )
+            )
+            print(f"duncan companion PNs={len(companion)} qty={companion['qty_year'].sum():,.0f}")
 
     # Keep DISTS aligned to what actually produced sell-out rows
     present = tuple(
@@ -908,10 +992,10 @@ def main() -> None:
         "distributors": list(DISTS),
         "uio_units": dict(UIO),
         "scope_note": (
-            f"Billed vs sales to dealer, calendar {YEAR}. Networks: {', '.join(DISTS)}. "
-            "ITUK from their dealer file. UTI from PartSales. "
-            "Ireland / IUK / Greece from the year-total sales-to-dealer file (months are not added). "
-            "IUK is pickup, ITUK is truck, Ireland is Ireland. Mix buckets: BVP / genuine with a BVP alt / genuine only."
+            f"Second layer (DB→DLR) CY{YEAR}. Networks: {', '.join(DISTS)}. "
+            "UTI is CV trucks. IUK is LCV pickups — BVP capture vs UTI is a tendency, not like-for-like trucks. "
+            "ITUK dealer×PN SSOT plus Duncan network companion (PN×month thru Aug 2026, Customer Name=All). "
+            "IUK ≠ ITUK; IRELAND ≠ IUK. AIM buckets: bvp | genuine_contested | genuine_only."
         ),
         "valuation_note": (
             "Sales to dealer is pieces only. Euro on that layer is pieces × our billed unit price for that distributor and part — a mix proxy, not their invoice. "
@@ -932,6 +1016,11 @@ def main() -> None:
         json.dumps(_clean_nans(payload), indent=2, default=str), encoding="utf-8"
     )
     OUT_HTML.write_text(build_html(payload), encoding="utf-8")
+    cmd = OUT_HTML.with_name("OPEN_Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.cmd")
+    cmd.write_text(
+        '@echo off\r\nstart "" "%~dp0Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html"\r\n',
+        encoding="utf-8",
+    )
 
     print(f"ok: {OUT_HTML}")
     print(f"ok: {OUT_JSON}")

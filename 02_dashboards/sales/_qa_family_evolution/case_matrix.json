@@ -1,0 +1,506 @@
+[
+  {
+    "market": "ITUK",
+    "clock": "CY",
+    "errorShown": false,
+    "errorText": "",
+    "canvases": [
+      {
+        "id": "c_trend",
+        "nonWhite": 28536,
+        "sampled": 556420,
+        "pct": 5.13
+      },
+      {
+        "id": "c_chg_eur",
+        "nonWhite": 25626,
+        "sampled": 163770,
+        "pct": 15.65
+      },
+      {
+        "id": "c_chg_units",
+        "nonWhite": 25523,
+        "sampled": 163770,
+        "pct": 15.58
+      },
+      {
+        "id": "c_fleet",
+        "nonWhite": 36369,
+        "sampled": 163770,
+        "pct": 22.21
+      },
+      {
+        "id": "c_capture",
+        "nonWhite": 21699,
+        "sampled": 163770,
+        "pct": 13.25
+      },
+      {
+        "id": "c_cat",
+        "nonWhite": 96937,
+        "sampled": 556420,
+        "pct": 17.42
+      },
+      {
+        "id": "c_gps",
+        "nonWhite": 89483,
+        "sampled": 556420,
+        "pct": 16.08
+      },
+      {
+        "id": "c_pos",
+        "nonWhite": 66534,
+        "sampled": 342910,
+        "pct": 19.4
+      }
+    ],
+    "kpis": 6,
+    "kpiText": [
+      "+1.6% | N-series truck billed euro, 2023 to 2025",
+      "+10.4% | heavy truck billed euro, 2023 to 2025",
+      "+37.5% | light vehicle billed euro, 2023 to 2025",
+      "EUR 0.75M | N-series truck billed, this customer, 2025",
+      "23,068 | vehicles in service, all families",
+      "EUR 23.13M | network spend gap against target, 2025"
+    ],
+    "formulas": [
+      "Network billed euro on parts that fit only the N-series truck, on the calendar year.<br>2023: EUR 1,193,265<br>2025: EUR 1,212,326<br>Both are complete twelve-month periods. Parts that fit more than one vehicle family are excluded, because they cannot be attributed to this family.",
+      "Network billed euro on parts that fit only the heavy truck family.<br>2023: EUR 155,603<br>2025: EUR 171,778<br>The heavy fleet is 1,238 vehicles network-wide, in Ireland, the United Kingdom and Portugal only, so this family is small in absolute terms and its percentage moves are large. Read it with the euro beside it, never on its own.<br>The family carries 164 part numbers, 101 of them on the Forward F&G range and the rest on the C&E range; the service families with the most of them are 45 clutch kits, 20 air filters, 15 clutch boosters, 10 clutch discs. They bill EUR 174,832 in 2025. Click the pooled bar below to see them.",
+      "Network billed euro on parts that fit only the D-Max pickup and SUV family.<br>2023: EUR 1,881,870<br>2025: EUR 2,587,583<br>This family also carries the largest share of unit volume, so a euro move here is a volume move, not only a price one.",
+      "Parts billed to <b>ITUK</b> in 2025 that fit only the N-series truck, plus the pooled value apportioned by nothing \u00e2\u20ac\u201d the figure is the measured billing on single-family part numbers.<br>Implied by the fleet: EUR 4,466,314.<br>The gap between those two is the subject of this page.",
+      "Fleet for <b>ITUK</b> from the service model: N-series 22,191, heavy 877, light 0.<br>This is a 2025 estimate and it is used for every year, so expected demand is flat over time by construction. Only the billing moves.",
+      "The fleet in each customer x the target spend per vehicle for that fleet mix, minus the parts actually billed.<br>Target spend comes from the research study: EUR 296 per 3.5 t truck, EUR 739 per heavier N-series truck, EUR 887 per heavy truck and EUR 250 per light vehicle.<br>It is a ceiling, not a forecast."
+    ],
+    "panels": 18,
+    "rows": 13,
+    "titles": [
+      "Is the N-series truck business growing or shrinking? Billed euro by vehicle family, complete years only, against the first full year",
+      "Is the light-vehicle business carrying all the growth? The same three families as bars, so the size of each move is readable",
+      "How does this customer's fleet split, and what does each family imply? Fleet is the denominator every euro below is measured against",
+      "Where can this customer's service billing be placed in a family at all? Euro by service family, split into the three families and the pooled rest",
+      "How much does each vehicle in service spend on parts, and how far is that from the target? Parts billed per vehicle a year against the target spend for that customer's fleet mix",
+      "Where do we sit above an independent competitor, for the part numbers we can place? Our reference dealer price divided by a real competing price, by vehicle family",
+      "What can this page not show, and why? Each limit named, with the size of the business it affects"
+    ]
+  },
+  {
+    "market": "IUK",
+    "clock": "FY",
+    "errorShown": false,
+    "errorText": "",
+    "canvases": [
+      {
+        "id": "c_trend",
+        "nonWhite": 28359,
+        "sampled": 556420,
+        "pct": 5.1
+      },
+      {
+        "id": "c_chg_eur",
+        "nonWhite": 24695,
+        "sampled": 163770,
+        "pct": 15.08
+      },
+      {
+        "id": "c_chg_units",
+        "nonWhite": 31234,
+        "sampled": 163770,
+        "pct": 19.07
+      },
+      {
+        "id": "c_fleet",
+        "nonWhite": 36411,
+        "sampled": 163770,
+        "pct": 22.23
+      },
+      {
+        "id": "c_capture",
+        "nonWhite": 20331,
+        "sampled": 163770,
+        "pct": 12.41
+      },
+      {
+        "id": "c_cat",
+        "nonWhite": 85924,
+        "sampled": 556420,
+        "pct": 15.44
+      },
+      {
+        "id": "c_gps",
+        "nonWhite": 89483,
+        "sampled": 556420,
+        "pct": 16.08
+      },
+      {
+        "id": "c_pos",
+        "nonWhite": 66534,
+        "sampled": 342910,
+        "pct": 19.4
+      }
+    ],
+    "kpis": 6,
+    "kpiText": [
+      "-0.2% | N-series truck billed euro, 2024 to 2026",
+      "+10.9% | heavy truck billed euro, 2024 to 2026",
+      "+14.3% | light vehicle billed euro, 2024 to 2026",
+      "EUR 0.00M | N-series truck billed, this customer, 2025",
+      "47,783 | vehicles in service, all families",
+      "EUR 23.13M | network spend gap against target, 2025"
+    ],
+    "formulas": [
+      "Network billed euro on parts that fit only the N-series truck, on the ISZE year.<br>2024: EUR 1,343,081<br>2026: EUR 1,340,258<br>Both are complete twelve-month periods. Parts that fit more than one vehicle family are excluded, because they cannot be attributed to this family.",
+      "Network billed euro on parts that fit only the heavy truck family.<br>2024: EUR 146,172<br>2026: EUR 162,123<br>The heavy fleet is 1,238 vehicles network-wide, in Ireland, the United Kingdom and Portugal only, so this family is small in absolute terms and its percentage moves are large. Read it with the euro beside it, never on its own.<br>The family carries 164 part numbers, 101 of them on the Forward F&G range and the rest on the C&E range; the service families with the most of them are 45 clutch kits, 20 air filters, 15 clutch boosters, 10 clutch discs. They bill EUR 174,832 in 2025. Click the pooled bar below to see them.",
+      "Network billed euro on parts that fit only the D-Max pickup and SUV family.<br>2024: EUR 2,076,874<br>2026: EUR 2,373,976<br>This family also carries the largest share of unit volume, so a euro move here is a volume move, not only a price one.",
+      "Parts billed to <b>IUK</b> in 2025 that fit only the N-series truck, plus the pooled value apportioned by nothing \u00e2\u20ac\u201d the figure is the measured billing on single-family part numbers.<br>Implied by the fleet: EUR 0.<br>The gap between those two is the subject of this page.",
+      "Fleet for <b>IUK</b> from the service model: N-series 0, heavy 0, light 47,783.<br>This is a 2025 estimate and it is used for every year, so expected demand is flat over time by construction. Only the billing moves.",
+      "The fleet in each customer x the target spend per vehicle for that fleet mix, minus the parts actually billed.<br>Target spend comes from the research study: EUR 296 per 3.5 t truck, EUR 739 per heavier N-series truck, EUR 887 per heavy truck and EUR 250 per light vehicle.<br>It is a ceiling, not a forecast."
+    ],
+    "panels": 18,
+    "rows": 13,
+    "titles": [
+      "Is the N-series truck business growing or shrinking? Billed euro by vehicle family, complete years only, against the first full year",
+      "Is the light-vehicle business carrying all the growth? The same three families as bars, so the size of each move is readable",
+      "How does this customer's fleet split, and what does each family imply? Fleet is the denominator every euro below is measured against",
+      "Where can this customer's service billing be placed in a family at all? Euro by service family, split into the three families and the pooled rest",
+      "How much does each vehicle in service spend on parts, and how far is that from the target? Parts billed per vehicle a year against the target spend for that customer's fleet mix",
+      "Where do we sit above an independent competitor, for the part numbers we can place? Our reference dealer price divided by a real competing price, by vehicle family",
+      "What can this page not show, and why? Each limit named, with the size of the business it affects"
+    ]
+  },
+  {
+    "market": "UTI",
+    "clock": "FY",
+    "errorShown": false,
+    "errorText": "",
+    "canvases": [
+      {
+        "id": "c_trend",
+        "nonWhite": 28359,
+        "sampled": 556420,
+        "pct": 5.1
+      },
+      {
+        "id": "c_chg_eur",
+        "nonWhite": 24695,
+        "sampled": 163770,
+        "pct": 15.08
+      },
+      {
+        "id": "c_chg_units",
+        "nonWhite": 31234,
+        "sampled": 163770,
+        "pct": 19.07
+      },
+      {
+        "id": "c_fleet",
+        "nonWhite": 36414,
+        "sampled": 163770,
+        "pct": 22.23
+      },
+      {
+        "id": "c_capture",
+        "nonWhite": 20058,
+        "sampled": 163770,
+        "pct": 12.25
+      },
+      {
+        "id": "c_cat",
+        "nonWhite": 90702,
+        "sampled": 556420,
+        "pct": 16.3
+      },
+      {
+        "id": "c_gps",
+        "nonWhite": 89483,
+        "sampled": 556420,
+        "pct": 16.08
+      },
+      {
+        "id": "c_pos",
+        "nonWhite": 66534,
+        "sampled": 342910,
+        "pct": 19.4
+      }
+    ],
+    "kpis": 6,
+    "kpiText": [
+      "-0.2% | N-series truck billed euro, 2024 to 2026",
+      "+10.9% | heavy truck billed euro, 2024 to 2026",
+      "+14.3% | light vehicle billed euro, 2024 to 2026",
+      "EUR 0.18M | N-series truck billed, this customer, 2025",
+      "10,336 | vehicles in service, all families",
+      "EUR 23.13M | network spend gap against target, 2025"
+    ],
+    "formulas": [
+      "Network billed euro on parts that fit only the N-series truck, on the ISZE year.<br>2024: EUR 1,343,081<br>2026: EUR 1,340,258<br>Both are complete twelve-month periods. Parts that fit more than one vehicle family are excluded, because they cannot be attributed to this family.",
+      "Network billed euro on parts that fit only the heavy truck family.<br>2024: EUR 146,172<br>2026: EUR 162,123<br>The heavy fleet is 1,238 vehicles network-wide, in Ireland, the United Kingdom and Portugal only, so this family is small in absolute terms and its percentage moves are large. Read it with the euro beside it, never on its own.<br>The family carries 164 part numbers, 101 of them on the Forward F&G range and the rest on the C&E range; the service families with the most of them are 45 clutch kits, 20 air filters, 15 clutch boosters, 10 clutch discs. They bill EUR 174,832 in 2025. Click the pooled bar below to see them.",
+      "Network billed euro on parts that fit only the D-Max pickup and SUV family.<br>2024: EUR 2,076,874<br>2026: EUR 2,373,976<br>This family also carries the largest share of unit volume, so a euro move here is a volume move, not only a price one.",
+      "Parts billed to <b>UTI</b> in 2025 that fit only the N-series truck, plus the pooled value apportioned by nothing \u00e2\u20ac\u201d the figure is the measured billing on single-family part numbers.<br>Implied by the fleet: EUR 2,667,922.<br>The gap between those two is the subject of this page.",
+      "Fleet for <b>UTI</b> from the service model: N-series 10,336, heavy 0, light 0.<br>This is a 2025 estimate and it is used for every year, so expected demand is flat over time by construction. Only the billing moves.",
+      "The fleet in each customer x the target spend per vehicle for that fleet mix, minus the parts actually billed.<br>Target spend comes from the research study: EUR 296 per 3.5 t truck, EUR 739 per heavier N-series truck, EUR 887 per heavy truck and EUR 250 per light vehicle.<br>It is a ceiling, not a forecast."
+    ],
+    "panels": 18,
+    "rows": 13,
+    "titles": [
+      "Is the N-series truck business growing or shrinking? Billed euro by vehicle family, complete years only, against the first full year",
+      "Is the light-vehicle business carrying all the growth? The same three families as bars, so the size of each move is readable",
+      "How does this customer's fleet split, and what does each family imply? Fleet is the denominator every euro below is measured against",
+      "Where can this customer's service billing be placed in a family at all? Euro by service family, split into the three families and the pooled rest",
+      "How much does each vehicle in service spend on parts, and how far is that from the target? Parts billed per vehicle a year against the target spend for that customer's fleet mix",
+      "Where do we sit above an independent competitor, for the part numbers we can place? Our reference dealer price divided by a real competing price, by vehicle family",
+      "What can this page not show, and why? Each limit named, with the size of the business it affects"
+    ]
+  },
+  {
+    "market": "UMI",
+    "clock": "CY",
+    "errorShown": false,
+    "errorText": "",
+    "canvases": [
+      {
+        "id": "c_trend",
+        "nonWhite": 28536,
+        "sampled": 556420,
+        "pct": 5.13
+      },
+      {
+        "id": "c_chg_eur",
+        "nonWhite": 25626,
+        "sampled": 163770,
+        "pct": 15.65
+      },
+      {
+        "id": "c_chg_units",
+        "nonWhite": 25523,
+        "sampled": 163770,
+        "pct": 15.58
+      },
+      {
+        "id": "c_fleet",
+        "nonWhite": 36411,
+        "sampled": 163770,
+        "pct": 22.23
+      },
+      {
+        "id": "c_capture",
+        "nonWhite": 20907,
+        "sampled": 163770,
+        "pct": 12.77
+      },
+      {
+        "id": "c_cat",
+        "nonWhite": 130233,
+        "sampled": 556420,
+        "pct": 23.41
+      },
+      {
+        "id": "c_gps",
+        "nonWhite": 89483,
+        "sampled": 556420,
+        "pct": 16.08
+      },
+      {
+        "id": "c_pos",
+        "nonWhite": 66534,
+        "sampled": 342910,
+        "pct": 19.4
+      }
+    ],
+    "kpis": 6,
+    "kpiText": [
+      "+1.6% | N-series truck billed euro, 2023 to 2025",
+      "+10.4% | heavy truck billed euro, 2023 to 2025",
+      "+37.5% | light vehicle billed euro, 2023 to 2025",
+      "EUR 0.00M | N-series truck billed, this customer, 2025",
+      "18,542 | vehicles in service, all families",
+      "EUR 23.13M | network spend gap against target, 2025"
+    ],
+    "formulas": [
+      "Network billed euro on parts that fit only the N-series truck, on the calendar year.<br>2023: EUR 1,193,265<br>2025: EUR 1,212,326<br>Both are complete twelve-month periods. Parts that fit more than one vehicle family are excluded, because they cannot be attributed to this family.",
+      "Network billed euro on parts that fit only the heavy truck family.<br>2023: EUR 155,603<br>2025: EUR 171,778<br>The heavy fleet is 1,238 vehicles network-wide, in Ireland, the United Kingdom and Portugal only, so this family is small in absolute terms and its percentage moves are large. Read it with the euro beside it, never on its own.<br>The family carries 164 part numbers, 101 of them on the Forward F&G range and the rest on the C&E range; the service families with the most of them are 45 clutch kits, 20 air filters, 15 clutch boosters, 10 clutch discs. They bill EUR 174,832 in 2025. Click the pooled bar below to see them.",
+      "Network billed euro on parts that fit only the D-Max pickup and SUV family.<br>2023: EUR 1,881,870<br>2025: EUR 2,587,583<br>This family also carries the largest share of unit volume, so a euro move here is a volume move, not only a price one.",
+      "Parts billed to <b>UMI</b> in 2025 that fit only the N-series truck, plus the pooled value apportioned by nothing \u00e2\u20ac\u201d the figure is the measured billing on single-family part numbers.<br>Implied by the fleet: EUR 0.<br>The gap between those two is the subject of this page.",
+      "Fleet for <b>UMI</b> from the service model: N-series 0, heavy 0, light 18,542.<br>This is a 2025 estimate and it is used for every year, so expected demand is flat over time by construction. Only the billing moves.",
+      "The fleet in each customer x the target spend per vehicle for that fleet mix, minus the parts actually billed.<br>Target spend comes from the research study: EUR 296 per 3.5 t truck, EUR 739 per heavier N-series truck, EUR 887 per heavy truck and EUR 250 per light vehicle.<br>It is a ceiling, not a forecast."
+    ],
+    "panels": 18,
+    "rows": 13,
+    "titles": [
+      "Is the N-series truck business growing or shrinking? Billed euro by vehicle family, complete years only, against the first full year",
+      "Is the light-vehicle business carrying all the growth? The same three families as bars, so the size of each move is readable",
+      "How does this customer's fleet split, and what does each family imply? Fleet is the denominator every euro below is measured against",
+      "Where can this customer's service billing be placed in a family at all? Euro by service family, split into the three families and the pooled rest",
+      "How much does each vehicle in service spend on parts, and how far is that from the target? Parts billed per vehicle a year against the target spend for that customer's fleet mix",
+      "Where do we sit above an independent competitor, for the part numbers we can place? Our reference dealer price divided by a real competing price, by vehicle family",
+      "What can this page not show, and why? Each limit named, with the size of the business it affects"
+    ]
+  },
+  {
+    "market": "GERMANY",
+    "clock": "FY",
+    "errorShown": false,
+    "errorText": "",
+    "canvases": [
+      {
+        "id": "c_trend",
+        "nonWhite": 28359,
+        "sampled": 556420,
+        "pct": 5.1
+      },
+      {
+        "id": "c_chg_eur",
+        "nonWhite": 24695,
+        "sampled": 163770,
+        "pct": 15.08
+      },
+      {
+        "id": "c_chg_units",
+        "nonWhite": 31234,
+        "sampled": 163770,
+        "pct": 19.07
+      },
+      {
+        "id": "c_fleet",
+        "nonWhite": 36392,
+        "sampled": 163770,
+        "pct": 22.22
+      },
+      {
+        "id": "c_capture",
+        "nonWhite": 21019,
+        "sampled": 163770,
+        "pct": 12.83
+      },
+      {
+        "id": "c_cat",
+        "nonWhite": 88469,
+        "sampled": 556420,
+        "pct": 15.9
+      },
+      {
+        "id": "c_gps",
+        "nonWhite": 89483,
+        "sampled": 556420,
+        "pct": 16.08
+      },
+      {
+        "id": "c_pos",
+        "nonWhite": 66534,
+        "sampled": 342910,
+        "pct": 19.4
+      }
+    ],
+    "kpis": 6,
+    "kpiText": [
+      "-0.2% | N-series truck billed euro, 2024 to 2026",
+      "+10.9% | heavy truck billed euro, 2024 to 2026",
+      "+14.3% | light vehicle billed euro, 2024 to 2026",
+      "EUR 0.01M | N-series truck billed, this customer, 2025",
+      "13,780 | vehicles in service, all families",
+      "EUR 23.13M | network spend gap against target, 2025"
+    ],
+    "formulas": [
+      "Network billed euro on parts that fit only the N-series truck, on the ISZE year.<br>2024: EUR 1,343,081<br>2026: EUR 1,340,258<br>Both are complete twelve-month periods. Parts that fit more than one vehicle family are excluded, because they cannot be attributed to this family.",
+      "Network billed euro on parts that fit only the heavy truck family.<br>2024: EUR 146,172<br>2026: EUR 162,123<br>The heavy fleet is 1,238 vehicles network-wide, in Ireland, the United Kingdom and Portugal only, so this family is small in absolute terms and its percentage moves are large. Read it with the euro beside it, never on its own.<br>The family carries 164 part numbers, 101 of them on the Forward F&G range and the rest on the C&E range; the service families with the most of them are 45 clutch kits, 20 air filters, 15 clutch boosters, 10 clutch discs. They bill EUR 174,832 in 2025. Click the pooled bar below to see them.",
+      "Network billed euro on parts that fit only the D-Max pickup and SUV family.<br>2024: EUR 2,076,874<br>2026: EUR 2,373,976<br>This family also carries the largest share of unit volume, so a euro move here is a volume move, not only a price one.",
+      "Parts billed to <b>GERMANY</b> in 2025 that fit only the N-series truck, plus the pooled value apportioned by nothing \u00e2\u20ac\u201d the figure is the measured billing on single-family part numbers.<br>Implied by the fleet: EUR 122,103.<br>The gap between those two is the subject of this page.",
+      "Fleet for <b>GERMANY</b> from the service model: N-series 732, heavy 0, light 13,048.<br>This is a 2025 estimate and it is used for every year, so expected demand is flat over time by construction. Only the billing moves.",
+      "The fleet in each customer x the target spend per vehicle for that fleet mix, minus the parts actually billed.<br>Target spend comes from the research study: EUR 296 per 3.5 t truck, EUR 739 per heavier N-series truck, EUR 887 per heavy truck and EUR 250 per light vehicle.<br>It is a ceiling, not a forecast."
+    ],
+    "panels": 18,
+    "rows": 13,
+    "titles": [
+      "Is the N-series truck business growing or shrinking? Billed euro by vehicle family, complete years only, against the first full year",
+      "Is the light-vehicle business carrying all the growth? The same three families as bars, so the size of each move is readable",
+      "How does this customer's fleet split, and what does each family imply? Fleet is the denominator every euro below is measured against",
+      "Where can this customer's service billing be placed in a family at all? Euro by service family, split into the three families and the pooled rest",
+      "How much does each vehicle in service spend on parts, and how far is that from the target? Parts billed per vehicle a year against the target spend for that customer's fleet mix",
+      "Where do we sit above an independent competitor, for the part numbers we can place? Our reference dealer price divided by a real competing price, by vehicle family",
+      "What can this page not show, and why? Each limit named, with the size of the business it affects"
+    ]
+  },
+  {
+    "market": "HUNGARY",
+    "clock": "CY",
+    "errorShown": false,
+    "errorText": "",
+    "canvases": [
+      {
+        "id": "c_trend",
+        "nonWhite": 28536,
+        "sampled": 556420,
+        "pct": 5.13
+      },
+      {
+        "id": "c_chg_eur",
+        "nonWhite": 25626,
+        "sampled": 163770,
+        "pct": 15.65
+      },
+      {
+        "id": "c_chg_units",
+        "nonWhite": 25523,
+        "sampled": 163770,
+        "pct": 15.58
+      },
+      {
+        "id": "c_fleet",
+        "nonWhite": 36411,
+        "sampled": 163770,
+        "pct": 22.23
+      },
+      {
+        "id": "c_capture",
+        "nonWhite": 21330,
+        "sampled": 163770,
+        "pct": 13.02
+      },
+      {
+        "id": "c_cat",
+        "nonWhite": 89517,
+        "sampled": 556420,
+        "pct": 16.09
+      },
+      {
+        "id": "c_gps",
+        "nonWhite": 89483,
+        "sampled": 556420,
+        "pct": 16.08
+      },
+      {
+        "id": "c_pos",
+        "nonWhite": 66534,
+        "sampled": 342910,
+        "pct": 19.4
+      }
+    ],
+    "kpis": 6,
+    "kpiText": [
+      "+1.6% | N-series truck billed euro, 2023 to 2025",
+      "+10.4% | heavy truck billed euro, 2023 to 2025",
+      "+37.5% | light vehicle billed euro, 2023 to 2025",
+      "EUR 0.00M | N-series truck billed, this customer, 2025",
+      "3,734 | vehicles in service, all families",
+      "EUR 23.13M | network spend gap against target, 2025"
+    ],
+    "formulas": [
+      "Network billed euro on parts that fit only the N-series truck, on the calendar year.<br>2023: EUR 1,193,265<br>2025: EUR 1,212,326<br>Both are complete twelve-month periods. Parts that fit more than one vehicle family are excluded, because they cannot be attributed to this family.",
+      "Network billed euro on parts that fit only the heavy truck family.<br>2023: EUR 155,603<br>2025: EUR 171,778<br>The heavy fleet is 1,238 vehicles network-wide, in Ireland, the United Kingdom and Portugal only, so this family is small in absolute terms and its percentage moves are large. Read it with the euro beside it, never on its own.<br>The family carries 164 part numbers, 101 of them on the Forward F&G range and the rest on the C&E range; the service families with the most of them are 45 clutch kits, 20 air filters, 15 clutch boosters, 10 clutch discs. They bill EUR 174,832 in 2025. Click the pooled bar below to see them.",
+      "Network billed euro on parts that fit only the D-Max pickup and SUV family.<br>2023: EUR 1,881,870<br>2025: EUR 2,587,583<br>This family also carries the largest share of unit volume, so a euro move here is a volume move, not only a price one.",
+      "Parts billed to <b>HUNGARY</b> in 2025 that fit only the N-series truck, plus the pooled value apportioned by nothing \u00e2\u20ac\u201d the figure is the measured billing on single-family part numbers.<br>Implied by the fleet: EUR 0.<br>The gap between those two is the subject of this page.",
+      "Fleet for <b>HUNGARY</b> from the service model: N-series 0, heavy 0, light 3,734.<br>This is a 2025 estimate and it is used for every year, so expected demand is flat over time by construction. Only the billing moves.",
+      "The fleet in each customer x the target spend per vehicle for that fleet mix, minus the parts actually billed.<br>Target spend comes from the research study: EUR 296 per 3.5 t truck, EUR 739 per heavier N-series truck, EUR 887 per heavy truck and EUR 250 per light vehicle.<br>It is a ceiling, not a forecast."
+    ],
+    "panels": 18,
+    "rows": 13,
+    "titles": [
+      "Is the N-series truck business growing or shrinking? Billed euro by vehicle family, complete years only, against the first full year",
+      "Is the light-vehicle business carrying all the growth? The same three families as bars, so the size of each move is readable",
+      "How does this customer's fleet split, and what does each family imply? Fleet is the denominator every euro below is measured against",
+      "Where can this customer's service billing be placed in a family at all? Euro by service family, split into the three families and the pooled rest",
+      "How much does each vehicle in service spend on parts, and how far is that from the target? Parts billed per vehicle a year against the target spend for that customer's fleet mix",
+      "Where do we sit above an independent competitor, for the part numbers we can place? Our reference dealer price divided by a real competing price, by vehicle family",
+      "What can this page not show, and why? Each limit named, with the size of the business it affects"
+    ]
+  }
+]

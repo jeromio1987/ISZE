@@ -130,7 +130,7 @@ Under `04_tools/autodoc_scraper/` (on disk):
 
 `oem_peer_basket.csv` notes annotated where an IAM xref exists. **Do not** put Eucon IAM competitor PNs into `peer_oe_pn` — that column is OEM peer OE only. Crossref feeds **IAM scrape / `iam_derived`**. OEM peer OE map from 2023 survey COMPARABLE is loaded; street fills are separate (see `OEM_STREET_ARRANGE.md`).
 
-### Pricing-point QA (Mode B) — verdict
+### Pricing-point QA (internal) — verdict
 
 **Yes — the Eucon probe’s headline deltas are on the wrong pricing point for street conclusions.**
 

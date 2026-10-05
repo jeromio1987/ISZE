@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__PAGE_TITLE__</title>
+<style>
+:root{
+  --navy:#15233c; --navy2:#1d3054; --terra:#c0552d; --paper:#f7f4ee;
+  --ink:#22262e; --muted:#6b6459; --line:#d9d3c8; --band:#eef3f9;
+  --good:#1e6b4f; --amber:#a8721f; --red:#b4453a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:14px;line-height:1.5}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:var(--navy);margin:0}
+h1{font-size:26px;letter-spacing:-.2px}
+h2{font-size:19px;margin-bottom:2px}
+h3{font-size:14.5px;margin-bottom:4px}
+.wrap{max-width:1400px;margin:0 auto;padding:22px 22px 60px}
+header.top{border-bottom:3px solid var(--navy);padding-bottom:14px;margin-bottom:18px}
+.sub{color:var(--muted);font-size:13px;margin-top:6px}
+.badge{display:inline-block;background:var(--navy);color:var(--paper);
+  font-size:11px;letter-spacing:.6px;text-transform:uppercase;
+  padding:3px 9px;border-radius:2px;margin-right:8px}
+.badge.terra{background:var(--terra)}
+.badge.ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.badge.ghost.dark{background:var(--navy2);color:var(--paper);border-color:var(--navy2)}
+
+.controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;
+  background:#fff;border:1px solid var(--line);border-left:4px solid var(--terra);
+  padding:14px 16px;margin-bottom:14px}
+.ctrl{display:flex;flex-direction:column;gap:5px}
+.ctrl label{font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:var(--muted)}
+select{font-size:14px;padding:7px 10px;border:1px solid var(--line);background:#fff;
+  color:var(--ink);border-radius:2px;min-width:190px;max-width:460px}
+select:focus{outline:2px solid var(--terra);outline-offset:-1px}
+select:disabled{background:#f2efe9;color:#9a958c;cursor:not-allowed}
+.cmpnote{font-size:12.5px;color:var(--navy);background:#fff;border:1px solid var(--line);
+  border-left:4px solid var(--navy);padding:11px 14px;margin-bottom:14px;line-height:1.5}
+.cmpnote.blocked{color:#8d332a;border-left-color:var(--red)}
+.cmpnote .rule{color:var(--muted);display:block;margin-top:5px;font-size:12px}
+.cmpnote b{color:inherit}
+
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;margin-bottom:20px}
+@media(max-width:1180px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:860px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr}}
+.kpi{background:#fff;border:1px solid var(--line);padding:14px 16px;position:relative;
+  border-top:3px solid var(--navy);min-height:104px;display:flex;flex-direction:column}
+.kpi .lab{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+  display:flex;align-items:flex-start;gap:5px;min-height:26px;line-height:1.25}
+.kpi .val{font-size:22px;font-weight:600;color:var(--navy);margin-top:auto;
+  font-variant-numeric:tabular-nums;line-height:1.15}
+.kpi .note{font-size:11.5px;color:var(--muted);margin-top:4px;min-height:2.4em}
+.kpi.t{border-top-color:var(--terra)}
+.kpi.t .val{color:var(--terra)}
+.kpi.g{border-top-color:var(--good)}
+.kpi.g .val{color:var(--good)}
+.kpi.w{border-top-color:var(--amber)}
+.kpi.r{border-top-color:var(--red)}
+.kpi.r .val{color:var(--red)}
+.info{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;
+  border-radius:50%;background:var(--navy);color:#fff;font-size:9.5px;cursor:help;
+  position:relative;flex:0 0 auto}
+.info .tip{display:none;position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+  width:290px;background:var(--navy);color:var(--paper);font-size:12px;line-height:1.45;
+  padding:9px 11px;border-radius:3px;z-index:80;text-transform:none;letter-spacing:0;
+  font-weight:400;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.info .tip b{color:#f0b49a}
+.info:hover .tip,.info:focus .tip{display:block}
+
+.grid{display:grid;gap:16px;margin-bottom:18px}
+.grid > *{min-width:0}
+.g1{grid-template-columns:1fr}
+.card{background:#fff;border:1px solid var(--line);padding:16px 18px 14px;min-width:0;
+  display:flex;flex-direction:column;position:relative}
+.card > h2{padding-right:34px}
+.card .q{font-size:13.5px;color:var(--muted);margin:4px 0 14px;max-width:96ch}
+.secno{position:absolute;top:14px;right:16px;width:24px;height:24px;border-radius:50%;
+  background:var(--navy);color:var(--paper);font-size:12px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.chartbox{position:relative;height:350px}
+.chartbox.tall{height:470px}
+
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{background:var(--navy);color:var(--paper);text-align:left;padding:8px 9px;
+  font-weight:600;font-size:11.5px;letter-spacing:.4px;text-transform:uppercase;
+  position:sticky;top:0;white-space:nowrap;z-index:2}
+th.n,td.n{text-align:right;font-variant-numeric:tabular-nums}
+td{padding:6px 9px;border-bottom:1px solid var(--line)}
+tbody tr:nth-child(even){background:var(--band)}
+tbody tr:hover{background:#e3ecf6}
+.tblwrap{max-height:440px;overflow:auto;border:1px solid var(--line);max-width:100%}
+@media(max-width:640px){
+  .card{padding:13px 12px 12px}
+  table{font-size:12px}
+  td,th{padding:5px 6px}
+}
+.pill{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;
+  border:1px solid var(--line);background:var(--paper);color:var(--muted);white-space:nowrap}
+.pill.jp{border-color:#9db4cf;color:#2c4b74}
+.pill.th{border-color:#d9b48c;color:#8a5622}
+.pill.na{border-color:#c9c2b6;color:#8a8275}
+.pill.red{background:#fbe9e7;border-color:#e0b3ac;color:#8d332a}
+.pill.gr{background:#e8f2ec;border-color:#a9c9b7;color:#1e6b4f}
+.pill.am{background:#fdf3e3;border-color:#e6cf9f;color:#7a5a15}
+.muted{color:var(--muted)}
+.warn{background:#fdf3e3;border:1px solid #e6cf9f;border-left:4px solid var(--amber);
+  padding:11px 14px;font-size:12.5px;color:#5e4a1c;margin-bottom:14px}
+.warn b{color:#4a3a12}
+.foot{font-size:12px;color:var(--muted);border-top:1px solid var(--line);
+  padding-top:12px;margin-top:24px}
+.foot code{background:#fff;border:1px solid var(--line);padding:1px 5px;border-radius:2px;
+  font-size:11.5px;word-break:break-all;overflow-wrap:anywhere}
+.foot div{overflow-wrap:anywhere}
+.crumb{font-size:13px;color:var(--muted);margin-bottom:10px;display:flex;
+  align-items:center;gap:6px;flex-wrap:wrap}
+.crumb b{color:var(--navy)}
+.crumb span.link{cursor:pointer;color:var(--terra);text-decoration:underline}
+.crumb span.here{color:var(--navy);text-decoration:none;font-weight:600;cursor:default}
+.cbtn{background:#fff;border:1px solid var(--line);padding:5px 10px;font-size:12.5px;
+  cursor:pointer;color:var(--terra);border-radius:2px}
+.cbtn:disabled{color:#9a958c;cursor:not-allowed}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
+.tools input[type=search]{font-size:13px;padding:6px 9px;border:1px solid var(--line);
+  border-radius:2px;min-width:210px}
+.ranks{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:900px){.ranks{grid-template-columns:1fr}}
+.ranks h3{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding-bottom:6px;border-bottom:2px solid var(--line)}
+.ranks .up h3{border-bottom-color:var(--good)}
+.ranks .dn h3{border-bottom-color:var(--red)}
+.ranks .tot{font-size:11.5px;font-weight:400;color:var(--muted);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  text-transform:none;letter-spacing:0}
+.ranks .lbl{font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+@media(max-width:640px){
+  .wrap{padding:14px 12px 40px}
+  h1{font-size:21px}
+  .kpi .val{font-size:18px}
+  .chartbox{height:300px}
+  .chartbox.tall{height:380px}
+  .controls{gap:12px}
+  .ctrl{width:100%}
+  select{min-width:0;width:100%;max-width:100%}
+  .tools input[type=search]{min-width:0;flex:1 1 100%}
+  .ranks h3{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div><span class="badge">AIM comparison</span><span class="badge terra" id="run-badge"></span><span class="badge ghost dark" id="scope-badge"></span></div>
+  <h1 style="margin-top:9px">Which service families and which part numbers grew, and which fell?</h1>
+  <div class="sub">
+    Sales to dealer, two equal periods side by side, ranked by the euro that moved, from AIM
+    level 1 down to the single part number. Ranked on sales to dealer, valued at the
+    <span id="plabel"></span>.
+  </div>
+</header>
+
+<div class="cmpnote" id="pairnote"></div>
+<div class="warn" id="values-note">
+  <b>How the euros are read.</b> Sales to dealer arrives with no price of its own, so both periods
+  are valued at the <span id="plabel2"></span>, and the page says so wherever a euro appears. A
+  second figure adds 35% gross margin, which is that price-list euro divided by 0.65, because
+  margin is measured on the selling price. That is a modelled dealer price. It is not the
+  distributor's turnover, not its revenue, and not an actual dealer purchase price. The 35% is an
+  assumption supplied by Jerome; if he meant margin on cost, the price-list euro times 1.35, the
+  figure is about 14% lower.
+</div>
+<div class="warn" id="notecmp" style="display:none"></div>
+
+<div class="controls">
+  <div class="ctrl">
+    <label for="db">Distributor</label>
+    <select id="db"></select>
+  </div>
+  <div class="ctrl">
+    <label for="pair">Periods compared</label>
+    <select id="pair"></select>
+  </div>
+  <div class="ctrl">
+    <label for="measure">Ranked by</label>
+    <select id="measure">
+      <option value="eur_list">Euro at price list</option>
+      <option value="eur_gm">Euro at list + 35% margin</option>
+      <option value="units">Units</option>
+    </select>
+  </div>
+  <div class="ctrl">
+    <label for="aimonly">AIM classification</label>
+    <select id="aimonly">
+      <option value="all">Everything, including not classified in AIM</option>
+      <option value="classified">Only part numbers with an AIM level</option>
+    </select>
+  </div>
+</div>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="grid g1">
+  <div class="card" id="s1">
+    <div class="secno">1</div>
+    <h2 id="t-drill">What moved at AIM level 1?</h2>
+    <div class="q" id="q-drill"></div>
+    <div class="crumb" id="crumb"></div>
+    <div class="tools"><span class="muted" id="drillhint"></span></div>
+    <div class="chartbox tall"><canvas id="c-drill"></canvas></div>
+  </div>
+</div>
+
+<div class="grid g1">
+  <div class="card" id="s2">
+    <div class="secno">2</div>
+    <h2 id="t-ranks">The biggest improvements and the biggest declines</h2>
+    <div class="q" id="q-ranks"></div>
+    <div class="ranks">
+      <div class="up">
+        <h3><span class="lbl">Biggest improvements</span><span class="tot" id="tot-up"></span></h3>
+        <div class="tblwrap" style="max-height:460px"><table id="t-up"><tbody></tbody></table></div>
+      </div>
+      <div class="dn">
+        <h3><span class="lbl">Biggest declines</span><span class="tot" id="tot-dn"></span></h3>
+        <div class="tblwrap" style="max-height:460px"><table id="t-dn"><tbody></tbody></table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid g1">
+  <div class="card" id="s3">
+    <div class="secno">3</div>
+    <h2 id="t-table">Every item in this selection</h2>
+    <div class="q" id="q-table"></div>
+    <div class="tools">
+      <input type="search" id="search" placeholder="Part number or description">
+      <button class="cbtn" id="csv">Download these part numbers</button>
+      <span class="muted" id="tcount"></span>
+    </div>
+    <div class="tblwrap" style="max-height:560px"><table id="t-drilltb"><thead></thead><tbody></tbody></table></div>
+  </div>
+</div>
+
+<div class="grid g1">
+  <div class="card" id="s4">
+    <div class="secno">4</div>
+    <h2>What the data covers, and what it does not</h2>
+    <div class="q">Read this before quoting any figure. Months missing for a stage are missing;
+      nothing is filled in and nothing is scaled up. The rule that produced the period pair is
+      stated here in full, together with the months each distributor can and cannot carry.</div>
+    <div class="tblwrap" style="max-height:none"><table id="t-cover"></table></div>
+    <div id="cover-extra" style="margin-top:14px;font-size:12.5px;color:var(--muted)"></div>
+  </div>
+</div>
+
+<footer class="foot" id="foot"></footer>
+</div>
+
+<script>/*__CHART_JS__*/</script>
+<script type="application/json" id="data">__DATA_JSON__</script>
+<script>
+(function(){
+"use strict";
+var D = JSON.parse(document.getElementById("data").textContent);
+var CM = {good:"#1e6b4f", red:"#b4453a", navy:"#15233c", terra:"#c0552d",
+          dim:"#8a8275", line:"#d9d3c8"};
+
+var fmtEur = function(v){
+  var a = Math.abs(v);
+  var s = a >= 1e6 ? (a/1e6).toFixed(2)+"M"
+        : a >= 1e3 ? Math.round(a/1e3).toLocaleString("en-GB")+"k"
+        : Math.round(a).toLocaleString("en-GB");
+  return (v<0?"-":"") + "\u20AC" + s;
+};
+var fmtEurFull = function(v){
+  return (v<0?"-":"") + "\u20AC" + Math.round(Math.abs(v)).toLocaleString("en-GB");
+};
+var fmtInt = function(v){
+  var r = Math.round(v);
+  if (Math.abs(v - r) > 0.001) return v.toFixed(1);
+  return r.toLocaleString("en-GB");
+};
+var esc = function(s){ return String(s===null||s===undefined?"":s)
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); };
+var pnz = function(s){ var t = String(s).replace(/^0+/,""); return t==="" ? "0" : t; };
+
+/* ------------------------------------------------------------------ state */
+var state = {view:null, pair:0, measure:"eur_list", aimonly:"all",
+             path:[], q:"", sort:"delta"};
+
+/* ------------------------------------------------------------------ lookups */
+var PN = {n:D.pn.n, d:D.pn.d, descs:D.pn.descs, l1:D.pn.l1, l2:D.pn.l2, l3:D.pn.l3,
+          f:D.pn.f, b:D.pn.b, s:D.pn.s, p:D.pn.p, o:D.pn.o, oc:D.pn.oc};
+var MON = D.months;
+var MI = {}; MON.forEach(function(m,i){ MI[m]=i; });
+
+/* views: one per distributor, plus a combined view in the all-distributors build */
+var VIEW = {}; D.views.forEach(function(v){ VIEW[v.code]=v; });
+var VIEWS = D.views;
+
+/* rows indexed by distributor code. row = [db_i, month_i, pn_i, billed_units, billed_eur, sold_units] */
+var ROWS = {}; D.dbs.forEach(function(d){ ROWS[d.code] = []; });
+D.facts.forEach(function(r){ ROWS[D.dbs[r[0]].code].push(r); });
+
+function viewPairs(code){ return (D.pairs[code] || []); }
+function curPair(){ var p = viewPairs(state.view); return p[state.pair] || null; }
+
+/* ------------------------------------------------------------------ euro / units */
+function valOf(pn, units, m){
+  if (m === "units") return units;
+  var sp = PN.p[pn];
+  if (sp === null || sp === undefined) return null;
+  return m === "eur_gm" ? units * sp / D.gm_divisor : units * sp;
+}
+function hasPrice(pn){ return PN.p[pn] !== null && PN.p[pn] !== undefined; }
+
+/* ------------------------------------------------------------------ aggregation
+   One pass per view and pair. Units and the price-list euro are always computed together, and
+   the ranking measure picks between them at read time, so switching the measure never
+   re-aggregates the rows.                                                    */
+var CACHE = {};
+function aggregate(){
+  var pair = curPair();
+  if (!pair) return null;
+  var ck = state.view + "|" + state.pair + "|" + state.aimonly;
+  if (CACHE[ck]) return CACHE[ck];
+  var ai = pair.months_a.map(function(x){ return MI[x]; });
+  var bi = pair.months_b.map(function(x){ return MI[x]; });
+  var A = {}, B = {};
+  ai.forEach(function(i){ A[i]=1; });
+  bi.forEach(function(i){ B[i]=1; });
+  var per = {}, order = [];
+  var tot = {ua:0, ub:0, ubA:0, ubB:0, ebA:0, ebB:0};
+  var noAimA=0, noAimB=0, noPriceA=0, noPriceB=0, allSoldA=0, allSoldB=0;
+  pair.dbs.forEach(function(code){
+    var rows = ROWS[code] || [];
+    for (var k=0;k<rows.length;k++){
+      var r = rows[k], mi = r[1];
+      var inA = A[mi]===1, inB = B[mi]===1;
+      if (!inA && !inB) continue;
+      var pn = r[2];
+      if (state.aimonly === "classified" && PN.l1[pn] === 0) continue;
+      var o = per[pn];
+      if (!o){ o = {pn:pn, ua:0, ub:0, ubA:0, ubB:0, ebA:0, ebB:0}; per[pn]=o; order.push(pn); }
+      allSoldA += inA ? r[5] : 0;
+      allSoldB += inB ? r[5] : 0;
+      if (PN.l1[pn] === 0){ if (inA) noAimA += r[5]; if (inB) noAimB += r[5]; }
+      if (!hasPrice(pn)){ if (inA) noPriceA += r[5]; if (inB) noPriceB += r[5]; }
+      if (inA){ o.ua += r[5]; o.ubA += r[3]; o.ebA += r[4];
+                tot.ua += r[5]; tot.ubA += r[3]; tot.ebA += r[4]; }
+      else    { o.ub += r[5]; o.ubB += r[3]; o.ebB += r[4];
+                tot.ub += r[5]; tot.ubB += r[3]; tot.ebB += r[4]; }
+    }
+  });
+  var list = order.map(function(pn){
+    var o = per[pn];
+    var priced = hasPrice(pn);
+    return {pn:pn, ua:o.ua, ub:o.ub, du:o.ub-o.ua,
+            la: priced ? o.ua*PN.p[pn] : null, lb: priced ? o.ub*PN.p[pn] : null,
+            ubA:o.ubA, ubB:o.ubB, ebA:o.ebA, ebB:o.ebB, de:o.ebB-o.ebA};
+  });
+  var shares = {aimA: allSoldA? 100*noAimA/allSoldA : 0, aimB: allSoldB? 100*noAimB/allSoldB : 0,
+                prA: allSoldA? 100*noPriceA/allSoldA : 0, prB: allSoldB? 100*noPriceB/allSoldB : 0,
+                soldA: allSoldA, soldB: allSoldB};
+  var out = {list:list, tot:tot, pair:pair, shares:shares};
+  CACHE[ck] = out;
+  return out;
+}
+/* the three measures, read off the one aggregation */
+function vOf(it){
+  if (state.measure === "units") return it.la;
+  if (state.measure === "eur_gm") return it.la === null ? null : it.la / D.gm_divisor;
+  return it.la;
+}
+function vbOf(it){
+  if (state.measure === "units") return it.lb;
+  if (state.measure === "eur_gm") return it.lb === null ? null : it.lb / D.gm_divisor;
+  return it.lb;
+}
+function dOf(it){
+  if (state.measure === "units") return it.du;
+  if (it.la === null || it.lb === null) return null;
+  return state.measure === "eur_gm" ? (it.lb - it.la)/D.gm_divisor : (it.lb - it.la);
+}
+/* read a part-number row through the same three measures */
+function pvA(r){ return vOf(r); }
+function pvB(r){ return vbOf(r); }
+function pvD(r){ return dOf(r); }
+function pUnpriced(r){ return r.la === null || r.lb === null; }
+function labelOf(lv, i){
+  return lv===1 ? D.aim.l1[i] : lv===2 ? D.aim.l2[i] : D.aim.l3[i];
+}
+function arrOf(lv){ return lv===1 ? PN.l1 : lv===2 ? PN.l2 : PN.l3; }
+function inPath(pn){
+  for (var j=0;j<state.path.length;j++){
+    if (arrOf(j+1)[pn] !== state.path[j]) return false;
+  }
+  return true;
+}
+function rollup(list, lv){
+  var arr = arrOf(lv), g = {}, out = [];
+  list.forEach(function(it){
+    var k = arr[it.pn], o = g[k];
+    if (!o){ o = {i:k, n:0, la:0, lb:0, uA:0, uB:0, nUp:0, nDn:0, unpriced:0, priced:0,
+                  eA:0, eB:0, ubA:0, ubB:0}; g[k]=o; }
+    o.n++;
+    o.uA += it.ua; o.uB += it.ub;
+    o.eA += it.ebA; o.eB += it.ebB;
+    o.ubA += it.ubA; o.ubB += it.ubB;
+    if (it.la === null || it.lb === null) o.unpriced += 1;
+    else { o.la += it.la; o.lb += it.lb; o.priced++; }
+    var d = dOf(it);
+    if (d !== null){ if (d>0) o.nUp++; else if (d<0) o.nDn++; }
+  });
+  Object.keys(g).forEach(function(k){
+    var o = g[k];
+    var la = o.priced ? o.la : null, lb = o.priced ? o.lb : null;
+    var d, m = state.measure;
+    if (m === "units") d = o.uB - o.uA;
+    else if (la === null) d = null;
+    else if (m === "eur_gm") d = (lb - la)/D.gm_divisor;
+    else d = lb - la;
+    out.push({i:o.i, label:labelOf(lv,o.i), n:o.n, uA:o.uA, uB:o.uB,
+              la:la, lb:lb, d:d, nUp:o.nUp, nDn:o.nDn, unpriced:o.unpriced,
+              ebA:o.eA, ebB:o.eB, ubA:o.ubA, ubB:o.ubB});
+  });
+  return out;
+}
+/* the items the page is currently looking at */
+function selection(agg){
+  var lv = Math.min(state.path.length + 1, 4);
+  var base = agg.list.filter(function(it){ return inPath(it.pn); });
+  return {lv:lv, base:base, rows: lv>=4 ? base : rollup(base, lv)};
+}
+function keyOf(r, lv){ return lv>=4 ? r.pn : r.i; }
+function deltaOfRow(r, lv){ return lv>=4 ? dOf(r) : r.d; }
+/* a group row's two period figures, read through the current measure */
+function gA(r){ if (state.measure==="units") return r.uA;
+  return r.la===null?null:(state.measure==="eur_gm"? r.la/D.gm_divisor : r.la); }
+function gB(r){ if (state.measure==="units") return r.uB;
+  return r.lb===null?null:(state.measure==="eur_gm"? r.lb/D.gm_divisor : r.lb); }
+function nameOfRow(r, lv){
+  return lv>=4 ? (PN.descs[r.pn] || pnz(D.pn.n[r.pn])) : r.label;
+}
+
+/* ------------------------------------------------------------------ period note */
+function renderPairNote(agg){
+  var el = document.getElementById("pairnote");
+  var v = VIEW[state.view];
+  var pairs = viewPairs(state.view);
+  if (!pairs.length){
+    el.className = "cmpnote blocked";
+    var d0 = D.dbs.filter(function(d){ return d.code === state.view; })[0];
+    el.innerHTML = "<b>No comparison is shown for " + esc(v.label) + ".</b> Sales to dealer for " +
+      esc(v.label) + " covers " + (d0 ? d0.sold_months : 0) + " months in total, and a comparison " +
+      "of two equal periods needs twice the window length in unbroken months. Nothing is drawn " +
+      "here rather than a shorter comparison that the data cannot carry.<span class='rule'>Rule: " +
+      "a comparison of two N-month windows requires 2N unbroken months of sales-to-dealer data. " +
+      "Where that run does not exist, the comparison is not offered at all, and no shorter one is " +
+      "offered as a substitute.</span>";
+    return;
+  }
+  var p = agg.pair;
+  var isDefault = (state.pair === 0);
+  el.className = "cmpnote";
+  var who = p.n_dbs > 1
+    ? "This pair is carried by " + p.n_dbs + " distributors between them: " +
+      p.dbs.map(function(c){ return VIEW[c] ? VIEW[c].label : c; }).join(", ") +
+      ". Sales to dealer is present in every one of these months for each of them. " +
+      (p.n_dbs > 1 && p.excluded && p.excluded.length
+        ? "It is not carried by " + p.excluded.map(function(x){
+            var lbl = VIEW[x.db] ? VIEW[x.db].label : x.db;
+            return lbl + " (missing " + esc(x.months_missing.slice(0,8).join(", ")) +
+              (x.months_missing.length>8 ? " \u2026" : "") + ")"; }).join("; ") +
+          ", which this view therefore leaves out entirely rather than filling in."
+        : "")
+    : "Sales to dealer for " + esc(v.label) + " is present in every one of these months, without " +
+      "a gap.";
+  var missNow = [];
+  var d = D.dbs.filter(function(x){ return x.code === state.view; })[0];
+  if (d){
+    var span = [];
+    p.months_a.forEach(function(m){ span.push(m); });
+    p.months_b.forEach(function(m){ span.push(m); });
+    span.forEach(function(m){
+      if (!d.sold_presence[MI[m]]) missNow.push(m);
+    });
+  }
+  var warn = missNow.length
+    ? "<br><b>This view cannot carry the selected pair.</b> Sales to dealer is absent for " +
+      esc(v.label) + " in " + esc(missNow.slice(0,10).join(", ")) +
+      (missNow.length>10 ? " \u2026" : "") + ", so no figure is shown for it. Choose another pair " +
+      "in the control above, or a distributor that can carry this one."
+    : "";
+  el.innerHTML = "<b>Period A: " + esc(p.a_from) + " to " + esc(p.a_to) +
+    " against Period B: " + esc(p.b_from) + " to " + esc(p.b_to) + "</b>, " + p.n +
+    " months against " + p.n + (isDefault ? " (the default pair)" : " (an alternative pair)") +
+    ".<br>" + who + warn +
+    " The default pair is the longest equal split the sales-to-dealer data can carry for this " +
+    "selection, cut at the latest month it reaches, and it is the basis for every figure on this " +
+    "page. ISZE billing is shown beside the movement as context only, and it never decides which " +
+    "months are comparable: a month with billing but no sales to dealer is not hidden and is not " +
+    "filled in." +
+    "<span class='rule'>Rule: a comparison of two N-month windows requires 2N unbroken months of " +
+    "sales-to-dealer data. Where that run does not exist, no comparison is drawn at all, and no " +
+    "shorter one is offered as a substitute.</span>";
+  return missNow.length;
+}
+
+/* ------------------------------------------------------------------ KPI strip */
+function renderKpis(agg, sel, lv){
+  var box = document.getElementById("kpis");
+  if (!agg){ box.innerHTML = ""; return; }
+  var up=0, dn=0, nUp=0, nDn=0, du=0, uA=0, uB=0, unpriced=0;
+  sel.rows.forEach(function(r){
+    var d = deltaOfRow(r, lv);
+    if (d !== null){
+      if (d>0){ up+=d; nUp++; } else if (d<0){ dn+=d; nDn++; }
+    }
+    du += (lv>=4 ? r.du : (r.uB-r.uA));
+    uA += (lv>=4 ? r.ua : r.uA);
+    uB += (lv>=4 ? r.ub : r.uB);
+    if (r.unpriced) unpriced++;
+  });
+  var total = up+dn;
+  var unitWord = state.measure === "units";
+  var mlab = unitWord ? "units" : (state.measure==="eur_gm" ? "euro at list plus 35% margin"
+                                                            : "euro at price list");
+  var mags = sel.rows.map(function(r){ var d = deltaOfRow(r,lv); return d===null?null:Math.abs(d); })
+    .filter(function(x){ return x!==null; }).sort(function(a,b){ return b-a; });
+  var allAbs = mags.reduce(function(a,b){ return a+b; },0);
+  var top = mags.slice(0, Math.min(10, mags.length)).reduce(function(a,b){ return a+b; },0);
+  var share = allAbs>0 ? 100*top/allAbs : 0;
+  var k = [
+    {lab: unitWord ? "Units moved in this selection" : "Euro movement in this selection",
+     val: unitWord ? (total>=0?"+":"")+fmtInt(total) : fmtEur(total),
+     note: (unitWord ? fmtInt(total)+" units" : fmtEurFull(total) + " in " + mlab) +
+       " between the two periods, across " + fmtInt(sel.rows.length) + " item(s) at this level",
+     cls: total>=0?"g":"r"},
+    {lab:"Growth against decline",
+     val: unitWord ? (fmtInt(up)+" / "+fmtInt(dn))
+                   : (fmtEur(up)+" / "+fmtEur(dn)),
+     note: (lv>=4? fmtInt(nUp)+" part numbers up, "+fmtInt(nDn)+" down"
+                 : fmtInt(nUp)+" groups up, "+fmtInt(nDn)+" down") +
+       (unpriced ? ". " + fmtInt(unpriced) + " item(s) here carry no price on the list and so have "
+                 + "no euro figure at all; they are kept in the units" : ""),
+     cls: up+dn>=0?"g":"r"},
+    {lab:"Units moved, for context",
+     val: (du>=0?"+":"")+fmtInt(du),
+     note: fmtInt(uA)+" units in period A, "+fmtInt(uB)+" units in period B. A unit count on its " +
+       "own does not say whether the mix improved, which is why the ranking is in euro",
+     cls:"w"},
+    {lab:"How few items carry it",
+     val: share.toFixed(1)+"%",
+     note:"the ten biggest movers by magnitude hold "+share.toFixed(1)+"% of all movement in this " +
+       "selection", cls:"t"}
+  ];
+  box.innerHTML = k.map(function(x){
+    return '<div class="kpi '+x.cls+'"><div class="lab">'+esc(x.lab)+
+      '<span class="info">i<span class="tip">'+esc(x.note)+'</span></span></div>'+
+      '<div class="val">'+x.val+'</div><div class="note">'+esc(x.note)+'</div></div>';
+  }).join("");
+}
+
+/* ------------------------------------------------------------------ drill chart */
+var chart = null;
+function renderChart(agg, sel, lv){
+  var cv = document.getElementById("c-drill");
+  var title = document.getElementById("t-drill");
+  var q = document.getElementById("q-drill");
+  var hint = document.getElementById("drillhint");
+  var crumb = document.getElementById("crumb");
+
+  var c = []; 
+  c.push('<span class="'+(state.path.length===0?'here':'link')+'" data-lv="0">AIM level 1</span>');
+  for (var j=0;j<state.path.length;j++){
+    var last = (j===state.path.length-1);
+    c.push('<span class="'+(last?'here':'link')+'" data-lv="'+(j+1)+'">'+
+      esc(labelOf(j+1, state.path[j]))+'</span>');
+  }
+  if (lv >= 4) c.push('<span class="here">part numbers</span>');
+  crumb.innerHTML = c.join('<span class="muted">&#8250;</span>');
+  Array.prototype.forEach.call(crumb.querySelectorAll("span[data-lv]"), function(el){
+    if (el.className.indexOf("here")>=0) return;
+    el.onclick = function(){
+      state.path = state.path.slice(0, +el.getAttribute("data-lv"));
+      state.q = ""; document.getElementById("search").value = "";
+      draw();
+    };
+  });
+
+  var mlabel = state.measure==="units" ? "units"
+    : state.measure==="eur_gm" ? "euro at list plus 35% margin" : "euro at price list";
+  if (state.path.length){
+    title.textContent = "What moved inside " + labelOf(lv-1, state.path[state.path.length-1]) + "?";
+  } else {
+    title.textContent = "What moved at AIM level 1?";
+  }
+  q.innerHTML = "Ranked by the change in " + mlabel + " between the two periods, improvements at " +
+    "the top and declines at the bottom, on one zero line so both directions read together. " +
+    (lv<4 ? "Click a bar to open the level underneath it. Each bar covers the part numbers inside " +
+            "it, so a group can rise while some part numbers in it fall."
+          : "These are single part numbers. The chart shows the fifteen biggest improvements and " +
+            "the fifteen biggest declines; the table below has every one of them.");
+
+  var rows = sel.rows.slice().filter(function(r){
+    if (lv>=4) return true;
+    return r.n > 0;
+  }).sort(function(a,b){
+    var x = deltaOfRow(a,lv), y = deltaOfRow(b,lv);
+    return (y||0) - (x||0);
+  });
+
+  var shown;
+  if (lv<4 && rows.length > 30){
+    shown = rows.slice(0,15).concat(rows.slice(rows.length-15));
+    hint.innerHTML = rows.length + " groups here; the chart shows the fifteen biggest improvements " +
+      "and the fifteen biggest declines. Click any bar to open it.";
+  } else {
+    shown = rows;
+    hint.innerHTML = lv<4
+      ? "Click a bar to open the " + (lv===1?"AIM level 2 group":lv===2?"AIM level 3 group":
+          "part numbers") + " underneath it."
+      : "Use the breadcrumb above to step back up.";
+    if (lv>=4 && rows.length > 30){
+      shown = rows.slice(0,15).concat(rows.slice(rows.length-15));
+      hint.innerHTML = rows.length + " part numbers here; the chart shows the fifteen biggest " +
+        "improvements and the fifteen biggest declines. The table below has all of them.";
+    }
+  }
+
+  var labels = shown.map(function(r){ return nameOfRow(r, lv); });
+  var vals = shown.map(function(r){ return deltaOfRow(r,lv)||0; });
+  var colors = vals.map(function(v){ return v>=0?CM.good:CM.red; });
+
+  if (chart){ chart.destroy(); chart = null; }
+  chart = new Chart(cv.getContext("2d"), {
+    type:"bar",
+    data:{labels:labels, datasets:[{data:vals, backgroundColor:colors, borderWidth:0}]},
+    options:{
+      indexAxis:"y", responsive:true, maintainAspectRatio:false, animation:false,
+      layout:{padding:{right:16}},
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:function(ctx){
+          var r = shown[ctx.dataIndex], out = [];
+          var cu = state.measure==="units" ? fmtInt : fmtEurFull;
+          out.push("Moved: " + (ctx.parsed.x>=0?"+":"") + cu(ctx.parsed.x));
+          if (lv>=4){
+            out.push("Units: " + fmtInt(r.ua) + " then " + fmtInt(r.ub) +
+              " (" + (r.du>=0?"+":"") + fmtInt(r.du) + ")");
+            if (!pUnpriced(r)){
+              out.push("At price list: " + fmtEurFull(r.la) + " then " + fmtEurFull(r.lb));
+            } else {
+              out.push("No price on the list, so no euro valuation; units only");
+            }
+            var fam = PN.f[r.pn];
+            out.push("PMS family: " + (fam>=0 ? D.pms.labels[D.pms.fams[fam]] : "not a PMS family"));
+            out.push("Genuine/BVP: " + D.bvp[PN.b[r.pn]]);
+            out.push("Source of supply: " + D.src[PN.s[r.pn]]);
+            out.push("AIM: " + D.aim.l1[PN.l1[r.pn]] + " > " + D.aim.l2[PN.l2[r.pn]] + " > " +
+              D.aim.l3[PN.l3[r.pn]]);
+            if (PN.oc[r.pn]) out.push("Carries " + PN.oc[r.pn] + " superseded number(s): " +
+              (PN.o[r.pn]||[]).join(", "));
+          } else {
+            out.push(fmtInt(r.n) + " part numbers in the group");
+            out.push(fmtInt(r.nUp) + " up, " + fmtInt(r.nDn) + " down");
+            if (r.unpriced) out.push(r.unpriced + " of them carry no price on the list");
+          }
+          return out;
+        }}},
+      },
+      scales:{
+        x:{grid:{color:CM.line}, ticks:{callback:function(v){
+             return (v>=0?"+":"") + (state.measure==="units" ? fmtInt(v) : fmtEur(v)); }},
+           title:{display:true, text: state.measure==="units" ? "Units moved between the periods"
+                 : "Euro moved between the periods, at the price list of 10 Aug 2026"}},
+        y:{grid:{display:false}, ticks:{autoSkip:false, font:{size:11.5},
+             callback:function(v){ var s = this.getLabelForValue(v);
+               return s.length>56 ? s.slice(0,54)+"\u2026" : s; }}}
+      },
+      onClick:function(e, els){
+        if (lv>=4 || !els.length) return;
+        var r = shown[els[0].index];
+        if (!r || !r.n) return;
+        state.path = state.path.concat([r.i]);
+        state.q = ""; document.getElementById("search").value = "";
+        draw();
+      }
+    }
+  });
+  state._shown = shown;
+}
+
+/* ------------------------------------------------------------------ ranked lists */
+function renderRanks(agg, sel, lv){
+  var q = document.getElementById("q-ranks");
+  var body = {};
+  ["up","dn"].forEach(function(k){
+    body[k] = document.getElementById("t-"+k).querySelector("tbody");
+  });
+  var rows = sel.rows.filter(function(r){ return deltaOfRow(r,lv) !== null; });  var asc = rows.slice().sort(function(a,b){ return deltaOfRow(a,lv)-deltaOfRow(b,lv); });
+  var dn = asc.filter(function(r){ return deltaOfRow(r,lv) < 0; });
+  var up = asc.slice().reverse().filter(function(r){ return deltaOfRow(r,lv) > 0; });
+  var sumUp = up.reduce(function(a,r){ return a+deltaOfRow(r,lv); },0);
+  var sumDn = dn.reduce(function(a,r){ return a+deltaOfRow(r,lv); },0);
+  document.getElementById("tot-up").textContent =
+    fmtEur(sumUp) + " across " + up.length + " item(s)";
+  document.getElementById("tot-dn").textContent =
+    fmtEur(sumDn) + " across " + dn.length + " item(s)";
+  q.innerHTML = "The level you are looking at, both directions at once, ranked by " +
+    (state.measure==="units" ? "units moved" : state.measure==="eur_gm"
+      ? "euro at list plus 35% margin" : "euro at price list") + ". " +
+    (lv<4 ? "Click a row to open it." : "These are the part numbers themselves.");
+
+  var unitMode = state.measure === "units";
+  function money(v){
+    if (v === null) return '<span class="muted">no list price</span>';
+    return (v>=0?"+":"") + fmtEurFull(v);
+  }
+  function val(r){ return unitMode ? (dOf(r)>=0?"+":"")+fmtInt(dOf(r)) : money(dOf(r)); }
+  function rowHtml(r, cls){
+    var nm = nameOfRow(r, lv);
+    var sub = lv>=4
+      ? esc(pnz(D.pn.n[r.pn])) + (PN.oc[r.pn] ? ' <span class="pill">supersedes '+
+          PN.oc[r.pn]+'</span>' : '')
+      : fmtInt(r.n) + " part numbers, " + fmtInt(r.nUp) + " up and " + fmtInt(r.nDn) + " down";
+    return '<tr data-key="'+esc(String(keyOf(r,lv)))+'" data-lv="'+lv+
+      '" style="cursor:'+(lv<4?'pointer':'default')+'"><td style="white-space:normal">'+esc(nm)+
+      '<div class="muted" style="font-size:11.5px">'+sub+'</div></td>'+
+      '<td class="n" style="color:'+(cls==='up'?CM.good:CM.red)+'">'+val(r)+'</td></tr>';
+  }  var MAXR = 20;
+  body.up.innerHTML = up.length
+    ? up.slice(0,MAXR).map(function(r){ return rowHtml(r,"up"); }).join("")
+      + (up.length>MAXR ? '<tr><td class="muted">and '+fmtInt(up.length-MAXR)+
+          ' more improving, in the table below.</td><td class="n"></td></tr>' : "")
+    : '<tr><td class="muted">Nothing improved in this selection.</td><td class="n"></td></tr>';
+  body.dn.innerHTML = dn.length
+    ? dn.slice(0,MAXR).map(function(r){ return rowHtml(r,"dn"); }).join("")
+      + (dn.length>MAXR ? '<tr><td class="muted">and '+fmtInt(dn.length-MAXR)+
+          ' more declining, in the table below.</td><td class="n"></td></tr>' : "")
+    : '<tr><td class="muted">Nothing declined in this selection.</td><td class="n"></td></tr>';
+
+  if (lv<4){
+    ["up","dn"].forEach(function(k){
+      Array.prototype.forEach.call(body[k].querySelectorAll("tr[data-key]"), function(tr){
+        tr.onclick = function(){
+          state.path = state.path.concat([+tr.getAttribute("data-key")]);
+          state.q = ""; document.getElementById("search").value = "";
+          draw();
+        };
+      });
+    });
+  }
+}
+
+/* ------------------------------------------------------------------ table */
+function renderTable(agg, sel, lv){
+  var tb = document.getElementById("t-drilltb");
+  var count = document.getElementById("tcount");
+  var q = document.getElementById("q-table");
+  var cols = lv>=4
+    ? [["pn","Part number"],["desc","Description"],["ua","Units A"],["ub","Units B"],
+       ["du","Units \u0394"],["va","\u20AC list A"],["vb","\u20AC list B"],["dv","\u20AC \u0394"],
+       ["vgm","\u20AC \u0394 at +35%"],["ebA","ISZE billed \u20AC A"],["ebB","ISZE billed \u20AC B"],
+       ["aim","AIM level 1 > 2 > 3"],["fam","PMS family"],
+       ["bvp","Genuine / BVP"],["src","Source of supply"],["price","List price"],
+       ["old","Superseded numbers"]]
+    : [["label","Group"],["n","Part numbers"],["uA","Units A"],["uB","Units B"],
+       ["vA","\u20AC list A"],["vB","\u20AC list B"],["d","\u20AC \u0394"],["unpriced","No list price"]];
+  var numCols = ["ua","ub","du","va","vb","dv","vgm","n","uA","uB","vA","vB","d","unpriced",
+                 "ebA","ebB"];
+  tb.querySelector("thead").innerHTML = "<tr>" + cols.map(function(c){
+    return '<th class="'+(numCols.indexOf(c[0])>=0?"n":"")+'">'+c[1]+'</th>'; }).join("") +
+    "</tr>";
+
+  q.innerHTML = lv>=4
+    ? "Every part number in the selection, with units and euro in each period, its AIM path, its " +
+      "PMS family, its Genuine/BVP flag, its source of supply, its list price and any number it " +
+      "supersedes. Click a heading to sort. The download writes exactly these rows."
+    : "This level shows the groups above the part numbers. Open all the way down to part numbers " +
+      "to get the full table with the download.";
+
+  var data = sel.rows.slice();
+  if (state.q){
+    var needle = state.q.toLowerCase();
+    data = data.filter(function(r){
+      var s = lv>=4 ? (PN.descs[r.pn]||"") + " " + pnz(D.pn.n[r.pn]) : r.label;
+      return String(s).toLowerCase().indexOf(needle) >= 0;
+    });
+  }
+  function key(r){
+    if (lv>=4){
+      switch(state.sort){
+        case "pn": return pnz(D.pn.n[r.pn]);
+        case "desc": return PN.descs[r.pn]||"";
+        case "ua": return r.ua;
+        case "ub": return r.ub;
+        case "du": return r.du;
+        case "va": return pvA(r)===null?-Infinity:pvA(r);
+        case "vb": return pvB(r)===null?-Infinity:pvB(r);
+        case "vgm": return pUnpriced(r)?-Infinity:(pvD(r)/D.gm_divisor);
+        case "ebA": return r.ebA;
+        case "ebB": return r.ebB;
+        default: return pvD(r)===null?-Infinity:pvD(r);
+      }
+    }
+    switch(state.sort){
+      case "label": return r.label;
+      case "n": return r.n;
+      case "uA": return r.uA;
+      case "uB": return r.uB;
+      case "vA": return r.vA;
+      case "vB": return r.vB;
+      case "unpriced": return r.unpriced;
+      default: return r.d;
+    }
+  }
+  data.sort(function(a,b){
+    var x = key(a), y = key(b);
+    if (typeof x === "string") return y.localeCompare(x);
+    return y-x;
+  });
+  count.textContent = fmtInt(data.length) + " rows";
+  function ncell(v, f){
+    if (v === null || v === undefined) return '<span class="muted">not available</span>';
+    return f(v);
+  }
+  tb.querySelector("tbody").innerHTML = data.map(function(r){
+    if (lv<4){
+      return "<tr><td>"+esc(r.label)+"</td><td class='n'>"+fmtInt(r.n)+"</td>"+
+        "<td class='n'>"+fmtInt(r.uA)+"</td><td class='n'>"+fmtInt(r.uB)+"</td>"+
+        "<td class='n'>"+ncell(gA(r),fmtEurFull)+"</td>"+
+        "<td class='n'>"+ncell(gB(r),fmtEurFull)+"</td>"+
+        "<td class='n' style='color:"+(r.d>=0?CM.good:CM.red)+"'>"+
+        (r.d===null?'<span class="muted">no list price</span>':
+          (r.d>=0?"+":"")+fmtEurFull(r.d))+"</td>"+
+        "<td class='n'>"+(r.unpriced?fmtInt(r.unpriced):"")+"</td></tr>";
+    }
+    var fam = PN.f[r.pn];
+    var aimTxt = PN.l1[r.pn]===0 ? '<span class="pill na">not classified in AIM</span>'
+      : esc(D.aim.l1[PN.l1[r.pn]])+" &rsaquo; "+esc(D.aim.l2[PN.l2[r.pn]])+" &rsaquo; "+
+        esc(D.aim.l3[PN.l3[r.pn]]);
+    var bcls = PN.b[r.pn]===0?"gr":PN.b[r.pn]===1?"am":"na";
+    var scls = PN.s[r.pn]===0?"jp":PN.s[r.pn]===1?"th":"na";
+    var olds = (PN.o[r.pn]||[]);
+    return "<tr><td>"+esc(pnz(D.pn.n[r.pn]))+"</td><td>"+esc(PN.descs[r.pn]||"")+"</td>"+
+      "<td class='n'>"+fmtInt(r.ua)+"</td><td class='n'>"+fmtInt(r.ub)+"</td>"+
+      "<td class='n' style='color:"+(r.du>=0?CM.good:CM.red)+"'>"+(r.du>=0?"+":"")+
+        fmtInt(r.du)+"</td>"+
+      "<td class='n'>"+ncell(pvA(r),fmtEurFull)+"</td><td class='n'>"+ncell(pvB(r),fmtEurFull)+"</td>"+
+      "<td class='n' style='color:"+(pvD(r)===null?CM.dim:(pvD(r)>=0?CM.good:CM.red))+"'>"+
+        (pvD(r)===null?'<span class="muted">no list price</span>':
+          (pvD(r)>=0?"+":"")+fmtEurFull(pvD(r)))+"</td>"+
+      "<td class='n'>"+(pvD(r)===null?'<span class="muted">not available</span>':
+        (pvD(r)>=0?"+":"")+fmtEurFull(pvD(r)/D.gm_divisor))+"</td>"+
+      "<td class='n'>"+fmtEurFull(r.ebA)+"</td>"+
+      "<td class='n'>"+fmtEurFull(r.ebB)+"</td>"+
+      "<td>"+aimTxt+"</td>"+
+      "<td>"+(fam>=0?esc(D.pms.labels[D.pms.fams[fam]]):
+        '<span class="muted">not a PMS family</span>')+"</td>"+
+      "<td><span class='pill "+bcls+"'>"+esc(D.bvp[PN.b[r.pn]])+"</span></td>"+
+      "<td><span class='pill "+scls+"'>"+esc(D.src[PN.s[r.pn]])+"</span></td>"+
+      "<td class='n'>"+(PN.p[r.pn]===null||PN.p[r.pn]===undefined?
+        '<span class="muted">no price</span>':"\u20AC"+Number(PN.p[r.pn]).toFixed(2))+"</td>"+
+      "<td>"+(olds.length?('<span class="pill" title="'+esc(olds.join(", "))+'">'+
+        olds.length+' number(s)</span>'):"")+"</td></tr>";
+  }).join("");
+  Array.prototype.forEach.call(tb.querySelectorAll("th"), function(th,i){
+    th.style.cursor = "pointer";
+    th.onclick = function(){ state.sort = cols[i][0]; renderTable(agg, sel, lv); };
+  });
+  state._table = data;
+  state._lv = lv;
+}
+
+/* ------------------------------------------------------------------ coverage */
+function renderCoverage(){
+  var tb = document.getElementById("t-cover");
+  tb.innerHTML = "<thead><tr><th>Distributor</th><th>Scope, and where it comes from</th>" +
+    "<th class='n'>Months with sales to dealer</th><th class='n'>Months with ISZE billing</th>" +
+    "<th class='n'>Longest unbroken sales-to-dealer run</th>" +
+    "<th class='n'>Longest equal split</th><th>Comparison offered</th></tr></thead><tbody>" +
+    D.coverage.map(function(c){
+      return "<tr><td>"+esc(c.label)+"</td><td>"+esc(c.sold_scope)+
+        " <span class='muted'>"+esc(c.sold_scope_note)+"</span><br>"+
+        "<span class='muted'>ISZE billing scope: "+esc(c.scope||"not stated")+"</span></td>"+
+        "<td class='n'>"+c.sold_months+"</td><td class='n'>"+c.billed_months+"</td>"+
+        "<td class='n'>"+c.run_months+" months<br><span class='muted'>"+esc(c.run_span)+
+        "</span></td>"+
+        "<td class='n'>"+(c.offers ? c.max_n+" vs "+c.max_n : "\u2014")+"</td>"+
+        "<td>"+(c.offers ? '<span class="pill gr">yes</span>'
+                         : '<span class="pill red">no: too short</span>')+"</td></tr>";
+    }).join("") + "</tbody>";
+  var miss = D.coverage.filter(function(c){ return c.sold_missing_where_billed.length; });
+  var ex = D.excluded;
+  document.getElementById("cover-extra").innerHTML =
+    "<p><b>The rule that produced the period pair.</b> A comparison of two N-month windows needs " +
+    "2N unbroken months of sales-to-dealer data. The pairs offered in the control are the longest " +
+    "equal splits the sales-to-dealer data can carry, longest first, and the first one is the " +
+    "default. Where a distributor has no such run, the page shows no comparison and says what " +
+    "would be needed. Nothing shorter than three months per side is offered at all, so the order " +
+    "of the ranked lists is never read off a single month.</p>" +
+    "<p><b>Months with sales to dealer absent while ISZE billing is present.</b> " +
+    (miss.length
+      ? miss.map(function(c){
+          return esc(c.label) + ": " + c.sold_missing_where_billed.length + " month(s) (" +
+            esc(c.sold_missing_where_billed.slice(0,16).join(", ")) +
+            (c.sold_missing_where_billed.length>16 ? " \u2026" : "") + ")";
+        }).join("; ")
+      : "None for the distributors on this page.") +
+    " These months are not filled in and they do not decide which months are comparable.</p>" +
+    "<p><b>ISZE billing excluded by document type.</b> Rule: " + esc(ex.doc_types.rule) +
+    ". That is " + fmtInt(ex.doc_types.rows) + " rows and " + fmtEurFull(ex.doc_types.eur) +
+    " of billing, none of it parts sold to a dealer. There are months in 2026 whose whole billing " +
+    "carries a blank document type; those months are shown as gaps above rather than counted.</p>" +
+    "<p><b>Out of scope on both stages.</b> Every line that is not a part (freight, service fee, " +
+    "rebate, merchandise, tool, marketing item, core deposit, finance, demurrage, display) and " +
+    "every part number whose AIM level 1 is Fluids Chemicals. AIM level 1 Lubrication is kept: " +
+    "those are engine parts such as oil pumps and drain plugs, not oils. Sales to dealer dropped " +
+    fmtInt(D.excluded.scope.sold.units) + " units this way; ISZE billing dropped " +
+    fmtEurFull(D.excluded.scope.billed.eur) + ".</p>" +
+    "<p><b>Not classified in AIM.</b> A part number with no AIM level sits in a bucket called Not " +
+    "classified in AIM at all three levels. Its share of units is counted and shown, never dropped " +
+    "silently, and the AIM classification control can hide it if only classified part numbers are " +
+    "wanted.</p>" +
+    "<p><b>Sales to dealer reported in half units.</b> " +
+    (D.half_units && D.half_units.length
+      ? "Two of these sources report some part numbers in half units (" +
+        D.half_units.map(function(h){ return esc(h.db) + ": " + fmtInt(h.rows) + " rows"; })
+          .join("; ") + "). They are kept exactly as reported rather than rounded, so the units on " +
+        "this page still add back to the source file."
+      : "None of the sources on this page does.") + "</p>" +
+    "<p><b>Where the euro comes from.</b> Sales to dealer has no price of its own, so both " +
+    "periods are valued at the same ISZE price list, " + esc(D.price_list_label) + ". A price of " +
+    "0.00 on that list means no price and is treated as missing, so those part numbers keep their " +
+    "units and show no euro. A price change inside the window is therefore not visible in this " +
+    "comparison.</p>" +
+    "<p><b>The 35% margin figure.</b> The second euro figure is the price-list euro divided by " +
+    "0.65, which is 35% gross margin measured on the selling price. It is a modelled dealer " +
+    "price. If instead the 35% were meant on cost, the price-list euro times 1.35, the figure " +
+    "would be about 14% lower.</p>" +
+    "<p><b>Reconciliation reported once.</b> The month rows against the total rows of every " +
+    "source file used, and the months each distributor carries per stage, are in the " +
+    "verification report written beside the builder. The two exceptions the build reports are " +
+    "UTI's 2025 file, whose year row is 92,660 against 55,570 in month rows because February to " +
+    "July 2025 are genuinely absent, and ITUK's dealer-level 2025 file, whose year row is " +
+    "224,001 against 223,897 and which is not used for network totals.</p>" +
+    "<p><b>What this page is not.</b> It is a movement report, not a stock report: it does not say " +
+    "what the distributor is holding, and it does not compare sales to dealer against what ISZE " +
+    "billed as if the difference were stock. ISZE billing appears beside the movement as context " +
+    "only.</p>";
+}
+
+function renderFoot(){
+  document.getElementById("foot").innerHTML =
+    "<b>Sources</b>" + D.sources.map(function(x){
+      return "<div><b>"+esc(x.what)+"</b> &middot; <code>"+esc(x.path)+"</code> &middot; "+
+        esc(x.note)+"</div>";
+    }).join("") +
+    "<div style='margin-top:12px'><b>Assumptions and open questions</b><ul>" +
+    D.open_questions.map(function(x){ return "<li>"+esc(x)+"</li>"; }).join("") + "</ul></div>" +
+    "<div style='margin-top:10px'>Built "+esc(D.built)+" &middot; run "+esc(D.run)+
+    " &middot; self-contained: no server and no internet needed.</div>";
+}
+
+/* ------------------------------------------------------------------ draw */
+function draw(){
+  var v = VIEW[state.view];
+  var agg = aggregate();
+  document.getElementById("run-badge").textContent =
+    D.run==="ALL" ? "all distributors" : v.label;
+  document.getElementById("scope-badge").textContent = v.scope_label;
+  var missNow = renderPairNote(agg);
+  var noteEl = document.getElementById("notecmp");
+  var notes = [];
+  if (state.aimonly === "classified"){
+    notes.push("Only part numbers with an AIM level are shown. The bucket called Not classified in " +
+      "AIM is hidden by this control; its share of units is still stated in the coverage panel.");
+  }
+  if (v.code === "ALL"){
+    notes.push("This view adds the distributors named above together. Their scopes differ, so a " +
+      "part number that only one of them reports is not comparable with one they all report. Use " +
+      "the distributor control to read one of them on its own.");
+  }
+  if (agg && (agg.shares.aimA > 0 || agg.shares.aimB > 0)){
+    notes.push("Units not classified in AIM: " + agg.shares.aimA.toFixed(2) + "% in period A and " +
+      agg.shares.aimB.toFixed(2) + "% in period B. Units with no price on the list: " +
+      agg.shares.prA.toFixed(2) + "% and " + agg.shares.prB.toFixed(2) +
+      "%. Both are kept in the figures above, not excluded from them.");
+  }
+  noteEl.style.display = notes.length ? "block" : "none";
+  noteEl.innerHTML = notes.join("<br><br>");
+
+  if (!agg){
+    document.getElementById("kpis").innerHTML = "";
+    document.getElementById("crumb").innerHTML = "";
+    document.getElementById("t-up").querySelector("tbody").innerHTML = "";
+    document.getElementById("t-dn").querySelector("tbody").innerHTML = "";
+    document.getElementById("t-drilltb").querySelector("tbody").innerHTML = "";
+    document.getElementById("t-drilltb").querySelector("thead").innerHTML = "";
+    document.getElementById("drillhint").innerHTML = "";
+    document.getElementById("t-drill").textContent = "No comparison is available";
+    document.getElementById("q-drill").textContent = "";
+    if (chart){ chart.destroy(); chart = null; }
+    return;
+  }
+  if (state.path.length > 0){
+    /* a path key that the current selection cannot resolve is dropped, so the page never shows
+       an empty panel with no way back */
+    var lv0 = Math.min(state.path.length, 3);
+    var arr = arrOf(lv0);
+    var any = agg.list.some(function(it){ return arr[it.pn] === state.path[state.path.length-1]; });
+    if (!any) state.path = [];
+  }
+  var sel = selection(agg);
+  renderKpis(agg, sel, sel.lv);
+  renderChart(agg, sel, sel.lv);
+  renderRanks(agg, sel, sel.lv);
+  renderTable(agg, sel, sel.lv);
+}
+
+/* ------------------------------------------------------------------ controls */
+function fillViews(){
+  var sel = document.getElementById("db");
+  sel.innerHTML = VIEWS.map(function(v){
+    return '<option value="'+esc(v.code)+'">'+esc(v.label)+
+      (v.sold_months ? " \u2014 "+v.sold_months+" months of sales to dealer"
+                     : " \u2014 no sales to dealer")+'</option>';
+  }).join("");
+  state.view = VIEWS[0].code;
+  sel.value = state.view;
+  sel.onchange = function(){
+    state.view = sel.value; state.pair = 0; state.path = [];
+    fillPairs(); draw();
+  };
+}
+function fillPairs(){
+  var sel = document.getElementById("pair");
+  var arr = viewPairs(state.view);
+  if (!arr.length){
+    sel.innerHTML = "<option>no comparison available</option>";
+    sel.disabled = true;
+    return;
+  }
+  sel.disabled = false;
+  sel.innerHTML = arr.map(function(p,i){
+    return '<option value="'+i+'">'+esc(p.a_from)+" to "+esc(p.a_to)+"  vs  "+
+      esc(p.b_from)+" to "+esc(p.b_to)+"  ("+p.n+" against "+p.n+")"+
+      (p.n_dbs>1 ? " \u2014 "+p.n_dbs+" distributors" : "")+'</option>';
+  }).join("");
+  sel.value = String(state.pair);
+  sel.onchange = function(){ state.pair = +sel.value; state.path = []; draw(); };
+}
+document.getElementById("measure").onchange = function(){
+  state.measure = this.value; state.sort = "delta"; state.path = state.path.slice(); draw();
+};
+document.getElementById("aimonly").onchange = function(){
+  state.aimonly = this.value; state.path = []; draw();
+};
+document.getElementById("search").oninput = function(){
+  state.q = this.value; renderTable(aggregate(), selection(aggregate()), state._lv||4);
+};
+document.getElementById("csv").onclick = function(){
+  var rows = state._table || [], lv = state._lv || 1;
+  var head, body;
+  if (lv >= 4){
+    head = ["part_number","description","units_period_a","units_period_b","units_change",
+      "eur_list_period_a","eur_list_period_b","eur_change","eur_change_at_35_margin",
+      "aim_level_1","aim_level_2","aim_level_3","pms_family","genuine_bvp",
+      "source_of_supply","list_price_eur","superseded_numbers"];
+    body = rows.map(function(r){
+      var fam = PN.f[r.pn];
+      return [pnz(D.pn.n[r.pn]), PN.descs[r.pn]||"", r.ua, r.ub, r.du,
+        pvA(r)===null?"":pvA(r).toFixed(2), pvB(r)===null?"":pvB(r).toFixed(2),
+        pvD(r)===null?"":pvD(r).toFixed(2),
+        pvD(r)===null?"":(pvD(r)/D.gm_divisor).toFixed(2),
+        D.aim.l1[PN.l1[r.pn]], D.aim.l2[PN.l2[r.pn]], D.aim.l3[PN.l3[r.pn]],
+        fam>=0?D.pms.labels[D.pms.fams[fam]]:"", D.bvp[PN.b[r.pn]], D.src[PN.s[r.pn]],
+        PN.p[r.pn]===null?"":Number(PN.p[r.pn]).toFixed(2), (PN.o[r.pn]||[]).join(" ")];
+    });
+  } else {
+    head = ["group","part_numbers","units_period_a","units_period_b",
+      "eur_list_period_a","eur_list_period_b","eur_change","items_without_a_list_price"];
+    body = rows.map(function(r){
+      return [r.label, r.n, r.uA, r.uB,
+        r.la===null?"":r.la.toFixed(2), r.lb===null?"":r.lb.toFixed(2),
+        r.la===null?"":(r.lb-r.la).toFixed(2), r.unpriced||0];
+    });
+  }
+  var csv = [head.join(",")].concat(body.map(function(r){
+    return r.map(function(c){
+      var s = String(c===null||c===undefined?"":c);
+      return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+    }).join(",");
+  })).join("\r\n");
+  var blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "aim_comparison_" + state.view + ".csv";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+};
+
+/* ------------------------------------------------------------------ boot */
+document.getElementById("plabel").textContent = D.price_list_label;
+document.getElementById("plabel2").textContent = D.price_list_label;
+renderCoverage();
+renderFoot();
+fillViews();
+fillPairs();
+draw();
+})();
+</script>
+</body>
+</html>

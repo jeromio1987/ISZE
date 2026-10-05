@@ -1,4 +1,4 @@
-# Aftermarket BI — build menu (Mode B · 2026-08-19)
+# Aftermarket BI — build menu (internal · 2026-08-19)
 
 **KPI filter (2026-09-14):** [`ISZE_BI_FRAMEWORK.md`](ISZE_BI_FRAMEWORK.md) is which numbers to quote (FY first, euros first). This file is the **build list**, not the KPI stack.
 
@@ -39,7 +39,7 @@ Hard rules: **UTI ≠ UMI** · **IUK ≠ ITUK** · **IRELAND ≠ IUK** · refere
 | A1 | **P5.2 baseline forecast** (ETS/ARIMA/naive + parc) | `demand_series.parquet`, UIO v19 | `forecast_candidates.parquet`, `backtest_report.parquet` | M |
 | A2 | **P5.6 forecast CSV + PRISM tab** | A1 | `forecast_final_*.csv`, `pages/19_Forecast.py` | S–M |
 | A3 | **Multi-DB replenishment dashboard** | `replenishment_bridge*.parquet` | `02_dashboards/sales/ISZE_DB_DLR_Replenishment_CY2025.html` + launcher | M |
-| A4 | **Book B revision review workbook** | `revision_book_b_top_review.csv` | Excel/HTML Mode B under `01_data/01_Pricing/` | S |
+| A4 | **Book B revision review workbook** | `revision_book_b_top_review.csv` | Excel/HTML internal under `01_data/01_Pricing/` | S |
 | A5 | **GREECE in commercial stack** (5th DB) | `dealer_sellout_long_GREECE_CY2025.csv` | Extend `build_db_dlr_commercial_stack.py` | S |
 | A6 | **KS/IAM index refresh** | KS crawl CSVs, PR00 | More revision-queue matches (now ~148) | S |
 | A7 | **P1.3 supersession delta** | `pn_supersession_map.csv`, billing | Derived CSV + note | S–M |
@@ -59,7 +59,7 @@ Hard rules: **UTI ≠ UMI** · **IUK ≠ ITUK** · **IRELAND ≠ IUK** · refere
 
 | # | Build | Decision |
 |---|-------|----------|
-| B1 | Book B **alloc** | Ambition +4% / +5% / launch-only |
+| B1 | Book B **alloc** | **CLOSED 2026-09-22 — do not re-ask.** The ambition half (+4% / +5% / launch-only) is closed permanently per Jerome; the +5% flat simulation of 2026-09-22 is its last output. This row is historical. Record: `00_docs/PRICE_AMBITION_CLOSED_2026-09-22.md` |
 | B2 | **Seed €** for 9,591 no-L12M PNs | IML BOM vs UTI placeholders |
 | B3 | **Growth-factor sign-off** | Keep 1.24/1.25/×1.25 UTI table? |
 | B4 | **Guardrail policy** | Auto-HOLD on IAM-undercut + proxy-adverse? |
@@ -68,7 +68,7 @@ Hard rules: **UTI ≠ UMI** · **IUK ≠ ITUK** · **IRELAND ≠ IUK** · refere
 | B7 | **P5 override policy** | Who may delta forecast + audit |
 | B8 | **Book A +3% alloc** | Explicit rebuild only |
 | B9 | **ITUK brake wear factor** | 0.4 vs 0.8 |
-| B10 | **Competitor vintage labels (Mode A)** | Rebuild when asked |
+| B10 | **Competitor vintage labels (shared)** | Rebuild when asked |
 
 ---
 

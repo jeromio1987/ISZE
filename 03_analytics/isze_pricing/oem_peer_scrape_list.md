@@ -5,7 +5,7 @@
 **Basket:** `oem_peer_basket.csv`  
 **Arrange runbook:** `OEM_STREET_ARRANGE.md`  
 **Ingest:** `ingest_oem_peer_street.py` (propagates by OE across markets/PNs)  
-**Audience:** Mode B / internal fill only — not a dashboard ship.
+**Audience:** internal / internal fill only — not a dashboard ship.
 
 ---
 

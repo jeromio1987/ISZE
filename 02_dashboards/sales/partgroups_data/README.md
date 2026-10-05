@@ -21,7 +21,7 @@ HTML shell must stay under ~500 KB (Plotly via local `_ui/plotly.min.js` copy of
 **Always** double-click `OPEN_PartGroups_Explorer.cmd` (starts HTTP on 8766 and opens the page).
 Do **not** open `ISZE_PartGroups_Sales_Explorer.html` via Explorer double-click — multi-MB JSON needs HTTP.
 
-Aftermarket Live Pricing (`02_dashboards/pricing/ISZE_Aftermarket_Live_Pricing_Dashboard.html`) is **self-contained** (scrape JSON embedded) — double-click OK.
+Price comparison page: `02_dashboards/pricing/ISZE_Parts_Price_Intelligence.html` (self-contained, double-click OK). The old Aftermarket Live Pricing page was retired 2026-10-02.
 
 ## Rebuild
 

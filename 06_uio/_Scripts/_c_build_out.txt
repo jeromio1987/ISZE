@@ -1,0 +1,23 @@
+﻿======================================================================================================================
+CANDIDATE C (retention-safety pass)
+======================================================================================================================
+r54  PORTUGL   LCV   on-disk c [5022, 5438, 5976, 6384, 6691] -> c2 [5109.0, 5425.0, 5709.0, 5967.0, 6251.0]   k now 0.889,0.886,0.898,0.898,0.907
+r69  POLAND    LCV   on-disk c [61, 49, 37, 26, 16] -> c2 [23.0, 19.0, 15.0, 11.0, 8.0]   k now 0.821,0.826,0.789,0.733,0.727
+r88  CYPRUS    LD    on-disk c [261, 256, 249, 245, 244] -> c2 [205.0, 208.0, 210.0, 214.0, 220.0]   k now 0.862,0.869,0.868,0.875,0.889
+r90  CYPRUS    LCV   on-disk c [2238, 2339, 2445, 2521, 2614] -> c2 [2238.0, 2339.0, 2445.0, 2521.0, 2614.0]   k now 0.892,0.866,0.891,0.884,0.894
+
+retention audit: 31 rows evaluated, 0 violation(s)
+
+  Grand Total 2026: 252131.15391716975 -> 252124.15391716975 (-7.0)
+  Grand Total 2027: 245225.50046041136 -> 245134.50046041136 (-91.0)
+  Grand Total 2028: 238140.81468729387 -> 237812.81468729387 (-328.0)
+  Grand Total 2029: 231293.4387531098 -> 230830.4387531098 (-463.0)
+  Grand Total 2030: 224710.19192152546 -> 224238.19192152546 (-472.0)
+
+openpyxl saved: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\ISUZU_UIO_Overview_2026_V20_CANDIDATE_2026-09-22c.xlsx
+changelog rows appended: 15
+assumptions log appended: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\UIO_V20_ASSUMPTIONS_2026-09-22c.md
+verify json: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\UIO_V20_VERIFY_2026-09-22c.json
+WARN: Excel recalculation skipped: (-2147418111, 'Call was rejected by callee.', None, None)
+
+DONE  candidate c: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\ISUZU_UIO_Overview_2026_V20_CANDIDATE_2026-09-22c.xlsx

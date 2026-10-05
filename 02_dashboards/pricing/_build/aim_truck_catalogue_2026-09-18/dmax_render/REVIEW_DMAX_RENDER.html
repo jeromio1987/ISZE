@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>D-Max render - review</title>
+<style>
+  :root{--navy:#15233c;--terra:#c0552d;--paper:#f7f4ee;--muted:#6b6459;--line:#d9d3c8;--amber:#a8721f}
+  body{margin:0;background:var(--paper);color:#22262e;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+  .wrap{max-width:1400px;margin:0 auto;padding:18px}
+  h1{font-family:Georgia,serif;font-size:22px;color:var(--navy);margin:0 0 5px}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.55}
+  .sub b{color:var(--navy)}
+  .card{background:#fff;border:1px solid var(--line);padding:13px;margin-bottom:14px}
+  .card h2{font-family:Georgia,serif;font-size:16px;color:var(--navy);margin:0 0 3px}
+  .card .m{font-size:11.5px;color:var(--muted);margin-bottom:10px}
+  .card img{display:block;width:100%;height:auto;border:1px solid var(--line)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:1000px){.two{grid-template-columns:1fr}}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin-top:4px}
+  th{background:var(--navy);color:#f7f4ee;text-align:left;padding:7px 9px;
+    font-size:10.5px;letter-spacing:.4px;text-transform:uppercase}
+  td{padding:6px 9px;border-bottom:1px solid var(--line)}
+  tr:nth-child(even) td{background:#eef3f9}
+  td.n{text-align:right;font-variant-numeric:tabular-nums}
+  .good{color:#1e6b4f;font-weight:600}
+  .bad{color:var(--terra);font-weight:600}
+  .was{color:#8b8578}
+  .verdict{background:#fdf3e3;border:1px solid #e6cf9f;border-left:4px solid var(--amber);
+    padding:12px 15px;font-size:13.5px;color:#5e4a1c;line-height:1.6;margin-bottom:16px}
+  .verdict b{color:#4a3a12}
+  .verdict h3{margin:0 0 6px;font-family:Georgia,serif;color:#4a3a12;font-size:15px}
+  .fix{background:#eef6f0;border:1px solid #c6dfd0;border-left:4px solid #2f7d5b;
+    padding:12px 15px;font-size:13.5px;color:#24513c;line-height:1.6;margin-bottom:16px}
+  .fix b{color:#1c3f2f}
+  .fix h3{margin:0 0 6px;font-family:Georgia,serif;color:#1c3f2f;font-size:15px}
+  code{background:#eef3f9;padding:1px 4px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>D-Max — real 3D model, rendered in Blender</h1>
+  <div class="sub">
+    The model is a genuine 2021 Isuzu D-Max built by a third-party modeller
+    (David_Holiday, CC-BY 4.0), obtained free and key-free from the Objaverse open
+    dataset — no account, no card. I loaded it into Blender, wrote the paint, glass and
+    chrome shaders and lit it, and rendered it. This is <b>not</b> my hand-drawn
+    geometry. Reload this page to pick up new renders.
+  </div>
+
+  <div class="fix">
+    <h3>The tail was not a model defect — it was my measuring error</h3>
+    The previous version reported the load box and rear overhang as 15–19% short of
+    Isuzu's specification, and that was wrong. It found the two axles by taking the
+    largest gap in the model's rim geometry and splitting there. This model also
+    carries extra wheel material <em>behind</em> the rear axle, which drags that split
+    rearward, so the wheelbase read as 130.1 model units instead of 122.1. Because the
+    wheelbase sets the scale, <b>every dimension was then 6.6% too small</b> — and the
+    tail, being farthest from the front axle, was hit hardest. Reading the axles from
+    the brake-rotor discs instead (which exist only on road wheels) fixes it. The tail
+    is now within about 2–6% of spec, and the load box is 1.520 m long against a
+    published 1.495 m.
+  </div>
+
+  <div class="verdict">
+    <h3>How real does it actually look</h3>
+    Measured against a real D-Max silhouette, the outline overlaps by
+    <b>IoU 0.837</b> — about five sixths — at the hero camera angle of azimuth 80°,
+    elevation 18°. The bottom edge, so the wheels, arches, sill and bumper line, agrees
+    to <b>1.6%</b> of vehicle height, which is why it sits on the ground like a truck
+    instead of floating. The top edge is off by <b>4.3%</b> (p95 11.7%), and that is
+    where the drift lives: the roofline and the cab-to-bed transition. It reads clearly
+    as a D-Max. What it is not is photographic, and the reason is specific —
+    <b>the model file carries no textures</b>, so the paint is a shader I wrote rather
+    than a photographed surface. No orange peel from a real paint map, and the badge is
+    extruded geometry lit by the studio rather than a decal with its own artwork. Put
+    crudely: a good 3D render, roughly three quarters to five sixths of the way to a
+    press photograph, and the missing part is surface, not shape. The one dimension
+    that is still genuinely off is bed depth, at 0.548 m against a published 0.490 m:
+    on this model the rail sits about 3 cm higher and the floor about 5 cm lower than
+    Isuzu's numbers imply, and I could not find a change that closed that gap without
+    visibly distorting the top of the load box, so it is left alone and stated here.
+  </div>
+
+  <div class="card">
+    <h2>The render</h2>
+    <div class="m">dmax_hero.png · 2356×992 · opaque studio ground with a soft contact
+      shadow · 400 samples · 63 s for this pass, 34 s for the transparent one</div>
+    <img src="dmax_hero.png" alt="Isuzu D-Max hero render">
+  </div>
+
+  <div class="card">
+    <h2>The six clickable zones placed on it</h2>
+    <div class="m">_qa_zone_overlay.png · the zones are traced from the rendered pixels, so
+      they follow the body rather than being boxes. Every vehicle pixel belongs to exactly
+      one zone (0 pixels claimed twice), and the sliver unclaimed is the 1.33% anti-aliased
+      rim.</div>
+    <img src="_qa_zone_overlay.png" alt="Zone overlay on the D-Max render">
+  </div>
+
+  <div class="two">
+    <div class="card">
+      <h2>The cut-out</h2>
+      <div class="m">dmax_alpha.png · genuinely transparent, for compositing onto anything.
+        1,068,017 pixels at alpha 0, background median alpha 0 — checked, not assumed.</div>
+      <img src="dmax_alpha.png" alt="D-Max cut-out with transparent background">
+    </div>
+    <div class="card">
+      <h2>Accuracy against a real D-Max</h2>
+      <div class="m">_qa_accuracy_sheet.png · the real vehicle beside the render, the measured
+        silhouette difference, and the geometry table against Isuzu's own specification with
+        the before/after column</div>
+      <img src="_qa_accuracy_sheet.png" alt="Accuracy sheet">
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Geometry against Isuzu's published specification</h2>
+    <div class="m">Negative means the model is smaller than the real vehicle. "Before" is the
+      previous method, recomputed by the same script so the two columns are directly
+      comparable.</div>
+    <table>
+      <tr><th>Dimension</th><th class="n">After</th><th class="n">Before</th><th>Read</th></tr>
+      <tr><td>Front overhang</td><td class="n">+7.5%</td><td class="n was">−0.4%</td><td>close, now slightly long</td></tr>
+      <tr><td>Ground clearance</td><td class="n">+3.3%</td><td class="n was">−3.1%</td><td class="good">close</td></tr>
+      <tr><td>Overall length</td><td class="n">+2.6%</td><td class="n was">−3.7%</td><td class="good">close</td></tr>
+      <tr><td>Overall height</td><td class="n">+1.3%</td><td class="n was">−4.9%</td><td class="good">close</td></tr>
+      <tr><td>Rear overhang</td><td class="n">+5.8%</td><td class="n was">−15.3%</td><td class="good">fixed</td></tr>
+      <tr><td>Load box length</td><td class="n">+1.7%</td><td class="n was">−19.4%</td><td class="good">fixed</td></tr>
+      <tr><td>Load box width</td><td class="n">−0.7%</td><td class="n was">−7.0%</td><td class="good">fixed</td></tr>
+      <tr><td>Load box depth</td><td class="n">+11.8%</td><td class="n was">−27.5%</td><td class="bad">still off, explained above</td></tr>
+      <tr><td>Track</td><td class="n">−1.8%</td><td class="n was">−7.9%</td><td class="good">fixed</td></tr>
+      <tr><td>Body width</td><td class="n">−2.5%</td><td class="n was">−8.5%</td><td class="good">fixed</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>What else changed in this pass</h2>
+    <div class="m">Beyond the scale correction.</div>
+    <table>
+      <tr><th>Item</th><th>What was done</th></tr>
+      <tr><td>Camera</td><td>Swept 28 azimuth/elevation combinations including rear three-quarter
+        views and elevations up to 22°, scored each against the real silhouette, then picked
+        80°/18° — the best-scoring angle that also keeps the nose, cab and load box legible.
+        0.837 vs 0.837 for the best elevation and clearly ahead of my first pick at 72°/22°.</td></tr>
+      <tr><td>Badge</td><td>The ISUZU wordmark is now real extruded letterform geometry on its own
+        chrome material, sitting on a dark backing plate, placed from the measured grille band.
+        The model's own badge is a material split on a smooth face and had no edge to catch light.</td></tr>
+      <tr><td>Number plates</td><td>A read plate surface in a recessed dark frame at both ends,
+        sized 470×104 mm. Deliberately blank — no registration number and no distributor
+        branding is invented.</td></tr>
+      <tr><td>Small detail added</td><td>Four door handles on the beltline, two windscreen wipers
+        on the cowl, two fuel filler doors, brake discs and calipers already present in the model
+        and now given their own metal and rubber responses, and a darker wheel well and arch liner.</td></tr>
+      <tr><td>Paint and surface</td><td>Layered basecoat plus clearcoat with a procedural metal
+        flake on the coat normal and a very shallow panel wave — the two things that make paint
+        read as paint rather than plastic. Faint large-scale base-colour variation so panels are
+        not perfectly uniform. Glass got a higher IOR and a coat; the tyres a much rougher rubber
+        with a mould texture; the chrome a faint directional roughness so the highlight smears.</td></tr>
+    </table>
+  </div>
+
+  <div class="verdict">
+    <h3>What I could not do</h3>
+    I did not lengthen the load box, because it turned out not to need lengthening — the fix
+    was to the scale, not the geometry. I did not close the bed-depth gap, for the reason
+    above. I did not add grille slats: the grille already has a moulded two-bar structure and
+    the front-on check showed extra slats would have read as clutter rather than detail. And
+    there is no texture on the paint, so up close it will never pass for a photograph no matter
+    how many samples I give it. Everything above is a measurement off the model or off the
+    render, not an impression — and if you want the evidence for the scale correction, the
+    `probe_*.py` scripts in this folder are what found it.
+  </div>
+</div>
+</body>
+</html>

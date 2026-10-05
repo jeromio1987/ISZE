@@ -1,0 +1,919 @@
+source size in header: 76251
+code objects: 39
+
+====================================================================================================
+PATH <module>
+  name='<module>' qualname='<module>'
+  firstline=1 nlines=583
+  argcount=0 posonly=0 kwonly=0
+  flags=0x1000000 varnames=('r', 's', 'b', 'm', '_')
+  cellvars=('__conditional_annotations__',) freevars=()
+  names=('__conditional_annotations__', '__doc__', '__future__', 'annotations', 'html', 'io', 'json', 'os', 'sys', 'datetime', 'date', 'pandas', 'pd', 'TextIOWrapper', 'stdout', 'buffer', 'ROOT', 'path', 'join', 'OUT_HTML', 'OUT_CMD', 'D', 'PRISM', 'SNAPSHOT', 'insert', 'KM_MODEL', 'dict', 'KM', 'FAM_GROUPS', 'GROUP_ORDER', 'DEALER_FILES', 'DEALER_FILES_2026', 'CY', 'FY', 'FYMON', 'norm_pn', 'n', 'print', 'read_csv', 'pms', 'year', 'line_type', 'copy', 'pms25', 'category_label', 'map', 'fillna', 'groupby', 'agg', 'reset_index', 'demand', 'exp', 'act', 'apply', 'fam', 'round', 'FAMNET', 'sort_values', 'float', 'sum', 'gap', 'uio', 'NETWORK', 'modules.pms_tagging', 'tag_pms_sales', 'modules.pms_engine', 'CATEGORY_LABELS', 'PMS_PN_REGISTRY', '_MULTI_MODEL', 'PN_CAT', '__annotations__', 'items', '_pn', '_v', 'setdefault', 'str', 'lstrip', '_maps', 'dim', 'read_parquet', 'sf', 'ddim', 'sold_to_sap', 'zip', 'distributor_code', 'to_datetime', 'billing_date', 'dt', 'strftime', 'saty', 'isin', 'tag', 'is_pms', 'columns', 'pms_capture_eligible', 'pms_category', 'len', 'db', 'notna', 'CNT', 'FNT', 'billed_qty', 'dropna', 'rat', 'clip', 'median', 'min', 'max', 'net_sales_value', 'mis', 'gps', 'set_index', 'g25', 'between', 'bill_fy_all', 'total_sales_eur', 'warranty_parts_eur', 'rep', 'bridge', 'signals', 'pipeline_signal', 'year_month', 'excfy', 'sellout_qty', 'bill_qty', 'startswith', 'head', 'mix', 'to_numeric', 'bvp_eur', 'genuine_eur', 'm25', 'bvp', 'gen', 'pt', 'pms_type', 'unstack', 'pt_cy', 'pt_fy', 'share_of', 'mix_cy_calc', 'mix_fy_calc', 'aim', 'a25', 'npr', 'part_number', 'set', 'spdb', 'description', 'contains', 'loc', 'is_lube', 'LUBE_EUR', 'cy2025_eur', 'NPR_TOTAL', 'buckets', 'network_role', 'scope', 'first', 'region', 'sorted', 'unique', 'NETDBS', 'read_excel', 'im', 'IMIT_NAME', 'DistributorName', 'to_dict', 'imit', 'dealer_qty', 'dealer_files', '_db', '_f', 'append', 'files', 'frames', 'f', 'd', 'period_grain', 'period', 'pn', 'concat', 'drop_duplicates', 'key', 'month', 'pk', 'frame', 'empty', 'qty', 'int', 'nunique', 'FYM_NEED', 'DEALER_FY_MONTHS', 'get', 'fy_months_of', 'ds', 'total_eur', 'dealer_eur_cy', 'dbs', 'dm', 'iloc', 'index', 'ux', 'cv_std_uio', 'f_series_uio', 'n75', 'lcv_uio', 'lcv', 'wc', 'rec', 'cy_gap', 'cy_exp', 'cy_act', 'nb', 'cy_nb', 'cy_cap', 'fams', 'fy_gap', 'fy_exp', 'fy_act', 'iterrows', '_', 'fr', 'r', 'f_act', 'avg_sp', 'f_gap', 'fam_group', 'cap', 'dq', 'dleg', 'rows', 's_gap', 's_act', 's_exp', 'got', 'sp', 'g', 'fm', 'scale', 'eur_fy', 'rr', 'bill_eur', 'rf', 'ms', 'mf', 'wr', 'bcy', 'bfy', 'sort', 'NW', 'next', 'iuk', 'iuk_fam', 'iuk_adj_exp', 'iuk_act', 'iuk_sp', 'IUK_ADJ', 'npr_sorted', 'gap_reason', 'replace', 'bool', 'NPLIST', 'today', 'isoformat', 'list', 'PAYLOAD', 'esc', 'E', 'eur_py', 'num_py', 'one_py', 'tip_py', 'CY_S', 'tipg', 'h', 'x', 'dumps', 'JS', 'makedirs', 'dirname', 'open', 'fh', 'write', 'getsize')
+  const[0] = 'Build ISZE_DB_Leakage_Review_CY2025.html\n\nPer-distributor leakage review. Four leaks, one row per distributor.\nThree viewer toggles: period (CY2025 / FY2025 Apr-Mar), direction (ISZE->DB /\nDB->dealer), warranty (included / excluded).\n\nHouse rule isze-gaps-need-context.mdc: euro LEADS, units support. Every gap\ncarries service family + fleet denominator. A unit count is never a finding.\n\nAnchor: CY2025 published demand capture (pms_capture_by_db_year.csv) for the\n18-DB fleet base. The FY leg and the DB->dealer leg are derived and labelled.\nNo chart library, no CDN, no external request.\n\nRun:  python 02_dashboards\\_build\\build_db_leakage_review.py\n'
+  const[1] = ('annotations',)
+  const[2] = None
+  const[3] = ('date',)
+  const[4] = 'utf-8'
+  const[5] = 'replace'
+  const[6] = ('encoding', 'errors')
+  const[7] = 'C:\\Users\\jerom\\Desktop\\claude\\ISZE'
+  const[8] = '02_dashboards\\sales\\ISZE_DB_Leakage_Review_CY2025.html'
+  const[9] = '02_dashboards\\sales\\OPEN_ISZE_DB_Leakage_Review.cmd'
+  const[10] = '01_data'
+  const[11] = '00_derived'
+  const[12] = '03_analytics'
+  const[13] = 'Isuzu'
+  const[14] = 'prism'
+  const[15] = '16 September 2026'
+  const[16] = 20000.0
+  const[17] = 'IUK'
+  const[18] = 14494.0
+  const[19] = '14,494'
+  const[20] = 'N35 Grafter odometer intervals'
+  const[21] = '9,006 mi median, 18,277 odometer intervals, 5,421 vehicles, 2018-2026'
+  const[22] = ('km', 'label', 'src', 'note')
+  const[23] = 'UTI'
+  const[24] = 51680.0
+  const[25] = '51,680'
+  const[26] = 'CV warranty odometer'
+  const[27] = 'already applied in the model as a 1.25 services/yr override'
+  const[28] = 'N35'
+  const[29] = 12165.0
+  const[30] = '12,165'
+  const[31] = 'PROVISIONAL, all-market'
+  const[32] = 'N75'
+  const[33] = 35217.0
+  const[34] = '35,217'
+  const[35] = 'F'
+  const[36] = 45630.0
+  const[37] = '45,630'
+  const[38] = 'Oil Filter'
+  const[39] = 'Filters'
+  const[40] = 'Fuel Filter'
+  const[41] = 'Air Filter'
+  const[42] = 'Urea (AdBlue) Filter'
+  const[43] = 'Blower Unit Filter'
+  const[44] = 'Brake Pad'
+  const[45] = 'Brakes'
+  const[46] = 'Brake Shoe'
+  const[47] = 'Brake Rotor'
+  const[48] = 'Clutch Disc'
+  const[49] = 'Clutch & bearings'
+  const[50] = 'Clutch Pressure Plate'
+  const[51] = 'Clutch Kit'
+  const[52] = 'Release Bearing'
+  const[53] = 'Pilot Bearing'
+  const[54] = 'Clutch Booster'
+  const[55] = 'dealer_sellout_long_IUK_CY2025.csv'
+  const[56] = 'ITUK'
+  const[57] = 'dealer_sellout_long_ITUK_CY2025.csv'
+  const[58] = 'IRELAND'
+  const[59] = 'dealer_sellout_long_IRELAND_CY2025.csv'
+  const[60] = 'GREECE'
+  const[61] = 'dealer_sellout_long_GREECE_CY2025.csv'
+  const[62] = 'PORTUGAL'
+  const[63] = 'dealer_sellout_long_PORTUGAL_CY2025.csv'
+  const[64] = 'dealer_sellout_long_UTI_CY2025.csv'
+  const[65] = 'dealer_sellout_long_IUK_CY2026YTD.csv'
+  const[66] = 'dealer_sellout_long_ITUK_CY2026YTD.csv'
+  const[67] = 'dealer_sellout_long_IRELAND_CY2026YTD.csv'
+  const[68] = 'dealer_sellout_long_PORTUGAL_CY2026YTD.csv'
+  const[69] = 'dealer_sellout_long_UTI_CY2026YTD.csv'
+  const[70] = 'ROMANIA'
+  const[71] = 'dealer_sellout_long_ROMANIA_CY2026YTD.csv'
+  const[72] = <code __annotate__ line 83>
+  const[73] = <code norm_pn line 83>
+  const[74] = <code n line 87>
+  const[75] = 'loading published demand capture ...'
+  const[76] = True
+  const[77] = ('flush',)
+  const[78] = 'pms_capture_by_db_year.csv'
+  const[79] = 2025
+  const[80] = 'total'
+  const[81] = 'Other'
+  const[82] = 'fam_group'
+  const[83] = 'distributor_code'
+  const[84] = 'max'
+  const[85] = ('exp', 'act', 'gap', 'rev', 'uio')
+  const[86] = 'nb'
+  const[87] = <code <lambda> line 105>
+  const[88] = ('axis',)
+  const[89] = 'avg_sp'
+  const[90] = 'category_label'
+  const[91] = ('exp', 'act', 'gap')
+  const[92] = 'cap'
+  const[93] = <code <lambda> line 112>
+  const[94] = <code <lambda> line 119>
+  const[95] = 'gap'
+  const[96] = False
+  const[97] = ('ascending',)
+  const[98] = ('exp', 'act', 'gap', 'uio')
+  const[99] = 'exp'
+  const[100] = 'act'
+  const[101] = 'notbought'
+  const[102] = 'tagging billing extract (one pass, ~90s) ...'
+  const[103] = ('tag_pms_sales',)
+  const[104] = ('CATEGORY_LABELS', 'PMS_PN_REGISTRY', '_MULTI_MODEL')
+  const[105] = 'dict[str, str]'
+  const[106] = 'PN_CAT'
+  const[107] = '0'
+  const[108] = 'category'
+  const[109] = 'bvp_pn_dimension.csv'
+  const[110] = 'sales_fact.parquet'
+  const[111] = 'distributor_dimension.csv'
+  const[112] = 'db'
+  const[113] = 'billing_date'
+  const[114] = '%Y-%m'
+  const[115] = 'ym'
+  const[116] = 'CR'
+  const[117] = 'RE'
+  const[118] = ('fill_catalog_pms',)
+  const[119] = 'pms_capture_eligible'
+  const[120] = '  PMS-tagged billing lines:'
+  const[121] = 0.3
+  const[122] = 1.6
+  const[123] = '  FY/CY demand ratios: median'
+  const[124] = 'min'
+  const[125] = '  FY vs CY billed EUR (all parts, 18 DBs):'
+  const[126] = '->'
+  const[127] = 'loading billing + warranty ...'
+  const[128] = 'gps_spu_by_distributor.csv'
+  const[129] = '  CY2025 billed (published):'
+  const[130] = '| warranty:'
+  const[131] = '| FY2025 billed (local):'
+  const[132] = 'loading replenishment ...'
+  const[133] = 'replenishment_exceptions_cy2025.csv'
+  const[134] = 'replenishment_bridge.parquet'
+  const[135] = 'leakage_high_sellthrough'
+  const[136] = 'overstock_low_sellthrough'
+  const[137] = 'overstock_no_sellout'
+  const[138] = 'leakage'
+  const[139] = 'rank_key'
+  const[140] = 'pipeline_signal'
+  const[141] = 'loading mix + exposure + no-price ...'
+  const[142] = 'mix_genuine_bvp_pms.csv'
+  const[143] = 'coerce'
+  const[144] = ('errors',)
+  const[145] = 'bvp_eur'
+  const[146] = 'genuine_eur'
+  const[147] = ('bvp', 'gen')
+  const[148] = 'share'
+  const[149] = 'genuine'
+  const[150] = 'bvp'
+  const[151] = 'role'
+  const[152] = 0.0
+  const[153] = ('fill_value',)
+  const[154] = <code __annotate__ line 209>
+  const[155] = <code share_of line 209>
+  const[156] = 'aim_exposure_by_db_year.csv'
+  const[157] = 'no_pr00_gap_cy2025_ranked.csv'
+  const[158] = 'part_number'
+  const[159] = ('dtype',)
+  const[160] = 'Rim|Rimula|Tellus'
+  const[161] = ('case', 'na')
+  const[162] = 'is_lube'
+  const[163] = 'cy2025_eur'
+  const[164] = '03_analytics\\Isuzu\\prism\\data\\uio_by_model_bucket.csv'
+  const[165] = 'network_db'
+  const[166] = '01_data\\08_Distributor\\EU_Mileage_by_country_IMG_2020-11_to_2026-06.xlsx'
+  const[167] = ('sheet_name',)
+  const[168] = 'ISUZU SALES DEUTSCHLAND - ISD'
+  const[169] = 'GERMANY'
+  const[170] = 'ISUZU BENELUX - BELGIUM'
+  const[171] = 'BELGIUM'
+  const[172] = 'A. LOUTSIOS & SONS'
+  const[173] = 'CYPRUS'
+  const[174] = 'ISUZU Danmark'
+  const[175] = 'DENMARK'
+  const[176] = 'Isuzu Motor Finland OY'
+  const[177] = 'FINLAND'
+  const[178] = 'PETROS PETROPOULOS'
+  const[179] = 'WAE LTD.'
+  const[180] = 'HUNGARY'
+  const[181] = 'BL ehf.'
+  const[182] = 'ICELAND'
+  const[183] = 'Isuzu Ireland 2020 Unlimited Company'
+  const[184] = 'GASANZAMMIT MOTORS LIMITED'
+  const[185] = 'MALTA'
+  const[186] = 'RSA'
+  const[187] = 'NORWAY'
+  const[188] = 'IMOTORS LDA'
+  const[189] = 'ISUZU ROM AUTO SRL'
+  const[190] = 'UMI'
+  const[191] = 'Average of Mileage per year'
+  const[192] = 'dict[str, dict]'
+  const[193] = 'dealer_qty'
+  const[194] = 'dict[str, list[str]]'
+  const[195] = 'dealer_files'
+  const[196] = ('usecols',)
+  const[197] = 'month'
+  const[198] = 'pn'
+  const[199] = 'other'
+  const[200] = ('ignore_index',)
+  const[201] = 'cy'
+  const[202] = '2025'
+  const[203] = 'fy'
+  const[204] = '_total'
+  const[205] = '_months'
+  const[206] = 'fy_months'
+  const[207] = <code fy_months_of line 279>
+  const[208] = '  dealer-file fiscal months:'
+  const[209] = 'dealer_sellout_gps_2025.csv'
+  const[210] = 'assembling payload ...'
+  const[211] = 'no fleet model'
+  const[212] = 'truck + light'
+  const[213] = 'truck class'
+  const[214] = 'light commercial'
+  const[215] = 'label'
+  const[216] = ('db', 'scope', 'region', 'uio', 'n75', 'lcv', 'wc', 'imit', 'km')
+  const[217] = 1.0
+  const[218] = ('label', 'group', 'gap', 'cap', 'fy_gap', 'act_qty', 'exp_qty')
+  const[219] = ('gap', 'exp', 'act', 'nb', 'cap')
+  const[220] = ('cy', 'fy')
+  const[221] = 'demand'
+  const[222] = 'fam'
+  const[223] = ('label', 'got', 'exp_qty', 'gap', 'cap')
+  const[224] = 'cy_months'
+  const[225] = ('gap', 'act', 'exp', 'cap', 'nb', 'months', 'proj', 'eur', 'fam')
+  const[226] = 12.0
+  const[227] = 'cy_total'
+  const[228] = 'dealer'
+  const[229] = 'rep'
+  const[230] = 'leakage_no_bill'
+  const[231] = ('total', 'pull', 'over_low', 'over_none', 'nobill', 'pns', 'rows')
+  const[232] = 'mix'
+  const[233] = 'high_risk_rev_pct'
+  const[234] = 'high_risk_rev_eur'
+  const[235] = ('pct', 'eur')
+  const[236] = 'expo'
+  const[237] = ('eur', 'pns')
+  const[238] = 'np'
+  const[239] = 'warranty_parts_eur'
+  const[240] = 'total_sales_eur'
+  const[241] = ('cy_inc', 'cy_exc', 'fy_inc', 'fy_exc', 'warr')
+  const[242] = 'bill'
+  const[243] = <code <lambda> line 417>
+  const[244] = ('key',)
+  const[245] = 'uio'
+  const[246] = ('exp', 'act', 'gap', 'nb', 'notbought', 'uio')
+  const[247] = <code <genexpr> line 424>
+  const[248] = 'rep_cy'
+  const[249] = 'rep_cy_dbs'
+  const[250] = <code <genexpr> line 426>
+  const[251] = 'rep_fy'
+  const[252] = 'rep_fy_dbs'
+  const[253] = <code <genexpr> line 428>
+  const[254] = 'pull_cy'
+  const[255] = 'pull_pn_cy'
+  const[256] = 'pull_pn_rows'
+  const[257] = <code <genexpr> line 431>
+  const[258] = 'over_cy'
+  const[259] = 'rep_rows_cy'
+  const[260] = <code <genexpr> line 434>
+  const[261] = 'billed_cy'
+  const[262] = <code <genexpr> line 435>
+  const[263] = 'billed_fy'
+  const[264] = <code <genexpr> line 436>
+  const[265] = 'warr'
+  const[266] = 'warr_pct'
+  const[267] = <code <genexpr> line 438>
+  const[268] = 'dealer_cy'
+  const[269] = 'dealer_dbs'
+  const[270] = 'np_pns'
+  const[271] = 'np_lube'
+  const[272] = 'np_lube_pct'
+  const[273] = 'np_top'
+  const[274] = 'np_top_pct'
+  const[275] = <code <genexpr> line 446>
+  const[276] = ('default',)
+  const[277] = 'expo_max'
+  const[278] = <code <genexpr> line 447>
+  const[279] = <code <lambda> line 447>
+  const[280] = 'expo_max_db'
+  const[281] = <code <genexpr> line 448>
+  const[282] = <code <lambda> line 448>
+  const[283] = 'mix_worst'
+  const[284] = <code <genexpr> line 449>
+  const[285] = 'mix_worst_v'
+  const[286] = <code <genexpr> line 450>
+  const[287] = 'spu'
+  const[288] = <code <genexpr> line 451>
+  const[289] = 'iuk_de'
+  const[290] = 'iuk_de_pct'
+  const[291] = <code <genexpr> line 455>
+  const[292] = 'km'
+  const[293] = ('scale', 'exp', 'act', 'gap', 'cap', 'nb', 'gap_now', 'cap_now', 'cut', 'km', 'km_model')
+  const[294] = '  IUK mileage correction:'
+  const[295] = 'rank'
+  const[296] = '_'
+  const[297] = ' '
+  const[298] = ('rank', 'pn', 'desc', 'eur', 'reason', 'lube')
+  const[299] = 'CY2025'
+  const[300] = ('snapshot', 'built', 'cy', 'fy', 'km_model', 'n_dbs', 'n_fleet_dbs', 'anchor')
+  const[301] = ('meta', 'nw', 'dbs', 'noprice', 'groups')
+  const[302] = 'payload dbs:'
+  const[303] = '| fam rows/IUK:'
+  const[304] = <code esc line 490>
+  const[305] = '€'
+  const[306] = <code eur_py line 497>
+  const[307] = <code num_py line 508>
+  const[308] = <code one_py line 512>
+  const[309] = <code tip_py line 516>
+  const[310] = 'Period CY2025 (Jan&ndash;Dec) &middot; Direction ISZE &rarr; DB &middot; Warranty included'
+  const[311] = <code <lambda> line 525>
+  const[312] = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>Where parts revenue leaves the network &mdash; distributor leakage review</title>\n<style>\n:root{--navy:#15233c;--navy2:#1a2b4a;--paper:#f7f4ee;--ink:#222;--terra:#c0552d;\n--muted:#6b6256;--line:#e5e0d6;--blue:#2b4a78;--grey:#8b8578;--paper2:#f2ede2}\n*{box-sizing:border-box}\nhtml{-webkit-text-size-adjust:100%}\nbody{margin:0;background:var(--paper);color:var(--ink);\nfont-family:-apple-system,"Segoe UI",system-ui,sans-serif;font-size:14px;line-height:1.5;overflow-x:hidden}\nh1,h2,h3{font-family:Georgia,\'Times New Roman\',serif;margin:0}\n.wrap{max-width:1280px;margin:0 auto;padding:0 18px 3rem}\n.hero{background:var(--navy);color:var(--paper);padding:2rem 0 1.6rem;border-bottom:4px solid var(--terra)}\n.hero .in{max-width:1280px;margin:0 auto;padding:0 18px}\n.hero .kick{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:#e8b48c}\n.hero h1{font-size:1.9rem;margin:.3rem 0 .45rem;line-height:1.15}\n.hero p{margin:0;color:#c9cedb;max-width:940px;font-size:.9rem}\n.hstats{display:flex;gap:2rem;flex-wrap:wrap;margin-top:1.1rem}\n.hstat .v{font-family:Georgia,serif;font-size:1.6rem;color:#fff;font-variant-numeric:tabular-nums}\n.hstat .l{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:#aeb9cf;max-width:210px}\nsection{padding:1.7rem 0 .4rem;border-top:1px solid var(--line);margin-top:1.1rem}\nsection:first-of-type{border-top:0}\nh2{font-size:1.32rem;color:var(--navy);margin-bottom:.25rem}\n.shead p{color:#454545;font-size:.89rem;margin:.25rem 0 .9rem;max-width:960px}\n.tgl{position:sticky;top:0;z-index:40;background:#fff;border:1px solid var(--line);\nborder-radius:9px;padding:.6rem .85rem;display:flex;gap:1.3rem;flex-wrap:wrap;align-items:center;\nmargin:.9rem 0 .5rem;box-shadow:0 1px 3px rgba(0,0,0,.06)}\n.tgl .grp{display:flex;align-items:center;gap:.35rem;flex-wrap:wrap}\n.tgl .gl{font-size:.64rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}\n.tgl button{font:inherit;font-size:.79rem;padding:.24rem .65rem;border:1px solid var(--line);\nbackground:#fbf9f5;border-radius:6px;cursor:pointer;color:var(--ink)}\n.tgl button.on{background:var(--navy);color:#fff;border-color:var(--navy)}\n.tgl button:focus-visible{outline:2px solid var(--terra);outline-offset:1px}\n#avail{background:#fdf6f1;border:1px solid #e6bfa6;border-left:4px solid var(--terra);\nborder-radius:8px;padding:.6rem .8rem;margin:.1rem 0 .9rem;font-size:.82rem;display:none}\n#avail.show{display:block}\n#avail ul{margin:.3rem 0 0;padding-left:1.1rem}\ntable{width:100%;border-collapse:collapse;background:#fff;font-size:.82rem}\nth,td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid #f0ece4;\nfont-variant-numeric:tabular-nums}\nth{background:var(--navy);color:var(--paper);font-weight:600;font-size:.68rem;\ntext-transform:uppercase;letter-spacing:.03em;text-align:right;white-space:nowrap}\nth:first-child,td:first-child{text-align:left}\ntbody tr:hover{background:#fdf9f5}\ntr.tot td{font-weight:700;background:var(--paper2);border-top:2px solid var(--navy)}\ntd.null{color:#a9a49a;font-style:italic;font-size:.76rem}\n.chip{display:inline-block;font-size:.6rem;padding:.03rem .32rem;border-radius:999px;\nborder:1px solid #cbc4b4;color:var(--muted);margin-left:.28rem;vertical-align:middle;white-space:nowrap}\n.chip.terra{border-color:#dcae94;color:#8a3a17}\n.chip.blue{border-color:#a9bcd6;color:var(--blue)}\n.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px;-webkit-overflow-scrolling:touch}\n.note{background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);\nborder-radius:8px;padding:.75rem .9rem;margin:.8rem 0;font-size:.83rem}\n.callout{background:#fdf6f1;border:1px solid #e6bfa6;border-left:4px solid var(--terra);\nborder-radius:8px;padding:.75rem .9rem;margin:.8rem 0;font-size:.83rem}\n.callout b{font-family:Georgia,serif;color:#8a3a17}\n.g2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}\n.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem}\n.dbfocus{background:#fff;border:1px solid var(--line);border-radius:9px;padding:.9rem 1rem}\n.dbfocus h3{font-size:1.02rem;color:var(--navy);margin-bottom:.15rem}\n.dbfocus .tagline{font-size:.76rem;color:var(--terra);font-weight:700;margin-bottom:.45rem}\n.dbfocus ul{margin:.35rem 0 0;padding-left:1.05rem;font-size:.82rem}\n.dbfocus li{margin:.14rem 0}\n.small{font-size:.75rem;color:var(--muted)}\n.kpi{position:relative;cursor:help;border-bottom:1px dotted #9a958a}\n.tip{display:none;position:absolute;left:0;top:118%;z-index:60;width:320px;background:var(--navy);\ncolor:var(--paper);border-radius:7px;padding:.55rem .65rem;font-size:.73rem;line-height:1.4;\nbox-shadow:0 6px 18px rgba(0,0,0,.28);text-align:left;font-weight:400;white-space:normal}\n.kpi:hover .tip,.kpi:focus .tip{display:block}\ntd:last-child .tip{left:auto;right:0}\n.tip i{display:block;color:#e8b48c;font-style:normal;font-size:.63rem;text-transform:uppercase;\nletter-spacing:.05em;margin-bottom:.04rem}\n.tip .tr{display:block;margin-top:.3rem}\n.tip .tr.warn{color:#f0c9b5}\n.tip b{font-family:Georgia,serif;font-size:.78rem;display:block;margin-bottom:.15rem}\n/* charts */\n.chart{background:#fff;border:1px solid var(--line);border-radius:9px;padding:.9rem 1rem 1rem;position:relative}\n.chart h3{font-size:1rem;color:var(--navy);line-height:1.25}\n.chart .cq{font-size:.8rem;color:#454545;margin:.2rem 0 .7rem}\n.chart .unit{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}\n.legend{display:flex;gap:.9rem;flex-wrap:wrap;margin:.35rem 0 .7rem;font-size:.74rem;color:#3c3c3c}\n.legend span i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:.28rem}\n.axis{display:grid;grid-template-columns:repeat(5,1fr);font-size:.65rem;color:var(--muted);\nborder-bottom:1px solid var(--line);margin-bottom:.35rem;padding-bottom:.15rem}\n.axis span{text-align:left}\n.axis span:last-child{text-align:right}\n.rows{position:relative}\n.grid{position:absolute;inset:0;pointer-events:none}\n.grid i{position:absolute;top:0;bottom:0;width:1px;background:#f0ece4}\n.brow{position:relative;display:grid;grid-template-columns:132px minmax(70px,1fr) 74px;\ngap:.45rem;align-items:center;margin:.2rem 0;z-index:1}\n.brow .bl{font-size:.77rem;overflow-wrap:anywhere}\n.brow .bv{font-size:.75rem;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}\n.track{height:14px;background:#efeade;border-radius:3px;display:flex;overflow:hidden}\n.track span{height:100%;display:block}\n.track.plain span{border-radius:3px}\n.gsg .brow{grid-template-columns:120px minmax(70px,1fr) 74px}\n@media(max-width:900px){\n.g2,.g3{grid-template-columns:1fr}\n.brow{grid-template-columns:104px minmax(50px,1fr) 66px}\n.gsg .brow{grid-template-columns:104px minmax(50px,1fr) 66px}\n.hero h1{font-size:1.5rem}\n.tip{width:min(300px,86vw)}\ntd:last-child .tip{left:auto;right:0}\n}\n@media(max-width:460px){\n.brow{grid-template-columns:88px minmax(38px,1fr) 60px}\n.gsg .brow{grid-template-columns:88px minmax(38px,1fr) 60px}\n.brow .bl{font-size:.72rem}\n.brow .bv{font-size:.7rem}\n.axis{grid-template-columns:repeat(3,1fr)}\n.axis span:nth-child(4){display:none}\ntable{font-size:.76rem}\n}\n</style></head><body>'
+  const[313] = '<div class="hero"><div class="in">\n<div class="kick">ISZE &middot; aftersales &middot; per distributor</div>\n<h1>Where parts revenue leaves the network</h1>\n<p>Four leaks, read per distributor and in euro against a service family and a fleet denominator.\nUnit counts appear only as supporting detail, never as the finding. The period, direction and\nwarranty controls below change every figure on the page; each figure states the settings that\nproduced it.</p>\n<div class="hstats">\n<div class="hstat"><div class="v">'
+  const[314] = '</div>\n<div class="l">uncaptured service value, '
+  const[315] = ' distributors</div></div>\n<div class="hstat"><div class="v" id="hero-nb">'
+  const[316] = '%'
+  const[317] = '</div>\n<div class="l">of expected service demand never bought</div></div>\n<div class="hstat"><div class="v" id="hero-cap">'
+  const[318] = '</div>\n<div class="l">average capture of expected demand</div></div>\n<div class="hstat"><div class="v" id="hero-billed">'
+  const[319] = '</div>\n<div class="l">parts billed, warranty included</div></div>\n<div class="hstat"><div class="v" id="hero-rep">'
+  const[320] = '</div>\n<div class="l">stock sitting with '
+  const[321] = ' distributors</div></div>\n</div>\n<p class="small" style="color:#aeb9cf;margin-top:.7rem">Supporting detail, not the finding: the\nmodel expects '
+  const[322] = ' service-part units across '
+  const[323] = ' filter, brake and clutch\nfamilies on '
+  const[324] = ' vehicles in service, and '
+  const[325] = ' were not bought in\nany form &mdash; genuine or Competitive. The euro is the finding: '
+  const[326] = '.</p>\n</div></div>'
+  const[327] = '<div class="wrap">'
+  const[328] = '<div class="tgl">\n<div class="grp"><span class="gl">Period</span>\n<button class="on" data-t="period" data-v="cy">Calendar 2025</button>\n<button data-t="period" data-v="fy">Fiscal 2025 (Apr&ndash;Mar)</button></div>\n<div class="grp"><span class="gl">Direction</span>\n<button class="on" data-t="dir" data-v="db">ISZE &rarr; DB</button>\n<button data-t="dir" data-v="dealer">DB &rarr; dealer</button></div>\n<div class="grp"><span class="gl">Warranty</span>\n<button class="on" data-t="warr" data-v="inc">Included</button>\n<button data-t="warr" data-v="exc">Excluded</button></div>\n</div>\n<div id="avail"></div>'
+  const[329] = '<section><div class="shead">\n<h2>The distributor leak league</h2>\n<p>One row per distributor, four leaks side by side, with the fleet that has to generate the demand.\n'
+  const[330] = ' distributors bill parts; '
+  const[331] = ' have a modelled fleet base, so the four CIS\nmarkets carry a Competitive-parts and price reading but no demand gap. Euro leads every column.</p>\n</div>'
+  const[332] = '<div class="chart" id="c1">\n<h3>Where does the uncaptured service value sit, and in which service families?</h3>\n<div class="cq">Uncaptured service value by distributor, split by service family. Every bar is euro.\nUnit counts are not shown; they are not the finding.</div>\n<div class="legend"><span><i style="background:#2b4a78"></i>Filters</span>\n<span><i style="background:#c0552d"></i>Brakes</span>\n<span><i style="background:#7a8fa8"></i>Clutch and bearings</span></div>\n<div class="axis" id="c1-axis"></div>\n<div class="rows" id="c1-rows"></div>\n</div>'
+  const[333] = '<div class="scroll" style="margin-top:.9rem"><table id="league"><thead><tr>\n<th>Distributor</th><th id="lg-demand">Uncaptured service value</th><th>Unbought</th>\n<th>Fleet (UIO)</th><th>Weight class</th><th>Replenishment</th>\n<th>Competitive share</th><th>Exposed revenue</th><th>No usable price</th>\n<th id="lg-bill">Billed to distributor</th></tr></thead>\n<tbody id="league-tbody"></tbody>\n<tfoot id="league-foot"></tfoot></table></div>\n<p class="small">Competitive share is the share of the service-part euro going to Competitive parts\n(not a unit share). Exposed revenue is the high-risk share of net sales from the aftermarket\nexposure model. Fleet is the vehicles-in-service base the demand model divides into; the four CIS\nmarkets have no modelled fleet base, which is why their demand columns are blank rather than zero.</p>\n</section>'
+  const[334] = '<section><div class="shead">\n<h2>Leak 2 &mdash; parts billed that never reached a dealer</h2>\n<p>The money splits into two problems that need opposite responses. Under-ordering means the parts\n<b>are</b> selling through to dealers and the distributor is simply not reordering enough. Genuine\noverstock means the parts are sitting still. Merging the two produces the wrong instruction.</p></div>\n<div class="chart" id="c2">\n<h3>Which distributors are under-ordering, and which are sitting on genuine overstock?</h3>\n<div class="cq">Value of exception lines at the distributor, calendar 2025. Five distributors have a\nsales-to-dealer file; the other thirteen cannot be measured this way.</div>\n<div class="legend"><span><i style="background:#2b4a78"></i>Under-ordering &mdash; selling through, reorder shortfall</span>\n<span><i style="background:#c0552d"></i>Genuine overstock &mdash; low or no sales to dealer</span></div>\n<div class="axis" id="c2-axis"></div>\n<div class="rows gsg" id="c2-rows"></div>\n</div>\n<div class="note"><b>Under-ordering is the bigger number:</b> '
+  const[335] = ' across\n'
+  const[336] = ' part numbers is selling through to dealers faster than the distributor reorders.\n'
+  const[337] = ' is genuinely sitting as overstock. A further 377 part numbers show dealer\ndemand with no billing at all &mdash; that is not stock, it is demand we never invoiced.</div>\n</section>'
+  const[338] = '<section><div class="shead">\n<h2>Leak 3 &mdash; bought, but not from us</h2>\n<p>The aftermarket shows up as <b>mix</b>, not as lost revenue on exposed part numbers. Direct\nexposure is low everywhere &mdash; the worst market is '
+  const[339] = ' at\n'
+  const[340] = ' of net sales. What actually moves is the share of the service-part euro\nthat goes to Competitive parts rather than genuine.</p></div>\n<div class="chart" id="c3">\n<h3>Where have Competitive parts taken share of the service euro, and are we losing revenue on exposed part numbers?</h3>\n<div class="cq">Two different questions on one axis: what the distributor chooses to stock (share),\nand what the aftermarket takes on part numbers where an alternative exists (exposure).</div>\n<div class="legend"><span><i style="background:#2b4a78"></i>Competitive-parts share of the service euro</span>\n<span><i style="background:#c0552d"></i>Direct aftermarket exposure, % of net sales</span></div>\n<div class="axis" id="c3-axis"></div>\n<div class="rows gsg" id="c3-rows"></div>\n</div>\n<div class="callout"><b>The response follows the mix reading, not the exposure reading.</b>\nBecause exposed revenue is 0.2% to '
+  const[341] = ' of net sales, the aftermarket is not\ncurrently taking revenue on part numbers where we list an alternative. It is shifting what the\ndistributor chooses to stock &mdash; which is a pricing, availability and counter-positioning\nproblem, not a lost-sale recovery problem.</div>\n</section>'
+  const[342] = '<section><div class="shead">\n<h2>Leak 4 &mdash; parts we bill that have no usable price</h2>\n<p>'
+  const[343] = ' part numbers worth '
+  const[344] = ' in CY2025 are either absent from the price\nlist or present with no usable price. This is mainly a <b>lubricants</b> gap, not a parts one: one\nlubricant oil alone is '
+  const[345] = ' of the whole leak. The fix is a price-list\nentry, not a project.</p></div>\n<div class="chart" id="c4">\n<h3>Which part numbers sell without a usable price, and what are they worth?</h3>\n<div class="cq">Top ten part numbers by CY2025 billed value, with the remaining twenty-one grouped.</div>\n<div class="legend"><span><i style="background:#c0552d"></i>Lubricants</span>\n<span><i style="background:#2b4a78"></i>Parts</span></div>\n<div class="axis" id="c4-axis"></div>\n<div class="rows gsg" id="c4-rows"></div>\n</div>\n<div class="scroll" style="margin-top:.9rem"><table><thead><tr><th>#</th><th>Part number</th>\n<th>Description</th><th>CY2025 value</th><th>Cause</th><th>Billed to</th></tr></thead><tbody>'
+  const[346] = slice(None, 8, None)
+  const[347] = '<tr><td>'
+  const[348] = '</td><td>'
+  const[349] = '</td>\n<td style="text-align:left">'
+  const[350] = 'desc'
+  const[351] = '</td>\n<td class="kpi">'
+  const[352] = 'eur'
+  const[353] = 'No usable price, CY2025'
+  const[354] = 'billed value of the part number in CY2025 where the price file carries no usable price'
+  const[355] = 'no_pr00_gap_cy2025_ranked.csv (price check 2026-08-11), CY2025 value from sales_fact.parquet'
+  const[356] = 'Only 31 part numbers remain after the August 2026 SAP price pull return closed 220. Shipments billed through a pricing path outside the standard selling-price route.'
+  const[357] = '</td>\n<td class="small" style="text-align:left">'
+  const[358] = 'reason'
+  const[359] = 'lube'
+  const[360] = 'Israel'
+  const[361] = 'Israel and Greece'
+  const[362] = '</td></tr>'
+  const[363] = '</tbody></table></div>\n<p class="small">Attribution: the seven lubricant part numbers bill to Israel (Universal Motors\nIsrael); the service cabs and the remaining parts bill mainly to Israel, with Greece for one\nback-door handle. Calendar 2025 only &mdash; this file carries no period tag.</p>\n</section>'
+  const[364] = '<section><div class="shead"><h2>Three distributors that carry the story</h2>\n<p>One is the largest leak and partly a measurement artefact. One is the worst rate on a large book.\nOne is above 100% and is not a leak at all.</p></div>\n<div class="g3">\n<div class="dbfocus"><h3>IUK &mdash; the largest leak, and part of it is our own measurement</h3>\n<div class="tagline">'
+  const[365] = ' &middot; '
+  const[366] = ' unbought</div>\n<ul><li>'
+  const[367] = ' light commercial vehicles in service, no trucks</li>\n<li>'
+  const[368] = ' across the filter, brake and clutch families in CY2025</li>\n<li><b>This number is inflated by our own assumption.</b> The model applies a flat\n'
+  const[369] = " km/yr while IUK's measured N35 Grafter fleet averages\n<b>"
+  const[370] = ' km/yr</b>. The correct figure is '
+  const[371] = ' &mdash; a\n'
+  const[372] = 'cut'
+  const[373] = ' smaller gap, and capture of '
+  const[374] = ' rather\nthan '
+  const[375] = 'cap_now'
+  const[376] = '. Still the worst leak in the network, but not by this much.</li></ul></div>\n<div class="dbfocus"><h3>Germany &mdash; the worst rate on a large book</h3>\n<div class="tagline">'
+  const[377] = <code <genexpr> line 811>
+  const[378] = ' &middot; 86.1% unbought</div>\n<ul><li>13,780 vehicles in service, mixed light and truck class</li>\n<li>Second largest gap in the network and the worst rate of any large book</li>\n<li>Competitive-parts share 26.4%, so this is not a substitution story &mdash; the parts are simply\nnot being bought from us or from anyone else we can see</li>\n<li>The market\'s own measured distance would settle it the way Israel\'s 51,680 was settled</li></ul></div>\n<div class="dbfocus"><h3>Ireland &mdash; above 100%, and not a leak</h3>\n<div class="tagline">'
+  const[379] = <code <genexpr> line 818>
+  const[380] = ' unbought &mdash; i.e. more bought than expected</div>\n<ul><li>The only distributor above 100% of modelled expected demand</li>\n<li>Either a genuinely exceptional market or a denominator set too low</li>\n<li>Both readings are possible and they need opposite responses, so Ireland is\n<b>unresolved</b> and should not be quoted as either a strength or a weakness</li>\n<li>Its dealer-side reading is '
+  const[381] = <code <genexpr> line 823>
+  const[382] = '\nof expected demand reached dealers, which is the highest capture in the network</li></ul></div>\n</div>\n<div class="chart" id="c5" style="margin-top:.9rem">\n<h3>How much of IUK\'s gap is a measurement artefact?</h3>\n<div class="cq">The same fleet, the same actual sales, two distances. The distance assumption, not\nthe market, moves the number.</div>\n<div class="axis" id="c5-axis"></div>\n<div class="rows gsg" id="c5-rows"></div>\n<p class="small" id="c5-note"></p>\n</div>\n<div class="chart" id="c6" style="margin-top:.9rem">\n<h3>Which service families carry the network\'s uncaptured service value?</h3>\n<div class="cq">All eighteen distributors, calendar 2025. Euro gap and the share of expected demand\nactually bought, so a large family with a small rate stands out from a large family nearly covered.</div>\n<div class="axis" id="c6-axis"></div>\n<div class="rows gsg" id="c6-rows"></div>\n</div>\n</section>'
+  const[383] = '<section><div class="shead"><h2>What to do first</h2>\n<p>Five items, each tied to a distributor and to a number on this page.</p></div>\n<div class="note"><ol style="margin:.2rem 0;padding-left:1.2rem">\n<li><b>IUK</b> &mdash; re-baseline the distance before the visit: at the measured '
+  const[384] = ' km/yr the\ngap is '
+  const[385] = ', not '
+  const[386] = 'gap_now'
+  const[387] = ". Acting on the uncorrected number\nbuys the wrong conversation.</li>\n<li><b>Germany</b> &mdash; commission the market's own annual distance the way Israel's 51,680 was\nconfirmed, then re-read 86.1% unbought on 13,780 vehicles.</li>\n<li><b>IUK and UTI</b> &mdash; split "
+  const[388] = <code <genexpr> line 852>
+  const[389] = <code <genexpr> line 852>
+  const[390] = ':\nthe under-ordering portion needs a reorder conversation, the overstock portion a stop-order instruction.</li>\n<li><b>UMI</b> &mdash; one lubricant price-list entry closes '
+  const[391] = ' of the\n'
+  const[392] = ' no-usable-price leak; lubricants together are '
+  const[393] = ' of it.</li>\n<li><b>Ireland</b> &mdash; resolve the above-100% reading before it is quoted either way.</li>\n</ol></div></section>'
+  const[394] = '<section><div class="shead"><h2>What this page does not claim</h2></div>\n<div class="note"><ul style="margin:.2rem 0;padding-left:1.2rem">\n<li><b>The demand side is modelled.</b> The service-demand model applies one flat\n'
+  const[395] = ' km/yr annual distance and is being corrected per weight class using measured\nvalues (IUK '
+  const[396] = ", Israel 51,680, N35/N75/F-series provisional). Per-distributor\n<i>direction</i> is solid; absolute levels move when that lands, and IUK's moves most.</li>\n<li><b>The fiscal-year leg is derived, not published.</b> The capture file on disk carries calendar\nyears only. Fiscal 2025 (April 2025 &ndash; March 2026) is produced by applying the fiscal-to-calendar\nratio of PMS-tagged billing lines, per distributor and per family, to the published calendar actuals.\nThe expected-demand model itself has no period dimension, so expected demand is the same annual\nfigure in both periods. Treat the fiscal leg as a directional recut.</li>\n<li><b>The replenishment figure is a five-distributor number, not a network one.</b> Only five\ndistributors have a sales-to-dealer file. Under fiscal 2025 it drops to four, because the bridge file\nhas no dealer-sales evidence for Greece before August 2025.</li>\n<li><b>Every modelled figure is marked modelled.</b> Demand gaps and the\n"
+  const[397] = ' headline are modelled from service intervals and fleet counts, not observed\nlost orders.</li>\n<li><b>Warranty parts cannot be split by service family on this page.</b> The warranty claim extract\nmatches the service-family part-number registry on only seven part numbers (EUR 1,174 of 2025\nclaims), so the warranty-excluded view corrects the billing leg exactly per distributor but cannot\nre-cut the demand gap by family. The effect on the gap is small: the registry-covered share of the\nmodelled families is negligible against '
+  const[398] = '.</li>\n<li><b>Competitive-parts share is measured on the service-part euro</b> and excludes part numbers\nwhere no alternative is listed, which is why it reads far higher than the exposure column.</li>\n<li><b>No forward fleet figure appears.</b> The 2026&ndash;2030 vehicles-in-service projection is\noverstated pending correction, so nothing on this page depends on it.</li>\n</ul></div></section>'
+  const[399] = '<p class="small" style="margin-top:1.4rem;padding-top:.8rem;border-top:1px solid var(--line)">\nSources: pms_capture_by_db_year.csv &middot; replenishment_exceptions_cy2025.csv &middot;\nreplenishment_bridge.parquet &middot; mix_genuine_bvp_pms.csv &middot; aim_exposure_by_db_year.csv\n&middot; no_pr00_gap_cy2025_ranked.csv &middot; dealer_sellout_gps_2025.csv &middot;\ndealer_sellout_long_*.csv &middot; gps_spu_by_distributor.csv &middot; sales_fact.parquet &middot;\ndistributor_dimension.csv &middot; uio_by_model_bucket.csv &middot; n35 mileages all.xlsx &middot;\nEU_Mileage_by_country_IMG_2020-11_to_2026-06.xlsx. Snapshot '
+  const[400] = '.</p>\n</div>\n<script>\nvar DATA = '
+  const[401] = ';\nvar IUK_ADJ = '
+  const[402] = ';\nvar KM = '
+  const[403] = ';\nvar FAMNET = '
+  const[404] = ('label', 'group', 'gap', 'cap', 'exp', 'act', 'avg_sp')
+  const[405] = ";\nvar ST = {period:'cy', dir:'db', warr:'inc'};\nvar NPLIST = DATA.noprice;\nvar LOADED = false;\n</script>"
+  const[406] = '\nfunction eur(v){ if(v===null||v===undefined||v===\'\'||isNaN(v)) return \'\\u2014\';\n  v=+v; var a=Math.abs(v);\n  if(a>=1e6) return \'\\u20AC\'+(v/1e6).toFixed(2)+\'M\';\n  if(a>=1e3) return \'\\u20AC\'+Math.round(v/1e3)+\'k\';\n  return \'\\u20AC\'+Math.round(v); }\nfunction eur2(v){ if(v===null||v===undefined||isNaN(v)) return \'\\u2014\';\n  v=+v; var a=Math.abs(v);\n  if(a>=1e6) return \'\\u20AC\'+(v/1e6).toFixed(2)+\'M\';\n  if(a>=1e3) return \'\\u20AC\'+(v/1e3).toFixed(0)+\'k\';\n  return \'\\u20AC\'+Math.round(v); }\nfunction num(v){ return (v===null||v===undefined||isNaN(v))?\'\\u2014\':Math.round(v).toLocaleString(\'en-GB\'); }\nfunction one(v,s){ return (v===null||v===undefined||isNaN(v))?\'\\u2014\':(+v).toFixed(1)+(s||\'\'); }\nfunction esc(s){ return String(s).replace(/&/g,\'&amp;\').replace(/</g,\'&lt;\').replace(/>/g,\'&gt;\'); }\nfunction cfg(){ return \'Period \'+(ST.period===\'cy\'?\'CY2025 (Jan\\u2013Dec)\':\'FY2025 (Apr\\u2013Mar)\')\n  +\' \\u00b7 Direction \'+(ST.dir===\'db\'?\'ISZE \\u2192 DB\':\'DB \\u2192 dealer\')\n  +\' \\u00b7 Warranty \'+(ST.warr===\'inc\'?\'included\':\'excluded\'); }\nfunction tip(t,f,s,e){ return \'<span class="tip"><b>\'+t+\'</b><span class="tr"><i>Formula</i>\'+f\n  +\'</span><span class="tr"><i>Snapshot &amp; source</i>\'+s\n  +\'</span><span class="tr"><i>Settings that produced this figure</i>\'+cfg()\n  +\'</span><span class="tr warn"><i>Not included</i>\'+e+\'</span></span>\'; }\nfunction g(id){ return document.getElementById(id); }\nvar $ = g;\n\n// ---------- period/direction aware getters ----------\nfunction demand(r){ if(!r) return null; return r.demand[ST.period]; }\nfunction dealerLeg(r){ if(!r||!r.dealer) return null; return r.dealer[ST.period]; }\nfunction repOf(r){ if(!r||!r.rep) return null; return r.rep[ST.period]; }\nfunction mixOf(r){ if(!r) return null; return r.mix[ST.period]; }\nfunction billOf(r){\n  if(!r) return null;\n  var k = ST.period+\'_\'+(ST.warr===\'inc\'?\'inc\':\'exc\');\n  var v = r.bill[k];\n  return (v===null||v===undefined)?null:v;\n}\nfunction billNote(r){\n  if(!r) return \'\';\n  var k = ST.period+\'_\'+(ST.warr===\'inc\'?\'inc\':\'exc\');\n  if(r.bill[k]===null||r.bill[k]===undefined){\n    if(ST.warr===\'exc\') return \'no warranty data for this market \\u2014 unavailable, not zero\';\n    return \'no billing extract for this market in this period\';\n  }\n  return \'\';\n}\n// the gap column is demand-side when direction is ISZE->DB, dealer-side otherwise\nfunction gapOf(r){\n  if(ST.dir===\'db\'){ var d=demand(r); return d?d.gap:null; }\n  var t=dealerLeg(r); return t?t.gap:null;\n}\nfunction gapReason(r){\n  if(gapOf(r)!==null) return \'\';\n  if(ST.dir===\'dealer\'){\n    if(!r.dealer||!r.dealer.cy) return \'no sales-to-dealer file for this distributor\';\n    if(ST.period===\'fy\'&&!r.dealer.fy) return \'dealer file covers only 8 of 11 fiscal months \\u2014 excluded, not annualised\';\n    return \'no sales-to-dealer file for this distributor\';\n  }\n  return \'not in the modelled fleet base (bills parts but has no vehicles-in-service model)\';\n}\nfunction unboughtOf(r){\n  if(ST.dir===\'db\'){ var d=demand(r); return d?d.nb:null; }\n  var t=dealerLeg(r); return t?t.nb:null;\n}\nfunction capOf(r){\n  if(ST.dir===\'db\'){ var d=demand(r); return d?d.cap:null; }\n  var t=dealerLeg(r); return t?t.cap:null;\n}\n\n// ---------- charts ----------\nvar GROUPC={ \'Filters\':\'#2b4a78\',\'Brakes\':\'#c0552d\',\'Clutch & bearings\':\'#7a8fa8\' };\nfunction chart1(){\n  var rows=DATA.dbs.filter(function(r){ return demand(r)&&demand(r).gap>0; })\n    .sort(function(a,b){ return demand(b).gap-demand(a).gap; });\n  if(!rows.length){ g(\'c1-rows\').innerHTML=\'<p class="small">No demand gap under these settings.</p>\'; return; }\n  var mx=demand(rows[0]).gap;\n  var ticks=\'\'; for(var i=0;i<=4;i++){ ticks+=\'<span>\'+eur2(mx*i/4)+\'</span>\'; }\n  g(\'c1-axis\').innerHTML=ticks;\n  var grid=\'\'; for(var i=0;i<=4;i++){ grid+=\'<i style="left:\'+(i*25)+\'%"></i>\'; }\n  var out=\'<div class="grid">\'+grid+\'</div>\';\n  rows.forEach(function(r){\n    var d=demand(r), fams=r.fam.slice().sort(function(a,b){ return (b.gap||0)-(a.gap||0); });\n    var segs=\'\';\n    DATA.groups.forEach(function(gr){\n      var v=0;\n      fams.forEach(function(f){ if(f.group===gr){ v+=Math.max(0,(ST.period===\'fy\'?(f.fy_gap||0):(f.gap||0))); } });\n      if(v>0){ segs+=\'<span style="width:\'+(v/mx*100)+\'%;background:\'+GROUPC[gr]+\'"></span>\'; }\n    });\n    out+=\'<div class="brow"><div class="bl">\'+esc(r.db)+\'</div>\'\n      +\'<div class="track">\'+segs+\'</div>\'\n      +\'<div class="bv kpi">\'+eur2(d.gap)+tip(\'Uncaptured service value, \'+esc(r.db),\n        \'expected service demand minus quantity bought (genuine or Competitive), valued at the observed average selling price per service family\',\n        \'pms_capture_by_db_year.csv, modelled; fleet \'+num(r.uio)+\' vehicles in service, \'+esc(r.wc)\n          + (ST.period===\'fy\'?\'. Fiscal leg derived from the fiscal-to-calendar ratio of service-part billing lines, per distributor and per family\':\'\')\n          + (r.db===\'IUK\'?\'. IUK expects \'+num(d.exp)+\' service-part units against \'+num(d.act)+\' bought at the flat 20,000 km/yr model distance; the measured distance is 14,494 km/yr\':\'\')\n          + (r.db===\'IRELAND\'?\'. Ireland exceeds 100% of modelled expected demand, which is unresolved, not a strength\':\'\'),\n        \'Service families with no agreed interval are outside the model, so this layer is narrower than the parts catalogue. The ceiling itself is modelled, not observed lost orders. Under fiscal the expected-demand ceiling is unchanged because the model has no period dimension.\')\n      +\'</div></div>\';\n  });\n  g(\'c1-rows\').innerHTML=out;\n}\nfunction chart2(){\n  var rows=DATA.dbs.filter(function(r){ return repOf(r)&&repOf(r).total>0; })\n    .sort(function(a,b){ return repOf(b).total-repOf(a).total; });\n  if(!rows.length){ g(\'c2-rows\').innerHTML=\'<p class="small">No distributor-level replenishment evidence under these settings.</p>\'; return; }\n  var mx=0; rows.forEach(function(r){ mx=Math.max(mx,repOf(r).pull||0,repOf(r).over_low||0,repOf(r).over_none||0); });\n  var t=\'\'; for(var i=0;i<=4;i++){ t+=\'<span>\'+eur2(mx*i/4)+\'</span>\'; } g(\'c2-axis\').innerHTML=t;\n  var grid=\'\'; for(var i=0;i<=4;i++){ grid+=\'<i style="left:\'+(i*25)+\'%"></i>\'; }\n  var out=\'<div class="grid">\'+grid+\'</div>\';\n  rows.forEach(function(r){\n    var rp=repOf(r), over=(rp.over_low||0)+(rp.over_none||0);\n    out+=\'<div class="brow"><div class="bl">\'+esc(r.db)+\'</div>\'\n      +\'<div><div class="track plain" title=""><span style="width:\'+((rp.pull||0)/mx*100)+\'%;background:#2b4a78"></span></div>\'\n      +\'<div class="track plain" style="margin-top:3px"><span style="width:\'+(over/mx*100)+\'%;background:#c0552d"></span></div></div>\'\n      +\'<div class="bv kpi">\'+eur2(rp.total)+tip(\'Replenishment exceptions, \'+esc(r.db),\n        \'value of exception part numbers billed to the distributor that did not show up proportionally in sales to its dealers, at billed value\',\n        \'replenishment_exceptions_cy2025.csv (calendar 2025) and replenishment_bridge.parquet for fiscal; ranking capped at the top 100 part numbers per signal\',\n        \'Thirteen of eighteen distributors have no sales-to-dealer file and cannot be measured. Under-ordering and overstock are different problems and are not added into one instruction.\')\n      +\'</div></div>\';\n  });\n  g(\'c2-rows\').innerHTML=out;\n}\nfunction chart3(){\n  var rows=DATA.dbs.filter(function(r){ return mixOf(r)!==null&&r.expo; })\n    .sort(function(a,b){ return mixOf(b)-mixOf(a); });\n  var mx=Math.max.apply(null,rows.map(function(r){ return mixOf(r); }));\n  var t=\'\'; for(var i=0;i<=4;i++){ t+=\'<span>\'+(Math.round(mx*i/4*10)/10)+\'%</span>\'; } g(\'c3-axis\').innerHTML=t;\n  var grid=\'\'; for(var i=0;i<=4;i++){ grid+=\'<i style="left:\'+(i*25)+\'%"></i>\'; }\n  var out=\'<div class="grid">\'+grid+\'</div>\';\n  rows.forEach(function(r){\n    var sh=mixOf(r), ex=r.expo.pct;\n    out+=\'<div class="brow"><div class="bl">\'+esc(r.db)+\'</div>\'\n      +\'<div><div class="track plain"><span style="width:\'+(sh/mx*100)+\'%;background:#2b4a78"></span></div>\'\n      +\'<div class="track plain" style="margin-top:3px"><span style="width:\'+(ex/mx*100)+\'%;background:#c0552d;min-width:2px"></span></div></div>\'\n      +\'<div class="bv kpi">\'+one(sh,\'%\')+tip(\'Competitive-parts share, \'+esc(r.db),\n        \'Competitive-parts euro divided by total service-part euro (genuine plus Competitive), service families only\',\n        \'mix_genuine_bvp_pms.csv, calendar 2025, snapshot \'+DATA.meta.snapshot,\n        \'Part numbers where no alternative is listed, so this is not the whole parts book. Fiscal leg is a period recut. Exposed revenue is \'+eur(r.expo.eur)+\' of net sales, \'+one(ex,\'%\')+\'.\')\n      +\'</div></div>\';\n  });\n  g(\'c3-rows\').innerHTML=out;\n}\nfunction chart4(){\n  var top=NPLIST.slice(0,10), rest=NPLIST.slice(10);\n  var mx=top[0].eur, rows=top.slice();\n  var restv=0; rest.forEach(function(x){ restv+=x.eur; });\n  if(restv>0) rows=rows.concat([{rank:0,pn:\'Other \'+(rest.length)+\' part numbers\',desc:\'\',eur:restv,lube:false,other:true}]);\n  var t=\'\'; for(var i=0;i<=4;i++){ t+=\'<span>\'+eur2(mx*i/4)+\'</span>\'; } g(\'c4-axis\').innerHTML=t;\n  var grid=\'\'; for(var i=0;i<=4;i++){ grid+=\'<i style="left:\'+(i*25)+\'%"></i>\'; }\n  var out=\'<div class="grid">\'+grid+\'</div>\';\n  rows.forEach(function(x){\n    var lb=x.other?esc(x.pn):(esc(x.pn)+\' <span class="small">\'+esc((x.desc||\'\').slice(0,22))+\'</span>\');\n    out+=\'<div class="brow"><div class="bl">\'+lb+\'</div>\'\n      +\'<div class="track plain"><span style="width:\'+(x.eur/mx*100)+\'%;background:\'+(x.lube?\'#c0552d\':\'#2b4a78\')+\'"></span></div>\'\n      +\'<div class="bv kpi">\'+eur2(x.eur)+tip(\'No usable price, \'+(x.other?\'grouped remainder\':esc(x.pn)),\n        \'billed value in CY2025 where the price file carries no usable price. \'+(x.other?\'Sum of \'+rest.length+\' part numbers below the top ten.\':\'Cause: \'+esc(x.desc?x.desc:\'\')+\'.\'),\n        \'no_pr00_gap_cy2025_ranked.csv (price check 2026-08-11, value from sales_fact.parquet CY2025)\',\n        \'Part numbers closed by the August 2026 SAP price pull return are not in this list. Billed value is not the same as lost margin.\')\n      +\'</div></div>\';\n  });\n  g(\'c4-rows\').innerHTML=out;\n}\nfunction chart5(){\n  var now=IUK_ADJ.gap_now, adj=IUK_ADJ.gap;\n  var mx=Math.max(now,adj);\n  var t=\'\'; for(var i=0;i<=4;i++){ t+=\'<span>\'+eur2(mx*i/4)+\'</span>\'; } g(\'c5-axis\').innerHTML=t;\n  var rows=[[\'Model distance \'+num(IUK_ADJ.km_model)+\' km/yr\',now,\'#2b4a78\',\n             \'IUK, the model as it stands, \'+num(IUK_ADJ.km_model)+\' km/yr flat assumption\'],\n            [\'Measured distance \'+num(IUK_ADJ.km)+\' km/yr\',adj,\'#c0552d\',\n             \'IUK, re-baselined to the measured N35 Grafter distance\']];\n  var out=\'\';\n  rows.forEach(function(r){\n    out+=\'<div class="brow"><div class="bl">\'+esc(r[0])+\'</div>\'\n      +\'<div class="track plain"><span style="width:\'+(r[1]/mx*100)+\'%;background:\'+r[2]+\'"></span></div>\'\n      +\'<div class="bv kpi">\'+eur2(r[1])+tip(esc(r[3]),\n        \'expected demand scaled by measured distance divided by model distance (\'+IUK_ADJ.scale.toFixed(3)+\'), minus actual bought, at the observed average selling price per family\',\n        \'n35 mileages all.xlsx, median of odometer deltas between readings over elapsed time, 18,277 intervals on 5,421 vehicles 2018-2026\',\n        \'Derived from odometer deltas, not the workbook annual mileage column, which divides by a shrinking vehicle age. N35 Grafter only, so the correction is applied to IUK as a whole.\')\n      +\'</div></div>\';\n  });\n  g(\'c5-rows\').innerHTML=out;\n  g(\'c5-note\').innerHTML=\'At \'+num(IUK_ADJ.km_model)+\' km/yr IUK captures \'\n    +one(IUK_ADJ.cap_now,\'%\')+\' of expected demand. At the measured \'+num(IUK_ADJ.km)+\' km/yr it captures \'\n    +one(IUK_ADJ.cap,\'%\')+\' and the gap falls from \'+eur2(IUK_ADJ.gap_now)+\' to \'+eur2(IUK_ADJ.gap)\n    +\' \\u2014 \'+(IUK_ADJ.cut*100).toFixed(0)+\'% of the headline was our own assumption. \'\n    +\'Israel is the one market already corrected inside the model, at 51,680 km/yr.\';\n}\nfunction chart6(){\n  var rows=FAMNET.slice().sort(function(a,b){ return (b.gap||0)-(a.gap||0); });\n  var mx=rows[0].gap;\n  var t=\'\'; for(var i=0;i<=4;i++){ t+=\'<span>\'+eur2(mx*i/4)+\'</span>\'; } g(\'c6-axis\').innerHTML=t;\n  var grid=\'\'; for(var i=0;i<=4;i++){ grid+=\'<i style="left:\'+(i*25)+\'%"></i>\'; }\n  var out=\'<div class="grid">\'+grid+\'</div>\';\n  rows.forEach(function(f){\n    out+=\'<div class="brow"><div class="bl">\'+esc(f.label)+\'</div>\'\n      +\'<div class="track plain"><span style="width:\'+(f.gap/mx*100)+\'%;background:\'+(GROUPC[f.group]||\'#8b8578\')+\'"></span></div>\'\n      +\'<div class="bv kpi">\'+eur2(f.gap)+tip(\'Uncaptured value, \'+esc(f.label),\n        \'expected demand minus bought, at the observed average selling price for this family\',\n        \'pms_capture_by_db_year.csv, 18 distributors, calendar 2025; snapshot \'+DATA.meta.snapshot,\n        \'This family bought \'+one(f.cap,\'%\')+\' of expected demand (\'+num(f.act)+\' of \'+num(f.exp)+\' units \\u2014 units shown only because the family is named). Modelled, not observed lost orders.\')\n      +\'</div></div>\';\n  });\n  g(\'c6-rows\').innerHTML=out;\n}\n\n// ---------- league table ----------\nfunction renderLeague(){\n  var tb=g(\'league-tbody\'), out=\'\';\n  var mx=0;\n  DATA.dbs.forEach(function(x){ var v=gapOf(x); if(v!==null&&v>mx) mx=v; });\n  DATA.dbs.forEach(function(r){\n    var gv=gapOf(r), nb=unboughtOf(r), bv=billOf(r);\n    var pct=(gv!==null&&mx)?Math.min(100,gv/mx*100):0;\n    var chips=\'\';\n    if(nb!==null&&nb<0) chips+=\'<span class="chip terra">above 100% \\u2014 unresolved</span>\';\n    if(r.db===\'IUK\') chips+=\'<span class="chip">mileage-inflated</span>\';\n    if(!r.demand.cy) chips+=\'<span class="chip blue">no fleet model</span>\';\n    out+=\'<tr><td><b>\'+esc(r.db)+\'</b>\'+chips+\'</td>\';\n    if(gv===null){\n      out+=\'<td class="null">\'+esc(gapReason(r))+\'</td><td class="null">\'+esc(gapReason(r))+\'</td>\';\n    } else {\n      out+=\'<td class="kpi">\'+eur2(gv)+tip((ST.dir===\'db\'?\'Uncaptured service value, \':\'Uncaptured service value at the dealer, \')+esc(r.db),\n        ST.dir===\'db\'\n          ? \'expected service demand minus quantity the distributor bought from ISZE, valued at the observed average selling price per service family\'\n          : \'expected service demand minus quantity the distributor sold on to its dealers, valued at the observed average selling price per service family\',\n        (ST.dir===\'db\' ? \'pms_capture_by_db_year.csv, modelled\' : \'monthly sales-to-dealer file for this distributor\')\n          + \', fleet \'+num(r.uio)+\' vehicles in service\'\n          + (ST.dir===\'dealer\'&&r.dealer&&r.dealer[ST.period]&&r.dealer[ST.period].proj\n             ? \'; only \'+r.dealer[ST.period].months+\' of 12 fiscal months are on file, so the observed run-rate is scaled to twelve and the figure is derived\' : \'\'),\n        ST.dir===\'db\'\n          ? \'Service families with no agreed service interval. A modelled ceiling, not observed lost orders. Fiscal leg is a derived recut.\'\n          : \'Excludes anything the dealer bought elsewhere. Only six of the twenty-two distributors have this file, so the twelve largest blank cells are structural, not zero.\')\n        +\'</td>\'\n        +\'<td class="kpi">\'+one(nb,\'%\')+tip(\'Not bought, share of expected demand, \'+esc(r.db),\n          \'one minus captured quantity divided by expected quantity\',\n          \'same source as the value column\',\n          \'A negative figure means more was bought than the model expected \\u2014 an unresolved reading, not a strength. Ireland reads 102.7% in calendar 2025.\')\n        +\'</td>\';\n    }\n    out+=\'<td>\'+num(r.uio)+\'</td><td class="small" style="text-align:left">\'+esc(r.wc)\n      +(r.n75?(\'<br><span class="small">\'+num(r.n75)+\' truck class / \'+num(r.lcv||0)+\' light</span>\'):\'\')\n      +(r.imit?(\'<br><span class="small">measured \'+num(r.imit)+\' km/yr</span>\'):\'\')\n      +\'</td>\';\n    var rp=repOf(r);\n    out+=\'<td class="kpi">\'+(rp?eur2(rp.total):\'<span class="null">no sales-to-dealer file</span>\')\n      +(rp?tip(\'Replenishment exceptions, \'+esc(r.db),\n        \'value of exception part numbers at billed value, capped at the top 100 part numbers per signal\',\n        ST.period===\'cy\'?\'replenishment_exceptions_cy2025.csv\':\'replenishment_bridge.parquet, fiscal months Apr 2025 \\u2013 Mar 2026\',\n        \'Only five distributors have a sales-to-dealer file, and under fiscal only four. Not a network figure.\'):\'\')\n      +\'</td>\';\n    var mv=mixOf(r);\n    out+=\'<td class="kpi">\'+(mv===null?\'<span class="null">not measured</span>\':one(mv,\'%\'))\n      +(mv===null?\'\':tip(\'Competitive-parts share, \'+esc(r.db),\n        \'Competitive-parts euro divided by total service-part euro, service families only\',\n        \'mix_genuine_bvp_pms.csv, calendar 2025\'+(ST.period===\'fy\'?\' with a period recut from tagged billing\':\'\'),\n        \'Part numbers with no listed alternative, so this is not the whole parts book.\'))\n      +\'</td>\';\n    out+=\'<td class="kpi">\'+(r.expo?one(r.expo.pct,\'%\'):\'\\u2014\')\n      +(r.expo?tip(\'Direct aftermarket exposure, \'+esc(r.db),\n        \'high-risk revenue divided by net sales\',\n        \'aim_exposure_by_db_year.csv, calendar 2025; \'+eur(r.expo.eur)+\' of net sales\',\n        \'Only part numbers with a matched alternative. A narrow slice, which is why it reads low everywhere.\'):\'\')\n      +\'</td>\';\n    out+=\'<td class="kpi">\'+(r.np&&r.np.eur?eur2(r.np.eur):\'\\u2014\')\n      +(r.np&&r.np.eur?tip(\'No usable price, \'+esc(r.db),\n        \'CY2025 billed value of part numbers the price file cannot price\',\n        \'no_pr00_gap_cy2025_ranked.csv with CY2025 value from sales_fact.parquet\',\n        \'Calendar 2025 only \\u2014 this file carries no period tag, so it does not move with the period control.\'):\'\')\n      +\'</td>\';\n    out+=\'<td class="kpi">\'+(bv===null?\'<span class="null">\'+esc(billNote(r))+\'</span>\':eur2(bv))\n      +(bv===null?\'\':tip((ST.dir===\'db\'?\'Billed to \':\'Sales to dealer from \')+esc(r.db),\n        ST.dir===\'db\'\n          ? \'net parts sales to this distributor, less warranty parts where warranty is excluded\'\n          : \'value the distributor invoiced on to its dealers\',\n        ST.dir===\'db\' ? \'gps_spu_by_distributor.csv (calendar 2025) and sales_fact.parquet (fiscal window); warranty split from the same GPS file\'\n                      : \'dealer_sellout_gps_2025.csv, calendar 2025 only\'\n                      + (r.dealer&&r.dealer[ST.period]&&r.dealer[ST.period].proj?\'; fiscal value derived at the distributor\\u2019s own euro per unit\':\'\'),\n        ST.warr===\'exc\'\n          ? \'Warranty parts, which are \'+(r.bill.warr?eur(r.bill.warr):\'n/a\')+\' at this distributor. Credit notes are already netted out.\'\n          : \'Nothing excluded. Credit notes are already netted out.\'))\n      +\'</td></tr>\';\n  });\n  tb.innerHTML=out;\n  var nwd={gap:0,exp:0,act:0,bill:0,bill_n:0,rep:0,rep_dbs:0,mix_max:null,gv_max:0};\n  DATA.dbs.forEach(function(r){\n    var v=gapOf(r);\n    if(v!==null){ nwd.gap+=v; nwd.exp+=(demand(r)?demand(r).exp:0); nwd.act+=(demand(r)?demand(r).act:0); }\n    var b=billOf(r); if(b!==null){ nwd.bill+=b; nwd.bill_n++; }\n    var rp=repOf(r); if(rp){ nwd.rep+=rp.total; nwd.rep_dbs++; }\n    var mv=mixOf(r); if(mv!==null&&(nwd.mix_max===null||mv>nwd.mix_max)) nwd.mix_max=mv;\n    if(r.expo&&r.expo.pct>nwd.gv_max) nwd.gv_max=r.expo.pct;\n  });\n  var nbn=(ST.dir===\'db\'&&nwd.exp>0)?one((nwd.exp-nwd.act)/nwd.exp*100,\'%\'):\'\\u2014\';\n  var f=\'<tr class="tot"><td>Network \\u00b7 \'+DATA.dbs.length+\' distributors</td>\'\n    +\'<td>\'+(nwd.gap?eur2(nwd.gap):\'\\u2014\')+\'</td><td>\'+nbn+\'</td>\'\n    +\'<td>\'+num(DATA.nw.uio)+\'</td><td class="small" style="text-align:left">light and truck class, mixed</td>\'\n    +\'<td>\'+(nwd.rep?eur2(nwd.rep)+\' <span class="small">(\'+nwd.rep_dbs+\' DBs)</span>\':\'\\u2014\')+\'</td>\'\n    +\'<td>\'+(nwd.mix_max===null?\'\\u2014\':\'max \'+one(nwd.mix_max,\'%\'))+\'</td>\'\n    +\'<td>\'+one(nwd.gv_max,\'%\')+\' max</td>\'\n    +\'<td>\'+eur2(DATA.nw.np)+\'</td><td>\'+(nwd.bill?eur2(nwd.bill):\'\\u2014\')+\'</td></tr>\';\n  g(\'league-foot\').innerHTML=f;\n  g(\'lg-demand\').textContent = ST.dir===\'db\'?\'Uncaptured service value\':\'Uncaptured value at the dealer\';\n  g(\'lg-bill\').textContent = ST.dir===\'db\'?\'Billed to distributor\':\'Sales to dealer\';\n}\n\n// ---------- availability + hero ----------\nfunction renderAvail(){\n  var items=[];\n  if(ST.dir===\'dealer\'){\n    items.push(\'<b>Sixteen of the twenty-two distributors have no sales-to-dealer file</b>, so their value columns are blank with the reason, never a zero and never a copy of the other direction. Six have one: IUK, UTI, ITUK, Ireland, Greece and Portugal.\');\n    var proj=[];\n    DATA.dbs.forEach(function(r){ var t=r.dealer&&r.dealer[ST.period];\n      if(t&&t.proj) proj.push(r.db+\' (\'+t.months+\' of 11 fiscal months on file)\'); });\n    if(ST.period===\'fy\'&&proj.length) items.push(\'<b>Two dealer files do not cover the fiscal window:</b> \'+proj.join(\' and \')+\'. Their value is the observed run-rate scaled to the window, marked derived, not counted. Greece is absent altogether under fiscal because its file starts in August 2025.\');\n  }\n  if(ST.period===\'fy\'){\n    items.push(\'<b>Fiscal 2025 is April 2025 to March 2026. No source covers 2026-03</b>, so a complete fiscal window is the eleven months April 2025 to February 2026. March 2026 is in neither the calendar nor the fiscal cut on this page.\');\n    items.push(\'<b>The demand gap under fiscal is a derived recut.</b> The demand-capture file on disk carries calendar years only, so the fiscal-to-calendar ratio of service-part billing lines, per distributor and per family, is applied to the published calendar actuals. The expected-demand model has no period dimension, so the ceiling is the same annual figure in both periods &mdash; only the bought quantity moves.\');\n    items.push(\'<b>The no-usable-price column stays on calendar 2025</b> under fiscal, because that file carries no period tag.\');\n    items.push(\'<b>Greece has no replenishment figure under fiscal</b>, and UTI\\\'s fiscal replenishment covers ten of the eleven months. Greece is excluded rather than annualised; UTI is shown because it is ten of eleven.\');\n  }\n  if(ST.warr===\'exc\') items.push(\'<b>Warranty is priced out of the billing column</b> (\'+eur2(DATA.nw.warr)+\' network-wide, \'+one(DATA.nw.warr_pct,\'%\')+\' of parts billed in CY2025). The four CIS markets \\u2014 Ukraine, Armenia, Kazakhstan and Palestine \\u2014 have no warranty data and show <i>unavailable, not zero</i>. Other figures do not move with this control: the demand gap covers parts that were never bought, so warranty claims against parts that were bought cannot be netted out of it. The warranty claim extract matches the service-family registry on only seven part numbers, which is why.\');\n  var el=g(\'avail\');\n  if(!items.length){ el.className=\'\'; el.innerHTML=\'\'; return; }\n  el.className=\'show\';\n  el.innerHTML=\'<b>What these settings cannot show.</b><ul><li>\'+items.join(\'</li><li>\')+\'</li></ul>\';\n}\nfunction renderHero(){\n  var billed=0, n=0, nwarr=0;\n  DATA.dbs.forEach(function(r){ var b=billOf(r); if(b!==null){ billed+=b; n++; } else if(ST.warr===\'exc\') nwarr++; });\n  g(\'hero-billed\').textContent = eur2(billed);\n  g(\'hero-billed\').nextElementSibling.textContent = ST.dir===\'dealer\'\n    ? \'sales to dealer, \'+DATA.nw.dealer_dbs+\' distributors\'\n    : \'parts billed, \'+(ST.warr===\'inc\'?\'warranty included\':\'warranty excluded\')+\', \'+n+\' of \'+DATA.dbs.length+\' distributors\';\n  var gv=0, fc=capOf(DATA.dbs[0]);\n  DATA.dbs.forEach(function(r){ var v=gapOf(r); if(v!==null) gv+=v; });\n  if(ST.dir===\'dealer\'){ g(\'hero-nb\').textContent=eur2(gv);\n    g(\'hero-nb\').nextElementSibling.textContent=\'uncaptured service value at the dealer\'; }\n  else { g(\'hero-nb\').textContent=(ST.period===\'fy\'?eur2(gv):one(DATA.nw.nb,\'%\'));\n    g(\'hero-nb\').nextElementSibling.textContent=(ST.period===\'fy\'\n      ? \'uncaptured service value, fiscal 2025 (derived recut)\'\n      : \'of expected service demand never bought\'); }\n  var cap=0, cn=0;\n  DATA.dbs.forEach(function(r){ var c=capOf(r); if(c!==null){ cap+=c; cn++; } });\n  $(\'hero-cap\').textContent = cn ? one(cap/cn,\'%\') : \'\\u2014\';\n  $(\'hero-cap\').nextElementSibling.textContent = ST.dir===\'dealer\'\n    ? \'average capture reached dealers\'+ (cn<22?\' \\u2014 \'+cn+\' of \'+DATA.dbs.length+\' distributors\')\n    : \'average capture of expected demand\'+ (cn<22?\' \\u2014 \'+cn+\' of \'+DATA.dbs.length+\' distributors\');\n  var rp=0, dn=0; DATA.dbs.forEach(function(r){ var x=repOf(r); if(x){ rp+=x.total; dn++; } });\n  g(\'hero-rep\').textContent = eur2(rp);\n  g(\'hero-rep\').nextElementSibling.textContent = dn?(\'stock sitting with \'+dn+\' distributors\'):\'no replenishment evidence under these settings\';\n}\nfunction renderAll(){ renderAvail(); renderHero(); renderLeague(); chart1(); chart2(); chart3(); chart4(); chart5(); chart6(); }\ndocument.querySelectorAll(\'.tgl button\').forEach(function(b){\n  b.addEventListener(\'click\', function(){\n    var t=b.getAttribute(\'data-t\'), v=b.getAttribute(\'data-v\');\n    document.querySelectorAll(\'.tgl button[data-t="\'+t+\'"]\').forEach(function(o){ o.classList.remove(\'on\'); o.setAttribute(\'aria-pressed\',\'false\'); });\n    b.classList.add(\'on\'); b.setAttribute(\'aria-pressed\',\'true\');\n    ST[t]=v; renderAll();\n  });\n});\ndocument.querySelectorAll(\'.tgl button\').forEach(function(b){ b.setAttribute(\'aria-pressed\', b.classList.contains(\'on\')?\'true\':\'false\'); });\nrenderAll();\n'
+  const[407] = '<script>'
+  const[408] = '</script></body></html>'
+  const[409] = ('exist_ok',)
+  const[410] = 'w'
+  const[411] = ('encoding',)
+  const[412] = '\n'
+  const[413] = 'ascii'
+  const[414] = '\r\n'
+  const[415] = ('encoding', 'newline')
+  const[416] = '@echo off\nstart "" "%~dp0ISZE_DB_Leakage_Review_CY2025.html"\n'
+  const[417] = 'WROTE'
+  const[418] = 1024
+  const[419] = 'KB'
+  const[420] = 'charts: 6 | league rows:'
+  const[421] = '| no-price rows:'
+  const[422] = ('Filters', 'Brakes', 'Clutch & bearings')
+  const[423] = ('2025-01-01', '2025-12-31')
+  const[424] = ('2025-04-01', '2026-03-31')
+  const[425] = ('2025-04', '2025-05', '2025-06', '2025-07', '2025-08', '2025-09', '2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03')
+  const[426] = (0,)
+  const[427] = ('expected_qty', 'sum')
+  const[428] = ('actual_qty', 'sum')
+  const[429] = ('revenue_gap_eur', 'sum')
+  const[430] = ('actual_rev_eur', 'sum')
+  const[431] = ('uio_units', 'max')
+  const[432] = ('distributor_code', 'category_label', 'fam_group')
+  const[433] = ('leakage_high_sellthrough', 'overstock_low_sellthrough', 'overstock_no_sellout')
+  const[434] = ('distributor_code', 'pipeline_signal', 'rank_key')
+  const[435] = (True, True, False)
+  const[436] = ('bvp_eur', 'sum')
+  const[437] = ('genuine_eur', 'sum')
+  const[438] = ('period', 'period_grain', 'part_number', 'qty')
+  const[439] = ('month', 'pn', 'category_label', 'qty')
+  const[440] = ('month', 'pn', 'category_label')
+  const[441] = ('',)
+
+====================================================================================================
+PATH <module>/__annotate__
+  name='__annotate__' qualname='__annotate__'
+  firstline=83 nlines=1
+  argcount=1 posonly=1 kwonly=0
+  flags=0x1000003 varnames=('format',)
+  cellvars=() freevars=()
+  names=()
+  const[0] = 2
+  const[1] = 's'
+  const[2] = 'pd.Series'
+  const[3] = 'return'
+
+====================================================================================================
+PATH <module>/norm_pn
+  name='norm_pn' qualname='norm_pn'
+  firstline=83 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('s',)
+  cellvars=() freevars=()
+  names=('astype', 'str', 'strip', 'replace')
+  const[0] = '\\.0$'
+  const[1] = ''
+  const[2] = True
+  const[3] = ('regex',)
+
+====================================================================================================
+PATH <module>/n
+  name='n' qualname='n'
+  firstline=87 nlines=4
+  argcount=2 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('v', 'd')
+  cellvars=() freevars=()
+  names=('isinstance', 'float', 'pd', 'isna', 'round')
+  const[0] = None
+
+====================================================================================================
+PATH <module>/<lambda>
+  name='<lambda>' qualname='<lambda>'
+  firstline=105 nlines=1
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('r',)
+  cellvars=() freevars=()
+  names=('exp', 'act', 'gap')
+  const[0] = 1
+  const[1] = None
+
+====================================================================================================
+PATH <module>/<lambda>
+  name='<lambda>' qualname='<lambda>'
+  firstline=112 nlines=1
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('r',)
+  cellvars=() freevars=()
+  names=('exp', 'act', 'gap')
+  const[0] = 1
+  const[1] = None
+
+====================================================================================================
+PATH <module>/<lambda>
+  name='<lambda>' qualname='<lambda>'
+  firstline=119 nlines=1
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('r',)
+  cellvars=() freevars=()
+  names=('exp', 'act', 'gap')
+  const[0] = 1
+  const[1] = None
+
+====================================================================================================
+PATH <module>/__annotate__
+  name='__annotate__' qualname='__annotate__'
+  firstline=209 nlines=1
+  argcount=1 posonly=1 kwonly=0
+  flags=0x1000003 varnames=('format',)
+  cellvars=() freevars=()
+  names=()
+  const[0] = 2
+  const[1] = 'd'
+  const[2] = 'pd.DataFrame'
+  const[3] = 'return'
+  const[4] = 'pd.Series'
+
+====================================================================================================
+PATH <module>/share_of
+  name='share_of' qualname='share_of'
+  firstline=209 nlines=5
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('d', 'tot')
+  cellvars=() freevars=()
+  names=('empty', 'columns', 'pd', 'Series', 'float', 'get', 'replace', 'NA')
+  const[0] = 'bvp'
+  const[1] = ('dtype',)
+  const[2] = 'genuine'
+  const[3] = 'inf'
+
+====================================================================================================
+PATH <module>/fy_months_of
+  name='fy_months_of' qualname='fy_months_of'
+  firstline=279 nlines=4
+  argcount=2 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('db', 'months', 'm')
+  cellvars=() freevars=()
+  names=('sorted', 'FYMON')
+  const[0] = None
+
+====================================================================================================
+PATH <module>/<lambda>
+  name='<lambda>' qualname='<lambda>'
+  firstline=417 nlines=1
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('r',)
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'demand'
+  const[1] = 'cy'
+  const[2] = 'gap'
+  const[3] = -1
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=424 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'rep'
+  const[1] = 'cy'
+  const[2] = 'total'
+  const[3] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=426 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'rep'
+  const[1] = 'fy'
+  const[2] = 'total'
+  const[3] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=428 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'rep'
+  const[1] = 'cy'
+  const[2] = 'pull'
+  const[3] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=431 nlines=5
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'rep'
+  const[1] = 'cy'
+  const[2] = 'over_low'
+  const[3] = 'over_none'
+  const[4] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=434 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'bill'
+  const[1] = 'cy_inc'
+  const[2] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=435 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'bill'
+  const[1] = 'fy_inc'
+  const[2] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=436 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'bill'
+  const[1] = 'warr'
+  const[2] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=438 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'dealer'
+  const[1] = 'cy'
+  const[2] = 'eur'
+  const[3] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=446 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'expo'
+  const[1] = 'pct'
+  const[2] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=447 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'expo'
+  const[1] = None
+
+====================================================================================================
+PATH <module>/<lambda>
+  name='<lambda>' qualname='<lambda>'
+  firstline=447 nlines=1
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('r',)
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'expo'
+  const[1] = 'pct'
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=448 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'mix'
+  const[1] = 'cy'
+  const[2] = None
+
+====================================================================================================
+PATH <module>/<lambda>
+  name='<lambda>' qualname='<lambda>'
+  firstline=448 nlines=1
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('r',)
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'mix'
+  const[1] = 'cy'
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=449 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'mix'
+  const[1] = 'cy'
+  const[2] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=450 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'uio'
+  const[1] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=451 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'db'
+  const[1] = 'demand'
+  const[2] = 'cy'
+  const[3] = 'gap'
+  const[4] = None
+  const[5] = ('IUK', 'GERMANY')
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=455 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'db'
+  const[1] = 'IUK'
+  const[2] = None
+
+====================================================================================================
+PATH <module>/esc
+  name='esc' qualname='esc'
+  firstline=490 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('s',)
+  cellvars=() freevars=()
+  names=('html', 'escape', 'str')
+  const[0] = True
+  const[1] = ('quote',)
+
+====================================================================================================
+PATH <module>/eur_py
+  name='eur_py' qualname='eur_py'
+  firstline=497 nlines=9
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('v', 'a')
+  cellvars=() freevars=()
+  names=('abs', 'E')
+  const[0] = None
+  const[1] = '&mdash;'
+  const[2] = 1000000.0
+  const[3] = ',.2f'
+  const[4] = 'M'
+  const[5] = 1000.0
+  const[6] = ',.0f'
+  const[7] = 'k'
+
+====================================================================================================
+PATH <module>/num_py
+  name='num_py' qualname='num_py'
+  firstline=508 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('v',)
+  cellvars=() freevars=()
+  names=()
+  const[0] = None
+  const[1] = '&mdash;'
+  const[2] = ',.0f'
+
+====================================================================================================
+PATH <module>/one_py
+  name='one_py' qualname='one_py'
+  firstline=512 nlines=2
+  argcount=2 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('v', 's')
+  cellvars=() freevars=()
+  names=()
+  const[0] = None
+  const[1] = '&mdash;'
+  const[2] = ',.1f'
+
+====================================================================================================
+PATH <module>/tip_py
+  name='tip_py' qualname='tip_py'
+  firstline=516 nlines=7
+  argcount=5 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('title', 'formula', 'src', 'excl', 'settings')
+  cellvars=() freevars=()
+  names=('esc',)
+  const[0] = '<span class="tip"><b>'
+  const[1] = '</b><span class="tr"><i>Formula</i>'
+  const[2] = '</span><span class="tr"><i>Snapshot &amp; source</i>'
+  const[3] = '</span><span class="tr"><i>Settings that produced this figure</i>'
+  const[4] = '</span><span class="tr warn"><i>Not included</i>'
+  const[5] = '</span></span>'
+
+====================================================================================================
+PATH <module>/<lambda>
+  name='<lambda>' qualname='<lambda>'
+  firstline=525 nlines=1
+  argcount=4 posonly=0 kwonly=0
+  flags=0x1000003 varnames=('t', 'f', 's', 'e')
+  cellvars=() freevars=()
+  names=('tip_py', 'CY_S')
+  const[0] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=811 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'db'
+  const[1] = 'GERMANY'
+  const[2] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=818 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'db'
+  const[1] = 'IRELAND'
+  const[2] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=823 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'db'
+  const[1] = 'IRELAND'
+  const[2] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=852 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'db'
+  const[1] = 'IUK'
+  const[2] = None
+
+====================================================================================================
+PATH <module>/<genexpr>
+  name='<genexpr>' qualname='<genexpr>'
+  firstline=852 nlines=2
+  argcount=1 posonly=0 kwonly=0
+  flags=0x1000023 varnames=('.0', 'r')
+  cellvars=() freevars=()
+  names=()
+  const[0] = 'db'
+  const[1] = 'UTI'
+  const[2] = None
+

@@ -1,0 +1,70 @@
+# =============================================================================
+# Isuzu Universe - keep embedded business data out of version control
+#
+# Why this exists: the whole of Isuzu Universe was committable but not ignored.
+# Measured 2026-09-22 - a single `git add -A` at the repo root would have staged
+# 3,177 files, including HTML artifacts with the pilot accounts embedded:
+#   ISUZU_I_Motors_ITUK_Real_Data.html   5.8 MB
+#   ISUZU_Network_Atlas_v0_2.html        8.6 MB
+#   IDS_2026_atlas0.1.html               4.6 MB
+# and 259 lines carrying restricted supplier purchase cost figures across nine
+# files in 06_Working. An ignore rule never untracks a file that is already
+# committed, so this is safe for everything already in the index - in particular
+# 05_AIM_Universe, whose own .gitignore governs what within it is tracked.
+# =============================================================================
+
+# --- Embedded business data in HTML -------------------------------------------
+# These carry pilot accounts and, in some cases, the restricted cost table. They
+# are far too large to version and are built or refreshed locally.
+**/*Real_Data*.html
+02_Atlas/*.html
+04_IDS_AIM_and_IMOTORS/*.html
+# A self-contained review application built 2026-09-22. Its own START_HERE says
+# "The HTML itself contains internal data and is not a distributor-facing export",
+# so it must not be committable. Its source package is a separate zip.
+AIM_Opportunity_Review*.html
+
+# --- Scratch, generated and working folders -----------------------------------
+# Working and build-intermediate trees: regenerable, and several hold restricted
+# figures. 06_Working in particular is where the extracted payload, the pack
+# scripts and the extracted engine source live.
+06_Working/
+_STRATEGY/
+_build_v05/
+_MERGED_MASTER_2026-09-21/
+Universe_IDS_AIM_Cursor_Handoff/
+03_Packages/**/RETURNS/
+
+# --- Derived handover packs ---------------------------------------------------
+# A handover pack is a copy: tracked source plus untracked working files. It is
+# assembled for an upload, never a source of truth, so it does not belong in the
+# repository. The .zip form is covered by the root *.zip rule.
+GPT_HANDOVER_*/
+
+# --- Local QA output ----------------------------------------------------------
+# Screenshots from test runs. Measured 2026-09-22: 8,471 files and 308 MB under
+# 05_AIM_Universe/_qa alone, against a 41 MB component. Regenerated every run.
+_qa/
+_qa*/
+**/_qa*/
+**/_qa_*/
+**/_qa_pdf*/
+**/_qa_page*/
+**/_qa_v03/
+**/_qa_yellow/
+**/_qa_yellow_*/
+_qa_page*/
+_qa_pdf*/
+_qa_yellow*/
+
+# --- Extracted and derived data -----------------------------------------------
+# Payload extracts, pack payloads and credential-free-but-restricted intermediates.
+*_payload*.json
+pack03.json
+*.local.json
+
+# --- Backups and editor residue -----------------------------------------------
+*.bak
+*.bak_*
+*~
+*.tmp

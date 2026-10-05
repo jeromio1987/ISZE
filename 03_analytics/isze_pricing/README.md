@@ -84,7 +84,7 @@ python -m isze_pricing.cli diagnose   # readiness + peer street vs Isuze (PR00×
 python 03_analytics/isze_pricing/scan_eucon_comparable_oem_gap.py
 ```
 
-Mode B status brief: `01_data/01_Pricing/PRICING_STATUS_BRIEF_2026-08-10.md`.
+internal status brief: `01_data/01_Pricing/PRICING_STATUS_BRIEF_2026-08-10.md`.
 
 ## The premium is per category, and it is gated
 

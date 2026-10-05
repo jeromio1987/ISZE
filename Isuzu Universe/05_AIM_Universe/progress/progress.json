@@ -1,0 +1,1448 @@
+{
+  "record_version": 2,
+  "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
+  "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
+  "written_at": "2026-09-22T17:26:34Z",
+  "state_vocabulary": [
+    "not started",
+    "in progress",
+    "implemented",
+    "technically verified",
+    "human accepted"
+  ],
+  "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
+  "counts": {
+    "technically verified": 30,
+    "not started": 63,
+    "implemented": 3
+  },
+  "total_tasks": 96,
+  "overlay_applied": 33,
+  "overlay_unknown_ids": [],
+  "open_findings": [
+    {
+      "id": "F08-IDENTITY",
+      "severity": "medium",
+      "title": "The permission surface now ships, but a browser-side check is still not an authentication",
+      "finding": "REVISED 2026-09-22. The permission table, canRead, canAttach, makeDevIdentity and requireApprovedIdentity are now in the SHIPPED src/data/export.js, ported there so the case store's attachment check works in a browser. So the component-level permission logic is closed, and a participant cannot read the internal record through this component. What remains is narrower: there is no approved identity provider on this machine, so requireApprovedIdentity REFUSES an authenticated identity rather than accepting one. That refusal is deliberate - accepting one would be inventing authority - and a development identity is a declared role, not an authentication.",
+      "impact": "F08's disclosure half and its component-level access logic are both closed and tested. Real tenant policy, revocation and server-side enforcement remain unimplemented, because no backend exists here to provide them. A browser-side allowlist is not access control, and it is not described as one anywhere in the code.",
+      "handling": "Needs infrastructure and an identity owner. Until one exists, the honest position is the one the code takes: refuse an authenticated identity rather than invent authority.",
+      "owner": "integration owner"
+    },
+    {
+      "id": "R27-CANDIDATE-PERIOD",
+      "severity": "medium",
+      "title": "The candidate records carry no reporting period, and the source cannot supply one",
+      "finding": "ACCEPT-01 R27 fails and should stay failing. The 10543 candidate rows have no period, year or date field, though the screening rule is described as running on 2025/2024 and H1 2026/2025. Two rows also carry a null cost reconciliation because the price-file FOB value is empty - a null difference is not a match.",
+      "handling": "Needs a commercial or source input. Guessing the period is the one thing the brief forbids.",
+      "owner": "source owner (not an agent)"
+    },
+    {
+      "id": "MARKET-DATA-GAP",
+      "severity": "high",
+      "title": "The payload contains no comparable price observation that can be used",
+      "finding": "Every offer is excluded, dominated by PRODUCT_MATCH_UNRESOLVED (offers rest on seller cross-references, which is a candidate to inspect rather than approved equivalence) and PACK_CONTENTS_UNKNOWN (no offer declares whether its quote is for a piece or a pack). The panel is correct to exclude them all.",
+      "impact": "MARKET-07 has tested logic and a working screen but no answer. The commercial question - how our net terms compare with a competitor - cannot be answered from the data currently held.",
+      "handling": "Needs pack contents and an exact match basis in the source. No code change supplies either.",
+      "owner": "source owner (not an agent)"
+    },
+    {
+      "id": "PAYLOAD-PROVENANCE",
+      "severity": "medium",
+      "title": "The payload has no recorded digest, so an added key cannot be verified against the file's own statement",
+      "finding": "A key was added by hand to meta (marketComparisonDeclarations) because writing it back programmatically rewrote the envelope's recorded digest, which then no longer matched the file. The payload is excluded from version control, so it exists only on this machine with no history. The added key was verified against the authorised sibling copy instead: cases, candidateScreen, verifiedCosts, offers, sources and alternatives are all byte-identical, and exactly one key was added.",
+      "impact": "A restricted file that a reviewer cannot verify against its own recorded digest is weaker evidence than one that never carried the extra key. The byte difference is also explained: the repo copy is pretty-printed while the sibling is minified, which accounts for 1054709 of the 1054709 byte gap; the real content change is 2965 characters.",
+      "handling": "The right fix is a small builder in 01_data/91_build/ that regenerates the payload with its digest intact. That is outside the agent-owned area and is a decision about how the file should be produced.",
+      "owner": "integration owner + data owner"
+    },
+    {
+      "id": "MODULE-AUDIT-RESIDUAL",
+      "severity": "low",
+      "title": "My own module_audit still over-reports, and the generated audits are stale",
+      "finding": "tools/module_audit.py is a raw text scan and cannot tell a deliberately declared comparison against a retired module from a misdirected load. It reports 11 retired loads where the guard says the genuinely misdirected count is 0. It now says so in its own output and names guard_09_module_scope.cjs as the authority. docs/ORPHAN_AUDIT.md and MODULE_AUDIT.md were also stale at commit time because the module lists changed after they were generated.",
+      "handling": "Either rework the tool to read the in-file declarations the way the guard does, or delete it and let the guard be the only answer. Regenerate both reports before any further commit.",
+      "owner": "integration owner"
+    },
+    {
+      "id": "F04-DATA",
+      "severity": "medium",
+      "title": "The payload still declares a split cost basis across alternatives",
+      "finding": "The ranking resolves every row to one offer date and reports a single baseline, so the screen no longer shows two baselines. The underlying payload still declares the split: the no-action rows for pads, cabin filter and oil filter use SEP26 while some alternatives use OCT26.",
+      "handling": "Data work, not a code fix.",
+      "owner": "data owner"
+    },
+    {
+      "id": "F07-INPUT",
+      "severity": "medium",
+      "title": "The oil migration cannot be calculated from the payload as supplied",
+      "finding": "Both product lines' parts costs are present and the Genuine line's list price appears in the option's prose, but no transferred quantity is stated anywhere and there is no applicable net selling price for the Genuine counterpart part number. The result is correctly unresolved rather than a fabricated zero.",
+      "handling": "Needs a stated transferred quantity and an applicable net selling price for the Genuine number.",
+      "owner": "commercial owner (not an agent)"
+    },
+    {
+      "id": "DATA-ENTITY",
+      "severity": "medium",
+      "title": "A country name appears where a distributor name is expected in the candidate rows",
+      "finding": "Candidate rows carry distributor labels ITUK and PORTUGAL. PORTUGAL is a country and the source never states which legal entity it is. ITUK and IUK are separate entities, and UTI and UMI must never be blended.",
+      "handling": "Not renamed - renaming would invent the entity. Kept visible with every label as it appears.",
+      "owner": "commercial owner (not an agent)"
+    },
+    {
+      "id": "OIL-COST-FLAG",
+      "severity": "low",
+      "title": "One case's costRecordPresent flag contradicts verifiedCosts",
+      "finding": "One case carries a verified parts cost on the forward basis in verifiedCosts while its own packEvidence.costRecordPresent flag says false. The cost value is not repeated here: it is the restricted figure the payload holds, and it is cited by field name only. Checked all five cases: the flag agrees on four and disagrees on exactly one. So the objectives tab can rank a gross-profit alternative while the economics tab says no cost is applied.",
+      "handling": "Both statements are individually defensible; together they would confuse a reader. Needs a decision on which is authoritative for this case.",
+      "owner": "integration owner"
+    },
+    {
+      "id": "PAYLOAD-STALE-HASH",
+      "severity": "medium",
+      "title": "The counts were taken against the payload staged before it was renewed, and cannot be re-derived without the restricted file",
+      "finding": "The restricted payload was regenerated during the session, so its bytes changed. Every count in _acceptance_run, and the artifact hash beside them, were taken against the payload staged before that renewal. The artifact itself was rebuilt AFTER the renewal and reproduces byte for byte, so the build is current; it is the counts that have not been re-derived against the renewed file.",
+      "impact": "Nothing is known to be wrong. The counts have not been re-derived against the renewed file, and doing so is a rebuild plus a full suite run. It cannot be finished from a clone: the payload is excluded from version control, so a machine without it cannot run these checks at all.",
+      "handling": "Re-run tests/run_all.ps1 against the renewed payload before treating these counts as current for that file.",
+      "owner": "integration owner"
+    },
+    {
+      "id": "RESTRICTED-VALUE-LEAK",
+      "severity": "medium",
+      "title": "Restricted figures and part numbers had been copied into tracked files, and the sweep that finds them was blind to a part number on its own",
+      "finding": "A sweep reads the real cost figures and part numbers out of the restricted payload and searches every git-tracked file for them. Its first run found a four-decimal supplier cost beside a part number in the progress record and real payload data copied into the data-contract test fixture. Checking the work by hand found more than the sweep reported: the sweep matched a FOUR-DECIMAL figure, so a real part number on its own line, a named seller beside an advertised price, and costs quoted to two decimals all passed it. Restricted part numbers were found in nine tracked files, and named competitor prices and seller names in one.",
+      "impact": "The exclusion scheme keeps the payload, the frozen reference and the assembled HTML out of version control. It does not stop a restricted VALUE being quoted in a tracked document, and a tracked document is versioned forever. Nothing had been committed, so nothing needed a history rewrite. The fixture's own values were replaced with invented ones, the affected documents were rewritten to cite FIELD NAMES instead of figures, and the checks that read the real payload now derive what they need from it in memory rather than asserting a literal copied out of it.",
+      "handling": "The sweep's match rule should be widened: a restricted PART NUMBER is identifying on its own, and so is a cost quoted to two decimals in a cost context. Until it is widened, a clean sweep run is not evidence that no restricted value is quoted - it is evidence that none of the forms the sweep knows about is quoted.",
+      "owner": "integration owner"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "BASE-01",
+      "title": "Identify and preserve the actual working version",
+      "owner": "Integration owner",
+      "target": "R1 | Proposed owner: Integration owner",
+      "roadmap": "B01, B04, B09 | Acceptance: A12",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "No task dependency; use the approved working area.",
+      "integrate_after": "The start prerequisites and the task checks.",
+      "state": "technically verified",
+      "evidence": [
+        "Frozen reference hash matches the original artifact: 7494CEA1955BE820D0082EEF15473610945663FBEFC7A06D7969C15822423E14, re-checked after every rebuild.",
+        "Corrected the handoff's claim: validate_v03.py and paint_seq.py were NOT missing; they are in 06_Working/_aim_pack_20260922/.",
+        "Both supplied baselines reproduce: engine 11/19/30, browser 29/1/30."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "BASE-02",
+      "title": "Separate code-only development from restricted inputs",
+      "owner": "Integration owner",
+      "target": "R1 | Proposed owner: Integration owner",
+      "roadmap": "B01, B04, B09 | Acceptance: A16, A17",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-01",
+      "integrate_after": "The start prerequisites and the task checks.",
+      "state": "technically verified",
+      "evidence": [
+        "git check-ignore confirms the restricted payload, frozen reference and every assembled HTML are excluded. Test run output is excluded too, after 277 output files were found to echo restricted cost values.",
+        "A synthetic build now writes under its own filename, so it can no longer overwrite the real artifact silently."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "BASE-03",
+      "title": "Agree one small set of shared records",
+      "owner": "Integration owner",
+      "target": "R1 | Proposed owner: Integration owner",
+      "roadmap": "B01, B04, B09 | Acceptance: A02, A03, A09, A12, A13",
+      "existing_finding": "F01, F04, F09, F12",
+      "can_start_after": "BASE-01",
+      "integrate_after": "The start prerequisites and the task checks.",
+      "state": "technically verified",
+      "evidence": [
+        "CONTRACT_VERSION 3, 114 declared fields. v2 added bridge_* fields, support_direction, and the participant-brief support decision. v3 added SECTION_FIELDS, because a flat name list could not declare a section's contents and three sections were being silently emptied."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "BASE-04",
+      "title": "Create maintainable modules without changing the product",
+      "owner": "Integration owner",
+      "target": "R1 | Proposed owner: Integration owner",
+      "roadmap": "B01, B04, B09 | Acceptance: A05, A12",
+      "existing_finding": "F01, F12",
+      "can_start_after": "BASE-02, BASE-03",
+      "integrate_after": "The start prerequisites and the task checks.",
+      "state": "technically verified",
+      "evidence": [
+        "tools/build.py assembles twelve modules onto the retained shell, and the case pair is assembled BEFORE the case facade, because the facade reads it and a browser has no require to fall back on. tests/case_build_wiring.cjs 4/0.",
+        "The guard that refuses to ship a module reading an unwired one was BROKEN and is fixed, and this is the change that matters most in the batch. It derived the global to search for from the FILE NAME, so src/case/store.js became root.AIMStore while the file publishes root.AIMCaseStore. That derivation was wrong for every module in the tree, so the guard searched for strings that never occur and reported clean on every build. It is now driven by PUBLISHED_BY, a table read from each file's own assignment line and measured by tools/published_names.py.",
+        "The corrected guard immediately caught a real defect the old one had been shipping as a silent undefined: src/case/store.js read root.AIMOutput, a retired module. Fixed by porting the permission and identity surface into the shipped src/data/export.js and repointing the case store at it, which is also what closes the access-control half of F08 at component level.",
+        "orphan_audit reports 0 orphans after the two view-layer orphans were retired deliberately with reasons recorded."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "BASE-05",
+      "title": "Make the old and new checks executable",
+      "owner": "Verification reviewer",
+      "target": "R1 | Proposed owner: Verification reviewer",
+      "roadmap": "B01, B04, B09 | Acceptance: A11, A12",
+      "existing_finding": "F01, F02, F03, F04, F05, F06, F07, F08, F09",
+      "can_start_after": "BASE-02",
+      "integrate_after": "The start prerequisites and the task checks.",
+      "state": "technically verified",
+      "evidence": [
+        "run_all.ps1 runs every check with tested checksums and states that exit 0 is not acceptance. BASE-BROWSER reports a real count after the invocation fault was fixed."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "BASE-06",
+      "title": "Fix the turbo view and prevent stale-page errors",
+      "owner": "Experience developer",
+      "target": "R1 | Proposed owner: Experience developer",
+      "roadmap": "B01, B04, B09 | Acceptance: A12, A19",
+      "existing_finding": "F05",
+      "can_start_after": "BASE-02",
+      "integrate_after": "The start prerequisites and the task checks.",
+      "state": "technically verified",
+      "evidence": [
+        "app.js catches a view throw, clears the content region first, and paints viewErrorPanel naming the failing view. Drilled by forcing the v03 throw."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "BASE-07",
+      "title": "Provide repeatable start, build and test commands",
+      "owner": "Integration owner",
+      "target": "R1 | Proposed owner: Integration owner",
+      "roadmap": "B01, B04, B09 | Acceptance: A12, A17",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-04",
+      "integrate_after": "BASE-05",
+      "state": "technically verified",
+      "evidence": [
+        "build.py --payload <file> [--check]; paint_check.py 8/8; run_tests.cjs 60/0."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "BASE-08",
+      "title": "Keep a single progress and integration record",
+      "owner": "Integration owner",
+      "target": "R1 | Proposed owner: Integration owner",
+      "roadmap": "B01, B04, B09 | Acceptance: A14",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-01",
+      "integrate_after": "The start prerequisites and the task checks.",
+      "state": "technically verified",
+      "evidence": [
+        "build_progress.py writes the 96-task record and clamps a machine-written state at technically verified."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "FIN-01",
+      "title": "Reject invalid pricing inputs at every entry point",
+      "owner": "Pricing developer",
+      "target": "R1 | Proposed owner: Pricing developer",
+      "roadmap": "B07 | Acceptance: A04, A11",
+      "existing_finding": "F06",
+      "can_start_after": "BASE-03",
+      "integrate_after": "BASE-04",
+      "state": "technically verified",
+      "evidence": [
+        "Invalid, negative, non-finite and non-numeric inputs refused; zero, unknown, return and invalid are four separate states."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "FIN-02",
+      "title": "Use an explicit offer date and one comparable baseline",
+      "owner": "Pricing developer",
+      "target": "R1 | Proposed owner: Pricing developer",
+      "roadmap": "B07 | Acceptance: A02, A09, A11",
+      "existing_finding": "F04, F11",
+      "can_start_after": "BASE-03",
+      "integrate_after": "FIN-01",
+      "state": "technically verified",
+      "evidence": [
+        "One offer-effective date and one named cost basis per comparison; an invalid or out-of-window date resolves to nothing rather than defaulting to October."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "FIN-03",
+      "title": "Calculate total revenue, profit and margin correctly",
+      "owner": "Pricing developer",
+      "target": "R1 | Proposed owner: Pricing developer",
+      "roadmap": "B07 | Acceptance: A11",
+      "existing_finding": "F02, F03",
+      "can_start_after": "BASE-03",
+      "integrate_after": "FIN-01, FIN-02",
+      "state": "technically verified",
+      "evidence": [
+        "Combined offer margin is reported profit over revenue: 25% -> 37.931%, and 40% -> 35% with support deducted."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "FIN-04",
+      "title": "Apply support once and reconcile the profit bridge",
+      "owner": "Pricing developer",
+      "target": "R1 | Proposed owner: Pricing developer",
+      "roadmap": "B07 | Acceptance: A11",
+      "existing_finding": "F02, F03",
+      "can_start_after": "BASE-03",
+      "integrate_after": "FIN-01, FIN-03",
+      "state": "technically verified",
+      "evidence": [
+        "Support counted once; the result carries bridge_revenue_change, bridge_cost_change, bridge_support_eur, bridge_reconciles."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "FIN-05",
+      "title": "Fix break-even quantities for each eligibility rule",
+      "owner": "Pricing developer",
+      "target": "R1 | Proposed owner: Pricing developer",
+      "roadmap": "B07 | Acceptance: A11",
+      "existing_finding": "F03",
+      "can_start_after": "BASE-03",
+      "integrate_after": "FIN-03, FIN-04",
+      "state": "technically verified",
+      "evidence": [
+        "Incremental break-even split from all-volume: 125/200/210 -> 100/100/110, orderable quantities rounded up to a real pack."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "FIN-06",
+      "title": "Use consistent precision and discrete pack quantities",
+      "owner": "Pricing developer",
+      "target": "R1 | Proposed owner: Pricing developer",
+      "roadmap": "B07 | Acceptance: A09, A11",
+      "existing_finding": "F03, F04",
+      "can_start_after": "BASE-03",
+      "integrate_after": "FIN-05",
+      "state": "technically verified",
+      "evidence": [
+        "Required pack quantities rounded up to the smallest orderable quantity above the threshold."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "FIN-07",
+      "title": "Normalise volume assumptions identically everywhere",
+      "owner": "Pricing developer",
+      "target": "R1 | Proposed owner: Pricing developer",
+      "roadmap": "B07 | Acceptance: A11, A12",
+      "existing_finding": "F09, F01",
+      "can_start_after": "BASE-03",
+      "integrate_after": "FIN-01, FIN-03, FIN-04",
+      "state": "technically verified",
+      "evidence": [
+        "One volume normalisation: PADS-VOL was 1400 through one entry point and 1750 through the other, now 1750 through both."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "FIN-08",
+      "title": "Rank valid alternatives without manufacturing advice",
+      "owner": "Pricing developer",
+      "target": "R1 | Proposed owner: Pricing developer",
+      "roadmap": "B07 | Acceptance: A04, A10, A11",
+      "existing_finding": "F01, F07, F09, F10, F11",
+      "can_start_after": "BASE-03",
+      "integrate_after": "FIN-02, FIN-04, FIN-06, FIN-07",
+      "state": "technically verified",
+      "evidence": [
+        "Revenue and gross profit stay separate objectives with no invented composite score, optimum, elasticity or margin floor."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "DATA-01",
+      "title": "Attach a source manifest to every analytical input",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B03, B11 | Acceptance: A02, A03, A09",
+      "existing_finding": "F04, F10, F11",
+      "can_start_after": "BASE-03",
+      "integrate_after": "BASE-04",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "DATA-02",
+      "title": "Keep distributors, purchasing accounts and sites distinct",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B03, B11 | Acceptance: A01, A03, A05",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "DATA-03",
+      "title": "Preserve original references and versioned part relationships",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B03, B11 | Acceptance: A05, A10, A14",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "DATA-04",
+      "title": "Enforce period, sales-stage and unit compatibility",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B03, B11 | Acceptance: A02, A03, A06, A09",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-01",
+      "state": "technically verified",
+      "evidence": [
+        "VAT unit. The shared rule divided by 1 + rate/100 while the payload stores a fraction. On a UK tax-inclusive observation it yielded EUR 89.90 against a correct EUR 75.07, 19.8% too high. The unit is now declared on the row and required by the rule; a bare 0.2 is refused. Four checks added."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "DATA-05",
+      "title": "Make repeat imports safe without deleting genuine transactions",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B03, B11 | Acceptance: A07, A08",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-01, DATA-04",
+      "state": "technically verified",
+      "evidence": [
+        "Conservation fixed. The old sum added setAside to buckets that already held every received row, so it detected a set-aside rather than a missing row. accept_03 16/1 -> 17/0."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "DATA-06",
+      "title": "Implement declared corrections and affected-result tracing",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B03, B11 | Acceptance: A07, A14",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-05",
+      "state": "technically verified",
+      "evidence": [
+        "The import log's conservation returned ok:true unconditionally and could never fail; both ledgers now share one rule. A second double-count in a re-imported set-aside key was found and fixed."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "DATA-07",
+      "title": "Reconcile joins and keep the unclassified remainder visible",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B03, B11 | Acceptance: A05, A10",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-02, DATA-03, DATA-04",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "DATA-08",
+      "title": "Stage failures and preserve the last accepted view",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B03, B11 | Acceptance: A04, A07, A17",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-06, DATA-07",
+      "state": "technically verified",
+      "evidence": [
+        "Conservation still fails on a genuine loss: a row in the key index but absent from the store returns ok:false with STORE_DISAGREES_WITH_INDEX."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "REVIEW-01",
+      "title": "Search and paginate the entire candidate set",
+      "owner": "Experience developer",
+      "target": "R2 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05 | Acceptance: A02, A03, A05, A09",
+      "existing_finding": "F10",
+      "can_start_after": "BASE-03",
+      "integrate_after": "BASE-04, DATA-01",
+      "state": "technically verified",
+      "evidence": [
+        "Candidate search and paging reach the whole permitted set rather than the first 300 rows, with a route from a row into its own part review."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "REVIEW-02",
+      "title": "Separate commercial priority from evidence completeness",
+      "owner": "Experience developer",
+      "target": "R2 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05 | Acceptance: A02, A03, A05, A09",
+      "existing_finding": "F10",
+      "can_start_after": "BASE-03",
+      "integrate_after": "REVIEW-01, DATA-04",
+      "state": "technically verified",
+      "evidence": [
+        "Row counts reported separately from distinct part numbers: 10543 rows, 7798 distinct parts, 15 costed rows covering 8 distinct parts against a source sentence claiming 15."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "REVIEW-03",
+      "title": "Make the actual comparison selectable and visible",
+      "owner": "Experience developer",
+      "target": "R2 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05 | Acceptance: A02, A03, A05, A09",
+      "existing_finding": "F01, F04",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-04, UX-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "REVIEW-04",
+      "title": "Explain the exact parts behind a purchasing movement",
+      "owner": "Experience developer",
+      "target": "R2 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05 | Acceptance: A02, A03, A05, A09",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-07, REVIEW-03",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "REVIEW-05",
+      "title": "Separate price, quantity and mix effects where supported",
+      "owner": "Experience developer",
+      "target": "R2 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05 | Acceptance: A02, A03, A05, A09",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "REVIEW-04, DATA-04",
+      "state": "implemented",
+      "evidence": [
+        "The 'case' view key was missing from TAB_LABELS so the part-review tab rendered its raw key instead of a label. Now 'Part review', confirmed present in the assembled artifact. Recorded here rather than under a new id: the fix has no task of its own in the plan, and inventing one would inflate the count. (An earlier revision of this overlay used a made-up id 'KX-01' and tools/build_progress.py correctly refused it.)"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "REVIEW-06",
+      "title": "Identify recurrence, interruption and new purchasing",
+      "owner": "Experience developer",
+      "target": "R2 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05 | Acceptance: A02, A03, A05, A09",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-03, DATA-04, REVIEW-03",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "REVIEW-07",
+      "title": "Turn each question into the appropriate next action",
+      "owner": "Experience developer",
+      "target": "R2 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05 | Acceptance: A02, A03, A05, A09",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "REVIEW-04, FIN-08",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "REVIEW-08",
+      "title": "Create supported new reviews beyond the five examples",
+      "owner": "Experience developer",
+      "target": "R2 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05 | Acceptance: A02, A03, A05, A09",
+      "existing_finding": "F10",
+      "can_start_after": "BASE-03",
+      "integrate_after": "REVIEW-01, REVIEW-04, REVIEW-07, CASE-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "UX-01",
+      "title": "Use one context across every working view",
+      "owner": "Experience developer",
+      "target": "R1 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05, B06, B08 | Acceptance: A12, A19",
+      "existing_finding": "F01",
+      "can_start_after": "BASE-03",
+      "integrate_after": "BASE-04",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "UX-02",
+      "title": "Select an alternative and edit that exact scenario",
+      "owner": "Experience developer",
+      "target": "R1 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05, B06, B08 | Acceptance: A12, A19",
+      "existing_finding": "F01, F09",
+      "can_start_after": "BASE-03",
+      "integrate_after": "UX-01, FIN-07, FIN-08",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "UX-03",
+      "title": "Make assumptions explicit and quick to change",
+      "owner": "Experience developer",
+      "target": "R1 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05, B06, B08 | Acceptance: A12, A19",
+      "existing_finding": "F06",
+      "can_start_after": "BASE-03",
+      "integrate_after": "UX-02, FIN-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "UX-04",
+      "title": "Visualise revenue, profit and break-even without a forecast claim",
+      "owner": "Experience developer",
+      "target": "R2 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05, B06, B08 | Acceptance: A12, A19",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "UX-03, FIN-05, FIN-06",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "UX-05",
+      "title": "Show a clear decision summary with deeper evidence underneath",
+      "owner": "Experience developer",
+      "target": "R1 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05, B06, B08 | Acceptance: A12, A19",
+      "existing_finding": "F11, F10",
+      "can_start_after": "BASE-03",
+      "integrate_after": "UX-01, FIN-02",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "UX-06",
+      "title": "Make partial, failed and empty states recoverable",
+      "owner": "Experience developer",
+      "target": "R1 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05, B06, B08 | Acceptance: A12, A19",
+      "existing_finding": "F05, F06",
+      "can_start_after": "BASE-03",
+      "integrate_after": "UX-01, BASE-06",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "UX-07",
+      "title": "Make the complete task work on keyboard and small screens",
+      "owner": "Experience developer",
+      "target": "R2 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05, B06, B08 | Acceptance: A12, A19",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "UX-03, UX-05, UX-06",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "UX-08",
+      "title": "Make save, export and reopen preserve one decision",
+      "owner": "Experience developer",
+      "target": "R1 | Proposed owner: Experience developer",
+      "roadmap": "B04, B05, B06, B08 | Acceptance: A12, A19",
+      "existing_finding": "F01, F12",
+      "can_start_after": "BASE-03",
+      "integrate_after": "UX-02, UX-03, SAFE-04",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "CASE-01",
+      "title": "Implement a durable case repository behind the shared contract",
+      "owner": "Workflow developer",
+      "target": "R2 | Proposed owner: Workflow developer",
+      "roadmap": "B06 | Acceptance: A12",
+      "existing_finding": "F12",
+      "can_start_after": "BASE-03",
+      "integrate_after": "BASE-04",
+      "state": "technically verified",
+      "evidence": [
+        "Durable case record: versioned, append-only history, and src/case/store.js is the one implementation. src/data/cases.js is a facade over it, and tests/case_service.test.mjs check C45 FAILS if a second state machine or a second rule book reappears.",
+        "A draft survives a REAL process restart: the parent writes the case, then runs tests/case_restart_child.cjs in a SEPARATE node process and reads its answer. The same check asserts the file's bytes AND its mtime are untouched, so the child provably only read. A restart proved by rebuilding the object in one process would pass even if the adapter held everything in memory.",
+        "A folder of files on one machine is not a shared service, and every description says so: describeStorage() states it, the bundle carries not_a_shared_service: true, and the app warns when storage is not durable. case_store 27/0, case_service 46/0."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "CASE-02",
+      "title": "Separate case, evidence, support and outcome states",
+      "owner": "Workflow developer",
+      "target": "R2 | Proposed owner: Workflow developer",
+      "roadmap": "B06 | Acceptance: A13, A14",
+      "existing_finding": "F12",
+      "can_start_after": "BASE-03",
+      "integrate_after": "CASE-01",
+      "state": "technically verified",
+      "evidence": [
+        "Nine states in force with an explicit transition table and a role for every move. The migration landed in ONE change: contracts.CASE_STATES publishes the nine target states, and the old-to-new mapping is in tests/case_store.test.mjs so the two runs can be read side by side.",
+        "A response issued and a case closed create no support, no outcome and no benefit. Checked against the benefit account, not only the record, and asserted per state rather than asserted-about: no state carries a monetary value.",
+        "Invalid transitions are rejected with the state and version retained, and every valid transition carries dated attribution."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "CASE-03",
+      "title": "Record who owes the next action and when",
+      "owner": "Workflow developer",
+      "target": "R2 | Proposed owner: Workflow developer",
+      "roadmap": "B06 | Acceptance: A13, A19",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "CASE-02",
+      "state": "technically verified",
+      "evidence": [
+        "Owner role, responding function, deputy and escalation route are stored, with the separate clocks (submitted, assigned, acknowledged, answered, resolved) rather than one updated-at.",
+        "A reassignment does not reset the clock: measured 3.0 days waiting before and 6.0 after, on the same submission timestamp, so the wait is the dealer's and it keeps running.",
+        "A dealer awaiting ISZE guidance is shown as awaiting that guidance, not as inactive or at fault."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "CASE-04",
+      "title": "Version proposals and preserve the established approval route",
+      "owner": "Workflow developer",
+      "target": "R2 | Proposed owner: Workflow developer",
+      "roadmap": "B06 | Acceptance: A11, A13, A14",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "CASE-02, FIN-08",
+      "state": "technically verified",
+      "evidence": [
+        "Proposed terms, references, quantities, dates, conditions, currency and the approval reference are stored, with an amendment preserving the former terms and an expired offer no longer presented as available.",
+        "A draft cannot become approved by saving it, by writing the state, or by choosing the top-ranked row. No live price is set and no approver is impersonated; a local simulated approval is labelled synthetic."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "CASE-05",
+      "title": "Link delivered support and outcomes without double counting",
+      "owner": "Workflow developer",
+      "target": "R2 | Proposed owner: Workflow developer",
+      "roadmap": "B06 | Acceptance: A13, A14",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "CASE-02, CASE-04",
+      "state": "technically verified",
+      "evidence": [
+        "Delivered support and outcomes are linked without double counting. A paid credit creates no incremental profit and no won quotation.",
+        "One action recorded under two modules is counted once, on a stable action identifier: measured 300 not 600 of support, 60 units not 120, and one gross-profit line across the two modules.",
+        "Purchase-cost difference, gross profit, capacity released and programme expenditure stay separate fields, and an unknown outcome stays unknown rather than becoming zero."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "CASE-06",
+      "title": "Preserve explanations and corrections as separate evidence",
+      "owner": "Workflow developer",
+      "target": "R2 | Proposed owner: Workflow developer",
+      "roadmap": "B06 | Acceptance: A14",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "CASE-01, DATA-06",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "CASE-07",
+      "title": "Prevent duplicate submissions and lost concurrent edits",
+      "owner": "Workflow developer",
+      "target": "R2 | Proposed owner: Workflow developer",
+      "roadmap": "B06 | Acceptance: A14",
+      "existing_finding": "F12",
+      "can_start_after": "BASE-03",
+      "integrate_after": "CASE-01, CASE-02",
+      "state": "technically verified",
+      "evidence": [
+        "A stale write is refused with expected_version and actual_version rather than overwriting a newer revision."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "CASE-08",
+      "title": "Provide an actionable internal queue and reusable history",
+      "owner": "Workflow developer",
+      "target": "R2 | Proposed owner: Workflow developer",
+      "roadmap": "B06 | Acceptance: A12, A16, A19",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "CASE-03, CASE-06, CASE-07",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "MARKET-01",
+      "title": "Store dated competitor observations as evidence, not truth",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B05, B07 | Acceptance: A04, A09, A10, A15",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "MARKET-02",
+      "title": "Record product equivalence separately from lexical similarity",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B05, B07 | Acceptance: A04, A09, A10, A15",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "MARKET-01, DATA-03",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "MARKET-03",
+      "title": "Normalise packs and kit contents only when supported",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B05, B07 | Acceptance: A04, A09, A10, A15",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "MARKET-01, MARKET-02",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "MARKET-04",
+      "title": "Make currency, tax and delivery adjustments auditable",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B05, B07 | Acceptance: A04, A09, A10, A15",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "MARKET-01, MARKET-03",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "MARKET-05",
+      "title": "Keep different commercial price levels separate",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B05, B07 | Acceptance: A04, A09, A10, A15",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "MARKET-04, DATA-04",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "MARKET-06",
+      "title": "Make outdated and conflicting observations visible",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B05, B07 | Acceptance: A04, A09, A10, A15",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "MARKET-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "MARKET-07",
+      "title": "Build a comparable-price panel with clear exclusions",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B05, B07 | Acceptance: A04, A09, A10, A15",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "MARKET-02, MARKET-03, MARKET-04, MARKET-05, MARKET-06, FIN-08",
+      "state": "implemented",
+      "evidence": [
+        "src/data/comparable.js is assembled and the price-position view draws it without recomputing anything. On the authorised payload the eligible set is empty on all five cases and renders as an explicit unavailable state naming the reason per row, not a blank panel. ux_market 12/0. NOT verified end to end, because no commercial comparison is possible from the current data."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "MARKET-08",
+      "title": "Ask only for the missing comparison evidence",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B02, B05, B07 | Acceptance: A04, A09, A10, A15",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "MARKET-07, CASE-01",
+      "state": "implemented",
+      "evidence": [
+        "The panel reads the exclusion codes and requests the smallest missing item as a draft ask, rather than asking for everything."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "RANGE-01",
+      "title": "Represent pairing, supersession and fitment as different relationships",
+      "owner": "Data developer",
+      "target": "R2 | Proposed owner: Data developer",
+      "roadmap": "B03, B05, B07, B17 | Acceptance: A10, A11",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-03",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RANGE-02",
+      "title": "Create an exact Genuine/BVP comparison view",
+      "owner": "Experience developer",
+      "target": "R2 | Proposed owner: Experience developer",
+      "roadmap": "B03, B05, B07, B17 | Acceptance: A10, A11",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "RANGE-01, UX-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RANGE-03",
+      "title": "Support a genuine multi-part financial scenario",
+      "owner": "Pricing developer",
+      "target": "R2 | Proposed owner: Pricing developer",
+      "roadmap": "B03, B05, B07, B17 | Acceptance: A10, A11",
+      "existing_finding": "F07",
+      "can_start_after": "BASE-03",
+      "integrate_after": "FIN-03, FIN-04, FIN-06, RANGE-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RANGE-04",
+      "title": "Separate transferred business from new BVP business",
+      "owner": "Pricing developer",
+      "target": "R2 | Proposed owner: Pricing developer",
+      "roadmap": "B03, B05, B07, B17 | Acceptance: A10, A11",
+      "existing_finding": "F07",
+      "can_start_after": "BASE-03",
+      "integrate_after": "RANGE-03",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RANGE-05",
+      "title": "Keep unsupported alternatives financially unresolved",
+      "owner": "Pricing developer",
+      "target": "R2 | Proposed owner: Pricing developer",
+      "roadmap": "B03, B05, B07, B17 | Acceptance: A10, A11",
+      "existing_finding": "F07",
+      "can_start_after": "BASE-03",
+      "integrate_after": "FIN-08, RANGE-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RANGE-06",
+      "title": "Support both price-up and price-down investigations",
+      "owner": "Pricing developer",
+      "target": "R2 | Proposed owner: Pricing developer",
+      "roadmap": "B03, B05, B07, B17 | Acceptance: A10, A11",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "FIN-05, FIN-08, MARKET-07, RANGE-03",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RANGE-07",
+      "title": "Use authentic, permitted product images with a clear fallback",
+      "owner": "Experience developer",
+      "target": "R2 | Proposed owner: Experience developer",
+      "roadmap": "B03, B05, B07, B17 | Acceptance: A10, A11",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "RANGE-01, RANGE-02",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RANGE-08",
+      "title": "Propagate relationship corrections without rewriting history",
+      "owner": "Experience developer",
+      "target": "R2 | Proposed owner: Experience developer",
+      "roadmap": "B03, B05, B07, B17 | Acceptance: A10, A11",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "RANGE-01, CASE-06",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "CONNECT-01",
+      "title": "Read IDS evidence through validated identities",
+      "owner": "Data developer",
+      "target": "R4 | Proposed owner: Data developer",
+      "roadmap": "B03, B04, B17 | Acceptance: A01, A03, A13",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-02, DATA-03, DATA-04",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "CONNECT-02",
+      "title": "Connect an IDS answer to a separate improvement action",
+      "owner": "Experience developer",
+      "target": "R4 | Proposed owner: Experience developer",
+      "roadmap": "B03, B04, B17 | Acceptance: A13, A15",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "CONNECT-01, CASE-02, CASE-03, CASE-06",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "CONNECT-03",
+      "title": "Add read-only PRISM context at its actual market level",
+      "owner": "Data developer",
+      "target": "R4 | Proposed owner: Data developer",
+      "roadmap": "B03, B04, B17 | Acceptance: A02, A03, A09, A10",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-01, DATA-02, DATA-04, UX-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "CONNECT-04",
+      "title": "Enforce service-demand and shared-applicability boundaries",
+      "owner": "Data developer",
+      "target": "R4 | Proposed owner: Data developer",
+      "roadmap": "B03, B04, B17 | Acceptance: A05, A10, A16",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "CONNECT-03, DATA-07, SAFE-04",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "CONNECT-05",
+      "title": "Create a dated availability question and response",
+      "owner": "Experience developer",
+      "target": "R4 | Proposed owner: Experience developer",
+      "roadmap": "B03, B04, B17 | Acceptance: A13, A19",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "CASE-02, CASE-03, UX-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "CONNECT-06",
+      "title": "Accept a small optional stock snapshot for a defined case",
+      "owner": "Experience developer",
+      "target": "R4 | Proposed owner: Experience developer",
+      "roadmap": "B03, B04, B17 | Acceptance: A04, A09, A15",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "CONNECT-05, DATA-01, DATA-04, SAFE-06",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "CONNECT-07",
+      "title": "Connect the existing tender feed to an owned investigation",
+      "owner": "Data developer",
+      "target": "R4 | Proposed owner: Data developer",
+      "roadmap": "B03, B04, B17 | Acceptance: A13, A14",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-01, CASE-02, CASE-03",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "CONNECT-08",
+      "title": "Enable each service only when it returns supported work",
+      "owner": "Experience developer",
+      "target": "R4 | Proposed owner: Experience developer",
+      "roadmap": "B03, B04, B17 | Acceptance: A12, A15, A20",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "UX-01, CASE-01, CONNECT-01, CONNECT-03, CONNECT-05, CONNECT-07",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "SAFE-01",
+      "title": "Connect approved identity with an explicit development-only mode",
+      "owner": "Workflow developer",
+      "target": "R3 | Proposed owner: Workflow developer",
+      "roadmap": "B08, B10, B13 | Acceptance: A16, A17",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "RUN-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "SAFE-02",
+      "title": "Enforce organisation, account and case permissions on the server",
+      "owner": "Workflow developer",
+      "target": "R3 | Proposed owner: Workflow developer",
+      "roadmap": "B08, B10, B13 | Acceptance: A16",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "SAFE-01, CASE-01, DATA-02",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "SAFE-03",
+      "title": "Exclude private fields before data reaches a participant",
+      "owner": "Workflow developer",
+      "target": "R3 | Proposed owner: Workflow developer",
+      "roadmap": "B08, B10, B13 | Acceptance: A16",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "SAFE-02",
+      "state": "technically verified",
+      "evidence": [
+        "Recipient outputs are built from an allowlist; the shipped builder also refuses a restricted figure typed into free text rather than writing it. ACCEPT-04 13/0, SAFE-05/08 16/0."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "SAFE-04",
+      "title": "Build separate internal and permitted recipient exports",
+      "owner": "Workflow developer",
+      "target": "R1 | Proposed owner: Workflow developer",
+      "roadmap": "B08, B10, B13 | Acceptance: A12, A16",
+      "existing_finding": "F08, F01",
+      "can_start_after": "BASE-03",
+      "integrate_after": "BASE-04",
+      "state": "technically verified",
+      "evidence": [
+        "A member brief carries no cost, margin or gross-profit field, asserted on produced bytes; the mutation proof holds."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "SAFE-05",
+      "title": "Test actual exported bytes and download paths",
+      "owner": "Verification reviewer",
+      "target": "R1 | Proposed owner: Verification reviewer",
+      "roadmap": "B08, B10, B13 | Acceptance: A16",
+      "existing_finding": "F08",
+      "can_start_after": "BASE-03",
+      "integrate_after": "SAFE-04",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "SAFE-06",
+      "title": "Protect attachments throughout upload, storage and access",
+      "owner": "Workflow developer",
+      "target": "R3 | Proposed owner: Workflow developer",
+      "roadmap": "B08, B10, B13 | Acceptance: A16, A17",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "SAFE-02, CASE-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "SAFE-07",
+      "title": "Implement role changes, departure and record-use decisions",
+      "owner": "Workflow developer",
+      "target": "R3 | Proposed owner: Workflow developer",
+      "roadmap": "B08, B10, B13 | Acceptance: A17",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "SAFE-02, SAFE-03, SAFE-06",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "SAFE-08",
+      "title": "Provide independent access and untrusted-content tests",
+      "owner": "Verification reviewer",
+      "target": "R3 | Proposed owner: Verification reviewer",
+      "roadmap": "B08, B10, B13 | Acceptance: A16, A17, A20",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "SAFE-02, SAFE-03, SAFE-05, SAFE-06, SAFE-07",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RUN-01",
+      "title": "Choose and prepare the smallest reusable shared backend",
+      "owner": "Workflow developer",
+      "target": "R2 | Proposed owner: Workflow developer",
+      "roadmap": "B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "BASE-04",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RUN-02",
+      "title": "Connect cases and scenarios to the maintained application",
+      "owner": "Workflow developer",
+      "target": "R2 | Proposed owner: Workflow developer",
+      "roadmap": "B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "RUN-01, CASE-01, CASE-07, UX-08, FIN-08",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RUN-03",
+      "title": "Run selected refresh jobs without duplication or partial state",
+      "owner": "Workflow developer",
+      "target": "R3 | Proposed owner: Workflow developer",
+      "roadmap": "B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-08, RUN-01",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RUN-04",
+      "title": "Separate configuration, secrets and restricted working files",
+      "owner": "Workflow developer",
+      "target": "R3 | Proposed owner: Workflow developer",
+      "roadmap": "B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "RUN-01, BASE-02",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RUN-05",
+      "title": "Show due actions without automatically sending messages",
+      "owner": "Workflow developer",
+      "target": "R3 | Proposed owner: Workflow developer",
+      "roadmap": "B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "CASE-03, CASE-08, SAFE-02",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RUN-06",
+      "title": "Record operational failures and useful-work measurements",
+      "owner": "Workflow developer",
+      "target": "R3 | Proposed owner: Workflow developer",
+      "roadmap": "B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "RUN-02, RUN-03, CASE-05",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RUN-07",
+      "title": "Back up and restore the full permitted working record",
+      "owner": "Workflow developer",
+      "target": "R3 | Proposed owner: Workflow developer",
+      "roadmap": "B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "RUN-02, SAFE-06, RUN-04",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "RUN-08",
+      "title": "Package an internal release and a recoverable deployment route",
+      "owner": "Workflow developer",
+      "target": "R2 | Proposed owner: Workflow developer",
+      "roadmap": "B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "BASE-07, UX-08",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ACCEPT-01",
+      "title": "Independently verify the corrected financial engine",
+      "owner": "Verification reviewer",
+      "target": "R1 | Proposed owner: Verification reviewer",
+      "roadmap": "B07, B09 | Acceptance: A11",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "BASE-05, FIN-08, RANGE-05",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ACCEPT-02",
+      "title": "Test the complete browser journey, not only isolated screens",
+      "owner": "Verification reviewer",
+      "target": "R1 | Proposed owner: Verification reviewer",
+      "roadmap": "B04, B06, B07, B08, B09 | Acceptance: A12, A19",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "BASE-05, BASE-06, UX-08",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ACCEPT-03",
+      "title": "Prove source conservation and correction behaviour",
+      "owner": "Verification reviewer",
+      "target": "R2 | Proposed owner: Verification reviewer",
+      "roadmap": "B02, B03, B11 | Acceptance: A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A14",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "DATA-08",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ACCEPT-04",
+      "title": "Examine the actual participant-facing release candidate",
+      "owner": "Verification reviewer",
+      "target": "R3 | Proposed owner: Verification reviewer",
+      "roadmap": "B08, B10, B12, B13 | Acceptance: A16, A17",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "SAFE-08, RUN-04, RUN-07",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ACCEPT-05",
+      "title": "Demonstrate a useful end-to-end internal decision",
+      "owner": "Verification reviewer",
+      "target": "R2 | Proposed owner: Verification reviewer",
+      "roadmap": "B05, B06, B07, B08, B09 | Acceptance: A09, A11, A12, A13, A14, A15, A19",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "ACCEPT-01, ACCEPT-02, REVIEW-08, RUN-02, CASE-05",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ACCEPT-06",
+      "title": "Prepare and observe the two different participant tasks",
+      "owner": "Verification reviewer",
+      "target": "R3 | Proposed owner: Verification reviewer",
+      "roadmap": "B14 | Acceptance: A03, A15, A19",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "ACCEPT-05, SAFE-05",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ACCEPT-07",
+      "title": "Prove a later exchange and review evidenced outcomes",
+      "owner": "Verification reviewer",
+      "target": "R4 | Proposed owner: Verification reviewer",
+      "roadmap": "B15 | Acceptance: A07, A20",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "ACCEPT-03, ACCEPT-06, RUN-03, CASE-05",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "ACCEPT-08",
+      "title": "Transfer operation and decide the next justified scope",
+      "owner": "Verification reviewer",
+      "target": "R4 | Proposed owner: Verification reviewer",
+      "roadmap": "B16, B18 | Acceptance: A18, A19, A20",
+      "existing_finding": "New implementation detail derived from the roadmap/papers.",
+      "can_start_after": "BASE-03",
+      "integrate_after": "RUN-07, RUN-08, ACCEPT-07",
+      "state": "not started",
+      "evidence": [],
+      "blockers": []
+    }
+  ]
+}

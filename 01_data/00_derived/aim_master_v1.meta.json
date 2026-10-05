@@ -1,0 +1,29 @@
+{
+  "generated": "2026-09-17T16:07:41.468394+00:00",
+  "built_by": "01_data/91_build/build_aim_master.py",
+  "governed_axis": "aim_l1 / aim_l2 / aim_l3  (AIM Category, sales-analysis taxonomy)",
+  "attribute_axis": "cat_l1 / cat_l2 / cat_l3  (price-list catalogue - attribute, never the axis)",
+  "notes": [
+    "AIM Category values are unchanged except Body Exterior -> Accident & Body.",
+    "Figure key is structural grouping only and must never imply competition.",
+    "AIM workbook is description-keyed; descriptions attached from billed text by euro."
+  ],
+  "rows": 165213,
+  "renames": {
+    "Body Exterior": "Accident & Body"
+  },
+  "coverage": {
+    "total_l12m_billed_eur": 52414407.82,
+    "with_aim_pct_eur": 80.74,
+    "with_catalogue_node_pct_eur": 90.7,
+    "pms_flagged_pct_eur": 53.2
+  },
+  "counts": {
+    "aim_l1_values": 21,
+    "aim_l2_values": 103,
+    "aim_l3_values": 195,
+    "rows_desc_ambiguous": 0,
+    "rows_with_fig_key": 164795,
+    "rows_not_classified_aim": 149087
+  }
+}

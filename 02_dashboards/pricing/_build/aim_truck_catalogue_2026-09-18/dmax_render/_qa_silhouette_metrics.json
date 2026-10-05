@@ -1,0 +1,45 @@
+{
+ "reference": {
+  "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\_truck_ref\\cut\\dmax_a.png",
+  "what": "isolated 2021 D-Max double cab on a flat light field, 1320x951",
+  "background_level": 243.0,
+  "segmentation": "flat-background threshold + hole fill + largest blob; exact"
+ },
+ "why_this_reference": "The photograph named in the original brief (dmax_spec_p8_0.jpeg) is a 483x297 px crop of a booklet page in which the vehicle merges with a dark setting and is clipped at the edge, so it cannot be segmented to a number. This cutout is the same model year and body style on a flat background and segments exactly.",
+ "method": "Both silhouettes are trimmed to the widest-row span to drop the contact shadow, stretched into the same box (which removes scale and aspect, so only the OUTLINE is compared), and scored for intersection over union plus the mean and p95 error of the top and bottom edges as a percentage of vehicle height. Both orientations are tried, because the reference is viewed from the opposite flank to the render.",
+ "hero_angle": {
+  "azimuth_deg": 80.0,
+  "elevation_deg": 18.0,
+  "orientation": "mirrored",
+  "intersection_over_union": 0.8366,
+  "symmetric_difference_pct_of_reference": 18.58,
+  "reference_only_pct": 4.87,
+  "render_only_pct": 13.71,
+  "top_edge_error_pct_of_height": {
+   "mean": 4.28,
+   "p95": 11.67
+  },
+  "bottom_edge_error_pct_of_height": {
+   "mean": 1.63,
+   "p95": 5.56
+  }
+ },
+ "previous_build": {
+  "method": "rim-cloud axle split, azimuth 82 deg measurement angle",
+  "intersection_over_union": 0.837,
+  "symmetric_difference_pct_of_reference": 18.27,
+  "top_edge_error_pct_of_height": {
+   "mean": 5.54,
+   "p95": 16.11
+  },
+  "bottom_edge_error_pct_of_height": {
+   "mean": 1.38,
+   "p95": 2.78
+  },
+  "hero_angle_azimuth_deg": 76,
+  "hero_angle_elevation_deg": 12,
+  "note": "hero was shot at 76/12; the 0.837 was scored at a separate measurement angle of 82/12"
+ },
+ "sweep": [],
+ "caveat": "This number measures SHAPE, not size: stretching both silhouettes into one box removes scale and aspect. A rear three-quarter view cannot score highly against a front three-quarter reference, and that is a limit of the reference, not evidence about the model."
+}

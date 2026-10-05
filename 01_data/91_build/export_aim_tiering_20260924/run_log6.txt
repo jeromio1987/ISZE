@@ -1,0 +1,113 @@
+==============================================================================
+A. THE WORKBOOK PATH AGAINST THE MASTER'S 21 FAMILIES
+  workbook rows: 164,380   overlapping the known master: 18,034
+  Level 2 Group                      keys=    25  one-family=     0 (  0.0%)  median top_share=0.585  part-level acc=0.5698
+  Level 3 Type                       keys=   167  one-family=    36 ( 21.6%)  median top_share=0.778  part-level acc=0.6939
+  full path L1>L2>L3                 keys=   167  one-family=    36 ( 21.6%)  median top_share=0.778  part-level acc=0.6939
+
+  Level 3 leaves that are ambiguous (top 30 by size):
+      Door                               n=  865 L1s=  3 | Accident & Body=863 | Chassis Frame=1 | Electrical=1
+      Review needed                      n=  753 L1s= 19 | Chassis Frame=135 | Accident & Body=106 | Electrical=89 | Brakes=68 | Engine=50
+      Harness / cable                    n=  480 L1s=  6 | Electrical=226 | Cabin Interior=139 | Accident & Body=87 | Chassis Frame=21 | Maintenance Service=6
+      Other gasket / seal                n=  448 L1s= 14 | Transmission=278 | Lubrication=47 | Engine=33 | Fuel System=24 | Chassis Frame=15
+      Bolt                               n=  416 L1s= 10 | Chassis Frame=359 | Wheels Hub=23 | Engine=9 | Electrical=8 | Steering=6
+      Oil seal / seal                    n=  405 L1s= 10 | Engine=228 | Accident & Body=105 | Wheels Hub=38 | Driveline Axle=13 | Suspension=7
+      Differential / axle                n=  402 L1s=  7 | Wheels Hub=177 | Driveline Axle=168 | Chassis Frame=37 | Electrical=12 | Steering=3
+      Interior trim                      n=  385 L1s=  8 | Cabin Interior=242 | Maintenance Service=90 | Chassis Frame=32 | Electrical=10 | Brakes=6
+      Linkage / lever                    n=  350 L1s= 10 | Cabin Interior=111 | Accident & Body=76 | Suspension=70 | Steering=47 | Engine=26
+      Aftertreatment                     n=  347 L1s= 12 | Chassis Frame=117 | Intake Exhaust Emission=112 | Electrical=53 | Accident & Body=28 | Transmission=12
+      Leaf / suspension spring           n=  338 L1s=  4 | Suspension=244 | Accident & Body=47 | Chassis Frame=45 | Driveline Axle=2
+      Bracket / stay                     n=  330 L1s=  4 | Chassis Frame=315 | Electrical=10 | Accident & Body=4 | Steering=1
+      Switch                             n=  306 L1s=  3 | Electrical=297 | Accident & Body=8 | Steering=1
+      Bumper                             n=  306 L1s=  2 | Accident & Body=305 | Chassis Frame=1
+      Headlamp                           n=  296 L1s=  2 | Electrical=157 | Accident & Body=139
+      Sensor                             n=  253 L1s=  6 | Electrical=154 | Wheels Hub=44 | Chassis Frame=34 | Intake Exhaust Emission=13 | Engine=4
+      Step / guard                       n=  240 L1s=  2 | Accident & Body=128 | Chassis Frame=112
+      Coolant hose / pipe                n=  237 L1s=  6 | Cooling=194 | Lubrication=31 | Fuel System=9 | Electrical=1 | Steering=1
+      Control unit                       n=  228 L1s=  2 | Electrical=227 | Maintenance Service=1
+      Trim / molding                     n=  220 L1s=  4 | Wheels Hub=171 | Cabin Interior=31 | Accident & Body=17 | Chassis Frame=1
+      Mirror assembly                    n=  218 L1s=  2 | Accident & Body=214 | Electrical=4
+      Fuel hose / pipe                   n=  211 L1s=  3 | Fuel System=206 | Chassis Frame=4 | Electrical=1
+      Other body                         n=  210 L1s=  8 | Accident & Body=119 | Chassis Frame=33 | Electrical=22 | Logistics Packaging=16 | Engine=15
+      Pin                                n=  206 L1s= 11 | Driveline Axle=78 | Steering=40 | Engine=23 | Brakes=18 | Chassis Frame=14
+      Meter / gauge                      n=  205 L1s=  7 | Electrical=92 | Tools Equipment=71 | Suspension=17 | Accident & Body=14 | Transmission=6
+      Heater core / heater               n=  198 L1s=  9 | Cooling=75 | Cabin Interior=53 | Electrical=29 | Intake Exhaust Emission=27 | Chassis Frame=6
+      Shift linkage / cable              n=  188 L1s=  9 | Cabin Interior=142 | Electrical=14 | Transmission=13 | Steering=8 | Chassis Frame=7
+      EGR component                      n=  188 L1s=  3 | Intake Exhaust Emission=186 | Transmission=1 | Steering=1
+      Other air system                   n=  186 L1s= 14 | Accident & Body=44 | Fluids Chemicals=31 | Cabin Interior=30 | Electrical=16 | Transmission=15
+      Tail / combination lamp            n=  185 L1s=  2 | Accident & Body=110 | Electrical=75
+
+==============================================================================
+B. QUEUE COVERAGE VIA WORKBOOK
+  queue rows                    : 1,311
+  covered by the workbook       : 1,190
+  not covered                   : 121
+
+  of the covered queue rows, how many sit on a Level 3 leaf that is decisive:
+    decisive leaf (one family on the master evidence) : 43
+    ambiguous leaf                                    : 1,147
+    PR00 EUR on a decisive leaf                       : 17,913.17
+    PR00 EUR on an ambiguous leaf                     : 205,314.44
+
+  the decisive Level 3 leaves used by the queue, with the family they imply:
+    distinct decisive leaves on the queue: 18
+      Fog lamp                         -> Electrical               rows=  3 EUR=   6,046.28 master_parts=118
+      Cylinder head                    -> Engine                   rows=  2 EUR=   4,650.58 master_parts=21
+      Turbocharger                     -> Intake Exhaust Emission  rows=  1 EUR=   4,475.48 master_parts=67
+      Fender                           -> Accident & Body          rows=  3 EUR=     642.72 master_parts=93
+      Gasket set                       -> Transmission             rows=  3 EUR=     544.45 master_parts=111
+      Common rail                      -> Fuel System              rows=  1 EUR=     531.70 master_parts=7
+      Panel                            -> Accident & Body          rows=  8 EUR=     205.93 master_parts=491
+      Clutch booster                   -> Clutch                   rows=  2 EUR=     198.80 master_parts=6
+      A/C hose / pipe                  -> Cabin Interior           rows=  5 EUR=     141.68 master_parts=1
+      Clutch kit                       -> Clutch                   rows=  3 EUR=     102.48 master_parts=7
+      Wheel cylinder                   -> Wheels Hub               rows=  1 EUR=      84.60 master_parts=137
+      Thermostat                       -> Cooling                  rows=  2 EUR=      68.78 master_parts=56
+      Bushing / mount                  -> Suspension               rows=  1 EUR=      57.92 master_parts=14
+      Pressure plate / cover           -> Clutch                   rows=  2 EUR=      52.20 master_parts=48
+      Grille                           -> Accident & Body          rows=  3 EUR=      49.00 master_parts=228
+      Cylinder head gasket             -> Transmission             rows=  1 EUR=      41.86 master_parts=64
+      Engine bearing                   -> Engine                   rows=  1 EUR=      12.23 master_parts=56
+      Transmission bearing / seal      -> Lubrication              rows=  1 EUR=       6.48 master_parts=2
+
+  the ambiguous leaves the queue lands on:
+      ABS component                  modal=Brakes               rows= 11 EUR= 19,075.36 | {'Brakes': 66, 'Chassis Frame': 55, 'Suspension': 17, 'Electrical': 12}
+      Review needed                  modal=Chassis Frame        rows=117 EUR= 18,567.43 | {'Chassis Frame': 135, 'Accident & Body': 106, 'Electrical': 89, 'Brakes': 68}
+      Interior trim                  modal=Cabin Interior       rows= 33 EUR= 14,786.16 | {'Cabin Interior': 242, 'Maintenance Service': 90, 'Chassis Frame': 32, 'Electrical': 10}
+      Gearbox case / housing         modal=Chassis Frame        rows= 14 EUR= 12,779.03 | {'Chassis Frame': 11, 'Lubrication': 9, 'Transmission': 1}
+      Rubber / grommet               modal=Suspension           rows= 53 EUR=  8,840.59 | {'Suspension': 78, 'Engine': 52, 'Chassis Frame': 27, 'Accident & Body': 9}
+      Other steering                 modal=Electrical           rows= 28 EUR=  5,702.76 | {'Electrical': 27, 'Chassis Frame': 25, 'Accident & Body': 19, 'Steering': 18}
+      Other brake                    modal=Cabin Interior       rows= 33 EUR=  5,671.53 | {'Cabin Interior': 39, 'Brakes': 29, 'Steering': 24, 'Chassis Frame': 21}
+      Case / housing / coupling      modal=Wheels Hub           rows= 32 EUR=  5,393.21 | {'Wheels Hub': 8, 'Transmission': 8, 'Fuel System': 4, 'Engine': 2}
+      Transmission assembly          modal=Literature Marketing rows=  1 EUR=  5,327.64 | {'Literature Marketing': 35, 'Transmission': 2}
+      Control unit                   modal=Electrical           rows=  6 EUR=  4,900.27 | {'Electrical': 227, 'Maintenance Service': 1}
+      Clutch disc                    modal=Clutch               rows=  1 EUR=  4,820.55 | {'Clutch': 42, 'Brakes': 6}
+      Differential / axle            modal=Wheels Hub           rows= 13 EUR=  4,323.41 | {'Wheels Hub': 177, 'Driveline Axle': 168, 'Chassis Frame': 37, 'Electrical': 12}
+      Leaf / suspension spring       modal=Suspension           rows= 14 EUR=  4,165.79 | {'Suspension': 244, 'Accident & Body': 47, 'Chassis Frame': 45, 'Driveline Axle': 2}
+      Harness / cable                modal=Electrical           rows= 17 EUR=  4,008.36 | {'Electrical': 226, 'Cabin Interior': 139, 'Accident & Body': 87, 'Chassis Frame': 21}
+      Linkage / lever                modal=Cabin Interior       rows= 38 EUR=  3,847.14 | {'Cabin Interior': 111, 'Accident & Body': 76, 'Suspension': 70, 'Steering': 47}
+      Step / guard                   modal=Accident & Body      rows= 17 EUR=  3,767.87 | {'Accident & Body': 128, 'Chassis Frame': 112}
+      Other fuel system              modal=Fuel System          rows= 14 EUR=  3,640.33 | {'Fuel System': 18, 'Cabin Interior': 18, 'Accident & Body': 7, 'Logistics Packaging': 2}
+      Heater core / heater           modal=Cooling              rows= 26 EUR=  3,249.13 | {'Cooling': 75, 'Cabin Interior': 53, 'Electrical': 29, 'Intake Exhaust Emission': 27}
+      Pin                            modal=Driveline Axle       rows= 22 EUR=  2,564.49 | {'Driveline Axle': 78, 'Steering': 40, 'Engine': 23, 'Brakes': 18}
+      Air dryer                      modal=Chassis Frame        rows=  3 EUR=  2,540.05 | {'Chassis Frame': 5, 'Brakes': 3, 'Engine': 2, 'Electrical': 2}
+      Cooler / intercooler           modal=Lubrication          rows=  9 EUR=  2,537.14 | {'Lubrication': 27, 'Cooling': 13, 'Transmission': 12, 'Chassis Frame': 6}
+      Other clutch                   modal=Wheels Hub           rows= 27 EUR=  2,507.36 | {'Wheels Hub': 28, 'Transmission': 18, 'Clutch': 16, 'Suspension': 15}
+      A/C compressor                 modal=Cooling              rows=  3 EUR=  2,494.94 | {'Cooling': 10, 'Cabin Interior': 1, 'Electrical': 1}
+      Spacer / retainer              modal=Transmission         rows= 43 EUR=  2,294.08 | {'Transmission': 68, 'Chassis Frame': 14, 'Fuel System': 7, 'Wheels Hub': 5}
+      Body structure                 modal=Chassis Frame        rows= 11 EUR=  2,285.49 | {'Chassis Frame': 70, 'Electrical': 2, 'Brakes': 2}
+      Other air system               modal=Accident & Body      rows= 14 EUR=  2,241.03 | {'Accident & Body': 44, 'Fluids Chemicals': 31, 'Cabin Interior': 30, 'Electrical': 16}
+      Gear set / gear                modal=Transmission         rows=  1 EUR=  2,134.16 | {'Transmission': 72, 'Driveline Axle': 7, 'Chassis Frame': 7}
+      Other transmission             modal=Fluids Chemicals     rows=  2 EUR=  2,127.14 | {'Fluids Chemicals': 63, 'Driveline Axle': 47, 'Electrical': 34, 'Chassis Frame': 9}
+      Trim / molding                 modal=Wheels Hub           rows= 27 EUR=  2,113.59 | {'Wheels Hub': 171, 'Cabin Interior': 31, 'Accident & Body': 17, 'Chassis Frame': 1}
+      Starter motor                  modal=Electrical           rows=  4 EUR=  2,007.38 | {'Electrical': 36, 'Cabin Interior': 31, 'Chassis Frame': 2, 'Driveline Axle': 1}
+      Steering gear / unit           modal=Steering             rows= 18 EUR=  1,959.44 | {'Steering': 44, 'Chassis Frame': 15, 'Engine': 3, 'Transmission': 2}
+      Blower / fan                   modal=Electrical           rows= 14 EUR=  1,885.84 | {'Electrical': 28, 'Cabin Interior': 19, 'Brakes': 4, 'Chassis Frame': 1}
+      Aftertreatment                 modal=Chassis Frame        rows= 22 EUR=  1,778.25 | {'Chassis Frame': 117, 'Intake Exhaust Emission': 112, 'Electrical': 53, 'Accident & Body': 28}
+      Other body                     modal=Accident & Body      rows= 23 EUR=  1,478.20 | {'Accident & Body': 119, 'Chassis Frame': 33, 'Electrical': 22, 'Logistics Packaging': 16}
+      Turbo gasket / kit             modal=Intake Exhaust Emiss rows=  1 EUR=  1,391.65 | {'Intake Exhaust Emission': 36, 'Transmission': 1}
+      Bumper                         modal=Accident & Body      rows=  3 EUR=  1,390.46 | {'Accident & Body': 305, 'Chassis Frame': 1}
+      Door                           modal=Accident & Body      rows= 10 EUR=  1,387.78 | {'Accident & Body': 863, 'Chassis Frame': 1, 'Electrical': 1}
+      Sensor                         modal=Electrical           rows= 13 EUR=  1,377.94 | {'Electrical': 154, 'Wheels Hub': 44, 'Chassis Frame': 34, 'Intake Exhaust Emission': 13}
+      Shaft                          modal=Transmission         rows= 14 EUR=  1,329.96 | {'Transmission': 119, 'Driveline Axle': 22, 'Engine': 14, 'Electrical': 2}
+      Parking brake component        modal=Cabin Interior       rows=  5 EUR=  1,298.71 | {'Cabin Interior': 84, 'Electrical': 12, 'Wheels Hub': 9, 'Chassis Frame': 4}

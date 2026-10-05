@@ -1,0 +1,56 @@
+{
+  "artifact": "02_dashboards/hub/ISZE_UNIVERSE_MAP.html",
+  "artifact_abs": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\hub\\ISZE_UNIVERSE_MAP.html",
+  "built_by": "02_dashboards/_build/build_universe_map.py",
+  "built_at_local": "2026-09-24 20:46",
+  "ok": true,
+  "schema": "v2",
+  "purpose": "One plain-language map of the whole Isuzu Universe: what connects to what, what is built, what is still on paper. Built for a non-technical reader.",
+  "data_sources_read_at_build": [
+    "01_data/00_derived/metrics_snapshot.json (parts base, verify counts)",
+    "01_data/00_derived/wallet_waterfall.csv (CY2025 ceiling, capture, 18 markets)",
+    "01_data/14_dashboards/tender_data.json (619 opportunities, R&M counts, outcomes)",
+    "04_tools/aftermarket_intelligence/state/CROSSREF_GRAPH_REPORT.md (131 of 16511, EUR 5.64M)",
+    "04_tools/aftermarket_intelligence/state/RATIO_MODEL_REPORT.md (model 46% vs flat 48%)",
+    "04_tools/autodoc_scraper/refresh_and_check_drift.py (2 live sources)",
+    "01_data/00_derived/aim_master_v2.csv (165,290 rows)",
+    "Windows task list via schtasks (Tender Monitor, PriceLedger)",
+    "Isuzu Universe/01_Strategy/ISUZU_UNIVERSE_3_0_2026-09-23.md (five tools, six-stage sequence, funding, stop condition)"
+  ],
+  "static_checks": {
+    "tiles_rendered": 6,
+    "tile_values": ["EUR 117.6M", "EUR 54.4M", "56.5%", "165,290", "131 of 16,511", "619"],
+    "stage_cards": 6,
+    "tool_cards": 5,
+    "example_cards": 3,
+    "sequence_steps": 6,
+    "next_cards": 6,
+    "table_rows": 21,
+    "status_chips": {"ok": 4, "warn": 7, "todo": 3},
+    "nan_literal": false,
+    "fetch_calls": 0,
+    "cdn_refs": 0,
+    "missing_source_banner": false,
+    "scheduled_task_rows_correct": true
+  },
+  "visual_checks": {
+    "engine": "headless Chrome, file:// open, no server",
+    "screenshots_taken": 8,
+    "screenshots_read": 8,
+    "read_by": "the agent that built it",
+    "band_detail": "6 full-height bands (band1..band6) + 2 pass-1 captures, each image-read at full size",
+    "blank_panels": 0,
+    "clipped_text": 0,
+    "white_on_pale_headers": 0
+  },
+  "launcher": {
+    "path": "02_dashboards/hub/OPEN_ISZE_UNIVERSE_MAP.cmd",
+    "line_ending": "CRLF",
+    "user_open": "cmd-only (not auto-started)"
+  },
+  "not_done": [
+    "Not added to the OS Hub or the deploy mirror. Linking it in is a separate, explicit decision.",
+    "No scheduled task created. No file outside the two written paths was touched.",
+    "Nothing published, nothing mailed."
+  ]
+}

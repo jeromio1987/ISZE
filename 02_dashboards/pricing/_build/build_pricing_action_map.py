@@ -33,6 +33,23 @@ STREET = 1.40 * 1.275  # = 1.785
 YEAR = 2025
 RAISE_SCENARIO = 0.05  # +5% list scenario, labelled as scenario in UI
 
+# ---------------------------------------------------------------------------
+# Mekonomen RETIRED 2026-09-24 (Jerome's go, card 0.4/C3) — see mekonomen_filtered().
+# The seven PNs below were all false: the site's part-number search echoes the query
+# and serves an unrelated in-stock item. Re-enable only with a real product page
+# showing the part number and a price together.
+# ---------------------------------------------------------------------------
+MEKONOMEN_RETIRED = True
+MEKONOMEN_FALSE_PNS = frozenset({
+    "8975056801",  # PAD KIT; CALIPER,DISC BRK,FRT -> returned a Kilen coil spring, 957 SEK
+    "8983373180",  # SENSOR ASM; DEF TANK
+    "8982932120",  # DRIVE ASM; FINAL,RR
+    "8982924321",  # SENSOR; SPD,FRT WHEEL
+    "8983937793",  # SUPPORT; RR BUMPER
+    "8983288004",  # LAMP ASM; RR COMB
+    "8982606011",  # DOOR ASM; FRT,WO/TRIM
+})
+
 CAT_LABEL = {
     "oil_filter": "Oil filter", "fuel_filter": "Fuel filter", "air_filter": "Air filter",
     "blower_filter": "Cabin/blower filter", "urea_filter": "Urea filter",
@@ -123,7 +140,22 @@ def coarse_scrapers() -> pd.DataFrame:
 
 
 def mekonomen_filtered() -> pd.DataFrame:
+    """RETIRED 2026-09-24 — Mekonomen's part-number search returns unrelated items.
+
+    Asking for 8975056801 "PAD KIT; CALIPER,DISC BRK,FRT" returned a Kilen coil spring
+    at 957 SEK; every part number returned exactly one unrelated item on every snapshot
+    from 2026-07-09 to 2026-09-22. All seven rows were false. The earlier artifact guard
+    below (identical price on >=3 unrelated PNs) did NOT catch them, because each one
+    carried a different price — so it is not a usable guard for this failure.
+
+    Returns an empty frame. The seven PNs are named so they can never re-enter, and the
+    scraper is out of the weekly run (see autodoc_scraper/refresh_and_check_drift.py).
+    """
+    if MEKONOMEN_RETIRED:
+        print("  Mekonomen: RETIRED — source not read; no price evidence from it")
+        return pd.DataFrame(columns=["PN", "suspect"])
     mek = pd.read_csv(SCRAPE / "mekonomen_results.csv", dtype={"PN": str})
+    mek = mek[~mek["PN"].isin(MEKONOMEN_FALSE_PNS)]
     hit = mek.dropna(subset=["MEK_AM_MinPrice_SEK"]).copy()
     # page-artifact guard: identical min price on >=3 unrelated PNs = search-page chrome, not a part price
     counts = hit.MEK_AM_MinPrice_SEK.value_counts()
@@ -186,6 +218,42 @@ def main() -> None:
     top_eucon = eu_pn.dropna(subset=["Avg_Competitor_EUR"]).nlargest(15, "rev_eur")[
         ["pn", "description", "pms_category", "rev_eur", "ISZE_IE40_Price_EUR",
          "street_eur", "Avg_Competitor_EUR", "street_delta_pct", "Brands_Found"]]
+
+    # Full 44-PN grain (Jerome's go, 2026-09-25): the page's primary "street price
+    # reality check" display re-ranks to individual part numbers instead of stopping
+    # at the top-15-by-revenue subset above (eucon_top, kept as-is for whatever else
+    # reads it). Every column here is a straight read of eucon_price_gap.csv (plus the
+    # same street_eur/street_delta_pct math already used above) -- no new figures.
+    CROSSREF_NOTE = "Not in PMS crossref"
+    all_pn = eu_pn.copy()
+    all_pn["label"] = all_pn["pms_category"].map(lambda c: CAT_LABEL.get(c, c) if pd.notna(c) else None)
+    all_pn["label"] = all_pn["label"].fillna(CROSSREF_NOTE)
+    all_pn = all_pn.sort_values("rev_eur", ascending=False).reset_index(drop=True)
+    all_pn.insert(0, "rank", all_pn.index + 1)
+    # Margin-if-matched-to-competitor (Jerome's go, 2026-09-25): competitor_price_panel.csv
+    # carries gm_if_matched_pct per PN -- the GM% ISZE would have if it matched the
+    # competitor price in THAT file (a separate KS/AIM-based competitor read, not the
+    # Eucon panel above, and its cost_est is 50% of list, a book average, not an actual
+    # purchase cost -- see competitor_price_panel_meta.json). Only 8 of these 44 PNs are
+    # also in that file; joined here, blank (None) everywhere else -- never estimated.
+    cpp_path = DERIVED / "competitor_price_panel.csv"
+    cpp = pd.read_csv(cpp_path, dtype={"pn": str})
+    cpp["pn"] = cpp["pn"].astype(str)
+    all_pn = all_pn.merge(
+        cpp[["pn", "iam", "cost_est", "gm_if_matched_pct"]].rename(
+            columns={"iam": "cpp_iam_eur", "cost_est": "cpp_cost_est_eur"}),
+        on="pn", how="left")
+
+    eucon_all_cols = ["rank", "pn", "description", "subgroup", "pms_category", "label",
+                       "rev_eur", "qty", "ISZE_IE40_Price_EUR", "street_eur",
+                       "Min_Competitor_EUR", "Avg_Competitor_EUR", "Max_Competitor_EUR",
+                       "street_delta_pct", "Avg_Delta_pct", "Competitor_Count",
+                       "Brands_Found", "Countries_Found", "gp_pct", "gp_at_risk_eur",
+                       "contested", "isze_exposed",
+                       "cpp_iam_eur", "cpp_cost_est_eur", "gm_if_matched_pct"]
+    eucon_all = all_pn[eucon_all_cols].round(4).to_dict("records")
+    n_margin_matched = int(all_pn["gm_if_matched_pct"].notna().sum())
+
     mek_clean = mek[~mek.suspect]
 
     # DB-level context: AIM competitive exposure + Eucon street-undercut + captive base
@@ -213,7 +281,11 @@ def main() -> None:
                 "ks": f"KS International UK, scraped {ks_date}"
                       + (" (stale flag)" if ks_date < "2026-07-01" else ""),
                 "coarse": "Tranzparts/TMC (UK), Auto365 (IL), scraped 2026-07-13",
-                "mekonomen": "Mekonomen SE scraped 2026-07-13 — artifact-filtered",
+                "mekonomen": "RETIRED 2026-09-24 — search returned unrelated items; no price evidence used",
+                "competitor_price_panel": "competitor_price_panel.csv (43 PNs, separate KS/AIM-based "
+                    "competitor read) -- gm_if_matched_pct joined onto the 8 PNs it shares with the "
+                    "44-PN Eucon list; cost_est in that file is 50% of list (book average), not an "
+                    "actual purchase cost",
             },
         },
         "cells": rows,
@@ -221,10 +293,11 @@ def main() -> None:
         "price_evidence": price_ev,
         "coarse_street": coarse.to_dict("records"),
         "eucon_top": top_eucon.round(2).to_dict("records"),
+        "eucon_all": eucon_all,
         "mekonomen": {
-            "clean": mek_clean[["PN", "Description", "PR00_EUR", "Rev_CY2025_EUR",
-                                "MEK_AM_MinPrice_SEK"]].to_dict("records"),
-            "suspect_n": int(mek.suspect.sum()),
+            "retired": True,
+            "clean": [],   # no row is usable — every one of the seven was a false match
+            "suspect_n": 0,
         },
     }
     def denan(o):
@@ -241,6 +314,7 @@ def main() -> None:
     tot_head = sum(r["headroom"] for r in rows)
     tot_risk = sum(r["at_risk"] for r in rows)
     print(f"cells={len(rows)}  headroom(+5% scenario)=EUR {tot_head:,.0f}  at-risk gap=EUR {tot_risk:,.0f}")
+    print(f"eucon_all={len(eucon_all)} PNs (full grain)  margin-if-matched populated on {n_margin_matched} of them")
     print(m.groupby("zone").agg(n=("distributor_code", "count"),
                                 headroom=("headroom_eur", "sum"),
                                 at_risk=("at_risk_eur", "sum")))

@@ -3,7 +3,7 @@
 Three validity windows (European dates) × PR00 + ZPR1.
 Parts_To_Pull = one row per Spec C4 missing PN with Y/N pull flags per window.
 
-Mode A. Uses derived parquet/CSV only (never raw sales XLSX).
+shared. Uses derived parquet/CSV only (never raw sales XLSX).
 """
 from __future__ import annotations
 
@@ -363,7 +363,7 @@ def main() -> None:
     ws["A1"].font = title_font
     ws.merge_cells("A1:N1")
     ws["A2"] = (
-        f"Mode A | {stats['ranked_pn_count']} PNs | EUR {stats['ranked_eur']:,.0f} CY2025 billed without usable current PR00. "
+        f"shared | {stats['ranked_pn_count']} PNs | EUR {stats['ranked_eur']:,.0f} CY2025 billed without usable current PR00. "
         "Instruction: for each column Pull_* = Y, export that PN price where Valid From/To overlaps the matching window "
         "(see Pull_Windows). Window_2025 = all rows Y (P0). Window_2023/2024 = Y only if year-matched gap OR EUR>=10k. "
         "Both PR00 and ZPR1 when Y."
@@ -430,7 +430,7 @@ def main() -> None:
     ws0["A1"].font = title_font
     ws0.merge_cells("A1:H1")
     ws0["A2"] = (
-        "Mode A | Built 2026-08-12 | European dates DD/MM/YYYY. "
+        "shared | Built 2026-08-12 | European dates DD/MM/YYYY. "
         "For each window, export BOTH network list (PR00 / IE40) and customer conditions (ZPR1). "
         "Export every condition row whose Valid From-Valid To overlaps the window. "
         "Parts list = sheet Parts_To_Pull (Y = pull that PN in that window)."

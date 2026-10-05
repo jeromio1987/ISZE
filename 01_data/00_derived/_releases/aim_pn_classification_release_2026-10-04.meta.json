@@ -1,0 +1,822 @@
+{
+  "generated": "2026-10-04T05:19:21+00:00",
+  "built_by": "01_data/91_build/build_aim_classification_release_20261004.py",
+  "release_id": "2026-10-04",
+  "release_id_note": "2026-10-04 is not taken in RELEASES.json, so the date alone is the id (register rule: date; a hyphen suffix only if the date is taken). No version label.",
+  "status_at_build": "PENDING_APPROVAL (Jerome approves; this script never sets APPROVED)",
+  "decisions_2026_10_04": {
+    "1_missing_billed_parts": "the 24 High-confidence parts of next_release_proposal_missing_billed_2026-10-02.csv added, with that file's catalogue and AIM labels; Medium (15) and Low (17) not added; unbilled 8974923852 not added",
+    "2_engine_gasket_sets": "GASKET SET; ENG ... AIM family Transmission > Bearings & Seals > Gasket -> Engine > Gasket & Sealing > Gasket; GASKET SET; TRANS OVERHAUL not touched; catalogue unchanged",
+    "3_evrv_valves": "VALVE; EVRV AIM family -> Intake Exhaust Emission > EGR > EGR Component; catalogue unchanged",
+    "4_antennas": "ANTENNA, ANTENNA ASM, ROD; ANTENNA, ANTENNA; GPS, ANTENNA; KEYLESS ENTRY: Instrument Cluster / Unknown / blank -> Electrical > Audio > Radio; a part with another label keeps it",
+    "5_cameras_catalogue_only": "CAMERA parts on Engine parts > Other engine -> Repair parts > Electrical sensors > Other electrical; AIM family untouched; HARNESS; CAMERA and the AEBS aiming targets not moved",
+    "6_def_injectors": "INJECTOR ASM; DEF DCM (3) + CONNECTOR KIT; COOLANT,INJECTOR ASM DEF + GASKET; INJECTOR ASM,DEF DCM -> NEW AIM label Intake Exhaust Emission > DEF System > DEF Injector (Jerome approved this one new label); catalogue stays Injectors > Injector",
+    "7_not_changed": "PCV element kits 8981065790 / 8980023462, radiator skid plates 8983941570 / 8983941544, rear modulator 8982154541, their siblings, and every other row"
+  },
+  "purpose": "Two-axes lock 2026-09-17: Axis A = catalog_l1/l2/l3 identity (the catalogue tree of the approved 2026-09-20 release); Axis B = commercial score beside Axis A, not built as scored columns here and never the parent of the identity tree. aim_l*_fixed is the governed AIM family label. legacy workbook_l* is context only. Do not invent a fourth layer.",
+  "rows": 164943,
+  "sha256": "8aad884f49db1a49ab86faca571942d912196ce08f7734f38d5a04f035e18896",
+  "base_release": {
+    "release_id": "2026-10-02-chassis-frame",
+    "file": "aim_pn_classification_release_2026-10-02-chassis-frame.csv",
+    "sha256": "9bb86a9b4d89c5954cd6dd15fdc977db44e66cddaa15e3e70bd0285e3bf3e65b",
+    "rows": 164919
+  },
+  "sources": {
+    "missing_billed_proposal": {
+      "file": "next_release_proposal_missing_billed_2026-10-02.csv",
+      "sha256": "c451c1318d2d415cfc2cf5c8c98c2cb1e4284fcbdf6dd07aaee909c6230e342e"
+    },
+    "jp_codes": {
+      "file": "jp_codes_cache_20260920.csv",
+      "sha256": "2277fa0363861decdcffeb57913db1e4b1903c1e96d713bd420938771630fad5"
+    },
+    "master": {
+      "file": "aim_master_v2.csv",
+      "sha256": "8add555669baf1f75b3bb2d203d58960fff7596b26ec5d8645d7ffee45604acf"
+    },
+    "sales_fact": {
+      "file": "sales_fact.parquet",
+      "sha256": "66db408990e20396dedc2ce9ce840b43d7c3dbb8c0263bff94ea8db77f0aedd2"
+    },
+    "euro": "sales_fact.parquet net_sales_value 2025-09-01..2026-08-31, all sold-to, 10-digit padded key (same window as APPROVAL_SUMMARY_2026-10-02-candidate); total parts billed in that window EUR 35,212,239.65. The release column l12m_billed_eur is a different window (2025-01-01..2026-06-30); the figures in Jerome's brief (camera EUR 125,967, DEF injectors EUR 267,132, EVRV 44k) are that column.",
+    "description_rule": "a part's description = release description_norm, else the description in jp_codes_cache_20260920.csv (137,702 release rows have no release description); a part changes only if it carries the label Jerome named as wrong"
+  },
+  "changes_vs_base": {
+    "rows_added": [
+      "7553266960",
+      "5876102381",
+      "1812004173",
+      "7552961740",
+      "8976547872",
+      "7552481570",
+      "7551993781",
+      "8975437940",
+      "7552319721",
+      "8975830430",
+      "8974923851",
+      "8976765330",
+      "7475007370",
+      "7552750070",
+      "7552927230",
+      "8978343810",
+      "8983456700",
+      "7475056720",
+      "8942720796",
+      "8983938054",
+      "8983938064",
+      "7475392910",
+      "7552923220",
+      "8978342570"
+    ],
+    "parts_touched": 421,
+    "parts_by_group": {
+      "D2_engine_gasket_sets": 209,
+      "D3_evrv_valves": 10,
+      "D4_antennas": 92,
+      "D5_cameras_catalogue": 81,
+      "D6_def_injectors": 5,
+      "D1_missing_billed_added": 24
+    },
+    "eur_sep25_aug26_by_group": {
+      "D2_engine_gasket_sets": 54374.5,
+      "D3_evrv_valves": 31855.82,
+      "D4_antennas": 23502.84,
+      "D5_cameras_catalogue": 78132.39,
+      "D6_def_injectors": 191495.9,
+      "D1_missing_billed_added": 24789.31
+    },
+    "eur_sep25_aug26_total": 404150.76,
+    "change_log": "aim_pn_classification_release_2026-10-04.changes.csv",
+    "change_log_rows": 1300,
+    "review": {
+      "gasket_sets": {
+        "engine_sets_changed": 209,
+        "engine_sets_changed_by_description": {
+          "GASKET SET; ENG OVERHAUL": 112,
+          "GASKET SET; ENG HD OVERHAUL": 91,
+          "GASKET SET;ENG OVERHAUL": 2,
+          "GASKET SET; ENG": 2,
+          "GASKET SET; ENG HEAD OVERHAUL": 1,
+          "GASKET SET;ENG HEAD OVERHAUL": 1
+        },
+        "engine_sets_changed_description_from_japanese_file": 2,
+        "engine_sets_no_aim_family_not_touched": 5978,
+        "engine_sets_no_aim_family_billed_eur_sep25_aug26": 585.78,
+        "engine_sets_no_aim_family_billed_parts": 3,
+        "other_gasket_sets_left_on_transmission_label": {
+          "GASKET SET; TRANS OVERHAUL": 17,
+          "GASKET SET; CARB": 2
+        }
+      },
+      "evrv": {
+        "parts": 10,
+        "by_label_before": {
+          " >  > ": 2,
+          "Steering > Control & Sensors > Valve": 7,
+          "Intake Exhaust Emission > Emission Control > Catalyst": 1
+        },
+        "description_from_japanese_file": 3
+      },
+      "antennas": {
+        "parts_changed": 92,
+        "by_kind_changed": {
+          "antenna": 82,
+          "gps": 7,
+          "keyless": 3
+        },
+        "by_label_before": {
+          " >  > ": 55,
+          "Unknown > Unknown > Unknown": 16,
+          "Electrical > Instruments > Instrument Cluster": 21
+        },
+        "changed_description_from_japanese_file": 55,
+        "already_radio_unchanged": 1,
+        "kept_existing_label": [
+          {
+            "part_number": "8980763330",
+            "description": "ANTENNA; KEYLESS ENTRY",
+            "description_source": "release",
+            "aim_before": "Electrical > Switch Relay Fuse > Switch",
+            "aim_after": "Electrical > Switch Relay Fuse > Switch",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 0.0
+          },
+          {
+            "part_number": "8981335712",
+            "description": "ANTENNA; KEYLESS ENTRY",
+            "description_source": "release",
+            "aim_before": "Electrical > Switch Relay Fuse > Switch",
+            "aim_after": "Electrical > Switch Relay Fuse > Switch",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 38.6
+          }
+        ],
+        "gps_and_keyless_changed": [
+          {
+            "part_number": "8972651462",
+            "description": "ANTENNA; GPS",
+            "description_source": "release",
+            "aim_before": "Electrical > Instruments > Instrument Cluster",
+            "aim_after": "Electrical > Audio > Radio",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 151.81
+          },
+          {
+            "part_number": "8980763321",
+            "description": "ANTENNA; KEYLESS ENTRY",
+            "description_source": "release",
+            "aim_before": "Unknown > Unknown > Unknown",
+            "aim_after": "Electrical > Audio > Radio",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 0.0
+          },
+          {
+            "part_number": "8981905250",
+            "description": "ANTENNA; KEYLES",
+            "description_source": "japanese code file",
+            "aim_before": " >  > ",
+            "aim_after": "Electrical > Audio > Radio",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 0.0
+          },
+          {
+            "part_number": "8983947820",
+            "description": "ANTENNA; KEYLESS ENTRY",
+            "description_source": "release",
+            "aim_before": "Electrical > Instruments > Instrument Cluster",
+            "aim_after": "Electrical > Audio > Radio",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 93.29
+          },
+          {
+            "part_number": "8983963531",
+            "description": "ANTENNA; GPS",
+            "description_source": "release",
+            "aim_before": "Unknown > Unknown > Unknown",
+            "aim_after": "Electrical > Audio > Radio",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 0.0
+          },
+          {
+            "part_number": "8983963532",
+            "description": "ANTENNA; GPS",
+            "description_source": "release",
+            "aim_before": "Electrical > Instruments > Instrument Cluster",
+            "aim_after": "Electrical > Audio > Radio",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 51.34
+          },
+          {
+            "part_number": "8983963541",
+            "description": "ANTENNA; GPS",
+            "description_source": "release",
+            "aim_before": "Unknown > Unknown > Unknown",
+            "aim_after": "Electrical > Audio > Radio",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 0.0
+          },
+          {
+            "part_number": "8983963542",
+            "description": "ANTENNA; GPS",
+            "description_source": "release",
+            "aim_before": "Electrical > Instruments > Instrument Cluster",
+            "aim_after": "Electrical > Audio > Radio",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 153.63
+          },
+          {
+            "part_number": "8983963550",
+            "description": "ANTENNA; GPS",
+            "description_source": "japanese code file",
+            "aim_before": " >  > ",
+            "aim_after": "Electrical > Audio > Radio",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 0.0
+          },
+          {
+            "part_number": "8983963551",
+            "description": "ANTENNA; GPS",
+            "description_source": "japanese code file",
+            "aim_before": " >  > ",
+            "aim_after": "Electrical > Audio > Radio",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 0.0
+          }
+        ],
+        "other_antenna_descriptions_not_changed": [
+          {
+            "description": "SCREW; ANTENNA",
+            "aim_family_today": " >  > ",
+            "parts": 4
+          },
+          {
+            "description": "CABLE; ANTENNA",
+            "aim_family_today": " >  > ",
+            "parts": 3
+          },
+          {
+            "description": "CAP; ANTENNA CA",
+            "aim_family_today": " >  > ",
+            "parts": 3
+          },
+          {
+            "description": "CABLE; ANTENNA",
+            "aim_family_today": "Cabin Interior > Pedals & Controls > Cable",
+            "parts": 3
+          },
+          {
+            "description": "NUT; ANTENNA POLE",
+            "aim_family_today": "Chassis Frame > Mounting Hardware > Nut",
+            "parts": 2
+          },
+          {
+            "description": "SCREW; TAP,ANTENNA",
+            "aim_family_today": "Unknown > Unknown > Unknown",
+            "parts": 1
+          },
+          {
+            "description": "POLE; ANTENNA",
+            "aim_family_today": " >  > ",
+            "parts": 1
+          },
+          {
+            "description": "BOLT; ANTENNA E",
+            "aim_family_today": " >  > ",
+            "parts": 1
+          },
+          {
+            "description": "NUT; ANTENNA PO",
+            "aim_family_today": " >  > ",
+            "parts": 1
+          },
+          {
+            "description": "SHEET; ANTENNA",
+            "aim_family_today": " >  > ",
+            "parts": 1
+          },
+          {
+            "description": "POLE; ANTENNA",
+            "aim_family_today": "Electrical > Instruments > Instrument Cluster",
+            "parts": 1
+          },
+          {
+            "description": "POLE; ANTENNA",
+            "aim_family_today": "Unknown > Unknown > Unknown",
+            "parts": 1
+          },
+          {
+            "description": "BOLT; ANTENNA",
+            "aim_family_today": "Chassis Frame > Mounting Hardware > Bolt",
+            "parts": 1
+          },
+          {
+            "description": "SHEET; ANTENNA",
+            "aim_family_today": "Unknown > Unknown > Unknown",
+            "parts": 1
+          },
+          {
+            "description": "SCREW; ANTENNA CABLE",
+            "aim_family_today": "Cabin Interior > Pedals & Controls > Cable",
+            "parts": 1
+          },
+          {
+            "description": "NUT; ANTENNA",
+            "aim_family_today": " >  > ",
+            "parts": 1
+          },
+          {
+            "description": "CLIP; ANTENNA C",
+            "aim_family_today": " >  > ",
+            "parts": 1
+          },
+          {
+            "description": "ANTENNA; DOOR L",
+            "aim_family_today": " >  > ",
+            "parts": 1
+          }
+        ],
+        "pole_antenna_rows": [
+          {
+            "part_number": "8970727350",
+            "description": "POLE; ANTENNA",
+            "description_source": "japanese code file",
+            "aim_before": " >  > ",
+            "aim_after": " >  > ",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 0.0
+          },
+          {
+            "part_number": "8970871970",
+            "description": "POLE; ANTENNA",
+            "description_source": "release",
+            "aim_before": "Unknown > Unknown > Unknown",
+            "aim_after": "Unknown > Unknown > Unknown",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 0.0
+          },
+          {
+            "part_number": "8972318360",
+            "description": "POLE; ANTENNA",
+            "description_source": "release",
+            "aim_before": "Electrical > Instruments > Instrument Cluster",
+            "aim_after": "Electrical > Instruments > Instrument Cluster",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "eur_sep25_aug26": 29.13
+          }
+        ]
+      },
+      "cameras": {
+        "parts_with_camera_in_release_description": 37,
+        "eur_those_sep25_aug26": 89153.68,
+        "eur_those_jan25_jun26_release_column": 125966.81,
+        "parts_moved": 81,
+        "moved_by_description": {
+          "CAMERA ASM": 36,
+          "COVER; CAMERA": 32,
+          "CAMERA; SAFETY": 7,
+          "CAMERA; REAR": 6
+        },
+        "moved_description_from_japanese_file": 51,
+        "moved_from_release_description_only": 30,
+        "aebs_target_parts_not_moved": [
+          {
+            "part_number": "5884032481",
+            "description": "TARGET;AEBS,CAMERA AIMING",
+            "description_source": "release",
+            "catalogue_today": "Repair parts > Engine parts > Other engine",
+            "aim_today": "Electrical > Instruments > Instrument Cluster",
+            "eur_sep25_aug26": 10510.78
+          },
+          {
+            "part_number": "5884032930",
+            "description": "TARGET;AEBS CAMERA AIMIMG",
+            "description_source": "release",
+            "catalogue_today": "Other / review > Miscellaneous > Review needed",
+            "aim_today": "Unknown > Unknown > Unknown",
+            "eur_sep25_aug26": 0.0
+          }
+        ],
+        "camera_parts_not_on_other_engine_not_moved": [
+          {
+            "part_number": "7552325071",
+            "description": "CAMERA; DRIVER MONITORING SYSTEM",
+            "description_source": "release",
+            "catalogue_today": "Repair parts > Engine parts > Engine ring",
+            "aim_today": "Electrical > Instruments > Instrument Cluster",
+            "eur_sep25_aug26": 171.8
+          },
+          {
+            "part_number": "8972658241",
+            "description": "HARNESS; CAMERA",
+            "description_source": "release",
+            "catalogue_today": "Repair parts > Electrical sensors > Harness / cable",
+            "aim_today": "Electrical > Starting & Charging > Battery Cable",
+            "eur_sep25_aug26": 116.86
+          },
+          {
+            "part_number": "8974922451",
+            "description": "HARNESS; CAMERA",
+            "description_source": "release",
+            "catalogue_today": "Repair parts > Electrical sensors > Harness / cable",
+            "aim_today": "Electrical > Harness & Connectors > Connector",
+            "eur_sep25_aug26": 281.36
+          },
+          {
+            "part_number": "8977921021",
+            "description": "BRACKET ASM; CAMERA",
+            "description_source": "release",
+            "catalogue_today": "Hardware & consumables > Hardware > Bracket / stay",
+            "aim_today": "Chassis Frame > Crossmember & Brackets > Bracket",
+            "eur_sep25_aug26": 0.0
+          },
+          {
+            "part_number": "8978391370",
+            "description": "CABLE; CAMERA",
+            "description_source": "release",
+            "catalogue_today": "Repair parts > Electrical sensors > Harness / cable",
+            "aim_today": "Cabin Interior > Pedals & Controls > Cable",
+            "eur_sep25_aug26": 0.0
+          }
+        ]
+      },
+      "def_injectors": {
+        "parts_changed": 5,
+        "injector_assemblies": [
+          "8977918600",
+          "8982318983",
+          "8983842670"
+        ],
+        "similar_parts_not_changed": [
+          {
+            "part_number": "8982318980",
+            "japanese_file_description": "INJECTOR ASM; D",
+            "catalogue": "High value repair > Injectors > Injector",
+            "aim": " >  > ",
+            "eur_sep25_aug26": 0.0
+          },
+          {
+            "part_number": "8982318981",
+            "japanese_file_description": "INJECTOR ASM; D",
+            "catalogue": "High value repair > Injectors > Injector",
+            "aim": " >  > ",
+            "eur_sep25_aug26": 0.0
+          },
+          {
+            "part_number": "8982318982",
+            "japanese_file_description": "INJECTOR ASM; D",
+            "catalogue": "Repair parts > Electrical sensors > Control unit",
+            "aim": " >  > ",
+            "eur_sep25_aug26": 0.0
+          }
+        ]
+      },
+      "added": {
+        "parts": [
+          {
+            "part_number": "7553266960",
+            "description": "CAB ASM; SERVICE,W/ELECT",
+            "fig_key": "604-002",
+            "catalogue": "Accident parts > Body parts > Other body",
+            "aim": "Accident & Body > Complete Assembly > Cab Assembly",
+            "in_aim_master_spine": true,
+            "aim_master_label": "Accident & Body > Complete Assembly > Cab Assembly",
+            "eur_sep25_aug26": 14811.5
+          },
+          {
+            "part_number": "5876102381",
+            "description": "PAD KIT; CALIPER, DISC BRK, FR",
+            "fig_key": "302-017",
+            "catalogue": "Competitive parts > Brake parts > Brake pad",
+            "aim": "Brakes > Pads & Shoes > Brake Pad Kit",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 5109.39
+          },
+          {
+            "part_number": "1812004173",
+            "description": "GENERATOR ASM",
+            "fig_key": "060-002",
+            "catalogue": "Repair parts > Starter / alternator > Alternator / generator",
+            "aim": "Electrical > Charging > Alternator/Generator",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 1221.78
+          },
+          {
+            "part_number": "7552961740",
+            "description": "EMBLEM; RAD GRILLE",
+            "fig_key": "701-004",
+            "catalogue": "Accident parts > Body parts > Grille",
+            "aim": "Accident & Body > Panels > Grille",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 861.6
+          },
+          {
+            "part_number": "8976547872",
+            "description": "GENERATOR ASM",
+            "fig_key": "060-002",
+            "catalogue": "Repair parts > Starter / alternator > Alternator / generator",
+            "aim": "Electrical > Charging > Alternator/Generator",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 498.94
+          },
+          {
+            "part_number": "7552481570",
+            "description": "CONTROL UNIT",
+            "fig_key": "826-776",
+            "catalogue": "Repair parts > Electrical sensors > Control unit",
+            "aim": "Electrical > Control Units > Control Unit",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 369.72
+          },
+          {
+            "part_number": "7551993781",
+            "description": "HARNESS; FRAME,RR",
+            "fig_key": "810-009",
+            "catalogue": "Repair parts > Electrical sensors > Harness / cable",
+            "aim": "Electrical > Harness & Connectors > Connector",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 364.21
+          },
+          {
+            "part_number": "8975437940",
+            "description": "REGULATOR; VOLTAGE,GEN",
+            "fig_key": "066-075",
+            "catalogue": "Repair parts > Starter / alternator > Voltage regulator",
+            "aim": "Electrical > Charging > Regulator",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 208.17
+          },
+          {
+            "part_number": "7552319721",
+            "description": "HARNESS; DEF DCM",
+            "fig_key": "810-729",
+            "catalogue": "Competitive parts > Exhaust > Aftertreatment",
+            "aim": "Electrical > Harness & Connectors > Connector",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 193.06
+          },
+          {
+            "part_number": "8975830430",
+            "description": "BUMPER; FRT,CENTER",
+            "fig_key": "601-002",
+            "catalogue": "Accident parts > Body parts > Bumper",
+            "aim": "Accident & Body > Panels > Bumper",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 175.09
+          },
+          {
+            "part_number": "8974923851",
+            "description": "HARNESS; CHAS",
+            "fig_key": "810-038",
+            "catalogue": "Repair parts > Electrical sensors > Harness / cable",
+            "aim": "Electrical > Harness & Connectors > Connector",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 166.87
+          },
+          {
+            "part_number": "8976765330",
+            "description": "CYLINDER SET; CAR LOCK",
+            "fig_key": "730-001",
+            "catalogue": "Accident parts > Body parts > Handle / lock",
+            "aim": "Accident & Body > Panels > Door",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 127.47
+          },
+          {
+            "part_number": "7475007370",
+            "description": "BACK ASM; SEAT",
+            "fig_key": "750-001",
+            "catalogue": "Accident parts > Body parts > Interior trim",
+            "aim": "Cabin Interior > Seat > Seat Back",
+            "in_aim_master_spine": true,
+            "aim_master_label": "Cabin Interior > Seat > Seat Cushion",
+            "eur_sep25_aug26": 126.16
+          },
+          {
+            "part_number": "7552750070",
+            "description": "BOLT; COVER,BATTERY",
+            "fig_key": "061-174",
+            "catalogue": "Hardware & consumables > Hardware > Bolt",
+            "aim": "Chassis Frame > Mounting Hardware > Bolt",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 78.84
+          },
+          {
+            "part_number": "7552927230",
+            "description": "SWITCH; PTO",
+            "fig_key": "825-077",
+            "catalogue": "Repair parts > Electrical sensors > Switch",
+            "aim": "Electrical > Switch Relay Fuse > Switch",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 66.15
+          },
+          {
+            "part_number": "8978343810",
+            "description": "UNIT; FUEL TANK,SUB",
+            "fig_key": "140-003",
+            "catalogue": "Competitive parts > Fuel system > Fuel tank / cap",
+            "aim": "Fuel System > Tank & Supply > Fuel Tank",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 61.18
+          },
+          {
+            "part_number": "8983456700",
+            "description": "CABLE; PTO CONT",
+            "fig_key": "285-024",
+            "catalogue": "Repair parts > Electrical sensors > Harness / cable",
+            "aim": "Cabin Interior > Pedals & Controls > Cable",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 61.12
+          },
+          {
+            "part_number": "7475056720",
+            "description": "BUMPER; FRT,SIDE",
+            "fig_key": "601-003",
+            "catalogue": "Accident parts > Body parts > Bumper",
+            "aim": "Accident & Body > Panels > Bumper",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 51.19
+          },
+          {
+            "part_number": "8942720796",
+            "description": "PANEL; FRONT,SIDE",
+            "fig_key": "605-016",
+            "catalogue": "Accident parts > Body parts > Panel",
+            "aim": "Accident & Body > Panels > Panel",
+            "in_aim_master_spine": true,
+            "aim_master_label": "Accident & Body > Panels > Panel",
+            "eur_sep25_aug26": 47.76
+          },
+          {
+            "part_number": "8983938054",
+            "description": "BUMPER; RR",
+            "fig_key": "690-001",
+            "catalogue": "Accident parts > Body parts > Bumper",
+            "aim": "Accident & Body > Panels > Bumper",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 43.68
+          },
+          {
+            "part_number": "8983938064",
+            "description": "BUMPER; RR",
+            "fig_key": "690-001",
+            "catalogue": "Accident parts > Body parts > Bumper",
+            "aim": "Accident & Body > Panels > Bumper",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 43.68
+          },
+          {
+            "part_number": "7475392910",
+            "description": "SENSOR; DISTANCE",
+            "fig_key": "826-748",
+            "catalogue": "Repair parts > Electrical sensors > Sensor",
+            "aim": "Electrical > Instruments > Sensor",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 39.88
+          },
+          {
+            "part_number": "7552923220",
+            "description": "REINFORCEMENT; BUMPER",
+            "fig_key": "601-046",
+            "catalogue": "Accident parts > Body parts > Bumper",
+            "aim": "Accident & Body > Panels > Bumper",
+            "in_aim_master_spine": true,
+            "aim_master_label": "Accident & Body > Bumpers > Bumper Assembly",
+            "eur_sep25_aug26": 33.12
+          },
+          {
+            "part_number": "8978342570",
+            "description": "UNIT; FUEL TANK,SUB",
+            "fig_key": "140-003",
+            "catalogue": "Competitive parts > Fuel system > Fuel tank / cap",
+            "aim": "Fuel System > Tank & Supply > Fuel Tank",
+            "in_aim_master_spine": false,
+            "aim_master_label": "",
+            "eur_sep25_aug26": 28.75
+          }
+        ],
+        "eur_sep25_aug26": 24789.31,
+        "eur_proposal_file": 24789.31,
+        "in_aim_master_spine": 4,
+        "aim_label_differs_from_master": [
+          {
+            "part_number": "7475007370",
+            "description": "BACK ASM; SEAT",
+            "fig_key": "750-001",
+            "catalogue": "Accident parts > Body parts > Interior trim",
+            "aim": "Cabin Interior > Seat > Seat Back",
+            "in_aim_master_spine": true,
+            "aim_master_label": "Cabin Interior > Seat > Seat Cushion",
+            "eur_sep25_aug26": 126.16
+          },
+          {
+            "part_number": "7552923220",
+            "description": "REINFORCEMENT; BUMPER",
+            "fig_key": "601-046",
+            "catalogue": "Accident parts > Body parts > Bumper",
+            "aim": "Accident & Body > Panels > Bumper",
+            "in_aim_master_spine": true,
+            "aim_master_label": "Accident & Body > Bumpers > Bumper Assembly",
+            "eur_sep25_aug26": 33.12
+          }
+        ],
+        "jp_fig_key_mismatch": [],
+        "not_added": {
+          "medium": 15,
+          "medium_eur": 9947.51,
+          "low": 17,
+          "low_eur": 1688.03,
+          "unbilled_8974923852": "not added (Jerome)"
+        },
+        "medium_def_injector_7552973320": {
+          "in_proposal_as": [
+            "medium"
+          ],
+          "eur_sep25_aug26": 848.94
+        }
+      }
+    }
+  },
+  "aim_label_vocabulary": {
+    "new_aim_labels": [
+      "Intake Exhaust Emission > DEF System > DEF Injector"
+    ],
+    "aim_triples_before": 268,
+    "aim_triples_after": 269,
+    "aim_l3_values_before": 241,
+    "aim_l3_values_after": 242,
+    "def_system_leaves_before": [
+      "DEF Pump",
+      "DEF Sensor",
+      "DEF Tank"
+    ],
+    "note": "the verify gate has no AIM-label check (it checks the catalogue tree only: 27 groups, 177 types, unchanged); this builder asserts that the only AIM triple not in the base release is the approved DEF Injector"
+  },
+  "catalogue_verification_vs_pr00": {
+    "rows_checked": 164794,
+    "rows_matching": 164669,
+    "match_pct": 99.9241,
+    "reference_file": "pr00_classification_reference_20260920.csv",
+    "reference_sha256": "98e64b5bdaef73819cf954ce96241f1a9b49d8fbd998d02700ae8494028bea34",
+    "reference_source": "git c813330f:01_data/00_derived/pr00_classification.csv (pr00 as committed 20 Sep 2026)",
+    "reference_reason": "Jerome decision 2026-10-02 (chat): copy integrity is measured against pr00_classification.csv as committed 20 Sep 2026 (git c813330f), not against today's file, because today's file carries the 21 Sep regression (1,660 rows). Pinned as a hash-recorded copy so the reference cannot move underneath the gate.",
+    "non_matching_parts": 125,
+    "note": "COPY-INTEGRITY ONLY, measured on THIS file: catalogue columns vs the pinned 20 Sep pr00 reference on the zero-padded key (method of build_aim_classification_v2.py). Every non-matching row is a deliberate change listed in the change log (the camera parts and the 24 added rows where pr00 has them), a change carried from the base release, or the 8980913940 air-filter fix. Does not prove correctness vs customs, figures or part text.",
+    "base_release_non_matching_parts": 44,
+    "newly_non_matching_vs_base_release": 81,
+    "newly_non_matching_are_logged_changes": true,
+    "vs_pr00_today_information_only": {
+      "rows_checked": 164795,
+      "rows_matching": 164714,
+      "match_pct": 99.9508,
+      "pr00_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\pr00_classification.csv",
+      "pr00_sha256": "74c080df42c3cd4bf3ee86a833f7bf9c736b86d2183f178cad92853b2179be7c",
+      "non_matching_parts": 81,
+      "note": "today's pr00 file, information only; not edited by this script"
+    }
+  },
+  "counts": {
+    "catalog_l2_count": 27,
+    "catalog_l3_count": 177,
+    "line_kind": {
+      "part": 164743,
+      "non_part_unnamed": 153,
+      "lubricant_or_tool": 27,
+      "merchandise": 5,
+      "tool": 3,
+      "core_deposit": 3,
+      "marketing_item": 2,
+      "service_fee": 2,
+      "demurrage": 1,
+      "display": 1,
+      "finance": 1,
+      "rebate": 1,
+      "freight": 1
+    }
+  },
+  "consumer_contract": [
+    "Axis A (identity): group by catalog_l1/l2/l3; filter catalog_node_present=1.",
+    "aim_l1_fixed/aim_l2_fixed/aim_l3_fixed = the governed AIM family (what the AIM pages chart).",
+    "line_kind != 'part' marks freight / rebate / service / lubricant rows; filter line_kind=='part' for parts revenue.",
+    "Lubricants are stored under BOTH key forms (0550xxxxxx and 550xxxxxx); the billing sits on the 9-digit row, the 10-digit row carries the master's 0.0. Do not sum both without knowing that."
+  ]
+}

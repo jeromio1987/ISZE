@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" class="charcoal"><head><meta charset="utf-8">
+<title>UNIVERSE 3.0 / CRITIQUE</title>
+<style>
+@page { size: A4; margin: 19mm 15mm 16mm 15mm; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font: 10.1pt/1.5 "Segoe UI", Helvetica, Arial, sans-serif; color:#222; margin:0; }
+h1,h2,h3,h4 { font-family: Georgia, "Times New Roman", serif; color:#15233c; }
+h1 { font-size: 24pt; line-height:1.14; margin: 0 0 5mm 0; }
+h2 { font-size: 15pt; margin: 9mm 0 3mm; padding-bottom: 1.6mm;
+     border-bottom: 1.8pt solid #15233c; page-break-after: avoid; }
+h3 { font-size: 11.8pt; margin: 6mm 0 2mm; color:#1a2b4a; page-break-after: avoid; }
+h4 { font-size: 10.4pt; margin: 4.5mm 0 1.5mm; color:#c0552d; page-break-after: avoid; }
+p { margin: 0 0 2.5mm; }
+hr { border:0; border-top:1px solid #d8d2c8; margin: 5mm 0; }
+strong { color:#15233c; }
+em { color:#1a2b4a; }
+code { font-family: Consolas, "Courier New", monospace; font-size: 9pt;
+       background:#f2efe9; padding: 0 .6mm; }
+table { width:100%; border-collapse: collapse; font-size: 8.9pt; margin: 2mm 0 4mm;
+        page-break-inside: avoid; }
+/* a long table may flow across pages, with its header repeated and its rows intact */
+table.tbl-flow { page-break-inside: auto; }
+table.tbl-flow thead { display: table-header-group; }
+table.tbl-flow tr { page-break-inside: avoid; }
+th { background:#15233c; color:#f7f4ee; text-align:left; padding: 1.6mm 2mm;
+     font-weight:600; font-size:8.5pt; }
+td { padding: 1.4mm 2mm; border-bottom: .6pt solid #ddd7cc; vertical-align: top; }
+tr:nth-child(even) td { background:#faf8f3; }
+blockquote { margin: 3mm 0; padding: 2.6mm 3.6mm; background:#f4f1ea;
+             border-left: 2.8pt solid #c0552d; font-style: italic; }
+ul, ol { margin: 0 0 3mm 5mm; padding:0; }
+li { margin-bottom: 1.2mm; }
+figure { margin: 4mm 0 5mm; page-break-inside: avoid; text-align:center; }
+figure img { width: 100%; max-width: 178mm; height:auto; border: 1px solid #e6e1d7; }
+figcaption { font-size: 8.2pt; color:#5b6472; text-align:left; margin-top: 1.8mm;
+            line-height:1.42; }
+figcaption b { color:#15233c; }
+.pagebreak { page-break-after: always; height:0; }
+.keep { page-break-inside: avoid; break-inside: avoid; }
+/* never leave a heading's paragraph as a two-line orphan at the foot of a page */
+p { orphans: 3; widows: 2; }
+li, td { orphans: 2; widows: 2; }
+/* a chapter opens a fresh page */
+.chapter-start { page-break-before: always; height:0; }
+/* the reading guide: chapter, pages, what it decides */
+.guide { width:100%; border-collapse: collapse; font-size: 9.2pt; margin: 3mm 0 4mm; }
+/* keep the page range on one line: "12-15", never "12-" and then "15" */
+.guide td.pg { white-space: nowrap; }
+
+/* ------------------------------------------------------------------ charcoal pack
+   Used only by the critique pack that goes to the other tool: the 80-pager's own palette. */
+.charcoal { background:#24282C; }
+.charcoal body { background:#24282C; color:#E0E5E8;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; }
+.charcoal .sheet { background:#24282C; }
+/* Chrome will not paint an element's background over a printed page unless the document asks it
+   to; without this the whole charcoal pack prints white with pale text on it. */
+@media print {
+  html.charcoal, html.charcoal body { background:#24282C !important; }
+}
+.charcoal h1, .charcoal h2, .charcoal h3, .charcoal h4 {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; color:#F5F6F7; }.charcoal h2 { border-bottom: 1.8pt solid #D71920; }
+.charcoal h3 { color:#F5F6F7; }
+.charcoal h4 { color:#FF686D; }
+.charcoal p, .charcoal li, .charcoal td { color:#E0E5E8; }
+.charcoal strong { color:#F5F6F7; }
+.charcoal em { color:#C2C8CC; }
+.charcoal a { color:#FF686D; }
+.charcoal hr { border-top:1px solid #48525B; }
+.charcoal code { background:#30363B; color:#F5F6F7; }
+.charcoal table { color:#E0E5E8; }
+.charcoal th { background:#D71920; color:#F5F6F7; }
+.charcoal td { border-bottom: .6pt solid #48525B; }
+.charcoal tr:nth-child(even) td { background:#2A3035; }
+.charcoal blockquote { background:#30363B; border-left:2.8pt solid #D71920; color:#E0E5E8; }
+.charcoal figcaption { color:#C2C8CC; }
+.charcoal figcaption b { color:#FF686D; }
+.charcoal .keep { }
+.charcoal .cover-page { background:#24282C; }
+.charcoal .cover-page .org { color:#F5F6F7; }
+.charcoal .cover-page .family { color:#FF686D; }
+.charcoal .cover-page .rule { border-top:3pt solid #D71920; }
+.charcoal .cover-page .title { color:#F5F6F7; }
+.charcoal .cover-page .strap { color:#C2C8CC; }
+.charcoal .cover-page .focus { border-top:1pt solid #48525B; }
+.charcoal .cover-page .focus .h { color:#A3ADB3; }
+.charcoal .cover-page .focus li { color:#E0E5E8; }
+.charcoal .cover-page .meta { border-top:2.4pt solid #D71920; color:#F5F6F7; }
+.charcoal .cover-page .meta2 { color:#A3ADB3; }
+.charcoal .closing { border-top:1px solid #48525B; color:#A3ADB3; }
+.charcoal .guide th { background:#30363B; color:#FF686D; }
+.charcoal .guide td { border-bottom:.6pt solid #3C4348; }
+.charcoal .guide tr:nth-child(even) td { background:#282E33; }
+.cover-page { height: 252mm; display:flex; flex-direction:column; page-break-after: always;
+              padding-top: 3mm; }
+.cover-page .org { font-size: 10.5pt; letter-spacing:.30em; text-transform:uppercase;
+                   color:#15233c; font-weight:600; }
+.cover-page .family { font-size: 12.5pt; letter-spacing:.40em; text-transform:uppercase;
+                      color:#c0552d; margin-top:3mm; font-weight:700; }
+.cover-page .rule { border-top: 3pt solid #15233c; margin: 6mm 0 11mm; }
+.cover-page .title { font-family: Georgia, serif; font-size: 50pt; line-height:1.02;
+                     color:#15233c; margin:0; }
+.cover-page .strap { font-family: Georgia, serif; font-size: 16pt; line-height:1.45;
+                     color:#1a2b4a; margin: 7mm 0 0; max-width: 152mm; }
+.cover-page .grow { flex:1; }
+.cover-page .focus { border-top:1pt solid #d8d2c8; padding-top: 5mm; }
+.cover-page .focus .h { font-size: 8.4pt; letter-spacing:.20em; text-transform:uppercase;
+                        color:#5b6472; margin-bottom: 3mm; }
+.cover-page .focus li { font-size: 11pt; color:#15233c; margin-bottom: 2.4mm;
+                        font-family: Georgia, serif; }
+.cover-page .meta { border-top: 2.4pt solid #c0552d; margin-top: 7mm; padding-top: 4mm;
+                    font-size: 9.6pt; color:#15233c; font-weight:600; letter-spacing:.10em;
+                    text-transform:uppercase; }
+.cover-page .meta2 { font-size: 8.4pt; color:#5b6472; margin-top: 2mm; letter-spacing:.12em;
+                     text-transform:uppercase; }
+</style></head><body>
+
+<div class="cover-page">
+  <div class="org">ISZE / Parts Europe</div>
+  <div class="family">Review</div>
+  <div class="rule"></div>
+  <div class="title">Universe 3.0</div>
+  <div class="strap">Thirteen findings on the two 22 September papers,<br>and what the current edition changed.</div>
+  
+  <div class="grow"></div>
+  <div class="focus">
+    <div class="h">What this review covers</div>
+    <ul style="list-style:none;margin:0;padding:0"><li>The scope boundary missing from the flagship.</li><li>Two product catalogues, and no authority declared.</li><li>The economics: four gaps, and the arithmetic that closes them.</li><li>What changed, and what is still open.</li></ul>
+  </div>
+  <div class="meta">Review pack &nbsp;·&nbsp; 23 September 2026</div>
+  <div class="meta2">Safe to forward &nbsp;·&nbsp; aggregate figures only</div>
+</div>
+
+<h1>Universe 3.0 — review of the two 22 September papers</h1>
+<p><strong>Thirteen findings, their evidence, and what changed in the 23 September edition</strong></p>
+<p>Prepared for the team that writes the Universe papers · 23 September 2026</p>
+<hr>
+<div class="keep"><h2>What was reviewed</h2>
+<p>Two documents, read in full, with their arithmetic recomputed and their counts taken from the files rather than from memory:</p>
+<table><thead><tr><th>Document</th><th>Pages</th><th>Role</th></tr></thead><tbody><tr><td><code>ISUZU_UNIVERSE_COMMERCIAL_VISION_3_0.pdf</code></td><td>80</td><td>The flagship paper</td></tr><tr><td><code>ISUZU_UNIVERSE_COMMERCIAL_TOOLS_WHITE_PAPER.pdf</code></td><td>33</td><td>The tools edition</td></tr></tbody></table></div>
+<p>Supporting material was checked where a claim could be tested against measured data: the distributor billing table for calendar 2025, the dealer network file of 20 September 2026, the measured price-and-volume response for 2024 against 2025, and the companion presentation <code>ISUZU_UNIVERSE_COMMERCIAL_VISION_3_0.pptx</code>.</p>
+<p>The purpose of this note is not to judge the programme. It is to record where the two papers, as written, would leave a reader with the wrong impression, and what has since been done about it.</p>
+<p><strong>The short version.</strong> The thinking is sound and the numbers are honest. The problem is that the flagship gives away its strongest material badly: the scope boundary is missing, two different product catalogues compete, the best economic argument is presented as two text boxes, and four chart pages have to carry an eighty-page commercial case. A reader who takes the flagship alone gets a vaguer and less credible proposition than the evidence actually supports.</p>
+<hr>
+<div class="keep"><h2>1. The scope boundary was missing from the flagship</h2>
+<p>The tools edition states the boundary properly on its page 4. Routine availability questions, ordinary part and BVP lookups, day-to-day quotation handling and support administration stay outside the programme, and basic support is explicitly not a reward for participation.</p>
+<p>The flagship contains the word "routine" zero times, "day-to-day" zero times and "help desk" zero times. The exclusion page is simply not there. A reader of the flagship alone can reasonably conclude that the programme might absorb ordinary service work, which is the single fear a distributor is most likely to bring to the table.</p></div>
+<p><strong>What to do.</strong> Carry the boundary page into the flagship in the same words. It costs one page and it removes the largest source of misreading in the whole document.</p>
+<p><strong>Done in the 23 September edition.</strong> The boundary is stated in chapter 1.2 and restated as the first line of the executive summary.</p>
+<hr>
+<div class="keep"><h2>2. Two competing product catalogues, with no authority declared</h2>
+<p>The flagship sells three applications: coordinated tenders, IDS development progress, and Deal of the Day. The tools edition sells five tools: AIM Commercial Atlas, IDS Development Studio, Range &amp; Campaign Planner, Pricing &amp; Margin Lab, and PRISM Market Intelligence. The tools edition never mentions Deal of the Day — not once, in thirty-three pages.</p>
+<p>Nothing in either document says which list is current. A reader with both open cannot tell whether Deal of the Day has been dropped or whether the tools edition is incomplete.</p></div>
+<p><strong>What to do.</strong> Declare one portfolio in one place, and say plainly what happened to the other. If Deal of the Day remains part of the programme, it belongs in the portfolio table. If it has been set aside, say so in the revision record.</p>
+<p><strong>Done in the 23 September edition.</strong> There is one portfolio of five tools. The three developed examples, Deal of the Day among them, appear inside it as worked illustrations rather than as a competing catalogue, and the superseded documents are named as withdrawn.</p>
+<hr>
+<div class="keep"><h2>3. Structure put the strongest idea last</h2>
+<p>The first application example does not appear until page 35 of 80. Before it there are thirty-four pages of framing. The Deal of the Day chapter — the material a commercial reader is most likely to act on — does not begin until page 42.</p>
+<p>This is not a matter of taste. A reader who stops after twenty pages has read a description of a programme and has not yet seen a single worked commercial decision.</p></div>
+<p><strong>What to do.</strong> Lead with one worked example, then explain the programme that produces it. The reversal costs nothing and moves the reader from "what is this" to "I can see how this is used" in the first ten pages.</p>
+<p><strong>Done in the 23 September edition.</strong> The reading order now opens on three decisions the reader can take, and the measured examples sit in chapters 3 and 4, before the tool descriptions.</p>
+<hr>
+<div class="keep"><h2>4. Picture fatigue</h2>
+<p>Counting the caption types across the eighty pages gives nineteen panels labelled "Illustrative design", five labelled "Proposed feedback mechanism", and five diagrams carrying the disclaimer that no measured causal effect is implied. Three further chains of numbered boxes in the tools edition carry the parallel disclaimer that the arrows do not represent a measured effect.</p>
+<p>When a picture has to deny its own meaning that often, it is holding a page rather than carrying an argument. The volume of diagram also has a cost that is easy to miss: a reader learns to skim panels, and then skims the four pages that contain real numbers.</p></div>
+<p><strong>What to do.</strong> Keep the diagrams that settle a decision. Cut the ones that describe a sequence the prose already states. Set a rule that any panel whose caption has to say "not a measured effect" either earns a measured companion or is not used.</p>
+<hr>
+<div class="keep"><h2>5. Four chart pages in eighty</h2>
+<p>Real charts appear on pages 14, 15 and 16 (the ITUK and Portugal examples) and a sensitivity chart around pages 49 and 50. That is it. The tools edition has three: a bar chart of the ITUK category, a comparison panel for Portugal, and one pricing sensitivity chart.</p>
+<p>There is no ranked family chart, no distributor comparison, no distribution of dealer scores, and no small multiples anywhere in either document — although "which market, which family, which dealer" is precisely the commercial question the tools exist to answer. The data for all four already sits in the derived files.</p></div>
+<p><strong>What to do.</strong> Replace four or five illustrative panels with four charts that rank the network on the four dimensions a distributor actually manages. The paper becomes shorter and stronger at the same time.</p>
+<hr>
+<div class="keep"><h2>6. The best available argument was left uncharted</h2>
+<p>Page 51 sets out the most decision-relevant arithmetic in the Deal of the Day chapter. Applying a 5% concession to all 120 units produces EUR 3,000 of parts gross profit. Applying it only to the 20 additional units produces EUR 3,500. The difference — EUR 500 — comes from the scope of the concession alone, not from any prediction about what a customer would accept.</p>
+<p>That is the whole commercial argument of the chapter, and it is presented as two side-by-side text callouts. It is a two-bar chart with a single annotation. As a chart it would land in three seconds; as text it has to be read, and it sits on page 51 of 80.</p></div>
+<p><strong>What to do.</strong> Chart it. Keep the surrounding caveats exactly as they are; the point is not to claim more, it is to stop hiding a clear result behind a paragraph.</p>
+<p><strong>Done in the 23 September edition.</strong> This comparison is now a chart, carrying its hypothetical label in the caption.</p>
+<hr>
+<div class="keep"><h2>7. The companion deck does not do a job the paper cannot</h2>
+<p><code>ISUZU_UNIVERSE_COMMERCIAL_VISION_3_0.pptx</code> measures as follows: 49 slides, 1,472 shapes, 4,315 words of text, and zero charts, zero images and zero tables.</p>
+<p>A deck with no charts, no images and no tables is a re-render of the paper in slide form. It cannot be presented at a meeting in less time than the paper takes to read, and it adds nothing the paper does not already say. The tools edition has its own deck as well, so three presentations of overlapping material now exist.</p></div>
+<p><strong>What to do.</strong> Either build a real talk deck — one idea per slide, six to eight charts, speaker notes that say what to say rather than what is written — or drop the deck and present the paper. A third option that is worse than both is to keep shipping the re-render.</p>
+<hr>
+<div class="keep"><h2>8. No launcher and no check file for the paper that mattered most</h2>
+<p>Neither 22 September paper has a sibling <code>OPEN_*.cmd</code> to open it, and neither has a verification file beside it. The older Yellow Paper and the opportunity page both have both.</p>
+<p>The practical effect is small but real: a reader who is handed a folder has no obvious way to open the flagship, and no record of which checks were run on it before it was circulated.</p></div>
+<p><strong>What to do.</strong> Add the launcher and the verification record to both papers. It is a five-minute change to each.</p>
+<p><strong>Done in the 23 September edition.</strong> The current paper ships with a launcher and a verification record, as do the annex, the deck and the showcase.</p>
+<hr>
+<div class="keep"><h2>9. Two vocabularies for one programme</h2>
+<p>The tools edition frames the programme against the work it is <em>not</em>: it uses "routine" fourteen times, "day-to-day" five times, "help desk" twice and "support ticket" once. The flagship never uses any of those words and instead talks about a dealer needing "help" — the word appears twenty-two times.</p>
+<p>Both framings are defensible, and the tools edition's is the clearer of the two. But a programme described negatively in one paper and positively in the other reads as two different propositions. Worse, the tools edition's frame invites the question it is trying to close: if you keep telling me this is not a help desk, why do I keep thinking it might be?</p></div>
+<p><strong>What to do.</strong> Pick the positive frame for both: what the dealer receives, and what changes as a result. Say once, near the boundary page, what stays outside.</p>
+<hr>
+<div class="keep"><h2>10. The economics had four gaps</h2>
+<p><strong>No denominator.</strong> The EUR 0, EUR 100,000 and EUR 300,000 envelopes are quoted with nothing to measure them against. Calendar-2025 network parts billing was EUR 32,381,311.55 across 22 distributors. On that base the EUR 100,000 route is 0.31% of one year's billing and the EUR 300,000 route is 0.93%. That is the correct size for a pilot and the wrong size for a platform build — and it is the single most reassuring number available to a reader who is worried about cost. It was not in either paper.</p>
+<p><strong>The hurdle was in the wrong document.</strong> The table of qualifying actions needed to cover each envelope — at EUR 2,500 of contribution per action, 40 actions for EUR 100,000 and 120 for EUR 300,000 — appears in the 64-page white paper and in the 46-page commercial revision. It appears in neither the flagship nor the tools edition. <em>(A note on the brief: it was said to come from the superseded tools edition. It does not; it comes from the white paper track. The point stands either way — it was absent from the two papers under review.)</em></p></div>
+<p><strong>No per-dealer cost.</strong> The dealer network file holds 519 dealer rows across 19 networks. Against that estate, EUR 15,000 of dealer enablement is EUR 28.90 per dealer. Confined to Portugal's sixteen dealers it is EUR 937.50 each. Those two numbers describe completely different programmes, and neither was stated.</p>
+<p><strong>No funding line for Deal of the Day.</strong> The flagship is honest about this — it says that Deal of the Day needs its own approved commercial treatment and is not automatically funded by an enablement allocation. What is missing is any figure to discuss. A costed estimate, even a rough one, would let a reader decide whether the application is worth pursuing.</p>
+<p><strong>What to do.</strong> Put the denominator, the hurdle table and the per-dealer arithmetic in the flagship. They are three short tables and they convert the funding discussion from an opinion into a calculation.</p>
+<p><strong>Done in the 23 September edition.</strong> Chapter 4 carries all four: the denominator, the hurdle table, the price of a dealer, and a funded campaign line with a minimum campaign size.</p>
+<hr>
+<div class="keep"><h2>11. Measured evidence that existed and was not used</h2>
+<p>The measured price-and-volume response for 2024 against 2025 holds stocking-side estimates on year-on-year pairs by family:</p></div>
+<ul><li><strong>Maintenance service</strong> — steeply negative, with a large standard error and almost no explanatory power on 230 pairs.</li><li><strong>Brakes</strong> — flat to positive and inconclusive, the standard error wider than the estimate on 290 pairs.</li><li><strong>Lubrication</strong> — not identified at all, because the list-price move was nearly uniform across pairs, so the data cannot separate a price effect from anything else.</li></ul>
+<p>None of this appeared in either paper. Refusing to forecast from it is the correct call — the estimates will not carry one. Staying silent is not: a reader who is not told leaves with whatever assumption about price responsiveness happens to suit them, and that assumption will drive the campaign design.</p>
+<p><strong>What to do.</strong> State the measurement, state that it will not support a forecast, and state what would have to be true for the campaign to work. Naming an uncertainty is cheaper than being asked about it later.</p>
+<p><strong>Done in the 23 September edition.</strong> Section 11.4 discloses all three results, including the lubrication non-result.</p>
+<hr>
+<div class="keep"><h2>12. Participation was asserted, not tested</h2>
+<p>Neither paper scores the likely behaviour of a dealer or a distributor at any step. Both describe what a participant receives and assume the response.</p>
+<p>The network already holds its own base rate: 519 recorded dealer self-assessments across 19 networks, of which 334 carry a score, with a minimum of 0, a maximum of 100, and an average of 77.5. That is the distribution against which any claim about dealer engagement should be tested. A programme that expects participation from dealers in the lower part of that distribution is making a different and much larger claim than one that expects it from the top quartile — and the papers do not distinguish between them.</p></div>
+<p><strong>What to do.</strong> Score the participation steps against the distribution that already exists. If the design only works for the upper half of the estate, that is a finding worth stating, and it changes who is invited first.</p>
+<p><strong>Done in the 23 September edition.</strong> Chapter 8 assesses participation step by step against the recorded base rate.</p>
+<hr>
+<div class="keep"><h2>13. A genuine strength worth recording</h2>
+<p>Every published figure in the flagship that was checked recomputed exactly:</p></div>
+<ul><li>the 120-unit and 132-unit thresholds in the Deal of the Day sensitivity;</li><li>the EUR 3,500 against EUR 3,000 scope result;</li><li>the ITUK −13.0% on parts billed and −25.4% on recorded quantity;</li><li>the Portugal +5.8% combined clutch-kit change.</li></ul>
+<p>No figure was found that overstated a result, and the hypothetical arithmetic is labelled as hypothetical wherever it appears. In a document of eighty pages that is rare enough to say plainly, and it is the reason the other findings in this note are worth fixing: the paper does not lie with numbers, so when it under-uses them the loss is real.</p>
+<hr>
+<div class="keep"><h2>What the 23 September edition changed</h2>
+<p>The current 25-page edition responds to the findings above. From its own revision record and the build's landing check:</p>
+<table class="tbl-flow"><thead><tr><th>Finding</th><th>What changed</th></tr></thead><tbody><tr><td>1</td><td>The scope boundary is back, and it excludes routine service</td></tr><tr><td>2</td><td>The superseded editions are named and withdrawn; one portfolio replaces two catalogues</td></tr><tr><td>3</td><td>The money and the measured examples move forward; the decision route opens the paper</td></tr><tr><td>4, 5</td><td>Charts replace illustrative panels where a decision is at stake</td></tr><tr><td>6</td><td>The scope comparison is charted</td></tr><tr><td>8</td><td>Launcher and verification record ship with the paper</td></tr><tr><td>10</td><td>The denominator, the hurdle, the price of a dealer and the funded campaign line are all present</td></tr><tr><td>11</td><td>The elasticity evidence is disclosed, including the result that could not be identified</td></tr><tr><td>12</td><td>Participation is scored against the recorded base rate</td></tr><tr><td>13</td><td>The numerical accuracy is maintained, and now carries more of the argument</td></tr></tbody></table></div>
+<p>The build's own landing check reports <strong>12 landed, 0 missing</strong>, and a clean sweep for banned vocabulary in the narrative text.</p>
+<hr>
+<div class="keep"><h2>What is still open</h2>
+<p><strong>The annex.</strong> The design detail behind chapters 5 to 7, and the reference rules, sit in a companion annex rather than in the paper. The annex exists, but the split means a reader needs two files to see the full product argument.</p>
+<p><strong>The deck.</strong> A talk deck with real speaker notes is in preparation. Until it exists, the paper is the presentation.</p></div>
+<p><strong>The showcase.</strong> The interactive HTML is being corrected to match the current portfolio and boundary. Until that lands, the showcase and the paper can disagree.</p>
+<p><strong>The qualifying-campaign rate.</strong> Nobody can know how many campaigns will produce a qualifying action until campaigns have run. The hurdle table is arithmetic on an assumed contribution per action, not a forecast. This is the one number in the economics section that the programme has to earn, and it is stated as unknown rather than filled in.</p>
+<hr>
+<div class="keep"><h2>How these findings were checked</h2>
+<table class="tbl-flow"><thead><tr><th>Claim</th><th>Checked against</th></tr></thead><tbody><tr><td>Scope boundary wording and counts</td><td>Text search of both papers</td></tr><tr><td>Portfolio contents</td><td>Section labels and reading guides of both papers</td></tr><tr><td>Structure and page numbers</td><td>Page-by-page text of both papers</td></tr><tr><td>Diagram and chart counts</td><td>Caption types, drawing density and value panels per page</td></tr><tr><td>Companion deck</td><td>Slide, shape, chart, image and table counts from the file itself</td></tr><tr><td>Launchers and verification records</td><td>Directory listing beside both papers</td></tr><tr><td>Network billing and envelope shares</td><td>Calendar-2025 distributor billing table</td></tr><tr><td>Hurdle arithmetic</td><td>White paper and commercial revision tables</td></tr><tr><td>Per-dealer cost</td><td>Dealer network file of 20 September 2026</td></tr><tr><td>Price and volume response</td><td>Measured 2024 against 2025 response file</td></tr><tr><td>Dealer base rate</td><td>Dealer network file, scored rows</td></tr><tr><td>Numerical accuracy</td><td>Recalculation of each published figure</td></tr></tbody></table>
+<p>&lt;br&gt;</p>
+<p><em>This note contains no part numbers, no supplier purchase costs and no line-level billing. All figures quoted are aggregate and are already published in the papers under review.</em></p></div>
+
+</body></html>

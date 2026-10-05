@@ -1,0 +1,699 @@
+{
+ "image": "dmax_hero.png",
+ "alpha_image": "dmax_alpha.png",
+ "size": [
+  2356,
+  992
+ ],
+ "note": "Zone polygons are in the pixel coordinates of dmax_hero.png, top-left origin. Each polygon is its zone clipped to the vehicle's silhouette, so the tint covers the whole vehicle including the far side and the roof rather than only the flat near-side plane. Polygons are free-form (not necessarily four points): read them as [x, y] pairs. Together they are a partition - a click anywhere on the truck resolves to exactly one zone, with no gaps and no overlaps.",
+ "projection": {
+  "type": "orthographic",
+  "res": [
+   2600,
+   1120
+  ],
+  "az_deg": 80.0,
+  "el_deg": 18.0,
+  "ortho_scale_m": 6.686607360839844,
+  "camera_matrix": [
+   [
+    0.17364801466464996,
+    -0.30432239174842834,
+    0.9366078972816467,
+    14.985725402832031
+   ],
+   [
+    0.9848078489303589,
+    0.05366022139787674,
+    -0.16514910757541656,
+    -2.642387628555298
+   ],
+   [
+    -6.810511621324622e-08,
+    0.9510565400123596,
+    0.30901700258255005,
+    5.776154518127441
+   ],
+   [
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ]
+  ],
+  "crop_offset_px": [
+   -132,
+   -76
+  ],
+  "crop_box_px_in_render": [
+   132,
+   76,
+   2488,
+   1068
+  ]
+ },
+ "vehicle": {
+  "name": "Isuzu D-Max (2021, double cab)",
+  "length_m": 5.404,
+  "width_overall_incl_mirrors_m": 2.071,
+  "width_body_excl_mirrors_m": 1.824,
+  "height_m": 1.808,
+  "wheelbase_m": 3.125,
+  "front_overhang_m": 0.972,
+  "rear_overhang_m": 1.307,
+  "tyre_radius_m": 0.392,
+  "published_spec_m": {
+   "length_m": 5.265,
+   "width_m": 1.87,
+   "height_m": 1.785,
+   "wheelbase_m": 3.125,
+   "front_overhang_m": 0.905,
+   "rear_overhang_m": 1.235,
+   "track_m": 1.57,
+   "loadbox_length_m": 1.495,
+   "loadbox_width_m": 1.53,
+   "loadbox_depth_m": 0.49,
+   "ground_clearance_m": 0.227,
+   "tyre_radius_m": 0.382
+  },
+  "note": "The published 1.870 m is the body width; width_overall_incl_mirrors_m is the model's full bounding box, which the mirrors push wider. Dimensions are the model as measured, not the published figures - see _qa_geometry_accuracy.json for the row-by-row comparison and for the correction applied to the previous build's scale."
+ },
+ "bounding_box": {
+  "px": [
+   [
+    117,
+    49
+   ],
+   [
+    2239,
+    49
+   ],
+   [
+    2239,
+    943
+   ],
+   [
+    117,
+    943
+   ]
+  ],
+  "x": 117,
+  "y": 49,
+  "w": 2122,
+  "h": 894
+ },
+ "zones": {
+  "front": [
+   [
+    117.0,
+    595.0
+   ],
+   [
+    195.0,
+    378.0
+   ],
+   [
+    273.0,
+    331.0
+   ],
+   [
+    351.0,
+    305.0
+   ],
+   [
+    407.0,
+    289.0
+   ],
+   [
+    407.0,
+    740.0
+   ],
+   [
+    351.0,
+    743.0
+   ],
+   [
+    273.0,
+    747.0
+   ],
+   [
+    195.0,
+    724.0
+   ],
+   [
+    117.0,
+    638.0
+   ]
+  ],
+  "engine": [
+   [
+    522.0,
+    261.0
+   ],
+   [
+    600.0,
+    245.0
+   ],
+   [
+    678.0,
+    214.0
+   ],
+   [
+    756.0,
+    166.0
+   ],
+   [
+    834.0,
+    122.0
+   ],
+   [
+    843.0,
+    118.0
+   ],
+   [
+    843.0,
+    716.0
+   ],
+   [
+    834.0,
+    717.0
+   ],
+   [
+    756.0,
+    721.0
+   ],
+   [
+    678.0,
+    725.0
+   ],
+   [
+    600.0,
+    730.0
+   ],
+   [
+    522.0,
+    734.0
+   ]
+  ],
+  "cab": [
+   [
+    844.0,
+    117.0
+   ],
+   [
+    922.0,
+    90.0
+   ],
+   [
+    1000.0,
+    77.0
+   ],
+   [
+    1078.0,
+    69.0
+   ],
+   [
+    1156.0,
+    62.0
+   ],
+   [
+    1234.0,
+    56.0
+   ],
+   [
+    1312.0,
+    52.0
+   ],
+   [
+    1390.0,
+    50.0
+   ],
+   [
+    1468.0,
+    77.0
+   ],
+   [
+    1546.0,
+    193.0
+   ],
+   [
+    1594.0,
+    190.0
+   ],
+   [
+    1594.0,
+    675.0
+   ],
+   [
+    1546.0,
+    678.0
+   ],
+   [
+    1468.0,
+    682.0
+   ],
+   [
+    1390.0,
+    687.0
+   ],
+   [
+    1312.0,
+    691.0
+   ],
+   [
+    1234.0,
+    695.0
+   ],
+   [
+    1156.0,
+    699.0
+   ],
+   [
+    1078.0,
+    704.0
+   ],
+   [
+    1000.0,
+    708.0
+   ],
+   [
+    922.0,
+    712.0
+   ],
+   [
+    844.0,
+    716.0
+   ]
+  ],
+  "rear": [
+   [
+    1595.0,
+    190.0
+   ],
+   [
+    1673.0,
+    185.0
+   ],
+   [
+    1751.0,
+    179.0
+   ],
+   [
+    1829.0,
+    174.0
+   ],
+   [
+    1907.0,
+    168.0
+   ],
+   [
+    1985.0,
+    163.0
+   ],
+   [
+    2063.0,
+    157.0
+   ],
+   [
+    2141.0,
+    221.0
+   ],
+   [
+    2219.0,
+    521.0
+   ],
+   [
+    2238.0,
+    608.0
+   ],
+   [
+    2238.0,
+    614.0
+   ],
+   [
+    2219.0,
+    624.0
+   ],
+   [
+    2141.0,
+    637.0
+   ],
+   [
+    2063.0,
+    650.0
+   ],
+   [
+    1985.0,
+    654.0
+   ],
+   [
+    1907.0,
+    658.0
+   ],
+   [
+    1829.0,
+    663.0
+   ],
+   [
+    1751.0,
+    667.0
+   ],
+   [
+    1673.0,
+    671.0
+   ],
+   [
+    1595.0,
+    675.0
+   ]
+  ],
+  "chassis": [
+   [
+    239.0,
+    750.0
+   ],
+   [
+    317.0,
+    746.0
+   ],
+   [
+    395.0,
+    742.0
+   ],
+   [
+    473.0,
+    738.0
+   ],
+   [
+    551.0,
+    733.0
+   ],
+   [
+    629.0,
+    729.0
+   ],
+   [
+    707.0,
+    725.0
+   ],
+   [
+    785.0,
+    721.0
+   ],
+   [
+    863.0,
+    716.0
+   ],
+   [
+    941.0,
+    712.0
+   ],
+   [
+    1019.0,
+    708.0
+   ],
+   [
+    1097.0,
+    704.0
+   ],
+   [
+    1175.0,
+    699.0
+   ],
+   [
+    1253.0,
+    695.0
+   ],
+   [
+    1331.0,
+    691.0
+   ],
+   [
+    1409.0,
+    687.0
+   ],
+   [
+    1487.0,
+    682.0
+   ],
+   [
+    1565.0,
+    678.0
+   ],
+   [
+    1643.0,
+    674.0
+   ],
+   [
+    1721.0,
+    670.0
+   ],
+   [
+    1799.0,
+    665.0
+   ],
+   [
+    1877.0,
+    661.0
+   ],
+   [
+    1955.0,
+    657.0
+   ],
+   [
+    2033.0,
+    653.0
+   ],
+   [
+    2105.0,
+    827.0
+   ],
+   [
+    2105.0,
+    839.0
+   ],
+   [
+    2033.0,
+    871.0
+   ],
+   [
+    1955.0,
+    882.0
+   ],
+   [
+    1877.0,
+    887.0
+   ],
+   [
+    1799.0,
+    890.0
+   ],
+   [
+    1721.0,
+    895.0
+   ],
+   [
+    1643.0,
+    897.0
+   ],
+   [
+    1565.0,
+    897.0
+   ],
+   [
+    1487.0,
+    897.0
+   ],
+   [
+    1409.0,
+    899.0
+   ],
+   [
+    1331.0,
+    901.0
+   ],
+   [
+    1253.0,
+    903.0
+   ],
+   [
+    1175.0,
+    905.0
+   ],
+   [
+    1097.0,
+    909.0
+   ],
+   [
+    1019.0,
+    914.0
+   ],
+   [
+    941.0,
+    918.0
+   ],
+   [
+    863.0,
+    921.0
+   ],
+   [
+    785.0,
+    923.0
+   ],
+   [
+    707.0,
+    929.0
+   ],
+   [
+    629.0,
+    932.0
+   ],
+   [
+    551.0,
+    936.0
+   ],
+   [
+    473.0,
+    940.0
+   ],
+   [
+    395.0,
+    942.0
+   ],
+   [
+    317.0,
+    934.0
+   ],
+   [
+    239.0,
+    750.0
+   ]
+  ],
+  "elec": [
+   [
+    408.0,
+    289.0
+   ],
+   [
+    486.0,
+    269.0
+   ],
+   [
+    521.0,
+    261.0
+   ],
+   [
+    521.0,
+    734.0
+   ],
+   [
+    486.0,
+    736.0
+   ],
+   [
+    408.0,
+    740.0
+   ]
+  ]
+ },
+ "zone_order": [
+  "front",
+  "engine",
+  "cab",
+  "rear",
+  "chassis",
+  "elec"
+ ],
+ "world_landmarks_m": {
+  "nose_y": -2.702,
+  "tail_y": 2.702,
+  "front_axle_y": -1.73,
+  "rear_axle_y": 1.395,
+  "roof_z": 1.808,
+  "sill_z": 0.455,
+  "bonnet_z": 1.313,
+  "bed_rail_z": 1.31,
+  "box_floor_z": 0.762,
+  "box_inner_y": [
+   0.985,
+   2.505
+  ],
+  "windscreen_base_y": -1.01,
+  "cab_back_y": 0.95,
+  "visible_flank_x": 0.924
+ },
+ "zone_world_slabs_m": {
+  "front": [
+   null,
+   -2.15,
+   0.0,
+   1.10862398147583
+  ],
+  "elec": [
+   -2.15,
+   -1.85,
+   0.0,
+   1.10862398147583
+  ],
+  "engine": [
+   -1.85,
+   -1.01,
+   0.0,
+   1.313
+  ],
+  "cab": [
+   -1.01,
+   0.95,
+   0.0,
+   1.808
+  ],
+  "rear": [
+   0.95,
+   null,
+   0.0,
+   1.31
+  ],
+  "chassis": [
+   null,
+   null,
+   0.02,
+   0.555
+  ]
+ },
+ "zone_slab_note": "Each zone is a slab in metres on the vehicle's flank plane: [y_start, y_end, z_start, z_end], with null meaning open-ended at the nose or the tail. 'chassis' is everything below the sill line for the whole length; the other five tile the space above the sill slice by slice.",
+ "scale": {
+  "m_per_unit": 0.025592329299112808,
+  "axle_find_method": "brake rotors",
+  "tyre_diameter_cross_check_m_per_unit": 0.025332845676240952,
+  "methods_agree_pct": -1.013911707055326,
+  "previous_build_m_per_unit": 0.024016970978185472,
+  "correction_vs_previous_build_pct": 6.559354726115241
+ },
+ "alpha_check": {
+  "source": "rgba_hero_nofoor.png",
+  "fully_clear_px": 1068017,
+  "fully_solid_px": 1260164,
+  "partial_px": 8971,
+  "max_alpha": 255,
+  "background_alpha_median": 0,
+  "total_px": 2337152,
+  "clear_background_fraction": 0.457,
+  "verdict": "PASS"
+ },
+ "qa": {
+  "projection_max_error_px": 0.05,
+  "zone_pixel_coverage_pct": {
+   "front": 99.8,
+   "engine": 99.8,
+   "cab": 99.9,
+   "rear": 100.0,
+   "chassis": 98.4,
+   "elec": 100.0
+  },
+  "vehicle_pixels": 1460233,
+  "vehicle_px_claimed_by_two_zones": 0,
+  "vehicle_px_claimed_by_no_zone": 19352,
+  "unclaimed_pct_of_vehicle": 1.33,
+  "note": "zone_pixel_coverage_pct is the share of each zone polygon that lands on vehicle pixels in dmax_hero.png. The polygons were traced from the rendered pixels, so they are expected to be near 100%. The two counts above are the partition check: on a correct build the first is 0, meaning no vehicle pixel is claimed by two zones. The second is the anti-aliased rim at the silhouette edge, which is a fraction of a percent."
+ }
+}

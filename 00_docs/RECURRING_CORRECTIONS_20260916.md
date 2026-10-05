@@ -235,5 +235,40 @@ whoever runs it.
 
 ---
 
+## Addendum, 2026-09-19 — the pricing-stack session
+
+**Ten further corrections landed on 18–19 September 2026 and were not written here until Jerome
+asked: "Again why did you not listed add it to the error page that is beign written".** That is this
+register's own root cause B — *the correction was made in chat and never reached a file* — happening
+inside the session that was reading this document.
+
+They are recorded in full, with the same columns, in
+`ISZE\00_docs\ERROR_REGISTER_20260919_PRICING_SESSION.md`. Five root causes, and three of them are new
+shapes not covered above:
+
+| Root cause | In one line | Machine-catchable |
+|---|---|---|
+| **G — the calculation was over-engineered, which manufactured inputs that did not need to exist** | The move is `new_price / current_price - 1`. Decomposing it into revision x rate x discount *requires* a historical rate as an input, and that requirement produced a wrong prior rate (163.7 instead of the correct previous vintage 172.6), a false "the two moves cancel" conclusion that ran for two days, and three reversals of the same Thailand finding | Yes. Assert no historical rate appears as an input to a move |
+| **H — a number I invented was used as evidence** | A +7% yen revision was written into a workbook and presented as the prospect. Nothing on file says 7%; the settled figure is 5.9616%. A worker caught it, not the author | Yes. Every external number resolves to a source file and line |
+| **I — the file architecture was invented instead of copied** | Jerome's own simulation opens; mine did not, twice. First from 79,642 VLOOKUP plus 78 SUMPRODUCT array formulas inside a 45 MB XML part; then from `wrap_text` on every one of 10,998 data rows. His file has zero of both | Yes. Scan for lookup and array functions; count wrapped cells in the data range; compare sizing against the reference file |
+| **J — faults declared that did not exist, and checks reported that had not been run** | Three instances: his text was called Dutch when it contained CJK characters; a builder was accused of a VLOOKUP it did not have, because the scan counted the word inside English prose and part descriptions rather than inside formulas; a launcher was reported CRLF-verified and was LF | Yes. Parse formula elements, never raw XML. Read the bytes rather than stating a count from memory |
+| **K — a diagnosed error was not written to the register** | Ten corrections diagnosed in chat, none written down. This addendum exists only because he asked for it | Yes. Check that a dated row exists for each correction raised in a session |
+
+**Ranked by cost, that session:** the over-engineered calculation (two days, a confidently wrong
+conclusion, three reversals), then the false fault reports (three turns spent correcting
+non-problems), then the invented architecture (two unusable workbooks), then the invented number,
+then the unwritten register.
+
+**The pattern common to G, I and J:** in each case **he had already shown the correct answer, in a
+file, and a different one was built anyway.** His simulation hardcodes the current price and carries
+no lookups. His text contained no fault. The reference file was correct in both cases and was not
+read before building.
+
+---
+
 *Prepared 2026-09-16. Every claim and count in this file is cited to a path. Nothing was rebuilt,
 published, sent or scheduled to write this document, and no existing file was modified.*
+
+*Addendum added 2026-09-19. The five root causes above are recorded in full in
+`ISZE\00_docs\ERROR_REGISTER_20260919_PRICING_SESSION.md`; nothing in the body of this register was
+altered.*

@@ -1,0 +1,219 @@
+==============================================================================
+0. PRICE COLUMN
+  values with BOTH '.' and ',' (ambiguous): 0
+  list-price parse: rows=1318, sum EUR=132,339.08
+  'Value' column  : rows=1318, sum EUR=296,106.98
+
+==============================================================================
+1. QUEUE BASELINE
+  queue rows              : 1,311
+  queue unique Newest P/N : 1,303
+  queue rows with HS code : 1,297
+  queue rows with fig_key : 1,311
+  queue PR00 EUR (rows)   : 293,818.52
+  queue PR00 EUR (dedup)  : 292,659.72
+  queue list-price EUR    : 130,176.50
+
+==============================================================================
+2. DESCRIPTION -> ONE FAMILY?  (master evidence, 19793 rows)
+  distinct descriptions          : 3,990
+  map to exactly ONE family      : 3,963 (99.32%)
+  map to MORE THAN ONE family    : 27 (0.68%)
+  the contested ones, listed:
+                                                   n= 274 L1s=17 | Chassis Frame=191 | Cooling=17 | Transmission=13 | Electrical=11 | Fluids Chemicals=11
+    HYDRAULIC UNIT; ANTI LOCK BRK                  n=  59 L1s= 2 | Brakes=58 | Electrical=1
+    DISC; CLUTCH                                   n=  50 L1s= 2 | Clutch=49 | Brakes=1
+    ABSORBER ASM; SHOCK,FRT                        n=  39 L1s= 2 | Suspension=38 | Electrical=1
+    COMPRESSOR ASM; A/C                            n=  15 L1s= 2 | Cooling=14 | Electrical=1
+    BARREL ASM; W/KEY,STRG LOCK                    n=  13 L1s= 2 | Accident & Body=12 | Electrical=1
+    SHAFT; AXLE,RR                                 n=  10 L1s= 2 | Driveline Axle=9 | Electrical=1
+    SENSOR; MAP                                    n=   8 L1s= 2 | Electrical=7 | Intake Exhaust Emission=1
+    BAR; TORSION,UPR                               n=   8 L1s= 2 | Suspension=7 | Accident & Body=1
+    BODY ASM; REAR                                 n=   8 L1s= 2 | Accident & Body=6 | Electrical=2
+    SHAFT ASM; FRT DRIVE                           n=   8 L1s= 2 | Driveline Axle=6 | Electrical=2
+    CONDENSER ASM; A/C                             n=   7 L1s= 2 | Cooling=6 | Electrical=1
+    CONVERTER; DC                                  n=   7 L1s= 2 | Intake Exhaust Emission=4 | Electrical=3
+    CAP; OIL TANK                                  n=   6 L1s= 2 | Brakes=5 | Clutch=1
+    SENSOR; AIR BAG                                n=   5 L1s= 2 | Cabin Interior=3 | Electrical=2
+    CONDENSER; A/C                                 n=   5 L1s= 2 | Cooling=4 | Electrical=1
+    CLIP; HARNESS                                  n=   4 L1s= 2 | Chassis Frame=2 | Electrical=2
+    RUBBER; MTG                                    n=   3 L1s= 2 | Steering=2 | Cooling=1
+    GASKET; CONNECTOR                              n=   3 L1s= 2 | Electrical=2 | Fuel System=1
+    RUBBER; MTG,HD COVER,OUTER                     n=   3 L1s= 2 | Engine=2 | Intake Exhaust Emission=1
+    COVER; RR                                      n=   3 L1s= 2 | Accident & Body=2 | Cooling=1
+    FRAME; DRIVE TRAIN ELEC VEH                    n=   3 L1s= 2 | Electrical=2 | Chassis Frame=1
+    CLIP; BAND                                     n=   2 L1s= 2 | Chassis Frame=1 | Electrical=1
+    COIL ASM; SIR                                  n=   2 L1s= 2 | Cabin Interior=1 | Electrical=1
+    MICROPHONE                                     n=   2 L1s= 2 | Electrical=1 | Accident & Body=1
+    PIN; RR SPR                                    n=   2 L1s= 2 | Electrical=1 | Suspension=1
+    RING; SNAP,CENTER BRG,MAINSHAFT                n=   2 L1s= 2 | Engine=1 | Clutch=1
+
+  *** the audit reported 71 contested descriptions on its own basis;
+      on the current master the count is 27. Report both.
+
+==============================================================================
+3. FIGURE KEY -> ONE FAMILY?  (master evidence)
+  distinct fig_keys              : 4,179
+  map to exactly ONE family      : 4,104 (98.21%)
+  map to MORE THAN ONE family    : 75 (1.79%)
+  fig_keys used by the queue that are multi-family:
+    350-089    queue=  6 master=  59 L1s= 2 | Brakes=58 | Electrical=1
+    450-062    queue=  1 master=  45 L1s= 2 | Suspension=44 | Electrical=1
+    022-001    queue= 10 master=  39 L1s= 2 | Engine=38 | Chassis Frame=1
+    014-112    queue=  1 master=  39 L1s= 2 | Transmission=34 | Engine=5
+    871-001    queue=  2 master=  12 L1s= 2 | Cooling=11 | Electrical=1
+    315-022    queue=  1 master=  12 L1s= 2 | Electrical=11 | Wheels Hub=1
+    145-002    queue=  1 master=   8 L1s= 2 | Maintenance Service=7 | Fuel System=1
+    651-019    queue=  2 master=   8 L1s= 2 | Accident & Body=4 | Electrical=4
+    930-001    queue=  1 master=   8 L1s= 2 | Accident & Body=6 | Electrical=2
+    412-001    queue=  2 master=   8 L1s= 2 | Driveline Axle=6 | Electrical=2
+    826-437    queue=  1 master=   7 L1s= 2 | Intake Exhaust Emission=4 | Electrical=3
+    010-043    queue=  1 master=   3 L1s= 2 | Engine=2 | Intake Exhaust Emission=1
+    815-016    queue=  1 master=   3 L1s= 2 | Electrical=2 | Chassis Frame=1
+    242-006    queue=  1 master=   2 L1s= 2 | Engine=1 | Lubrication=1
+    331-001    queue=  9 master=   2 L1s= 2 | Electrical=1 | Clutch=1
+    442-039    queue=  1 master=   2 L1s= 2 | Transmission=1 | Lubrication=1
+
+  THE DOCUMENTED TRAP, REPRODUCED ON THE QUEUE's OWN FIG KEYS:
+    fig_key 220-001: master 38 parts -> {'Literature Marketing': np.int64(38)}
+        7551912400  TRANSMISSION ASM; MANUAL                 -> Literature Marketing > Manuals > Manual
+        7552788640  TRANSMISSION ASM; MANUAL                 -> Literature Marketing > Manuals > Manual
+        8973739190  TRANSMISSION ASM; MANUAL                 -> Literature Marketing > Manuals > Manual
+        QUEUE 8976646550  TRANSMISSION ASM; MANUAL             list=5,112.02 pr00=5,327.64  <-- this row
+        QUEUE 8975480980  TRANSMISSION ASM; MANUAL             list=2,379.90 pr00=2,480.28  <-- this row
+    fig_key 011-001: master 12 parts -> {'Engine': np.int64(12)}
+        8971147136  HEAD ASM; CYL                            -> Engine > Cylinder Head > Head Cover
+        8972787480  HEAD ASM; CYL                            -> Engine > Cylinder Head > Head Cover
+        8973583662  HEAD ASM; CYL                            -> Engine > Cylinder Head > Head Cover
+        QUEUE 7553116080  HEAD ASM; CYL                        list=953.72 pr00=4,644.60  <-- this row
+        QUEUE 8982703783  HEAD ASM; CYL                        list=871.69 pr00=1,746.87  <-- this row
+
+==============================================================================
+4. CROSS-CHECK: the same test on the independent classification file
+  classified rows                 : 155,475
+  distinct descriptions           : 13,541
+  map to MORE THAN ONE family     : 2,300 (16.99%)
+
+==============================================================================
+5. THE TIER SPLIT
+   Tier A = description names exactly one family in the master evidence
+            AND that evidence has >=2 parts behind it AND the fig_key is not
+            one of the contested keys (a double signal, description + fig key).
+   Tier B = everything else.
+  Tier A: rows=  350  unique PN=  349  PR00 EUR=    111,914.56  list EUR=   63,489.10  ( 38.1% of PR00 EUR)
+  Tier B: rows=  961  unique PN=  954  PR00 EUR=    181,903.96  list EUR=   66,687.40  ( 61.9% of PR00 EUR)
+
+  Tier B, broken down by why:
+    description and fig_key disagree                     rows=    2  PR00 EUR=         8.24
+    description known but only one master part behind it rows=   74  PR00 EUR=    12,590.03
+    description maps to more than one family             rows=   25  PR00 EUR=    28,861.81
+    description not in the master evidence at all        rows=  792  PR00 EUR=   126,958.76
+    fig_key is a contested key                           rows=   68  PR00 EUR=    13,485.12
+
+  --- Tier A: the description rules that do the work ---
+    distinct Tier A descriptions: 224
+    TRANSMISSION ASM; MANUAL                     -> Literature Marketing       rows=  2 EUR=    7,807.92
+    BACK ASM; SEAT                               -> Cabin Interior             rows= 11 EUR=    7,096.39
+    HEAD ASM; CYL                                -> Engine                     rows=  2 EUR=    6,391.47
+    SPRING ASM; LEAF,FRT                         -> Suspension                 rows= 10 EUR=    6,209.91
+    LAMP ASM; FOG                                -> Electrical                 rows=  3 EUR=    6,046.28
+    DISPLAY; MULTI                               -> Electrical                 rows=  2 EUR=    4,666.70
+    TURBOCHARGER ASM                             -> Intake Exhaust Emission    rows=  1 EUR=    4,475.48
+    TRANSFER ASM                                 -> Driveline Axle             rows=  1 EUR=    4,341.71
+    CONTROLLER; ABS                              -> Electrical                 rows=  4 EUR=    4,328.23
+    CONTROL UNIT; ENG                            -> Electrical                 rows=  3 EUR=    3,638.72
+    PIPE; HTR                                    -> Cooling                    rows= 11 EUR=    3,010.10
+    TANK; FUEL                                   -> Fuel System                rows=  4 EUR=    2,539.69
+    HARNESS; FRAME,FRT                           -> Electrical                 rows=  2 EUR=    2,472.29
+    GEAR SET; FINAL DRIVE,FRT                    -> Transmission               rows=  1 EUR=    2,134.16
+    STARTER ASM                                  -> Electrical                 rows=  3 EUR=    1,972.77
+    AXLE; FRT                                    -> Driveline Axle             rows=  2 EUR=    1,804.42
+    STEP; BODY SIDE                              -> Accident & Body            rows=  4 EUR=    1,794.15
+    LAMP ASM; RR COMB                            -> Accident & Body            rows=  2 EUR=    1,724.66
+    PLATE ASM; PRESSURE,CLU                      -> Clutch                     rows=  1 EUR=    1,375.30
+    BUMPER ASM; FRT                              -> Accident & Body            rows=  2 EUR=    1,328.12
+    LAMP ASM; HEAD                               -> Accident & Body            rows=  3 EUR=    1,215.32
+    TRANSMITTER; DOOR LOCK                       -> Accident & Body            rows=  1 EUR=    1,186.60
+    GUIDE; AIR                                   -> Cooling                    rows=  7 EUR=    1,130.68
+    COVER; TRIM,FRT SEAT,CUSHION                 -> Wheels Hub                 rows=  2 EUR=    1,064.27
+    FILTER ASM; FUEL                             -> Maintenance Service        rows=  2 EUR=      939.26
+    LINER SET; ENG CYL                           -> Engine                     rows=  3 EUR=      933.30
+    BAR; FRT BUMPER                              -> Accident & Body            rows=  1 EUR=      925.95
+    AIR BAG UNIT                                 -> Cabin Interior             rows=  3 EUR=      834.21
+    METER COMPL; CLUSTER                         -> Electrical                 rows=  3 EUR=      830.09
+    SHAFT ASM; STRG                              -> Steering                   rows=  2 EUR=      802.86
+    HARNESS; CAB                                 -> Electrical                 rows=  2 EUR=      784.39
+    HARNESS; ENG                                 -> Electrical                 rows=  4 EUR=      767.40
+    CRANKSHAFT                                   -> Engine                     rows=  1 EUR=      727.06
+    FILTER ASM; OIL                              -> Maintenance Service        rows=  1 EUR=      689.52
+    KING PIN KIT                                 -> Steering                   rows=  1 EUR=      622.36
+    ARM; LWR CONT                                -> Suspension                 rows=  2 EUR=      608.86
+    STEERING UNIT                                -> Steering                   rows=  1 EUR=      569.47
+    GASKET SET; ENG OVERHAUL                     -> Transmission               rows=  2 EUR=      534.94
+    EVAPORATOR ASM; HEATER                       -> Cabin Interior             rows=  1 EUR=      533.37
+    RAIL ASM; COMMON                             -> Fuel System                rows=  1 EUR=      531.70
+    DRM                                          -> Electrical                 rows=  2 EUR=      467.83
+    FENDER; FRT                                  -> Accident & Body            rows=  1 EUR=      458.52
+    COVER; RR,TRANS                              -> Transmission               rows=  1 EUR=      442.58
+    WHEEL; STRG                                  -> Wheels Hub                 rows=  3 EUR=      439.68
+    ARM; UPR CONT                                -> Suspension                 rows=  2 EUR=      432.64
+    WHEEL; DISC,AL                               -> Wheels Hub                 rows=  2 EUR=      422.54
+    BRACKET; LAMP,RR COMB                        -> Electrical                 rows=  2 EUR=      419.27
+    PUMP ASM; OIL,P/S                            -> Fuel System                rows=  1 EUR=      417.21
+    SPRING; COIL,FRT SUSP                        -> Suspension                 rows=  2 EUR=      411.48
+    CYLINDER ASM; CLUTCH MASTER                  -> Brakes                     rows=  1 EUR=      391.89
+    HOSE; RUBBER,FUEL LEAK                       -> Fuel System                rows=  1 EUR=      385.93
+    CONTROL UNIT; DEF DCM                        -> Electrical                 rows=  1 EUR=      375.67
+    CAMERA; REAR                                 -> Electrical                 rows=  1 EUR=      375.56
+    PUMP ASM; OIL                                -> Fuel System                rows=  2 EUR=      374.99
+    PUMP KIT                                     -> Fuel System                rows=  1 EUR=      364.51
+    HARNESS; CHAS                                -> Electrical                 rows=  2 EUR=      343.76
+    BODY ASM; DEF TANK                           -> Intake Exhaust Emission    rows=  1 EUR=      331.25
+    REINFORCEMENT; BUMPER                        -> Accident & Body            rows=  1 EUR=      331.20
+    BLADE; WIPER                                 -> Accident & Body            rows=  3 EUR=      330.85
+    PISTON                                       -> Engine                     rows=  2 EUR=      323.88
+
+  --- Tier A: sample of descriptions NOT carrying a text rule (the risk) ---
+    Tier A rows with an obvious system word in the description : 7
+    Tier A rows WITHOUT one                                    : 343
+    (description | family assigned | fig_key | rows | EUR | master parts behind)
+      BACK ASM; SEAT                           | Cabin Interior           | 750-001   |  11 |   7,096.39 | 31
+      SPRING ASM; LEAF,FRT                     | Suspension               | 450-002   |  10 |   6,209.91 | 40
+      LAMP ASM; FOG                            | Electrical               | 801-032   |   3 |   6,046.28 | 35
+      DISPLAY; MULTI                           | Electrical               | 890-299   |   2 |   4,666.70 | 15
+      CONTROLLER; ABS                          | Electrical               | 826-158   |   4 |   4,328.23 | 12
+      CONTROL UNIT; ENG                        | Electrical               | 060-613   |   3 |   3,638.72 | 131
+      PIPE; HTR                                | Cooling                  | 845-009   |  11 |   3,010.10 | 2
+      TANK; FUEL                               | Fuel System              | 140-001   |   4 |   2,539.69 | 22
+      HARNESS; FRAME,FRT                       | Electrical               | 810-008   |   2 |   2,472.29 | 26
+      GEAR SET; FINAL DRIVE,FRT                | Transmission             | 415-021   |   1 |   2,134.16 | 7
+      STARTER ASM                              | Electrical               | 060-001   |   3 |   1,972.77 | 17
+      AXLE; FRT                                | Driveline Axle           | 410-001   |   2 |   1,804.42 | 4
+      STEP; BODY SIDE                          | Accident & Body          | 620-102   |   4 |   1,794.15 | 40
+      LAMP ASM; RR COMB                        | Accident & Body          | 803-001   |   2 |   1,724.66 | 78
+      PLATE ASM; PRESSURE,CLU                  | Clutch                   | 201-002   |   1 |   1,375.30 | 46
+      BUMPER ASM; FRT                          | Accident & Body          | 601-001   |   2 |   1,328.12 | 36
+      LAMP ASM; HEAD                           | Accident & Body          | 801-001   |   3 |   1,215.32 | 161
+      TRANSMITTER; DOOR LOCK                   | Accident & Body          | 730-068   |   1 |   1,186.60 | 11
+      GUIDE; AIR                               | Cooling                  | 603-138   |   7 |   1,130.68 | 3
+      COVER; TRIM,FRT SEAT,CUSHION             | Wheels Hub               | 750-013   |   2 |   1,064.27 | 66
+      FILTER ASM; FUEL                         | Maintenance Service      | 041-001   |   2 |     939.26 | 38
+      LINER SET; ENG CYL                       | Engine                   | 012-002   |   3 |     933.30 | 10
+      BAR; FRT BUMPER                          | Accident & Body          | 601-024   |   1 |     925.95 | 27
+      AIR BAG UNIT                             | Cabin Interior           | 827-023   |   3 |     834.21 | 26
+      METER COMPL; CLUSTER                     | Electrical               | 821-001   |   3 |     830.09 | 97
+      SHAFT ASM; STRG                          | Steering                 | 431-002   |   2 |     802.86 | 5
+      HARNESS; CAB                             | Electrical               | 810-001   |   2 |     784.39 | 23
+      HARNESS; ENG                             | Electrical               | 810-013   |   4 |     767.40 | 39
+      CRANKSHAFT                               | Engine                   | 015-001   |   1 |     727.06 | 12
+      FILTER ASM; OIL                          | Maintenance Service      | 050-496   |   1 |     689.52 | 10
+      KING PIN KIT                             | Steering                 | 410-004   |   1 |     622.36 | 13
+      ARM; LWR CONT                            | Suspension               | 450-084   |   2 |     608.86 | 13
+      GASKET SET; ENG OVERHAUL                 | Transmission             | 005-001   |   2 |     534.94 | 112
+      EVAPORATOR ASM; HEATER                   | Cabin Interior           | 860-234   |   1 |     533.37 | 8
+      RAIL ASM; COMMON                         | Fuel System              | 040-211   |   1 |     531.70 | 7
+      DRM                                      | Electrical               | 060-897   |   2 |     467.83 | 3
+      FENDER; FRT                              | Accident & Body          | 605-014   |   1 |     458.52 | 35
+      COVER; RR,TRANS                          | Transmission             | 220-421   |   1 |     442.58 | 5
+      WHEEL; STRG                              | Wheels Hub               | 430-003   |   3 |     439.68 | 29
+      ARM; UPR CONT                            | Suspension               | 450-025   |   2 |     432.64 | 14

@@ -4,7 +4,7 @@
 
 **Purpose:** one prompt that (1) walks every live graph/dashboard, (2) names what is actually very good, (3) names where good data is missing, (4) builds an honest OEM vs IAM **where we are** picture — without inventing an IAM capture %.
 
-**How to use:** paste the fenced block below into a fresh session with full ISZE repo access. Do not run it in the same session that is already mid-rebuild. Output stays in chat (Mode B). Write a markdown report under `00_docs/` only if Jerome asks.
+**How to use:** paste the fenced block below into a fresh session with full ISZE repo access. Do not run it in the same session that is already mid-rebuild. Output stays in chat (internal). Write a markdown report under `00_docs/` only if Jerome asks.
 
 **Grounding (2026-08-18):** `02_dashboards/roadmaps/html.md` is **stale** (missing Part Groups, Aftermarket Live Pricing, GPS Network SPU, MD Pack Capture, pricing engines, etc.). PRISM IA is in `03_analytics/Isuzu/prism/docs/DASHBOARD_IA.md`. Capture has **two correct ITUK lanes** — `00_docs/ITUK_PRISM_LANE_BRIDGE.md`. IAM scrapes are **price**, not volume (`eucon_uk_survey_2023_price_gap.meta.json`: ~38 priced PNs; DB coverage often 1–17% of billed book). Dealer sell-out exists only for **ITUK, UTI, Ireland, IUK, Greece**.
 
@@ -13,7 +13,7 @@
 ## Prompt — Dashboard quality + OEM/IAM capture gap
 
 ```
-You are working in the ISZE repo (Isuzu Motors Europe, parts hub). This is Mode B
+You are working in the ISZE repo (Isuzu Motors Europe, parts hub). This is internal
 (internal sparring with Jerome). Read INDEX.md → 00_docs/ROUTING.yaml → AGENTS.md
 first. Follow them exactly.
 
@@ -38,7 +38,7 @@ Numbers
   not exist, write "unknown — source gap" and stop.
 
 Language / entities
-- Chat = Mode B. Do not put Mode B nicknames into any file you might later
+- Chat = internal. Do not put internal nicknames into any file you might later
   share. Do not say "street" / "street fills" — say OEM peer retail / dealer
   sell-out / reference sell-out / price index.
 - PMS primary = line_type=total (sales is sales). Genuine capture is an extra
@@ -124,7 +124,7 @@ A. HTML live set
    Glob 02_dashboards/**/*.html excluding the ignore list above.
    For each file record: path, last-modified, purpose in one line, data feed
    (embedded JSON / sibling JSON / .cmd launcher / dead fetch), whether it
-   is Mode A (client) or internal.
+   is shared (client) or internal.
 
 B. PRISM live set
    Every pages/*.py that draws a chart. Use DASHBOARD_IA.md as the question
@@ -166,7 +166,7 @@ Score every chart/page (not every decorative KPI chip) on four axes:
 1. Decision  — does a human take a different action after seeing it?
 2. Data      — green verify / named source / correct grain / honest caveat
 3. Visual    — paints, one series per intended series, readable, file:// or
-               launcher works, no white-on-white, no Dutch in Mode A IDS
+               launcher works, no white-on-white, no Dutch in shared IDS
 4. Uniqueness — not the same GPS heatmap for the fifth time
 
 Verdict per chart (exactly one):
@@ -309,6 +309,6 @@ or whether he wants the one-pager built).
 
 ## After the run
 
-- The audit is Mode B. If Jerome wants a Mode A one-pager built, that is a **separate** rebuild ask.
+- The audit is internal. If Jerome wants a shared one-pager built, that is a **separate** rebuild ask.
 - Do not silently turn this prompt into HTML/PPTX.
 - If a later session implements the one-pager, it must still obey `isze-no-ship-without-ok.mdc` and `isze-pms-sales-is-sales.mdc` (total capture first).

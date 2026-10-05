@@ -80,7 +80,7 @@ This is the Prompt 1 redirect: “who needs attention” without a fake price-ri
 |---|------|------|--------|
 | 2.1 | ✅ **Build `account_health.parquet`** from existing P2a (2026-08-18). Draft NONE/AMBER/RED — not a KPI. | Done (builder). **Your 1-day threshold pass still open.** | Who went quiet, without a fake price-risk score |
 | 2.2 | CC-depth — **not required**; `n_cc` already on `interaction_fact` | Closed for P4 | Escalation uses max CC per thread |
-| 2.3 | Surface: internal CSV / PRISM widget **after** 2.1 is calibrated — not a Mode A pack until you say ship | Your OK after 4.9 | Mode A: no pipeline jargon |
+| 2.3 | Surface: internal CSV / PRISM widget **after** 2.1 is calibrated — not a shared pack until you say ship | Your OK after 4.9 | shared: no pipeline jargon |
 | 2.4 | ✅ **Account-health ops triage pack** (2026-08-19) — `01_data/17_interactions/account_health_ops_triage.csv` + note. Draft thresholds, internal only | Done | Feeds the calibration conversation; still not a call list |
 
 Detail and task list stay in `00_docs/roadmaps/ai_sales_intelligence.md` §9. This roadmap only says: **P4 is now first in the AIM-replacement queue**, not a side quest.

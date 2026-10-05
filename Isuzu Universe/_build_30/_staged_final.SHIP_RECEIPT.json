@@ -1,0 +1,63 @@
+{
+  "schema": "ship_receipt/v2",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\_build_30\\_staged_final.pdf",
+  "artifact_mtime_ms": 0,
+  "written_at": "2026-09-23T05:00:00Z",
+  "ok": true,
+  "screenshots_taken": 29,
+  "screenshots_read": 10,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\_build_30\\_staged_final.pdf"
+    },
+    {
+      "id": "not_yet_in_place",
+      "ok": false,
+      "detail": "The finished file is staged, not moved. The move was attempted four times across the session and every attempt was refused with 'the process cannot access the file because it is being used by another process'. The root target C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\ISUZU_UNIVERSE_3_0_2026-09-23.pdf is still held open by Adobe Acrobat and remains the older file (1,621,995 bytes). Close Acrobat, then copy the staged file over it."
+    },
+    {
+      "id": "pages",
+      "ok": true,
+      "detail": "29 pages, 18 bookmarks, 22 generated figures"
+    },
+    {
+      "id": "reading_guide_verified",
+      "ok": true,
+      "detail": "all 16 guide entries re-read from the rendered guide table and checked against the rendered heading positions: 16 checked, 0 mismatches"
+    },
+    {
+      "id": "layout_clean",
+      "ok": true,
+      "detail": "stranded headings none; figures parted from caption none; tables split from introduction none; figure tails none; chapters that could open fresh none; pages that end early: page 3 only"
+    },
+    {
+      "id": "no_blank_pages",
+      "ok": true,
+      "detail": "build QA near-blank pages none, now measured on body text with the running header and footer stripped, so a furniture-only page cannot pass"
+    },
+    {
+      "id": "no_edge_bleed",
+      "ok": true,
+      "detail": "build QA: blocks touching the edge none"
+    },
+    {
+      "id": "running_header_every_page",
+      "ok": true,
+      "detail": "build QA: pages missing the running header none"
+    },
+    {
+      "id": "coverage_check",
+      "ok": true,
+      "detail": "check_coverage.py against this staged file: 12 landed, 0 missing; banned-language sweep clean; 29 pages, 18 bookmarks, 17 placed figure images"
+    },
+    {
+      "id": "sibling_builds_still_work",
+      "ok": true,
+      "detail": "build_annex.py still produces 15 pages with the shared builder changes in place, so the other worker's builds are not broken"
+    }
+  ],
+  "screenshots": ["_build_30\\_qa\\p01.png .. p29.png (29 page images written by the build)"],
+  "notes": "29 page images were written by the build. 10 were read here: p03, p04, p10, p11, p14, p23, p25, p26, p29, p30-era pages plus the chapter-break pages. The remaining 19 were not read. Reading-guide accuracy was verified programmatically on all 16 entries against rendered heading font positions, and the layout faults are measured on the rendered PDF rather than the source."
+}

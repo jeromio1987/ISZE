@@ -1,0 +1,186 @@
+{
+  "mode": "release",
+  "run_at": "2026-10-02T13:20:15.083505+00:00",
+  "classifier_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\aim_pn_classification_release_2026-10-02-chassis-frame.csv",
+  "classifier_sha256": "9bb86a9b4d89c5954cd6dd15fdc977db44e66cddaa15e3e70bd0285e3bf3e65b",
+  "resolved_from": "APPROVED release in C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\RELEASES.json",
+  "approved_release": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\aim_pn_classification_release_2026-10-02-chassis-frame.csv",
+  "meta_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\aim_pn_classification_release_2026-10-02-chassis-frame.meta.json",
+  "meta_present": true,
+  "meta_resolved_as": "sibling",
+  "drift_baseline_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\aim_pn_classification_release_2026-10-02-chassis-frame.gate.json",
+  "baseline_same_file": true,
+  "checks": [
+    {
+      "id": "release_approved",
+      "ok": true,
+      "measured": "APPROVED (2026-10-02-chassis-frame, matched by hash)",
+      "expected": "APPROVED in _releases/RELEASES.json, sha256 equal to the register",
+      "note": "OK: aim_pn_classification_release_2026-10-02-chassis-frame.csv matches approved release 2026-10-02-chassis-frame (9bb86a9b4d89...)"
+    },
+    {
+      "id": "file_rows",
+      "ok": true,
+      "measured": 164919,
+      "expected": "> 100000",
+      "note": ""
+    },
+    {
+      "id": "duplicate_keys",
+      "ok": true,
+      "measured": 0,
+      "expected": 0,
+      "note": ""
+    },
+    {
+      "id": "key_length",
+      "ok": true,
+      "measured": 0,
+      "expected": 0,
+      "note": "every part_number 10 chars; non-part rows (line_kind != 'part') exempt by identity, not by length"
+    },
+    {
+      "id": "axis_a_l1_vocabulary",
+      "ok": true,
+      "measured": [],
+      "expected": "no new Axis A Level-1 values",
+      "note": "Axis A = identity (catalog_l*). A new L1 is a taxonomy decision, not a data update"
+    },
+    {
+      "id": "axis_a_l2_count",
+      "ok": true,
+      "measured": 27,
+      "expected": "20-40",
+      "note": "approved baseline 27 (catalog_symbolic_leaf_20260920)"
+    },
+    {
+      "id": "axis_a_l3_count",
+      "ok": true,
+      "measured": 177,
+      "expected": "100-300",
+      "note": "approved baseline 177 (catalog_symbolic_leaf_20260920)"
+    },
+    {
+      "id": "hierarchy_orphans",
+      "ok": true,
+      "measured": 0,
+      "expected": 0,
+      "note": ""
+    },
+    {
+      "id": "pr00_copy_integrity",
+      "ok": true,
+      "measured": 99.9733,
+      "expected": ">= 99.0% vs pinned reference",
+      "note": "COPY ONLY \u2014 aim_pn_classification_release_2026-10-02-chassis-frame.csv catalogue cols vs PINNED pr00 reference pr00_classification_reference_20260920.csv (sha256 98e64b5bdaef, git c813330f:01_data/00_derived/pr00_classification.csv (pr00 as committed 20 Sep 2026)), 164794 rows, re-measured by this gate. Reference reason: Jerome decision 2026-10-02 (chat): copy integrity is measured against pr00_classification.csv as committed 20 Sep 2026 (git c813330f), not against today's file, because today's file carries the 21 Sep regression (1,660 rows). Pinned as a hash-recorded copy so the reference cannot move underneath the gate. Does not prove correctness vs customs / figures / part text.",
+      "reference_sha256": "98e64b5bdaef73819cf954ce96241f1a9b49d8fbd998d02700ae8494028bea34",
+      "pinned_reference": {
+        "reference_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\pr00_classification_reference_20260920.csv",
+        "reference_sha256_expected": "98e64b5bdaef73819cf954ce96241f1a9b49d8fbd998d02700ae8494028bea34",
+        "reference_sha256_measured": "98e64b5bdaef73819cf954ce96241f1a9b49d8fbd998d02700ae8494028bea34",
+        "reference_source": "git c813330f:01_data/00_derived/pr00_classification.csv (pr00 as committed 20 Sep 2026)",
+        "reference_reason": "Jerome decision 2026-10-02 (chat): copy integrity is measured against pr00_classification.csv as committed 20 Sep 2026 (git c813330f), not against today's file, because today's file carries the 21 Sep regression (1,660 rows). Pinned as a hash-recorded copy so the reference cannot move underneath the gate.",
+        "meta_match_pct": 99.9733,
+        "gate_measured": {
+          "rows_checked": 164794,
+          "rows_matching": 164750,
+          "match_pct": 99.9733
+        },
+        "agrees_with_meta": true
+      }
+    },
+    {
+      "id": "leading_zero_keys_present",
+      "ok": true,
+      "measured": 1606,
+      "expected": ">= 1000",
+      "note": "part numbers beginning with 0 must remain in the file after padding fix"
+    },
+    {
+      "id": "hs6_coherence",
+      "ok": true,
+      "measured": 63.0,
+      "expected": ">= 55.0%",
+      "note": "share of parts whose catalog_l2 matches the majority L2 of their own HS6 subheading"
+    },
+    {
+      "id": "figure_purity",
+      "ok": true,
+      "measured": 72.0,
+      "expected": ">= 65.0%",
+      "note": "share of parts whose catalog_l2 matches the majority L2 of their own Isuzu figure"
+    },
+    {
+      "id": "axis_conflict_share",
+      "ok": true,
+      "measured": 11.84,
+      "expected": "<= 12.0%",
+      "note": "legacy workbook system-named rows (context); must not grow"
+    },
+    {
+      "id": "axis_columns_separate",
+      "ok": true,
+      "measured": {
+        "missing_cols": [],
+        "fused_system_into_catalog_l1": 0
+      },
+      "expected": "Axis A cols present; workbook system name never equals catalog_l1 on conflict rows",
+      "note": "Two-axes lock: Axis A = catalog_l*/fig_key identity; Axis B = commercial score beside (not a Level-1 parent). Wear views hang from L2/L3 or fig_key."
+    },
+    {
+      "id": "residual_share",
+      "ok": true,
+      "measured": 5.85,
+      "expected": "<= 8.0%",
+      "note": "Other / review must be named, never presented as a family"
+    },
+    {
+      "id": "two_axes_contract",
+      "ok": true,
+      "measured": "aim_pn_classification_release_2026-10-02-chassis-frame.meta.json states the two-axes contract: axis A identity + axis B commercial + parent denied",
+      "expected": "Axis A + Axis B named; commercial not parent",
+      "note": "DECISIONS.md 2026-09-17 two-axes lock"
+    },
+    {
+      "id": "description_ambiguity",
+      "ok": true,
+      "measured": 891,
+      "expected": "< 2% of rows",
+      "note": ""
+    },
+    {
+      "id": "euro_coverage",
+      "ok": true,
+      "measured": 93.82,
+      "expected": ">= 90.0%",
+      "note": "share of billed euro in 2025-01-01..2026-06-30 on a real node"
+    },
+    {
+      "id": "drift_vs_previous_run",
+      "ok": true,
+      "measured": "within tolerance",
+      "expected": "< 1.0% per check; L2/L3=catalog_symbolic_leaf_20260920",
+      "note": ""
+    }
+  ],
+  "checks_not_checked": [],
+  "checks_pending": [],
+  "pr00_reference": {
+    "reference_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\pr00_classification_reference_20260920.csv",
+    "reference_sha256_expected": "98e64b5bdaef73819cf954ce96241f1a9b49d8fbd998d02700ae8494028bea34",
+    "reference_sha256_measured": "98e64b5bdaef73819cf954ce96241f1a9b49d8fbd998d02700ae8494028bea34",
+    "reference_source": "git c813330f:01_data/00_derived/pr00_classification.csv (pr00 as committed 20 Sep 2026)",
+    "reference_reason": "Jerome decision 2026-10-02 (chat): copy integrity is measured against pr00_classification.csv as committed 20 Sep 2026 (git c813330f), not against today's file, because today's file carries the 21 Sep regression (1,660 rows). Pinned as a hash-recorded copy so the reference cannot move underneath the gate.",
+    "meta_match_pct": 99.9733,
+    "gate_measured": {
+      "rows_checked": 164794,
+      "rows_matching": 164750,
+      "match_pct": 99.9733
+    },
+    "agrees_with_meta": true
+  },
+  "failed": 0,
+  "passed": 19,
+  "verdict": "PASS",
+  "note": ""
+}

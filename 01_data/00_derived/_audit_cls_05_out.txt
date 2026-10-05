@@ -1,0 +1,169 @@
+﻿==============================================================================
+(a) HS COMMODITY CODE CROSS-CHECK
+  parts with a node: 154,754
+  distinct HS4 headings 86   distinct HS6 subheadings 195
+  top 20 HS6 by part count:
+    870899  15,780 PNs  EUR   2,167,976   modal L2 = Hardware (23%)
+    870829  14,890 PNs  EUR   3,333,398   modal L2 = Body parts (81%)
+    840999   9,664 PNs  EUR   2,151,895   modal L2 = Engine parts (30%)
+    854430   7,724 PNs  EUR     472,848   modal L2 = Electrical sensors (89%)
+    848410   6,898 PNs  EUR     518,524   modal L2 = Gaskets / seals (73%)
+    731815   6,572 PNs  EUR     147,818   modal L2 = Hardware (54%)
+    870830   6,009 PNs  EUR   3,230,455   modal L2 = Brake parts (73%)
+    870840   5,636 PNs  EUR     784,992   modal L2 = Transmission parts (37%)
+    903289   5,388 PNs  EUR     485,551   modal L2 = Electrical sensors (83%)
+    870850   4,143 PNs  EUR   2,942,550   modal L2 = Transmission parts (59%)
+    848490   3,949 PNs  EUR      58,322   modal L2 = Gaskets / seals (99%)
+    400931   3,653 PNs  EUR      88,402   modal L2 = Cooling (24%)
+    851220   2,631 PNs  EUR   2,089,784   modal L2 = Lighting (99%)
+    401699   2,629 PNs  EUR     165,621   modal L2 = Hardware (52%)
+    870893   2,478 PNs  EUR   1,102,182   modal L2 = Clutch parts (94%)
+    830230   2,456 PNs  EUR     225,645   modal L2 = Body parts (83%)
+    401693   2,407 PNs  EUR     184,971   modal L2 = Gaskets / seals (56%)
+    731816   2,327 PNs  EUR     125,626   modal L2 = Hardware (57%)
+    853650   2,116 PNs  EUR     260,247   modal L2 = Electrical sensors (74%)
+    870894   2,038 PNs  EUR   2,269,273   modal L2 = Steering (79%)
+
+  -- agreement index (assigned L2 vs the modal L2 of its HS6 peers) --
+  scope: HS6 groups with >= 30 parts -> 152,794 parts, EUR 46,883,211
+  agree with HS6 majority: 95,871 parts (62.7%), EUR 32,213,801 (68.7% of euro)
+
+  -- biggest euro disagreements vs HS6 majority (top 40 parts) --
+    EUR    998,989  8983767550  ROTOR; DISC BRK,FRT                        | assigned Competitive parts > Brake parts > Brake disc  | HS 870850 says Transmission parts
+    EUR    460,315  8982878080  FILTER ASM                                 | assigned Competitive parts > Filters > Other filter  | HS 842139 says Exhaust
+    EUR    381,447  8974995480  FILTER; ACL                                | assigned Comfort parts > Air conditioning > Other A/C  | HS 842199 says Filters
+    EUR    356,142  8975554500  FILTER; BLOWER UNIT                        | assigned Comfort parts > Air conditioning > Blower / fan  | HS 842199 says Filters
+    EUR    317,968  8983682091  PIPE; EXH                                  | assigned Competitive parts > Exhaust > Exhaust pipe  | HS 870899 says Hardware
+    EUR    317,650  8974985741  TURBOCHARGER ASM                           | assigned High value repair > Turbo > Turbocharger  | HS 841459 says Cooling
+    EUR    290,494  8982688122  PUMP ASM; DEF,DCM SPLY                     | assigned Competitive parts > Exhaust > Aftertreatment  | HS 841330 says Cooling
+    EUR    218,009  8984890190  NOZZLE ASM; INJ                            | assigned High value repair > Injectors > Injector nozzle  | HS 840999 says Engine parts
+    EUR    194,934  8978279610  PAD KIT; DISC BRK,W/O SHIM & CLIP          | assigned Competitive parts > Brake parts > Brake pad  | HS 870899 says Hardware
+    EUR    191,185  8983320591  NOZZLE ASM; INJ                            | assigned High value repair > Injectors > Injector nozzle  | HS 840999 says Engine parts
+    EUR    183,058  8983842670  INJECTOR ASM; DEF DCM                      | assigned High value repair > Injectors > Injector  | HS 840999 says Engine parts
+    EUR    171,313  8980252486  COOLER ASM; EGR                            | assigned Competitive parts > Exhaust > EGR component  | HS 841950 says Air conditioning
+    EUR    166,715  8984890171  PUMP ASM; FUEL,SUPPLY                      | assigned Competitive parts > Fuel system > Fuel pump  | HS 841330 says Cooling
+    EUR    156,273  8975077751  PUMP ASM; DEF,DCM SPLY                     | assigned Competitive parts > Exhaust > Aftertreatment  | HS 841360 says Steering
+    EUR    146,849  8982127181  COOLER ASM; EGR                            | assigned Competitive parts > Exhaust > EGR component  | HS 841950 says Air conditioning
+    EUR    139,270  8983314120  SENSOR; PRESSURE,DPD                       | assigned Competitive parts > Exhaust > Aftertreatment  | HS 902690 says Fuel system
+    EUR    130,707  8982050610  FILTER ASM                                 | assigned Competitive parts > Filters > Other filter  | HS 842139 says Exhaust
+    EUR    125,909  8983767530  ROTOR; DISC BRK,FRT                        | assigned Competitive parts > Brake parts > Brake disc  | HS 870850 says Transmission parts
+    EUR    123,825  5876100201  ELEMENT; AIR CLEANER                       | assigned Competitive parts > Air system > Other air system  | HS 842199 says Filters
+    EUR    120,375  1876101132  FILTER; ACL                                | assigned Comfort parts > Air conditioning > Other A/C  | HS 842199 says Filters
+    EUR    116,878  8975488420  FILTER; BLOWER UNIT                        | assigned Comfort parts > Air conditioning > Blower / fan  | HS 842199 says Filters
+    EUR    111,820  8982074350  NOZZLE ASM; INJ                            | assigned High value repair > Injectors > Injector nozzle  | HS 840999 says Engine parts
+    EUR     98,691  8975074241  TURBOCHARGER ASM                           | assigned High value repair > Turbo > Turbocharger  | HS 841459 says Cooling
+    EUR     97,937  8983373180  SENSOR ASM; DEF TANK                       | assigned Competitive parts > Exhaust > Aftertreatment  | HS 903290 says Electrical sensors
+    EUR     93,223  8983320621  PUMP ASM; FUEL,SUPPLY                      | assigned Competitive parts > Fuel system > Fuel pump  | HS 841350 says Injectors
+    EUR     90,579  8981772710  FILTER; ACL                                | assigned Comfort parts > Air conditioning > Other A/C  | HS 842199 says Filters
+    EUR     82,785  8982318983  INJECTOR ASM; DEF DCM                      | assigned High value repair > Injectors > Injector  | HS 840999 says Engine parts
+    EUR     79,470  8983064750  NOZZLE ASM; INJ                            | assigned High value repair > Injectors > Injector nozzle  | HS 840999 says Engine parts
+    EUR     77,183  8982601090  NOZZLE ASM; INJ                            | assigned High value repair > Injectors > Injector nozzle  | HS 840999 says Engine parts
+    EUR     74,338  8975340131  COOLER; CHARGE AIR                         | assigned Competitive parts > Cooling > Cooler / intercooler  | HS 841950 says Air conditioning
+    EUR     68,928  8980256421  LINK; DRAG                                 | assigned Repair parts > Hydraulic / mechanical > Linkage / lever  | HS 870894 says Steering
+    EUR     68,863  8983929650  SHAFT ASM; FRT DRIVE                       | assigned Repair parts > Hydraulic / mechanical > Shaft  | HS 870899 says Hardware
+    EUR     65,706  8983621213  BAR; FRT BUMPER                            | assigned Competitive parts > Suspension > Leaf / suspension spring  | HS 870810 says Body parts
+    EUR     63,494  8983615742  SENSOR ASM; DEF TANK                       | assigned Competitive parts > Exhaust > Aftertreatment  | HS 903290 says Electrical sensors
+    EUR     63,147  8980058750  JOINT ASM; BALL,LWR CONT ARM               | assigned Repair parts > Hydraulic / mechanical > Linkage / lever  | HS 870880 says Suspension
+    EUR     63,046  5878324001  KING PIN KIT                               | assigned Hardware & consumables > Hardware > Pin  | HS 870850 says Transmission parts
+    EUR     61,907  8973871590  ROTOR; SENSOR                              | assigned Repair parts > Electrical sensors > Sensor  | HS 870830 says Brake parts
+    EUR     61,744  7552887860  METER COMPL; CLUSTER                       | assigned Repair parts > Electrical sensors > Meter / gauge  | HS 870899 says Hardware
+    EUR     61,727  5876150521  FILTER; ACL                                | assigned Comfort parts > Air conditioning > Other A/C  | HS 842199 says Filters
+    EUR     59,311  8981394280  FILTER; BLOWER UNIT                        | assigned Comfort parts > Air conditioning > Blower / fan  | HS 842139 says Exhaust
+
+  -- HS coherence of each assigned Level 2 group --
+    Level 2                        PNs    billed EUR  HS6 modal share  distinct HS6
+    Air system                   5,480       592,045           14.6% (870899)     78
+    Air conditioning             3,172     2,158,884           17.3% (841950)     66
+    Cooling                      4,481     1,193,633           19.4% (400931)     47
+    Exhaust                      5,361     3,758,395           19.4% (870892)     60
+    Starter / alternator         1,883       478,378           20.9% (851150)     37
+    Hydraulic / mechanical       8,312     1,896,547           21.1% (870840)     65
+    Hardware                    16,919       830,749           21.2% (870899)     83
+    Turbo                        1,239       872,680           28.0% (840999)     24
+    Transmission parts           7,750     2,484,309           31.5% (870850)     61
+    Electrical sensors          19,232     6,293,859           35.7% (854430)    103
+    Steering                     4,426     2,450,135           36.4% (870894)     50
+    Suspension                   2,999       962,544           37.0% (732010)     22
+    Filters                      2,025     3,412,672           41.6% (842123)     39
+    Consumables                    853        66,203           42.0% (840999)     41
+    Body parts                  28,054     6,511,635           42.9% (870829)     81
+    Gaskets / seals             11,502       675,394           43.7% (848410)     38
+    Fuel system                  3,131       644,165           46.1% (870899)     44
+    Lighting                     5,035     2,631,631           51.5% (851220)     47
+    Injectors                    2,547     1,374,632           52.8% (840999)     41
+    Engine parts                 5,023     1,183,906           57.9% (840999)     41
+    Brake parts                  7,482     5,299,429           58.4% (870830)     57
+    Clutch parts                 3,939     1,196,011           59.3% (870893)     45
+    Mirrors                      2,136       476,246           66.9% (700910)     21
+    Belts                          480        43,844           75.8% (848350)     16
+
+==============================================================================
+(b) ISUZU OWN CATALOGUE FIGURE CROSS-CHECK
+  distinct figure numbers: 297
+  figures with >= 20 parts: 244
+  agreement with the figure's own majority group: 109,050/152,773 parts (71.4%), EUR 34,154,918/47,428,035 (72.0%)
+
+  -- 25 figures where the classifier scatters an Isuzu assembly the most --
+    fig 999      761 PNs  EUR     138,882  purity  15.6% across 21 groups -> Hardware 119, Air system 89, Gaskets / seals 88, Hydraulic / mechanical 86, Body parts 78
+    fig 997      488 PNs  EUR       1,242  purity  17.8% across 21 groups -> Hardware 87, Hydraulic / mechanical 77, Gaskets / seals 50, Engine parts 48, Brake parts 44
+    fig 244      125 PNs  EUR      47,013  purity  20.0% across 8 groups -> Transmission parts 25, Hardware 21, Filters 20, Clutch parts 17, Electrical sensors 16
+    fig 242      135 PNs  EUR      26,220  purity  20.7% across 8 groups -> Transmission parts 28, Consumables 27, Gaskets / seals 26, Electrical sensors 24, Hardware 15
+    fig 066      357 PNs  EUR      20,879  purity  21.6% across 12 groups -> Hardware 77, Air system 76, Belts 52, Starter / alternator 50, Hydraulic / mechanical 48
+    fig 052      863 PNs  EUR      61,467  purity  22.9% across 15 groups -> Turbo 198, Hardware 177, Air system 146, Consumables 84, Cooling 67
+    fig 220     1144 PNs  EUR     309,698  purity  24.3% across 17 groups -> Transmission parts 278, Hardware 255, Gaskets / seals 243, Hydraulic / mechanical 153, Clutch parts 94
+    fig 852      230 PNs  EUR      10,725  purity  25.7% across 11 groups -> Hardware 59, Air conditioning 50, Gaskets / seals 47, Cooling 35, Engine parts 15
+    fig 070       23 PNs  EUR          21  purity  26.1% across 6 groups -> Body parts 6, Gaskets / seals 5, Electrical sensors 4, Air system 3, Engine parts 3
+    fig 872       35 PNs  EUR           0  purity  28.6% across 8 groups -> Cooling 10, Gaskets / seals 8, Air conditioning 6, Hardware 4, Brake parts 3
+    fig 011     1681 PNs  EUR     209,456  purity  29.3% across 13 groups -> Gaskets / seals 492, Engine parts 462, Hardware 421, Body parts 126, Suspension 46
+    fig 345       68 PNs  EUR      11,636  purity  29.4% across 8 groups -> Hardware 20, Transmission parts 18, Suspension 9, Electrical sensors 8, Engine parts 4
+    fig 014     1973 PNs  EUR     125,161  purity  29.5% across 14 groups -> Hydraulic / mechanical 583, Engine parts 453, Hardware 299, Exhaust 216, Air system 161
+    fig 322      201 PNs  EUR      12,255  purity  30.3% across 9 groups -> Electrical sensors 61, Hardware 40, Engine parts 39, Air system 38, Hydraulic / mechanical 9
+    fig 082       47 PNs  EUR         138  purity  31.9% across 6 groups -> Gaskets / seals 15, Injectors 14, Hardware 7, Electrical sensors 6, Fuel system 4
+    fig 901      214 PNs  EUR      49,164  purity  32.7% across 13 groups -> Hardware 70, Body parts 62, Hydraulic / mechanical 33, Exhaust 14, Air system 9
+    fig 450     1923 PNs  EUR     634,960  purity  33.7% across 13 groups -> Suspension 648, Hardware 469, Hydraulic / mechanical 381, Brake parts 233, Body parts 117
+    fig 055      149 PNs  EUR     955,046  purity  34.2% across 9 groups -> Injectors 51, Air system 26, Electrical sensors 22, Body parts 14, Hardware 13
+    fig 515      452 PNs  EUR      10,642  purity  34.5% across 6 groups -> Hardware 156, Body parts 117, Hydraulic / mechanical 98, Electrical sensors 45, Suspension 22
+    fig 225      568 PNs  EUR      16,377  purity  35.0% across 11 groups -> Clutch parts 199, Hydraulic / mechanical 150, Hardware 106, Electrical sensors 77, Gaskets / seals 17
+    fig 013      831 PNs  EUR     143,042  purity  35.6% across 13 groups -> Electrical sensors 296, Gaskets / seals 171, Consumables 166, Hardware 137, Engine parts 46
+    fig 252       28 PNs  EUR           0  purity  35.7% across 4 groups -> Transmission parts 10, Clutch parts 10, Brake parts 6, Hydraulic / mechanical 2
+    fig 090       64 PNs  EUR         121  purity  35.9% across 5 groups -> Hardware 23, Transmission parts 13, Injectors 13, Gaskets / seals 8, Hydraulic / mechanical 7
+    fig 326       75 PNs  EUR         389  purity  36.0% across 8 groups -> Hardware 27, Brake parts 21, Electrical sensors 9, Engine parts 8, Body parts 6
+    fig 442      305 PNs  EUR       1,617  purity  36.4% across 10 groups -> Engine parts 111, Gaskets / seals 54, Air system 41, Hardware 38, Electrical sensors 29
+
+==============================================================================
+(c) EXACT SAME DESCRIPTION, DIFFERENT NODE
+  distinct descriptions with a node : 13,423
+  descriptions split across Level 2 : 399  (17,921 parts, EUR 5,070,348 = 10.67% of billed)
+  descriptions split across Level 3 : 477  (20,035 parts, EUR 5,399,576 = 11.36% of billed)
+
+  -- top 30 L2 clashes by euro --
+    EUR    964,332    58 PNs  FILTER; ACL                                  -> Air conditioning 56, Filters 2
+    EUR    948,419   339 PNs  ELEMENT; OIL FILTER                          -> Filters 338, Consumables 1
+    EUR    852,056   141 PNs  ELEMENT KIT; FUEL FILTER                     -> Filters 140, Brake parts 1
+    EUR    799,335   267 PNs  BUMPER ASM; FRT                              -> Body parts 265, Suspension 1, Transmission parts 1
+    EUR    286,268  1037 PNs  MIRROR ASM; DOOR                             -> Mirrors 1036, Electrical sensors 1
+    EUR    273,277   237 PNs  TRANSMISSION ASM; MANUAL                     -> Transmission parts 236, Injectors 1
+    EUR    116,534   299 PNs  FILTER ASM; FUEL                             -> Filters 298, Air conditioning 1
+    EUR     63,431    83 PNs  BELT; A/C CMPR                               -> Air conditioning 80, Cooling 2, Steering 1
+    EUR     61,364   461 PNs  TANK; FUEL                                   -> Fuel system 460, Hydraulic / mechanical 1
+    EUR     50,389    27 PNs  GEAR; PINION,DIFF                            -> Transmission parts 26, Hardware 1
+    EUR     47,754  4371 PNs  GASKET SET; ENG OVERHAUL                     -> Gaskets / seals 4352, Air system 19
+    EUR     38,862   117 PNs  FILTER; AIR CLEANER                          -> Filters 113, Air conditioning 4
+    EUR     32,861   136 PNs  PIN; WHEEL,FRT AXLE                          -> Transmission parts 134, Hardware 2
+    EUR     32,077   186 PNs  CONTROL UNIT; TRANSMISSION                   -> Transmission parts 184, Electrical sensors 2
+    EUR     32,054   145 PNs  BRACKET; FRT BUMPER                          -> Body parts 141, Suspension 4
+    EUR     30,863    46 PNs  CLUTCH; COOLING FAN                          -> Clutch parts 45, Cooling 1
+    EUR     30,561    14 PNs  GASKET; PIPE                                 -> Gaskets / seals 13, Exhaust 1
+    EUR     29,239  1565 PNs  GASKET SET; ENG HD OVERHAUL                  -> Gaskets / seals 1562, Air system 3
+    EUR     21,447     2 PNs  BUSHING; BRKT,RR SPRING                      -> Hardware 1, Suspension 1
+    EUR     18,331    83 PNs  METAL SET; CONN ROD,STANDARD                 -> Engine parts 82, Hydraulic / mechanical 1
+    EUR     18,295    26 PNs  PLUG; DRAIN,OIL                              -> Hardware 25, Fuel system 1
+    EUR     16,656    19 PNs  GASKET; PLUG                                 -> Gaskets / seals 18, Hardware 1
+    EUR     16,572   199 PNs  BOOSTER ASM; CLU                             -> Clutch parts 198, Brake parts 1
+    EUR     16,556   108 PNs  REGULATOR ASM; DOOR                          -> Starter / alternator 107, Body parts 1
+    EUR     15,870   117 PNs  PIN; WHEEL,RR AXLE                           -> Transmission parts 114, Hardware 3
+    EUR     13,757    14 PNs  PIN; GUIDE                                   -> Hardware 13, Body parts 1
+    EUR     13,548    23 PNs  SWITCH; STOP LAMP                            -> Lighting 21, Clutch parts 2
+    EUR     13,232     7 PNs  RELAY; MAIN                                  -> Electrical sensors 5, Clutch parts 1, Lighting 1
+    EUR     12,457    10 PNs  BOLT; BRK,DISC TO HUB                        -> Brake parts 9, Hardware 1
+    EUR     12,238    43 PNs  RELAY; STARTER                               -> Starter / alternator 38, Electrical sensors 4, Brake parts 1

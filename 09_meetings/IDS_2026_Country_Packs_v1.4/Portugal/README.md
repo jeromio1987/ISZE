@@ -14,7 +14,7 @@ Country-only dealer compare for ISZE / IMG colleagues. English UI.
 - Dealers: **16**
 - Geo pinned: 16 · missing: 0
 - Map: Leaflet + OpenStreetMap / CARTO (needs internet when opening HTML)
-- **No Country filter / By country / Country radar / Changelog** — Mode A colleague pack
+- **No Country filter / By country / Country radar / Changelog** — shared colleague pack
 - Benchmarks kept: dealer vs **Portugal national average**, anonymous full-network average
 
 ## Network average

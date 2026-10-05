@@ -32,4 +32,4 @@ Mirrored HTML: `02_dashboards/ids/IDS_2026_dealer_compare_Israel_LCV.html`
 | Evaluation result (feed for this HTML) | `01_data/90_INBOX/IDS_2026/reports/evaluation_result/2026 IDS Evaluation Result Report_Israel LCV.xls` |
 | Raw dealer scorecards | `01_data/90_INBOX/IDS_2026/Israel\` |
 
-Open the HTML with internet so map tiles load. No Changelog / Weak-sector overlay (Mode A).
+Open the HTML with internet so map tiles load. No Changelog / Weak-sector overlay (shared).

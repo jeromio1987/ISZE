@@ -57,10 +57,11 @@ Then re-run verify. Do not weaken bands without user confirmation.
 
 ## ITUK pilot anchors (do not regress silently)
 
-- UIO denominator: **22,389** (DVLA March 2026, `UIO_OVERRIDES["ITUK"]` in `bvp_analytics.py`)
-- Oil filter total capture bands (UIO × 0.5 svc/yr × 70% addressable, registry + BVP-catalog actuals):
-  - CY2024: **95–125%** uncapped (~121% observed)
-  - CY2025: **130–165%** uncapped (~162% observed)
+- PRISM-lane UIO denominator: **23,068** bucketed PRISM-lane UIO (cv_std + f_series split; `UIO_OVERRIDES["ITUK"]` in `bvp_analytics.py`). This is the denominator checked against `verification_fixtures.yaml`.
+- **The 22,389 figure is a separate lane, not this denominator.** It is the IML v7 external standard (DVLA March 2026) and the basis of the externally published 35.1% oil-filter cover. It is deliberately unchanged — never substitute one for the other, and never quote a PRISM-lane rate against the IML denominator.
+- Oil filter total capture bands, PRISM lane (**100% addressable**, registry + BVP-catalog actuals; bands read from `verification_fixtures.yaml`, re-based 2026-09-18 for the N35/N75 interval split):
+  - CY2024: **52–61%** uncapped (~56.4% observed)
+  - CY2025: **74–84%** uncapped (~78.7% observed)
 - These are NOT comparable to legacy dealer-level single-PN rates (~10% / ~17%)
 - `verify_derived_pipeline.py` cross-checks `UIO_OVERRIDES` vs `verification_fixtures.yaml` on every run
 

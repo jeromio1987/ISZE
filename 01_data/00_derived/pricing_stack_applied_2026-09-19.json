@@ -1,0 +1,177 @@
+{
+  "generated": "2026-09-19T10:45:44+00:00",
+  "method": {
+    "formula": "weighted_increase = SUM(qty x delta_jpy) / SUM(qty x bp_prior) - 1",
+    "recipe": "price_bp_weighted_compare_pn.csv filtered to in_scope == True AND unpriced_reason IS NULL",
+    "recipe_rows": 47617,
+    "reproduces_published_index": 0.059616,
+    "computed": 0.05961599453926434,
+    "why": "The exchange rate and the purchase discount are both already in force, so neither is a forward move. Multiplying them into the result would add changes that are already inside today's prices. The move is measured from the price comparison instead.",
+    "no_factor_chain": true,
+    "exchange_rate_is_a_decision": false,
+    "exchange_rate_note": "The rate is issued by ISZJ and applied. It is not a choice, and nothing is passed on or held back."
+  },
+  "live_inputs": {
+    "fx": 178.5,
+    "fx_list_base": 163.7,
+    "fx_previous_vintage": 172.6,
+    "discount_live": {
+      "J": 0.673,
+      "T": 0.611
+    },
+    "discount_j_prior": 0.62,
+    "discount_j_effective": "2026-01-05",
+    "note": "Recorded for traceability. None of these is an input to the weighted increase."
+  },
+  "whole_book": {
+    "weighted_increase": 0.05961599453926434,
+    "japan": 0.06208063018487108,
+    "thailand": 0.06308754566062438
+  },
+  "by_source": [
+    {
+      "source": "J",
+      "label": "Japan (IML)",
+      "rows": 22731,
+      "billed_eur": 15401370.75,
+      "weight_share": 0.4771209169238828,
+      "weighted_increase": 0.06208063018487108
+    },
+    {
+      "source": "T",
+      "label": "Thailand (IMIT)",
+      "rows": 23085,
+      "billed_eur": 14252360.9,
+      "weight_share": 0.4308056503308608,
+      "weighted_increase": 0.06308754566062438
+    },
+    {
+      "source": "(none)",
+      "label": "no source label",
+      "rows": 1801,
+      "billed_eur": 2942120.98,
+      "weight_share": 0.09207343274525637,
+      "weighted_increase": 0.030601185620378314
+    }
+  ],
+  "figure_replaced": {
+    "earlier_method": "(1 + revision) x (FX_old / FX_new) x (discount_new / discount_old) - 1",
+    "earlier_whole": 0.018,
+    "earlier_japan": 0.0574,
+    "earlier_thailand": -0.0245,
+    "earlier_per_market": {
+      "PR00": 0.0024,
+      "UTI": 0.0517,
+      "UMI": -0.007,
+      "CIS": 0.0328
+    },
+    "corrected_whole": 0.05961599453926434
+  },
+  "markets": {
+    "PR00": {
+      "note": "Main EU distributor list.",
+      "rows": 32434,
+      "part_numbers": 10968,
+      "billed_eur": 12831245.78,
+      "weighted_increase": 0.05921147633739341,
+      "japan": 0.06392482296934246,
+      "thailand": 0.06400111391423328,
+      "no_label": 0.02408760892427406,
+      "no_label_share": 0.11946846477727013,
+      "rows_japan": 13345,
+      "rows_thailand": 17896,
+      "billed_japan": 3586722.92,
+      "billed_thailand": 7777202.64
+    },
+    "UTI": {
+      "note": "Israel, sold-to 1799. Never combined with UMI.",
+      "rows": 1869,
+      "part_numbers": 1869,
+      "billed_eur": 3400405.3899999997,
+      "weighted_increase": 0.05580775741103503,
+      "japan": 0.05631158659190771,
+      "thailand": 0.09239494017373363,
+      "no_label": 0.044610654247508284,
+      "no_label_share": 0.04534232071252538,
+      "rows_japan": 1790,
+      "rows_thailand": 3,
+      "billed_japan": 3246001.06,
+      "billed_thailand": 2563.65
+    },
+    "UMI": {
+      "note": "Israel, sold-to 1797. Never combined with UTI.",
+      "rows": 2428,
+      "part_numbers": 2428,
+      "billed_eur": 2429159.96,
+      "weighted_increase": 0.056370090038081556,
+      "japan": 0.0621401380084074,
+      "thailand": 0.06272469573483705,
+      "no_label": 0.020114808450078382,
+      "no_label_share": 0.1466740673963239,
+      "rows_japan": 609,
+      "rows_thailand": 1725,
+      "billed_japan": 444445.61,
+      "billed_thailand": 1640047.4899999998
+    },
+    "CIS": {
+      "note": "GA Armenia and CBC Kazakhstan.",
+      "rows": 3090,
+      "part_numbers": 2674,
+      "billed_eur": 1455811.0699999998,
+      "weighted_increase": 0.04845536721908188,
+      "japan": 0.04644539475736338,
+      "thailand": 0.0637690838485076,
+      "no_label": 0.04463258629454378,
+      "no_label_share": 0.03271326594087597,
+      "rows_japan": 2238,
+      "rows_thailand": 734,
+      "billed_japan": 1220344.33,
+      "billed_thailand": 184886.69
+    }
+  },
+  "ebp_evidence": [
+    {
+      "n": 1,
+      "claim": "The Export Base Price is built up from IML's own costs, and our purchase price is a discount off it.",
+      "source": "Masumi Hayakawa (IML), 10 November 2025, \"FW: ISZE \u79fb\u8ee2\u4fa1\u683c\u5bfe\u5fdc 10/30\u6253\u3061\u5408\u308f\u305b\u30e1\u30e2\u30fb\u4eca\u5f8c\u306e\u5bfe\u5fdc\u4e8b\u9805\u306b\u3064\u304d\u307e\u3057\u3066\"",
+      "detail": "The factors are 62% on vehicle parts and 73.5% on industrial engines, applied to IML's Export Base Price. Worked example: an Export Base Price of 1,000 JPY gives a purchase price of 620 JPY on vehicle parts. The Export Base Price therefore sits above our purchase cost by construction, and it is not a restatement of any single cost line of ours."
+    },
+    {
+      "n": 2,
+      "claim": "IML builds its offer price from supplier cost plus a target gross profit.",
+      "source": "Hideya Kondou (ISZJ), 24 November 2020, \"ITUK\u5411\u3051MMU\u65b0\u898f\u30cf\u30fc\u30cd\u30b9\u306e\u4fa1\u683c\u8a2d\u5b9a\u306b\u3064\u3044\u3066\"",
+      "detail": "Normal at 25% gross profit, Best at 17%. So the Export Base Price is a supplier cost plus a stated margin - a build-up, not a rebilling of anyone else's cost."
+    },
+    {
+      "n": 3,
+      "claim": "The discount change and the base-price revision happen at the same moment.",
+      "source": "Takayoshi Suzuki, 22 December 2025, \"discount/whole sales ratio revisoin from Jan 5th 2026\"",
+      "detail": "Valid from 5 January 2026, and the mail states it is \"the same timing with annual EBP revision\". This is why the discount cannot be treated as a forward move: it was applied when the base price was last revised."
+    },
+    {
+      "n": 4,
+      "claim": "The base price and the class letter arrive together from Japan.",
+      "source": "Peeraya Sawangsaensuk (IMIT), 29 April 2026, \"RE: base price class\"",
+      "detail": "\"Please find the B/P, Price Class, and remark as detailed below.\" The class letter is issued with the base price, so the class factor and the base price move on the same cycle."
+    }
+  ],
+  "open_items": [
+    {
+      "id": "IE_RATE",
+      "title": "Our configuration carries only the vehicle-parts rate",
+      "detail": "03_analytics/isze_pricing/config.yaml holds J: 0.673, which is the vehicle-parts rate - 1 minus the 32.7% discount in Masumi Hayakawa's mail of 10 November 2025. The industrial-engine rate is different: 73.5% in 2025, moving to 79.7% in 2026 (1 minus 20.3%). Our configuration applies that rate to every Japan-sourced part, so an industrial-engine part is priced on the vehicle-parts rate.",
+      "action": "config.yaml is left alone, exactly as it stands. Question for IML: confirm the current industrial-engine rate and which part families it covers."
+    },
+    {
+      "id": "REVISION_SIZE",
+      "title": "IML states a different revision size from ours",
+      "detail": "Masumi Hayakawa's mail of 10 November 2025 says the CY2026 IML base price revision has an impact of \"around 3% increase for ISZE (weighted average)\". We measure 5.9616% on the published recipe. These are probably different revisions or different scopes - theirs may be a purchase-cost impact over a different window.",
+      "action": "Open reconciliation item, and it is left open rather than closed by choosing an explanation. Ask IML for the window, the scope and the weighting behind the 3%."
+    }
+  ],
+  "caveats": [
+    "The weighted increase is measured on the price comparison itself. No exchange rate and no discount is multiplied into it.",
+    "Rows with no source label carry no source split. Their weighted increase is reported separately rather than being assigned to Japan or Thailand.",
+    "Volume and mix are held flat. This is the arithmetic of the price move, not a forecast."
+  ]
+}

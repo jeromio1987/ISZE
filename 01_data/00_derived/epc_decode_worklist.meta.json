@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-09-19T07:02:56+00:00",
+  "generated_by": "03_analytics/Isuzu/prism/scripts/build_epc_decode_batches.py",
+  "batch_size": 250,
+  "universe": {
+    "part_numbers": 835,
+    "eur_all_markets_all_years": 20647862.76,
+    "rule": "every part number in bvp_pn_dimension.csv or pms_capture_supplement.csv that carries a pms_category \u2014 the whole service-part list, nothing cut off by euro or by batch size"
+  },
+  "already_carrying_a_family": {
+    "part_numbers": 835,
+    "eur": 20647862.76,
+    "source": "vehicle_family_bands.csv \u2014 the cross-reference or the existing decode"
+  },
+  "family_already_known_no_epc_needed": {
+    "part_numbers": 371,
+    "eur": 13902200.17,
+    "source": "vehicle_family_bands.csv, resolution=single_family"
+  },
+  "still_needing_an_epc_lookup": {
+    "part_numbers": 464,
+    "eur": 6745662.59,
+    "batches": 2,
+    "note": "ordered by euro so the highest value is decoded first; nothing is cut off by the batch size, the batch number is a sitting"
+  },
+  "pooled_across_families": {
+    "part_numbers": 53,
+    "eur": 4158263.68
+  },
+  "no_vehicle_reference": {
+    "part_numbers": 411,
+    "eur": 2587398.91
+  },
+  "excluded_placeholder_preamble": {
+    "part_numbers": 0,
+    "eur": 0.0,
+    "note": "REBATE, TRANSPORT and similar \u2014 not part numbers, the EPC cannot resolve them"
+  },
+  "defect_this_replaces": {
+    "expression": "need = book[~book[\"vehicle_known\"] & ~book[\"_pn\"].isin(placeholder)]",
+    "effect": "cross-reference-known part numbers were dropped from the decode because their family was known, and then dropped from the family view because they were not in the decode",
+    "effect_measured": "the part numbers the cross-reference names a vehicle for were on neither side; none of them appeared in the decode",
+    "earlier_claim_withdrawn": "an earlier estimate of 95 heavy-truck-only part numbers at EUR 1,955,749 across eleven service families does not reproduce and is not quoted here; the bare F* substring test behind it read TF*, the D-Max pickup wildcard, as an F-series token, and the euro rested on the blower filters whose model string is TF*,UC* — six part numbers billing EUR 1,347,222.32 on all years, all markets and all billing lines, which vehicle_family_bands.csv places in the Light vehicle family, not heavy truck. Nothing in this worklist computes the corrected size: that measurement belongs to vehicle_family_bands.csv, which carries 164 heavy truck part numbers billing EUR 174,832 in 2025 on a 1,238-vehicle fleet"
+  }
+}

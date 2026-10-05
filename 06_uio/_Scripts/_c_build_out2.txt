@@ -1,0 +1,28 @@
+﻿======================================================================================================================
+CANDIDATE C (retention-safety pass) - base = candidate b
+======================================================================================================================
+r54  PORTUGL   LCV   b [5022, 5438, 5976, 6384, 6691] -> c [5109.0, 5425.0, 5709.0, 5967.0, 6251.0]   k 0.889,0.890,0.894,0.898,0.907
+r69  POLAND    LCV   b [61, 49, 37, 26, 16] -> c [23.0, 19.0, 15.0, 11.0, 8.0]   k 0.821,0.826,0.789,0.733,0.727
+r88  CYPRUS    LD    b [261, 256, 249, 245, 244] -> c [205.0, 208.0, 210.0, 214.0, 220.0]   k 0.862,0.869,0.866,0.877,0.888
+r90  CYPRUS    LCV   b [3252, 3506, 3708, 3811, 3868] -> c [2238.0, 2339.0, 2445.0, 2521.0, 2614.0]   k 0.883,0.879,0.886,0.884,0.894
+
+assertions:
+  r79 unchanged at [51, 65, 79, 93, 108] : True
+  r25 CY2026F locked at 44926 : True
+  r54 == candidate a : True ; r90 == candidate a : True
+  grand total reconciles (sum of rows == projected GT) : True
+
+retention audit on the input actually used: 31 rows, 0 violation(s)
+  Grand Total 2026: 253145.15 -> 252124.15 (-1021)
+  Grand Total 2027: 246392.5 -> 245134.5 (-1258)
+  Grand Total 2028: 239403.81 -> 237812.81 (-1591)
+  Grand Total 2029: 232583.44 -> 230830.44 (-1753)
+  Grand Total 2030: 225964.19 -> 224238.19 (-1726)
+
+openpyxl saved: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\ISUZU_UIO_Overview_2026_V20_CANDIDATE_2026-09-22c.xlsx
+changelog: 170 base rows (from b) + 20 new rows = C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\UIO_V20_CHANGELOG_2026-09-22c.csv
+assumptions log: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\UIO_V20_ASSUMPTIONS_2026-09-22c.md
+verify json: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\UIO_V20_VERIFY_2026-09-22c.json
+recalculated; Grand Total cached = [252124.15, 245134.5, 237812.81, 230830.44, 224238.19]
+
+DONE  candidate c: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\ISUZU_UIO_Overview_2026_V20_CANDIDATE_2026-09-22c.xlsx

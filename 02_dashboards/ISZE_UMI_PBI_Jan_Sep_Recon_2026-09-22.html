@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UMI, January to September — Power BI against our own billing</title>
+<style>
+  :root{
+    --navy:#15233c; --terracotta:#c0552d; --paper:#f7f4ee;
+    --ink:#22252b; --muted:#5d6470; --line:#d9d2c6; --track:rgba(21,35,60,.09);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font:15px/1.62 "Segoe UI",-apple-system,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 26px 72px}
+  header{background:var(--navy);color:var(--paper);padding:40px 0 34px;margin-bottom:32px}
+  header .wrap{padding-bottom:0;padding-top:0}
+  .kicker{font:600 11.5px/1 "Segoe UI",Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#c9b9a4;margin:0 0 14px}
+  h1{font:400 34px/1.22 Georgia,"Times New Roman",serif;margin:0 0 14px;color:#fff;max-width:900px}
+  .meta{font-size:13px;color:#b9c2d1;margin:0}
+  .meta b{color:#e8e2d8;font-weight:600}
+  h2{font:400 25px/1.25 Georgia,"Times New Roman",serif;color:var(--navy);margin:44px 0 14px;padding-top:22px;border-top:2px solid var(--navy)}
+  h2:first-of-type{border-top:0;padding-top:0;margin-top:8px}
+  h3{font:600 14px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);margin:26px 0 8px;letter-spacing:.02em}
+  p{margin:0 0 14px;max-width:880px}
+  .lede{font-size:16.5px;color:var(--navy)}
+  ul{margin:0 0 16px;padding-left:20px;max-width:880px}
+  li{margin:0 0 7px}
+  code{font:13px/1.5 "Cascadia Mono",Consolas,monospace;background:rgba(21,35,60,.07);padding:1px 5px;border-radius:3px}
+  .call{border-left:4px solid var(--terracotta);background:#fff;padding:16px 20px;margin:22px 0;max-width:920px}
+  .call p:last-child{margin-bottom:0}
+  .call .tag{font:600 11.5px/1 "Segoe UI",Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase;color:var(--terracotta);display:block;margin-bottom:9px}
+  .ok{border-left-color:var(--navy)}
+  .ok .tag{color:var(--navy)}
+  .fix{border-left-color:#8a6d3b}
+  .fix .tag{color:#8a6d3b}
+
+  .scroll{overflow-x:auto;margin:18px 0 10px}
+  table{border-collapse:collapse;width:100%;background:#fff;font-size:13.4px;table-layout:fixed}
+  caption{caption-side:top;text-align:left;font:600 13.5px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);padding:0 0 9px}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:break-word}
+  thead th{background:var(--navy);color:var(--paper);font-weight:600;text-align:left;border-bottom:0}
+  thead th.n,td.n{text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:normal;word-break:keep-all;white-space:nowrap}
+  .t3 th:nth-child(1),.t3 td:nth-child(1){width:34%}
+  .t3 th:nth-child(2),.t3 td:nth-child(2),.t3 th:nth-child(3),.t3 td:nth-child(3){width:14%}
+  .t3 th:nth-child(4),.t3 td:nth-child(4){width:11%}
+  .t3 th:nth-child(5),.t3 td:nth-child(5){width:27%}
+  .t4 th:nth-child(1),.t4 td:nth-child(1){width:22%}
+  .t4 th:nth-child(2),.t4 td:nth-child(2),.t4 th:nth-child(3),.t4 td:nth-child(3){width:11%}
+  .t4 th:nth-child(4),.t4 td:nth-child(4),.t4 th:nth-child(5),.t4 td:nth-child(5){width:11%}
+  .t4 th:nth-child(6),.t4 td:nth-child(6){width:15%}
+  .t4 th:nth-child(7),.t4 td:nth-child(7){width:8%}
+  .t5 th:nth-child(1),.t5 td:nth-child(1){width:21%}
+  .t5 th:nth-child(2),.t5 td:nth-child(2),.t5 th:nth-child(3),.t5 td:nth-child(3){width:9%}
+  .t5 th:nth-child(4),.t5 td:nth-child(4){width:10%}
+  .t5 th:nth-child(5),.t5 td:nth-child(5),.t5 th:nth-child(6),.t5 td:nth-child(6){width:12%}
+  .t5 th:nth-child(7),.t5 td:nth-child(7){width:10%}
+  .t5 th:nth-child(8),.t5 td:nth-child(8){width:17%}
+  .t6 th:nth-child(1),.t6 td:nth-child(1){width:46%}
+  .t6 th:nth-child(2),.t6 td:nth-child(2),.t6 th:nth-child(3),.t6 td:nth-child(3){width:27%}
+  tbody tr:nth-child(even){background:#fdfcfa}
+  tbody tr.key{background:#fbf1ea}
+  tbody tr.key td{font-weight:600}
+  tbody tr.total td{border-top:2px solid var(--navy);font-weight:700;background:#f2ede3}
+  tbody tr.total td .sm{font-weight:400}
+  .neg{color:var(--terracotta)}
+  .pos{color:var(--navy)}
+  .sm{font-size:12.1px;color:var(--muted)}
+  td .sm{display:block;font-weight:400}
+
+  .chart{background:#fff;border:1px solid var(--line);padding:20px 22px 16px;margin:20px 0 8px}
+  .chart .qtitle{font:600 14px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);margin:0 0 4px}
+  .chart .qsub{font-size:12.6px;color:var(--muted);margin:0 0 18px}
+  .legend{display:flex;gap:22px;align-items:center;margin:0 0 16px;font-size:12.4px;color:var(--muted);flex-wrap:wrap}
+  .sw{display:inline-block;width:22px;height:9px;border-radius:2px;margin-right:6px;vertical-align:1px}
+  .sw.e{background:var(--terracotta)} .sw.d{background:#4a6189} .sw.s{background:#9aa7ba}
+  .crow{display:grid;grid-template-columns:250px 1fr 132px;gap:12px;align-items:center;padding:5px 0;border-bottom:1px solid #efeae0}
+  .crow:last-child{border-bottom:0}
+  .crow .lbl{font-size:12.8px;color:var(--navy);overflow-wrap:anywhere}
+  .crow .vals{font-size:12.4px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .t{background:var(--track);border-radius:2px;height:11px;position:relative}
+  .t i{position:absolute;left:0;top:0;bottom:0;border-radius:2px;display:block;min-width:3px}
+  .t i.e{background:var(--terracotta)} .t i.d{background:#4a6189} .t i.s{background:#9aa7ba}
+  .yrgrp{display:grid;grid-template-columns:250px 1fr 132px;gap:12px;align-items:center;margin:20px 0 8px}
+  .yrgrp .h{font:600 13px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy)}
+  .axis{display:grid;grid-template-columns:250px 1fr 132px;gap:12px;margin-top:10px;padding-top:7px;border-top:1px solid var(--line)}
+  .axis .ticks{display:flex;justify-content:space-between;font-size:11.4px;color:var(--muted)}
+
+  .stack{margin:24px 0 6px}
+  .stack .sl{font:600 13px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);margin:0 0 7px}
+  .stack .sl span{font-weight:400;color:var(--muted);font-size:12.4px}
+  .sbar{display:flex;height:34px;border-radius:3px;overflow:hidden;background:var(--track)}
+  .sbar b{display:flex;align-items:center;justify-content:center;color:#fff;font:600 11.6px/1 "Segoe UI",Arial,sans-serif;overflow:hidden;white-space:nowrap}
+  .key2{font-size:12.3px;color:var(--muted);margin:9px 0 0}
+  .foot{font-size:12.4px;color:var(--muted);margin-top:14px;max-width:920px}
+  .foot b{color:var(--navy);font-weight:600}
+  footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);font-size:12.4px;color:var(--muted)}
+  @media print{
+    body{background:#fff}
+    header{background:#15233c !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    h2{page-break-after:avoid}
+    table,.chart,.stack{page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="kicker">Internal working note &middot; not for distribution</p>
+    <h1>UMI, January to September &mdash; what the report says against what we billed</h1>
+    <p class="meta"><b>22 September 2026</b> &middot; Power BI <i>SALES DATA VP NEW</i>, pages <i>SALES HISTORY BY CAT.(qty)</i> and <i>(amount)</i>, customer UMI &middot; compared with our own part-level billing for sold-to 1797, January&ndash;September 2024 against January&ndash;September 2025</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2>Bottom line</h2>
+
+<p class="lede">Adjust the quantities and it compares cleanly, family by family. Adjust the euro and it does not land anywhere &mdash; but not for the reason I first thought, and I had to correct myself on that, so it is the first thing on this page.</p>
+
+<p>The units tie out to the piece. The report shows 85,685 pieces for UMI in January&ndash;September 2024 and 91,518 in 2025; we compute 85,687 and 91,518 from our own billing. Better than that, the split by category matches too: his COMPETITIVE PARTS is 23,243 in 2024 and so is ours, his EMISSION RELATED PARTS is 1,300 and so is ours, and so on down the list. That is a genuine tie-out and it means his volume view of UMI is our volume view.</p>
+
+<p>The euro is a different matter. The same page carries <b>two</b> euro tables, both internally consistent, and they differ from each other by &euro;539,000 in 2024 and &euro;325,000 in 2025. Both sit below what we billed.</p>
+
+<div class="call fix">
+  <span class="tag">Correction &mdash; I got this wrong first time</span>
+  <p>On my first pass I read the demand table's two columns the wrong way round and wrote that its year labels were transposed and its arithmetic impossible. <b>That was my mistake and the table is fine.</b> Every percentage on it equals its second column divided by its first, and the two columns sum exactly to the two totals it prints. There is nothing wrong with that table. Everything below uses the correct orientation, and the conclusions have been rewritten accordingly.</p>
+</div>
+
+<h2>What I compared, and how I know it is UMI</h2>
+
+<p>The UMI on the qty page is sold-to 1797 on our side &mdash; the Israel light-commercial company. UTI is 1799 and is a different business; it never appears in these numbers. That identification is not assumed, it is forced by the figures:</p>
+
+<ul>
+  <li>His January&ndash;September 2025 unit total is 91,518 and ours for 1797 is also 91,518.</li>
+  <li>His 2024 total is 85,685 against our 85,687.</li>
+  <li>His 2024 category split matches ours line for line: COMPETITIVE PARTS 23,243 both sides, EMISSION RELATED PARTS 1,300 both sides, ENGINE PARTS 449 both sides, GLASS PARTS 68 both sides.</li>
+</ul>
+
+<p>His filter panel was reading year as multiple selections and carried a stale "overview by qty" label, so the amounts table below it is what is live. I read the values off the visible table rather than relying on the label.</p>
+
+<p class="foot">One caveat on dates: our extract runs to 31 August 2026, so for September 2025 I am using our own records rather than his August refresh. That is the correct choice for a September 2025 cut, and it is a small difference in the 2025 column.</p>
+
+<h2>The numbers on that report, and ours</h2>
+
+<div class="scroll">
+<table class="t3">
+<caption>UMI, January to September &mdash; same customer and same window in every row</caption>
+<thead><tr><th>Where the number comes from</th><th class="n">2024</th><th class="n">2025</th><th class="n">Change</th><th>Against ours</th></tr></thead>
+<tbody>
+<tr class="key"><td><b>Qty page</b> &mdash; total pieces</td><td class="n">85,685</td><td class="n">91,518</td><td class="n pos">+6.8%</td><td>matches our 85,687 / 91,518</td></tr>
+<tr><td><b>Amount page</b>, sales table &mdash; &euro;</td><td class="n">&euro;1,869,601</td><td class="n">&euro;1,759,060</td><td class="n neg">&minus;5.9%</td><td>30% and 36% below our &euro;2,681,819 / &euro;2,745,049</td></tr>
+<tr><td><b>Amount page</b>, sales table &mdash; pieces</td><td class="n">59,195</td><td class="n">62,546</td><td class="n pos">+5.7%</td><td>69% and 68% of the qty page</td></tr>
+<tr class="key"><td><b>Amount page</b>, demand table &mdash; &euro;</td><td class="n">&euro;2,408,815</td><td class="n">&euro;2,084,492</td><td class="n neg">&minus;13.5%</td><td>10% and 24% below our billing</td></tr>
+<tr class="total"><td><b>Our own billing</b> for sold-to 1797</td><td class="n">&euro;2,681,819</td><td class="n">&euro;2,745,049</td><td class="n pos">+2.4%</td><td>85,687 / 91,518 pieces</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Read the three euro rows together. For one customer and one nine-month window, the report offers &euro;1.87M and &euro;2.41M for 2024, and &euro;1.76M and &euro;2.08M for 2025. We billed &euro;2.68M and &euro;2.75M. That is five different euro figures across two pages, and the one you pick decides whether UMI's parts business fell 5.9%, fell 13.5%, or grew 2.4%.</p>
+
+<h2>Units agree, category by category</h2>
+
+<p>This is the comparison you asked for, apples with apples: UMI, January to September, our family tree carrying both the report's units and our euro beside them.</p>
+
+<div class="scroll">
+<table class="t4">
+<caption>By the report's own eight categories. His units on the left, our units computed from our own billing on the right, then what we billed.</caption>
+<thead><tr><th>Category on the report</th><th class="n">His units 2024</th><th class="n">His units 2025</th><th class="n">Our units 2024</th><th class="n">Our units 2025</th><th class="n">Our billed &euro; 2025</th><th class="n">&euro; change</th></tr></thead>
+<tbody>
+<tr class="key"><td>OTHERS</td><td class="n">52,056</td><td class="n">62,158</td><td class="n">51,871</td><td class="n">61,969</td><td class="n">&euro;1,981,506</td><td class="n pos">+9.1%</td></tr>
+<tr><td>COMPETITIVE PARTS</td><td class="n">23,243</td><td class="n">21,706</td><td class="n">23,243</td><td class="n">21,706</td><td class="n">&euro;161,162</td><td class="n neg">&minus;27.0%</td></tr>
+<tr><td>SEMI COMPETITIVE PARTS</td><td class="n">not shown</td><td class="n">not shown</td><td class="n">7,459</td><td class="n">5,385</td><td class="n">&euro;11,273</td><td class="n neg">&minus;28.3%</td></tr>
+<tr><td>PANEL PARTS</td><td class="n">not shown</td><td class="n">not shown</td><td class="n">1,110</td><td class="n">849</td><td class="n">&euro;63,498</td><td class="n neg">&minus;30.3%</td></tr>
+<tr class="key"><td>EMISSION RELATED PARTS</td><td class="n">1,300</td><td class="n">924</td><td class="n">1,300</td><td class="n">924</td><td class="n">&euro;424,341</td><td class="n pos">+24.8%</td></tr>
+<tr><td>ENGINE PARTS</td><td class="n">449</td><td class="n">452</td><td class="n">449</td><td class="n">452</td><td class="n">&euro;98,788</td><td class="n neg">&minus;49.1%</td></tr>
+<tr><td>GLASS PARTS</td><td class="n">68</td><td class="n">43</td><td class="n">68</td><td class="n">43</td><td class="n">&euro;2,960</td><td class="n neg">&minus;4.1%</td></tr>
+<tr><td>LARGE PARTS</td><td class="n">&mdash;</td><td class="n">1</td><td class="n">&mdash;</td><td class="n">1</td><td class="n">&euro;1,360</td><td class="n">new</td></tr>
+<tr class="total"><td>Total</td><td class="n">85,685</td><td class="n">91,518</td><td class="n">85,500</td><td class="n">91,329</td><td class="n">&euro;2,744,888</td><td class="n pos">+2.4%</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="foot">His two rows marked "not shown": the qty page's UMI view lists only seven categories, so SEMI COMPETITIVE PARTS and PANEL PARTS come from our side alone. That accounts for part of why our unit total is 189 below his, along with 187 pieces on parts that do not appear on his list at all. Everything he does show, we match exactly.</p>
+
+<div class="call ok">
+  <span class="tag">The good result</span>
+  <p>Not one category he displays differs from our own count. If you filter the report to UMI you are reading our own volume, and the family shape can be taken off it with confidence.</p>
+</div>
+
+<h2>The euro, and why it will not reconcile</h2>
+
+<div class="chart">
+  <p class="qtitle">Three euro figures for UMI in the same nine months &mdash; which one is the billing?</p>
+  <p class="qsub">All six bars on one scale. Ours is the only one that is a complete sum of what we invoiced and credited.</p>
+  <div class="legend">
+    <span><span class="sw e"></span>Our billed euro</span>
+    <span><span class="sw d"></span>Report &mdash; demand table</span>
+    <span><span class="sw s"></span>Report &mdash; sales table</span>
+  </div>
+
+  <div class="yrgrp"><div class="h">January&ndash;September 2024</div><div></div><div></div></div>
+  <div class="crow"><div class="lbl">Our billing</div>
+    <div><div class="t"><i class="e" style="width:97.7%"></i></div></div>
+    <div class="vals">&euro;2,681,819</div></div>
+  <div class="crow"><div class="lbl">Report, demand table</div>
+    <div><div class="t"><i class="d" style="width:87.8%"></i></div></div>
+    <div class="vals">&euro;2,408,815 <span class="neg">&minus;10%</span></div></div>
+  <div class="crow"><div class="lbl">Report, sales table</div>
+    <div><div class="t"><i class="s" style="width:68.1%"></i></div></div>
+    <div class="vals">&euro;1,869,601 <span class="neg">&minus;30%</span></div></div>
+
+  <div class="yrgrp"><div class="h">January&ndash;September 2025</div><div></div><div></div></div>
+  <div class="crow"><div class="lbl">Our billing</div>
+    <div><div class="t"><i class="e" style="width:100%"></i></div></div>
+    <div class="vals">&euro;2,745,049</div></div>
+  <div class="crow"><div class="lbl">Report, demand table</div>
+    <div><div class="t"><i class="d" style="width:75.9%"></i></div></div>
+    <div class="vals">&euro;2,084,492 <span class="neg">&minus;24%</span></div></div>
+  <div class="crow"><div class="lbl">Report, sales table</div>
+    <div><div class="t"><i class="s" style="width:64.1%"></i></div></div>
+    <div class="vals">&euro;1,759,060 <span class="neg">&minus;36%</span></div></div>
+
+  <div class="axis"><div></div><div class="ticks"><span>&euro;0</span><span>&euro;0.5M</span><span>&euro;1M</span><span>&euro;1.5M</span><span>&euro;2M</span><span>&euro;2.5M</span></div><div></div></div>
+</div>
+
+<p>The important thing in that chart is that neither gap holds still. The demand table sits 10% below us in 2024 and 24% below in 2025. The sales table sits 30% below in 2024 and 36% below in 2025. A fixed exclusion &mdash; returns, a set of customers left out, one currency screened off &mdash; would keep the same percentage in both years. These do not, so neither table is one of those. They are two different measures, and the differences are not explained by the window or by the customer, because we have already fixed both.</p>
+
+<p>There is one further oddity worth recording. The sales table's pieces, 59,195 and 62,546, are 69% and 68% of the pieces on the qty page in the same two years. That is a fairly steady relationship, so it is a subset of some kind rather than a separate measure &mdash; but I could not identify which subset. I tried our lines by currency sign, by order type, excluding credit, excluding non-parts, and restricting to rows carrying a family; none of them reproduces it.</p>
+
+<div class="call">
+  <span class="tag">What I could not reproduce</span>
+  <p>The sales table's <b>&euro;1,869,601</b> and <b>&euro;1,759,060</b>, and its pieces of <b>59,195</b> and <b>62,546</b>. Neither the money nor the pieces match any cut of our data I can build. The nearest money cut is our family-carrying rows, and even that is still &euro;265,000 above the sales table in 2024 and &euro;516,000 above in 2025 &mdash; so the sales table is not simply a cleaner version of our number. It is a smaller one by a rule I cannot see from outside.</p>
+</div>
+
+<div class="scroll">
+<table class="t6">
+<caption>Every cut I tried against the sales table&rsquo;s &euro;1,869,601 and &euro;1,759,060</caption>
+<thead><tr><th>Cut of our own UMI billing</th><th class="n">&euro; 2024 &nbsp;(vs &euro;1,869,601)</th><th class="n">&euro; 2025 &nbsp;(vs &euro;1,759,060)</th></tr></thead>
+<tbody>
+<tr><td>All lines, every order type</td><td class="n">&euro;2,681,819 &nbsp;<span class="neg">+43.4%</span></td><td class="n">&euro;2,745,049 &nbsp;<span class="neg">+56.1%</span></td></tr>
+<tr><td>Excluding credit lines</td><td class="n">&euro;2,548,850 &nbsp;<span class="neg">+36.3%</span></td><td class="n">&euro;2,657,690 &nbsp;<span class="neg">+51.1%</span></td></tr>
+<tr><td>Only rows carrying a family</td><td class="n">&euro;2,134,910 &nbsp;<span class="neg">+14.2%</span></td><td class="n">&euro;2,275,501 &nbsp;<span class="neg">+29.4%</span></td></tr>
+<tr><td>Ordinary stock orders only, excluding special and credit flows</td><td class="n">&euro;2,081,349 &nbsp;<span class="neg">+11.3%</span></td><td class="n">&euro;2,087,838 &nbsp;<span class="neg">+18.7%</span></td></tr>
+<tr class="total"><td>The sales table itself</td><td class="n">&euro;1,869,601</td><td class="n">&euro;1,759,060</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>The filter basket, both systems, units and euro</h2>
+
+<p>This is where the apples-to-apples work pays off, and for UMI it is mostly a good result. Same nine months, same customer.</p>
+
+<div class="scroll">
+<table class="t5">
+<caption>The filter basket for UMI, January to September, read both ways</caption>
+<thead><tr><th>Row</th><th class="n">Units 2024</th><th class="n">Units 2025</th><th class="n">Unit change</th><th class="n">&euro; 2024</th><th class="n">&euro; 2025</th><th class="n">&euro; change</th><th>Note</th></tr></thead>
+<tbody>
+<tr class="key"><td>Oil filter, our tree</td><td class="n">11,186</td><td class="n">12,703</td><td class="n pos">+13.6%</td><td class="n">&euro;49,202</td><td class="n">&euro;51,906</td><td class="n pos">+5.5%</td><td>the clean core</td></tr>
+<tr class="key"><td>His OIL COOLER AND OIL FILTER</td><td class="n">11,224</td><td class="n">12,729</td><td class="n pos">+13.4%</td><td class="n">&euro;49,344</td><td class="n">&euro;52,114</td><td class="n pos">+5.6%</td><td>within 0.2% on units</td></tr>
+<tr><td>Fuel filter, our tree</td><td class="n">3,660</td><td class="n">3,714</td><td class="n pos">+1.5%</td><td class="n">&euro;35,080</td><td class="n">&euro;34,231</td><td class="n neg">&minus;2.4%</td><td>flat</td></tr>
+<tr><td>His FUEL FILTER AND BRACKET</td><td class="n">3,666</td><td class="n">3,734</td><td class="n pos">+1.9%</td><td class="n">&euro;34,988</td><td class="n">&euro;34,242</td><td class="n neg">&minus;2.1%</td><td>within 0.5% on units</td></tr>
+<tr><td>His AIR CLEANER</td><td class="n">2,831</td><td class="n">1,649</td><td class="n neg">&minus;41.8%</td><td class="n">&euro;36,574</td><td class="n">&euro;20,194</td><td class="n neg">&minus;44.8%</td><td><b>the one real disagreement</b></td></tr>
+<tr><td>Air filter, our tree</td><td class="n">26</td><td class="n">6</td><td class="n neg">&minus;77%</td><td class="n">&euro;310</td><td class="n">&euro;74</td><td class="n neg">&minus;76%</td><td>we file these as Other filter</td></tr>
+<tr><td>His BLOWER UNIT</td><td class="n">465</td><td class="n">348</td><td class="n neg">&minus;25%</td><td class="n">&euro;8,068</td><td class="n">&euro;10,145</td><td class="n pos">+25.7%</td><td>cabin filters</td></tr>
+<tr><td>Other filter, our tree</td><td class="n">803</td><td class="n">1,577</td><td class="n pos">+96.4%</td><td class="n">&euro;34,060</td><td class="n">&euro;69,082</td><td class="n pos">+102.8%</td><td>aftertreatment residue</td></tr>
+<tr class="total"><td>Filters total, our tree</td><td class="n">15,675</td><td class="n">18,000</td><td class="n pos">+14.8%</td><td class="n">&euro;118,652</td><td class="n">&euro;155,293</td><td class="n pos">+30.9%</td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Two things I will not dress up. On oil and fuel filters the two systems agree closely on this market &mdash; within a fifth of a percent on oil units, within half a percent on fuel units. That is a clean comparison and it says his filter rows are usable for those two.</p>
+
+<p>But air cleaners genuinely disagree, and the difference is ours, not his. His AIR CLEANER is 2,831 units in 2024 and 1,649 in 2025, and we can only place 26 and 6 of those units in our air-filter family; the rest we file under Other filter. Our Other filter moves the opposite way, 803 pieces up to 1,577, and its euro more than doubles from &euro;34,060 to &euro;69,082. So the thing worth chasing in UMI's filter business is our own air-cleaner mapping, and it is a &euro;69k question.</p>
+
+<div class="stack">
+  <p class="sl">His five rows against our one family, UMI, units 2025 <span>&mdash; and how much of the gap is one mapping</span></p>
+  <div class="sbar">
+    <b style="width:37.5%;background:#15233c">Our five leaves 18,000</b>
+    <b style="width:34.3%;background:#4a6189">His four, matched 16,466</b>
+    <b style="width:28.2%;background:#c0552d">Air cleaner we cannot place 1,649</b>
+  </div>
+  <p class="key2">His rows are OIL COOLER AND OIL FILTER, FUEL FILTER AND BRACKET, AIR CLEANER, BLOWER UNIT and WATER SEDIMENTER; FUEL, totalling 18,460. Ours is the single Filters family at 18,000. His four rows we can match total 16,466, and the 1,649 air-cleaner pieces are the gap. Unlike the group-wide comparison, on this market the list is not losing the basket &mdash; it is our mapping that cannot find those pieces.</p>
+</div>
+
+<h2>Conclusions</h2>
+
+<h3>1. For quantities, use the report and trust it</h3>
+<p>To the piece, category by category, on this customer. Not one of his seven displayed categories differs from our own count. That is a real result and it means the qty page is a usable view of UMI's volume.</p>
+
+<h3>2. For euro, do not use it, and do not spend more time trying to reconcile it</h3>
+<p>The same page gives two euro figures that differ from each other by &euro;539,000 in 2024, and neither matches ours. The one you pick turns UMI's parts business into a 5.9% fall, a 13.5% fall or a 2.4% rise. Quote our number: ours is a complete sum of what we invoiced and credited, and the other two are not.</p>
+
+<h3>3. Ask the report's owner for two definitions</h3>
+<p>The sales table's measure and its filter, and whether the demand table is meant to be billed or ordered. That is the only way these numbers stop disagreeing, and it is a question about the report, not about our data. One hour of the report's source would settle it.</p>
+
+<h3>4. The real finding on UMI is our air-cleaner mapping</h3>
+<p>His air cleaner is 2,831 pieces and &euro;36,574 in 2024, falling to 1,649 and &euro;20,194. We can only place a handful of that in our air-filter family, and the rest sits in Other filter, which doubled to &euro;69,082 instead. That is the same problem the group-wide comparison found: our air-cleaner mapping is behind the report's, and on this market it is worth &euro;69k on its own.</p>
+
+<h3>5. The one thing in UMI's favour that is now measurable</h3>
+<p>Oil and fuel filters match his rows to within half a percent on units and within 2% on euro. So for the two service families that matter most to a maintenance conversation, the report and our tree already agree. That is a better starting point than the group-wide picture suggested.</p>
+
+<h2>What this does not settle</h2>
+
+<ul>
+  <li><b>Our extract ends 31 August 2026.</b> September 2025 comes from our own records rather than his August refresh, so the 2025 column is our version of that month.</li>
+  <li><b>Both of his euro tables are internally sound.</b> The problem is not their arithmetic, it is that neither is the same measure as the other, and neither is ours. I could not identify either measure from the outside.</li>
+  <li><b>No month-by-month reconciliation.</b> This is the nine-month window as a whole. If part of the euro gap is timing it would show month by month, and that is the next thing I would do.</li>
+  <li><b>You gave me the whole book to compare, not UMI.</b> The export in Downloads carries no customer filter, so I identified UMI from the report and cut our side to match. The identification is solid on the totals and the category split, but if you meant a different customer, say so and I will redo it.</li>
+  <li><b>Units are not comparable between families.</b> One oil filter is not one wheel rim, which is why the unit comparison is made inside each category and inside the filter basket, never as a single number.</li>
+</ul>
+
+<h2>Sources</h2>
+
+<p class="foot">
+<b>The report:</b> Power BI <i>SALES DATA VP NEW</i>, <i>SALES HISTORY BY CAT.(qty)</i> and <i>SALES HISTORY BY CAT.(amount)</i>, customer UMI, values read off the rendered tables on 22 September 2026.<br>
+<b>Our side:</b> our part-level billing for sold-to 1797, January&ndash;September 2024 and 2025, joined to our parts master for the family tree.<br>
+<b>Row-level output:</b> <code>ISZE\01_data\90_INBOX\_umi_by_his_category.csv</code> &mdash; every UMI billing line in the window with the report&rsquo;s category stamped beside it.<br>
+<b>Nothing was rebuilt, changed or overwritten.</b> The report was read, not modified.
+</p>
+
+<footer>
+  Internal working note prepared 22 September 2026. Contains internal file names and our billed euro &mdash; not for distribution outside ISZE.
+</footer>
+
+</div>
+</body>
+</html>

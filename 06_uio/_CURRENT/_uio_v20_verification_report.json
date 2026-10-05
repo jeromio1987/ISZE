@@ -1,0 +1,378 @@
+{
+  "harness": "verify_uio_v20.py",
+  "harness_version": "1.0.0",
+  "generated_utc": "2026-09-22T17:52:56.428461+00:00",
+  "workbook": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\ISUZU_UIO_Overview_2026.xlsx",
+  "verdict": "CONVICTED",
+  "n_checks": 10,
+  "n_fail": 7,
+  "failed_checks": [
+    "check1_method_consistency",
+    "check2_ireland_rebuild",
+    "check2b_ireland_2030",
+    "check3_steady_state",
+    "check5_flat_rule_present",
+    "check7_overstatement_curve",
+    "check8_locked_values"
+  ],
+  "self_certification_guard": "Inputs limited to: candidate workbook values, the survival-curve table, and the VIN shipment register. No builder assumptions log, changelog, method note or narrative sheet is read as evidence.",
+  "checks": {
+    "check9_self_cert_guard": {
+      "title": "Harness does not self-certify from builder notes",
+      "status": "PASS",
+      "summary": "Inputs limited to workbook values, the curve table and the VIN register.",
+      "evidence": [
+        "workbook (values only): C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\ISUZU_UIO_Overview_2026.xlsx",
+        "VIN register: C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\07_UIO\\vin\\VIN_register.csv",
+        "survival curve read from: 3. UIO Calculation!B5:E25 (CV developed); 3. UIO Calculation!B5:E25 (LCV)",
+        "method notes / assumptions narrative sheets: NOT read as evidence",
+        "C:\\...\\_CURRENT\\V20_SPEC.md, changelog, README, builder logs: NOT read",
+        "no builder script was executed; no formula in the workbook was recalculated by the builder's engine"
+      ],
+      "metrics": {
+        "allowed_inputs": [
+          "candidate workbook values",
+          "survival curve table",
+          "VIN shipment register"
+        ]
+      }
+    },
+    "check1_method_consistency": {
+      "title": "Every row uses ONE method across 1990-2030",
+      "status": "FAIL",
+      "summary": "26 of 32 eligible rows switch method mid-series.",
+      "evidence": [
+        "26 row(s) switch method at the 2025/2026 boundary",
+        "r7 ISRAEL CV LD (UTI) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [146.0, 210.9, 199.8, 197.3])",
+        "r8 ISRAEL CV MD (UTI) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [388.8, 426.2, 439.6, 451.1])",
+        "r9 ISRAEL LCV LCV (UMI) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [999.6, 929.6, 930.1, 930.3])",
+        "r12 ICELAND LCV LCV (BL) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [45.2, 92.1, 92.5, 91.8])",
+        "r15 NORWAY LCV LCV (RSA) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [350.3, 454.5, 454.8, 454.8])",
+        "r18 SWEDEN LCV LCV (Isuzu Sverige) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [919.7, 875.1, 874.6, 874.6])",
+        "r19 DENMARK CV LD (Isuzu Denmark) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [0.0, 0.0, 0.0, 0.0])",
+        "r21 DENMARK LCV LCV (Isuzu Denmark) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [120.3, 135.1, 135.2, 135.2])",
+        "r25 U KING LCV LCV (IUK) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [2400.4, 2400.1, 2399.9, 2399.9])",
+        "r26 IRELAND CV LD (Isuzu Ireland) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [215.8, 216.4, 215.9, 216.2])",
+        "r29 IRELAND LCV LCV (Isuzu Ireland) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [429.8, 430.2, 430.2, 429.9])",
+        "r33 BELGIUM CV LD (IBX) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [35.3, 35.3, 35.2, 35.1])",
+        "r35 BELGIUM LCV LCV (IBX) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [840.2, 840.4, 840.2, 840.4])",
+        "r42 GERMANY CV LD (ISD-Lang) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [388.0, 623.7, 898.1, 1000.2])",
+        "r44 GERMANY LCV LCV (ISD-Lang) -> flat 3% (implied life 33.3 yr) from 2026 (implied regs [999.7, 1000.4, 999.6, 1000.2])",
+        "ITUK rows 22/24 excluded by design (sheet 4 holds their method)"
+      ],
+      "metrics": {
+        "n_switching_rows": 26,
+        "n_rows": 32,
+        "switching_rows": [
+          7,
+          8,
+          9,
+          12,
+          15,
+          18,
+          19,
+          21,
+          25,
+          26,
+          29,
+          33,
+          35,
+          42,
+          44,
+          51,
+          54,
+          60,
+          61,
+          63,
+          66,
+          75,
+          79,
+          81,
+          88,
+          90
+        ]
+      }
+    },
+    "check2_ireland_rebuild": {
+      "title": "Ireland 2025 rebuilds to 731 from own regs + curve",
+      "status": "FAIL",
+      "summary": "Ireland 2025 rebuilds to 734 vs spec 731, and the 2026-2030 segment is still the flat 3% rule.",
+      "evidence": [
+        "curve used: 3. UIO Calculation §A CV developed (expected life 9.85 yr)",
+        "curve source: 3. UIO Calculation!B5:E25 (CV developed); 3. UIO Calculation!B5:E25 (LCV)",
+        "best registration boundary: 2012/2013 breakpoint at SIMI start = 2016",
+        "independent rebuild Ireland CV LD 2025 = 734.0",
+        "spec anchor = 731 ; workbook row 26 2025 = 731",
+        "  independent survival rebuild Ireland trucks 2026 = 853.1 (spec target - ; V19 workbook 925)",
+        "  independent survival rebuild Ireland trucks 2027 = 979.6 (spec target - ; V19 workbook 1113)",
+        "  independent survival rebuild Ireland trucks 2028 = 1020.5 (spec target - ; V19 workbook 1296)",
+        "  independent survival rebuild Ireland trucks 2029 = 1120.1 (spec target - ; V19 workbook 1473)",
+        "  independent survival rebuild Ireland trucks 2030 = 1175.2 (spec target 1382 ; V19 workbook 1645)",
+        "NOTE: spec target 2030 = 1382. The harness's rebuild on the row's own inverted inputs gives 1175, -15.0% away. Reported as UNEXPLAINED, not as a pass.",
+        "flat 3%% rule with plan 216: 2026=925, 2027=1113, 2028=1296, 2029=1473, 2030=1645 -> MATCHES the workbook row [925, 1113, 1296, 1473, 1645]"
+      ],
+      "metrics": {
+        "ireland_2025_harness": 734.0,
+        "ireland_2025_spec": 731,
+        "ireland_2025_workbook": 731,
+        "ireland_2030_survival_rebuild": 1175.2,
+        "ireland_2030_spec_target": 1382,
+        "ireland_2030_workbook": 1645,
+        "ireland_forecast_is_flat_rule": true,
+        "curve_life_years": 9.85
+      }
+    },
+    "check2b_ireland_2030": {
+      "title": "Ireland 2030 ~1,382 trucks / ~2,527 pickups",
+      "status": "FAIL",
+      "summary": "Workbook 2030 is 19.0% above the proper-method trucks target and 25.6% above pickups.",
+      "evidence": [
+        "independent truck rebuild 2030 = 1175 (spec 1382, delta -15.0%)",
+        "independent pickup rebuild 2030 = 2774 (spec 2527, delta 9.8%)",
+        "workbook row 26 2030 = 1645 ; row 29 2030 = 3174",
+        "harness rebuild does NOT reproduce the spec anchor: the spec's 1,382 implies a ~651-unit 2026 step (+89%%) on a 731 base, which no smooth plan gets to.",
+        "Pickups: workbook 3,174 vs spec 2,527. Harness rebuild on the row's own inputs gives 2774.",
+        "workbook vs spec target: trucks +19.0% ; pickups +25.6%"
+      ],
+      "metrics": {
+        "trucks_2030_workbook": 1645,
+        "trucks_2030_target": 1382,
+        "trucks_2030_harness": 1175.2,
+        "pickups_2030_workbook": 3174,
+        "pickups_2030_target": 2527,
+        "pickups_2030_harness": 2773.6,
+        "curve_where": [
+          "3. UIO Calculation!B5:E25 (CV developed)",
+          "3. UIO Calculation!B5:E25 (LCV)"
+        ]
+      }
+    },
+    "check3_steady_state": {
+      "title": "Steady state ~2100 at 216 regs/yr, not 7200",
+      "status": "FAIL",
+      "summary": "Flat-rule steady state is 7200 (33.3-yr implied life). Curve steady state is 2128 on the workbook's own curve (9.85-yr life).",
+      "evidence": [
+        "curve 3. UIO Calculation §A CV developed -> expected life 9.85 yr",
+        "proper steady state = 216 x 9.85 = 2128  (spec says ~2100)",
+        "flat 3% rule steady state = 216 / 0.03 = 7200",
+        "spec life constant for the rounded ~2,100: 2100/216 = 9.72 yr",
+        "workbook Ireland row 26 forecast still rising 2026->2030 by +720 units",
+        "The flat rule settles at 7200, not ~2100. That is the defect."
+      ],
+      "metrics": {
+        "steady_state_curve": 2127.6,
+        "steady_state_flat_rule": 7200.0,
+        "spec_expected": 2100,
+        "spec_life_constant": 9.8,
+        "curve_expected_life": 9.85
+      }
+    },
+    "check4_vin_scrappage": {
+      "title": "Real scrappage from VIN shipments ~13.3%% / 7.4%%",
+      "status": "WARN",
+      "summary": "Measured Ireland 15.1%, Portugal 9.1% — far from the 3% rule (the claim that matters) but not within 1.5 pp of the spec figure; the on-disk register differs from the one the spec used.",
+      "evidence": [
+        "Ireland: fleet 820->749, shipped 2020-24 on disk = 523 (spec quotes 451), removed 119/yr -> measured 15.1%/yr (spec 13.3%)",
+        "  NOTE: the VIN register on disk does NOT reproduce the spec's shipment total for Ireland (523 vs 451). The register was rebuilt 2026-09-18, after the spec was written. The measured rate is therefore recomputed from the register as it is, and the delta against the spec figure is stated rather than forced.",
+        "Portugal: fleet 1502->2239, shipped 2020-24 on disk = 1583 (spec quotes 1427), removed 169/yr -> measured 9.0%/yr (spec 7.4%)",
+        "  NOTE: the VIN register on disk does NOT reproduce the spec's shipment total for Portugal (1583 vs 1427). The register was rebuilt 2026-09-18, after the spec was written. The measured rate is therefore recomputed from the register as it is, and the delta against the spec figure is stated rather than forced.",
+        "curve the workbook uses for CV = 3. UIO Calculation §A CV developed, expected life 9.85 yr (implied scrap 10.2%/yr)",
+        "flat rule in the forecast columns = 3.0%%/yr",
+        "VIN register is shipments from Japan, NOT registrations — used only as a scrappage cross-check, per the register's own README."
+      ],
+      "metrics": {
+        "markets": {
+          "Ireland": {
+            "fleet_row": 26,
+            "fleet_2019": 820,
+            "fleet_2024": 749,
+            "fleet_avg": 784.5,
+            "shipped_2020_2024_on_disk": 523,
+            "shipped_2020_2024_quoted_by_spec": 451,
+            "scrap_per_year_units": 118.8,
+            "measured_scrap_pct": 15.14,
+            "spec_pct": 13.3
+          },
+          "Portugal": {
+            "fleet_row": 51,
+            "fleet_2019": 1502,
+            "fleet_2024": 2239,
+            "fleet_avg": 1870.5,
+            "shipped_2020_2024_on_disk": 1583,
+            "shipped_2020_2024_quoted_by_spec": 1427,
+            "scrap_per_year_units": 169.2,
+            "measured_scrap_pct": 9.05,
+            "spec_pct": 7.4
+          }
+        },
+        "register_path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\07_UIO\\vin\\VIN_register.csv",
+        "register_rebuilt": "2026-09-18"
+      }
+    },
+    "check5_flat_rule_present": {
+      "title": "Candidate forecast no longer fits UIO x 0.97 + regs",
+      "status": "FAIL",
+      "summary": "34 row(s) still follow the flat 3% rule in 2026-2030.",
+      "evidence": [
+        "34 row(s) reproduce UIO(T) = UIO(T-1) x 0.97 + regs for every forecast step",
+        "r7 ISRAEL/CV/LD/UTI: implied regs 2027-2030 = [146.0, 210.9, 199.8, 197.3]",
+        "r8 ISRAEL/CV/MD/UTI: implied regs 2027-2030 = [388.8, 426.2, 439.6, 451.1]",
+        "r9 ISRAEL/LCV/LCV/UMI: implied regs 2027-2030 = [999.6, 929.6, 930.1, 930.3]",
+        "r12 ICELAND/LCV/LCV/BL: implied regs 2027-2030 = [45.2, 92.1, 92.5, 91.8]",
+        "r15 NORWAY/LCV/LCV/RSA: implied regs 2027-2030 = [350.3, 454.5, 454.8, 454.8]",
+        "r18 SWEDEN/LCV/LCV/Isuzu Sverige: implied regs 2027-2030 = [919.7, 875.1, 874.6, 874.6]",
+        "r19 DENMARK/CV/LD/Isuzu Denmark: implied regs 2027-2030 = [0.0, 0.0, 0.0, 0.0]",
+        "r21 DENMARK/LCV/LCV/Isuzu Denmark: implied regs 2027-2030 = [120.3, 135.1, 135.2, 135.2]",
+        "r25 U KING/LCV/LCV/IUK: implied regs 2027-2030 = [2400.4, 2400.1, 2399.9, 2399.9]",
+        "r26 IRELAND/CV/LD/Isuzu Ireland: implied regs 2027-2030 = [215.8, 216.4, 215.9, 216.2]",
+        "r27 IRELAND/CV/MD/Isuzu Ireland: implied regs 2027-2030 = [36.1, 36.1, 36.2, 36.1]",
+        "r29 IRELAND/LCV/LCV/Isuzu Ireland: implied regs 2027-2030 = [429.8, 430.2, 430.2, 429.9]",
+        "r33 BELGIUM/CV/LD/IBX: implied regs 2027-2030 = [35.3, 35.3, 35.2, 35.1]",
+        "r35 BELGIUM/LCV/LCV/IBX: implied regs 2027-2030 = [840.2, 840.4, 840.2, 840.4]",
+        "r42 GERMANY/CV/LD/ISD-Lang: implied regs 2027-2030 = [388.0, 623.7, 898.1, 1000.2]",
+        "Rows 22/24 (ITUK) excluded: their model lives on sheet 4 by design."
+      ],
+      "metrics": {
+        "n_rows_flat": 34,
+        "rows": [
+          7,
+          8,
+          9,
+          12,
+          15,
+          18,
+          19,
+          21,
+          25,
+          26,
+          27,
+          29,
+          33,
+          35,
+          42,
+          43,
+          44,
+          51,
+          52,
+          54,
+          58,
+          59,
+          60,
+          61,
+          63,
+          66,
+          75,
+          79,
+          80,
+          81,
+          84,
+          88,
+          89,
+          90
+        ]
+      }
+    },
+    "check6_totals_identity": {
+      "title": "Every year: Grand Total == sum of rows",
+      "status": "PASS",
+      "summary": "Grand Total reconciles to the sum of rows in every year.",
+      "evidence": [
+        "MIDI toggle B4 = 'Include' -> INCLUDED MIDI rows",
+        "compared Grand Total row 2 against the sum of rows 7:90 for each year"
+      ],
+      "metrics": {
+        "n_breach_years": 0,
+        "largest_breach": null
+      }
+    },
+    "check7_overstatement_curve": {
+      "title": "Overstatement curve 7.8%% in 2026 rising to 37.7%% in 2030",
+      "status": "FAIL",
+      "summary": "Candidate is the V19 file itself: the flat 3% forecast is still in the output. The 7.8%->37.7% overstatement curve therefore still applies, and the independent recomputation reproduces its magnitude and rise (7.4% -> 36.5%).",
+      "evidence": [
+        "NOTE: candidate IS the V19 baseline file, so every measured delta is 0.0%% by construction. That comparison is vacuous and is not used to decide this check.",
+        "2026: candidate 269314 vs V19 269314 -> delta +0.0% (spec +7.8%)",
+        "2027: candidate 279502 vs V19 279502 -> delta +0.0% (spec +15.6%)",
+        "2028: candidate 289529 vs V19 289529 -> delta +0.0% (spec +23.2%)",
+        "2029: candidate 299448 vs V19 299448 -> delta +0.0% (spec +30.6%)",
+        "2030: candidate 309125 vs V19 309125 -> delta +0.0% (spec +37.7%)",
+        "independent recomputation from the net exit identity, using the spec's own inputs (2018-2025 avg all-rows plan 18478/yr, 10.2% curve vs 3% flat): 2026 7.4%, 2027 14.8%, 2028 22.2%, 2029 29.4%, 2030 36.5%",
+        "independent recompute vs spec: 2026 -0.4 pp, 2027 -0.8 pp, 2028 -1.0 pp, 2029 -1.2 pp, 2030 -1.2 pp (same order of magnitude, rising monotonically; the residual is the plan profile after 2026, which the spec recovers from the buried cells)",
+        "year-2030 note: the workbook's 2030 column is partial (June-2026 build; monthly plan runs to Jul-2027 and Aug-2030 onward is empty), so any 2030 figure is a floor, not a final."
+      ],
+      "metrics": {
+        "measured_pct": {
+          "2026": 0.0,
+          "2027": 0.0,
+          "2028": 0.0,
+          "2029": 0.0,
+          "2030": 0.0
+        },
+        "recomputed_pct": {
+          "2026": 7.43,
+          "2027": 14.82,
+          "2028": 22.16,
+          "2029": 29.4,
+          "2030": 36.53
+        },
+        "spec_pct": {
+          "2026": 7.8,
+          "2027": 15.6,
+          "2028": 23.2,
+          "2029": 30.6,
+          "2030": 37.7
+        },
+        "candidate_is_v19_baseline": true,
+        "v19_workbook": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\ISUZU_UIO_Overview_2026.xlsx",
+        "monotonic": false
+      }
+    },
+    "check8_locked_values": {
+      "title": "Locked values honoured: UK LCV 44,926 / Israel not zeroed / plan-only MD out",
+      "status": "FAIL",
+      "summary": "6 guard violation(s).",
+      "evidence": [
+        "row 25 U KING/LCV/LCV CY2026F = 49280 (locked 44926)",
+        "row 7 ISRAEL/LD 2025 = 6059",
+        "row 7 ISRAEL/LD 2026 = 6101",
+        "row 7 ISRAEL/LD 2030 = 6124",
+        "row 8 ISRAEL/MD 2025 = 4277",
+        "row 8 ISRAEL/MD 2026 = 4659",
+        "row 8 ISRAEL/MD 2030 = 5758",
+        "row 9 ISRAEL/LCV 2025 = 18542",
+        "row 9 ISRAEL/LCV 2026 = 18886",
+        "row 9 ISRAEL/LCV 2030 = 20339",
+        "PLAN-ONLY r27 IRELAND/CV/MD/Isuzu Ireland total 520 -> currently in Grand Total: YES",
+        "PLAN-ONLY r52 PORTUGL/CV/MD/Imotors total 1500 -> currently in Grand Total: YES",
+        "PLAN-ONLY r80 GREECE/CV/MD/Petros Petropoulos total 74 -> currently in Grand Total: YES",
+        "PLAN-ONLY r89 CYPRUS/CV/MD/Loutsios & Sons total 74 -> currently in Grand Total: YES",
+        "Grand Total formula range is rows 7:90, so any plan-only row inside it is counted. The spec requires them moved out.",
+        "VIOLATION: row 25 CY2026F = 49280, must be 44926 (V19's 49,280 is wrong)",
+        "VIOLATION: row 25 CY2026F 49280 > CY2025E 47783 — wrong direction",
+        "VIOLATION: plan-only row r27 IRELAND/CV/MD/Isuzu Ireland carries 520 units and is still inside the Grand Total sum range (rows 7:90)",
+        "VIOLATION: plan-only row r52 PORTUGL/CV/MD/Imotors carries 1500 units and is still inside the Grand Total sum range (rows 7:90)",
+        "VIOLATION: plan-only row r80 GREECE/CV/MD/Petros Petropoulos carries 74 units and is still inside the Grand Total sum range (rows 7:90)",
+        "VIOLATION: plan-only row r89 CYPRUS/CV/MD/Loutsios & Sons carries 74 units and is still inside the Grand Total sum range (rows 7:90)"
+      ],
+      "metrics": {
+        "n_violations": 6,
+        "violations": [
+          "row 25 CY2026F = 49280, must be 44926 (V19's 49,280 is wrong)",
+          "row 25 CY2026F 49280 > CY2025E 47783 — wrong direction",
+          "plan-only row r27 IRELAND/CV/MD/Isuzu Ireland carries 520 units and is still inside the Grand Total sum range (rows 7:90)",
+          "plan-only row r52 PORTUGL/CV/MD/Imotors carries 1500 units and is still inside the Grand Total sum range (rows 7:90)",
+          "plan-only row r80 GREECE/CV/MD/Petros Petropoulos carries 74 units and is still inside the Grand Total sum range (rows 7:90)",
+          "plan-only row r89 CYPRUS/CV/MD/Loutsios & Sons carries 74 units and is still inside the Grand Total sum range (rows 7:90)"
+        ]
+      }
+    }
+  },
+  "curve_source": [
+    "3. UIO Calculation!B5:E25 (CV developed)",
+    "3. UIO Calculation!B5:E25 (LCV)"
+  ],
+  "curve_expected_life": {
+    "cv": 9.85,
+    "lcv": 8.23
+  }
+}

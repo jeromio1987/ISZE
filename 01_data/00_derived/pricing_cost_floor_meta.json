@@ -1,0 +1,30 @@
+{
+  "built": "2026-09-17T21:50:37",
+  "basis": {
+    "lines": "pricing_aim_source_lines.parquet, priced_both == True",
+    "margin": "pricing_list_pn.gm (class-implied), superseded rows dropped",
+    "cost": "fob_eur from pricing_list_pn \u2014 the class-implied landed cost, NOT a purchase cost",
+    "competitor": "iam_ks_price_gap.csv, median across distributors, same-shop listings"
+  },
+  "headline": {
+    "priced_lines": 47617,
+    "lines_with_margin": 45816,
+    "billed_eur_with_margin": 29653731.650000002,
+    "weighted_gm_pct": 51.090724309840446,
+    "gross_profit_eur": 15150306.284881402
+  },
+  "reach": {
+    "part_numbers_visible": 41,
+    "cost_above_competing_retail": 12,
+    "reachable_under_20pct_margin": 3,
+    "reachable_at_20pct_or_better": 26,
+    "median_gm_to_match_pct": 51.96581196581197,
+    "median_gm_today_pct": 52.99911690781877
+  },
+  "caveats": [
+    "Cost is the class-implied landed cost from the class factor, not a purchase price. Where the class factor is generous the 'cost' is understated and the headroom overstated; where it is aggressive the reverse. The direction of the error is not known per part.",
+    "The reach analysis rests on 43 part numbers across up to 18 markets, all tagged brand tier 1 with one or two competitors. It is a signal, not a measurement of the book.",
+    "The Autodoc risk file (298 part numbers) was NOT used: its price column carries the identical value 2.34 on 277 of 298 rows and is not usable as a competitor price.",
+    "The scenario table holds cost fixed and ignores supersession, mix and volume response. It prices the arithmetic of a margin target, not its consequence."
+  ]
+}

@@ -152,11 +152,16 @@ Six of those eight have a 2023 UK workshop number we could show as **vintage**, 
 
 | Source | What it is | Oil/air/fuel result |
 |---|---|---|
-| **KS** | PN-indexed Magento search. Current file = **top 300 network revenue**. 300 rows: 64 `ok`, **39** with aftermarket £>2. | 33 filters in that 300; **7 AM hits**; 2 genuine-only; 24 `no_results`. UMI 33 filter PNs → only **10** scraped, **1** AM. GERMANY 56 → 21 scraped, **5** AM. |
-| **Mekonomen** | PN search, top **200**. 7 `ok` rows, **0 filters**. The 7 look like accessory/sensor false friends (Raufoss bumper 113 kr, NB Parts 259 kr). | All 22 scraped filters = `no_results`. |
-| **TMC** | Category crawl (search `?s=` times out). 90 products, 12 labeled oil/fuel. | Titles collide with ISZE descriptions; **no OEM PN** — cannot say “this is 8982705240”. |
-| **Tranzparts** | Shopify collection crawl. Confirmed: Isuzu PN search returns zero. | 7 filter-ish SKUs, IAM catalog numbers. |
-| **Auto365** | 208 Hebrew listings, internal מק"ט only. | Family street in `iam_israel_street.csv`. Do not build `iam_israel_price_gap.csv`. |
+| **KS** | PN-indexed Magento search. Current file = **top 300 network revenue**. 300 rows: 64 `ok`, **40** with aftermarket £>2 (hit rate **21.3%**). **The source is far bigger than our seed list:** its public sitemap carries **19,662 URLs, 6,453 containing "isuzu"**, against 300 part numbers we asked about. See the coverage note below. | 33 filters in that 300; **7 AM hits**; 2 genuine-only; 24 `no_results`. UMI 33 filter PNs → only **10** scraped, **1** AM. GERMANY 56 → 21 scraped, **5** AM. |
+| **Mekonomen** | **CLOSED — does not carry Isuzu.** The earlier note here said "PN search, top 200. 7 `ok` rows, 0 filters. The 7 look like accessory/sensor false friends." They were not merely noisy, they were **search noise**: the site ignores the part-number query and its catalogue has three Isuzu entries in total, all radio adaptors. Verified 2026-09-18 by pulling all four product sitemaps (169,066 URLs). | Do not retry |
+| **TMC** | Category crawl (search `?s=` times out). **Domain unreachable to a plain fetch 2026-09-18** (robots returned no response). | Titles collide with ISZE descriptions; **no OEM PN** — cannot say “this is 8982705240”. |
+| **Tranzparts** | **CLOSED, verified 2026-09-18.** `mekonomen.co.uk` has **no A record at all**, only an SOA — the domain is dead, which explains the 7-rows-from-200 result. Separately `tranzparts.co.uk` carries **zero Isuzu in its first 250 products**; every 8-digit handle is Volvo, Iveco or DAF. | Do not retry |
+| **Auto365** | **CLOSED — robots-disallowed and not an independent competitor.** Its robots.txt is `User-agent: * / Disallow: /` — everything is disallowed to every bot except Google's, and our scraper walks 21 product pages there. It is also **UMI's own shop** (`auto365@umi.co.il`), so it was never a third-party price. 208 Hebrew listings, internal מק"ט only. | `iam_israel_street.csv` only. Do not build `iam_israel_price_gap.csv`. |
+| **KS coverage — the real constraint** | Verified 2026-09-18: `ks-international.com/sitemap.xml` is **12.6 MB and lists 19,662 URLs, 6,453 containing "isuzu"**, across NKR/NPR/NQR/NNR/NLR/Grafter N35/Forward/F110/FSR/FVR. Search by 10-digit number returns real hits and prices (spot-checked: `8983767550` → £36.00/£30.00, `8982705240` → £12.00/£10.00). **At our measured 21.3% hit rate, the full 15,872-part catalogue would yield roughly 3,380 part numbers with a price — about 7.9% of the priced book by value, against 16.5% today.** | The binding constraint was **never the source. It is the seed list** — 300 part numbers. |
+| **Amayama** | **NEW, HIGH** | accepts any bare 10-digit Isuzu number in the URL and returns price, warehouse, stock and shipping server-side. Not a UK company but usable. |
+| **Omega Spare Parts** | **NEW, HIGH** | publishes the OEM number as a structured field **and** prints a competitor `Dealer Price` on the same page. |
+| **Cloudflare-blocked, unresolved** | eBay UK (403 on both hosts, tested twice with cookie jar), Amazon, Autodoc, Buycarparts, Partsouq, Euro Car Parts, **Bison Parts**. Bison is the one that matters: the best UK aftermarket N-Series range seen anywhere, with ex-VAT and inc-VAT prices, and **not one page could be read**. Unresolved, not dismissed. | Do not attempt to bypass |
+| **Ireland** | **complete negative** | Harris Group, Colm Burns, D. Dennehy, H&I Parts, North Dublin Commercials are all phone-or-form businesses. None publishes a part number and a price. D. Dennehy's robots.txt explicitly blocks ClaudeBot and GPTBot. Ireland needs **asking**, not scraping. |
 
 `iam_ks_price_gap.csv` is **UMI 7 + UTI 14** rows (21 PNs), of which **2** are filters. GERMANY already has **31** KS aftermarket hits in `ks_results.csv` that never reach the Germany dashboard because the join file was only built for Israel.
 
@@ -186,7 +191,19 @@ Current KS list is network top-300. That is why UMI is missing 23 of 33 filter P
 
 Pass 1 is a **filter-list scrape**, not `--top 300`. Seed from CY2025 billed PNs with `pms_category ∈ {oil_filter, air_filter, fuel_filter}` for UMI sold-to 1797 and GERMANY 2516+601.
 
-**Mekonomen:** not next. 0/22 filters in the current 200. A Sweden-only retry on SWEDEN’s 18 filter PNs is optional later; do not burn another 200-PN run hoping filters appear.
+**Mekonomen: CLOSED as a source — and the reason recorded here before was wrong.** The earlier note said the 200-PN run returned 0/22 filters and that "a Sweden-only retry on SWEDEN's 18 filter PNs is optional later". That retry would have been wasted effort. Verified 2026-09-18: **Mekonomen does not carry the Isuzu line at all.** All four product sitemaps were pulled — 169,066 product URLs — and they contain three Isuzu entries, all Connects2 radio-installation adaptors. The part-number search also does not work: `mekonomen.se/artiklar/search/?q=<PN>` returns byte-identical pages with the heading rendering `Sök ""`, so the query is echoed and ignored and the search is JavaScript/Algolia-driven. **The 7 `ok` rows in `mekonomen_results.csv` were search noise, not hits** — which is why they looked like accessory false friends (a bumper, a sensor). Do not retry with a filter list; the catalogue is empty of Isuzu. The Swedish route is the used-parts network instead: `bildelsbasen.se` and `laga.se` both support search by original number.
+
+**Verified Nordic additions, 2026-09-18** (detail in `01_data/90_INBOX/scrape_targets/nordics.md`):
+
+| Source | What it gives | Note |
+|---|---|---|
+| `mekster.no` | prints an `OE-nummer` block with real Isuzu 10-digit numbers and NOK prices | search returning 200 is NOT proof it works — mark probable, confirm on a product page |
+| `geparden.no` | the product SKU **is** the Isuzu OEM number, e.g. `ISU5876150000`; genuine oil filter 379,05 NOK | the cleanest Norwegian bridge found |
+| `tungen-bil.no` | an Isuzu dealer publishing a table explicitly searchable by part number, with price ex. mva | dealer prices, not IAM |
+| `bildelsbasen.se`, `laga.se`, `autopurkaamot.com` | search by original number works | **used / trade tier — never mixed into new OEM peer retail** |
+| `autoline.dk` | prints `P/NO` and `Referencenummer` with EUR prices | a pan-European marketplace with a Danish skin, not a Danish distributor book |
+
+**Iceland and Finland:** official importers in all five Nordic countries sell by counter or phone, with no priced webshop. Iceland is a request-a-quote market — treat it as such rather than spending a scrape on it.
 
 ### What NOT to do
 
@@ -209,7 +226,7 @@ Pass 1 is a **filter-list scrape**, not `--top 300`. Seed from CY2025 billed PNs
 | Rebuild KS join for 18 DBs from existing CSV | No | 1–2 hours | GERMANY/ITUK/PT dashboards start showing KS AM that is already on disk |
 | KS scrape 48 UMI∪GERMANY filters | **Yes** | ~2–4 min wall (delay 1–3 s) + 1 hour QA | New rows in `ks_results.csv`; then rebuild the join |
 | KS scrape +ITUK filters (84 total missing) | Yes | ~5–8 min + QA | Fills the CV hole the Autodoc-44 never covered |
-| Mekonomen / TMC-PN / Auto365-PN / Autodoc | — | **Skip** | — |
+| Mekonomen / TMC-PN / Auto365-PN / Autodoc | — | **Skip** — Mekonomen and TMC closed 2026-09-18 as sources that cannot answer the question | — |
 
 ### FX (state the rate; do not invent a new official one)
 

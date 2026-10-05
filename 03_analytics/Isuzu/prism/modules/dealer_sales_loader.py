@@ -159,12 +159,25 @@ def sellout_long_path(derived_dir: Path, distributor_code: str, year: int) -> Pa
 
 
 def discover_sellout_long_dists(derived_dir: Path, year: int) -> list[str]:
-    """Distributor codes that have a normalized long file for the calendar year."""
+    """Distributor codes that have a normalized long file for the calendar year.
+
+    Matches both the full-year (`_CY2025.csv`) and partial-year (`_CY2026YTD.csv`) naming,
+    so a YTD-only distributor is still discovered. Sidecar exports such as
+    `dealer_sellout_unmapped_codes_*` do not carry the `dealer_sellout_long_` prefix and are
+    therefore never seen here.
+    """
     found: list[str] = []
-    for p in sorted(derived_dir.glob(f"dealer_sellout_long_*_CY{year}.csv")):
-        # dealer_sellout_long_IRELAND_CY2025.csv
+    for p in sorted(derived_dir.glob(f"dealer_sellout_long_*_CY{year}*.csv")):
+        # dealer_sellout_long_IRELAND_CY2025.csv / ..._CY2026YTD.csv
         stem = p.stem  # dealer_sellout_long_IRELAND_CY2025
-        mid = stem.removeprefix("dealer_sellout_long_").removesuffix(f"_CY{year}")
+        mid = stem.removeprefix("dealer_sellout_long_")
+        # strip the trailing _CY{year} and any YTD suffix
+        cut = mid.find(f"_CY{year}")
+        if cut == -1:
+            continue
+        mid = mid[:cut]
+        if "_network" in mid.lower():
+            continue
         if mid and mid not in found:
             found.append(mid)
     return found
@@ -216,6 +229,18 @@ def load_sellout_long_pn(
         return pd.DataFrame(columns=["part_number", "qty_year"])
     if "year" in df.columns:
         df = df[pd.to_numeric(df["year"], errors="coerce") == year]
+    if "period_grain" in df.columns:
+        # Rollup rows carry period_grain "year" (full-year files) or "ytd" (partial-year
+        # files). Both must be accepted, or a month+rollup file is summed twice.
+        grain = df["period_grain"].astype(str).str.lower()
+        year_rows = df[grain.isin(("year", "ytd"))]
+        if not year_rows.empty:
+            df = year_rows
+        else:
+            # No rollup row: fall back to month rows so a month-only file still totals.
+            month_rows = df[grain == "month"]
+            if not month_rows.empty:
+                df = month_rows
     df = df.copy()
     df = _rows_for_annual_qty(df)
     df["part_number"] = df["part_number"].map(normalize_pn)

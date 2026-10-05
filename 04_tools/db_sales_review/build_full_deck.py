@@ -1,15 +1,15 @@
-"""Build Mode A + deep-dive Sales Review deck for any distributor.
+"""Build meeting-core + appendix + analytical deep-dive Sales Review deck.
 
 Usage:
     python build_full_deck.py --db IBX
     python build_full_deck.py --db UMI
     python build_full_deck.py --db HUNGARY
 
-Deep-dive pages use customer-safe eyebrows (no INTERNAL stamp) so selected
-slides can be shared. Numbers are computed from sales_fact / wallet_waterfall /
-gps_master / AIM / warranty — not hard-coded per DB.
+Meeting core follows the Sep 2026 craft (storyline → joint plan). Appendix holds
+PN detail. Analytical deep-dive pages use customer-safe eyebrows so selected
+slides can be shared.
 
-See: 04_tools/ppt_template_v2/DB_SALES_REVIEW_BLUEPRINT.md §7 (deep dive).
+See: 04_tools/ppt_template_v2/DB_SALES_REVIEW_BLUEPRINT.md §7.
 """
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ sys.path.insert(0, str(DBSR))
 import isze_chart_theme as ct  # noqa: E402
 import isze_deck_builder as db  # noqa: E402
 from build_deck import (  # noqa: E402
-    build as build_mode_a,
+    build as build_shared_core,
     card,
     eur,
     styled_table,
@@ -416,6 +416,9 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
     pn_rows, pn_label = top_pn_losers(hu)
     chart_dir = out_dir(key) / "charts_out"
     chart_dir.mkdir(exist_ok=True)
+    from datetime import datetime, timezone as _tz
+    chart_dir = chart_dir / f"deep_{datetime.now(_tz.utc).strftime('%Y%m%dT%H%M%SZ')}"
+    chart_dir.mkdir(exist_ok=True)
     page = page_start
     peers = C.pms_vs_network(profile)
     pms_year, _ = C.load_pms(profile)
@@ -423,13 +426,13 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
     # divider
     s = db.build_content(
         prs,
-        "Deep dive — detail behind the Mode A story",
+        "Deep dive — detail behind the shared story",
         eyebrow=f"{display} · {partner}",
         page_no=page,
     )
     bullets = [
         f"Extra detail for meeting prep — pick which slides to share with {partner}.",
-        "Mode A ends on the previous closing slide.",
+        "The spoken meeting ends on the earlier closing slide.",
         "Label in all charts: “Genuine with BVP alternative” "
         "(not “genuine contested”).",
     ]
@@ -462,7 +465,7 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
         s,
         [
             gps_agenda,
-            "FY2025 → FY2026 wallet mix (Genuine / Genuine with BVP alternative / BVP)",
+            "FY2025 → FY2026 parts mix (Genuine / Genuine with BVP alternative / BVP)",
             "Where the money went — outside the service-parts basket (FY)",
             "Service parts: CY capture vs network + FY billing (capture % is CY-only by design)",
             "Brake pads — BVP share of total brake pad sales (FY)",
@@ -528,12 +531,12 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
         take = []
         if ginfo.get("fy25") is not None and ginfo.get("fy26") is not None:
             take.append(
-                f"Red = fiscal-year GPS (frozen CY2025 wallet). "
+                f"Red = fiscal-year GPS (frozen CY2025 target spend). "
                 f"FY25 {ginfo['fy25']:.1f}% → FY26 {ginfo['fy26']:.1f}%."
             )
         elif ginfo.get("fy26") is not None:
             take.append(
-                f"Red = fiscal-year GPS (frozen CY2025 wallet). FY26 headline "
+                f"Red = fiscal-year GPS (frozen CY2025 target spend). FY26 headline "
                 f"{ginfo['fy26']:.1f}%."
             )
         if ginfo.get("fy26_ex") is not None and ginfo.get("warr26"):
@@ -544,7 +547,7 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
                 f"(warranty {eur(ginfo['warr26'])} ≈ {share:.0f}% of FY26 billing)."
             )
             take.append(
-                f"Both lines divide by the same wallet ({eur(ginfo['wallet'])}), so the gap "
+                f"Both lines divide by the same target spend ({eur(ginfo['wallet'])}), so the gap "
                 "between them is warranty and nothing else."
             )
         if ginfo.get("uio_2025") and ginfo.get("uio_2026"):
@@ -582,11 +585,11 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
                 ],
             },
             str(chart_dir / "modeb_fy_wallet.png"),
-            title="FY2025 → FY2026 wallet mix (EUR K)",
+            title="FY2025 → FY2026 parts mix (EUR K)",
             ylabel="EUR K", value_fmt="{:,.0f}", figsize=(10.2, 4.3),
         )
         s = db.build_content(
-            prs, "FY2025 → FY2026 wallet mix", eyebrow="Wallet mix", page_no=page,
+            prs, "FY2025 → FY2026 parts mix", eyebrow="Parts mix", page_no=page,
         )
         db.add_picture_fit(
             s, str(chart_dir / "modeb_fy_wallet.png"),
@@ -602,7 +605,7 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
                 f"Genuine only {eur(d_go)}.",
                 f"Genuine with BVP alternative {eur(f26['genuine_with_bvp_alt'] - f25['genuine_with_bvp_alt'])}; "
                 f"BVP {eur(f26['bvp'] - f25['bvp'])} "
-                f"({f26['bvp_pct'] * 100:.1f}% of FY26 wallet).",
+                f"({f26['bvp_pct'] * 100:.1f}% of FY26 parts billed).",
                 "Display label locked: Genuine with BVP alternative.",
             ],
             Inches(8.1), Inches(1.35), Inches(4.7), Inches(4.5), size=13,
@@ -619,11 +622,11 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
              eur(f26["genuine_with_bvp_alt"] - f25["genuine_with_bvp_alt"])],
             ["BVP", eur(f25["bvp"]), eur(f26["bvp"]),
              eur(f26["bvp"] - f25["bvp"])],
-            ["BVP % of wallet", f"{f25['bvp_pct']*100:.1f}%",
+            ["BVP % of parts billed", f"{f25['bvp_pct']*100:.1f}%",
              f"{f26['bvp_pct']*100:.1f}%",
              f"{(f26['bvp_pct']-f25['bvp_pct'])*100:+.1f} pp"],
         ]
-        s = db.build_content(prs, "FY wallet mix — detail", eyebrow="Wallet mix", page_no=page)
+        s = db.build_content(prs, "FY parts mix — detail", eyebrow="Parts mix", page_no=page)
         styled_table(
             s, rows, Inches(0.32), Inches(1.35), Inches(12.5), Inches(3.2),
             [Inches(4.0), Inches(2.7), Inches(2.7), Inches(3.1)],
@@ -683,7 +686,7 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
         page += 1
 
     # PMS CY capture — categories whose rate breaches the model ceiling are
-    # withheld here exactly as they are on the Mode A coverage slide.
+    # withheld here exactly as they are on the shared coverage slide.
     pms_ok, pms_withheld = C.quotable_pms(peers) if peers else ([], [])
     if peers and len(pms_ok) >= 3:
         keys = [k for k in PMS_CATS if k in pms_ok]
@@ -789,7 +792,7 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
                 )
             pad_notes.append(
                 f"Wallet-level BVP is still only ~{f26['bvp_pct']*100:.1f}% of FY26 — "
-                "do not generalise a pad story to the whole wallet."
+                "do not generalise a pad story to the whole parts book."
             )
             db.bullet_list(
                 s, pad_notes,
@@ -836,7 +839,7 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
             f"FY24 {eur(warr['fy2024'])} · FY25 {eur(warr['fy2025'])} · "
             f"FY26 {eur(warr['fy2026'])}.",
             f"Source row: {warr['name']}.",
-            "Ex-warranty GPS = (net − warranty) ÷ frozen CY25 wallet.",
+            "Ex-warranty GPS = (net − warranty) ÷ frozen CY25 target spend.",
         ],
     )
     db.bullet_list(
@@ -887,7 +890,7 @@ def build_full(db_key: str) -> Path:
     odir = out_dir(key)
     odir.mkdir(parents=True, exist_ok=True)
 
-    print(f"[{key}] rebuilding Mode A …")
+    print(f"[{key}] rebuilding meeting core …")
     from datetime import datetime, timezone
     canonical = odir / f"ISZE_{key}_Sales_Review_FY2027.pptx"
     share = odir / f"ISZE_{key}_Sales_Review_FY2027_share.pptx"
@@ -910,53 +913,72 @@ def build_full(db_key: str) -> Path:
         print(f"  (canonical PPTX locked — writing → {target.name})")
 
     os.environ["ISZE_DECK_OUT"] = str(target)
-    mode_a_path = Path(build_mode_a(key))
-    mode_a_only = odir / f"ISZE_{key}_Sales_Review_FY2027_ModeA_only.pptx"
+    shared_path = Path(build_shared_core(key))
+    shared_only = odir / f"ISZE_{key}_Sales_Review_FY2027_shared_only.pptx"
     try:
-        shutil.copy2(mode_a_path, mode_a_only)
-        print(f"  Mode A backup → {mode_a_only}")
+        shutil.copy2(shared_path, shared_only)
+        print(f"  shared backup → {shared_only}")
     except PermissionError:
-        print(f"  Mode A backup skipped (locked): {mode_a_only.name}")
+        print(f"  shared backup skipped (locked): {shared_only.name}")
 
-    print(f"[{key}] appending deep dive …")
-    prs = Presentation(str(mode_a_path))
+    print(f"[{key}] appending analytical deep dive …")
+    prs = Presentation(str(shared_path))
     n_a = len(prs.slides)
     append_deep_dive(prs, profile, page_start=n_a + 1)
+    # Prefer a path other than shared_path — python-pptx cannot reliably overwrite
+    # the same file it just opened (Windows EINVAL).
+    save_order = [p for p in (canonical, share, rebuild) if p.resolve() != shared_path.resolve()]
+    if _writable(shared_path) and shared_path.resolve() == target.resolve():
+        # still try target last if it was a different write
+        pass
+    save_order = list(dict.fromkeys(save_order + [share, rebuild, target]))
     full = None
-    for cand in (target, share, rebuild):
+    for cand in save_order:
         try:
             prs.save(str(cand))
             full = cand
             if cand != target:
-                print(f"  (save locked — wrote → {cand.name})")
+                print(f"  (wrote full deck → {cand.name})")
             break
-        except PermissionError:
+        except (PermissionError, OSError) as exc:
+            print(f"  save failed {cand.name}: {exc}")
             continue
     if full is None:
         raise SystemExit(f"[{key}] cannot save full deck — PPTX files locked")
+
+    # If full landed on a non-canonical path, also refresh shared_only from shared_path
+    # (already copied). Optionally copy full → canonical when unlocked.
+    if full != canonical and _writable(canonical):
+        try:
+            shutil.copy2(full, canonical)
+            full = canonical
+            print(f"  copied full deck → {canonical.name}")
+        except (PermissionError, OSError):
+            pass
 
     # Write a short manifest for GitHub / other agents
     manifest = {
         "db": key,
         "display": profile.get("display"),
         "partner": profile.get("name"),
-        "mode_a_slides": n_a,
+        "meeting_core_plus_appendix_slides": n_a,
         "total_slides": len(prs.slides),
         "pptx": str(full),
-        "mode_a_only": str(mode_a_only),
+        "shared_only": str(shared_only),
         "blueprint": str(TOOLS / "DB_SALES_REVIEW_BLUEPRINT.md"),
         "built_by": "build_full_deck.py",
+        "craft": "decision-led meeting core (Sep 2026 style pack)",
     }
     (odir / "_full_deck_manifest.json").write_text(
         json.dumps(manifest, indent=2), encoding="utf-8"
     )
     print(f"[{key}] FULL deck → {full}  ({len(prs.slides)} slides)")
-    print(f"  Mode A: {n_a}  ·  Deep dive from slide {n_a + 1}")
+    print(f"  meeting core + appendix: {n_a}  ·  Analytical deep dive from slide {n_a + 1}")
     return full
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Build Mode A + deep-dive sales review deck")
+    ap = argparse.ArgumentParser(description="Build shared + deep-dive sales review deck")
     ap.add_argument("--db", required=True, help="Profile key, e.g. IBX, UMI, HUNGARY")
     args = ap.parse_args()
     build_full(args.db.upper())

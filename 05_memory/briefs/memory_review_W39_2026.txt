@@ -1,0 +1,81 @@
+ISZE MEMORY REVIEW — Week 39, 2026
+Generated: 2026-09-23
+
+Scope note: lubricants and action-plan-fy* out of scope (standing instruction 2026-07-13).
+action-plan-fy2027.md present, not opened. No reviews ran W36–W38 — last brief was W35 (2026-08-24),
+so this run covers ~4 weeks of change.
+
+## Verifier
+| Check | Result | Evidence |
+|-------|--------|----------|
+| Brief written this run | PASS | 05_memory/briefs/memory_review_W39_2026.txt |
+| Stale files remaining | FAIL | 11 of 12 in-scope project files STALE by clock (only the new isze-corporate-presentations-20260919.md is fresh) |
+| Off-scope untouched | PASS | lubricants absent; action-plan-fy2027.md not opened or edited |
+| Applied log updated | PASS | 05_memory/briefs/memory_applied_log.md (4 new entries) |
+
+## Memory Health
+
+1. **Pricing inputs moved and memory was behind (fixed).** DECISIONS.md 2026-09-19 + config.yaml:
+   Source J discount 0.620 → 0.673 effective 2026-01-05; live FX 178.5 JPY/EUR from 1 Oct 2026 for both
+   J and T (172.6 previous, 163.7 two vintages back). glossary.md still said 0.62. Synced.
+2. **Price ambition closed permanently (2026-09-22)** and +8% cap deleted (2026-09-20) — not in any
+   memory file. Recorded in pricing-basket-2026.md so agents stop re-asking.
+3. **UIO V20: candidates a/b/c built 2026-09-22, not promoted; V19 still canonical.** uio.md said
+   "nothing built yet". Synced. Note for Jerome: candidate grand total 2026 ≈ 252k vs V19 269k (~-6%),
+   and the gap widens to ~224k vs 309k by 2030 — material for every UIO-driven number once promoted.
+4. **Pipeline verify: 164 pass / 1 warn / 0 fail** (2026-09-22). Warn = DENMARK 2012/2013 historical gap.
+5. **Global CLAUDE.md (in-session copy) still unchanged** on PMS 0.3%/€3.5M, AIM 93.5%, UIO "v9",
+   pricing path, and now also Source J 0.62 / FX 163.7 as "current". 9th week for the first three.
+6. **Mode A/B → shared/internal label sweep** (commit c813330) touched glossary, db-sales-review,
+   ids-db-leverage-os, imie, pricing-basket. Wording only, no content change. Fine.
+7. **Automation:** 2026-09-21 audit — 1 HIGH: `ISZE_EQ_Hit_Session_20260919` exit code 1; 591 banned
+   labels in shared pages changed in last 7 days (exec paper, pricing policy REV3, MD pack).
+   PMS_IAM / LiveStateAudit 267009 = still-running overlap (LOW), same as W35.
+8. **This review itself skipped W36–W38.** Worth checking the scheduler entry.
+
+STALE (>3 weeks) — 11 of 12:
+- sales-analytics-pipeline.md — 2026-06-13 (102d) — reconfirmation applied
+- pricing-basket-2026.md — 2026-06-29 (86d) — sync block applied; 2026-08-11 DECISIONS batch still not folded in
+- aftermarket-intelligence.md — 2026-07-02 (83d) — content gap (AIM pricing-risk retired 08-18; two-axis classification 09-17; AIM Universe v04 pricing 09-22)
+- gps-reconciliation.md — 2026-07-03 (82d)
+- pms-coverage.md — 2026-07-03 (82d)
+- monthly-sales-report-fy2027.md — 2026-07-05 (80d) — still no July/Aug monthly PDF on disk (only 2026-06)
+- competitiveness.md — 2026-07-27 (58d) — Eucon/PartsPool naming still conflated
+- imie_3party_2025_2026.md — 2026-07-30 (55d)
+- ids-db-leverage-os.md — 2026-08-11 (43d) — v1.4 still "Pending" in file
+- db-sales-review-mode-a.md — 2026-08-12 (42d)
+- uio.md — 2026-08-17 (37d) — V20 status synced
+
+## Applied this run
+1. glossary.md — Source J 0.62 → 0.673 (eff. 2026-01-05) + live FX 178.5.
+2. pricing-basket-2026.md — dated factual-sync block (FX vintages, discount, +5.9616%, cap deleted, ambition closed).
+3. uio.md — V20 status: candidates built, not promoted, V19 canonical.
+4. sales-analytics-pipeline.md — verify 164/1/0 reconfirmation.
+Detail: memory_applied_log.md.
+
+## Open Items Still Unresolved
+- EQ-HIT PN→service mapping (pms-coverage.md) — and the EQ_Hit session task now failing (exit 1).
+- CY2025 full PMS basket gap revalidation (pms-coverage.md).
+- VKWRT load for SPA-adjusted AIM; other-DB sell-out for AIM FY2027 KPI.
+- GPS v9 snapshot re-basing decision (gps-reconciliation.md).
+- MIDI contribution (uio.md) still estimate.
+- V20 promotion decision (22c candidate; open inputs: Greek CV LD regs, Cyprus LCV post-2014, Portugal LCV pre-2010).
+- Decision register: D05 (sales-review gate) open; D24 Portugal share 0.6364 accepted, ceiling rebuild not authorised; D08 fleet rebuild approved not run; D26 tier-A gate update outstanding.
+- 07_deploy competitiveness copies re-deploy — not re-checked.
+- Tomoe Baumann IDS v1.4 mail — not re-checked this run.
+
+## Suggested Updates (Jerome)
+1. Global CLAUDE.md "Key confirmed data": PMS (→ Model B 35.1% / €2.04M), AIM (retired pricing-risk layer; two-axis classification), UIO row (v19 canonical, V20 candidate), pricing path (05_memory/projects/pricing-basket-2026.md), and Source J 0.62 → 0.673 / FX 178.5 live.
+2. aftermarket-intelligence.md — rewrite "What it does": Pricing Risk Map / Opportunity Engine retired 2026-08-18 (context-only); two-axis classification locked 2026-09-17; attribute layer on hold; AIM Universe v04 pricing component 2026-09-22.
+3. pricing-basket-2026.md — fold in the 2026-08-11 DECISIONS batch (year-matched PR00 not quotable; elasticity DB→DLR only; gross/SPA closed) and re-verify; decide whether the FY2026 table stays or gets a live-values table.
+4. Parts base: record in a project file that €103.57M (cut 2026-03-31) and €112.09M (cut 2026-06-30) are one method, two dates (DECISIONS 2026-09-17), plus the NON_PARTS leak fix.
+5. ids-db-leverage-os.md — mark v1.4 shipped (2026-08-15) and close the v1.4 open decision.
+6. competitiveness.md + glossary "Eucon" — separate Eucon 2023 UK/ITUK survey from PartsPool Autodoc DE/NO 2026-03-29.
+7. isze-corporate-presentations-20260919.md — add standard frontmatter (last_validated 2026-09-19).
+8. uio.md — once V20 is promoted, update Files/Version history; flag the ~-6% (2026) to ~-27% (2030) grand-total change to downstream users.
+9. Low: `Sales to Dealers_ITUK_CY2025.xlsx` still in 05_memory/projects/; bootstrap CLAUDE.md files still reference pre-reorg raw path.
+
+## No action needed
+- isze-corporate-presentations-20260919.md — new, 4 days old, content is capture of three decks.
+- db-sales-review-mode-a.md, imie_3party_2025_2026.md — label sweep only; no contradicting evidence found.
+- verification report — green (0 fail).

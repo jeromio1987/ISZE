@@ -1,4 +1,4 @@
-"""Emit Mode B Action Ledger hub HTML + OPEN_*.cmd (no browser launch)."""
+"""Emit internal Action Ledger hub HTML + OPEN_*.cmd (no browser launch)."""
 
 from __future__ import annotations
 
@@ -408,7 +408,7 @@ def build_html(kpis: dict, top: pd.DataFrame) -> str:
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ISZE Action Ledger Hub · Mode B</title>
+<title>ISZE Action Ledger Hub · internal</title>
 <style>
 *{{box-sizing:border-box}}
 html,body{{margin:0;padding:0}}
@@ -477,7 +477,7 @@ code{{font-size:12px;background:#eceae4;padding:1px 5px;color:#222}}
 <body>
 <header class="hero">
   <div class="hero-inner">
-    <div class="brand">ISZE · Mode B · Ops</div>
+    <div class="brand">ISZE · internal · Ops</div>
     <h1>Action Ledger Hub</h1>
     <div class="rule"></div>
     <p class="lead">
@@ -529,7 +529,7 @@ code{{font-size:12px;background:#eceae4;padding:1px 5px;color:#222}}
   </p>
   <div class="callout">
     Run <code>{html.escape(str(kpis["run_id"] or "—"))}</code> · produced
-    <code>{html.escape(str(produced))}</code> · {n_surfaces} adapters · Mode B only.
+    <code>{html.escape(str(produced))}</code> · {n_surfaces} adapters · internal only.
   </div>
 
   {render_scorecard_block()}
@@ -559,7 +559,7 @@ code{{font-size:12px;background:#eceae4;padding:1px 5px;color:#222}}
   </div>
 
   <p class="foot">
-    Mode B · internal ops hub · no CDN · house navy/terra · attribution: co-moved, never delivered/caused/drove.
+    internal · internal ops hub · no CDN · house navy/terra · attribution: co-moved, never delivered/caused/drove.
     Rebuild: <code>python 02_dashboards/_build/build_action_ledger_hub.py</code>
   </p>
 </main>

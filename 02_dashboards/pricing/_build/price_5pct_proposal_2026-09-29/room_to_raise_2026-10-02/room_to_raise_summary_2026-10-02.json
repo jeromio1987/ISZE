@@ -1,0 +1,786 @@
+{
+ "proposal": {
+  "base_eur": 32595852.629999995,
+  "step_eur": 1629792.6315000001,
+  "scaling_k": 0.9054285101647632,
+  "parts": 15273,
+  "pad_kits": 29,
+  "check": "k and step equal price_5pct_proposal_summary_2026-09-29.json"
+ },
+ "segment_rule": {
+  "used": "body = release aim_l1 Accident & Body; service = BVP-crossref PMS categories + master PMS flag; repair = rest",
+  "parts_changed_vs_exercise_rule": 207,
+  "billed_changed_vs_exercise_rule": 1271902.0
+ },
+ "aim_release": {
+  "release_id": "2026-10-02",
+  "status": "APPROVED",
+  "sha256": "0ac9137903a326430c68e4d619fa4f836a796a01d9d40f6f6f1183e7d4c52360",
+  "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\aim_pn_classification_release_2026-10-02.csv",
+  "parts_in_base_found": 15273
+ },
+ "holds_exercise_rule_step": 388035.12,
+ "holds": {
+  "exercise_published_held_step": 388040.0,
+  "exercise_published_held_base": 9224705.0,
+  "recomputed_here": {
+   "UMI body/collision hold": {
+    "billed": 244054.15,
+    "step": 15463.14
+   },
+   "UMI lighting hold": {
+    "billed": 111103.47,
+    "step": 4434.57
+   },
+   "UTI lighting hold": {
+    "billed": 133711.55,
+    "step": 8484.33
+   },
+   "service hold (market exercise)": {
+    "billed": 8736511.11,
+    "step": 360532.37
+   }
+  },
+  "recomputed_total_step": 388914.4,
+  "uti_panels_optional": {
+   "billed": 215778.36,
+   "step": 13794.65,
+   "parts": 228
+  },
+  "uti_lighting_rule": "UTI lines on the 87 part numbers the 19 Sep pricing lines file files under Lighting (the exercise's EUR 133,712 selection)",
+  "umi_lighting_rule": "UMI lines whose release catalogue L2 is Lighting, not already in UMI body; the exercise named this hold but counted only body in its EUR 388,040"
+ },
+ "slow_mover_rule": "at most 6 order lines network-wide, Jul 2025-Jun 2026 (sales_fact.parquet)",
+ "lines_quantiles": {
+  "0.1": 1.0,
+  "0.25": 1.0,
+  "0.5": 3.0,
+  "0.75": 10.0,
+  "0.9": 26.0
+ },
+ "vehicle_line_checks": {
+  "band_file_vs_buyers": {
+   "parts": 115,
+   "agree": 114
+  },
+  "apl_vs_buyers": {
+   "parts": 4463,
+   "agree": 4346
+  }
+ },
+ "p700_new_only": {
+  "parts": 826,
+  "with_any_billing_2023_aug2026": 135,
+  "billed_eur_2023_aug2026": 253333.78,
+  "with_billing_l12m": 14,
+  "billed_eur_l12m": 659.62,
+  "in_proposal_base": 14,
+  "proposal_base_billed": 659.62,
+  "with_billing_jul_aug_2026": 7,
+  "billed_eur_jul_aug_2026": 97.84,
+  "by_year": {
+   "2023": 228715.0,
+   "2024": 23530.0,
+   "2025": 332.0,
+   "2026": 757.0
+  }
+ },
+ "lever4_cy2025": {
+  "basis": "CY2025 sales_fact lines x 2025 PR00 list (market_facts.py method); CIS left at 0 (untouched)",
+  "stock_narrow_1pt_eur": 213113.0,
+  "stock_narrow_1pt_eur_excl_service_hold_markets": 111199.0,
+  "stock_halve_gap_eur": 452168.0,
+  "urgent_plus1pt_eur": 46306.0,
+  "urgent_plus2pt_eur": 92612.0,
+  "sor_list_value": 21311348.0,
+  "urgent_list_value": 4630617.0
+ },
+ "sufficiency": {
+  "base": {
+   "parts": 15273,
+   "billed_eur": 32595852.63
+  },
+  "1_outside_prices_aftermarket_street_any_date": {
+   "parts": 266,
+   "parts_pct": 0.0174,
+   "billed_eur": 6853278.0,
+   "billed_pct": 0.2102,
+   "note": "aftermarket shop price on file"
+  },
+  "1_outside_prices_aftermarket_street_12m": {
+   "parts": 254,
+   "parts_pct": 0.0166,
+   "billed_eur": 6634906.0,
+   "billed_pct": 0.2036,
+   "note": "dated in the last 12 months"
+  },
+  "1_outside_prices_aftermarket_any_group": {
+   "parts": 293,
+   "parts_pct": 0.0192,
+   "billed_eur": 7966274.0,
+   "billed_pct": 0.2444,
+   "note": "street, RRP or trade"
+  },
+  "1_outside_prices_genuine_grey": {
+   "parts": 1167,
+   "parts_pct": 0.0764,
+   "billed_eur": 16430902.0,
+   "billed_pct": 0.5041,
+   "note": "genuine Isuzu sold outside our network"
+  },
+  "1_rival_above_ref_dealer_price": {
+   "parts": 46,
+   "parts_pct": 0.003,
+   "billed_eur": 452522.0,
+   "billed_pct": 0.0139,
+   "note": "aftermarket street price at or above our reference dealer price"
+  },
+  "2_competitor_number_confirmed_likely": {
+   "parts": 78,
+   "parts_pct": 0.0051,
+   "billed_eur": 5029805.0,
+   "billed_pct": 0.1543,
+   "note": "crossref_graded.csv tier confirmed/likely"
+  },
+  "2_competitive_evidence_brief_definition": {
+   "parts": 294,
+   "parts_pct": 0.0192,
+   "billed_eur": 7992190.0,
+   "billed_pct": 0.2452,
+   "note": "edge or aftermarket price"
+  },
+  "2_family_competitive_release": {
+   "parts": 4146,
+   "parts_pct": 0.2715,
+   "billed_eur": 14462844.0,
+   "billed_pct": 0.4437,
+   "note": "release catalogue L1 = Competitive parts"
+  },
+  "2_release_found": {
+   "parts": 15273,
+   "parts_pct": 1.0,
+   "billed_eur": 32595853.0,
+   "billed_pct": 1.0,
+   "note": "part number found in the approved release"
+  },
+  "2_captive_strict": {
+   "parts": 10891,
+   "parts_pct": 0.7131,
+   "billed_eur": 14967438.0,
+   "billed_pct": 0.4592,
+   "note": "no edge, no aftermarket price, no BVP alternative, not a competitive family, not measured lost/contested"
+  },
+  "3_order_lines_found": {
+   "parts": 15273,
+   "parts_pct": 1.0,
+   "billed_eur": 32595853.0,
+   "billed_pct": 1.0,
+   "note": "order lines in sales_fact, same window"
+  },
+  "3_slow_movers": {
+   "parts": 10081,
+   "parts_pct": 0.6601,
+   "billed_eur": 3055952.0,
+   "billed_pct": 0.0938,
+   "note": "at most 6 order lines network-wide, Jul 2025-Jun 2026 (sales_fact.parquet)"
+  },
+  "4_order_type_found": {
+   "parts": 15273,
+   "parts_pct": 1.0,
+   "billed_eur": 32595853.0,
+   "billed_pct": 1.0,
+   "note": "order type on the sales lines"
+  },
+  "5_dealer_response_measured": {
+   "parts": 3819,
+   "parts_pct": 0.25,
+   "billed_eur": 24033982.0,
+   "billed_pct": 0.7373,
+   "note": "part in the April 2026 dealer-response frame (UK trucks, UK D-Max, Ireland, Portugal; 3+ units before)"
+  },
+  "5_fell_after_rise": {
+   "parts": 351,
+   "parts_pct": 0.023,
+   "billed_eur": 1011837.0,
+   "billed_pct": 0.031,
+   "note": "rise of 3%+, 10+ units before, fell 30%+ more than its own family"
+  },
+  "6_vehicle_line_any": {
+   "parts": 12522,
+   "parts_pct": 0.8199,
+   "billed_eur": 31857843.0,
+   "billed_pct": 0.9774,
+   "note": "any of the three routes"
+  },
+  "6_vehicle_line_band_file": {
+   "parts": 456,
+   "parts_pct": 0.0299,
+   "billed_eur": 6141063.0,
+   "billed_pct": 0.1884,
+   "note": "vehicle_family_bands.csv"
+  },
+  "6_vehicle_line_apl": {
+   "parts": 5434,
+   "parts_pct": 0.3558,
+   "billed_eur": 13044546.0,
+   "billed_pct": 0.4002,
+   "note": "APL part lists"
+  },
+  "7_p700_new_only_in_base": {
+   "parts": 14,
+   "parts_pct": 0.0009,
+   "billed_eur": 660.0,
+   "billed_pct": 0.0,
+   "note": "Book B bucket p700_new_only_seed"
+  },
+  "8_umi_service": {
+   "parts": 903,
+   "parts_pct": 0.0591,
+   "billed_eur": 7094837.0,
+   "billed_pct": 0.2177,
+   "note": "parts with UMI service billing"
+  }
+ },
+ "vehicle_line_split": {
+  "Both": {
+   "parts": 728,
+   "billed": 2414560.0
+  },
+  "LCV (D-Max)": {
+   "parts": 6150,
+   "billed": 17903056.0
+  },
+  "Truck": {
+   "parts": 5644,
+   "billed": 11540227.0
+  },
+  "Unknown": {
+   "parts": 2751,
+   "billed": 738009.0
+  }
+ },
+ "vehicle_line_by_source": {
+  "": {
+   "parts": 2751,
+   "billed": 738009.0
+  },
+  "APL part lists 2026-08-12": {
+   "parts": 4966,
+   "billed": 9057932.0
+  },
+  "vehicle_family_bands.csv": {
+   "parts": 456,
+   "billed": 6141063.0
+  },
+  "who buys it (LCV-only vs truck-only distributors)": {
+   "parts": 7100,
+   "billed": 16658848.0
+  }
+ },
+ "index_distribution": {
+  "aftermarket_street": {
+   "parts": 266,
+   "median": 0.56,
+   "billed_weighted_median": 0.44,
+   "parts_at_or_above_1": 46,
+   "billed_at_or_above_1": 452522.0,
+   "parts_below_0_8": 182,
+   "billed_below_0_8": 5977854.0
+  },
+  "genuine_grey": {
+   "parts": 1167,
+   "median": 1.169,
+   "billed_weighted_median": 1.167,
+   "parts_at_or_above_1": 929,
+   "billed_at_or_above_1": 12758919.0,
+   "parts_below_0_8": 78,
+   "billed_below_0_8": 1310578.0
+  }
+ },
+ "genuine_grey_sources_parts": {
+  "amayama": 1093,
+  "geparden": 4,
+  "ks": 284,
+  "ks_gen": 41,
+  "omega": 2,
+  "tungen": 1
+ },
+ "input_fingerprints": {
+  "price_observations.parquet": {
+   "sha256_12": "09633e49cdc0",
+   "modified": "2026-10-02 09:04"
+  },
+  "crossref_graded.csv": {
+   "sha256_12": "87ff86707a14",
+   "modified": "2026-10-02 09:52"
+  },
+  "pr00_classification.csv": {
+   "sha256_12": "cf4bc400fa3d",
+   "modified": "2026-10-02 09:48"
+  },
+  "parts_catalog_dimension.parquet": {
+   "sha256_12": "8a9e7c9ea68f",
+   "modified": "2026-10-02 09:48"
+  },
+  "aim_pn_classification_release_2026-10-02.csv": {
+   "sha256_12": "0ac9137903a3",
+   "modified": "2026-10-02 08:42"
+  },
+  "sales_fact.parquet": {
+   "sha256_12": "66db408990e2",
+   "modified": "2026-09-21 12:33"
+  },
+  "price_bp_weighted_compare_pn.csv": {
+   "sha256_12": "e306cc28f855",
+   "modified": "2026-09-17 15:03"
+  },
+  "pricing_pr00_ie40.parquet": {
+   "sha256_12": "95d83957e7b1",
+   "modified": "2026-08-19 18:23"
+  },
+  "market_exercise_decisions_2026-09-30.json": {
+   "sha256_12": "57e1b7e30ca3",
+   "modified": "2026-09-30 18:21"
+  }
+ },
+ "usable_edges_rows": 2215,
+ "room_score_rule": {
+  "captive_strict": "+2",
+  "aftermarket street index >= 1.0 / < 0.8": "+2 / -2",
+  "genuine grey index >= 1.0 / < 0.8": "+1 / -1",
+  "slow mover": "+1",
+  "urgent (VOR+RUSH) share >= 50%": "+1",
+  "fell after April 2026 rise": "-1",
+  "floor": "0; forced 0 for pad kits, lubricants and parts the proposal already holds (distributor sells under 45% of need)"
+ },
+ "room_score_dist": {
+  "0": {
+   "parts": 1241,
+   "billed": 13875051.0
+  },
+  "1": {
+   "parts": 2282,
+   "billed": 3532904.0
+  },
+  "2": {
+   "parts": 3762,
+   "billed": 7790397.0
+  },
+  "3": {
+   "parts": 5112,
+   "billed": 6536082.0
+  },
+  "4": {
+   "parts": 2869,
+   "billed": 845632.0
+  },
+  "5": {
+   "parts": 7,
+   "billed": 15787.0
+  }
+ },
+ "scenarios": [
+  {
+   "scenario": "A flat rest of book",
+   "uti_panels_held": false,
+   "ceiling": "factory+5pts",
+   "feasible": true,
+   "total_step_eur": 1629793.0,
+   "total_pct": 0.05,
+   "held_step_given_up_eur": 388914.0,
+   "proposal_moves_cut_by_ceiling_parts": 5,
+   "proposal_moves_cut_by_ceiling_eur": 7654.0,
+   "free_base_eur": 22939442.0,
+   "avg_move_on_free_lines": 0.07041,
+   "uplift_above_proposal_eur": 396568.0,
+   "cut_below_proposal_by_ceiling_eur": 7654.0,
+   "uplift_on_captive_strict_pct": 0.6361,
+   "uplift_on_captive_brief_pct": 0.8525,
+   "uplift_service_eur": 137023.0,
+   "uplift_repair_eur": 167961.0,
+   "uplift_body_eur": 91583.0,
+   "uplift_LCV (D-Max)_eur": 193659.0,
+   "uplift_Truck_eur": 177948.0,
+   "uplift_Both_eur": 13887.0,
+   "uplift_Unknown_eur": 11075.0,
+   "weighted_base_eur": 21696071.0,
+   "weighted_parts": 13766,
+   "step_on_captive_strict_pct": 0.6246,
+   "parts_at_ceiling": 56,
+   "billed_at_ceiling_eur": 262658.0,
+   "parts_moved_above_proposal": 13761,
+   "max_move": 1.5209,
+   "median_move_free_parts": 0.0847,
+   "solver_t": 0.333819
+  },
+  {
+   "scenario": "B captive repair + non-competitive body",
+   "uti_panels_held": false,
+   "ceiling": "factory+5pts",
+   "feasible": true,
+   "total_step_eur": 1629793.0,
+   "total_pct": 0.05,
+   "held_step_given_up_eur": 388914.0,
+   "proposal_moves_cut_by_ceiling_parts": 5,
+   "proposal_moves_cut_by_ceiling_eur": 7654.0,
+   "free_base_eur": 22939442.0,
+   "avg_move_on_free_lines": 0.07041,
+   "uplift_above_proposal_eur": 396568.0,
+   "cut_below_proposal_by_ceiling_eur": 7654.0,
+   "uplift_on_captive_strict_pct": 1.0,
+   "uplift_on_captive_brief_pct": 1.0,
+   "uplift_service_eur": 0.0,
+   "uplift_repair_eur": 252972.0,
+   "uplift_body_eur": 143596.0,
+   "uplift_LCV (D-Max)_eur": 278355.0,
+   "uplift_Truck_eur": 104387.0,
+   "uplift_Both_eur": 5061.0,
+   "uplift_Unknown_eur": 8765.0,
+   "weighted_base_eur": 10641763.0,
+   "weighted_parts": 8447,
+   "step_on_captive_strict_pct": 0.7132,
+   "parts_at_ceiling": 5,
+   "billed_at_ceiling_eur": 241951.0,
+   "parts_moved_above_proposal": 8446,
+   "max_move": 1.3318,
+   "median_move_free_parts": 0.1006,
+   "solver_t": 0.037266
+  },
+  {
+   "scenario": "C room-weighted (angles 1-5)",
+   "uti_panels_held": false,
+   "ceiling": "factory+5pts",
+   "feasible": true,
+   "total_step_eur": 1629793.0,
+   "total_pct": 0.05,
+   "held_step_given_up_eur": 388914.0,
+   "proposal_moves_cut_by_ceiling_parts": 5,
+   "proposal_moves_cut_by_ceiling_eur": 7654.0,
+   "free_base_eur": 22939442.0,
+   "avg_move_on_free_lines": 0.07041,
+   "uplift_above_proposal_eur": 396568.0,
+   "cut_below_proposal_by_ceiling_eur": 7654.0,
+   "uplift_on_captive_strict_pct": 0.9073,
+   "uplift_on_captive_brief_pct": 0.9761,
+   "uplift_service_eur": 90683.0,
+   "uplift_repair_eur": 199856.0,
+   "uplift_body_eur": 106029.0,
+   "uplift_LCV (D-Max)_eur": 222152.0,
+   "uplift_Truck_eur": 148344.0,
+   "uplift_Both_eur": 9878.0,
+   "uplift_Unknown_eur": 16193.0,
+   "weighted_base_eur": 15655540.0,
+   "weighted_parts": 12742,
+   "step_on_captive_strict_pct": 0.6906,
+   "parts_at_ceiling": 8,
+   "billed_at_ceiling_eur": 247032.0,
+   "parts_moved_above_proposal": 12738,
+   "max_move": 1.343,
+   "median_move_free_parts": 0.0971,
+   "solver_t": 0.011243
+  },
+  {
+   "scenario": "A flat rest of book",
+   "uti_panels_held": false,
+   "ceiling": "12% max",
+   "feasible": true,
+   "total_step_eur": 1629793.0,
+   "total_pct": 0.05,
+   "held_step_given_up_eur": 388914.0,
+   "proposal_moves_cut_by_ceiling_parts": 93,
+   "proposal_moves_cut_by_ceiling_eur": 16079.0,
+   "free_base_eur": 22939442.0,
+   "avg_move_on_free_lines": 0.07041,
+   "uplift_above_proposal_eur": 404993.0,
+   "cut_below_proposal_by_ceiling_eur": 16079.0,
+   "uplift_on_captive_strict_pct": 0.6317,
+   "uplift_on_captive_brief_pct": 0.8477,
+   "uplift_service_eur": 139913.0,
+   "uplift_repair_eur": 171815.0,
+   "uplift_body_eur": 93266.0,
+   "uplift_LCV (D-Max)_eur": 198525.0,
+   "uplift_Truck_eur": 181737.0,
+   "uplift_Both_eur": 14157.0,
+   "uplift_Unknown_eur": 10574.0,
+   "weighted_base_eur": 21696071.0,
+   "weighted_parts": 13766,
+   "step_on_captive_strict_pct": 0.6223,
+   "parts_at_ceiling": 1119,
+   "billed_at_ceiling_eur": 735254.0,
+   "parts_moved_above_proposal": 13673,
+   "max_move": 0.12,
+   "median_move_free_parts": 0.0853,
+   "solver_t": 0.343297
+  },
+  {
+   "scenario": "B captive repair + non-competitive body",
+   "uti_panels_held": false,
+   "ceiling": "12% max",
+   "feasible": true,
+   "total_step_eur": 1629793.0,
+   "total_pct": 0.05,
+   "held_step_given_up_eur": 388914.0,
+   "proposal_moves_cut_by_ceiling_parts": 93,
+   "proposal_moves_cut_by_ceiling_eur": 16079.0,
+   "free_base_eur": 22939442.0,
+   "avg_move_on_free_lines": 0.07041,
+   "uplift_above_proposal_eur": 404993.0,
+   "cut_below_proposal_by_ceiling_eur": 16079.0,
+   "uplift_on_captive_strict_pct": 1.0,
+   "uplift_on_captive_brief_pct": 1.0,
+   "uplift_service_eur": 0.0,
+   "uplift_repair_eur": 258737.0,
+   "uplift_body_eur": 146256.0,
+   "uplift_LCV (D-Max)_eur": 284395.0,
+   "uplift_Truck_eur": 106673.0,
+   "uplift_Both_eur": 5146.0,
+   "uplift_Unknown_eur": 8780.0,
+   "weighted_base_eur": 10641763.0,
+   "weighted_parts": 8447,
+   "step_on_captive_strict_pct": 0.7138,
+   "parts_at_ceiling": 833,
+   "billed_at_ceiling_eur": 486404.0,
+   "parts_moved_above_proposal": 8394,
+   "max_move": 0.12,
+   "median_move_free_parts": 0.1017,
+   "solver_t": 0.038337
+  },
+  {
+   "scenario": "C room-weighted (angles 1-5)",
+   "uti_panels_held": false,
+   "ceiling": "12% max",
+   "feasible": true,
+   "total_step_eur": 1629793.0,
+   "total_pct": 0.05,
+   "held_step_given_up_eur": 388914.0,
+   "proposal_moves_cut_by_ceiling_parts": 93,
+   "proposal_moves_cut_by_ceiling_eur": 16079.0,
+   "free_base_eur": 22939442.0,
+   "avg_move_on_free_lines": 0.07041,
+   "uplift_above_proposal_eur": 404993.0,
+   "cut_below_proposal_by_ceiling_eur": 16079.0,
+   "uplift_on_captive_strict_pct": 0.9049,
+   "uplift_on_captive_brief_pct": 0.9738,
+   "uplift_service_eur": 92899.0,
+   "uplift_repair_eur": 204156.0,
+   "uplift_body_eur": 107939.0,
+   "uplift_LCV (D-Max)_eur": 226826.0,
+   "uplift_Truck_eur": 151919.0,
+   "uplift_Both_eur": 10083.0,
+   "uplift_Unknown_eur": 16166.0,
+   "weighted_base_eur": 15655540.0,
+   "weighted_parts": 12742,
+   "step_on_captive_strict_pct": 0.6902,
+   "parts_at_ceiling": 721,
+   "billed_at_ceiling_eur": 377786.0,
+   "parts_moved_above_proposal": 12651,
+   "max_move": 0.12,
+   "median_move_free_parts": 0.098,
+   "solver_t": 0.011531
+  },
+  {
+   "scenario": "A flat rest of book",
+   "uti_panels_held": true,
+   "ceiling": "factory+5pts",
+   "feasible": true,
+   "total_step_eur": 1629793.0,
+   "total_pct": 0.05,
+   "held_step_given_up_eur": 402709.0,
+   "proposal_moves_cut_by_ceiling_parts": 5,
+   "proposal_moves_cut_by_ceiling_eur": 7654.0,
+   "free_base_eur": 22723663.0,
+   "avg_move_on_free_lines": 0.07108,
+   "uplift_above_proposal_eur": 410363.0,
+   "cut_below_proposal_by_ceiling_eur": 7654.0,
+   "uplift_on_captive_strict_pct": 0.6327,
+   "uplift_on_captive_brief_pct": 0.8516,
+   "uplift_service_eur": 143435.0,
+   "uplift_repair_eur": 175873.0,
+   "uplift_body_eur": 91056.0,
+   "uplift_LCV (D-Max)_eur": 202801.0,
+   "uplift_Truck_eur": 181458.0,
+   "uplift_Both_eur": 14539.0,
+   "uplift_Unknown_eur": 11564.0,
+   "weighted_base_eur": 21480293.0,
+   "weighted_parts": 13665,
+   "step_on_captive_strict_pct": 0.6213,
+   "parts_at_ceiling": 57,
+   "billed_at_ceiling_eur": 265783.0,
+   "parts_moved_above_proposal": 13660,
+   "max_move": 1.5209,
+   "median_move_free_parts": 0.0857,
+   "solver_t": 0.349582
+  },
+  {
+   "scenario": "B captive repair + non-competitive body",
+   "uti_panels_held": true,
+   "ceiling": "factory+5pts",
+   "feasible": true,
+   "total_step_eur": 1629793.0,
+   "total_pct": 0.05,
+   "held_step_given_up_eur": 402709.0,
+   "proposal_moves_cut_by_ceiling_parts": 5,
+   "proposal_moves_cut_by_ceiling_eur": 7654.0,
+   "free_base_eur": 22723663.0,
+   "avg_move_on_free_lines": 0.07108,
+   "uplift_above_proposal_eur": 410363.0,
+   "cut_below_proposal_by_ceiling_eur": 7654.0,
+   "uplift_on_captive_strict_pct": 1.0,
+   "uplift_on_captive_brief_pct": 1.0,
+   "uplift_service_eur": 0.0,
+   "uplift_repair_eur": 266775.0,
+   "uplift_body_eur": 143587.0,
+   "uplift_LCV (D-Max)_eur": 293543.0,
+   "uplift_Truck_eur": 102239.0,
+   "uplift_Both_eur": 5337.0,
+   "uplift_Unknown_eur": 9244.0,
+   "weighted_base_eur": 10442181.0,
+   "weighted_parts": 8347,
+   "step_on_captive_strict_pct": 0.7138,
+   "parts_at_ceiling": 5,
+   "billed_at_ceiling_eur": 241951.0,
+   "parts_moved_above_proposal": 8346,
+   "max_move": 1.3318,
+   "median_move_free_parts": 0.1027,
+   "solver_t": 0.039299
+  },
+  {
+   "scenario": "C room-weighted (angles 1-5)",
+   "uti_panels_held": true,
+   "ceiling": "factory+5pts",
+   "feasible": true,
+   "total_step_eur": 1629793.0,
+   "total_pct": 0.05,
+   "held_step_given_up_eur": 402709.0,
+   "proposal_moves_cut_by_ceiling_parts": 5,
+   "proposal_moves_cut_by_ceiling_eur": 7654.0,
+   "free_base_eur": 22723663.0,
+   "avg_move_on_free_lines": 0.07108,
+   "uplift_above_proposal_eur": 410363.0,
+   "cut_below_proposal_by_ceiling_eur": 7654.0,
+   "uplift_on_captive_strict_pct": 0.906,
+   "uplift_on_captive_brief_pct": 0.9759,
+   "uplift_service_eur": 95182.0,
+   "uplift_repair_eur": 209795.0,
+   "uplift_body_eur": 105387.0,
+   "uplift_LCV (D-Max)_eur": 233199.0,
+   "uplift_Truck_eur": 149797.0,
+   "uplift_Both_eur": 10370.0,
+   "uplift_Unknown_eur": 16997.0,
+   "weighted_base_eur": 15453147.0,
+   "weighted_parts": 12642,
+   "step_on_captive_strict_pct": 0.6901,
+   "parts_at_ceiling": 11,
+   "billed_at_ceiling_eur": 250151.0,
+   "parts_moved_above_proposal": 12638,
+   "max_move": 1.3436,
+   "median_move_free_parts": 0.0988,
+   "solver_t": 0.011802
+  },
+  {
+   "scenario": "A flat rest of book",
+   "uti_panels_held": true,
+   "ceiling": "12% max",
+   "feasible": true,
+   "total_step_eur": 1629793.0,
+   "total_pct": 0.05,
+   "held_step_given_up_eur": 402709.0,
+   "proposal_moves_cut_by_ceiling_parts": 92,
+   "proposal_moves_cut_by_ceiling_eur": 16078.0,
+   "free_base_eur": 22723663.0,
+   "avg_move_on_free_lines": 0.07108,
+   "uplift_above_proposal_eur": 418787.0,
+   "cut_below_proposal_by_ceiling_eur": 16078.0,
+   "uplift_on_captive_strict_pct": 0.6282,
+   "uplift_on_captive_brief_pct": 0.8468,
+   "uplift_service_eur": 146359.0,
+   "uplift_repair_eur": 179824.0,
+   "uplift_body_eur": 92604.0,
+   "uplift_LCV (D-Max)_eur": 207618.0,
+   "uplift_Truck_eur": 185345.0,
+   "uplift_Both_eur": 14778.0,
+   "uplift_Unknown_eur": 11046.0,
+   "weighted_base_eur": 21480293.0,
+   "weighted_parts": 13665,
+   "step_on_captive_strict_pct": 0.6189,
+   "parts_at_ceiling": 1132,
+   "billed_at_ceiling_eur": 734744.0,
+   "parts_moved_above_proposal": 13573,
+   "max_move": 0.12,
+   "median_move_free_parts": 0.0864,
+   "solver_t": 0.359789
+  },
+  {
+   "scenario": "B captive repair + non-competitive body",
+   "uti_panels_held": true,
+   "ceiling": "12% max",
+   "feasible": true,
+   "total_step_eur": 1629793.0,
+   "total_pct": 0.05,
+   "held_step_given_up_eur": 402709.0,
+   "proposal_moves_cut_by_ceiling_parts": 92,
+   "proposal_moves_cut_by_ceiling_eur": 16078.0,
+   "free_base_eur": 22723663.0,
+   "avg_move_on_free_lines": 0.07108,
+   "uplift_above_proposal_eur": 418787.0,
+   "cut_below_proposal_by_ceiling_eur": 16078.0,
+   "uplift_on_captive_strict_pct": 1.0,
+   "uplift_on_captive_brief_pct": 1.0,
+   "uplift_service_eur": 0.0,
+   "uplift_repair_eur": 272725.0,
+   "uplift_body_eur": 146062.0,
+   "uplift_LCV (D-Max)_eur": 299692.0,
+   "uplift_Truck_eur": 104462.0,
+   "uplift_Both_eur": 5402.0,
+   "uplift_Unknown_eur": 9231.0,
+   "weighted_base_eur": 10442181.0,
+   "weighted_parts": 8347,
+   "step_on_captive_strict_pct": 0.7145,
+   "parts_at_ceiling": 831,
+   "billed_at_ceiling_eur": 482740.0,
+   "parts_moved_above_proposal": 8295,
+   "max_move": 0.12,
+   "median_move_free_parts": 0.1038,
+   "solver_t": 0.040446
+  },
+  {
+   "scenario": "C room-weighted (angles 1-5)",
+   "uti_panels_held": true,
+   "ceiling": "12% max",
+   "feasible": true,
+   "total_step_eur": 1629793.0,
+   "total_pct": 0.05,
+   "held_step_given_up_eur": 402709.0,
+   "proposal_moves_cut_by_ceiling_parts": 92,
+   "proposal_moves_cut_by_ceiling_eur": 16078.0,
+   "free_base_eur": 22723663.0,
+   "avg_move_on_free_lines": 0.07108,
+   "uplift_above_proposal_eur": 418787.0,
+   "cut_below_proposal_by_ceiling_eur": 16078.0,
+   "uplift_on_captive_strict_pct": 0.9035,
+   "uplift_on_captive_brief_pct": 0.9735,
+   "uplift_service_eur": 97479.0,
+   "uplift_repair_eur": 214187.0,
+   "uplift_body_eur": 107121.0,
+   "uplift_LCV (D-Max)_eur": 237887.0,
+   "uplift_Truck_eur": 153390.0,
+   "uplift_Both_eur": 10573.0,
+   "uplift_Unknown_eur": 16937.0,
+   "weighted_base_eur": 15453147.0,
+   "weighted_parts": 12642,
+   "step_on_captive_strict_pct": 0.6897,
+   "parts_at_ceiling": 1026,
+   "billed_at_ceiling_eur": 440890.0,
+   "parts_moved_above_proposal": 12552,
+   "max_move": 0.12,
+   "median_move_free_parts": 0.0997,
+   "solver_t": 0.012105
+  }
+ ],
+ "inputs": {
+  "price_observations": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\price_observations.parquet",
+  "obs_rows_used": 6490,
+  "crossref_graded_rows": 7162,
+  "ref_multiple": 2.19
+ }
+}

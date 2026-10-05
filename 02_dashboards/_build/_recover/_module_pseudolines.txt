@@ -1,0 +1,5260 @@
+    1: MAKE_CELL __conditional_annotations__
+    0: RESUME 0
+    1: BUILD_SET 0
+    1: STORE_NAME __conditional_annotations__
+    1: SETUP_ANNOTATIONS
+    1: LOAD_CONST 'Build ISZE_DB_Leakage_Review_CY2025.html\n\nPer-distributor leakage review. Four leaks,...[671]
+    1: STORE_NAME __doc__
+   16: LOAD_SMALL_INT 0
+   16: LOAD_CONST ('annotations',)
+   16: IMPORT_NAME __future__
+   16: IMPORT_FROM annotations
+   16: STORE_NAME annotations
+   16: POP_TOP
+   18: LOAD_SMALL_INT 0
+   18: LOAD_CONST None
+   18: IMPORT_NAME html
+   18: STORE_NAME html
+   19: LOAD_SMALL_INT 0
+   19: LOAD_CONST None
+   19: IMPORT_NAME io
+   19: STORE_NAME io
+   20: LOAD_SMALL_INT 0
+   20: LOAD_CONST None
+   20: IMPORT_NAME json
+   20: STORE_NAME json
+   21: LOAD_SMALL_INT 0
+   21: LOAD_CONST None
+   21: IMPORT_NAME os
+   21: STORE_NAME os
+   22: LOAD_SMALL_INT 0
+   22: LOAD_CONST None
+   22: IMPORT_NAME sys
+   22: STORE_NAME sys
+   23: LOAD_SMALL_INT 0
+   23: LOAD_CONST ('date',)
+   23: IMPORT_NAME datetime
+   23: IMPORT_FROM date
+   23: STORE_NAME date
+   23: POP_TOP
+   25: LOAD_SMALL_INT 0
+   25: LOAD_CONST None
+   25: IMPORT_NAME pandas
+   25: STORE_NAME pd
+   27: LOAD_NAME io
+   27: LOAD_ATTR TextIOWrapper
+   27: PUSH_NULL
+   27: LOAD_NAME sys
+   27: LOAD_ATTR stdout
+   27: LOAD_ATTR buffer
+   27: LOAD_CONST 'utf-8'
+   27: LOAD_CONST 'replace'
+   27: LOAD_CONST ('encoding', 'errors')
+   27: CALL_KW 3
+   27: LOAD_NAME sys
+   27: STORE_ATTR stdout
+   29: LOAD_CONST 'C:\\Users\\jerom\\Desktop\\claude\\ISZE'
+   29: STORE_NAME ROOT
+   30: LOAD_NAME os
+   30: LOAD_ATTR path
+   30: LOAD_ATTR join
+   30: LOAD_NAME ROOT
+   30: LOAD_CONST '02_dashboards\\sales\\ISZE_DB_Leakage_Review_CY2025.html'
+   30: CALL 2
+   30: STORE_NAME OUT_HTML
+   31: LOAD_NAME os
+   31: LOAD_ATTR path
+   31: LOAD_ATTR join
+   31: LOAD_NAME ROOT
+   31: LOAD_CONST '02_dashboards\\sales\\OPEN_ISZE_DB_Leakage_Review.cmd'
+   31: CALL 2
+   31: STORE_NAME OUT_CMD
+   32: LOAD_NAME os
+   32: LOAD_ATTR path
+   32: LOAD_ATTR join
+   32: LOAD_NAME ROOT
+   32: LOAD_CONST '01_data'
+   32: LOAD_CONST '00_derived'
+   32: CALL 3
+   32: STORE_NAME D
+   33: LOAD_NAME os
+   33: LOAD_ATTR path
+   33: LOAD_ATTR join
+   33: LOAD_NAME ROOT
+   33: LOAD_CONST '03_analytics'
+   33: LOAD_CONST 'Isuzu'
+   33: LOAD_CONST 'prism'
+   33: CALL 4
+   33: STORE_NAME PRISM
+   34: LOAD_CONST '16 September 2026'
+   34: STORE_NAME SNAPSHOT
+   36: LOAD_NAME PRISM
+   36: LOAD_NAME sys
+   36: LOAD_ATTR path
+   36: CONTAINS_OP 1
+   36: POP_JUMP_IF_FALSE 506
+   36: NOT_TAKEN
+   37: LOAD_NAME sys
+   37: LOAD_ATTR path
+   37: LOAD_ATTR insert
+   37: LOAD_SMALL_INT 0
+   37: LOAD_NAME PRISM
+   37: CALL 2
+   37: POP_TOP
+   40: LOAD_CONST 20000.0
+   40: STORE_NAME KM_MODEL
+   42: LOAD_CONST 'IUK'
+   42: LOAD_NAME dict
+   42: PUSH_NULL
+   42: LOAD_CONST 14494.0
+   42: LOAD_CONST '14,494'
+   42: LOAD_CONST 'N35 Grafter odometer intervals'
+   42: LOAD_CONST '9,006 mi median, 18,277 odometer intervals, 5,421 vehicles, 2018-2026'
+   42: LOAD_CONST ('km', 'label', 'src', 'note')
+   42: CALL_KW 4
+   43: LOAD_CONST 'UTI'
+   43: LOAD_NAME dict
+   43: PUSH_NULL
+   43: LOAD_CONST 51680.0
+   43: LOAD_CONST '51,680'
+   43: LOAD_CONST 'CV warranty odometer'
+   43: LOAD_CONST 'already applied in the model as a 1.25 services/yr override'
+   43: LOAD_CONST ('km', 'label', 'src', 'note')
+   43: CALL_KW 4
+   44: LOAD_CONST 'N35'
+   44: LOAD_NAME dict
+   44: PUSH_NULL
+   44: LOAD_CONST 12165.0
+   44: LOAD_CONST '12,165'
+   44: LOAD_CONST 'CV warranty odometer'
+   44: LOAD_CONST 'PROVISIONAL, all-market'
+   44: LOAD_CONST ('km', 'label', 'src', 'note')
+   44: CALL_KW 4
+   45: LOAD_CONST 'N75'
+   45: LOAD_NAME dict
+   45: PUSH_NULL
+   45: LOAD_CONST 35217.0
+   45: LOAD_CONST '35,217'
+   45: LOAD_CONST 'CV warranty odometer'
+   45: LOAD_CONST 'PROVISIONAL, all-market'
+   45: LOAD_CONST ('km', 'label', 'src', 'note')
+   45: CALL_KW 4
+   46: LOAD_CONST 'F'
+   46: LOAD_NAME dict
+   46: PUSH_NULL
+   46: LOAD_CONST 45630.0
+   46: LOAD_CONST '45,630'
+   46: LOAD_CONST 'CV warranty odometer'
+   46: LOAD_CONST 'PROVISIONAL, all-market'
+   46: LOAD_CONST ('km', 'label', 'src', 'note')
+   46: CALL_KW 4
+   41: BUILD_MAP 5
+   41: STORE_NAME KM
+   50: LOAD_CONST 'Oil Filter'
+   50: LOAD_CONST 'Filters'
+   50: LOAD_CONST 'Fuel Filter'
+   50: LOAD_CONST 'Filters'
+   50: LOAD_CONST 'Air Filter'
+   50: LOAD_CONST 'Filters'
+   51: LOAD_CONST 'Urea (AdBlue) Filter'
+   51: LOAD_CONST 'Filters'
+   51: LOAD_CONST 'Blower Unit Filter'
+   51: LOAD_CONST 'Filters'
+   52: LOAD_CONST 'Brake Pad'
+   52: LOAD_CONST 'Brakes'
+   52: LOAD_CONST 'Brake Shoe'
+   52: LOAD_CONST 'Brakes'
+   52: LOAD_CONST 'Brake Rotor'
+   52: LOAD_CONST 'Brakes'
+   53: LOAD_CONST 'Clutch Disc'
+   53: LOAD_CONST 'Clutch & bearings'
+   53: LOAD_CONST 'Clutch Pressure Plate'
+   53: LOAD_CONST 'Clutch & bearings'
+   54: LOAD_CONST 'Clutch Kit'
+   54: LOAD_CONST 'Clutch & bearings'
+   54: LOAD_CONST 'Release Bearing'
+   54: LOAD_CONST 'Clutch & bearings'
+   55: LOAD_CONST 'Pilot Bearing'
+   55: LOAD_CONST 'Clutch & bearings'
+   55: LOAD_CONST 'Clutch Booster'
+   55: LOAD_CONST 'Clutch & bearings'
+   49: BUILD_MAP 14
+   49: STORE_NAME FAM_GROUPS
+   57: BUILD_LIST 0
+   57: EXTENDED_ARG 1
+   57: LOAD_CONST ('Filters', 'Brakes', 'Clutch & bearings')
+   57: LIST_EXTEND 1
+   57: STORE_NAME GROUP_ORDER
+   60: LOAD_CONST 'IUK'
+   60: LOAD_CONST 'dealer_sellout_long_IUK_CY2025.csv'
+   61: LOAD_CONST 'ITUK'
+   61: LOAD_CONST 'dealer_sellout_long_ITUK_CY2025.csv'
+   62: LOAD_CONST 'IRELAND'
+   62: LOAD_CONST 'dealer_sellout_long_IRELAND_CY2025.csv'
+   63: LOAD_CONST 'GREECE'
+   63: LOAD_CONST 'dealer_sellout_long_GREECE_CY2025.csv'
+   64: LOAD_CONST 'PORTUGAL'
+   64: LOAD_CONST 'dealer_sellout_long_PORTUGAL_CY2025.csv'
+   65: LOAD_CONST 'UTI'
+   65: LOAD_CONST 'dealer_sellout_long_UTI_CY2025.csv'
+   59: BUILD_MAP 6
+   59: STORE_NAME DEALER_FILES
+   68: LOAD_CONST 'IUK'
+   68: LOAD_CONST 'dealer_sellout_long_IUK_CY2026YTD.csv'
+   69: LOAD_CONST 'ITUK'
+   69: LOAD_CONST 'dealer_sellout_long_ITUK_CY2026YTD.csv'
+   70: LOAD_CONST 'IRELAND'
+   70: LOAD_CONST 'dealer_sellout_long_IRELAND_CY2026YTD.csv'
+   71: LOAD_CONST 'PORTUGAL'
+   71: LOAD_CONST 'dealer_sellout_long_PORTUGAL_CY2026YTD.csv'
+   72: LOAD_CONST 'UTI'
+   72: LOAD_CONST 'dealer_sellout_long_UTI_CY2026YTD.csv'
+   73: LOAD_CONST 'ROMANIA'
+   73: LOAD_CONST 'dealer_sellout_long_ROMANIA_CY2026YTD.csv'
+   67: BUILD_MAP 6
+   67: STORE_NAME DEALER_FILES_2026
+   76: EXTENDED_ARG 1
+   76: LOAD_CONST ('2025-01-01', '2025-12-31')
+   76: STORE_NAME CY
+   77: EXTENDED_ARG 1
+   77: LOAD_CONST ('2025-04-01', '2026-03-31')
+   77: STORE_NAME FY
+   78: BUILD_LIST 0
+   78: EXTENDED_ARG 1
+   78: LOAD_CONST ('2025-04', '2025-05', '2025-06', '2025-07', '2025-08', '2025-09', '2025-10', '2025-11',...[132]
+   78: LIST_EXTEND 1
+   78: STORE_NAME FYMON
+   83: LOAD_CONST <code __annotate__@83>
+   83: MAKE_FUNCTION
+   83: LOAD_CONST <code norm_pn@83>
+   83: MAKE_FUNCTION
+   83: SET_FUNCTION_ATTRIBUTE 16
+   83: STORE_NAME norm_pn
+   87: EXTENDED_ARG 1
+   87: LOAD_CONST (0,)
+   87: LOAD_CONST <code n@87>
+   87: MAKE_FUNCTION
+   87: SET_FUNCTION_ATTRIBUTE 1
+   87: STORE_NAME n
+   94: LOAD_NAME print
+   94: PUSH_NULL
+   94: LOAD_CONST 'loading published demand capture ...'
+   94: LOAD_CONST True
+   94: LOAD_CONST ('flush',)
+   94: CALL_KW 2
+   94: POP_TOP
+   95: LOAD_NAME pd
+   95: LOAD_ATTR read_csv
+   95: PUSH_NULL
+   95: LOAD_NAME os
+   95: LOAD_ATTR path
+   95: LOAD_ATTR join
+   95: LOAD_NAME D
+   95: LOAD_CONST 'pms_capture_by_db_year.csv'
+   95: CALL 2
+   95: CALL 1
+   95: STORE_NAME pms
+   96: LOAD_NAME pms
+   96: LOAD_NAME pms
+   96: LOAD_ATTR year
+   96: LOAD_CONST 2025
+   96: COMPARE_OP ==
+   96: LOAD_NAME pms
+   96: LOAD_ATTR line_type
+   96: LOAD_CONST 'total'
+   96: COMPARE_OP ==
+   96: BINARY_OP 1
+   96: BINARY_OP 26
+   96: LOAD_ATTR copy
+   96: CALL 0
+   96: STORE_NAME pms25
+   97: LOAD_NAME pms25
+   97: LOAD_ATTR category_label
+   97: LOAD_ATTR map
+   97: LOAD_NAME FAM_GROUPS
+   97: CALL 1
+   97: LOAD_ATTR fillna
+   97: LOAD_CONST 'Other'
+   97: CALL 1
+   97: LOAD_NAME pms25
+   97: LOAD_CONST 'fam_group'
+   97: STORE_SUBSCR None
+   99: LOAD_NAME pms25
+   99: LOAD_ATTR groupby
+   99: LOAD_CONST 'distributor_code'
+   99: CALL 1
+   99: LOAD_ATTR agg
+  100: EXTENDED_ARG 1
+  100: LOAD_CONST ('expected_qty', 'sum')
+  100: EXTENDED_ARG 1
+  100: LOAD_CONST ('actual_qty', 'sum')
+  101: EXTENDED_ARG 1
+  101: LOAD_CONST ('revenue_gap_eur', 'sum')
+  101: EXTENDED_ARG 1
+  101: LOAD_CONST ('actual_rev_eur', 'sum')
+  102: EXTENDED_ARG 1
+  102: LOAD_CONST ('uio_units', 'max')
+   99: LOAD_CONST ('exp', 'act', 'gap', 'rev', 'uio')
+   99: CALL_KW 5
+  102: LOAD_ATTR reset_index
+  102: CALL 0
+   99: STORE_NAME demand
+  103: LOAD_NAME demand
+  103: LOAD_ATTR exp
+  103: LOAD_NAME demand
+  103: LOAD_ATTR act
+  103: BINARY_OP 10
+  103: LOAD_NAME demand
+  103: LOAD_ATTR exp
+  103: BINARY_OP 11
+  103: LOAD_SMALL_INT 100
+  103: BINARY_OP 5
+  103: LOAD_NAME demand
+  103: LOAD_CONST 'nb'
+  103: STORE_SUBSCR None
+  104: LOAD_NAME demand
+  104: LOAD_ATTR apply
+  105: LOAD_CONST <code <lambda>@105>
+  105: MAKE_FUNCTION
+  105: LOAD_SMALL_INT 1
+  104: LOAD_CONST ('axis',)
+  104: CALL_KW 2
+  104: LOAD_NAME demand
+  104: LOAD_CONST 'avg_sp'
+  104: STORE_SUBSCR None
+  107: LOAD_NAME pms25
+  107: LOAD_ATTR groupby
+  107: BUILD_LIST 0
+  107: EXTENDED_ARG 1
+  107: LOAD_CONST ('distributor_code', 'category_label', 'fam_group')
+  107: LIST_EXTEND 1
+  107: CALL 1
+  107: LOAD_ATTR agg
+  108: EXTENDED_ARG 1
+  108: LOAD_CONST ('expected_qty', 'sum')
+  108: EXTENDED_ARG 1
+  108: LOAD_CONST ('actual_qty', 'sum')
+  109: EXTENDED_ARG 1
+  109: LOAD_CONST ('revenue_gap_eur', 'sum')
+  107: LOAD_CONST ('exp', 'act', 'gap')
+  107: CALL_KW 3
+  109: LOAD_ATTR reset_index
+  109: CALL 0
+  107: STORE_NAME fam
+  110: LOAD_NAME fam
+  110: LOAD_ATTR act
+  110: LOAD_NAME fam
+  110: LOAD_ATTR exp
+  110: BINARY_OP 11
+  110: LOAD_SMALL_INT 100
+  110: BINARY_OP 5
+  110: LOAD_ATTR round
+  110: LOAD_SMALL_INT 1
+  110: CALL 1
+  110: LOAD_NAME fam
+  110: LOAD_CONST 'cap'
+  110: STORE_SUBSCR None
+  111: LOAD_NAME fam
+  111: LOAD_ATTR apply
+  112: LOAD_CONST <code <lambda>@112>
+  112: MAKE_FUNCTION
+  112: LOAD_SMALL_INT 1
+  111: LOAD_CONST ('axis',)
+  111: CALL_KW 2
+  111: LOAD_NAME fam
+  111: LOAD_CONST 'avg_sp'
+  111: STORE_SUBSCR None
+  114: LOAD_NAME pms25
+  114: LOAD_ATTR groupby
+  114: LOAD_CONST 'category_label'
+  114: LOAD_CONST 'fam_group'
+  114: BUILD_LIST 2
+  114: CALL 1
+  114: LOAD_ATTR agg
+  115: EXTENDED_ARG 1
+  115: LOAD_CONST ('expected_qty', 'sum')
+  115: EXTENDED_ARG 1
+  115: LOAD_CONST ('actual_qty', 'sum')
+  116: EXTENDED_ARG 1
+  116: LOAD_CONST ('revenue_gap_eur', 'sum')
+  114: LOAD_CONST ('exp', 'act', 'gap')
+  114: CALL_KW 3
+  116: LOAD_ATTR reset_index
+  116: CALL 0
+  114: STORE_NAME FAMNET
+  117: LOAD_NAME FAMNET
+  117: LOAD_ATTR act
+  117: LOAD_NAME FAMNET
+  117: LOAD_ATTR exp
+  117: BINARY_OP 11
+  117: LOAD_SMALL_INT 100
+  117: BINARY_OP 5
+  117: LOAD_ATTR round
+  117: LOAD_SMALL_INT 1
+  117: CALL 1
+  117: LOAD_NAME FAMNET
+  117: LOAD_CONST 'cap'
+  117: STORE_SUBSCR None
+  118: LOAD_NAME FAMNET
+  118: LOAD_ATTR apply
+  119: LOAD_CONST <code <lambda>@119>
+  119: MAKE_FUNCTION
+  119: LOAD_SMALL_INT 1
+  118: LOAD_CONST ('axis',)
+  118: CALL_KW 2
+  118: LOAD_NAME FAMNET
+  118: LOAD_CONST 'avg_sp'
+  118: STORE_SUBSCR None
+  120: LOAD_NAME FAMNET
+  120: LOAD_ATTR sort_values
+  120: LOAD_CONST 'gap'
+  120: LOAD_CONST False
+  120: LOAD_CONST ('ascending',)
+  120: CALL_KW 2
+  120: STORE_NAME FAMNET
+  122: LOAD_NAME dict
+  122: PUSH_NULL
+  123: LOAD_NAME float
+  123: PUSH_NULL
+  123: LOAD_NAME demand
+  123: LOAD_ATTR exp
+  123: LOAD_ATTR sum
+  123: CALL 0
+  123: CALL 1
+  123: LOAD_NAME float
+  123: PUSH_NULL
+  123: LOAD_NAME demand
+  123: LOAD_ATTR act
+  123: LOAD_ATTR sum
+  123: CALL 0
+  123: CALL 1
+  123: LOAD_NAME float
+  123: PUSH_NULL
+  123: LOAD_NAME demand
+  123: LOAD_ATTR gap
+  123: LOAD_ATTR sum
+  123: CALL 0
+  123: CALL 1
+  124: LOAD_NAME float
+  124: PUSH_NULL
+  124: LOAD_NAME demand
+  124: LOAD_ATTR uio
+  124: LOAD_ATTR sum
+  124: CALL 0
+  124: CALL 1
+  122: LOAD_CONST ('exp', 'act', 'gap', 'uio')
+  122: CALL_KW 4
+  122: STORE_NAME NETWORK
+  125: LOAD_NAME NETWORK
+  125: LOAD_CONST 'exp'
+  125: BINARY_OP 26
+  125: LOAD_NAME NETWORK
+  125: LOAD_CONST 'act'
+  125: BINARY_OP 26
+  125: BINARY_OP 10
+  125: LOAD_NAME NETWORK
+  125: LOAD_CONST 'exp'
+  125: BINARY_OP 26
+  125: BINARY_OP 11
+  125: LOAD_SMALL_INT 100
+  125: BINARY_OP 5
+  125: LOAD_NAME NETWORK
+  125: LOAD_CONST 'nb'
+  125: STORE_SUBSCR None
+  126: LOAD_NAME NETWORK
+  126: LOAD_CONST 'exp'
+  126: BINARY_OP 26
+  126: LOAD_NAME NETWORK
+  126: LOAD_CONST 'act'
+  126: BINARY_OP 26
+  126: BINARY_OP 10
+  126: LOAD_NAME NETWORK
+  126: LOAD_CONST 'notbought'
+  126: STORE_SUBSCR None
+  129: LOAD_NAME print
+  129: PUSH_NULL
+  129: LOAD_CONST 'tagging billing extract (one pass, ~90s) ...'
+  129: LOAD_CONST True
+  129: LOAD_CONST ('flush',)
+  129: CALL_KW 2
+  129: POP_TOP
+  130: LOAD_SMALL_INT 0
+  130: LOAD_CONST ('tag_pms_sales',)
+  130: IMPORT_NAME modules.pms_tagging
+  130: IMPORT_FROM tag_pms_sales
+  130: STORE_NAME tag_pms_sales
+  130: POP_TOP
+  131: LOAD_SMALL_INT 0
+  131: LOAD_CONST ('CATEGORY_LABELS', 'PMS_PN_REGISTRY', '_MULTI_MODEL')
+  131: IMPORT_NAME modules.pms_engine
+  131: IMPORT_FROM CATEGORY_LABELS
+  131: STORE_NAME CATEGORY_LABELS
+  131: IMPORT_FROM PMS_PN_REGISTRY
+  131: STORE_NAME PMS_PN_REGISTRY
+  131: IMPORT_FROM _MULTI_MODEL
+  131: STORE_NAME _MULTI_MODEL
+  131: POP_TOP
+  133: BUILD_MAP 0
+  133: STORE_NAME PN_CAT
+  133: LOAD_CONST 'dict[str, str]'
+  133: LOAD_NAME __annotations__
+  133: LOAD_CONST 'PN_CAT'
+  133: STORE_SUBSCR None
+  134: LOAD_NAME PMS_PN_REGISTRY
+  134: LOAD_ATTR items
+  134: PUSH_NULL
+  134: CALL 0
+  134: GET_ITER
+  134: FOR_ITER 2568
+  134: UNPACK_SEQUENCE 2
+  134: STORE_NAME _pn
+  134: STORE_NAME _v
+  135: LOAD_NAME PN_CAT
+  135: LOAD_ATTR setdefault
+  135: LOAD_NAME str
+  135: PUSH_NULL
+  135: LOAD_NAME _pn
+  135: CALL 1
+  135: LOAD_ATTR lstrip
+  135: LOAD_CONST '0'
+  135: CALL 1
+  135: LOAD_NAME _v
+  135: LOAD_CONST 'category'
+  135: BINARY_OP 26
+  135: CALL 2
+  135: POP_TOP
+  135: JUMP_BACKWARD 2460
+  134: END_FOR
+  134: POP_ITER
+  136: LOAD_NAME _MULTI_MODEL
+  136: LOAD_ATTR items
+  136: PUSH_NULL
+  136: CALL 0
+  136: GET_ITER
+  136: FOR_ITER 2728
+  136: UNPACK_SEQUENCE 2
+  136: STORE_NAME _pn
+  136: STORE_NAME _maps
+  137: LOAD_NAME PN_CAT
+  137: LOAD_ATTR setdefault
+  137: LOAD_NAME str
+  137: PUSH_NULL
+  137: LOAD_NAME _pn
+  137: CALL 1
+  137: LOAD_ATTR lstrip
+  137: LOAD_CONST '0'
+  137: CALL 1
+  137: LOAD_NAME _maps
+  137: LOAD_SMALL_INT 0
+  137: BINARY_OP 26
+  137: LOAD_CONST 'category'
+  137: BINARY_OP 26
+  137: CALL 2
+  137: POP_TOP
+  137: JUMP_BACKWARD 2606
+  136: END_FOR
+  136: POP_ITER
+  139: LOAD_NAME pd
+  139: LOAD_ATTR read_csv
+  139: PUSH_NULL
+  139: LOAD_NAME os
+  139: LOAD_ATTR path
+  139: LOAD_ATTR join
+  139: LOAD_NAME D
+  139: LOAD_CONST 'bvp_pn_dimension.csv'
+  139: CALL 2
+  139: CALL 1
+  139: STORE_NAME dim
+  140: LOAD_NAME pd
+  140: LOAD_ATTR read_parquet
+  140: PUSH_NULL
+  140: LOAD_NAME os
+  140: LOAD_ATTR path
+  140: LOAD_ATTR join
+  140: LOAD_NAME D
+  140: LOAD_CONST 'sales_fact.parquet'
+  140: CALL 2
+  140: CALL 1
+  140: STORE_NAME sf
+  141: LOAD_NAME pd
+  141: LOAD_ATTR read_csv
+  141: PUSH_NULL
+  141: LOAD_NAME os
+  141: LOAD_ATTR path
+  141: LOAD_ATTR join
+  141: LOAD_NAME D
+  141: LOAD_CONST 'distributor_dimension.csv'
+  141: CALL 2
+  141: CALL 1
+  141: STORE_NAME ddim
+  142: LOAD_NAME sf
+  142: LOAD_ATTR sold_to_sap
+  142: LOAD_ATTR map
+  142: LOAD_NAME dict
+  142: PUSH_NULL
+  142: LOAD_NAME zip
+  142: PUSH_NULL
+  142: LOAD_NAME ddim
+  142: LOAD_ATTR sold_to_sap
+  142: LOAD_NAME ddim
+  142: LOAD_ATTR distributor_code
+  142: CALL 2
+  142: CALL 1
+  142: CALL 1
+  142: LOAD_NAME sf
+  142: LOAD_CONST 'db'
+  142: STORE_SUBSCR None
+  143: LOAD_NAME pd
+  143: LOAD_ATTR to_datetime
+  143: PUSH_NULL
+  143: LOAD_NAME sf
+  143: LOAD_ATTR billing_date
+  143: CALL 1
+  143: LOAD_NAME sf
+  143: LOAD_CONST 'billing_date'
+  143: STORE_SUBSCR None
+  144: LOAD_NAME sf
+  144: LOAD_ATTR billing_date
+  144: LOAD_ATTR dt
+  144: LOAD_ATTR strftime
+  144: LOAD_CONST '%Y-%m'
+  144: CALL 1
+  144: LOAD_NAME sf
+  144: LOAD_CONST 'ym'
+  144: STORE_SUBSCR None
+  145: LOAD_NAME sf
+  145: LOAD_NAME sf
+  145: LOAD_ATTR saty
+  145: LOAD_ATTR isin
+  145: LOAD_CONST 'CR'
+  145: LOAD_CONST 'RE'
+  145: BUILD_LIST 2
+  145: CALL 1
+  145: UNARY_INVERT
+  145: BINARY_OP 26
+  145: LOAD_ATTR copy
+  145: CALL 0
+  145: STORE_NAME sf
+  147: LOAD_NAME tag_pms_sales
+  147: PUSH_NULL
+  147: LOAD_NAME sf
+  147: LOAD_NAME dim
+  147: LOAD_CONST True
+  147: LOAD_CONST ('fill_catalog_pms',)
+  147: CALL_KW 3
+  147: STORE_NAME tag
+  148: LOAD_NAME tag
+  148: LOAD_NAME tag
+  148: LOAD_ATTR is_pms
+  148: BINARY_OP 26
+  148: LOAD_ATTR copy
+  148: CALL 0
+  148: STORE_NAME tag
+  149: LOAD_CONST 'pms_capture_eligible'
+  149: LOAD_NAME tag
+  149: LOAD_ATTR columns
+  149: CONTAINS_OP 0
+  149: POP_JUMP_IF_FALSE 3554
+  149: NOT_TAKEN
+  150: LOAD_NAME tag
+  150: LOAD_NAME tag
+  150: LOAD_ATTR pms_capture_eligible
+  150: BINARY_OP 26
+  150: LOAD_ATTR copy
+  150: CALL 0
+  150: STORE_NAME tag
+  151: LOAD_NAME tag
+  151: LOAD_ATTR pms_category
+  151: LOAD_ATTR map
+  151: LOAD_NAME CATEGORY_LABELS
+  151: CALL 1
+  151: LOAD_ATTR fillna
+  151: LOAD_NAME tag
+  151: LOAD_ATTR pms_category
+  151: CALL 1
+  151: LOAD_NAME tag
+  151: LOAD_CONST 'category_label'
+  151: STORE_SUBSCR None
+  152: LOAD_NAME print
+  152: PUSH_NULL
+  152: LOAD_CONST '  PMS-tagged billing lines:'
+  152: LOAD_NAME len
+  152: PUSH_NULL
+  152: LOAD_NAME tag
+  152: CALL 1
+  152: LOAD_CONST True
+  152: LOAD_CONST ('flush',)
+  152: CALL_KW 3
+  152: POP_TOP
+  154: LOAD_NAME tag
+  154: LOAD_NAME tag
+  154: LOAD_ATTR db
+  154: LOAD_ATTR notna
+  154: CALL 0
+  154: LOAD_NAME tag
+  154: LOAD_ATTR billing_date
+  154: LOAD_NAME CY
+  154: LOAD_SMALL_INT 0
+  154: BINARY_OP 26
+  154: COMPARE_OP >=
+  154: BINARY_OP 1
+  154: LOAD_NAME tag
+  154: LOAD_ATTR billing_date
+  154: LOAD_NAME CY
+  154: LOAD_SMALL_INT 1
+  154: BINARY_OP 26
+  154: COMPARE_OP <=
+  154: BINARY_OP 1
+  154: BINARY_OP 26
+  154: STORE_NAME CNT
+  155: LOAD_NAME tag
+  155: LOAD_NAME tag
+  155: LOAD_ATTR db
+  155: LOAD_ATTR notna
+  155: CALL 0
+  155: LOAD_NAME tag
+  155: LOAD_ATTR billing_date
+  155: LOAD_NAME FY
+  155: LOAD_SMALL_INT 0
+  155: BINARY_OP 26
+  155: COMPARE_OP >=
+  155: BINARY_OP 1
+  155: LOAD_NAME tag
+  155: LOAD_ATTR billing_date
+  155: LOAD_NAME FY
+  155: LOAD_SMALL_INT 1
+  155: BINARY_OP 26
+  155: COMPARE_OP <=
+  155: BINARY_OP 1
+  155: BINARY_OP 26
+  155: STORE_NAME FNT
+  157: LOAD_NAME FNT
+  157: LOAD_ATTR groupby
+  157: LOAD_CONST 'db'
+  157: LOAD_CONST 'category_label'
+  157: BUILD_LIST 2
+  157: CALL 1
+  157: LOAD_ATTR billed_qty
+  157: LOAD_ATTR sum
+  157: CALL 0
+  158: LOAD_NAME CNT
+  158: LOAD_ATTR groupby
+  158: LOAD_CONST 'db'
+  158: LOAD_CONST 'category_label'
+  158: BUILD_LIST 2
+  158: CALL 1
+  158: LOAD_ATTR billed_qty
+  158: LOAD_ATTR sum
+  158: CALL 0
+  157: BINARY_OP 11
+  158: LOAD_ATTR dropna
+  158: CALL 0
+  157: STORE_NAME rat
+  159: LOAD_NAME rat
+  159: LOAD_ATTR clip
+  159: LOAD_CONST 0.3
+  159: LOAD_CONST 1.6
+  159: CALL 2
+  159: STORE_NAME rat
+  160: LOAD_NAME print
+  160: PUSH_NULL
+  160: LOAD_CONST '  FY/CY demand ratios: median'
+  160: LOAD_NAME round
+  160: PUSH_NULL
+  160: LOAD_NAME float
+  160: PUSH_NULL
+  160: LOAD_NAME rat
+  160: LOAD_ATTR median
+  160: CALL 0
+  160: CALL 1
+  160: LOAD_SMALL_INT 3
+  160: CALL 2
+  161: LOAD_CONST 'min'
+  161: LOAD_NAME round
+  161: PUSH_NULL
+  161: LOAD_NAME float
+  161: PUSH_NULL
+  161: LOAD_NAME rat
+  161: LOAD_ATTR min
+  161: CALL 0
+  161: CALL 1
+  161: LOAD_SMALL_INT 3
+  161: CALL 2
+  161: LOAD_CONST 'max'
+  161: LOAD_NAME round
+  161: PUSH_NULL
+  161: LOAD_NAME float
+  161: PUSH_NULL
+  161: LOAD_NAME rat
+  161: LOAD_ATTR max
+  161: CALL 0
+  161: CALL 1
+  161: LOAD_SMALL_INT 3
+  161: CALL 2
+  161: LOAD_CONST True
+  160: LOAD_CONST ('flush',)
+  160: CALL_KW 7
+  160: POP_TOP
+  163: LOAD_NAME FNT
+  163: LOAD_ATTR groupby
+  163: LOAD_CONST 'db'
+  163: CALL 1
+  163: LOAD_ATTR net_sales_value
+  163: LOAD_ATTR sum
+  163: CALL 0
+  163: LOAD_NAME CNT
+  163: LOAD_ATTR groupby
+  163: LOAD_CONST 'db'
+  163: CALL 1
+  163: LOAD_ATTR net_sales_value
+  163: LOAD_ATTR sum
+  163: CALL 0
+  163: BINARY_OP 10
+  163: STORE_NAME mis
+  164: LOAD_NAME print
+  164: PUSH_NULL
+  164: LOAD_CONST '  FY vs CY billed EUR (all parts, 18 DBs):'
+  165: LOAD_NAME round
+  165: PUSH_NULL
+  165: LOAD_NAME float
+  165: PUSH_NULL
+  165: LOAD_NAME CNT
+  165: LOAD_ATTR net_sales_value
+  165: LOAD_ATTR sum
+  165: CALL 0
+  165: CALL 1
+  165: CALL 1
+  165: LOAD_CONST '->'
+  165: LOAD_NAME round
+  165: PUSH_NULL
+  165: LOAD_NAME float
+  165: PUSH_NULL
+  165: LOAD_NAME FNT
+  165: LOAD_ATTR net_sales_value
+  165: LOAD_ATTR sum
+  165: CALL 0
+  165: CALL 1
+  165: CALL 1
+  165: LOAD_CONST True
+  164: LOAD_CONST ('flush',)
+  164: CALL_KW 5
+  164: POP_TOP
+  168: LOAD_NAME print
+  168: PUSH_NULL
+  168: LOAD_CONST 'loading billing + warranty ...'
+  168: LOAD_CONST True
+  168: LOAD_CONST ('flush',)
+  168: CALL_KW 2
+  168: POP_TOP
+  169: LOAD_NAME pd
+  169: LOAD_ATTR read_csv
+  169: PUSH_NULL
+  169: LOAD_NAME os
+  169: LOAD_ATTR path
+  169: LOAD_ATTR join
+  169: LOAD_NAME D
+  169: LOAD_CONST 'gps_spu_by_distributor.csv'
+  169: CALL 2
+  169: CALL 1
+  169: STORE_NAME gps
+  170: LOAD_NAME gps
+  170: LOAD_NAME gps
+  170: LOAD_ATTR year
+  170: LOAD_CONST 2025
+  170: COMPARE_OP ==
+  170: BINARY_OP 26
+  170: LOAD_ATTR set_index
+  170: LOAD_CONST 'distributor_code'
+  170: CALL 1
+  170: STORE_NAME g25
+  174: LOAD_NAME sf
+  174: LOAD_NAME sf
+  174: LOAD_ATTR db
+  174: LOAD_ATTR notna
+  174: CALL 0
+  174: LOAD_NAME sf
+  174: LOAD_ATTR billing_date
+  174: LOAD_ATTR between
+  174: LOAD_NAME FY
+  174: LOAD_SMALL_INT 0
+  174: BINARY_OP 26
+  174: LOAD_NAME FY
+  174: LOAD_SMALL_INT 1
+  174: BINARY_OP 26
+  174: CALL 2
+  174: BINARY_OP 1
+  174: BINARY_OP 26
+  174: LOAD_ATTR groupby
+  174: LOAD_CONST 'db'
+  174: CALL 1
+  174: LOAD_ATTR net_sales_value
+  174: LOAD_ATTR sum
+  174: CALL 0
+  174: STORE_NAME bill_fy_all
+  175: LOAD_NAME print
+  175: PUSH_NULL
+  175: LOAD_CONST '  CY2025 billed (published):'
+  175: LOAD_NAME round
+  175: PUSH_NULL
+  175: LOAD_NAME float
+  175: PUSH_NULL
+  175: LOAD_NAME g25
+  175: LOAD_ATTR total_sales_eur
+  175: LOAD_ATTR sum
+  175: CALL 0
+  175: CALL 1
+  175: CALL 1
+  176: LOAD_CONST '| warranty:'
+  176: LOAD_NAME round
+  176: PUSH_NULL
+  176: LOAD_NAME float
+  176: PUSH_NULL
+  176: LOAD_NAME g25
+  176: LOAD_ATTR warranty_parts_eur
+  176: LOAD_ATTR sum
+  176: CALL 0
+  176: CALL 1
+  176: CALL 1
+  177: LOAD_CONST '| FY2025 billed (local):'
+  177: LOAD_NAME round
+  177: PUSH_NULL
+  177: LOAD_NAME float
+  177: PUSH_NULL
+  177: LOAD_NAME bill_fy_all
+  177: LOAD_ATTR sum
+  177: CALL 0
+  177: CALL 1
+  177: CALL 1
+  177: LOAD_CONST True
+  175: LOAD_CONST ('flush',)
+  175: CALL_KW 7
+  175: POP_TOP
+  180: LOAD_NAME print
+  180: PUSH_NULL
+  180: LOAD_CONST 'loading replenishment ...'
+  180: LOAD_CONST True
+  180: LOAD_CONST ('flush',)
+  180: CALL_KW 2
+  180: POP_TOP
+  181: LOAD_NAME pd
+  181: LOAD_ATTR read_csv
+  181: PUSH_NULL
+  181: LOAD_NAME os
+  181: LOAD_ATTR path
+  181: LOAD_ATTR join
+  181: LOAD_NAME D
+  181: LOAD_CONST 'replenishment_exceptions_cy2025.csv'
+  181: CALL 2
+  181: CALL 1
+  181: STORE_NAME rep
+  182: LOAD_NAME pd
+  182: LOAD_ATTR read_parquet
+  182: PUSH_NULL
+  182: LOAD_NAME os
+  182: LOAD_ATTR path
+  182: LOAD_ATTR join
+  182: LOAD_NAME D
+  182: LOAD_CONST 'replenishment_bridge.parquet'
+  182: CALL 2
+  182: CALL 1
+  182: STORE_NAME bridge
+  183: EXTENDED_ARG 1
+  183: LOAD_CONST ('leakage_high_sellthrough', 'overstock_low_sellthrough', 'overstock_no_sellout')
+  183: STORE_NAME signals
+  184: LOAD_NAME bridge
+  184: LOAD_NAME bridge
+  184: LOAD_ATTR pipeline_signal
+  184: LOAD_ATTR isin
+  184: LOAD_NAME signals
+  184: CALL 1
+  184: LOAD_NAME bridge
+  184: LOAD_ATTR year_month
+  184: LOAD_ATTR isin
+  184: LOAD_NAME FYMON
+  184: CALL 1
+  184: BINARY_OP 1
+  184: BINARY_OP 26
+  184: LOAD_ATTR copy
+  184: CALL 0
+  184: STORE_NAME excfy
+  187: LOAD_NAME zip
+  187: PUSH_NULL
+  187: LOAD_NAME excfy
+  187: LOAD_ATTR pipeline_signal
+  187: LOAD_NAME excfy
+  187: LOAD_ATTR sellout_qty
+  187: LOAD_NAME excfy
+  187: LOAD_ATTR bill_qty
+  187: CALL 3
+  187: GET_ITER
+  185: LOAD_FAST_AND_CLEAR r
+  185: LOAD_FAST_AND_CLEAR s
+  185: LOAD_FAST_AND_CLEAR b
+  185: SWAP 4
+  185: BUILD_LIST 0
+  185: SWAP 2
+  187: FOR_ITER 5996
+  186: UNPACK_SEQUENCE 3
+  186: STORE_FAST_STORE_FAST ('r', 's')
+  186: STORE_FAST_LOAD_FAST ('b', 'r')
+  186: LOAD_ATTR startswith
+  186: LOAD_CONST 'leakage'
+  186: CALL 1
+  186: TO_BOOL
+  186: POP_JUMP_IF_FALSE 5988
+  186: NOT_TAKEN
+  186: LOAD_FAST s
+  186: JUMP_FORWARD 5990
+  186: LOAD_FAST b
+  186: LIST_APPEND 2
+  186: JUMP_BACKWARD 5928
+  187: END_FOR
+  187: POP_ITER
+  185: SWAP 4
+  185: STORE_FAST b
+  185: STORE_FAST s
+  185: STORE_FAST r
+  185: LOAD_NAME excfy
+  185: LOAD_CONST 'rank_key'
+  185: STORE_SUBSCR None
+  188: LOAD_NAME excfy
+  188: LOAD_ATTR sort_values
+  188: BUILD_LIST 0
+  188: EXTENDED_ARG 1
+  188: LOAD_CONST ('distributor_code', 'pipeline_signal', 'rank_key')
+  188: LIST_EXTEND 1
+  189: BUILD_LIST 0
+  189: EXTENDED_ARG 1
+  189: LOAD_CONST (True, True, False)
+  189: LIST_EXTEND 1
+  188: LOAD_CONST ('ascending',)
+  188: CALL_KW 2
+  188: STORE_NAME excfy
+  190: LOAD_NAME excfy
+  190: LOAD_ATTR groupby
+  190: LOAD_CONST 'distributor_code'
+  190: LOAD_CONST 'pipeline_signal'
+  190: BUILD_LIST 2
+  190: CALL 1
+  190: LOAD_ATTR head
+  190: LOAD_SMALL_INT 100
+  190: CALL 1
+  190: STORE_NAME excfy
+  193: LOAD_NAME print
+  193: PUSH_NULL
+  193: LOAD_CONST 'loading mix + exposure + no-price ...'
+  193: LOAD_CONST True
+  193: LOAD_CONST ('flush',)
+  193: CALL_KW 2
+  193: POP_TOP
+  194: LOAD_NAME pd
+  194: LOAD_ATTR read_csv
+  194: PUSH_NULL
+  194: LOAD_NAME os
+  194: LOAD_ATTR path
+  194: LOAD_ATTR join
+  194: LOAD_NAME D
+  194: LOAD_CONST 'mix_genuine_bvp_pms.csv'
+  194: CALL 2
+  194: CALL 1
+  194: STORE_NAME mix
+  195: LOAD_NAME pd
+  195: EXTENDED_ARG 1
+  195: LOAD_ATTR to_numeric
+  195: PUSH_NULL
+  195: LOAD_NAME mix
+  195: EXTENDED_ARG 1
+  195: LOAD_ATTR bvp_eur
+  195: LOAD_CONST 'coerce'
+  195: LOAD_CONST ('errors',)
+  195: CALL_KW 2
+  195: LOAD_NAME mix
+  195: LOAD_CONST 'bvp_eur'
+  195: STORE_SUBSCR None
+  196: LOAD_NAME pd
+  196: EXTENDED_ARG 1
+  196: LOAD_ATTR to_numeric
+  196: PUSH_NULL
+  196: LOAD_NAME mix
+  196: EXTENDED_ARG 1
+  196: LOAD_ATTR genuine_eur
+  196: LOAD_CONST 'coerce'
+  196: LOAD_CONST ('errors',)
+  196: CALL_KW 2
+  196: LOAD_NAME mix
+  196: LOAD_CONST 'genuine_eur'
+  196: STORE_SUBSCR None
+  197: LOAD_NAME mix
+  197: LOAD_NAME mix
+  197: LOAD_ATTR year
+  197: LOAD_CONST 2025
+  197: COMPARE_OP ==
+  197: BINARY_OP 26
+  197: LOAD_ATTR groupby
+  197: LOAD_CONST 'distributor_code'
+  197: CALL 1
+  197: LOAD_ATTR agg
+  198: EXTENDED_ARG 1
+  198: LOAD_CONST ('bvp_eur', 'sum')
+  198: EXTENDED_ARG 1
+  198: LOAD_CONST ('genuine_eur', 'sum')
+  197: LOAD_CONST ('bvp', 'gen')
+  197: CALL_KW 2
+  197: STORE_NAME m25
+  199: LOAD_NAME m25
+  199: EXTENDED_ARG 1
+  199: LOAD_ATTR bvp
+  199: LOAD_NAME m25
+  199: EXTENDED_ARG 1
+  199: LOAD_ATTR bvp
+  199: LOAD_NAME m25
+  199: EXTENDED_ARG 1
+  199: LOAD_ATTR gen
+  199: BINARY_OP 0
+  199: BINARY_OP 11
+  199: LOAD_SMALL_INT 100
+  199: BINARY_OP 5
+  199: LOAD_NAME m25
+  199: LOAD_CONST 'share'
+  199: STORE_SUBSCR None
+  201: LOAD_NAME tag
+  201: LOAD_ATTR copy
+  201: CALL 0
+  201: STORE_NAME pt
+  202: LOAD_NAME pt
+  202: EXTENDED_ARG 1
+  202: LOAD_ATTR pms_type
+  202: LOAD_ATTR map
+  202: LOAD_CONST 'genuine'
+  202: LOAD_CONST 'genuine'
+  202: LOAD_CONST 'bvp'
+  202: LOAD_CONST 'bvp'
+  202: BUILD_MAP 2
+  202: CALL 1
+  202: LOAD_NAME pt
+  202: LOAD_CONST 'role'
+  202: STORE_SUBSCR None
+  203: LOAD_NAME pt
+  203: LOAD_NAME pt
+  203: LOAD_ATTR billing_date
+  203: LOAD_NAME CY
+  203: LOAD_SMALL_INT 0
+  203: BINARY_OP 26
+  203: COMPARE_OP >=
+  203: LOAD_NAME pt
+  203: LOAD_ATTR billing_date
+  203: LOAD_NAME CY
+  203: LOAD_SMALL_INT 1
+  203: BINARY_OP 26
+  203: COMPARE_OP <=
+  203: BINARY_OP 1
+  203: BINARY_OP 26
+  203: LOAD_ATTR groupby
+  204: LOAD_CONST 'db'
+  204: LOAD_CONST 'role'
+  204: BUILD_LIST 2
+  203: CALL 1
+  204: LOAD_ATTR net_sales_value
+  204: LOAD_ATTR sum
+  204: CALL 0
+  204: EXTENDED_ARG 1
+  204: LOAD_ATTR unstack
+  204: LOAD_CONST 0.0
+  204: LOAD_CONST ('fill_value',)
+  204: CALL_KW 1
+  203: STORE_NAME pt_cy
+  205: LOAD_NAME pt
+  205: LOAD_NAME pt
+  205: LOAD_ATTR billing_date
+  205: LOAD_NAME FY
+  205: LOAD_SMALL_INT 0
+  205: BINARY_OP 26
+  205: COMPARE_OP >=
+  205: LOAD_NAME pt
+  205: LOAD_ATTR billing_date
+  205: LOAD_NAME FY
+  205: LOAD_SMALL_INT 1
+  205: BINARY_OP 26
+  205: COMPARE_OP <=
+  205: BINARY_OP 1
+  205: BINARY_OP 26
+  205: LOAD_ATTR groupby
+  206: LOAD_CONST 'db'
+  206: LOAD_CONST 'role'
+  206: BUILD_LIST 2
+  205: CALL 1
+  206: LOAD_ATTR net_sales_value
+  206: LOAD_ATTR sum
+  206: CALL 0
+  206: EXTENDED_ARG 1
+  206: LOAD_ATTR unstack
+  206: LOAD_CONST 0.0
+  206: LOAD_CONST ('fill_value',)
+  206: CALL_KW 1
+  205: STORE_NAME pt_fy
+  209: LOAD_CONST <code __annotate__@209>
+  209: MAKE_FUNCTION
+  209: LOAD_CONST <code share_of@209>
+  209: MAKE_FUNCTION
+  209: SET_FUNCTION_ATTRIBUTE 16
+  209: STORE_NAME share_of
+  216: LOAD_NAME share_of
+  216: PUSH_NULL
+  216: LOAD_NAME pt_cy
+  216: CALL 1
+  216: STORE_NAME mix_cy_calc
+  217: LOAD_NAME share_of
+  217: PUSH_NULL
+  217: LOAD_NAME pt_fy
+  217: CALL 1
+  217: STORE_NAME mix_fy_calc
+  219: LOAD_NAME pd
+  219: LOAD_ATTR read_csv
+  219: PUSH_NULL
+  219: LOAD_NAME os
+  219: LOAD_ATTR path
+  219: LOAD_ATTR join
+  219: LOAD_NAME D
+  219: LOAD_CONST 'aim_exposure_by_db_year.csv'
+  219: CALL 2
+  219: CALL 1
+  219: STORE_NAME aim
+  220: LOAD_NAME aim
+  220: LOAD_NAME aim
+  220: LOAD_ATTR year
+  220: LOAD_CONST 2025
+  220: COMPARE_OP ==
+  220: BINARY_OP 26
+  220: LOAD_ATTR set_index
+  220: LOAD_CONST 'distributor_code'
+  220: CALL 1
+  220: STORE_NAME a25
+  222: LOAD_NAME pd
+  222: LOAD_ATTR read_csv
+  222: PUSH_NULL
+  222: LOAD_NAME os
+  222: LOAD_ATTR path
+  222: LOAD_ATTR join
+  222: LOAD_NAME D
+  222: LOAD_CONST 'no_pr00_gap_cy2025_ranked.csv'
+  222: CALL 2
+  222: LOAD_CONST 'part_number'
+  222: LOAD_NAME str
+  222: BUILD_MAP 1
+  222: LOAD_CONST ('dtype',)
+  222: CALL_KW 2
+  222: STORE_NAME npr
+  223: LOAD_NAME sf
+  223: LOAD_NAME sf
+  223: LOAD_ATTR billing_date
+  223: LOAD_ATTR between
+  223: LOAD_NAME CY
+  223: LOAD_SMALL_INT 0
+  223: BINARY_OP 26
+  223: LOAD_NAME CY
+  223: LOAD_SMALL_INT 1
+  223: BINARY_OP 26
+  223: CALL 2
+  223: LOAD_NAME sf
+  223: EXTENDED_ARG 1
+  223: LOAD_ATTR part_number
+  223: LOAD_ATTR isin
+  223: LOAD_NAME set
+  223: PUSH_NULL
+  223: LOAD_NAME npr
+  223: EXTENDED_ARG 1
+  223: LOAD_ATTR part_number
+  223: CALL 1
+  223: CALL 1
+  223: BINARY_OP 1
+  223: BINARY_OP 26
+  223: STORE_NAME spdb
+  224: LOAD_NAME spdb
+  224: LOAD_ATTR groupby
+  224: LOAD_CONST 'db'
+  224: CALL 1
+  224: LOAD_ATTR net_sales_value
+  224: LOAD_ATTR sum
+  224: CALL 0
+  224: STORE_NAME spdb
+  226: LOAD_NAME npr
+  226: EXTENDED_ARG 1
+  226: LOAD_ATTR description
+  226: LOAD_ATTR str
+  226: EXTENDED_ARG 1
+  226: LOAD_ATTR contains
+  226: LOAD_CONST 'Rim|Rimula|Tellus'
+  226: LOAD_CONST False
+  226: LOAD_CONST False
+  226: LOAD_CONST ('case', 'na')
+  226: CALL_KW 3
+  226: LOAD_NAME npr
+  226: LOAD_CONST 'is_lube'
+  226: STORE_SUBSCR None
+  227: LOAD_NAME float
+  227: PUSH_NULL
+  227: LOAD_NAME npr
+  227: EXTENDED_ARG 1
+  227: LOAD_ATTR loc
+  227: LOAD_NAME npr
+  227: EXTENDED_ARG 1
+  227: LOAD_ATTR is_lube
+  227: LOAD_CONST 'cy2025_eur'
+  227: BUILD_TUPLE 2
+  227: BINARY_OP 26
+  227: LOAD_ATTR sum
+  227: CALL 0
+  227: CALL 1
+  227: STORE_NAME LUBE_EUR
+  228: LOAD_NAME float
+  228: PUSH_NULL
+  228: LOAD_NAME npr
+  228: EXTENDED_ARG 1
+  228: LOAD_ATTR cy2025_eur
+  228: LOAD_ATTR sum
+  228: CALL 0
+  228: CALL 1
+  228: STORE_NAME NPR_TOTAL
+  231: LOAD_NAME pd
+  231: LOAD_ATTR read_csv
+  231: PUSH_NULL
+  231: LOAD_NAME os
+  231: LOAD_ATTR path
+  231: LOAD_ATTR join
+  231: LOAD_NAME ROOT
+  231: LOAD_CONST '03_analytics\\Isuzu\\prism\\data\\uio_by_model_bucket.csv'
+  231: CALL 2
+  231: CALL 1
+  231: LOAD_ATTR set_index
+  231: LOAD_CONST 'distributor_code'
+  231: CALL 1
+  231: STORE_NAME buckets
+  232: LOAD_NAME ddim
+  232: LOAD_NAME ddim
+  232: EXTENDED_ARG 1
+  232: LOAD_ATTR network_role
+  232: LOAD_CONST 'network_db'
+  232: COMPARE_OP ==
+  232: BINARY_OP 26
+  232: LOAD_ATTR groupby
+  232: LOAD_CONST 'distributor_code'
+  232: CALL 1
+  232: EXTENDED_ARG 1
+  232: LOAD_ATTR scope
+  232: EXTENDED_ARG 1
+  232: LOAD_ATTR first
+  232: CALL 0
+  232: STORE_NAME scope
+  233: LOAD_NAME ddim
+  233: LOAD_NAME ddim
+  233: EXTENDED_ARG 1
+  233: LOAD_ATTR network_role
+  233: LOAD_CONST 'network_db'
+  233: COMPARE_OP ==
+  233: BINARY_OP 26
+  233: LOAD_ATTR groupby
+  233: LOAD_CONST 'distributor_code'
+  233: CALL 1
+  233: EXTENDED_ARG 1
+  233: LOAD_ATTR region
+  233: EXTENDED_ARG 1
+  233: LOAD_ATTR first
+  233: CALL 0
+  233: STORE_NAME region
+  234: LOAD_NAME sorted
+  234: PUSH_NULL
+  234: LOAD_NAME ddim
+  234: EXTENDED_ARG 1
+  234: LOAD_ATTR loc
+  234: LOAD_NAME ddim
+  234: EXTENDED_ARG 1
+  234: LOAD_ATTR network_role
+  234: LOAD_CONST 'network_db'
+  234: COMPARE_OP ==
+  234: LOAD_CONST 'distributor_code'
+  234: BUILD_TUPLE 2
+  234: BINARY_OP 26
+  234: EXTENDED_ARG 1
+  234: LOAD_ATTR unique
+  234: CALL 0
+  234: CALL 1
+  234: STORE_NAME NETDBS
+  236: LOAD_NAME pd
+  236: EXTENDED_ARG 1
+  236: LOAD_ATTR read_excel
+  236: PUSH_NULL
+  236: LOAD_NAME os
+  236: LOAD_ATTR path
+  236: LOAD_ATTR join
+  236: LOAD_NAME ROOT
+  236: LOAD_CONST '01_data\\08_Distributor\\EU_Mileage_by_country_IMG_2020-11_to_2026-06.xlsx'
+  236: CALL 2
+  236: LOAD_SMALL_INT 0
+  236: LOAD_CONST ('sheet_name',)
+  236: CALL_KW 2
+  236: STORE_NAME im
+  237: LOAD_CONST 'ISUZU SALES DEUTSCHLAND - ISD'
+  237: LOAD_CONST 'GERMANY'
+  237: LOAD_CONST 'ISUZU BENELUX - BELGIUM'
+  237: LOAD_CONST 'BELGIUM'
+  238: LOAD_CONST 'A. LOUTSIOS & SONS'
+  238: LOAD_CONST 'CYPRUS'
+  238: LOAD_CONST 'ISUZU Danmark'
+  238: LOAD_CONST 'DENMARK'
+  239: LOAD_CONST 'Isuzu Motor Finland OY'
+  239: LOAD_CONST 'FINLAND'
+  239: LOAD_CONST 'PETROS PETROPOULOS'
+  239: LOAD_CONST 'GREECE'
+  240: LOAD_CONST 'WAE LTD.'
+  240: LOAD_CONST 'HUNGARY'
+  240: LOAD_CONST 'BL ehf.'
+  240: LOAD_CONST 'ICELAND'
+  241: LOAD_CONST 'Isuzu Ireland 2020 Unlimited Company'
+  241: LOAD_CONST 'IRELAND'
+  242: LOAD_CONST 'GASANZAMMIT MOTORS LIMITED'
+  242: LOAD_CONST 'MALTA'
+  242: LOAD_CONST 'RSA'
+  242: LOAD_CONST 'NORWAY'
+  243: LOAD_CONST 'IMOTORS LDA'
+  243: LOAD_CONST 'PORTUGAL'
+  243: LOAD_CONST 'ISUZU ROM AUTO SRL'
+  243: LOAD_CONST 'ROMANIA'
+  243: LOAD_CONST 'UMI'
+  243: LOAD_CONST 'UMI'
+  237: BUILD_MAP 14
+  237: STORE_NAME IMIT_NAME
+  244: LOAD_NAME im
+  244: EXTENDED_ARG 1
+  244: LOAD_ATTR DistributorName
+  244: LOAD_ATTR map
+  244: LOAD_NAME IMIT_NAME
+  244: CALL 1
+  244: LOAD_NAME im
+  244: LOAD_CONST 'db'
+  244: STORE_SUBSCR None
+  245: LOAD_NAME im
+  245: LOAD_NAME im
+  245: LOAD_ATTR db
+  245: LOAD_ATTR notna
+  245: CALL 0
+  245: BINARY_OP 26
+  245: LOAD_ATTR set_index
+  245: LOAD_CONST 'db'
+  245: CALL 1
+  245: LOAD_CONST 'Average of Mileage per year'
+  245: BINARY_OP 26
+  245: LOAD_ATTR round
+  245: LOAD_SMALL_INT 0
+  245: CALL 1
+  245: EXTENDED_ARG 1
+  245: LOAD_ATTR to_dict
+  245: CALL 0
+  245: STORE_NAME imit
+  247: BUILD_MAP 0
+  247: STORE_NAME dealer_qty
+  247: LOAD_CONST 'dict[str, dict]'
+  247: LOAD_NAME __annotations__
+  247: LOAD_CONST 'dealer_qty'
+  247: STORE_SUBSCR None
+  248: BUILD_MAP 0
+  248: STORE_NAME dealer_files
+  248: LOAD_CONST 'dict[str, list[str]]'
+  248: LOAD_NAME __annotations__
+  248: LOAD_CONST 'dealer_files'
+  248: STORE_SUBSCR None
+  249: BUILD_MAP 0
+  249: LOAD_NAME DEALER_FILES
+  249: DICT_UPDATE 1
+  249: LOAD_NAME DEALER_FILES_2026
+  249: DICT_UPDATE 1
+  249: LOAD_ATTR items
+  249: CALL 0
+  249: GET_ITER
+  249: FOR_ITER 9040
+  249: UNPACK_SEQUENCE 2
+  249: STORE_NAME _db
+  249: STORE_NAME _f
+  250: LOAD_NAME dealer_files
+  250: LOAD_ATTR setdefault
+  250: LOAD_NAME _db
+  250: BUILD_LIST 0
+  250: CALL 2
+  250: EXTENDED_ARG 1
+  250: LOAD_ATTR append
+  250: LOAD_NAME _f
+  250: CALL 1
+  250: POP_TOP
+  250: JUMP_BACKWARD 8956
+  249: END_FOR
+  249: POP_ITER
+  251: LOAD_NAME dealer_files
+  251: LOAD_ATTR items
+  251: CALL 0
+  251: GET_ITER
+  251: EXTENDED_ARG 2
+  251: FOR_ITER 10262
+  251: UNPACK_SEQUENCE 2
+  251: STORE_NAME db
+  251: STORE_NAME files
+  252: BUILD_LIST 0
+  252: STORE_NAME frames
+  253: LOAD_NAME files
+  253: GET_ITER
+  253: FOR_ITER 9584
+  253: STORE_NAME f
+  254: LOAD_NAME pd
+  254: LOAD_ATTR read_csv
+  254: PUSH_NULL
+  254: LOAD_NAME os
+  254: LOAD_ATTR path
+  254: LOAD_ATTR join
+  254: LOAD_NAME D
+  254: LOAD_NAME f
+  254: CALL 2
+  254: BUILD_LIST 0
+  254: EXTENDED_ARG 1
+  254: LOAD_CONST ('period', 'period_grain', 'part_number', 'qty')
+  254: LIST_EXTEND 1
+  254: LOAD_CONST ('usecols',)
+  254: CALL_KW 2
+  254: STORE_NAME d
+  255: LOAD_NAME d
+  255: LOAD_NAME d
+  255: EXTENDED_ARG 1
+  255: LOAD_ATTR period_grain
+  255: LOAD_CONST 'month'
+  255: COMPARE_OP ==
+  255: BINARY_OP 26
+  255: LOAD_ATTR copy
+  255: CALL 0
+  255: STORE_NAME d
+  256: LOAD_NAME d
+  256: EXTENDED_ARG 1
+  256: LOAD_ATTR period
+  256: LOAD_NAME d
+  256: LOAD_CONST 'month'
+  256: STORE_SUBSCR None
+  257: LOAD_NAME norm_pn
+  257: PUSH_NULL
+  257: LOAD_NAME d
+  257: EXTENDED_ARG 1
+  257: LOAD_ATTR part_number
+  257: CALL 1
+  257: LOAD_ATTR str
+  257: LOAD_ATTR lstrip
+  257: LOAD_CONST '0'
+  257: CALL 1
+  257: LOAD_NAME d
+  257: LOAD_CONST 'pn'
+  257: STORE_SUBSCR None
+  258: LOAD_NAME d
+  258: EXTENDED_ARG 1
+  258: LOAD_ATTR pn
+  258: LOAD_ATTR map
+  258: LOAD_NAME PN_CAT
+  258: CALL 1
+  258: LOAD_ATTR map
+  258: LOAD_NAME CATEGORY_LABELS
+  258: CALL 1
+  258: LOAD_ATTR fillna
+  258: LOAD_CONST 'other'
+  258: CALL 1
+  258: LOAD_NAME d
+  258: LOAD_CONST 'category_label'
+  258: STORE_SUBSCR None
+  259: LOAD_NAME frames
+  259: EXTENDED_ARG 1
+  259: LOAD_ATTR append
+  259: LOAD_NAME d
+  259: BUILD_LIST 0
+  259: EXTENDED_ARG 1
+  259: LOAD_CONST ('month', 'pn', 'category_label', 'qty')
+  259: LIST_EXTEND 1
+  259: BINARY_OP 26
+  259: CALL 1
+  259: POP_TOP
+  259: JUMP_BACKWARD 9098
+  253: END_FOR
+  253: POP_ITER
+  260: LOAD_NAME pd
+  260: EXTENDED_ARG 1
+  260: LOAD_ATTR concat
+  260: PUSH_NULL
+  260: LOAD_NAME frames
+  260: LOAD_CONST True
+  260: LOAD_CONST ('ignore_index',)
+  260: CALL_KW 2
+  260: EXTENDED_ARG 1
+  260: LOAD_ATTR drop_duplicates
+  260: BUILD_LIST 0
+  260: EXTENDED_ARG 1
+  260: LOAD_CONST ('month', 'pn', 'category_label')
+  260: LIST_EXTEND 1
+  260: CALL 1
+  260: STORE_NAME d
+  261: LOAD_NAME db
+  261: STORE_NAME key
+  262: LOAD_CONST 'cy'
+  262: LOAD_NAME d
+  262: LOAD_NAME d
+  262: EXTENDED_ARG 1
+  262: LOAD_ATTR month
+  262: LOAD_ATTR str
+  262: LOAD_ATTR startswith
+  262: LOAD_CONST '2025'
+  262: CALL 1
+  262: BINARY_OP 26
+  262: BUILD_TUPLE 2
+  263: LOAD_CONST 'fy'
+  263: LOAD_NAME d
+  263: LOAD_NAME d
+  263: EXTENDED_ARG 1
+  263: LOAD_ATTR month
+  263: LOAD_ATTR isin
+  263: LOAD_NAME FYMON
+  263: CALL 1
+  263: BINARY_OP 26
+  263: BUILD_TUPLE 2
+  262: BUILD_TUPLE 2
+  262: GET_ITER
+  262: FOR_ITER 10252
+  262: UNPACK_SEQUENCE 2
+  262: STORE_NAME pk
+  262: STORE_NAME frame
+  264: LOAD_NAME frame
+  264: EXTENDED_ARG 1
+  264: LOAD_ATTR empty
+  264: TO_BOOL
+  264: POP_JUMP_IF_FALSE 9894
+  264: NOT_TAKEN
+  265: JUMP_BACKWARD 9840
+  266: LOAD_NAME frame
+  266: LOAD_ATTR groupby
+  266: LOAD_CONST 'category_label'
+  266: CALL 1
+  266: EXTENDED_ARG 1
+  266: LOAD_ATTR qty
+  266: LOAD_ATTR sum
+  266: CALL 0
+  266: EXTENDED_ARG 1
+  266: LOAD_ATTR to_dict
+  266: CALL 0
+  266: LOAD_NAME dealer_qty
+  266: LOAD_ATTR setdefault
+  266: LOAD_NAME key
+  266: BUILD_MAP 0
+  266: CALL 2
+  266: LOAD_NAME pk
+  266: STORE_SUBSCR None
+  267: LOAD_NAME float
+  267: PUSH_NULL
+  267: LOAD_NAME frame
+  267: EXTENDED_ARG 1
+  267: LOAD_ATTR qty
+  267: LOAD_ATTR sum
+  267: CALL 0
+  267: CALL 1
+  267: LOAD_NAME dealer_qty
+  267: LOAD_NAME key
+  267: BINARY_OP 26
+  267: LOAD_NAME pk
+  267: LOAD_CONST '_total'
+  267: BINARY_OP 0
+  267: STORE_SUBSCR None
+  268: LOAD_NAME int
+  268: PUSH_NULL
+  268: LOAD_NAME frame
+  268: EXTENDED_ARG 1
+  268: LOAD_ATTR month
+  268: EXTENDED_ARG 1
+  268: LOAD_ATTR nunique
+  268: CALL 0
+  268: CALL 1
+  268: LOAD_NAME dealer_qty
+  268: LOAD_NAME key
+  268: BINARY_OP 26
+  268: LOAD_NAME pk
+  268: LOAD_CONST '_months'
+  268: BINARY_OP 0
+  268: STORE_SUBSCR None
+  268: JUMP_BACKWARD 9840
+  262: END_FOR
+  262: POP_ITER
+  262: EXTENDED_ARG 2
+  262: JUMP_BACKWARD 9076
+  251: END_FOR
+  251: POP_ITER
+  275: LOAD_SMALL_INT 11
+  275: STORE_NAME FYM_NEED
+  276: BUILD_MAP 0
+  276: STORE_NAME DEALER_FY_MONTHS
+  277: LOAD_NAME dealer_files
+  277: GET_ITER
+  277: FOR_ITER 10396
+  277: STORE_NAME _db
+  278: LOAD_NAME int
+  278: PUSH_NULL
+  278: LOAD_NAME dealer_qty
+  278: EXTENDED_ARG 1
+  278: LOAD_ATTR get
+  278: LOAD_NAME _db
+  278: BUILD_MAP 0
+  278: CALL 2
+  278: EXTENDED_ARG 1
+  278: LOAD_ATTR get
+  278: LOAD_CONST 'fy_months'
+  278: CALL 1
+  278: COPY 1
+  278: TO_BOOL
+  278: POP_JUMP_IF_TRUE 10376
+  278: NOT_TAKEN
+  278: POP_TOP
+  278: LOAD_SMALL_INT 0
+  278: CALL 1
+  278: LOAD_NAME DEALER_FY_MONTHS
+  278: LOAD_NAME _db
+  278: STORE_SUBSCR None
+  278: JUMP_BACKWARD 10278
+  277: END_FOR
+  277: POP_ITER
+  279: LOAD_CONST <code fy_months_of@279>
+  279: MAKE_FUNCTION
+  279: STORE_NAME fy_months_of
+  281: LOAD_NAME print
+  281: PUSH_NULL
+  281: LOAD_CONST '  dealer-file fiscal months:'
+  281: LOAD_NAME DEALER_FY_MONTHS
+  281: LOAD_CONST True
+  281: LOAD_CONST ('flush',)
+  281: CALL_KW 3
+  281: POP_TOP
+  283: LOAD_NAME pd
+  283: LOAD_ATTR read_csv
+  283: PUSH_NULL
+  283: LOAD_NAME os
+  283: LOAD_ATTR path
+  283: LOAD_ATTR join
+  283: LOAD_NAME D
+  283: LOAD_CONST 'dealer_sellout_gps_2025.csv'
+  283: CALL 2
+  283: CALL 1
+  283: STORE_NAME ds
+  284: LOAD_NAME ds
+  284: LOAD_ATTR groupby
+  284: LOAD_CONST 'distributor_code'
+  284: CALL 1
+  284: EXTENDED_ARG 1
+  284: LOAD_ATTR total_eur
+  284: LOAD_ATTR sum
+  284: CALL 0
+  284: STORE_NAME dealer_eur_cy
+  286: LOAD_NAME print
+  286: PUSH_NULL
+  286: LOAD_CONST 'assembling payload ...'
+  286: LOAD_CONST True
+  286: LOAD_CONST ('flush',)
+  286: CALL_KW 2
+  286: POP_TOP
+  287: BUILD_LIST 0
+  287: STORE_NAME dbs
+  288: LOAD_NAME NETDBS
+  288: GET_ITER
+  288: EXTENDED_ARG 14
+  288: FOR_ITER 17884
+  288: STORE_NAME db
+  289: LOAD_NAME demand
+  289: LOAD_NAME demand
+  289: LOAD_ATTR distributor_code
+  289: LOAD_NAME db
+  289: COMPARE_OP ==
+  289: BINARY_OP 26
+  289: STORE_NAME dm
+  290: LOAD_NAME len
+  290: PUSH_NULL
+  290: LOAD_NAME dm
+  290: CALL 1
+  290: TO_BOOL
+  290: POP_JUMP_IF_FALSE 10748
+  290: NOT_TAKEN
+  290: LOAD_NAME dm
+  290: EXTENDED_ARG 1
+  290: LOAD_ATTR iloc
+  290: LOAD_SMALL_INT 0
+  290: BINARY_OP 26
+  290: JUMP_FORWARD 10750
+  290: LOAD_CONST None
+  290: STORE_NAME dm
+  291: LOAD_NAME db
+  291: LOAD_NAME buckets
+  291: EXTENDED_ARG 1
+  291: LOAD_ATTR index
+  291: CONTAINS_OP 0
+  291: POP_JUMP_IF_FALSE 10828
+  291: NOT_TAKEN
+  291: LOAD_NAME buckets
+  291: EXTENDED_ARG 1
+  291: LOAD_ATTR loc
+  291: LOAD_NAME db
+  291: BINARY_OP 26
+  291: JUMP_FORWARD 10830
+  291: LOAD_CONST None
+  291: STORE_NAME ux
+  292: LOAD_NAME ux
+  292: POP_JUMP_IF_NONE 10914
+  292: NOT_TAKEN
+  292: LOAD_NAME float
+  292: PUSH_NULL
+  292: LOAD_NAME ux
+  292: EXTENDED_ARG 1
+  292: LOAD_ATTR cv_std_uio
+  292: LOAD_NAME ux
+  292: EXTENDED_ARG 1
+  292: LOAD_ATTR f_series_uio
+  292: BINARY_OP 0
+  292: CALL 1
+  292: JUMP_FORWARD 10916
+  292: LOAD_CONST None
+  292: STORE_NAME n75
+  293: LOAD_NAME ux
+  293: POP_JUMP_IF_NONE 10964
+  293: NOT_TAKEN
+  293: LOAD_NAME float
+  293: PUSH_NULL
+  293: LOAD_NAME ux
+  293: EXTENDED_ARG 1
+  293: LOAD_ATTR lcv_uio
+  293: CALL 1
+  293: JUMP_FORWARD 10966
+  293: LOAD_CONST None
+  293: STORE_NAME lcv
+  294: LOAD_NAME n75
+  294: POP_JUMP_IF_NOT_NONE 10982
+  294: NOT_TAKEN
+  295: LOAD_CONST 'no fleet model'
+  295: STORE_NAME wc
+  295: JUMP_FORWARD 11040
+  296: LOAD_NAME n75
+  296: LOAD_SMALL_INT 0
+  296: COMPARE_OP >
+  296: POP_JUMP_IF_FALSE 11016
+  296: NOT_TAKEN
+  296: LOAD_NAME lcv
+  296: LOAD_SMALL_INT 0
+  296: COMPARE_OP >
+  296: POP_JUMP_IF_FALSE 11016
+  296: NOT_TAKEN
+  297: LOAD_CONST 'truck + light'
+  297: STORE_NAME wc
+  297: JUMP_FORWARD 11040
+  298: LOAD_NAME n75
+  298: LOAD_SMALL_INT 0
+  298: COMPARE_OP >
+  298: POP_JUMP_IF_FALSE 11036
+  298: NOT_TAKEN
+  299: LOAD_CONST 'truck class'
+  299: STORE_NAME wc
+  299: JUMP_FORWARD 11040
+  301: LOAD_CONST 'light commercial'
+  301: STORE_NAME wc
+  302: LOAD_NAME dict
+  302: PUSH_NULL
+  303: LOAD_NAME db
+  304: LOAD_NAME pd
+  304: LOAD_ATTR notna
+  304: PUSH_NULL
+  304: LOAD_NAME scope
+  304: EXTENDED_ARG 1
+  304: LOAD_ATTR get
+  304: LOAD_NAME db
+  304: LOAD_CONST None
+  304: CALL 2
+  304: CALL 1
+  304: TO_BOOL
+  304: POP_JUMP_IF_FALSE 11176
+  304: NOT_TAKEN
+  304: LOAD_NAME str
+  304: PUSH_NULL
+  304: LOAD_NAME scope
+  304: EXTENDED_ARG 1
+  304: LOAD_ATTR get
+  304: LOAD_NAME db
+  304: CALL 1
+  304: CALL 1
+  304: JUMP_FORWARD 11178
+  304: LOAD_CONST None
+  305: LOAD_NAME pd
+  305: LOAD_ATTR notna
+  305: PUSH_NULL
+  305: LOAD_NAME region
+  305: EXTENDED_ARG 1
+  305: LOAD_ATTR get
+  305: LOAD_NAME db
+  305: LOAD_CONST None
+  305: CALL 2
+  305: CALL 1
+  305: TO_BOOL
+  305: POP_JUMP_IF_FALSE 11308
+  305: NOT_TAKEN
+  305: LOAD_NAME str
+  305: PUSH_NULL
+  305: LOAD_NAME region
+  305: EXTENDED_ARG 1
+  305: LOAD_ATTR get
+  305: LOAD_NAME db
+  305: CALL 1
+  305: CALL 1
+  305: JUMP_FORWARD 11310
+  305: LOAD_CONST None
+  306: LOAD_NAME dm
+  306: POP_JUMP_IF_NONE 11354
+  306: NOT_TAKEN
+  306: LOAD_NAME n
+  306: PUSH_NULL
+  306: LOAD_NAME dm
+  306: LOAD_ATTR uio
+  306: CALL 1
+  306: JUMP_FORWARD 11356
+  306: LOAD_CONST None
+  307: LOAD_NAME n
+  307: PUSH_NULL
+  307: LOAD_NAME n75
+  307: CALL 1
+  307: LOAD_NAME n
+  307: PUSH_NULL
+  307: LOAD_NAME lcv
+  307: CALL 1
+  307: LOAD_NAME wc
+  308: LOAD_NAME n
+  308: PUSH_NULL
+  308: LOAD_NAME imit
+  308: EXTENDED_ARG 1
+  308: LOAD_ATTR get
+  308: LOAD_NAME db
+  308: CALL 1
+  308: CALL 1
+  309: LOAD_NAME db
+  309: LOAD_NAME KM
+  309: CONTAINS_OP 0
+  309: POP_JUMP_IF_FALSE 11478
+  309: NOT_TAKEN
+  309: LOAD_NAME KM
+  309: LOAD_NAME db
+  309: BINARY_OP 26
+  309: LOAD_CONST 'label'
+  309: BINARY_OP 26
+  309: JUMP_FORWARD 11480
+  309: LOAD_CONST None
+  302: LOAD_CONST ('db', 'scope', 'region', 'uio', 'n75', 'lcv', 'wc', 'imit', 'km')
+  302: CALL_KW 9
+  302: STORE_NAME rec
+  312: LOAD_NAME dm
+  312: EXTENDED_ARG 2
+  312: POP_JUMP_IF_NONE 12754
+  312: NOT_TAKEN
+  313: LOAD_NAME float
+  313: PUSH_NULL
+  313: LOAD_NAME dm
+  313: LOAD_ATTR gap
+  313: CALL 1
+  313: LOAD_NAME float
+  313: PUSH_NULL
+  313: LOAD_NAME dm
+  313: LOAD_ATTR exp
+  313: CALL 1
+  313: LOAD_NAME float
+  313: PUSH_NULL
+  313: LOAD_NAME dm
+  313: LOAD_ATTR act
+  313: CALL 1
+  313: SWAP 3
+  313: STORE_NAME cy_gap
+  313: STORE_NAME cy_exp
+  313: STORE_NAME cy_act
+  314: LOAD_NAME float
+  314: PUSH_NULL
+  314: LOAD_NAME dm
+  314: EXTENDED_ARG 1
+  314: LOAD_ATTR nb
+  314: CALL 1
+  314: STORE_NAME cy_nb
+  315: LOAD_SMALL_INT 1
+  315: LOAD_NAME cy_nb
+  315: LOAD_SMALL_INT 100
+  315: BINARY_OP 11
+  315: BINARY_OP 10
+  315: LOAD_SMALL_INT 100
+  315: BINARY_OP 5
+  315: STORE_NAME cy_cap
+  316: BUILD_LIST 0
+  316: STORE_NAME fams
+  317: LOAD_CONST 0.0
+  317: COPY 1
+  317: STORE_NAME fy_gap
+  317: COPY 1
+  317: STORE_NAME fy_exp
+  317: STORE_NAME fy_act
+  318: LOAD_NAME fam
+  318: LOAD_NAME fam
+  318: LOAD_ATTR distributor_code
+  318: LOAD_NAME db
+  318: COMPARE_OP ==
+  318: BINARY_OP 26
+  318: EXTENDED_ARG 1
+  318: LOAD_ATTR iterrows
+  318: CALL 0
+  318: GET_ITER
+  318: EXTENDED_ARG 1
+  318: FOR_ITER 12430
+  318: UNPACK_SEQUENCE 2
+  318: STORE_NAME _
+  318: STORE_NAME fr
+  319: LOAD_NAME float
+  319: PUSH_NULL
+  319: LOAD_NAME rat
+  319: EXTENDED_ARG 1
+  319: LOAD_ATTR get
+  319: LOAD_NAME db
+  319: LOAD_NAME fr
+  319: LOAD_ATTR category_label
+  319: BUILD_TUPLE 2
+  319: LOAD_CONST 1.0
+  319: CALL 2
+  319: CALL 1
+  319: STORE_NAME r
+  320: LOAD_NAME float
+  320: PUSH_NULL
+  320: LOAD_NAME fr
+  320: LOAD_ATTR act
+  320: CALL 1
+  320: LOAD_NAME r
+  320: BINARY_OP 5
+  320: STORE_NAME f_act
+  321: LOAD_NAME max
+  321: PUSH_NULL
+  321: LOAD_NAME float
+  321: PUSH_NULL
+  321: LOAD_NAME fr
+  321: LOAD_ATTR exp
+  321: CALL 1
+  321: LOAD_NAME f_act
+  321: BINARY_OP 10
+  321: LOAD_CONST 0.0
+  321: CALL 2
+  321: LOAD_NAME pd
+  321: LOAD_ATTR notna
+  321: PUSH_NULL
+  321: LOAD_NAME fr
+  321: EXTENDED_ARG 1
+  321: LOAD_ATTR avg_sp
+  321: CALL 1
+  321: TO_BOOL
+  321: POP_JUMP_IF_FALSE 12094
+  321: NOT_TAKEN
+  321: LOAD_NAME float
+  321: PUSH_NULL
+  321: LOAD_NAME fr
+  321: EXTENDED_ARG 1
+  321: LOAD_ATTR avg_sp
+  321: CALL 1
+  321: JUMP_FORWARD 12096
+  321: LOAD_CONST 0.0
+  321: BINARY_OP 5
+  321: STORE_NAME f_gap
+  322: LOAD_NAME fams
+  322: EXTENDED_ARG 1
+  322: LOAD_ATTR append
+  322: LOAD_NAME dict
+  322: PUSH_NULL
+  322: LOAD_NAME fr
+  322: LOAD_ATTR category_label
+  322: LOAD_NAME fr
+  322: EXTENDED_ARG 1
+  322: LOAD_ATTR fam_group
+  323: LOAD_NAME n
+  323: PUSH_NULL
+  323: LOAD_NAME fr
+  323: LOAD_ATTR gap
+  323: CALL 1
+  323: LOAD_NAME n
+  323: PUSH_NULL
+  323: LOAD_NAME fr
+  323: EXTENDED_ARG 1
+  323: LOAD_ATTR cap
+  323: LOAD_SMALL_INT 1
+  323: CALL 2
+  323: LOAD_NAME n
+  323: PUSH_NULL
+  323: LOAD_NAME f_gap
+  323: CALL 1
+  324: LOAD_NAME n
+  324: PUSH_NULL
+  324: LOAD_NAME f_act
+  324: CALL 1
+  324: LOAD_NAME n
+  324: PUSH_NULL
+  324: LOAD_NAME fr
+  324: LOAD_ATTR exp
+  324: CALL 1
+  322: LOAD_CONST ('label', 'group', 'gap', 'cap', 'fy_gap', 'act_qty', 'exp_qty')
+  322: CALL_KW 7
+  322: CALL 1
+  322: POP_TOP
+  325: LOAD_NAME fy_gap
+  325: LOAD_NAME f_gap
+  325: BINARY_OP 13
+  325: STORE_NAME fy_gap
+  326: LOAD_NAME fy_exp
+  326: LOAD_NAME float
+  326: PUSH_NULL
+  326: LOAD_NAME fr
+  326: LOAD_ATTR exp
+  326: CALL 1
+  326: BINARY_OP 13
+  326: STORE_NAME fy_exp
+  327: LOAD_NAME fy_act
+  327: LOAD_NAME f_act
+  327: BINARY_OP 13
+  327: STORE_NAME fy_act
+  327: EXTENDED_ARG 1
+  327: JUMP_BACKWARD 11786
+  318: END_FOR
+  318: POP_ITER
+  328: LOAD_NAME dict
+  328: PUSH_NULL
+  329: LOAD_NAME dict
+  329: PUSH_NULL
+  329: LOAD_NAME n
+  329: PUSH_NULL
+  329: LOAD_NAME cy_gap
+  329: CALL 1
+  329: LOAD_NAME n
+  329: PUSH_NULL
+  329: LOAD_NAME cy_exp
+  329: CALL 1
+  329: LOAD_NAME n
+  329: PUSH_NULL
+  329: LOAD_NAME cy_act
+  329: CALL 1
+  329: LOAD_NAME n
+  329: PUSH_NULL
+  329: LOAD_NAME cy_nb
+  329: LOAD_SMALL_INT 1
+  329: CALL 2
+  329: LOAD_NAME n
+  329: PUSH_NULL
+  329: LOAD_NAME cy_cap
+  329: LOAD_SMALL_INT 1
+  329: CALL 2
+  329: LOAD_CONST ('gap', 'exp', 'act', 'nb', 'cap')
+  329: CALL_KW 5
+  330: LOAD_NAME dict
+  330: PUSH_NULL
+  330: LOAD_NAME n
+  330: PUSH_NULL
+  330: LOAD_NAME fy_gap
+  330: CALL 1
+  330: LOAD_NAME n
+  330: PUSH_NULL
+  330: LOAD_NAME fy_exp
+  330: CALL 1
+  330: LOAD_NAME n
+  330: PUSH_NULL
+  330: LOAD_NAME fy_act
+  330: CALL 1
+  331: LOAD_NAME fy_exp
+  331: TO_BOOL
+  331: POP_JUMP_IF_FALSE 12648
+  331: NOT_TAKEN
+  331: LOAD_NAME n
+  331: PUSH_NULL
+  331: LOAD_NAME fy_exp
+  331: LOAD_NAME fy_act
+  331: BINARY_OP 10
+  331: LOAD_NAME fy_exp
+  331: BINARY_OP 11
+  331: LOAD_SMALL_INT 100
+  331: BINARY_OP 5
+  331: LOAD_SMALL_INT 1
+  331: CALL 2
+  331: JUMP_FORWARD 12650
+  331: LOAD_CONST None
+  332: LOAD_NAME fy_exp
+  332: TO_BOOL
+  332: POP_JUMP_IF_FALSE 12712
+  332: NOT_TAKEN
+  332: LOAD_NAME n
+  332: PUSH_NULL
+  332: LOAD_NAME fy_act
+  332: LOAD_NAME fy_exp
+  332: BINARY_OP 11
+  332: LOAD_SMALL_INT 100
+  332: BINARY_OP 5
+  332: LOAD_SMALL_INT 1
+  332: CALL 2
+  332: JUMP_FORWARD 12714
+  332: LOAD_CONST None
+  330: LOAD_CONST ('gap', 'exp', 'act', 'nb', 'cap')
+  330: CALL_KW 5
+  328: LOAD_CONST ('cy', 'fy')
+  328: CALL_KW 2
+  328: LOAD_NAME rec
+  328: LOAD_CONST 'demand'
+  328: STORE_SUBSCR None
+  333: LOAD_NAME fams
+  333: LOAD_NAME rec
+  333: LOAD_CONST 'fam'
+  333: STORE_SUBSCR None
+  333: JUMP_FORWARD 12790
+  335: LOAD_NAME dict
+  335: PUSH_NULL
+  335: LOAD_CONST None
+  335: LOAD_CONST None
+  335: LOAD_CONST ('cy', 'fy')
+  335: CALL_KW 2
+  335: LOAD_NAME rec
+  335: LOAD_CONST 'demand'
+  335: STORE_SUBSCR None
+  336: BUILD_LIST 0
+  336: LOAD_NAME rec
+  336: LOAD_CONST 'fam'
+  336: STORE_SUBSCR None
+  338: LOAD_NAME dealer_qty
+  338: EXTENDED_ARG 1
+  338: LOAD_ATTR get
+  338: LOAD_NAME db
+  338: CALL 1
+  338: STORE_NAME dq
+  339: LOAD_NAME dict
+  339: PUSH_NULL
+  339: LOAD_CONST None
+  339: LOAD_CONST None
+  339: LOAD_CONST ('cy', 'fy')
+  339: CALL_KW 2
+  339: STORE_NAME dleg
+  340: LOAD_NAME dq
+  340: TO_BOOL
+  340: EXTENDED_ARG 2
+  340: POP_JUMP_IF_FALSE 13932
+  340: NOT_TAKEN
+  340: LOAD_NAME dq
+  340: EXTENDED_ARG 1
+  340: LOAD_ATTR get
+  340: LOAD_CONST 'cy'
+  340: CALL 1
+  340: TO_BOOL
+  340: EXTENDED_ARG 1
+  340: POP_JUMP_IF_FALSE 13932
+  340: NOT_TAKEN
+  341: BUILD_LIST 0
+  341: LOAD_CONST 0.0
+  341: LOAD_CONST 0.0
+  341: LOAD_CONST 0.0
+  341: BUILD_TUPLE 4
+  341: UNPACK_SEQUENCE 4
+  341: STORE_NAME rows
+  341: STORE_NAME s_gap
+  341: STORE_NAME s_act
+  341: STORE_NAME s_exp
+  342: LOAD_NAME fam
+  342: LOAD_NAME fam
+  342: LOAD_ATTR distributor_code
+  342: LOAD_NAME db
+  342: COMPARE_OP ==
+  342: BINARY_OP 26
+  342: EXTENDED_ARG 1
+  342: LOAD_ATTR iterrows
+  342: CALL 0
+  342: GET_ITER
+  342: EXTENDED_ARG 1
+  342: FOR_ITER 13638
+  342: UNPACK_SEQUENCE 2
+  342: STORE_NAME _
+  342: STORE_NAME fr
+  343: LOAD_NAME float
+  343: PUSH_NULL
+  343: LOAD_NAME dq
+  343: LOAD_CONST 'cy'
+  343: BINARY_OP 26
+  343: EXTENDED_ARG 1
+  343: LOAD_ATTR get
+  343: LOAD_NAME fr
+  343: LOAD_ATTR category_label
+  343: LOAD_CONST 0.0
+  343: CALL 2
+  343: CALL 1
+  343: STORE_NAME got
+  344: LOAD_NAME pd
+  344: LOAD_ATTR notna
+  344: PUSH_NULL
+  344: LOAD_NAME fr
+  344: EXTENDED_ARG 1
+  344: LOAD_ATTR avg_sp
+  344: CALL 1
+  344: TO_BOOL
+  344: POP_JUMP_IF_FALSE 13216
+  344: NOT_TAKEN
+  344: LOAD_NAME float
+  344: PUSH_NULL
+  344: LOAD_NAME fr
+  344: EXTENDED_ARG 1
+  344: LOAD_ATTR avg_sp
+  344: CALL 1
+  344: JUMP_FORWARD 13218
+  344: LOAD_CONST 0.0
+  344: STORE_NAME sp
+  345: LOAD_NAME max
+  345: PUSH_NULL
+  345: LOAD_NAME float
+  345: PUSH_NULL
+  345: LOAD_NAME fr
+  345: LOAD_ATTR exp
+  345: CALL 1
+  345: LOAD_NAME got
+  345: BINARY_OP 10
+  345: LOAD_CONST 0.0
+  345: CALL 2
+  345: LOAD_NAME sp
+  345: BINARY_OP 5
+  345: STORE_NAME g
+  346: LOAD_NAME rows
+  346: EXTENDED_ARG 1
+  346: LOAD_ATTR append
+  346: LOAD_NAME dict
+  346: PUSH_NULL
+  346: LOAD_NAME fr
+  346: LOAD_ATTR category_label
+  346: LOAD_NAME n
+  346: PUSH_NULL
+  346: LOAD_NAME got
+  346: CALL 1
+  346: LOAD_NAME n
+  346: PUSH_NULL
+  346: LOAD_NAME fr
+  346: LOAD_ATTR exp
+  346: CALL 1
+  347: LOAD_NAME n
+  347: PUSH_NULL
+  347: LOAD_NAME g
+  347: CALL 1
+  347: LOAD_NAME fr
+  347: LOAD_ATTR exp
+  347: TO_BOOL
+  347: POP_JUMP_IF_FALSE 13524
+  347: NOT_TAKEN
+  347: LOAD_NAME n
+  347: PUSH_NULL
+  347: LOAD_NAME got
+  347: LOAD_NAME float
+  347: PUSH_NULL
+  347: LOAD_NAME fr
+  347: LOAD_ATTR exp
+  347: CALL 1
+  347: BINARY_OP 11
+  347: LOAD_SMALL_INT 100
+  347: BINARY_OP 5
+  347: LOAD_SMALL_INT 1
+  347: CALL 2
+  347: JUMP_FORWARD 13526
+  347: LOAD_CONST None
+  346: LOAD_CONST ('label', 'got', 'exp_qty', 'gap', 'cap')
+  346: CALL_KW 5
+  346: CALL 1
+  346: POP_TOP
+  348: LOAD_NAME s_gap
+  348: LOAD_NAME g
+  348: BINARY_OP 13
+  348: STORE_NAME s_gap
+  349: LOAD_NAME s_act
+  349: LOAD_NAME got
+  349: BINARY_OP 13
+  349: STORE_NAME s_act
+  350: LOAD_NAME s_exp
+  350: LOAD_NAME float
+  350: PUSH_NULL
+  350: LOAD_NAME fr
+  350: LOAD_ATTR exp
+  350: CALL 1
+  350: BINARY_OP 13
+  350: STORE_NAME s_exp
+  350: EXTENDED_ARG 1
+  350: JUMP_BACKWARD 13010
+  342: END_FOR
+  342: POP_ITER
+  351: LOAD_NAME dict
+  351: PUSH_NULL
+  351: LOAD_NAME n
+  351: PUSH_NULL
+  351: LOAD_NAME s_gap
+  351: CALL 1
+  351: LOAD_NAME n
+  351: PUSH_NULL
+  351: LOAD_NAME s_act
+  351: CALL 1
+  351: LOAD_NAME n
+  351: PUSH_NULL
+  351: LOAD_NAME s_exp
+  351: CALL 1
+  352: LOAD_NAME s_exp
+  352: TO_BOOL
+  352: POP_JUMP_IF_FALSE 13750
+  352: NOT_TAKEN
+  352: LOAD_NAME n
+  352: PUSH_NULL
+  352: LOAD_NAME s_act
+  352: LOAD_NAME s_exp
+  352: BINARY_OP 11
+  352: LOAD_SMALL_INT 100
+  352: BINARY_OP 5
+  352: LOAD_SMALL_INT 1
+  352: CALL 2
+  352: JUMP_FORWARD 13752
+  352: LOAD_CONST None
+  353: LOAD_NAME s_exp
+  353: TO_BOOL
+  353: POP_JUMP_IF_FALSE 13828
+  353: NOT_TAKEN
+  353: LOAD_NAME n
+  353: PUSH_NULL
+  353: LOAD_NAME s_exp
+  353: LOAD_NAME s_act
+  353: BINARY_OP 10
+  353: LOAD_NAME s_exp
+  353: BINARY_OP 11
+  353: LOAD_SMALL_INT 100
+  353: BINARY_OP 5
+  353: LOAD_SMALL_INT 1
+  353: CALL 2
+  353: JUMP_FORWARD 13830
+  353: LOAD_CONST None
+  354: LOAD_NAME dq
+  354: EXTENDED_ARG 1
+  354: LOAD_ATTR get
+  354: LOAD_CONST 'cy_months'
+  354: CALL 1
+  354: LOAD_CONST False
+  354: LOAD_NAME n
+  354: PUSH_NULL
+  354: LOAD_NAME dealer_eur_cy
+  354: EXTENDED_ARG 1
+  354: LOAD_ATTR get
+  354: LOAD_NAME db
+  354: CALL 1
+  354: CALL 1
+  355: LOAD_NAME rows
+  351: LOAD_CONST ('gap', 'act', 'exp', 'cap', 'nb', 'months', 'proj', 'eur', 'fam')
+  351: CALL_KW 9
+  351: LOAD_NAME dleg
+  351: LOAD_CONST 'cy'
+  351: STORE_SUBSCR None
+  356: LOAD_NAME DEALER_FY_MONTHS
+  356: EXTENDED_ARG 1
+  356: LOAD_ATTR get
+  356: LOAD_NAME db
+  356: LOAD_SMALL_INT 0
+  356: CALL 2
+  356: STORE_NAME fm
+  357: LOAD_NAME dq
+  357: TO_BOOL
+  357: EXTENDED_ARG 2
+  357: POP_JUMP_IF_FALSE 15236
+  357: NOT_TAKEN
+  357: LOAD_NAME dq
+  357: EXTENDED_ARG 1
+  357: LOAD_ATTR get
+  357: LOAD_CONST 'fy'
+  357: CALL 1
+  357: TO_BOOL
+  357: EXTENDED_ARG 2
+  357: POP_JUMP_IF_FALSE 15236
+  357: NOT_TAKEN
+  357: LOAD_NAME fm
+  357: LOAD_SMALL_INT 9
+  357: COMPARE_OP >=
+  357: EXTENDED_ARG 2
+  357: POP_JUMP_IF_FALSE 15236
+  357: NOT_TAKEN
+  358: LOAD_NAME fm
+  358: LOAD_SMALL_INT 12
+  358: COMPARE_OP <
+  358: POP_JUMP_IF_FALSE 14086
+  358: NOT_TAKEN
+  358: LOAD_CONST 12.0
+  358: LOAD_NAME fm
+  358: BINARY_OP 11
+  358: JUMP_FORWARD 14088
+  358: LOAD_CONST 1.0
+  358: STORE_NAME scale
+  359: BUILD_LIST 0
+  359: LOAD_CONST 0.0
+  359: LOAD_CONST 0.0
+  359: LOAD_CONST 0.0
+  359: BUILD_TUPLE 4
+  359: UNPACK_SEQUENCE 4
+  359: STORE_NAME rows
+  359: STORE_NAME s_gap
+  359: STORE_NAME s_act
+  359: STORE_NAME s_exp
+  360: LOAD_NAME fam
+  360: LOAD_NAME fam
+  360: LOAD_ATTR distributor_code
+  360: LOAD_NAME db
+  360: COMPARE_OP ==
+  360: BINARY_OP 26
+  360: EXTENDED_ARG 1
+  360: LOAD_ATTR iterrows
+  360: CALL 0
+  360: GET_ITER
+  360: EXTENDED_ARG 1
+  360: FOR_ITER 14828
+  360: UNPACK_SEQUENCE 2
+  360: STORE_NAME _
+  360: STORE_NAME fr
+  361: LOAD_NAME float
+  361: PUSH_NULL
+  361: LOAD_NAME dq
+  361: LOAD_CONST 'fy'
+  361: BINARY_OP 26
+  361: EXTENDED_ARG 1
+  361: LOAD_ATTR get
+  361: LOAD_NAME fr
+  361: LOAD_ATTR category_label
+  361: LOAD_CONST 0.0
+  361: CALL 2
+  361: CALL 1
+  361: LOAD_NAME scale
+  361: BINARY_OP 5
+  361: STORE_NAME got
+  362: LOAD_NAME pd
+  362: LOAD_ATTR notna
+  362: PUSH_NULL
+  362: LOAD_NAME fr
+  362: EXTENDED_ARG 1
+  362: LOAD_ATTR avg_sp
+  362: CALL 1
+  362: TO_BOOL
+  362: POP_JUMP_IF_FALSE 14406
+  362: NOT_TAKEN
+  362: LOAD_NAME float
+  362: PUSH_NULL
+  362: LOAD_NAME fr
+  362: EXTENDED_ARG 1
+  362: LOAD_ATTR avg_sp
+  362: CALL 1
+  362: JUMP_FORWARD 14408
+  362: LOAD_CONST 0.0
+  362: STORE_NAME sp
+  363: LOAD_NAME max
+  363: PUSH_NULL
+  363: LOAD_NAME float
+  363: PUSH_NULL
+  363: LOAD_NAME fr
+  363: LOAD_ATTR exp
+  363: CALL 1
+  363: LOAD_NAME got
+  363: BINARY_OP 10
+  363: LOAD_CONST 0.0
+  363: CALL 2
+  363: LOAD_NAME sp
+  363: BINARY_OP 5
+  363: STORE_NAME g
+  364: LOAD_NAME rows
+  364: EXTENDED_ARG 1
+  364: LOAD_ATTR append
+  364: LOAD_NAME dict
+  364: PUSH_NULL
+  364: LOAD_NAME fr
+  364: LOAD_ATTR category_label
+  364: LOAD_NAME n
+  364: PUSH_NULL
+  364: LOAD_NAME got
+  364: CALL 1
+  364: LOAD_NAME n
+  364: PUSH_NULL
+  364: LOAD_NAME fr
+  364: LOAD_ATTR exp
+  364: CALL 1
+  365: LOAD_NAME n
+  365: PUSH_NULL
+  365: LOAD_NAME g
+  365: CALL 1
+  365: LOAD_NAME fr
+  365: LOAD_ATTR exp
+  365: TO_BOOL
+  365: POP_JUMP_IF_FALSE 14714
+  365: NOT_TAKEN
+  365: LOAD_NAME n
+  365: PUSH_NULL
+  365: LOAD_NAME got
+  365: LOAD_NAME float
+  365: PUSH_NULL
+  365: LOAD_NAME fr
+  365: LOAD_ATTR exp
+  365: CALL 1
+  365: BINARY_OP 11
+  365: LOAD_SMALL_INT 100
+  365: BINARY_OP 5
+  365: LOAD_SMALL_INT 1
+  365: CALL 2
+  365: JUMP_FORWARD 14716
+  365: LOAD_CONST None
+  364: LOAD_CONST ('label', 'got', 'exp_qty', 'gap', 'cap')
+  364: CALL_KW 5
+  364: CALL 1
+  364: POP_TOP
+  366: LOAD_NAME s_gap
+  366: LOAD_NAME g
+  366: BINARY_OP 13
+  366: STORE_NAME s_gap
+  367: LOAD_NAME s_act
+  367: LOAD_NAME got
+  367: BINARY_OP 13
+  367: STORE_NAME s_act
+  368: LOAD_NAME s_exp
+  368: LOAD_NAME float
+  368: PUSH_NULL
+  368: LOAD_NAME fr
+  368: LOAD_ATTR exp
+  368: CALL 1
+  368: BINARY_OP 13
+  368: STORE_NAME s_exp
+  368: EXTENDED_ARG 1
+  368: JUMP_BACKWARD 14186
+  360: END_FOR
+  360: POP_ITER
+  369: LOAD_CONST None
+  369: STORE_NAME eur_fy
+  370: LOAD_NAME db
+  370: LOAD_NAME dealer_eur_cy
+  370: EXTENDED_ARG 1
+  370: LOAD_ATTR index
+  370: CONTAINS_OP 0
+  370: POP_JUMP_IF_FALSE 15016
+  370: NOT_TAKEN
+  370: LOAD_NAME dq
+  370: EXTENDED_ARG 1
+  370: LOAD_ATTR get
+  370: LOAD_CONST 'cy_total'
+  370: CALL 1
+  370: TO_BOOL
+  370: POP_JUMP_IF_FALSE 15016
+  370: NOT_TAKEN
+  372: LOAD_NAME n
+  372: PUSH_NULL
+  372: LOAD_NAME float
+  372: PUSH_NULL
+  372: LOAD_NAME dealer_eur_cy
+  372: LOAD_NAME db
+  372: BINARY_OP 26
+  372: CALL 1
+  372: LOAD_NAME float
+  372: PUSH_NULL
+  372: LOAD_NAME dq
+  372: LOAD_CONST 'cy_total'
+  372: BINARY_OP 26
+  372: CALL 1
+  372: BINARY_OP 11
+  372: LOAD_NAME s_act
+  372: BINARY_OP 5
+  372: CALL 1
+  372: STORE_NAME eur_fy
+  373: LOAD_NAME dict
+  373: PUSH_NULL
+  373: LOAD_NAME n
+  373: PUSH_NULL
+  373: LOAD_NAME s_gap
+  373: CALL 1
+  373: LOAD_NAME n
+  373: PUSH_NULL
+  373: LOAD_NAME s_act
+  373: CALL 1
+  373: LOAD_NAME n
+  373: PUSH_NULL
+  373: LOAD_NAME s_exp
+  373: CALL 1
+  374: LOAD_NAME s_exp
+  374: TO_BOOL
+  374: POP_JUMP_IF_FALSE 15124
+  374: NOT_TAKEN
+  374: LOAD_NAME n
+  374: PUSH_NULL
+  374: LOAD_NAME s_act
+  374: LOAD_NAME s_exp
+  374: BINARY_OP 11
+  374: LOAD_SMALL_INT 100
+  374: BINARY_OP 5
+  374: LOAD_SMALL_INT 1
+  374: CALL 2
+  374: JUMP_FORWARD 15126
+  374: LOAD_CONST None
+  375: LOAD_NAME s_exp
+  375: TO_BOOL
+  375: POP_JUMP_IF_FALSE 15202
+  375: NOT_TAKEN
+  375: LOAD_NAME n
+  375: PUSH_NULL
+  375: LOAD_NAME s_exp
+  375: LOAD_NAME s_act
+  375: BINARY_OP 10
+  375: LOAD_NAME s_exp
+  375: BINARY_OP 11
+  375: LOAD_SMALL_INT 100
+  375: BINARY_OP 5
+  375: LOAD_SMALL_INT 1
+  375: CALL 2
+  375: JUMP_FORWARD 15204
+  375: LOAD_CONST None
+  376: LOAD_NAME fm
+  376: LOAD_NAME fm
+  376: LOAD_SMALL_INT 12
+  376: COMPARE_OP <
+  376: LOAD_NAME eur_fy
+  376: LOAD_NAME rows
+  373: LOAD_CONST ('gap', 'act', 'exp', 'cap', 'nb', 'months', 'proj', 'eur', 'fam')
+  373: CALL_KW 9
+  373: LOAD_NAME dleg
+  373: LOAD_CONST 'fy'
+  373: STORE_SUBSCR None
+  377: LOAD_NAME dleg
+  377: LOAD_NAME rec
+  377: LOAD_CONST 'dealer'
+  377: STORE_SUBSCR None
+  379: LOAD_NAME rep
+  379: LOAD_NAME rep
+  379: LOAD_ATTR distributor_code
+  379: LOAD_NAME db
+  379: COMPARE_OP ==
+  379: BINARY_OP 26
+  379: STORE_NAME rr
+  380: LOAD_NAME dict
+  380: PUSH_NULL
+  380: LOAD_CONST None
+  380: LOAD_CONST None
+  380: LOAD_CONST ('cy', 'fy')
+  380: CALL_KW 2
+  380: LOAD_NAME rec
+  380: LOAD_CONST 'rep'
+  380: STORE_SUBSCR None
+  381: LOAD_NAME len
+  381: PUSH_NULL
+  381: LOAD_NAME rr
+  381: CALL 1
+  381: TO_BOOL
+  381: POP_JUMP_IF_FALSE 15790
+  381: NOT_TAKEN
+  382: LOAD_NAME rr
+  382: LOAD_ATTR groupby
+  382: LOAD_CONST 'pipeline_signal'
+  382: CALL 1
+  382: EXTENDED_ARG 1
+  382: LOAD_ATTR bill_eur
+  382: LOAD_ATTR sum
+  382: CALL 0
+  382: STORE_NAME g
+  383: LOAD_NAME dict
+  383: PUSH_NULL
+  384: LOAD_NAME n
+  384: PUSH_NULL
+  384: LOAD_NAME g
+  384: LOAD_ATTR sum
+  384: CALL 0
+  384: CALL 1
+  384: LOAD_NAME n
+  384: PUSH_NULL
+  384: LOAD_NAME g
+  384: EXTENDED_ARG 1
+  384: LOAD_ATTR get
+  384: LOAD_CONST 'leakage_high_sellthrough'
+  384: LOAD_SMALL_INT 0
+  384: CALL 2
+  384: CALL 1
+  385: LOAD_NAME n
+  385: PUSH_NULL
+  385: LOAD_NAME g
+  385: EXTENDED_ARG 1
+  385: LOAD_ATTR get
+  385: LOAD_CONST 'overstock_low_sellthrough'
+  385: LOAD_SMALL_INT 0
+  385: CALL 2
+  385: CALL 1
+  386: LOAD_NAME n
+  386: PUSH_NULL
+  386: LOAD_NAME g
+  386: EXTENDED_ARG 1
+  386: LOAD_ATTR get
+  386: LOAD_CONST 'overstock_no_sellout'
+  386: LOAD_SMALL_INT 0
+  386: CALL 2
+  386: CALL 1
+  387: LOAD_NAME n
+  387: PUSH_NULL
+  387: LOAD_NAME g
+  387: EXTENDED_ARG 1
+  387: LOAD_ATTR get
+  387: LOAD_CONST 'leakage_no_bill'
+  387: LOAD_SMALL_INT 0
+  387: CALL 2
+  387: CALL 1
+  388: LOAD_NAME int
+  388: PUSH_NULL
+  388: LOAD_NAME rr
+  388: EXTENDED_ARG 1
+  388: LOAD_ATTR part_number
+  388: EXTENDED_ARG 1
+  388: LOAD_ATTR nunique
+  388: CALL 0
+  388: CALL 1
+  388: LOAD_NAME int
+  388: PUSH_NULL
+  388: LOAD_NAME len
+  388: PUSH_NULL
+  388: LOAD_NAME rr
+  388: CALL 1
+  388: CALL 1
+  383: LOAD_CONST ('total', 'pull', 'over_low', 'over_none', 'nobill', 'pns', 'rows')
+  383: CALL_KW 7
+  383: LOAD_NAME rec
+  383: LOAD_CONST 'rep'
+  383: BINARY_OP 26
+  383: LOAD_CONST 'cy'
+  383: STORE_SUBSCR None
+  389: LOAD_NAME excfy
+  389: LOAD_NAME excfy
+  389: LOAD_ATTR distributor_code
+  389: LOAD_NAME db
+  389: COMPARE_OP ==
+  389: BINARY_OP 26
+  389: STORE_NAME rf
+  390: LOAD_NAME len
+  390: PUSH_NULL
+  390: LOAD_NAME rf
+  390: CALL 1
+  390: TO_BOOL
+  390: EXTENDED_ARG 1
+  390: POP_JUMP_IF_FALSE 16456
+  390: NOT_TAKEN
+  390: LOAD_NAME len
+  390: PUSH_NULL
+  390: LOAD_NAME excfy
+  390: LOAD_NAME excfy
+  390: LOAD_ATTR distributor_code
+  390: LOAD_NAME db
+  390: COMPARE_OP ==
+  390: BINARY_OP 26
+  390: LOAD_ATTR year_month
+  390: EXTENDED_ARG 1
+  390: LOAD_ATTR unique
+  390: CALL 0
+  390: GET_ITER
+  390: LOAD_FAST_AND_CLEAR m
+  390: SWAP 2
+  390: BUILD_SET 0
+  390: SWAP 2
+  390: FOR_ITER 15982
+  390: STORE_FAST_LOAD_FAST ('m', 'm')
+  390: SET_ADD 2
+  390: JUMP_BACKWARD 15970
+  390: END_FOR
+  390: POP_ITER
+  390: SWAP 2
+  390: STORE_FAST m
+  390: CALL 1
+  390: LOAD_NAME FYM_NEED
+  390: COMPARE_OP >=
+  390: POP_JUMP_IF_FALSE 16456
+  390: NOT_TAKEN
+  391: LOAD_NAME rf
+  391: LOAD_ATTR groupby
+  391: LOAD_CONST 'pipeline_signal'
+  391: CALL 1
+  391: EXTENDED_ARG 1
+  391: LOAD_ATTR bill_eur
+  391: LOAD_ATTR sum
+  391: CALL 0
+  391: STORE_NAME g
+  392: LOAD_NAME dict
+  392: PUSH_NULL
+  393: LOAD_NAME n
+  393: PUSH_NULL
+  393: LOAD_NAME g
+  393: LOAD_ATTR sum
+  393: CALL 0
+  393: CALL 1
+  393: LOAD_NAME n
+  393: PUSH_NULL
+  393: LOAD_NAME g
+  393: EXTENDED_ARG 1
+  393: LOAD_ATTR get
+  393: LOAD_CONST 'leakage_high_sellthrough'
+  393: LOAD_SMALL_INT 0
+  393: CALL 2
+  393: CALL 1
+  394: LOAD_NAME n
+  394: PUSH_NULL
+  394: LOAD_NAME g
+  394: EXTENDED_ARG 1
+  394: LOAD_ATTR get
+  394: LOAD_CONST 'overstock_low_sellthrough'
+  394: LOAD_SMALL_INT 0
+  394: CALL 2
+  394: CALL 1
+  395: LOAD_NAME n
+  395: PUSH_NULL
+  395: LOAD_NAME g
+  395: EXTENDED_ARG 1
+  395: LOAD_ATTR get
+  395: LOAD_CONST 'overstock_no_sellout'
+  395: LOAD_SMALL_INT 0
+  395: CALL 2
+  395: CALL 1
+  396: LOAD_NAME n
+  396: PUSH_NULL
+  396: LOAD_NAME g
+  396: EXTENDED_ARG 1
+  396: LOAD_ATTR get
+  396: LOAD_CONST 'leakage_no_bill'
+  396: LOAD_SMALL_INT 0
+  396: CALL 2
+  396: CALL 1
+  397: LOAD_NAME int
+  397: PUSH_NULL
+  397: LOAD_NAME rf
+  397: EXTENDED_ARG 1
+  397: LOAD_ATTR part_number
+  397: EXTENDED_ARG 1
+  397: LOAD_ATTR nunique
+  397: CALL 0
+  397: CALL 1
+  397: LOAD_NAME int
+  397: PUSH_NULL
+  397: LOAD_NAME len
+  397: PUSH_NULL
+  397: LOAD_NAME rf
+  397: CALL 1
+  397: CALL 1
+  392: LOAD_CONST ('total', 'pull', 'over_low', 'over_none', 'nobill', 'pns', 'rows')
+  392: CALL_KW 7
+  392: LOAD_NAME rec
+  392: LOAD_CONST 'rep'
+  392: BINARY_OP 26
+  392: LOAD_CONST 'fy'
+  392: STORE_SUBSCR None
+  399: LOAD_NAME db
+  399: LOAD_NAME m25
+  399: EXTENDED_ARG 1
+  399: LOAD_ATTR index
+  399: CONTAINS_OP 0
+  399: POP_JUMP_IF_FALSE 16548
+  399: NOT_TAKEN
+  399: LOAD_NAME float
+  399: PUSH_NULL
+  399: LOAD_NAME m25
+  399: EXTENDED_ARG 1
+  399: LOAD_ATTR loc
+  399: LOAD_NAME db
+  399: LOAD_CONST 'share'
+  399: BUILD_TUPLE 2
+  399: BINARY_OP 26
+  399: CALL 1
+  399: JUMP_FORWARD 16550
+  399: LOAD_CONST None
+  399: STORE_NAME ms
+  400: LOAD_CONST None
+  400: STORE_NAME mf
+  401: LOAD_NAME ms
+  401: POP_JUMP_IF_NONE 16720
+  401: NOT_TAKEN
+  401: LOAD_NAME db
+  401: LOAD_NAME mix_cy_calc
+  401: EXTENDED_ARG 1
+  401: LOAD_ATTR index
+  401: CONTAINS_OP 0
+  401: POP_JUMP_IF_FALSE 16720
+  401: NOT_TAKEN
+  401: LOAD_NAME db
+  401: LOAD_NAME mix_fy_calc
+  401: EXTENDED_ARG 1
+  401: LOAD_ATTR index
+  401: CONTAINS_OP 0
+  401: POP_JUMP_IF_FALSE 16720
+  401: NOT_TAKEN
+  402: LOAD_NAME ms
+  402: LOAD_NAME float
+  402: PUSH_NULL
+  402: LOAD_NAME mix_fy_calc
+  402: LOAD_NAME db
+  402: BINARY_OP 26
+  402: CALL 1
+  402: LOAD_NAME float
+  402: PUSH_NULL
+  402: LOAD_NAME mix_cy_calc
+  402: LOAD_NAME db
+  402: BINARY_OP 26
+  402: CALL 1
+  402: BINARY_OP 10
+  402: BINARY_OP 0
+  402: STORE_NAME mf
+  403: LOAD_NAME dict
+  403: PUSH_NULL
+  403: LOAD_NAME n
+  403: PUSH_NULL
+  403: LOAD_NAME ms
+  403: LOAD_SMALL_INT 1
+  403: CALL 2
+  403: LOAD_NAME n
+  403: PUSH_NULL
+  403: LOAD_NAME mf
+  403: LOAD_SMALL_INT 1
+  403: CALL 2
+  403: LOAD_CONST ('cy', 'fy')
+  403: CALL_KW 2
+  403: LOAD_NAME rec
+  403: LOAD_CONST 'mix'
+  403: STORE_SUBSCR None
+  405: LOAD_NAME db
+  405: LOAD_NAME a25
+  405: EXTENDED_ARG 1
+  405: LOAD_ATTR index
+  405: CONTAINS_OP 0
+  405: POP_JUMP_IF_FALSE 16974
+  405: NOT_TAKEN
+  404: LOAD_NAME dict
+  404: PUSH_NULL
+  404: LOAD_NAME n
+  404: PUSH_NULL
+  404: LOAD_NAME float
+  404: PUSH_NULL
+  404: LOAD_NAME a25
+  404: EXTENDED_ARG 1
+  404: LOAD_ATTR loc
+  404: LOAD_NAME db
+  404: LOAD_CONST 'high_risk_rev_pct'
+  404: BUILD_TUPLE 2
+  404: BINARY_OP 26
+  404: CALL 1
+  404: LOAD_SMALL_INT 100
+  404: BINARY_OP 5
+  404: LOAD_SMALL_INT 1
+  404: CALL 2
+  405: LOAD_NAME n
+  405: PUSH_NULL
+  405: LOAD_NAME float
+  405: PUSH_NULL
+  405: LOAD_NAME a25
+  405: EXTENDED_ARG 1
+  405: LOAD_ATTR loc
+  405: LOAD_NAME db
+  405: LOAD_CONST 'high_risk_rev_eur'
+  405: BUILD_TUPLE 2
+  405: BINARY_OP 26
+  405: CALL 1
+  405: CALL 1
+  404: LOAD_CONST ('pct', 'eur')
+  404: CALL_KW 2
+  404: JUMP_FORWARD 16976
+  405: LOAD_CONST None
+  404: LOAD_NAME rec
+  404: LOAD_CONST 'expo'
+  404: STORE_SUBSCR None
+  406: LOAD_NAME dict
+  406: PUSH_NULL
+  406: LOAD_NAME n
+  406: PUSH_NULL
+  406: LOAD_NAME spdb
+  406: EXTENDED_ARG 1
+  406: LOAD_ATTR get
+  406: LOAD_NAME db
+  406: LOAD_SMALL_INT 0
+  406: CALL 2
+  406: CALL 1
+  406: LOAD_NAME int
+  406: PUSH_NULL
+  406: LOAD_NAME npr
+  406: EXTENDED_ARG 1
+  406: LOAD_ATTR part_number
+  406: LOAD_ATTR isin
+  407: LOAD_NAME set
+  407: PUSH_NULL
+  407: LOAD_NAME sf
+  407: EXTENDED_ARG 1
+  407: LOAD_ATTR loc
+  407: LOAD_NAME sf
+  407: LOAD_ATTR db
+  407: LOAD_NAME db
+  407: COMPARE_OP ==
+  407: LOAD_CONST 'part_number'
+  407: BUILD_TUPLE 2
+  407: BINARY_OP 26
+  407: CALL 1
+  406: CALL 1
+  407: LOAD_ATTR sum
+  407: CALL 0
+  406: CALL 1
+  406: LOAD_CONST ('eur', 'pns')
+  406: CALL_KW 2
+  406: LOAD_NAME rec
+  406: LOAD_CONST 'np'
+  406: STORE_SUBSCR None
+  408: LOAD_NAME db
+  408: LOAD_NAME g25
+  408: EXTENDED_ARG 1
+  408: LOAD_ATTR index
+  408: CONTAINS_OP 0
+  408: POP_JUMP_IF_FALSE 17406
+  408: NOT_TAKEN
+  408: LOAD_NAME pd
+  408: LOAD_ATTR notna
+  408: PUSH_NULL
+  408: LOAD_NAME g25
+  408: EXTENDED_ARG 1
+  408: LOAD_ATTR loc
+  408: LOAD_NAME db
+  408: LOAD_CONST 'warranty_parts_eur'
+  408: BUILD_TUPLE 2
+  408: BINARY_OP 26
+  408: CALL 1
+  408: TO_BOOL
+  408: POP_JUMP_IF_FALSE 17406
+  408: NOT_TAKEN
+  408: LOAD_NAME float
+  408: PUSH_NULL
+  408: LOAD_NAME g25
+  408: EXTENDED_ARG 1
+  408: LOAD_ATTR loc
+  408: LOAD_NAME db
+  408: LOAD_CONST 'warranty_parts_eur'
+  408: BUILD_TUPLE 2
+  408: BINARY_OP 26
+  408: CALL 1
+  408: JUMP_FORWARD 17408
+  408: LOAD_CONST None
+  408: STORE_NAME wr
+  409: LOAD_NAME db
+  409: LOAD_NAME g25
+  409: EXTENDED_ARG 1
+  409: LOAD_ATTR index
+  409: CONTAINS_OP 0
+  409: POP_JUMP_IF_FALSE 17590
+  409: NOT_TAKEN
+  409: LOAD_NAME pd
+  409: LOAD_ATTR notna
+  409: PUSH_NULL
+  409: LOAD_NAME g25
+  409: EXTENDED_ARG 1
+  409: LOAD_ATTR loc
+  409: LOAD_NAME db
+  409: LOAD_CONST 'total_sales_eur'
+  409: BUILD_TUPLE 2
+  409: BINARY_OP 26
+  409: CALL 1
+  409: TO_BOOL
+  409: POP_JUMP_IF_FALSE 17590
+  409: NOT_TAKEN
+  409: LOAD_NAME float
+  409: PUSH_NULL
+  409: LOAD_NAME g25
+  409: EXTENDED_ARG 1
+  409: LOAD_ATTR loc
+  409: LOAD_NAME db
+  409: LOAD_CONST 'total_sales_eur'
+  409: BUILD_TUPLE 2
+  409: BINARY_OP 26
+  409: CALL 1
+  409: JUMP_FORWARD 17592
+  409: LOAD_CONST None
+  409: STORE_NAME bcy
+  410: LOAD_NAME db
+  410: LOAD_NAME bill_fy_all
+  410: EXTENDED_ARG 1
+  410: LOAD_ATTR index
+  410: CONTAINS_OP 0
+  410: POP_JUMP_IF_FALSE 17678
+  410: NOT_TAKEN
+  410: LOAD_NAME float
+  410: PUSH_NULL
+  410: LOAD_NAME bill_fy_all
+  410: EXTENDED_ARG 1
+  410: LOAD_ATTR get
+  410: LOAD_NAME db
+  410: CALL 1
+  410: CALL 1
+  410: JUMP_FORWARD 17680
+  410: LOAD_CONST None
+  410: STORE_NAME bfy
+  411: LOAD_NAME dict
+  411: PUSH_NULL
+  412: LOAD_NAME n
+  412: PUSH_NULL
+  412: LOAD_NAME bcy
+  412: CALL 1
+  412: LOAD_NAME bcy
+  412: POP_JUMP_IF_NONE 17746
+  412: NOT_TAKEN
+  412: LOAD_NAME wr
+  412: POP_JUMP_IF_NONE 17746
+  412: NOT_TAKEN
+  412: LOAD_NAME n
+  412: PUSH_NULL
+  412: LOAD_NAME bcy
+  412: LOAD_NAME wr
+  412: BINARY_OP 10
+  412: CALL 1
+  412: JUMP_FORWARD 17748
+  412: LOAD_CONST None
+  413: LOAD_NAME n
+  413: PUSH_NULL
+  413: LOAD_NAME bfy
+  413: CALL 1
+  413: LOAD_NAME bfy
+  413: POP_JUMP_IF_NONE 17808
+  413: NOT_TAKEN
+  413: LOAD_NAME wr
+  413: POP_JUMP_IF_NONE 17808
+  413: NOT_TAKEN
+  413: LOAD_NAME n
+  413: PUSH_NULL
+  413: LOAD_NAME bfy
+  413: LOAD_NAME wr
+  413: BINARY_OP 10
+  413: CALL 1
+  413: JUMP_FORWARD 17810
+  413: LOAD_CONST None
+  414: LOAD_NAME n
+  414: PUSH_NULL
+  414: LOAD_NAME wr
+  414: CALL 1
+  411: LOAD_CONST ('cy_inc', 'cy_exc', 'fy_inc', 'fy_exc', 'warr')
+  411: CALL_KW 5
+  411: LOAD_NAME rec
+  411: LOAD_CONST 'bill'
+  411: STORE_SUBSCR None
+  415: LOAD_NAME dbs
+  415: EXTENDED_ARG 1
+  415: LOAD_ATTR append
+  415: LOAD_NAME rec
+  415: CALL 1
+  415: POP_TOP
+  415: EXTENDED_ARG 14
+  415: JUMP_BACKWARD 10628
+  288: END_FOR
+  288: POP_ITER
+  417: LOAD_NAME dbs
+  417: EXTENDED_ARG 1
+  417: LOAD_ATTR sort
+  417: LOAD_CONST <code <lambda>@417>
+  417: MAKE_FUNCTION
+  417: LOAD_CONST ('key',)
+  417: CALL_KW 1
+  417: POP_TOP
+  420: LOAD_NAME dict
+  420: PUSH_NULL
+  421: LOAD_NAME n
+  421: PUSH_NULL
+  421: LOAD_NAME NETWORK
+  421: LOAD_CONST 'exp'
+  421: BINARY_OP 26
+  421: CALL 1
+  421: LOAD_NAME n
+  421: PUSH_NULL
+  421: LOAD_NAME NETWORK
+  421: LOAD_CONST 'act'
+  421: BINARY_OP 26
+  421: CALL 1
+  421: LOAD_NAME n
+  421: PUSH_NULL
+  421: LOAD_NAME NETWORK
+  421: LOAD_CONST 'gap'
+  421: BINARY_OP 26
+  421: CALL 1
+  422: LOAD_NAME n
+  422: PUSH_NULL
+  422: LOAD_NAME NETWORK
+  422: LOAD_CONST 'nb'
+  422: BINARY_OP 26
+  422: LOAD_SMALL_INT 1
+  422: CALL 2
+  422: LOAD_NAME n
+  422: PUSH_NULL
+  422: LOAD_NAME NETWORK
+  422: LOAD_CONST 'notbought'
+  422: BINARY_OP 26
+  422: CALL 1
+  422: LOAD_NAME n
+  422: PUSH_NULL
+  422: LOAD_NAME NETWORK
+  422: LOAD_CONST 'uio'
+  422: BINARY_OP 26
+  422: CALL 1
+  420: LOAD_CONST ('exp', 'act', 'gap', 'nb', 'notbought', 'uio')
+  420: CALL_KW 6
+  420: STORE_NAME NW
+  424: LOAD_NAME n
+  424: PUSH_NULL
+  424: LOAD_NAME sum
+  424: PUSH_NULL
+  424: LOAD_CONST <code <genexpr>@424>
+  424: MAKE_FUNCTION
+  424: LOAD_NAME dbs
+  424: GET_ITER
+  424: CALL 0
+  424: CALL 1
+  424: CALL 1
+  424: LOAD_NAME NW
+  424: LOAD_CONST 'rep_cy'
+  424: STORE_SUBSCR None
+  425: LOAD_NAME len
+  425: PUSH_NULL
+  425: LOAD_NAME dbs
+  425: GET_ITER
+  425: LOAD_FAST_AND_CLEAR r
+  425: SWAP 2
+  425: BUILD_LIST 0
+  425: SWAP 2
+  425: FOR_ITER 18238
+  425: STORE_FAST_LOAD_FAST ('r', 'r')
+  425: LOAD_CONST 'rep'
+  425: BINARY_OP 26
+  425: LOAD_CONST 'cy'
+  425: BINARY_OP 26
+  425: TO_BOOL
+  425: POP_JUMP_IF_TRUE 18230
+  425: NOT_TAKEN
+  425: JUMP_BACKWARD 18178
+  425: LOAD_FAST_BORROW r
+  425: LIST_APPEND 2
+  425: JUMP_BACKWARD 18178
+  425: END_FOR
+  425: POP_ITER
+  425: SWAP 2
+  425: STORE_FAST r
+  425: CALL 1
+  425: LOAD_NAME NW
+  425: LOAD_CONST 'rep_cy_dbs'
+  425: STORE_SUBSCR None
+  426: LOAD_NAME n
+  426: PUSH_NULL
+  426: LOAD_NAME sum
+  426: PUSH_NULL
+  426: LOAD_CONST <code <genexpr>@426>
+  426: MAKE_FUNCTION
+  426: LOAD_NAME dbs
+  426: GET_ITER
+  426: CALL 0
+  426: CALL 1
+  426: CALL 1
+  426: LOAD_NAME NW
+  426: LOAD_CONST 'rep_fy'
+  426: STORE_SUBSCR None
+  427: LOAD_NAME len
+  427: PUSH_NULL
+  427: LOAD_NAME dbs
+  427: GET_ITER
+  427: LOAD_FAST_AND_CLEAR r
+  427: SWAP 2
+  427: BUILD_LIST 0
+  427: SWAP 2
+  427: FOR_ITER 18386
+  427: STORE_FAST_LOAD_FAST ('r', 'r')
+  427: LOAD_CONST 'rep'
+  427: BINARY_OP 26
+  427: LOAD_CONST 'fy'
+  427: BINARY_OP 26
+  427: TO_BOOL
+  427: POP_JUMP_IF_TRUE 18378
+  427: NOT_TAKEN
+  427: JUMP_BACKWARD 18326
+  427: LOAD_FAST_BORROW r
+  427: LIST_APPEND 2
+  427: JUMP_BACKWARD 18326
+  427: END_FOR
+  427: POP_ITER
+  427: SWAP 2
+  427: STORE_FAST r
+  427: CALL 1
+  427: LOAD_NAME NW
+  427: LOAD_CONST 'rep_fy_dbs'
+  427: STORE_SUBSCR None
+  428: LOAD_NAME n
+  428: PUSH_NULL
+  428: LOAD_NAME sum
+  428: PUSH_NULL
+  428: LOAD_CONST <code <genexpr>@428>
+  428: MAKE_FUNCTION
+  428: LOAD_NAME dbs
+  428: GET_ITER
+  428: CALL 0
+  428: CALL 1
+  428: CALL 1
+  428: LOAD_NAME NW
+  428: LOAD_CONST 'pull_cy'
+  428: STORE_SUBSCR None
+  429: LOAD_NAME int
+  429: PUSH_NULL
+  429: LOAD_NAME rep
+  429: LOAD_NAME rep
+  429: LOAD_ATTR pipeline_signal
+  429: LOAD_CONST 'leakage_high_sellthrough'
+  429: COMPARE_OP ==
+  429: BINARY_OP 26
+  429: EXTENDED_ARG 1
+  429: LOAD_ATTR part_number
+  429: EXTENDED_ARG 1
+  429: LOAD_ATTR nunique
+  429: CALL 0
+  429: CALL 1
+  429: LOAD_NAME NW
+  429: LOAD_CONST 'pull_pn_cy'
+  429: STORE_SUBSCR None
+  430: LOAD_NAME int
+  430: PUSH_NULL
+  430: LOAD_NAME len
+  430: PUSH_NULL
+  430: LOAD_NAME rep
+  430: LOAD_NAME rep
+  430: LOAD_ATTR pipeline_signal
+  430: LOAD_CONST 'leakage_high_sellthrough'
+  430: COMPARE_OP ==
+  430: BINARY_OP 26
+  430: CALL 1
+  430: CALL 1
+  430: LOAD_NAME NW
+  430: EXTENDED_ARG 1
+  430: LOAD_CONST 'pull_pn_rows'
+  430: STORE_SUBSCR None
+  431: LOAD_NAME n
+  431: PUSH_NULL
+  431: LOAD_NAME sum
+  431: PUSH_NULL
+  431: EXTENDED_ARG 1
+  431: LOAD_CONST <code <genexpr>@431>
+  431: MAKE_FUNCTION
+  432: LOAD_NAME dbs
+  432: GET_ITER
+  431: CALL 0
+  431: CALL 1
+  431: CALL 1
+  431: LOAD_NAME NW
+  431: EXTENDED_ARG 1
+  431: LOAD_CONST 'over_cy'
+  431: STORE_SUBSCR None
+  433: LOAD_NAME int
+  433: PUSH_NULL
+  433: LOAD_NAME len
+  433: PUSH_NULL
+  433: LOAD_NAME rep
+  433: CALL 1
+  433: CALL 1
+  433: LOAD_NAME NW
+  433: EXTENDED_ARG 1
+  433: LOAD_CONST 'rep_rows_cy'
+  433: STORE_SUBSCR None
+  434: LOAD_NAME n
+  434: PUSH_NULL
+  434: LOAD_NAME sum
+  434: PUSH_NULL
+  434: EXTENDED_ARG 1
+  434: LOAD_CONST <code <genexpr>@434>
+  434: MAKE_FUNCTION
+  434: LOAD_NAME dbs
+  434: GET_ITER
+  434: CALL 0
+  434: CALL 1
+  434: CALL 1
+  434: LOAD_NAME NW
+  434: EXTENDED_ARG 1
+  434: LOAD_CONST 'billed_cy'
+  434: STORE_SUBSCR None
+  435: LOAD_NAME n
+  435: PUSH_NULL
+  435: LOAD_NAME sum
+  435: PUSH_NULL
+  435: EXTENDED_ARG 1
+  435: LOAD_CONST <code <genexpr>@435>
+  435: MAKE_FUNCTION
+  435: LOAD_NAME dbs
+  435: GET_ITER
+  435: CALL 0
+  435: CALL 1
+  435: CALL 1
+  435: LOAD_NAME NW
+  435: EXTENDED_ARG 1
+  435: LOAD_CONST 'billed_fy'
+  435: STORE_SUBSCR None
+  436: LOAD_NAME n
+  436: PUSH_NULL
+  436: LOAD_NAME sum
+  436: PUSH_NULL
+  436: EXTENDED_ARG 1
+  436: LOAD_CONST <code <genexpr>@436>
+  436: MAKE_FUNCTION
+  436: LOAD_NAME dbs
+  436: GET_ITER
+  436: CALL 0
+  436: CALL 1
+  436: CALL 1
+  436: LOAD_NAME NW
+  436: EXTENDED_ARG 1
+  436: LOAD_CONST 'warr'
+  436: STORE_SUBSCR None
+  437: LOAD_NAME n
+  437: PUSH_NULL
+  437: LOAD_NAME NW
+  437: EXTENDED_ARG 1
+  437: LOAD_CONST 'warr'
+  437: BINARY_OP 26
+  437: LOAD_NAME NW
+  437: EXTENDED_ARG 1
+  437: LOAD_CONST 'billed_cy'
+  437: BINARY_OP 26
+  437: BINARY_OP 11
+  437: LOAD_SMALL_INT 100
+  437: BINARY_OP 5
+  437: LOAD_SMALL_INT 1
+  437: CALL 2
+  437: LOAD_NAME NW
+  437: EXTENDED_ARG 1
+  437: LOAD_CONST 'warr_pct'
+  437: STORE_SUBSCR None
+  438: LOAD_NAME n
+  438: PUSH_NULL
+  438: LOAD_NAME sum
+  438: PUSH_NULL
+  438: EXTENDED_ARG 1
+  438: LOAD_CONST <code <genexpr>@438>
+  438: MAKE_FUNCTION
+  438: LOAD_NAME dbs
+  438: GET_ITER
+  438: CALL 0
+  438: CALL 1
+  438: CALL 1
+  438: LOAD_NAME NW
+  438: EXTENDED_ARG 1
+  438: LOAD_CONST 'dealer_cy'
+  438: STORE_SUBSCR None
+  439: LOAD_NAME len
+  439: PUSH_NULL
+  439: LOAD_NAME dbs
+  439: GET_ITER
+  439: LOAD_FAST_AND_CLEAR r
+  439: SWAP 2
+  439: BUILD_LIST 0
+  439: SWAP 2
+  439: FOR_ITER 19106
+  439: STORE_FAST_LOAD_FAST ('r', 'r')
+  439: LOAD_CONST 'dealer'
+  439: BINARY_OP 26
+  439: LOAD_CONST 'cy'
+  439: BINARY_OP 26
+  439: TO_BOOL
+  439: POP_JUMP_IF_TRUE 19098
+  439: NOT_TAKEN
+  439: JUMP_BACKWARD 19046
+  439: LOAD_FAST_BORROW r
+  439: LIST_APPEND 2
+  439: JUMP_BACKWARD 19046
+  439: END_FOR
+  439: POP_ITER
+  439: SWAP 2
+  439: STORE_FAST r
+  439: CALL 1
+  439: LOAD_NAME NW
+  439: EXTENDED_ARG 1
+  439: LOAD_CONST 'dealer_dbs'
+  439: STORE_SUBSCR None
+  440: LOAD_NAME n
+  440: PUSH_NULL
+  440: LOAD_NAME NPR_TOTAL
+  440: CALL 1
+  440: LOAD_NAME NW
+  440: LOAD_CONST 'np'
+  440: STORE_SUBSCR None
+  441: LOAD_NAME int
+  441: PUSH_NULL
+  441: LOAD_NAME npr
+  441: EXTENDED_ARG 1
+  441: LOAD_ATTR part_number
+  441: EXTENDED_ARG 1
+  441: LOAD_ATTR nunique
+  441: CALL 0
+  441: CALL 1
+  441: LOAD_NAME NW
+  441: EXTENDED_ARG 1
+  441: LOAD_CONST 'np_pns'
+  441: STORE_SUBSCR None
+  442: LOAD_NAME n
+  442: PUSH_NULL
+  442: LOAD_NAME LUBE_EUR
+  442: CALL 1
+  442: LOAD_NAME NW
+  442: EXTENDED_ARG 1
+  442: LOAD_CONST 'np_lube'
+  442: STORE_SUBSCR None
+  443: LOAD_NAME n
+  443: PUSH_NULL
+  443: LOAD_NAME LUBE_EUR
+  443: LOAD_NAME NPR_TOTAL
+  443: BINARY_OP 11
+  443: LOAD_SMALL_INT 100
+  443: BINARY_OP 5
+  443: LOAD_SMALL_INT 1
+  443: CALL 2
+  443: LOAD_NAME NW
+  443: EXTENDED_ARG 1
+  443: LOAD_CONST 'np_lube_pct'
+  443: STORE_SUBSCR None
+  444: LOAD_NAME n
+  444: PUSH_NULL
+  444: LOAD_NAME float
+  444: PUSH_NULL
+  444: LOAD_NAME npr
+  444: EXTENDED_ARG 1
+  444: LOAD_ATTR cy2025_eur
+  444: LOAD_ATTR max
+  444: CALL 0
+  444: CALL 1
+  444: CALL 1
+  444: LOAD_NAME NW
+  444: EXTENDED_ARG 1
+  444: LOAD_CONST 'np_top'
+  444: STORE_SUBSCR None
+  445: LOAD_NAME n
+  445: PUSH_NULL
+  445: LOAD_NAME float
+  445: PUSH_NULL
+  445: LOAD_NAME npr
+  445: EXTENDED_ARG 1
+  445: LOAD_ATTR cy2025_eur
+  445: LOAD_ATTR max
+  445: CALL 0
+  445: CALL 1
+  445: LOAD_NAME NPR_TOTAL
+  445: BINARY_OP 11
+  445: LOAD_SMALL_INT 100
+  445: BINARY_OP 5
+  445: LOAD_SMALL_INT 1
+  445: CALL 2
+  445: LOAD_NAME NW
+  445: EXTENDED_ARG 1
+  445: LOAD_CONST 'np_top_pct'
+  445: STORE_SUBSCR None
+  446: LOAD_NAME n
+  446: PUSH_NULL
+  446: LOAD_NAME max
+  446: PUSH_NULL
+  446: EXTENDED_ARG 1
+  446: LOAD_CONST <code <genexpr>@446>
+  446: MAKE_FUNCTION
+  446: LOAD_NAME dbs
+  446: GET_ITER
+  446: CALL 0
+  446: LOAD_SMALL_INT 0
+  446: EXTENDED_ARG 1
+  446: LOAD_CONST ('default',)
+  446: CALL_KW 2
+  446: LOAD_SMALL_INT 1
+  446: CALL 2
+  446: LOAD_NAME NW
+  446: EXTENDED_ARG 1
+  446: LOAD_CONST 'expo_max'
+  446: STORE_SUBSCR None
+  447: LOAD_NAME max
+  447: PUSH_NULL
+  447: EXTENDED_ARG 1
+  447: LOAD_CONST <code <genexpr>@447>
+  447: MAKE_FUNCTION
+  447: LOAD_NAME dbs
+  447: GET_ITER
+  447: CALL 0
+  447: EXTENDED_ARG 1
+  447: LOAD_CONST <code <lambda>@447>
+  447: MAKE_FUNCTION
+  447: LOAD_CONST ('key',)
+  447: CALL_KW 2
+  447: LOAD_CONST 'db'
+  447: BINARY_OP 26
+  447: LOAD_NAME NW
+  447: EXTENDED_ARG 1
+  447: LOAD_CONST 'expo_max_db'
+  447: STORE_SUBSCR None
+  448: LOAD_NAME max
+  448: PUSH_NULL
+  448: EXTENDED_ARG 1
+  448: LOAD_CONST <code <genexpr>@448>
+  448: MAKE_FUNCTION
+  448: LOAD_NAME dbs
+  448: GET_ITER
+  448: CALL 0
+  448: EXTENDED_ARG 1
+  448: LOAD_CONST <code <lambda>@448>
+  448: MAKE_FUNCTION
+  448: LOAD_CONST ('key',)
+  448: CALL_KW 2
+  448: LOAD_CONST 'db'
+  448: BINARY_OP 26
+  448: LOAD_NAME NW
+  448: EXTENDED_ARG 1
+  448: LOAD_CONST 'mix_worst'
+  448: STORE_SUBSCR None
+  449: LOAD_NAME max
+  449: PUSH_NULL
+  449: EXTENDED_ARG 1
+  449: LOAD_CONST <code <genexpr>@449>
+  449: MAKE_FUNCTION
+  449: LOAD_NAME dbs
+  449: GET_ITER
+  449: CALL 0
+  449: CALL 1
+  449: LOAD_NAME NW
+  449: EXTENDED_ARG 1
+  449: LOAD_CONST 'mix_worst_v'
+  449: STORE_SUBSCR None
+  450: LOAD_NAME n
+  450: PUSH_NULL
+  450: LOAD_NAME NW
+  450: EXTENDED_ARG 1
+  450: LOAD_CONST 'billed_cy'
+  450: BINARY_OP 26
+  450: LOAD_NAME sum
+  450: PUSH_NULL
+  450: EXTENDED_ARG 1
+  450: LOAD_CONST <code <genexpr>@450>
+  450: MAKE_FUNCTION
+  450: LOAD_NAME dbs
+  450: GET_ITER
+  450: CALL 0
+  450: CALL 1
+  450: BINARY_OP 11
+  450: CALL 1
+  450: LOAD_NAME NW
+  450: EXTENDED_ARG 1
+  450: LOAD_CONST 'spu'
+  450: STORE_SUBSCR None
+  451: LOAD_NAME n
+  451: PUSH_NULL
+  451: LOAD_NAME sum
+  451: PUSH_NULL
+  451: EXTENDED_ARG 1
+  451: LOAD_CONST <code <genexpr>@451>
+  451: MAKE_FUNCTION
+  451: LOAD_NAME dbs
+  451: GET_ITER
+  451: CALL 0
+  451: CALL 1
+  451: CALL 1
+  451: LOAD_NAME NW
+  451: EXTENDED_ARG 1
+  451: LOAD_CONST 'iuk_de'
+  451: STORE_SUBSCR None
+  452: LOAD_NAME n
+  452: PUSH_NULL
+  452: LOAD_NAME NW
+  452: EXTENDED_ARG 1
+  452: LOAD_CONST 'iuk_de'
+  452: BINARY_OP 26
+  452: LOAD_NAME NW
+  452: LOAD_CONST 'gap'
+  452: BINARY_OP 26
+  452: BINARY_OP 11
+  452: LOAD_SMALL_INT 100
+  452: BINARY_OP 5
+  452: LOAD_SMALL_INT 1
+  452: CALL 2
+  452: LOAD_NAME NW
+  452: EXTENDED_ARG 1
+  452: LOAD_CONST 'iuk_de_pct'
+  452: STORE_SUBSCR None
+  455: LOAD_NAME next
+  455: PUSH_NULL
+  455: EXTENDED_ARG 1
+  455: LOAD_CONST <code <genexpr>@455>
+  455: MAKE_FUNCTION
+  455: LOAD_NAME dbs
+  455: GET_ITER
+  455: CALL 0
+  455: CALL 1
+  455: STORE_NAME iuk
+  456: LOAD_NAME fam
+  456: LOAD_NAME fam
+  456: LOAD_ATTR distributor_code
+  456: LOAD_CONST 'IUK'
+  456: COMPARE_OP ==
+  456: BINARY_OP 26
+  456: STORE_NAME iuk_fam
+  457: LOAD_NAME KM
+  457: LOAD_CONST 'IUK'
+  457: BINARY_OP 26
+  457: EXTENDED_ARG 1
+  457: LOAD_CONST 'km'
+  457: BINARY_OP 26
+  457: LOAD_NAME KM_MODEL
+  457: BINARY_OP 11
+  457: STORE_NAME scale
+  458: LOAD_NAME float
+  458: PUSH_NULL
+  458: LOAD_NAME iuk_fam
+  458: LOAD_ATTR exp
+  458: LOAD_ATTR sum
+  458: CALL 0
+  458: CALL 1
+  458: LOAD_NAME scale
+  458: BINARY_OP 5
+  458: STORE_NAME iuk_adj_exp
+  459: LOAD_NAME float
+  459: PUSH_NULL
+  459: LOAD_NAME iuk_fam
+  459: LOAD_ATTR act
+  459: LOAD_ATTR sum
+  459: CALL 0
+  459: CALL 1
+  459: STORE_NAME iuk_act
+  460: LOAD_NAME float
+  460: PUSH_NULL
+  460: LOAD_NAME iuk_fam
+  460: LOAD_ATTR gap
+  460: LOAD_ATTR sum
+  460: CALL 0
+  460: CALL 1
+  460: LOAD_NAME float
+  460: PUSH_NULL
+  460: LOAD_NAME iuk_fam
+  460: LOAD_ATTR exp
+  460: LOAD_ATTR sum
+  460: CALL 0
+  460: CALL 1
+  460: LOAD_NAME iuk_act
+  460: BINARY_OP 10
+  460: BINARY_OP 11
+  460: EXTENDED_ARG 1
+  460: STORE_NAME iuk_sp
+  461: LOAD_NAME dict
+  461: PUSH_NULL
+  462: LOAD_NAME n
+  462: PUSH_NULL
+  462: LOAD_NAME scale
+  462: LOAD_SMALL_INT 3
+  462: CALL 2
+  463: LOAD_NAME n
+  463: PUSH_NULL
+  463: LOAD_NAME iuk_adj_exp
+  463: CALL 1
+  463: LOAD_NAME n
+  463: PUSH_NULL
+  463: LOAD_NAME iuk_act
+  463: CALL 1
+  464: LOAD_NAME n
+  464: PUSH_NULL
+  464: LOAD_NAME max
+  464: PUSH_NULL
+  464: LOAD_NAME iuk_adj_exp
+  464: LOAD_NAME iuk_act
+  464: BINARY_OP 10
+  464: LOAD_SMALL_INT 0
+  464: CALL 2
+  464: EXTENDED_ARG 1
+  464: LOAD_NAME iuk_sp
+  464: BINARY_OP 5
+  464: CALL 1
+  465: LOAD_NAME n
+  465: PUSH_NULL
+  465: LOAD_NAME iuk_act
+  465: LOAD_NAME iuk_adj_exp
+  465: BINARY_OP 11
+  465: LOAD_SMALL_INT 100
+  465: BINARY_OP 5
+  465: LOAD_SMALL_INT 1
+  465: CALL 2
+  466: LOAD_NAME n
+  466: PUSH_NULL
+  466: LOAD_NAME iuk_adj_exp
+  466: LOAD_NAME iuk_act
+  466: BINARY_OP 10
+  466: LOAD_NAME iuk_adj_exp
+  466: BINARY_OP 11
+  466: LOAD_SMALL_INT 100
+  466: BINARY_OP 5
+  466: LOAD_SMALL_INT 1
+  466: CALL 2
+  467: LOAD_NAME n
+  467: PUSH_NULL
+  467: LOAD_NAME float
+  467: PUSH_NULL
+  467: LOAD_NAME iuk_fam
+  467: LOAD_ATTR gap
+  467: LOAD_ATTR sum
+  467: CALL 0
+  467: CALL 1
+  467: CALL 1
+  467: LOAD_NAME n
+  467: PUSH_NULL
+  467: LOAD_NAME iuk_act
+  467: LOAD_NAME float
+  467: PUSH_NULL
+  467: LOAD_NAME iuk_fam
+  467: LOAD_ATTR exp
+  467: LOAD_ATTR sum
+  467: CALL 0
+  467: CALL 1
+  467: BINARY_OP 11
+  467: LOAD_SMALL_INT 100
+  467: BINARY_OP 5
+  467: LOAD_SMALL_INT 1
+  467: CALL 2
+  468: LOAD_NAME n
+  468: PUSH_NULL
+  468: LOAD_SMALL_INT 1
+  468: LOAD_NAME max
+  468: PUSH_NULL
+  468: LOAD_NAME iuk_adj_exp
+  468: LOAD_NAME iuk_act
+  468: BINARY_OP 10
+  468: LOAD_SMALL_INT 0
+  468: CALL 2
+  468: EXTENDED_ARG 1
+  468: LOAD_NAME iuk_sp
+  468: BINARY_OP 5
+  468: LOAD_NAME float
+  468: PUSH_NULL
+  468: LOAD_NAME iuk_fam
+  468: LOAD_ATTR gap
+  468: LOAD_ATTR sum
+  468: CALL 0
+  468: CALL 1
+  468: BINARY_OP 11
+  468: BINARY_OP 10
+  468: LOAD_SMALL_INT 3
+  468: CALL 2
+  469: LOAD_NAME KM
+  469: LOAD_CONST 'IUK'
+  469: BINARY_OP 26
+  469: EXTENDED_ARG 1
+  469: LOAD_CONST 'km'
+  469: BINARY_OP 26
+  469: LOAD_NAME KM_MODEL
+  461: EXTENDED_ARG 1
+  461: LOAD_CONST ('scale', 'exp', 'act', 'gap', 'cap', 'nb', 'gap_now', 'cap_now', 'cut', 'km', 'km_model...[90]
+  461: CALL_KW 11
+  461: EXTENDED_ARG 1
+  461: STORE_NAME IUK_ADJ
+  471: LOAD_NAME print
+  471: PUSH_NULL
+  471: EXTENDED_ARG 1
+  471: LOAD_CONST '  IUK mileage correction:'
+  471: EXTENDED_ARG 1
+  471: LOAD_NAME IUK_ADJ
+  471: LOAD_CONST True
+  471: LOAD_CONST ('flush',)
+  471: CALL_KW 3
+  471: POP_TOP
+  474: LOAD_NAME npr
+  474: LOAD_ATTR sort_values
+  474: LOAD_CONST 'cy2025_eur'
+  474: LOAD_CONST False
+  474: LOAD_CONST ('ascending',)
+  474: CALL_KW 2
+  474: EXTENDED_ARG 1
+  474: STORE_NAME npr_sorted
+  477: EXTENDED_ARG 1
+  477: LOAD_NAME npr_sorted
+  477: EXTENDED_ARG 1
+  477: LOAD_ATTR iterrows
+  477: CALL 0
+  477: GET_ITER
+  475: LOAD_FAST_AND_CLEAR _
+  475: LOAD_FAST_AND_CLEAR r
+  475: SWAP 3
+  475: BUILD_LIST 0
+  475: SWAP 2
+  477: FOR_ITER 21350
+  477: UNPACK_SEQUENCE 2
+  477: STORE_FAST_STORE_FAST ('_', 'r')
+  475: LOAD_NAME dict
+  475: PUSH_NULL
+  475: LOAD_NAME int
+  475: PUSH_NULL
+  475: LOAD_FAST_BORROW r
+  475: EXTENDED_ARG 1
+  475: LOAD_CONST 'rank'
+  475: BINARY_OP 26
+  475: CALL 1
+  475: LOAD_NAME str
+  475: PUSH_NULL
+  475: LOAD_FAST_BORROW r
+  475: EXTENDED_ARG 1
+  475: LOAD_ATTR part_number
+  475: CALL 1
+  475: LOAD_NAME str
+  475: PUSH_NULL
+  475: LOAD_FAST_BORROW r
+  475: EXTENDED_ARG 1
+  475: LOAD_ATTR description
+  475: CALL 1
+  476: LOAD_NAME n
+  476: PUSH_NULL
+  476: LOAD_FAST_BORROW r
+  476: EXTENDED_ARG 1
+  476: LOAD_ATTR cy2025_eur
+  476: CALL 1
+  476: LOAD_NAME str
+  476: PUSH_NULL
+  476: LOAD_FAST_BORROW r
+  476: EXTENDED_ARG 2
+  476: LOAD_ATTR gap_reason
+  476: CALL 1
+  476: EXTENDED_ARG 2
+  476: LOAD_ATTR replace
+  476: EXTENDED_ARG 1
+  476: LOAD_CONST '_'
+  476: EXTENDED_ARG 1
+  476: LOAD_CONST ' '
+  476: CALL 2
+  477: EXTENDED_ARG 1
+  477: LOAD_NAME bool
+  477: PUSH_NULL
+  477: LOAD_FAST_BORROW r
+  477: EXTENDED_ARG 1
+  477: LOAD_ATTR is_lube
+  477: CALL 1
+  475: EXTENDED_ARG 1
+  475: LOAD_CONST ('rank', 'pn', 'desc', 'eur', 'reason', 'lube')
+  475: CALL_KW 6
+  475: LIST_APPEND 2
+  475: JUMP_BACKWARD 21068
+  477: END_FOR
+  477: POP_ITER
+  475: SWAP 3
+  475: STORE_FAST r
+  475: STORE_FAST _
+  475: EXTENDED_ARG 1
+  475: STORE_NAME NPLIST
+  479: LOAD_NAME dict
+  479: PUSH_NULL
+  480: LOAD_NAME dict
+  480: PUSH_NULL
+  480: LOAD_NAME SNAPSHOT
+  480: LOAD_NAME date
+  480: EXTENDED_ARG 2
+  480: LOAD_ATTR today
+  480: PUSH_NULL
+  480: CALL 0
+  480: EXTENDED_ARG 2
+  480: LOAD_ATTR isoformat
+  480: CALL 0
+  481: EXTENDED_ARG 1
+  481: LOAD_NAME list
+  481: PUSH_NULL
+  481: LOAD_NAME CY
+  481: CALL 1
+  481: EXTENDED_ARG 1
+  481: LOAD_NAME list
+  481: PUSH_NULL
+  481: LOAD_NAME FY
+  481: CALL 1
+  481: LOAD_NAME KM_MODEL
+  482: LOAD_NAME len
+  482: PUSH_NULL
+  482: LOAD_NAME dbs
+  482: CALL 1
+  482: LOAD_NAME int
+  482: PUSH_NULL
+  482: LOAD_NAME len
+  482: PUSH_NULL
+  482: LOAD_NAME demand
+  482: CALL 1
+  482: CALL 1
+  482: EXTENDED_ARG 1
+  482: LOAD_CONST 'CY2025'
+  480: EXTENDED_ARG 1
+  480: LOAD_CONST ('snapshot', 'built', 'cy', 'fy', 'km_model', 'n_dbs', 'n_fleet_dbs', 'anchor')
+  480: CALL_KW 8
+  483: LOAD_NAME NW
+  483: LOAD_NAME dbs
+  483: EXTENDED_ARG 1
+  483: LOAD_NAME NPLIST
+  484: LOAD_NAME GROUP_ORDER
+  479: EXTENDED_ARG 1
+  479: LOAD_CONST ('meta', 'nw', 'dbs', 'noprice', 'groups')
+  479: CALL_KW 5
+  479: EXTENDED_ARG 1
+  479: STORE_NAME PAYLOAD
+  486: LOAD_NAME print
+  486: PUSH_NULL
+  486: EXTENDED_ARG 1
+  486: LOAD_CONST 'payload dbs:'
+  486: LOAD_NAME len
+  486: PUSH_NULL
+  486: LOAD_NAME dbs
+  486: CALL 1
+  486: EXTENDED_ARG 1
+  486: LOAD_CONST '| fam rows/IUK:'
+  486: LOAD_NAME len
+  486: PUSH_NULL
+  486: LOAD_NAME iuk_fam
+  486: CALL 1
+  486: LOAD_CONST True
+  486: LOAD_CONST ('flush',)
+  486: CALL_KW 5
+  486: POP_TOP
+  490: EXTENDED_ARG 1
+  490: LOAD_CONST <code esc@490>
+  490: MAKE_FUNCTION
+  490: EXTENDED_ARG 1
+  490: STORE_NAME esc
+  494: EXTENDED_ARG 1
+  494: LOAD_CONST '€'
+  494: EXTENDED_ARG 1
+  494: STORE_NAME E
+  497: EXTENDED_ARG 1
+  497: LOAD_CONST <code eur_py@497>
+  497: MAKE_FUNCTION
+  497: EXTENDED_ARG 1
+  497: STORE_NAME eur_py
+  508: EXTENDED_ARG 1
+  508: LOAD_CONST <code num_py@508>
+  508: MAKE_FUNCTION
+  508: EXTENDED_ARG 1
+  508: STORE_NAME num_py
+  512: EXTENDED_ARG 1
+  512: LOAD_CONST ('',)
+  512: EXTENDED_ARG 1
+  512: LOAD_CONST <code one_py@512>
+  512: MAKE_FUNCTION
+  512: SET_FUNCTION_ATTRIBUTE 1
+  512: EXTENDED_ARG 1
+  512: STORE_NAME one_py
+  516: EXTENDED_ARG 1
+  516: LOAD_CONST <code tip_py@516>
+  516: MAKE_FUNCTION
+  516: EXTENDED_ARG 1
+  516: STORE_NAME tip_py
+  524: EXTENDED_ARG 1
+  524: LOAD_CONST 'Period CY2025 (Jan&ndash;Dec) &middot; Direction ISZE &rarr; DB &middot; Warranty inclu...[92]
+  524: EXTENDED_ARG 1
+  524: STORE_NAME CY_S
+  525: EXTENDED_ARG 1
+  525: LOAD_CONST <code <lambda>@525>
+  525: MAKE_FUNCTION
+  525: EXTENDED_ARG 1
+  525: STORE_NAME tipg
+  527: BUILD_LIST 0
+  527: EXTENDED_ARG 1
+  527: STORE_NAME h
+  528: EXTENDED_ARG 1
+  528: LOAD_NAME h
+  528: EXTENDED_ARG 1
+  528: LOAD_ATTR append
+  528: EXTENDED_ARG 1
+  528: LOAD_CONST '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">\n<meta name="viewport" cont...[7382]
+  528: CALL 1
+  528: POP_TOP
+  645: EXTENDED_ARG 1
+  645: LOAD_NAME h
+  645: EXTENDED_ARG 1
+  645: LOAD_ATTR append
+  645: EXTENDED_ARG 1
+  645: LOAD_CONST '<div class="hero"><div class="in">\n<div class="kick">ISZE &middot; aftersales &middot;...[525]
+  653: EXTENDED_ARG 1
+  653: LOAD_NAME eur_py
+  653: PUSH_NULL
+  653: LOAD_NAME NW
+  653: LOAD_CONST 'gap'
+  653: BINARY_OP 26
+  653: CALL 1
+  653: FORMAT_SIMPLE
+  653: EXTENDED_ARG 1
+  653: LOAD_CONST '</div>\n<div class="l">uncaptured service value, '
+  654: LOAD_NAME len
+  654: PUSH_NULL
+  654: LOAD_NAME dbs
+  654: CALL 1
+  654: FORMAT_SIMPLE
+  654: EXTENDED_ARG 1
+  654: LOAD_CONST ' distributors</div></div>\n<div class="hstat"><div class="v" id="hero-nb">'
+  655: EXTENDED_ARG 1
+  655: LOAD_NAME one_py
+  655: PUSH_NULL
+  655: LOAD_NAME NW
+  655: LOAD_CONST 'nb'
+  655: BINARY_OP 26
+  655: EXTENDED_ARG 1
+  655: LOAD_CONST '%'
+  655: CALL 2
+  655: FORMAT_SIMPLE
+  655: EXTENDED_ARG 1
+  655: LOAD_CONST '</div>\n<div class="l">of expected service demand never bought</div></div>\n<div class=...[126]
+  657: EXTENDED_ARG 1
+  657: LOAD_NAME one_py
+  657: PUSH_NULL
+  657: LOAD_NAME NW
+  657: LOAD_CONST 'act'
+  657: BINARY_OP 26
+  657: LOAD_NAME NW
+  657: LOAD_CONST 'exp'
+  657: BINARY_OP 26
+  657: BINARY_OP 11
+  657: LOAD_SMALL_INT 100
+  657: BINARY_OP 5
+  657: EXTENDED_ARG 1
+  657: LOAD_CONST '%'
+  657: CALL 2
+  657: FORMAT_SIMPLE
+  657: EXTENDED_ARG 1
+  657: LOAD_CONST '</div>\n<div class="l">average capture of expected demand</div></div>\n<div class="hsta...[124]
+  659: EXTENDED_ARG 1
+  659: LOAD_NAME eur_py
+  659: PUSH_NULL
+  659: LOAD_NAME NW
+  659: EXTENDED_ARG 1
+  659: LOAD_CONST 'billed_cy'
+  659: BINARY_OP 26
+  659: CALL 1
+  659: FORMAT_SIMPLE
+  659: EXTENDED_ARG 1
+  659: LOAD_CONST '</div>\n<div class="l">parts billed, warranty included</div></div>\n<div class="hstat">...[118]
+  661: EXTENDED_ARG 1
+  661: LOAD_NAME eur_py
+  661: PUSH_NULL
+  661: LOAD_NAME NW
+  661: LOAD_CONST 'rep_cy'
+  661: BINARY_OP 26
+  661: CALL 1
+  661: FORMAT_SIMPLE
+  661: EXTENDED_ARG 1
+  661: LOAD_CONST '</div>\n<div class="l">stock sitting with '
+  662: LOAD_NAME NW
+  662: LOAD_CONST 'rep_cy_dbs'
+  662: BINARY_OP 26
+  662: FORMAT_SIMPLE
+  662: EXTENDED_ARG 1
+  662: LOAD_CONST ' distributors</div></div>\n</div>\n<p class="small" style="color:#aeb9cf;margin-top:.7r...[148]
+  665: EXTENDED_ARG 1
+  665: LOAD_NAME num_py
+  665: PUSH_NULL
+  665: LOAD_NAME NW
+  665: LOAD_CONST 'exp'
+  665: BINARY_OP 26
+  665: CALL 1
+  665: FORMAT_SIMPLE
+  665: EXTENDED_ARG 1
+  665: LOAD_CONST ' service-part units across '
+  665: LOAD_NAME len
+  665: PUSH_NULL
+  665: LOAD_NAME FAMNET
+  665: CALL 1
+  665: FORMAT_SIMPLE
+  665: EXTENDED_ARG 1
+  665: LOAD_CONST ' filter, brake and clutch\nfamilies on '
+  666: EXTENDED_ARG 1
+  666: LOAD_NAME num_py
+  666: PUSH_NULL
+  666: LOAD_NAME NW
+  666: LOAD_CONST 'uio'
+  666: BINARY_OP 26
+  666: CALL 1
+  666: FORMAT_SIMPLE
+  666: EXTENDED_ARG 1
+  666: LOAD_CONST ' vehicles in service, and '
+  666: EXTENDED_ARG 1
+  666: LOAD_NAME num_py
+  666: PUSH_NULL
+  666: LOAD_NAME NW
+  666: LOAD_CONST 'notbought'
+  666: BINARY_OP 26
+  666: CALL 1
+  666: FORMAT_SIMPLE
+  666: EXTENDED_ARG 1
+  666: LOAD_CONST ' were not bought in\nany form &mdash; genuine or Competitive. The euro is the finding: ...[89]
+  667: EXTENDED_ARG 1
+  667: LOAD_NAME eur_py
+  667: PUSH_NULL
+  667: LOAD_NAME NW
+  667: LOAD_CONST 'gap'
+  667: BINARY_OP 26
+  667: CALL 1
+  667: FORMAT_SIMPLE
+  667: EXTENDED_ARG 1
+  667: LOAD_CONST '.</p>\n</div></div>'
+  645: BUILD_STRING 25
+  645: CALL 1
+  645: POP_TOP
+  670: EXTENDED_ARG 1
+  670: LOAD_NAME h
+  670: EXTENDED_ARG 1
+  670: LOAD_ATTR append
+  670: EXTENDED_ARG 1
+  670: LOAD_CONST '<div class="wrap">'
+  670: CALL 1
+  670: POP_TOP
+  673: EXTENDED_ARG 1
+  673: LOAD_NAME h
+  673: EXTENDED_ARG 1
+  673: LOAD_ATTR append
+  673: EXTENDED_ARG 1
+  673: LOAD_CONST '<div class="tgl">\n<div class="grp"><span class="gl">Period</span>\n<button class="on" ...[618]
+  673: CALL 1
+  673: POP_TOP
+  687: EXTENDED_ARG 1
+  687: LOAD_NAME h
+  687: EXTENDED_ARG 1
+  687: LOAD_ATTR append
+  687: EXTENDED_ARG 1
+  687: LOAD_CONST '<section><div class="shead">\n<h2>The distributor leak league</h2>\n<p>One row per dist...[172]
+  690: LOAD_NAME len
+  690: PUSH_NULL
+  690: LOAD_NAME dbs
+  690: CALL 1
+  690: FORMAT_SIMPLE
+  690: EXTENDED_ARG 1
+  690: LOAD_CONST ' distributors bill parts; '
+  690: LOAD_NAME int
+  690: PUSH_NULL
+  690: LOAD_NAME len
+  690: PUSH_NULL
+  690: LOAD_NAME demand
+  690: CALL 1
+  690: CALL 1
+  690: FORMAT_SIMPLE
+  690: EXTENDED_ARG 1
+  690: LOAD_CONST ' have a modelled fleet base, so the four CIS\nmarkets carry a Competitive-parts and pri...[155]
+  687: BUILD_STRING 5
+  687: CALL 1
+  687: POP_TOP
+  695: EXTENDED_ARG 1
+  695: LOAD_NAME h
+  695: EXTENDED_ARG 1
+  695: LOAD_ATTR append
+  695: EXTENDED_ARG 1
+  695: LOAD_CONST '<div class="chart" id="c1">\n<h3>Where does the uncaptured service value sit, and in wh...[568]
+  695: CALL 1
+  695: POP_TOP
+  707: EXTENDED_ARG 1
+  707: LOAD_NAME h
+  707: EXTENDED_ARG 1
+  707: LOAD_ATTR append
+  707: EXTENDED_ARG 1
+  707: LOAD_CONST '<div class="scroll" style="margin-top:.9rem"><table id="league"><thead><tr>\n<th>Distri...[856]
+  707: CALL 1
+  707: POP_TOP
+  721: EXTENDED_ARG 1
+  721: LOAD_NAME h
+  721: EXTENDED_ARG 1
+  721: LOAD_ATTR append
+  721: EXTENDED_ARG 1
+  721: LOAD_CONST '<section><div class="shead">\n<h2>Leak 2 &mdash; parts billed that never reached a deal...[1087]
+  735: EXTENDED_ARG 1
+  735: LOAD_NAME eur_py
+  735: PUSH_NULL
+  735: LOAD_NAME NW
+  735: LOAD_CONST 'pull_cy'
+  735: BINARY_OP 26
+  735: CALL 1
+  735: FORMAT_SIMPLE
+  735: EXTENDED_ARG 1
+  735: LOAD_CONST ' across\n'
+  736: LOAD_NAME NW
+  736: LOAD_CONST 'pull_pn_cy'
+  736: BINARY_OP 26
+  736: FORMAT_SIMPLE
+  736: EXTENDED_ARG 1
+  736: LOAD_CONST ' part numbers is selling through to dealers faster than the distributor reorders.\n'
+  737: EXTENDED_ARG 1
+  737: LOAD_NAME eur_py
+  737: PUSH_NULL
+  737: LOAD_NAME NW
+  737: EXTENDED_ARG 1
+  737: LOAD_CONST 'over_cy'
+  737: BINARY_OP 26
+  737: CALL 1
+  737: FORMAT_SIMPLE
+  737: EXTENDED_ARG 1
+  737: LOAD_CONST ' is genuinely sitting as overstock. A further 377 part numbers show dealer\ndemand with...[184]
+  721: BUILD_STRING 7
+  721: CALL 1
+  721: POP_TOP
+  742: EXTENDED_ARG 1
+  742: LOAD_NAME h
+  742: EXTENDED_ARG 1
+  742: LOAD_ATTR append
+  742: EXTENDED_ARG 1
+  742: LOAD_CONST '<section><div class="shead">\n<h2>Leak 3 &mdash; bought, but not from us</h2>\n<p>The a...[232]
+  745: LOAD_NAME NW
+  745: EXTENDED_ARG 1
+  745: LOAD_CONST 'expo_max_db'
+  745: BINARY_OP 26
+  745: FORMAT_SIMPLE
+  745: EXTENDED_ARG 1
+  745: LOAD_CONST ' at\n'
+  746: EXTENDED_ARG 1
+  746: LOAD_NAME one_py
+  746: PUSH_NULL
+  746: LOAD_NAME NW
+  746: EXTENDED_ARG 1
+  746: LOAD_CONST 'expo_max'
+  746: BINARY_OP 26
+  746: EXTENDED_ARG 1
+  746: LOAD_CONST '%'
+  746: CALL 2
+  746: FORMAT_SIMPLE
+  746: EXTENDED_ARG 1
+  746: LOAD_CONST ' of net sales. What actually moves is the share of the service-part euro\nthat goes to ...[914]
+  758: EXTENDED_ARG 1
+  758: LOAD_NAME one_py
+  758: PUSH_NULL
+  758: LOAD_NAME NW
+  758: EXTENDED_ARG 1
+  758: LOAD_CONST 'expo_max'
+  758: BINARY_OP 26
+  758: EXTENDED_ARG 1
+  758: LOAD_CONST '%'
+  758: CALL 2
+  758: FORMAT_SIMPLE
+  758: EXTENDED_ARG 1
+  758: LOAD_CONST ' of net sales, the aftermarket is not\ncurrently taking revenue on part numbers where w...[292]
+  742: BUILD_STRING 7
+  742: CALL 1
+  742: POP_TOP
+  765: EXTENDED_ARG 1
+  765: LOAD_NAME h
+  765: EXTENDED_ARG 1
+  765: LOAD_ATTR append
+  765: EXTENDED_ARG 1
+  765: LOAD_CONST '<section><div class="shead">\n<h2>Leak 4 &mdash; parts we bill that have no usable pric...[100]
+  767: LOAD_NAME NW
+  767: EXTENDED_ARG 1
+  767: LOAD_CONST 'np_pns'
+  767: BINARY_OP 26
+  767: FORMAT_SIMPLE
+  767: EXTENDED_ARG 1
+  767: LOAD_CONST ' part numbers worth '
+  767: EXTENDED_ARG 1
+  767: LOAD_NAME eur_py
+  767: PUSH_NULL
+  767: LOAD_NAME NW
+  767: LOAD_CONST 'np'
+  767: BINARY_OP 26
+  767: CALL 1
+  767: FORMAT_SIMPLE
+  767: EXTENDED_ARG 1
+  767: LOAD_CONST ' in CY2025 are either absent from the price\nlist or present with no usable price. This...[170]
+  769: EXTENDED_ARG 1
+  769: LOAD_NAME one_py
+  769: PUSH_NULL
+  769: LOAD_NAME NW
+  769: EXTENDED_ARG 1
+  769: LOAD_CONST 'np_top_pct'
+  769: BINARY_OP 26
+  769: EXTENDED_ARG 1
+  769: LOAD_CONST '%'
+  769: CALL 2
+  769: FORMAT_SIMPLE
+  769: EXTENDED_ARG 1
+  769: LOAD_CONST ' of the whole leak. The fix is a price-list\nentry, not a project.</p></div>\n<div clas...[716]
+  765: BUILD_STRING 7
+  765: CALL 1
+  765: POP_TOP
+  781: EXTENDED_ARG 1
+  781: LOAD_NAME NPLIST
+  781: EXTENDED_ARG 1
+  781: LOAD_CONST slice(None, 8, None)
+  781: BINARY_OP 26
+  781: GET_ITER
+  781: FOR_ITER 23244
+  781: EXTENDED_ARG 1
+  781: STORE_NAME x
+  782: EXTENDED_ARG 1
+  782: LOAD_NAME h
+  782: EXTENDED_ARG 1
+  782: LOAD_ATTR append
+  782: EXTENDED_ARG 1
+  782: LOAD_CONST '<tr><td>'
+  782: EXTENDED_ARG 1
+  782: LOAD_NAME x
+  782: EXTENDED_ARG 1
+  782: LOAD_CONST 'rank'
+  782: BINARY_OP 26
+  782: FORMAT_SIMPLE
+  782: EXTENDED_ARG 1
+  782: LOAD_CONST '</td><td>'
+  782: EXTENDED_ARG 1
+  782: LOAD_NAME esc
+  782: PUSH_NULL
+  782: EXTENDED_ARG 1
+  782: LOAD_NAME x
+  782: LOAD_CONST 'pn'
+  782: BINARY_OP 26
+  782: CALL 1
+  782: FORMAT_SIMPLE
+  782: EXTENDED_ARG 1
+  782: LOAD_CONST '</td>\n<td style="text-align:left">'
+  783: EXTENDED_ARG 1
+  783: LOAD_NAME esc
+  783: PUSH_NULL
+  783: EXTENDED_ARG 1
+  783: LOAD_NAME x
+  783: EXTENDED_ARG 1
+  783: LOAD_CONST 'desc'
+  783: BINARY_OP 26
+  783: CALL 1
+  783: FORMAT_SIMPLE
+  783: EXTENDED_ARG 1
+  783: LOAD_CONST '</td>\n<td class="kpi">'
+  784: EXTENDED_ARG 1
+  784: LOAD_NAME eur_py
+  784: PUSH_NULL
+  784: EXTENDED_ARG 1
+  784: LOAD_NAME x
+  784: EXTENDED_ARG 1
+  784: LOAD_CONST 'eur'
+  784: BINARY_OP 26
+  784: CALL 1
+  784: FORMAT_SIMPLE
+  784: EXTENDED_ARG 1
+  784: LOAD_NAME tipg
+  784: PUSH_NULL
+  784: EXTENDED_ARG 1
+  784: LOAD_CONST 'No usable price, CY2025'
+  785: EXTENDED_ARG 1
+  785: LOAD_CONST 'billed value of the part number in CY2025 where the price file carries no usable price'
+  786: EXTENDED_ARG 1
+  786: LOAD_CONST 'no_pr00_gap_cy2025_ranked.csv (price check 2026-08-11), CY2025 value from sales_fact.pa...[94]
+  787: EXTENDED_ARG 1
+  787: LOAD_CONST 'Only 31 part numbers remain after the August 2026 SAP price pull return closed 220. Shi...[167]
+  784: CALL 4
+  784: FORMAT_SIMPLE
+  787: EXTENDED_ARG 1
+  787: LOAD_CONST '</td>\n<td class="small" style="text-align:left">'
+  788: EXTENDED_ARG 1
+  788: LOAD_NAME esc
+  788: PUSH_NULL
+  788: EXTENDED_ARG 1
+  788: LOAD_NAME x
+  788: EXTENDED_ARG 1
+  788: LOAD_CONST 'reason'
+  788: BINARY_OP 26
+  788: CALL 1
+  788: FORMAT_SIMPLE
+  788: EXTENDED_ARG 1
+  788: LOAD_CONST '</td>\n<td class="small" style="text-align:left">'
+  789: EXTENDED_ARG 1
+  789: LOAD_NAME x
+  789: EXTENDED_ARG 1
+  789: LOAD_CONST 'lube'
+  789: BINARY_OP 26
+  789: TO_BOOL
+  789: POP_JUMP_IF_FALSE 23218
+  789: NOT_TAKEN
+  789: EXTENDED_ARG 1
+  789: LOAD_CONST 'Israel'
+  789: JUMP_FORWARD 23222
+  789: EXTENDED_ARG 1
+  789: LOAD_CONST 'Israel and Greece'
+  789: FORMAT_SIMPLE
+  789: EXTENDED_ARG 1
+  789: LOAD_CONST '</td></tr>'
+  782: BUILD_STRING 14
+  782: CALL 1
+  782: POP_TOP
+  782: JUMP_BACKWARD 22924
+  781: END_FOR
+  781: POP_ITER
+  790: EXTENDED_ARG 1
+  790: LOAD_NAME h
+  790: EXTENDED_ARG 1
+  790: LOAD_ATTR append
+  790: EXTENDED_ARG 1
+  790: LOAD_CONST '</tbody></table></div>\n<p class="small">Attribution: the seven lubricant part numbers ...[310]
+  790: CALL 1
+  790: POP_TOP
+  797: EXTENDED_ARG 1
+  797: LOAD_NAME h
+  797: EXTENDED_ARG 1
+  797: LOAD_ATTR append
+  797: EXTENDED_ARG 1
+  797: LOAD_CONST '<section><div class="shead"><h2>Three distributors that carry the story</h2>\n<p>One is...[375]
+  802: EXTENDED_ARG 1
+  802: LOAD_NAME eur_py
+  802: PUSH_NULL
+  802: LOAD_NAME iuk
+  802: LOAD_CONST 'demand'
+  802: BINARY_OP 26
+  802: LOAD_CONST 'cy'
+  802: BINARY_OP 26
+  802: LOAD_CONST 'gap'
+  802: BINARY_OP 26
+  802: CALL 1
+  802: FORMAT_SIMPLE
+  802: EXTENDED_ARG 1
+  802: LOAD_CONST ' &middot; '
+  802: EXTENDED_ARG 1
+  802: LOAD_NAME one_py
+  802: PUSH_NULL
+  802: LOAD_NAME iuk
+  802: LOAD_CONST 'demand'
+  802: BINARY_OP 26
+  802: LOAD_CONST 'cy'
+  802: BINARY_OP 26
+  802: LOAD_CONST 'nb'
+  802: BINARY_OP 26
+  802: EXTENDED_ARG 1
+  802: LOAD_CONST '%'
+  802: CALL 2
+  802: FORMAT_SIMPLE
+  802: EXTENDED_ARG 1
+  802: LOAD_CONST ' unbought</div>\n<ul><li>'
+  803: EXTENDED_ARG 1
+  803: LOAD_NAME num_py
+  803: PUSH_NULL
+  803: LOAD_NAME iuk
+  803: LOAD_CONST 'uio'
+  803: BINARY_OP 26
+  803: CALL 1
+  803: FORMAT_SIMPLE
+  803: EXTENDED_ARG 1
+  803: LOAD_CONST ' light commercial vehicles in service, no trucks</li>\n<li>'
+  804: EXTENDED_ARG 1
+  804: LOAD_NAME eur_py
+  804: PUSH_NULL
+  804: LOAD_NAME iuk
+  804: LOAD_CONST 'demand'
+  804: BINARY_OP 26
+  804: LOAD_CONST 'cy'
+  804: BINARY_OP 26
+  804: LOAD_CONST 'gap'
+  804: BINARY_OP 26
+  804: CALL 1
+  804: FORMAT_SIMPLE
+  804: EXTENDED_ARG 1
+  804: LOAD_CONST ' across the filter, brake and clutch families in CY2025</li>\n<li><b>This number is inf...[148]
+  806: EXTENDED_ARG 1
+  806: LOAD_NAME num_py
+  806: PUSH_NULL
+  806: LOAD_NAME KM_MODEL
+  806: CALL 1
+  806: FORMAT_SIMPLE
+  806: EXTENDED_ARG 1
+  806: LOAD_CONST " km/yr while IUK's measured N35 Grafter fleet averages\n<b>"
+  807: LOAD_NAME KM
+  807: LOAD_CONST 'IUK'
+  807: BINARY_OP 26
+  807: LOAD_CONST 'label'
+  807: BINARY_OP 26
+  807: FORMAT_SIMPLE
+  807: EXTENDED_ARG 1
+  807: LOAD_CONST ' km/yr</b>. The correct figure is '
+  807: EXTENDED_ARG 1
+  807: LOAD_NAME eur_py
+  807: PUSH_NULL
+  807: EXTENDED_ARG 1
+  807: LOAD_NAME IUK_ADJ
+  807: LOAD_CONST 'gap'
+  807: BINARY_OP 26
+  807: CALL 1
+  807: FORMAT_SIMPLE
+  807: EXTENDED_ARG 1
+  807: LOAD_CONST ' &mdash; a\n'
+  808: EXTENDED_ARG 1
+  808: LOAD_NAME one_py
+  808: PUSH_NULL
+  808: EXTENDED_ARG 1
+  808: LOAD_NAME IUK_ADJ
+  808: EXTENDED_ARG 1
+  808: LOAD_CONST 'cut'
+  808: BINARY_OP 26
+  808: LOAD_SMALL_INT 100
+  808: BINARY_OP 5
+  808: EXTENDED_ARG 1
+  808: LOAD_CONST '%'
+  808: CALL 2
+  808: FORMAT_SIMPLE
+  808: EXTENDED_ARG 1
+  808: LOAD_CONST ' smaller gap, and capture of '
+  808: EXTENDED_ARG 1
+  808: LOAD_NAME one_py
+  808: PUSH_NULL
+  808: EXTENDED_ARG 1
+  808: LOAD_NAME IUK_ADJ
+  808: LOAD_CONST 'cap'
+  808: BINARY_OP 26
+  808: EXTENDED_ARG 1
+  808: LOAD_CONST '%'
+  808: CALL 2
+  808: FORMAT_SIMPLE
+  808: EXTENDED_ARG 1
+  808: LOAD_CONST ' rather\nthan '
+  809: EXTENDED_ARG 1
+  809: LOAD_NAME one_py
+  809: PUSH_NULL
+  809: EXTENDED_ARG 1
+  809: LOAD_NAME IUK_ADJ
+  809: EXTENDED_ARG 1
+  809: LOAD_CONST 'cap_now'
+  809: BINARY_OP 26
+  809: EXTENDED_ARG 1
+  809: LOAD_CONST '%'
+  809: CALL 2
+  809: FORMAT_SIMPLE
+  809: EXTENDED_ARG 1
+  809: LOAD_CONST '. Still the worst leak in the network, but not by this much.</li></ul></div>\n<div clas...[179]
+  811: EXTENDED_ARG 1
+  811: LOAD_NAME eur_py
+  811: PUSH_NULL
+  811: LOAD_NAME next
+  811: PUSH_NULL
+  811: EXTENDED_ARG 1
+  811: LOAD_CONST <code <genexpr>@811>
+  811: MAKE_FUNCTION
+  811: LOAD_NAME dbs
+  811: GET_ITER
+  811: CALL 0
+  811: CALL 1
+  811: LOAD_CONST 'demand'
+  811: BINARY_OP 26
+  811: LOAD_CONST 'cy'
+  811: BINARY_OP 26
+  811: LOAD_CONST 'gap'
+  811: BINARY_OP 26
+  811: CALL 1
+  811: FORMAT_SIMPLE
+  811: EXTENDED_ARG 1
+  811: LOAD_CONST ' &middot; 86.1% unbought</div>\n<ul><li>13,780 vehicles in service, mixed light and tru...[553]
+  818: EXTENDED_ARG 1
+  818: LOAD_NAME one_py
+  818: PUSH_NULL
+  818: LOAD_NAME next
+  818: PUSH_NULL
+  818: EXTENDED_ARG 1
+  818: LOAD_CONST <code <genexpr>@818>
+  818: MAKE_FUNCTION
+  818: LOAD_NAME dbs
+  818: GET_ITER
+  818: CALL 0
+  818: CALL 1
+  818: LOAD_CONST 'demand'
+  818: BINARY_OP 26
+  818: LOAD_CONST 'cy'
+  818: BINARY_OP 26
+  818: LOAD_CONST 'nb'
+  818: BINARY_OP 26
+  818: EXTENDED_ARG 1
+  818: LOAD_CONST '%'
+  818: CALL 2
+  818: FORMAT_SIMPLE
+  818: EXTENDED_ARG 1
+  818: LOAD_CONST ' unbought &mdash; i.e. more bought than expected</div>\n<ul><li>The only distributor ab...[404]
+  823: EXTENDED_ARG 1
+  823: LOAD_NAME one_py
+  823: PUSH_NULL
+  823: LOAD_NAME next
+  823: PUSH_NULL
+  823: EXTENDED_ARG 1
+  823: LOAD_CONST <code <genexpr>@823>
+  823: MAKE_FUNCTION
+  823: LOAD_NAME dbs
+  823: GET_ITER
+  823: CALL 0
+  823: CALL 1
+  823: LOAD_CONST 'dealer'
+  823: BINARY_OP 26
+  823: LOAD_CONST 'cy'
+  823: BINARY_OP 26
+  823: LOAD_CONST 'cap'
+  823: BINARY_OP 26
+  823: EXTENDED_ARG 1
+  823: LOAD_CONST '%'
+  823: CALL 2
+  823: FORMAT_SIMPLE
+  823: EXTENDED_ARG 1
+  823: LOAD_CONST '\nof expected demand reached dealers, which is the highest capture in the network</li><...[928]
+  797: BUILD_STRING 27
+  797: CALL 1
+  797: POP_TOP
+  844: EXTENDED_ARG 1
+  844: LOAD_NAME h
+  844: EXTENDED_ARG 1
+  844: LOAD_ATTR append
+  844: EXTENDED_ARG 1
+  844: LOAD_CONST '<section><div class="shead"><h2>What to do first</h2>\n<p>Five items, each tied to a di...[289]
+  847: LOAD_NAME KM
+  847: LOAD_CONST 'IUK'
+  847: BINARY_OP 26
+  847: LOAD_CONST 'label'
+  847: BINARY_OP 26
+  847: FORMAT_SIMPLE
+  847: EXTENDED_ARG 1
+  847: LOAD_CONST ' km/yr the\ngap is '
+  848: EXTENDED_ARG 1
+  848: LOAD_NAME eur_py
+  848: PUSH_NULL
+  848: EXTENDED_ARG 1
+  848: LOAD_NAME IUK_ADJ
+  848: LOAD_CONST 'gap'
+  848: BINARY_OP 26
+  848: CALL 1
+  848: FORMAT_SIMPLE
+  848: EXTENDED_ARG 1
+  848: LOAD_CONST ', not '
+  848: EXTENDED_ARG 1
+  848: LOAD_NAME eur_py
+  848: PUSH_NULL
+  848: EXTENDED_ARG 1
+  848: LOAD_NAME IUK_ADJ
+  848: EXTENDED_ARG 1
+  848: LOAD_CONST 'gap_now'
+  848: BINARY_OP 26
+  848: CALL 1
+  848: FORMAT_SIMPLE
+  848: EXTENDED_ARG 1
+  848: LOAD_CONST ". Acting on the uncorrected number\nbuys the wrong conversation.</li>\n<li><b>Germany</...[275]
+  852: EXTENDED_ARG 1
+  852: LOAD_NAME eur_py
+  852: PUSH_NULL
+  852: LOAD_NAME next
+  852: PUSH_NULL
+  852: EXTENDED_ARG 1
+  852: LOAD_CONST <code <genexpr>@852>
+  852: MAKE_FUNCTION
+  852: LOAD_NAME dbs
+  852: GET_ITER
+  852: CALL 0
+  852: CALL 1
+  852: LOAD_CONST 'rep'
+  852: BINARY_OP 26
+  852: LOAD_CONST 'cy'
+  852: BINARY_OP 26
+  852: LOAD_CONST 'total'
+  852: BINARY_OP 26
+  852: COPY 1
+  852: TO_BOOL
+  852: POP_JUMP_IF_TRUE 24328
+  852: NOT_TAKEN
+  852: POP_TOP
+  852: LOAD_SMALL_INT 0
+  852: LOAD_NAME next
+  852: PUSH_NULL
+  852: EXTENDED_ARG 1
+  852: LOAD_CONST <code <genexpr>@852>
+  852: MAKE_FUNCTION
+  852: LOAD_NAME dbs
+  852: GET_ITER
+  852: CALL 0
+  852: CALL 1
+  852: LOAD_CONST 'rep'
+  852: BINARY_OP 26
+  852: LOAD_CONST 'cy'
+  852: BINARY_OP 26
+  852: LOAD_CONST 'total'
+  852: BINARY_OP 26
+  852: COPY 1
+  852: TO_BOOL
+  852: POP_JUMP_IF_TRUE 24420
+  852: NOT_TAKEN
+  852: POP_TOP
+  852: LOAD_SMALL_INT 0
+  852: BINARY_OP 0
+  852: CALL 1
+  852: FORMAT_SIMPLE
+  852: EXTENDED_ARG 1
+  852: LOAD_CONST ':\nthe under-ordering portion needs a reorder conversation, the overstock portion a sto...[177]
+  854: EXTENDED_ARG 1
+  854: LOAD_NAME eur_py
+  854: PUSH_NULL
+  854: LOAD_NAME NW
+  854: EXTENDED_ARG 1
+  854: LOAD_CONST 'np_top'
+  854: BINARY_OP 26
+  854: CALL 1
+  854: FORMAT_SIMPLE
+  854: EXTENDED_ARG 1
+  854: LOAD_CONST ' of the\n'
+  855: EXTENDED_ARG 1
+  855: LOAD_NAME eur_py
+  855: PUSH_NULL
+  855: LOAD_NAME NW
+  855: LOAD_CONST 'np'
+  855: BINARY_OP 26
+  855: CALL 1
+  855: FORMAT_SIMPLE
+  855: EXTENDED_ARG 1
+  855: LOAD_CONST ' no-usable-price leak; lubricants together are '
+  855: EXTENDED_ARG 1
+  855: LOAD_NAME one_py
+  855: PUSH_NULL
+  855: LOAD_NAME NW
+  855: EXTENDED_ARG 1
+  855: LOAD_CONST 'np_lube_pct'
+  855: BINARY_OP 26
+  855: EXTENDED_ARG 1
+  855: LOAD_CONST '%'
+  855: CALL 2
+  855: FORMAT_SIMPLE
+  855: EXTENDED_ARG 1
+  855: LOAD_CONST ' of it.</li>\n<li><b>Ireland</b> &mdash; resolve the above-100% reading before it is qu...[133]
+  844: BUILD_STRING 15
+  844: CALL 1
+  844: POP_TOP
+  860: EXTENDED_ARG 1
+  860: LOAD_NAME h
+  860: EXTENDED_ARG 1
+  860: LOAD_ATTR append
+  860: EXTENDED_ARG 1
+  860: LOAD_CONST '<section><div class="shead"><h2>What this page does not claim</h2></div>\n<div class="n...[226]
+  863: EXTENDED_ARG 1
+  863: LOAD_NAME num_py
+  863: PUSH_NULL
+  863: LOAD_NAME KM_MODEL
+  863: CALL 1
+  863: FORMAT_SIMPLE
+  863: EXTENDED_ARG 1
+  863: LOAD_CONST ' km/yr annual distance and is being corrected per weight class using measured\nvalues (...[93]
+  864: LOAD_NAME KM
+  864: LOAD_CONST 'IUK'
+  864: BINARY_OP 26
+  864: LOAD_CONST 'label'
+  864: BINARY_OP 26
+  864: FORMAT_SIMPLE
+  864: EXTENDED_ARG 1
+  864: LOAD_CONST ", Israel 51,680, N35/N75/F-series provisional). Per-distributor\n<i>direction</i> is so...[979]
+  875: EXTENDED_ARG 1
+  875: LOAD_NAME eur_py
+  875: PUSH_NULL
+  875: LOAD_NAME NW
+  875: LOAD_CONST 'gap'
+  875: BINARY_OP 26
+  875: CALL 1
+  875: FORMAT_SIMPLE
+  875: EXTENDED_ARG 1
+  875: LOAD_CONST ' headline are modelled from service intervals and fleet counts, not observed\nlost orde...[536]
+  881: EXTENDED_ARG 1
+  881: LOAD_NAME eur_py
+  881: PUSH_NULL
+  881: LOAD_NAME NW
+  881: LOAD_CONST 'gap'
+  881: BINARY_OP 26
+  881: CALL 1
+  881: FORMAT_SIMPLE
+  881: EXTENDED_ARG 1
+  881: LOAD_CONST '.</li>\n<li><b>Competitive-parts share is measured on the service-part euro</b> and exc...[402]
+  860: BUILD_STRING 9
+  860: CALL 1
+  860: POP_TOP
+  888: EXTENDED_ARG 1
+  888: LOAD_NAME h
+  888: EXTENDED_ARG 1
+  888: LOAD_ATTR append
+  888: EXTENDED_ARG 1
+  888: LOAD_CONST '<p class="small" style="margin-top:1.4rem;padding-top:.8rem;border-top:1px solid var(--...[635]
+  894: LOAD_NAME SNAPSHOT
+  894: FORMAT_SIMPLE
+  894: EXTENDED_ARG 1
+  894: LOAD_CONST '.</p>\n</div>\n<script>\nvar DATA = '
+  897: LOAD_NAME json
+  897: EXTENDED_ARG 2
+  897: LOAD_ATTR dumps
+  897: PUSH_NULL
+  897: EXTENDED_ARG 1
+  897: LOAD_NAME PAYLOAD
+  897: LOAD_NAME str
+  897: EXTENDED_ARG 1
+  897: LOAD_CONST ('default',)
+  897: CALL_KW 2
+  897: FORMAT_SIMPLE
+  897: EXTENDED_ARG 1
+  897: LOAD_CONST ';\nvar IUK_ADJ = '
+  898: LOAD_NAME json
+  898: EXTENDED_ARG 2
+  898: LOAD_ATTR dumps
+  898: PUSH_NULL
+  898: EXTENDED_ARG 1
+  898: LOAD_NAME IUK_ADJ
+  898: CALL 1
+  898: FORMAT_SIMPLE
+  898: EXTENDED_ARG 1
+  898: LOAD_CONST ';\nvar KM = '
+  899: LOAD_NAME json
+  899: EXTENDED_ARG 2
+  899: LOAD_ATTR dumps
+  899: PUSH_NULL
+  899: LOAD_NAME KM
+  899: CALL 1
+  899: FORMAT_SIMPLE
+  899: EXTENDED_ARG 1
+  899: LOAD_CONST ';\nvar FAMNET = '
+  900: LOAD_NAME json
+  900: EXTENDED_ARG 2
+  900: LOAD_ATTR dumps
+  900: PUSH_NULL
+  903: LOAD_NAME FAMNET
+  903: EXTENDED_ARG 1
+  903: LOAD_ATTR iterrows
+  903: CALL 0
+  903: GET_ITER
+  900: LOAD_FAST_AND_CLEAR _
+  900: LOAD_FAST_AND_CLEAR r
+  900: SWAP 3
+  900: BUILD_LIST 0
+  900: SWAP 2
+  903: FOR_ITER 25320
+  903: UNPACK_SEQUENCE 2
+  903: STORE_FAST_STORE_FAST ('_', 'r')
+  900: LOAD_NAME dict
+  900: PUSH_NULL
+  900: LOAD_FAST_BORROW r
+  900: LOAD_ATTR category_label
+  900: LOAD_FAST_BORROW r
+  900: EXTENDED_ARG 1
+  900: LOAD_ATTR fam_group
+  900: LOAD_NAME n
+  900: PUSH_NULL
+  900: LOAD_FAST_BORROW r
+  900: LOAD_ATTR gap
+  900: LOAD_SMALL_INT 0
+  900: CALL 2
+  901: LOAD_NAME n
+  901: PUSH_NULL
+  901: LOAD_FAST_BORROW r
+  901: EXTENDED_ARG 1
+  901: LOAD_ATTR cap
+  901: LOAD_SMALL_INT 1
+  901: CALL 2
+  901: LOAD_NAME n
+  901: PUSH_NULL
+  901: LOAD_FAST_BORROW r
+  901: LOAD_ATTR exp
+  901: CALL 1
+  901: LOAD_NAME n
+  901: PUSH_NULL
+  901: LOAD_FAST_BORROW r
+  901: LOAD_ATTR act
+  901: CALL 1
+  902: LOAD_NAME pd
+  902: LOAD_ATTR notna
+  902: LOAD_FAST_BORROW r
+  902: EXTENDED_ARG 1
+  902: LOAD_ATTR avg_sp
+  902: CALL 1
+  902: TO_BOOL
+  902: POP_JUMP_IF_FALSE 25300
+  902: NOT_TAKEN
+  902: LOAD_NAME n
+  902: PUSH_NULL
+  902: LOAD_FAST_BORROW r
+  902: EXTENDED_ARG 1
+  902: LOAD_ATTR avg_sp
+  902: LOAD_SMALL_INT 2
+  902: CALL 2
+  902: JUMP_FORWARD 25302
+  902: LOAD_CONST None
+  900: EXTENDED_ARG 1
+  900: LOAD_CONST ('label', 'group', 'gap', 'cap', 'exp', 'act', 'avg_sp')
+  900: CALL_KW 7
+  900: LIST_APPEND 2
+  900: JUMP_BACKWARD 24990
+  903: END_FOR
+  903: POP_ITER
+  900: SWAP 3
+  900: STORE_FAST r
+  900: STORE_FAST _
+  900: CALL 1
+  900: FORMAT_SIMPLE
+  903: EXTENDED_ARG 1
+  903: LOAD_CONST ";\nvar ST = {period:'cy', dir:'db', warr:'inc'};\nvar NPLIST = DATA.noprice;\nvar LOADE...[110]
+  888: BUILD_STRING 11
+  888: CALL 1
+  888: POP_TOP
+  910: EXTENDED_ARG 1
+  910: LOAD_CONST '\nfunction eur(v){ if(v===null||v===undefined||v===\'\'||isNaN(v)) return \'\\u2014\';\...[26534]
+  910: EXTENDED_ARG 1
+  910: STORE_NAME JS
+ 1272: EXTENDED_ARG 1
+ 1272: LOAD_NAME h
+ 1272: EXTENDED_ARG 1
+ 1272: LOAD_ATTR append
+ 1272: EXTENDED_ARG 1
+ 1272: LOAD_CONST '<script>'
+ 1272: EXTENDED_ARG 1
+ 1272: LOAD_NAME JS
+ 1272: BINARY_OP 0
+ 1272: EXTENDED_ARG 1
+ 1272: LOAD_CONST '</script></body></html>'
+ 1272: BINARY_OP 0
+ 1272: CALL 1
+ 1272: POP_TOP
+ 1274: LOAD_NAME os
+ 1274: EXTENDED_ARG 2
+ 1274: LOAD_ATTR makedirs
+ 1274: PUSH_NULL
+ 1274: LOAD_NAME os
+ 1274: LOAD_ATTR path
+ 1274: EXTENDED_ARG 2
+ 1274: LOAD_ATTR dirname
+ 1274: LOAD_NAME OUT_HTML
+ 1274: CALL 1
+ 1274: LOAD_CONST True
+ 1274: EXTENDED_ARG 1
+ 1274: LOAD_CONST ('exist_ok',)
+ 1274: CALL_KW 2
+ 1274: POP_TOP
+ 1275: EXTENDED_ARG 1
+ 1275: LOAD_NAME open
+ 1275: PUSH_NULL
+ 1275: LOAD_NAME OUT_HTML
+ 1275: EXTENDED_ARG 1
+ 1275: LOAD_CONST 'w'
+ 1275: LOAD_CONST 'utf-8'
+ 1275: EXTENDED_ARG 1
+ 1275: LOAD_CONST ('encoding',)
+ 1275: CALL_KW 3
+ 1275: COPY 1
+ 1275: LOAD_SPECIAL 1
+ 1275: SWAP 2
+ 1275: SWAP 3
+ 1275: LOAD_SPECIAL 0
+ 1275: CALL 0
+ 1275: EXTENDED_ARG 1
+ 1275: STORE_NAME fh
+ 1276: EXTENDED_ARG 1
+ 1276: LOAD_NAME fh
+ 1276: EXTENDED_ARG 2
+ 1276: LOAD_ATTR write
+ 1276: EXTENDED_ARG 1
+ 1276: LOAD_CONST '\n'
+ 1276: LOAD_ATTR join
+ 1276: EXTENDED_ARG 1
+ 1276: LOAD_NAME h
+ 1276: CALL 1
+ 1276: CALL 1
+ 1276: POP_TOP
+ 1275: LOAD_CONST None
+ 1275: LOAD_CONST None
+ 1275: LOAD_CONST None
+ 1275: CALL 3
+ 1275: POP_TOP
+ 1277: EXTENDED_ARG 1
+ 1277: LOAD_NAME open
+ 1277: PUSH_NULL
+ 1277: LOAD_NAME OUT_CMD
+ 1277: EXTENDED_ARG 1
+ 1277: LOAD_CONST 'w'
+ 1277: EXTENDED_ARG 1
+ 1277: LOAD_CONST 'ascii'
+ 1277: EXTENDED_ARG 1
+ 1277: LOAD_CONST '\r\n'
+ 1277: EXTENDED_ARG 1
+ 1277: LOAD_CONST ('encoding', 'newline')
+ 1277: CALL_KW 4
+ 1277: COPY 1
+ 1277: LOAD_SPECIAL 1
+ 1277: SWAP 2
+ 1277: SWAP 3
+ 1277: LOAD_SPECIAL 0
+ 1277: CALL 0
+ 1277: EXTENDED_ARG 1
+ 1277: STORE_NAME fh
+ 1278: EXTENDED_ARG 1
+ 1278: LOAD_NAME fh
+ 1278: EXTENDED_ARG 2
+ 1278: LOAD_ATTR write
+ 1278: EXTENDED_ARG 1
+ 1278: LOAD_CONST '@echo off\nstart "" "%~dp0ISZE_DB_Leakage_Review_CY2025.html"\n'
+ 1278: CALL 1
+ 1278: POP_TOP
+ 1277: LOAD_CONST None
+ 1277: LOAD_CONST None
+ 1277: LOAD_CONST None
+ 1277: CALL 3
+ 1277: POP_TOP
+ 1279: LOAD_NAME print
+ 1279: PUSH_NULL
+ 1279: EXTENDED_ARG 1
+ 1279: LOAD_CONST 'WROTE'
+ 1279: LOAD_NAME OUT_HTML
+ 1279: LOAD_NAME round
+ 1279: PUSH_NULL
+ 1279: LOAD_NAME os
+ 1279: LOAD_ATTR path
+ 1279: EXTENDED_ARG 2
+ 1279: LOAD_ATTR getsize
+ 1279: LOAD_NAME OUT_HTML
+ 1279: CALL 1
+ 1279: EXTENDED_ARG 1
+ 1279: LOAD_CONST 1024
+ 1279: BINARY_OP 11
+ 1279: LOAD_SMALL_INT 1
+ 1279: CALL 2
+ 1279: EXTENDED_ARG 1
+ 1279: LOAD_CONST 'KB'
+ 1279: CALL 4
+ 1279: POP_TOP
+ 1280: LOAD_NAME print
+ 1280: PUSH_NULL
+ 1280: EXTENDED_ARG 1
+ 1280: LOAD_CONST 'WROTE'
+ 1280: LOAD_NAME OUT_CMD
+ 1280: CALL 2
+ 1280: POP_TOP
+ 1281: LOAD_NAME print
+ 1281: PUSH_NULL
+ 1281: EXTENDED_ARG 1
+ 1281: LOAD_CONST 'charts: 6 | league rows:'
+ 1281: LOAD_NAME len
+ 1281: PUSH_NULL
+ 1281: LOAD_NAME dbs
+ 1281: CALL 1
+ 1281: EXTENDED_ARG 1
+ 1281: LOAD_CONST '| no-price rows:'
+ 1281: LOAD_NAME len
+ 1281: PUSH_NULL
+ 1281: EXTENDED_ARG 1
+ 1281: LOAD_NAME NPLIST
+ 1281: CALL 1
+ 1281: CALL 4
+ 1281: POP_TOP
+ 1281: LOAD_CONST None
+ 1281: RETURN_VALUE | SWAP 2 | POP_TOP
+  185: SWAP 4
+  185: STORE_FAST b
+  185: STORE_FAST s
+  185: STORE_FAST r
+  185: RERAISE 0 | SWAP 2 | POP_TOP
+  390: SWAP 2
+  390: STORE_FAST m
+  390: RERAISE 0 | SWAP 2 | POP_TOP
+  425: SWAP 2
+  425: STORE_FAST r
+  425: RERAISE 0 | SWAP 2 | POP_TOP
+  427: SWAP 2
+  427: STORE_FAST r
+  427: RERAISE 0 | SWAP 2 | POP_TOP
+  439: SWAP 2
+  439: STORE_FAST r
+  439: RERAISE 0 | SWAP 2 | POP_TOP
+  475: SWAP 3
+  475: STORE_FAST r
+  475: STORE_FAST _
+  475: RERAISE 0 | SWAP 2 | POP_TOP
+  900: SWAP 3
+  900: STORE_FAST r
+  900: STORE_FAST _
+  900: RERAISE 0
+ 1275: PUSH_EXC_INFO
+ 1275: WITH_EXCEPT_START
+ 1275: TO_BOOL
+ 1275: POP_JUMP_IF_TRUE 26060
+ 1275: NOT_TAKEN
+ 1275: RERAISE 2
+ 1275: POP_TOP
+ 1275: POP_EXCEPT
+ 1275: POP_TOP
+ 1275: POP_TOP
+ 1275: POP_TOP
+ 1275: JUMP_BACKWARD_NO_INTERRUPT 25668 | COPY 3 | POP_EXCEPT | RERAISE 1
+ 1277: PUSH_EXC_INFO
+ 1277: WITH_EXCEPT_START
+ 1277: TO_BOOL
+ 1277: POP_JUMP_IF_TRUE 26098
+ 1277: NOT_TAKEN
+ 1277: RERAISE 2
+ 1277: POP_TOP
+ 1277: POP_EXCEPT
+ 1277: POP_TOP
+ 1277: POP_TOP
+ 1277: POP_TOP
+ 1277: JUMP_BACKWARD_NO_INTERRUPT 25778 | COPY 3 | POP_EXCEPT | RERAISE 1

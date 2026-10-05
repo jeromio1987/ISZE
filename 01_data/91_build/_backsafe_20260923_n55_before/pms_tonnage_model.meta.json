@@ -1,0 +1,28 @@
+{
+  "generated_at": "2026-09-22T16:21:56+00:00",
+  "generated_by": "scripts/build_pms_tonnage_model.py",
+  "band_model": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\pms_tonnage_model.csv",
+  "aim_model": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_evolution_model.csv",
+  "bands": [
+    "LCV_D-Max",
+    "3.5t_N35",
+    "7.5t_N50_N62_N75",
+    "F_series_MD_heavy"
+  ],
+  "rows": {
+    "band_model": 2016,
+    "aim_model": 18865
+  },
+  "lanes": {
+    "IML v7 (ITUK)": "filters 1.25 visits/yr, clutch and brake 0.5, 22,389 DVLA fleet, brake factor 0.4",
+    "PRISM network": "cv 0.5, F-series 0.667, LCV 1.0 visits/yr, D-Max brake 0.4"
+  },
+  "limits": [
+    "Actual billed units do not split by tonnage. The billing carries no vehicle, so the band columns carry the band's expected demand and the market's actual beside it. actual_is_market_level=True marks every such row; do not sum actuals down a band.",
+    "The fleet vintage is 2025E for every year, so expected demand is flat over time by construction. Only the billing and the capture move.",
+    "F-series exists as a fleet in three markets only (ITUK, Portugal, Ireland) and is 1,238 vehicles in total. It carries an expected demand but almost no attributable billing, because the billing has no vehicle.",
+    "UTI has no 3.5 t band at all: 2,360 CV warranty VINs show no NLR/NMR/NKR.",
+    "The ITUK lane is the IML v7 schedule and is not comparable with the PRISM lane. Never average or sum the two.",
+    "AIM level 1 resolves on 99.3% of billed euro; level 2 on a little less. The remainder is reported as Unclassified rather than dropped."
+  ]
+}

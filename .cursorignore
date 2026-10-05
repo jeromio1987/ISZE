@@ -43,3 +43,33 @@ AUDIT_*.md
 
 # --- Legacy clutter ---
 91_legacy/**
+
+# =============================================================================
+# Agent search scope - added 2026-09-24 (Jerome: fewer stale-copy errors, faster
+# searches). NOTHING IS DELETED. These paths stay on disk and still open by
+# direct path; they are only kept out of default agent search/indexing.
+# If a task genuinely needs one of these, name the file or folder explicitly and
+# read it by absolute path.
+# =============================================================================
+
+# --- Isuzu Universe: ~13k files (3.6k .js build output). Self-contained project
+#     with its own INDEX.md + RUNBOOK_UNIVERSE.md. Search it by naming the path.
+Isuzu Universe/**
+
+# --- Unsorted inbox: ~3.8k files, mixes live work with stale drafts. This is the
+#     single biggest source of double versions in search results.
+01_data/90_INBOX/**
+
+# --- Claude/Cursor worktrees: a linked worktree inside the repo shows every real
+#     file a second time (and a stale copy of it). Removed 2026-09-24; this rule
+#     stops a future one from entering search.
+.claude/worktrees/**
+.cursor/worktrees/**
+
+# --- Agent scratch backups: _backsafe_<date>_before folders hold pre-edit copies
+#     of files that also exist live. Reading one of those instead of the live file
+#     is the wrong-number failure mode.
+**/_backsafe_*/**
+
+# --- Scratch probe scripts/dumps (DATA_MANIFEST.md section 8: scratch, not deliverable)
+**/_tmp_*

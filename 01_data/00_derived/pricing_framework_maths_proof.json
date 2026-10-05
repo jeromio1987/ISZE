@@ -1,0 +1,78 @@
+{
+  "step": "prove the framework maths",
+  "settled_arithmetic_ok": true,
+  "rates": {
+    "fx_live": 178.5,
+    "fx_live_period": [
+      "2026-10-01",
+      "2027-03-31"
+    ],
+    "fx_prior_2026_04": 172.6,
+    "fx_prior_2025_10": 163.7,
+    "discount_live": {
+      "J": 0.673,
+      "T": 0.611
+    },
+    "discount_prior": {
+      "J": 0.62,
+      "T": 0.611
+    }
+  },
+  "rate_effects_pct": {
+    "fx_cost_factor": -8.291316526610649,
+    "discount_cost_factor": 8.54838709677419,
+    "net_on_landed_cost": -0.4517032619499428,
+    "euro_move_settled_revision_5_9616pct_yen": 5.482967996385657,
+    "euro_move_scenario_revision_7pct_yen": 6.516677509713564,
+    "margin_on_yen_base_price_pp": 5.300000000000004
+  },
+  "base_revision_provenance": {
+    "settled": 0.059616,
+    "settled_source": "aim_pricing_recalc_2026-09-17.json - weighted 5.9616%, step EUR 1,652,140.71",
+    "settled_is_yen_basis": true,
+    "settled_euro_move": 0.05482967996385657,
+    "scenario": 0.07,
+    "scenario_source": "AGENT-WRITTEN 2026-09-18. NOT on file, NOT a quotation from IML. Retained only to size the ceiling case.",
+    "scenario_euro_move": 0.06516677509713564
+  },
+  "target_solve": {
+    "4pct": {
+      "base_revision_needed": 0.04471902993643462,
+      "vs_settled": -0.014896970063565385,
+      "points_held_back_vs_settled": 0.01482967996385657,
+      "points_held_back_vs_scenario": 0.025166775097135642,
+      "relaxation_vs_plus7": -0.02528097006356539
+    },
+    "5pct": {
+      "base_revision_needed": 0.05476440522428505,
+      "vs_settled": -0.004851594775714951,
+      "points_held_back_vs_settled": 0.004829679963856567,
+      "points_held_back_vs_scenario": 0.01516677509713564,
+      "relaxation_vs_plus7": -0.015235594775714956
+    },
+    "6pct": {
+      "base_revision_needed": 0.06480978051213548,
+      "vs_settled": 0.005193780512135482,
+      "points_held_back_vs_settled": -0.005170320036143428,
+      "points_held_back_vs_scenario": 0.005166775097135645,
+      "relaxation_vs_plus7": -0.0051902194878645225
+    }
+  },
+  "chain_identity_rows_tested": 275210,
+  "chain_sp_within_1c_pct_live": 6.178917917226845,
+  "chain_sp_within_1c_pct_prior_163_7": 87.16035027796956,
+  "margin_identity_within_0.0005_pct_live": 92.69285273064204,
+  "margin_identity_within_0.0005_pct_prior_163_7": 92.69285273064204,
+  "spa_lines": 53,
+  "spa_matched_to_list": 50,
+  "spa_measured_gm_median": 0.42590971272229816,
+  "spa_class_gm_median": 0.5299891463357086,
+  "spa_gap_pp_median": -7.625024972269473,
+  "spa_measured_gm_median_at_live_rates": 0.42851571116488596,
+  "spa_measured_gm_median_at_prior_rates": 0.4259225847541023,
+  "chain_pct_off_by_more_than_1c_live": 93.82108208277316,
+  "chain_pct_off_by_more_than_1c_prior_163_7": 12.83964972203045,
+  "index_recomputed": 0.05961599453926425,
+  "index_published": 0.059616,
+  "index_reproduces": true
+}

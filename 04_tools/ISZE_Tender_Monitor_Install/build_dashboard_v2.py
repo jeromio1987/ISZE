@@ -1130,8 +1130,11 @@ function renderExecutive() {
   const countries = Object.entries(DATA.meta.country_counts).sort((a,b) => b[1]-a[1]).slice(0, 10);
   const lifecycle = Object.entries(DATA.meta.lifecycle_counts).sort((a,b) => b[1]-a[1]);
   const qualityRows = [
-    ['Missing deadlines', DATA.meta.stats.missing_deadline],
-    ['Missing value', DATA.meta.stats.missing_value],
+    ['Opportunities missing deadline', DATA.meta.stats.missing_deadline_opportunities ?? DATA.meta.stats.missing_deadline],
+    ['Opportunities missing value', DATA.meta.stats.missing_value_opportunities ?? DATA.meta.stats.missing_value],
+    ['Notices missing deadline', DATA.meta.stats.missing_deadline_notices],
+    ['Notices missing value', DATA.meta.stats.missing_value_notices],
+    ['Lifecycle unknown', DATA.meta.stats.lifecycle_unknown],
     ['Low evidence families', stats.low_evidence],
     ['Duplicate families', stats.duplicate_families],
   ];

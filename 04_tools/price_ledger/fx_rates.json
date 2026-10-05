@@ -1,0 +1,41 @@
+{
+  "built_at": "2026-09-24T20:24:26+00:00",
+  "builder": "04_tools/price_ledger/build_fx_rates.py",
+  "reference_date": "2026-09-24",
+  "source": "European Central Bank euro foreign exchange reference rates (daily)",
+  "source_url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml",
+  "convention": "eur_per_unit — multiply the native price by this to get EUR (same convention as the existing inline FX table in build_price_ledger.py)",
+  "quoted_as": "the ECB quotes units of currency per euro; eur_per_unit = 1 / quoted",
+  "raw_ecb_units_per_eur": {
+    "GBP": "0.85986",
+    "USD": "1.1367",
+    "NOK": "10.7895",
+    "SEK": "11.2645",
+    "DKK": "7.4756",
+    "PLN": "4.3823",
+    "ILS": "3.4649",
+    "JPY": "180.57",
+    "CHF": "0.9409",
+    "HUF": "366.15",
+    "RON": "5.2779",
+    "CZK": "24.399"
+  },
+  "eur_per_unit": {
+    "EUR": 1.0,
+    "GBP": 1.16298002,
+    "USD": 0.8797395971,
+    "NOK": 0.0926827008,
+    "SEK": 0.0887744685,
+    "DKK": 0.1337685269,
+    "PLN": 0.2281906761,
+    "ILS": 0.2886086179,
+    "JPY": 0.0055380185,
+    "CHF": 1.0628122011,
+    "HUF": 0.0027311211,
+    "RON": 0.1894692965,
+    "CZK": 0.0409852863
+  },
+  "missing_from_ecb": [],
+  "note": "ECB reference rates are published for information and are not a deal rate. They are used here so a Norwegian, Danish or US price can be recorded in euro at all; they replace no negotiated rate.",
+  "supersedes": "the inline FX = {'EUR':1.0,'GBP':1.17,'SEK':0.089} working table (as_of 2026-05-01, described in the ledger as 'not official')"
+}

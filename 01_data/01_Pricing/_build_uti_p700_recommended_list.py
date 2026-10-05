@@ -1,7 +1,7 @@
 """
 Build UTI P700 recommended parts list (Excel + CSV) from harvested APL rows.
 
-Mode A list · Mode B advise notes · 2026-08-12
+shared list · internal advise notes · 2026-08-12
 - Prefer VL27 Recommended / ITUK PRD / accessories / body P700 over VL27 All Parts
 - No invented per-PN qty or € demand
 - UTI ≠ UMI; RG21 2.2L not mixed in
@@ -302,7 +302,7 @@ def main() -> None:
     # --- Excel ---
     wb = Workbook()
 
-    # Advise first (Mode A + clear need/continue)
+    # Advise first (shared + clear need/continue)
     ws_a = wb.active
     ws_a.title = "Advise"
     advise_lines = [
@@ -416,10 +416,10 @@ def main() -> None:
     rec.to_csv(OUT_CSV, index=False)
     rec.to_csv(OUT_DERIVED_CSV, index=False)
 
-    # Sibling advise MD (Mode B OK)
+    # Sibling advise MD (internal OK)
     md = f"""# UTI P700 recommended parts list — advise
 
-**Mode B notes · {utc_now()} · UTI ≠ UMI · Shell out · RG21 not mixed**
+**internal notes · {utc_now()} · UTI ≠ UMI · Shell out · RG21 not mixed**
 
 ## Deliverables
 

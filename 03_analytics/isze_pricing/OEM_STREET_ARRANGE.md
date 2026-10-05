@@ -1,7 +1,7 @@
 # OEM peer street — arrange package (22 OEs)
 
 **As of:** 2026-08-10 (evening pass 2)  
-**Mode:** B (internal). No Mode A ship.  
+**Mode:** B (internal). No shared ship.  
 **Goal:** Fill street EUR for mapped peer OEs → `oem_peer_basket.csv` → `apply_oem_benchmark` on next `alloc` (+3% target unchanged).  
 **Status brief:** `C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\PRICING_STATUS_BRIEF_2026-08-10.md`
 

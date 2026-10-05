@@ -33,6 +33,7 @@ COUNTRY_NAME_MAP = {
     "HRV": "Croatia",
     "HUN": "Hungary",
     "IRL": "Ireland",
+    "ISL": "Iceland",
     "ISR": "Israel",
     "ITA": "Italy",
     "LTU": "Lithuania",
@@ -63,6 +64,7 @@ COUNTRY_CLUSTER_MAP = {
     "Finland": "Nordics Lead",
     "Sweden": "Nordics Lead",
     "Denmark": "Nordics Lead",
+    "Iceland": "Nordics Lead",
     "Spain": "Iberia Lead",
     "Portugal": "Iberia Lead",
     "France": "France Lead",
@@ -85,13 +87,16 @@ COUNTRY_CLUSTER_MAP = {
 }
 
 # v3: ISZE's active markets — used for country filtering at scrape time
+# 2026-09-25: ISL (Iceland) restored — EEA/EFTA, TED-eligible like Norway, and
+# ISZE bills ~EUR 85k/year through its Iceland distributor. See same note in
+# tender_scraper_v3.py's TED_TARGET_COUNTRIES.
 ISZE_TARGET_MARKETS = {
     "GBR", "IRL", "POL", "PRT", "GRC", "ISR",
     "DEU", "FRA", "ESP", "ITA", "NLD", "BEL",
     "DNK", "SWE", "NOR", "FIN", "ROU", "HUN",
     "CZE", "SVK", "BGR", "HRV", "AUT", "LVA",
     "LTU", "EST", "SVN",
-    "CYP", "MLT",
+    "CYP", "MLT", "ISL",
 }
 
 OWNER_OPTIONS = [
@@ -157,6 +162,24 @@ SOURCE_COUNTRY_FALLBACK = {
 BRAND_TERMS = [
     "isuzu", "d-max", "d max", "dmax", "n-series", "n series", "f-series", "f series",
 ]
+
+# Strict brand match (2026-10-01). Plain substring matching of BRAND_TERMS produced only
+# false hits in the 28 Sep feed: "d max" inside "...und max..." and "d-max" inside the
+# reagent name "Bond-Max". Each term must stand alone as a word; D-Max must not be the
+# tail of a longer word.
+_BRAND_STRICT_RE = {
+    "isuzu": re.compile(r"(?i)\bisuzu\b"),
+    "d-max": re.compile(r"(?i)(?<![a-z0-9-])d-?max\b"),
+    "d max": re.compile(r"(?i)(?<![a-z0-9-])d max\b(?!\s*\d)"),
+    "n-series": re.compile(r"(?i)\bisuzu n[- ]?(series|serie|reeks)\b|\bn-series\b"),
+    "f-series": re.compile(r"(?i)\bisuzu f[- ]?(series|serie|reeks)\b"),
+}
+
+
+def brand_hits_strict(text: str) -> List[str]:
+    """Isuzu brand terms that stand alone as words in `text`."""
+    return [t for t, rx in _BRAND_STRICT_RE.items() if rx.search(text or "")]
+
 
 SERVICE_TERMS = [
     "maintenance", "service contract", "repair and maintenance", "servicing", "after-sales",
@@ -380,6 +403,43 @@ LIFECYCLE_TERMS = {
     ],
 }
 
+# ---------------------------------------------------------------------------
+# Official notice-form codes → lifecycle state.
+# ---------------------------------------------------------------------------
+# Portals publish an authoritative form/notice code. The German open-data export
+# (oeffentlichevergabe) carries both `formType` and `noticeType`; TED uses the
+# eForms codes cn-*/can-*; Doffin and UK-CF pass a status string. Reading these is
+# exact evidence, and beats guessing the stage from title prose.
+#
+# 2026-09-20: DE-OV previously passed `noticeType` straight through and hardcoded
+# `Lifecycle: ""`, so every German notice was later defaulted to "competition" —
+# including `can-standard`, which is an award (result) notice. That put results in
+# the open-bid queue and told the desk to "Validate deadline" on a closed award.
+NOTICE_TYPE_FORM_MAP: Dict[str, str] = {
+    # TED / eForms
+    "cn-standard": "competition", "cn-social": "competition", "cn-desg": "competition",
+    "can-standard": "result", "can-social": "result", "can-desg": "result",
+    "can-tran": "result",
+    "pin-only": "planning", "pin-buyer": "planning", "pin-rtl": "planning",
+    "pin-cfc-standard": "planning", "pin-cfc-social": "planning",
+    "veat": "result",
+    "corr": "change",
+    # German open data (oeffentlichevergabe) formType / noticeType
+    "competition": "competition", "result": "result",
+    "planning": "planning", "change": "change", "completion": "completion",
+    "cancellation": "cancelled", "cancelled": "cancelled",
+    # Plain-word statuses returned by other national fetchers
+    "open": "competition", "active": "competition", "awarded": "result",
+    "award": "result", "closed": "result", "cancelled": "cancelled",
+    "amended": "change", "modification": "change",
+}
+
+# Lifecycle states. "unknown" is a real state: no form code, no stage wording.
+# "cancelled" is separated from "result" because a cancelled round is not an award.
+LIFECYCLE_STATES: Tuple[str, ...] = (
+    "competition", "planning", "result", "completion", "change", "cancelled", "unknown",
+)
+
 # v3/v4: CPV codes that are in-scope for "vehicles" but completely out-of-scope for ISZE.
 # Any notice whose CPV starts with one of these prefixes is discarded before scoring.
 EXCLUDED_CPV_PREFIXES: Tuple[str, ...] = (
@@ -422,6 +482,9 @@ ISUZU_NOISE_TITLE_RE = re.compile(
     r"sweeping machine|car ?sharing|"
     r"tyre repair|tire repair|tyre supply|tire supply|"
     r"firefight|feuerwehr|ambulance|refuse[- ]collection|"
+    # Bus / coach — Isuzu builds no buses, so bus-only R&M is not our workshop work
+    r"\bbus(?:es)?\b|autobus\w*|autob[uú]sz|omnibus|linienbus|reisebus|"
+    r"\bcoach(?:es)?\b|autobuz\w*|"
     # Hebrew noise (Latin EU patterns unchanged)
     r"רכב\s*פרטי|מונית|מוניות|אוטובוס|אוטובוסים|"
     r"הסעת\s*נוסעים|הסעות|"
@@ -461,6 +524,30 @@ ISUZU_LCV_SIGNAL_RE = re.compile(
     r")"
 )
 
+# Vehicle repair / maintenance / fleet-service CPV families.
+# Service contracts are the aftersales desk's own work: our vehicles, our service
+# volumes, our parts. They carry no "truck" or "pickup" token, so the LCV text
+# signal below never fires — they must be recognised from the CPV alone.
+# NOTE: 501181 (tyre repair) stays excluded via EXCLUDED_CPV_PREFIXES.
+VEHICLE_RM_CPV_PREFIXES: Tuple[str, ...] = (
+    "5011",    # Repair and maintenance services of motor vehicles (incl. 50111/50112/50113/50114/50116)
+    "50110",
+    "50112",
+    "50113",   # Repair and maintenance services of buses/coaches — kept, but see noise gate
+    "50114",   # Repair and maintenance of trucks
+    "50116",
+    "50111",   # Vehicle fleet management / fleet-support services
+)
+
+# Vehicle spare-parts CPVs — the aftersales core (parts for goods vehicles, vans,
+# cars). A parts contract names no vehicle type our text signal can catch, so it is
+# admitted from the CPV. 3432/3433 sit under "parts and accessories for vehicles".
+VEHICLE_PARTS_CPV_PREFIXES: Tuple[str, ...] = (
+    "3433",    # Spare parts for goods vehicles, vans and cars
+    "3432",    # Parts and accessories for cars
+    "3431",    # Engines and engine parts
+)
+
 # v3: CPV codes that are the ISZE sweet spot — used to give a CPV bonus in scoring
 ISZE_TARGET_CPV_PREFIXES: Tuple[str, ...] = (
     "34131",   # Pickups — D-Max core
@@ -494,7 +581,9 @@ GPS_ELIGIBLE_SEGMENTS = frozenset({"pickup", "truck"})
 # Discriminating product-shape regexes (order applied in classify_product_segment).
 _PICKUP_SHAPE_RE = re.compile(
     r"(?i)("
-    r"\bpick[- ]?ups?\b|d[- ]?max|double cab|crew cab|single cab|extra cab|"
+    # 2026-10-01: d-max must stand alone; "Bond-Max" (a lab reagent) and "...und max"
+    # were read as a D-Max pickup.
+    r"\bpick[- ]?ups?\b|(?<![a-z0-9-])d-?max\b|double cab|crew cab|single cab|extra cab|"
     r"chassis\s+cab\s+pickup|4x4\s+(?:pickup|utility|pick[- ]?up)|"
     r"טנדר"
     r")"
@@ -533,12 +622,11 @@ _LCV_VAN_SHAPE_RE = re.compile(
 # Hard-drop from opportunities (not merely GPS-null). See _NOT_FOR_US_GATE.md.
 POSTAL_COURIER_NOT_FOR_US_RE = re.compile(
     r"(?i)("
-    r"\bposta\b|po[sșşš]ta|post\s*(?:office|europ)|"
     r"posta\s*romana|c\.?n\.?\s*posta|hrvatska\s*po[sš]ta|"
-    r"la\s*poste|\bbpost\b|deutsche\s*post|royal\s*mail|"
-    r"\bcourier\b|parcel\s*force|\bdpd\b|\bgls\b|"
+    r"post\s*(?:office|europ|nord)|deutsche\s*post|royal\s*mail|"
+    r"\bpoczta\b|\bposti\b|\bpostnord\b|\bpostnl\b|"
     r"postal\s*(?:service|fleet|van|vehicle)|"
-    r"parcels?\s+van|delivery\s+van"
+    r"\bcourier\b|parcel\s*force|\bdpd\b|\bgls\b|parcels?\s+van|delivery\s+van"
     r")"
 )
 PANEL_VAN_PURCHASE_RE = re.compile(
@@ -821,25 +909,43 @@ _FLEET_NOUNS = (
     r"|vozila?"
 )
 _FLEET_COUNTERS = r"st[uü]ck|szt|buc|db|ks|kpl|units?|stk|pcs"
+# A leading digit must not be part of another number, a configuration token, or a
+# reference code. The guards stop:
+#   "4x4" / "6x2" / "8x4"   drivetrain and axle notation  -> not a count
+#   "3,5 t"                 tonnage                      -> not a count
+#   "VH170" / "DLII5"       reference and procedure codes -> not a count
+# The letter guard is what catches the last case: in "1/DLII5/VH170 LKW" the 170
+# follows H, and a real count ("10 vehicles") is always preceded by a space or
+# punctuation. Without this, one reference code became 170 trucks and 78% of the
+# whole euro pipeline. See the VH170 test in tests/.
+_NUM_GUARD_LEFT = r"(?<![\d/.,\-xX×A-Za-zÀ-ÿ])"
 _PAT_NUM_NOUN = re.compile(
-    rf"(?<![\d/.,-])(\d{{1,4}})\s*(?:{_FLEET_COUNTERS})?\.?\s*(?:{_FLEET_NOUNS})\b", re.I
+    rf"{_NUM_GUARD_LEFT}(\d{{1,4}})\s*(?:{_FLEET_COUNTERS})?\.?\s*(?:{_FLEET_NOUNS})\b", re.I
 )
 _PAT_NOUN_NUM = re.compile(
-    rf"(?:{_FLEET_NOUNS})\W{{0,12}}?(?<![\d/.,-])(\d{{1,4}})\s*(?:{_FLEET_COUNTERS})\b", re.I
+    rf"(?:{_FLEET_NOUNS})\W{{0,12}}?{_NUM_GUARD_LEFT}(\d{{1,4}})\s*(?:{_FLEET_COUNTERS})\b", re.I
 )
 _PAT_FLEET_OF = re.compile(r"\bfleet\s+of\s+(\d{1,4})\b", re.I)
 _FLEET_MAX = 3000
 
 
-def extract_fleet_size(*fields: str) -> int:
-    """Return maximum plausible fleet size from title/description fields, else 0.
+def extract_fleet_size(*fields: str) -> Optional[int]:
+    """Return the maximum plausible fleet size found, or None when none is stated.
+
+    Returns None — not 0 — when nothing is found. See the note at the end of this
+    docstring: a stored zero is not the same as an unknown and must not be summed.
 
     Guards: reject years 1900-2100, reject numbers abutting '/', cap at 3000,
     take the MAXIMUM plausible match (not the first). Accepts title and/or description.
+
+    2026-09-20: this previously returned 0 for "not found", so 658 of 682 diagnostic
+    rows stored the integer 0. That 0 propagated into sums, means and the dashboard's
+    `fleet_size ? ... : '—'` test, where it read as a real fleet of zero vehicles.
+    Callers that need a number should treat None and 0 as different facts.
     """
     text = " ".join(f for f in fields if f)
     if not text:
-        return 0
+        return None
     best = 0
     for pat in (_PAT_NUM_NOUN, _PAT_NOUN_NUM, _PAT_FLEET_OF):
         for match in pat.finditer(text):
@@ -858,7 +964,7 @@ def extract_fleet_size(*fields: str) -> int:
                 continue
             if n > best:
                 best = n
-    return best
+    return best or None
 
 
 
@@ -993,12 +1099,44 @@ def urgency_from_days(days: Optional[int]) -> str:
     return "ok"
 
 
+def lifecycle_from_notice_type(notice_type: str) -> str:
+    """Map an official form/notice code to a lifecycle state, or "" if unrecognised.
+
+    Exact code match first (evidence), then a guarded substring match so wrapped
+    values such as "can-standard, can-standard" still resolve. Substring matching
+    is guarded so "result" inside a longer word cannot fire accidentally.
+    """
+    t = extract_text(notice_type).strip().lower()
+    if not t:
+        return ""
+    if t in NOTICE_TYPE_FORM_MAP:
+        return NOTICE_TYPE_FORM_MAP[t]
+    for code, state in NOTICE_TYPE_FORM_MAP.items():
+        if code in t or re.search(rf"(?<![a-z]){re.escape(code)}(?![a-z])", t):
+            return state
+    return ""
+
+
 def classify_lifecycle(text: str, notice_type: str = "") -> str:
+    """Return the lifecycle state for a notice.
+
+    Order of authority:
+      1. the official form/notice code, when the source publishes one;
+      2. explicit stage wording in the title/description;
+      3. "unknown" — never a silent "competition".
+
+    A missing or unrecognised form code must not be presented as an open
+    competition. The bid queue needs a *verified* open state, so "unknown" is
+    routed to document qualification instead (see suggest_next_action).
+    """
+    by_code = lifecycle_from_notice_type(notice_type)
+    if by_code:
+        return by_code
     blob = f"{text or ''} {notice_type or ''}".lower()
     for stage in ("completion", "result", "change", "planning"):
         if any(term in blob for term in LIFECYCLE_TERMS[stage]):
             return stage
-    return "competition"
+    return "unknown"
 
 
 def evidence_score(row: Dict[str, Any]) -> Tuple[int, str, List[str]]:
@@ -1183,8 +1321,9 @@ def passes_isuzu_selection_gate(
 ) -> bool:
     """Commercial shortlist gate for D-Max / N-Series / truck + real fleet R&M.
 
-    Keeps notices with Isuzu-core CPV or an LCV/goods/fleet signal in the text.
-    Drops transport-services CPV, passenger/SEND/towing noise, and generic
+    Keeps notices with Isuzu-core CPV, a vehicle repair/maintenance CPV
+    (aftersales work on our own product), or an LCV/goods/fleet signal in the
+    text. Drops transport-services CPV, passenger/SEND/towing noise, and generic
     passenger-car R&M with no LCV signal. Prefer this filter over score retune.
 
     Postal/courier panel-van buys are hard-dropped by passes_not_for_us_gate
@@ -1198,6 +1337,16 @@ def passes_isuzu_selection_gate(
         return False
     if cpv_is_isuzu_core(cpv_s):
         return True
+    # Vehicle repair / maintenance / fleet-service contracts: aftersales work on
+    # our own product. The LCV text signal never fires on these (a Romanian
+    # "Acord-cadru de reparații" carries no truck or pickup token), so they are
+    # admitted from the CPV. Passenger/bus R&M is still removed by the noise gate
+    # above, and tyre repair stays in EXCLUDED_CPV_PREFIXES.
+    if cpv_s.startswith(VEHICLE_RM_CPV_PREFIXES):
+        return True
+    # Vehicle spare-parts contracts — aftersales core, no vehicle-type token in the text.
+    if cpv_s.startswith(VEHICLE_PARTS_CPV_PREFIXES):
+        return True
     # Parent "motor vehicles" / car R&M: only with LCV signal
     if cpv_s.startswith("34100000") or cpv_s.startswith("50112"):
         return text_has_lcv_signal(blob)
@@ -1207,8 +1356,14 @@ def passes_isuzu_selection_gate(
 
 
 def is_postal_courier_not_for_us(title: str = "", description: str = "", buyer: str = "") -> bool:
-    """True when buyer/title is postal/courier — near-zero exclusive D-Max play."""
-    blob = " ".join([buyer or "", title or "", description or ""])
+    """True when buyer/title is postal/courier — near-zero exclusive D-Max play.
+
+    Buyer-only postal nouns (posta, La Poste, bpost, GLS, DPD …) are deliberately
+    NOT matched here: a postal operator's spare-parts or maintenance contract is
+    genuine aftersales work on vehicles we service, not a panel-van purchase.
+    Those are removed by the panel-van and van-segment rules instead.
+    """
+    blob = " ".join([title or "", description or ""])
     return bool(blob and POSTAL_COURIER_NOT_FOR_US_RE.search(blob))
 
 
@@ -1243,8 +1398,8 @@ def passes_not_for_us_gate(
 
     See _NOT_FOR_US_GATE.md.
     """
-    blob = " ".join([title or "", description or "", cpv_desc or "", buyer or ""])
-    if is_postal_courier_not_for_us(title, description, buyer):
+    blob = " ".join([title or "", description or ""])
+    if is_postal_courier_not_for_us(title, description):
         return False
 
     seg = (product_segment or "").strip()
@@ -1386,7 +1541,7 @@ def compute_scores(row: Dict[str, Any]) -> Tuple[int, int, int, List[str]]:
     ).lower()
     cpv = extract_text(row.get("CPV Code"))
 
-    brand_hits = keyword_hits(text, BRAND_TERMS)
+    brand_hits = brand_hits_strict(text)
     service_hits = keyword_hits(text, SERVICE_TERMS)
     framework_hits = keyword_hits(text, FRAMEWORK_TERMS)
     vehicle_hits = keyword_hits(text, VEHICLE_TERMS)
@@ -1495,7 +1650,9 @@ def compute_scores(row: Dict[str, Any]) -> Tuple[int, int, int, List[str]]:
     if cpv.startswith(CPV_SERVICE_PREFIXES):
         econ += 10
 
-    fleet_size = int(row.get("fleet_size") or 0)
+    fleet_size = row.get("fleet_size")
+    if fleet_size is None:
+        fleet_size = 0
     if fleet_size >= 20:
         econ += 15
         reasons.append("material fleet size")
@@ -1526,13 +1683,226 @@ def derive_decision(fit: int, win: int, econ: int, lifecycle: str) -> str:
     return "Ignore"
 
 
+# ---------------------------------------------------------------------------
+# Fleet-brand gate (2026-10-01, Jerome: "how can you apply if you don't know
+# for which fleet brand it is?")
+#
+# A tender to SERVICE an existing fleet (repair & maintenance, parts supply,
+# no vehicle purchase) is only an Isuzu opportunity if Isuzu vehicles are in
+# that fleet. The notice text almost never says so: the vehicle list sits in
+# the tender documents. Until someone has read it, such a tender cannot be
+# Selective or Attack on keyword and CPV points alone.
+#
+# A vehicle PURCHASE tender is different: the brand is the bidder's choice,
+# so an unnamed brand is not a defect there and the gate does not apply.
+# ---------------------------------------------------------------------------
+
+MULTI_BRAND_RE = re.compile(
+    r"(?i)(multi[- ]?marques?|multi[- ]?brand|toutes marques|alle merken|merkonafhankelijk|"
+    r"mehrmarken|markenunabh[aä]ngig|verschiedene(n)? (marken|hersteller|fabrikate)|"
+    r"varie marche|diverse marche|vari(e|os) (marche|marcas)|various (makes|brands)|"
+    r"different (makes|brands)|distintas marcas|r[oó][zż]nych marek|multimarc|multimarque)"
+)
+
+# Purchase wording the shared _VEHICLE_BUY_RE does not carry. Kept local to this gate so
+# the not-for-us and segment gates are not changed by it.
+_GATE_BUY_EXTRA_RE = re.compile(
+    r"(?i)(aankoop|aankopen|aanbesteding voor de levering|levering van|beschaffung|\bkauf\b|kauf von|"
+    r"achat|acquisizione|fornitura di|compra de|adquisi[cç]|zakup|dostaw|inköp|anskaff|indkøb|hankinta|\bkjøp\b|\bkjop\b|\bkøb\b|\bköp\b|innkjøp|"
+    r"nákup|dobava|vásárl|furnizare|cump[aă]rare|προμήθεια|aquisi[cç]|fourniture|"
+    r"supply and delivery|delivery of|lastebil for)"
+)
+
+# Repair / maintenance / workshop wording. When the title carries it, a purchase word in
+# it usually buys a SERVICE ("achizitie servicii de reparare"), not a vehicle.
+_GATE_RM_WORDS_RE = re.compile(
+    r"(?i)(repair|maint|servic|workshop|entretien|r[ée]paration|reparat|onderhoud|herstel|wartung|"
+    r"instandhalt|werkstatt|revizi|[iî]ntre[tț]inere|verksted|vedlikehold|assist[eê]ncia|manuten|"
+    r"mantenim|servis|underh[aå]ll|v[aæ]rksted|piese|pi[eè]ces|onderdelen|ersatzteil)"
+)
+_GATE_BUY_VEHICLE_RE = re.compile(
+    r"(?i)\b(acquisition|achat|purchase|aankoop|aankopen|kauf|beschaffung|lieferung|livraison|"
+    r"aquisi[cç][aã]o|adquisici[oó]n|acquisto|fornitura|furnizare|achizi[tț]i[ea]|zakup|kj[oø]p|"
+    r"anskaffelse|supply)\b(?P<mid>(?:\W+\w+){0,6}?)\W+"
+    r"(camions?|trucks?|vrachtwagens?|lastebil\w*|lkw|v[ée]hicules?|vehicles?|viaturas?|ve[íi]culos?|"
+    r"pick-?ups?|autocarri|fahrzeug\w*|autovehicul\w*|ch[aâ]ssis|bestelwagens?)\b"
+)
+
+
+def _buys_a_vehicle(text: str) -> bool:
+    """Purchase word followed closely by a vehicle noun, with no service wording between."""
+    for m in _GATE_BUY_VEHICLE_RE.finditer(text or ""):
+        if not _GATE_RM_WORDS_RE.search(m.group("mid") or ""):
+            return True
+    return False
+
+
+_GATE_LEASE_RE = re.compile(
+    r"(?i)\b(lease|leasing|autolease|leasen|renting|aluguer|noleggio|alquiler|location longue)\b"
+)
+
+
+def _is_vehicle_buy(blob: str) -> bool:
+    return bool(_VEHICLE_BUY_RE.search(blob) or _GATE_BUY_EXTRA_RE.search(blob))
+
+
+FLEET_BRAND_LABELS = {
+    "isuzu_named": "Isuzu named in the notice",
+    "open_vehicle_buy": "Vehicle purchase: brand is the bidder's choice",
+    "unknown_multi_brand": "Multi-brand fleet: Isuzu share unknown, check the vehicle list",
+    "unknown": "Fleet brand unknown: check the vehicle list in the tender documents",
+    "isuzu_in_fleet_docs": "Isuzu in the vehicle list of the tender documents",
+}
+FLEET_BRAND_NEXT_ACTION = "Open the tender documents and check the vehicle list for Isuzu before any decision"
+
+# Result of the document reader (tender_doc_reader.py), attached as rec["fleet_doc_check"].
+# Only "isuzu_in_fleet" lifts the cap; every other verdict keeps the tender on Watch with
+# the reason the documents gave.
+FLEET_DOC_NEXT_ACTION = {
+    "isuzu_mentioned_outside_list": "Isuzu is named in the tender documents but not in a vehicle list: read the passage before deciding",
+    "not_in_fleet": "The vehicle list in the tender documents has no Isuzu: pass unless the fleet changes",
+    "no_vehicle_list_found": "The tender documents carry no vehicle list: ask the buyer for the fleet list before any decision",
+    "documents_not_available": "Tender documents not readable automatically: open them on the portal by hand",
+}
+FLEET_DOC_BRAND_FIT, FLEET_DOC_BRAND_ECON = 40, 10  # the same points compute_scores gives a brand hit
+
+
+def _num(v: Any) -> Optional[int]:
+    try:
+        return int(float(v))
+    except (TypeError, ValueError):
+        return None
+
+
+def _like(old: Any, new: int) -> Any:
+    return str(new) if isinstance(old, str) else new
+
+
+def _apply_fleet_doc_points(rec: Dict[str, Any], confirmed: bool) -> None:
+    """Add (or take back) the brand-signal points for an Isuzu-confirmed vehicle list, once,
+    then let derive_decision decide. Never sets a decision by hand."""
+    has = bool(rec.get("fleet_doc_brand_points"))
+    if confirmed == has:
+        pass
+    else:
+        sign = 1 if confirmed else -1
+        for k, d in (("fit_score", FLEET_DOC_BRAND_FIT), ("econ_score", FLEET_DOC_BRAND_ECON)):
+            v = _num(rec.get(k))
+            if v is not None:
+                rec[k] = _like(rec[k], max(0, min(100, v + sign * d)))
+        if confirmed:
+            rec["fleet_doc_brand_points"] = True
+        else:
+            rec.pop("fleet_doc_brand_points", None)
+    drivers = [x for x in (rec.get("score_drivers") or [])
+               if x not in ("fleet brand unknown", "Isuzu in tender vehicle list")]
+    if confirmed:
+        rec["score_drivers"] = ["Isuzu in tender vehicle list"] + drivers[:5]
+    fit, win, econ = (_num(rec.get(k)) for k in ("fit_score", "win_score", "econ_score"))
+    if None not in (fit, win, econ) and (confirmed or has):
+        lifecycle = rec.get("Lifecycle") or rec.get("lifecycle") or ""
+        rec["decision"] = derive_decision(fit, win, econ, lifecycle)
+        if "opportunity_score" in rec:
+            rec["opportunity_score"] = int(round(fit * 0.4 + win * 0.3 + econ * 0.3))
+
+
+def apply_fleet_brand_gate(rec: Dict[str, Any], text: str = "") -> Dict[str, Any]:
+    """Set fleet_brand / fleet_brand_label and cap the decision when the brand is unknown.
+
+    Works on a notice row (export keys) or an opportunity dict. Idempotent.
+    Also corrects a record scored before the strict brand match existed: a brand hit
+    that is not a real Isuzu word loses the +40 fit / +10 econ it was given.
+    """
+    blob = " ".join([
+        text or "",
+        str(rec.get("Title") or rec.get("title_raw") or rec.get("title") or ""),
+        str(rec.get("Description") or rec.get("description") or ""),
+    ])
+    if rec.get("brand_hits") and not brand_hits_strict(blob):
+        rec["brand_hits_rejected"] = list(rec.get("brand_hits") or [])
+        rec["brand_hits"] = []
+        for k, d in (("fit_score", 40), ("econ_score", 10)):
+            if isinstance(rec.get(k), (int, float)):
+                rec[k] = max(0, int(rec[k]) - d)
+        rec["score_drivers"] = [x for x in (rec.get("score_drivers") or []) if x != "ISZE brand signal"]
+        if all(isinstance(rec.get(k), (int, float)) for k in ("fit_score", "win_score", "econ_score")):
+            lifecycle = rec.get("Lifecycle") or rec.get("lifecycle") or ""
+            rec["decision"] = derive_decision(rec["fit_score"], rec["win_score"], rec["econ_score"], lifecycle)
+            if "opportunity_score" in rec:
+                rec["opportunity_score"] = int(round(rec["fit_score"] * 0.4 + rec["win_score"] * 0.3
+                                                     + rec["econ_score"] * 0.3))
+
+    seg = rec.get("product_segment") or ""
+    service = bool(rec.get("rm_contract") or rec.get("parts_signal") or seg == "rm_only")
+    buy = _is_vehicle_buy(blob)
+    lease = bool(_GATE_LEASE_RE.search(blob))
+    title = str(rec.get("title_raw") or rec.get("Title") or rec.get("title") or "")
+    title_rm = bool(_GATE_RM_WORDS_RE.search(title))
+    vehicle_seg = seg in ("pickup", "truck", "lcv_van")
+    if rec.get("brand_hits"):
+        status = "isuzu_named"
+    elif lease or _buys_a_vehicle(title):
+        status = "open_vehicle_buy"
+    elif buy and (vehicle_seg or not service or not title_rm):
+        status = "open_vehicle_buy"
+    elif vehicle_seg and not title_rm:
+        status = "open_vehicle_buy"
+    elif service:
+        status = "unknown"
+    else:
+        status = "open_vehicle_buy" if buy else "unknown"
+    if status == "unknown" and MULTI_BRAND_RE.search(blob):
+        status = "unknown_multi_brand"
+
+    # Document check (tender_doc_reader.py): Isuzu found in the fleet list lifts the cap and
+    # re-scores through the normal brand points; any other verdict keeps the cap with its reason.
+    doc = rec.get("fleet_doc_check") if isinstance(rec.get("fleet_doc_check"), dict) else {}
+    verdict = doc.get("verdict") or ""
+    confirmed = status.startswith("unknown") and verdict == "isuzu_in_fleet"
+    if confirmed or rec.get("fleet_doc_brand_points"):
+        _apply_fleet_doc_points(rec, confirmed)
+    if confirmed:
+        status = "isuzu_in_fleet_docs"
+    rec["fleet_brand"] = status
+    rec["fleet_brand_label"] = FLEET_BRAND_LABELS[status]
+    if confirmed:
+        rec.pop("decision_before_brand_gate", None)
+        lifecycle = rec.get("Lifecycle") or rec.get("lifecycle") or ""
+        if lifecycle not in ("result", "cancelled", "change", "completion"):
+            rec["next_action_suggested"] = (
+                "Isuzu is in the tender's vehicle list (see the document evidence): decide pursue or pass")
+            rec["status_suggested"] = suggest_status(
+                rec.get("decision") or "", rec.get("urgency") or "", lifecycle,
+                rec.get("evidence_label") or "")
+
+    if status.startswith("unknown"):
+        before = rec.get("decision")
+        if before in ("Attack", "Selective"):
+            rec["decision"] = "Watch"
+            rec.setdefault("decision_before_brand_gate", before)
+        drivers = list(rec.get("score_drivers") or [])
+        if "fleet brand unknown" not in drivers:
+            rec["score_drivers"] = ["fleet brand unknown"] + drivers[:5]
+        lifecycle = rec.get("Lifecycle") or rec.get("lifecycle") or ""
+        if lifecycle not in ("result", "cancelled", "change", "completion"):
+            rec["next_action_suggested"] = FLEET_DOC_NEXT_ACTION.get(verdict, FLEET_BRAND_NEXT_ACTION)
+            rec["status_suggested"] = "Enrich"
+        if verdict in FLEET_DOC_NEXT_ACTION:
+            label = str(doc.get("label") or verdict)
+            if doc.get("reason"):
+                label += f" ({doc['reason']})"
+            rec["fleet_brand_label"] = label
+    return rec
+
 def suggest_owner(country: str) -> str:
     return COUNTRY_CLUSTER_MAP.get(country, "Unassigned")
 
 
 def suggest_status(decision: str, urgency: str, lifecycle: str, evidence_label: str) -> str:
-    if lifecycle == "result":
+    if lifecycle in ("result", "cancelled", "change", "completion"):
         return "Review"
+    if lifecycle == "unknown":
+        return "Enrich"
     if decision == "Attack" and urgency in ("critical", "soon"):
         return "Bid / No-Bid"
     if decision == "Attack":
@@ -1545,11 +1915,23 @@ def suggest_status(decision: str, urgency: str, lifecycle: str, evidence_label: 
 
 
 def suggest_next_action(row: Dict[str, Any]) -> str:
+    """Route a case to its next action.
+
+    Unknown lifecycle is not an open-bid signal: a lead with no verified open state
+    goes to document qualification rather than the bid queue (2026-09-20).
+    """
     decision = row.get("decision", "Watch")
     urgency = row.get("urgency", "none")
-    lifecycle = row.get("Lifecycle", "competition")
+    lifecycle = row.get("Lifecycle") or "unknown"
     if lifecycle == "result":
         return "Mine award outcome and incumbent insight"
+    if lifecycle == "cancelled":
+        return "Closed round - check for a replacement notice"
+    if lifecycle in ("change", "completion"):
+        return "Check amendment scope and effective dates"
+    if lifecycle == "unknown":
+        # A lead with no verified open state belongs in document qualification.
+        return "Verify lifecycle and recover notice documents"
     if not row.get("Buyer"):
         return "Enrich buyer and route to owner"
     if not row.get("deadline_date"):
@@ -1611,9 +1993,13 @@ def normalize_raw_row(raw: Dict[str, Any], source_hint: str = "") -> Dict[str, A
     source_notice_id = extract_text(raw.get("Source Notice ID")) or extract_notice_id(raw.get("URL", ""))
     raw_fleet = parse_number(raw.get("FleetSize"))
     extracted_fleet = extract_fleet_size(title, description)
-    fleet_size = int(raw_fleet or extracted_fleet or 0)
+    # 2026-09-20: keep None as "not stated". This used to be `... or 0`, which stored
+    # a real-looking fleet of zero. (None and 0 must stay different facts.)
+    fleet_size: Optional[int] = raw_fleet if raw_fleet is not None else extracted_fleet
+    if fleet_size is not None:
+        fleet_size = int(fleet_size)
     # Confidence: "extracted" only when source or extractor provided a size — never guessed.
-    fleet_size_confidence = "extracted" if fleet_size else None
+    fleet_size_confidence = "extracted" if fleet_size is not None else None
     days = days_until(deadline)
     tier = value_tier(value_amount)
     urgency = urgency_from_days(days)
@@ -1655,7 +2041,7 @@ def normalize_raw_row(raw: Dict[str, Any], source_hint: str = "") -> Dict[str, A
     row["relevance_pass"] = relevance_pass(row["relevance_score_1to5"])
     row["opportunity_id"] = build_family_id(row["Title Compact"], buyer, country)
     _text_blob = " ".join([title, cpv_desc, description]).lower()
-    row["brand_hits"] = keyword_hits(_text_blob, BRAND_TERMS)
+    row["brand_hits"] = brand_hits_strict(_text_blob)
     row["service_hits"] = keyword_hits(_text_blob, SERVICE_TERMS)
     row["framework_hits"] = keyword_hits(_text_blob, FRAMEWORK_TERMS)
     row["vehicle_hits"] = keyword_hits(_text_blob, VEHICLE_TERMS)
@@ -1687,6 +2073,7 @@ def normalize_raw_row(raw: Dict[str, Any], source_hint: str = "") -> Dict[str, A
     row["owner_suggested"] = suggest_owner(country)
     row["status_suggested"] = suggest_status(row["decision"], urgency, lifecycle, ev_label)
     row["next_action_suggested"] = suggest_next_action(row)
+    apply_fleet_brand_gate(row)
     return row
 
 
@@ -1750,14 +2137,19 @@ def aggregate_opportunities(notices: List[Dict[str, Any]]) -> List[Dict[str, Any
         win = max(int(r["win_score"]) for r in items)
         econ = max(int(r["econ_score"]) for r in items)
         lifecycle_counter = Counter(r["Lifecycle"] for r in items)
-        lifecycle = lifecycle_counter.most_common(1)[0][0]
+        # Most common state wins, but never let a defaulted "unknown" hide a known
+        # stage: if any notice in the family has a real state, use that.
+        known_states = [s for s, _ in lifecycle_counter.most_common() if s and s != "unknown"]
+        lifecycle = known_states[0] if known_states else (lifecycle_counter.most_common(1)[0][0] or "unknown")
         ev_score = int(round(sum(evidence_scores) / len(evidence_scores))) if evidence_scores else 0
         ev_label = "High" if ev_score >= 75 else "Medium" if ev_score >= 50 else "Low"
         decision = derive_decision(fit, win, econ, lifecycle)
         urgency_values = [r["urgency"] for r in items]
         urgency = min(urgency_values, key=lambda x: URGENCY_ORDER.get(x, 9)) if urgency_values else "none"
-        fleet_size = max(int(r.get("fleet_size") or 0) for r in items)
-        fleet_size_confidence = "extracted" if fleet_size else None
+        # 2026-09-20: previously `max(... or 0)` forced an unknown fleet to 0.
+        stated_fleets = [int(r["fleet_size"]) for r in items if r.get("fleet_size") is not None]
+        fleet_size = max(stated_fleets) if stated_fleets else None
+        fleet_size_confidence = "extracted" if fleet_size is not None else None
         buyer = rep.get("Buyer") or next((r.get("Buyer") for r in items if r.get("Buyer")), "")
         country = rep.get("Country") or (countries[0] if countries else "")
         owner = suggest_owner(country)
@@ -1886,6 +2278,10 @@ def aggregate_opportunities(notices: List[Dict[str, Any]]) -> List[Dict[str, Any
             opportunity["aftersales_match_tip"] = (
                 "No service/parts/warranty language found in notice"
             )
+        apply_fleet_brand_gate(
+            opportunity,
+            " ".join(str(r.get("Title") or "") + " " + str(r.get("Description") or "") for r in items),
+        )
         opportunities.append(opportunity)
 
     opportunities.sort(
@@ -1901,6 +2297,14 @@ def aggregate_opportunities(notices: List[Dict[str, Any]]) -> List[Dict[str, Any
 
 
 def meta_summary(notices: List[Dict[str, Any]], opportunities: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Headline counts, all derived from the final rows passed in.
+
+    2026-09-20: the missing-deadline / missing-value totals were computed over the
+    raw notice list while every list on the page is built from the opportunity
+    families, so the headline disagreed with the rows beneath it (315/374 against a
+    row count of 296/350 on the frozen export). They are now counted over the same
+    opportunities the lists use, and the per-row basis is named in the key.
+    """
     action_queue = [
         o for o in opportunities
         if o["decision"] in ("Attack", "Selective") and (
@@ -1916,15 +2320,21 @@ def meta_summary(notices: List[Dict[str, Any]], opportunities: List[Dict[str, An
         "selective": sum(1 for o in opportunities if o["decision"] == "Selective"),
         "action_queue": len(action_queue),
         "due_14d": sum(1 for o in opportunities if o["days_to_deadline"] is not None and o["days_to_deadline"] <= 14 and o["days_to_deadline"] >= 0),
-        "missing_deadline": sum(1 for n in notices if not n.get("Deadline Date")),
-        "missing_value": sum(1 for n in notices if n.get("value_amount") is None),
+        # Counted over opportunities, matching the lists on the page.
+        "missing_deadline_opportunities": sum(1 for o in opportunities if not o.get("deadline_date")),
+        "missing_value_opportunities": sum(1 for o in opportunities if o.get("value_amount") is None),
+        # Counted over raw notices, kept separately and labelled as such.
+        "missing_deadline_notices": sum(1 for n in notices if not n.get("Deadline Date")),
+        "missing_value_notices": sum(1 for n in notices if n.get("value_amount") is None),
         "duplicate_families": sum(1 for o in opportunities if o["duplicate_count"] > 0),
         "low_evidence": sum(1 for o in opportunities if o["evidence_label"] == "Low"),
         "aftersales_tagged": sum(1 for o in opportunities if o.get("aftersales_tags")),
+        "lifecycle_known": sum(1 for o in opportunities if o.get("lifecycle") not in (None, "", "unknown")),
+        "lifecycle_unknown": sum(1 for o in opportunities if o.get("lifecycle") in (None, "", "unknown")),
     }
     source_counts = Counter(n.get("Source", "Unknown") for n in notices)
     country_counts = Counter(o.get("country", "Unknown") for o in opportunities if o.get("country"))
-    lifecycle_counts = Counter(o.get("lifecycle", "competition") for o in opportunities)
+    lifecycle_counts = Counter(o.get("lifecycle") or "unknown" for o in opportunities)
     decision_counts = Counter(o.get("decision", "Watch") for o in opportunities)
     owner_counts = Counter(o.get("owner_suggested", "Unassigned") for o in opportunities)
     return {

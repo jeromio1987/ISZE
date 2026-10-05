@@ -1,0 +1,99 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-10-02T00:00:00Z",
+  "candidates": [
+    {
+      "release_id": "2026-09-20",
+      "path": "aim_pn_classification_release_2026-09-20.csv",
+      "sha256": "60111c104ddeb466e6c15f084039639d35172056b0fd2ea10225a3c50da610e0",
+      "status": "SUPERSEDED",
+      "approved_by": "Jerome",
+      "approved_on": "2026-09-24",
+      "approved_note": "Jerome approved the frozen 2026-09-20 release on 2026-09-24. Hash re-verified against this register before the status was changed. The newer 2026-09-24 candidate stays unapproved pending the three white-paper re-tests.",
+      "rows": 164908,
+      "source": "aim_pn_classification_20260920.csv.bak_pre_export_aim_eq_20260924_20260924_142051",
+      "recommendation": "Isuzu Universe memo recommends this frozen release",
+      "notes": null,
+      "superseded_by": "2026-10-02",
+      "superseded_on": "2026-10-02",
+      "superseded_note": "Superseded when Jerome approved release 2026-10-02 on 2026-10-02. Hash, history and the 2026-09-24 approval record kept unchanged."
+    },
+    {
+      "release_id": "2026-09-24-candidate",
+      "path": "../aim_pn_classification_20260920.csv",
+      "sha256": "e5824683806f7b7fdef17517dac2bc7a653e739b4c493ffba9a6dbb4e513e015",
+      "status": "NOT_RELEASED",
+      "rows": 164908,
+      "source": "01_data/00_derived/aim_pn_classification_20260920.csv (live)",
+      "recommendation": null,
+      "notes": "Adds EXPORT.XLSX classifications (1,197 rows changed on 2026-09-24 16:20); needs re-test against the three white-paper examples"
+    },
+    {
+      "release_id": "2026-10-02",
+      "path": "aim_pn_classification_release_2026-10-02.csv",
+      "sha256": "0ac9137903a326430c68e4d619fa4f836a796a01d9d40f6f6f1183e7d4c52360",
+      "status": "SUPERSEDED",
+      "rows": 164916,
+      "rows_note": "data rows, header excluded (the two earlier entries record 164908 = 164,907 data rows + header)",
+      "source": "catalogue tree: aim_pn_classification_release_2026-09-20.csv; AIM labels: aim_pn_classification_20260920.csv per level, aim_master_v2.csv where blank (the live page export's rule)",
+      "recommendation": "00_docs/AIM_RELEASE_RETEST_2026-09-25.md s7 item 4; Jerome decisions 2026-10-02 (keep Filter element leaf; side sills to Panels > Panel; cut a new release)",
+      "notes": "Cut 2026-10-02 by claude-opus. Adds the 24 Sep AIM work, the side-sill decision, the 8980913940 air-filter catalogue fix and both lubricant key forms; change log aim_pn_classification_release_2026-10-02.changes.csv. Supersedes the 2026-09-24-candidate as the thing to approve. Bookkeeping: that candidate's recorded sha256 e5824683... is the hash of aim_pn_classification_20260920.csv.bak_pre_cab_class_20260924_192113, not of its recorded path (now 092e9815...); its entry was left unchanged because sha256 is the identity field the gate matches on.",
+      "approved_by": "Jerome",
+      "approved_on": "2026-10-02",
+      "approved_note": "Jerome approved release 2026-10-02 in chat on 2026-10-02. sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-02.candidate_gate_2026-10-02.json): 18 checks pass, release_approved PENDING, 0 fail, with pr00_copy_integrity measured against the pinned 20 Sep pr00 reference pr00_classification_reference_20260920.csv (git c813330f, sha256 98e64b5b...), Jerome decision 2026-10-02, because today's pr00 carries the 21 Sep regression (1,660 rows). Lubricant relabel accepted (Shell keys to Fluids Chemicals > Lubricants; 9-digit keys line_kind lubricant_or_tool). Supersedes 2026-09-20 in the same edit.",
+      "pr00_reference": {
+        "file": "pr00_classification_reference_20260920.csv",
+        "sha256": "98e64b5bdaef73819cf954ce96241f1a9b49d8fbd998d02700ae8494028bea34",
+        "source": "git c813330f"
+      },
+      "superseded_by": "2026-10-02-chassis-frame",
+      "superseded_on": "2026-10-02",
+      "superseded_note": "Superseded when Jerome approved release 2026-10-02-chassis-frame on 2026-10-02. Hash, history and the approval record kept unchanged."
+    },
+    {
+      "release_id": "2026-10-02-candidate",
+      "path": "aim_pn_classification_release_2026-10-02-candidate.csv",
+      "sha256": "d17bb48d9d9c5cd2f8643ea2e3515c9a1bda21c26aab657fe0a5140197c4c54e",
+      "status": "NOT_RELEASED",
+      "rows": 164919,
+      "rows_note": "data rows, header excluded (same as 2026-10-02)",
+      "source": "release 2026-10-02 (aim_pn_classification_release_2026-10-02.csv, sha256 0ac91379...) + next_release_proposal_2026-10-02.csv (42 parts) + body filing + 2 wrong-in-both fixes",
+      "recommendation": "01_data/91_build/pr00_21sep_review_2026-10-02/REVIEW.md; UTI back-order findings 2 Oct (body parts not filed under body); Jerome go 2026-10-02",
+      "notes": "Cut 2026-10-02 by claude-opus as the candidate after 2026-10-02. Change log aim_pn_classification_release_2026-10-02-candidate.changes.csv; body list aim_pn_classification_release_2026-10-02-candidate.body_filing.csv. Release id: 2026-10-02 taken; hyphen suffix on the date per the 2026-09-24-candidate precedent, no version label.",
+      "replaced_by": "2026-10-02-chassis-frame",
+      "replaced_note": "Never approved. Jerome's 2026-10-02 decisions changed one thing (cab mounting members to Chassis Frame), cut as 2026-10-02-chassis-frame; this entry's sha256 and file are kept unchanged because sha256 is the identity the gate matches on and release files are never overwritten."
+    },
+    {
+      "release_id": "2026-10-02-chassis-frame",
+      "path": "aim_pn_classification_release_2026-10-02-chassis-frame.csv",
+      "sha256": "9bb86a9b4d89c5954cd6dd15fdc977db44e66cddaa15e3e70bd0285e3bf3e65b",
+      "status": "SUPERSEDED",
+      "rows": 164919,
+      "rows_note": "data rows, header excluded (same as 2026-10-02)",
+      "source": "release 2026-10-02 (aim_pn_classification_release_2026-10-02.csv, sha256 0ac91379...) + next_release_proposal_2026-10-02.csv (42 parts) + body filing (cab mounting members on Chassis Frame) + 2 wrong-in-both fixes",
+      "recommendation": "APPROVAL_SUMMARY_2026-10-02-candidate.md; Jerome decisions 2026-10-02 (cab mounting members to Chassis Frame; 4 to-check parts as proposed)",
+      "notes": "Cut 2026-10-02 by claude-opus: the 2026-10-02-candidate with Jerome's decision (1) applied (142 cab mounting member rows differ, AIM columns only). Change log aim_pn_classification_release_2026-10-02-chassis-frame.changes.csv; body list aim_pn_classification_release_2026-10-02-chassis-frame.body_filing.csv. Release id: the candidate entry's sha256 is its identity and its file is never overwritten, so a new id in the date + hyphen suffix form; no version label. PCV kits 8981065790 / 8980023462: check against the parts catalogue (EPC).",
+      "approved_by": "Jerome",
+      "approved_on": "2026-10-02",
+      "approved_note": "Jerome approved in chat on 2026-10-02 ('all yes' on APPROVAL_SUMMARY_2026-10-02-candidate.md): cab mounting members to AIM Chassis Frame > Crossmember & Brackets > Bracket (catalogue Body structure); the 4 to-check parts as proposed, PCV kits 8981065790 / 8980023462 to be checked against the parts catalogue (EPC). sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-02-chassis-frame.gate.json): 18 checks pass, release_approved PENDING, 0 fail. Supersedes 2026-10-02 in the same edit; replaces the unapproved 2026-10-02-candidate.",
+      "superseded_by": "2026-10-04",
+      "superseded_on": "2026-10-04",
+      "superseded_note": "Superseded when Jerome approved release 2026-10-04 on 2026-10-04. Hash, history and the approval record kept unchanged."
+    },
+    {
+      "release_id": "2026-10-04",
+      "path": "aim_pn_classification_release_2026-10-04.csv",
+      "sha256": "8aad884f49db1a49ab86faca571942d912196ce08f7734f38d5a04f035e18896",
+      "status": "APPROVED",
+      "rows": 164943,
+      "rows_note": "data rows, header excluded (same as 2026-10-02)",
+      "base_release": "2026-10-02-chassis-frame",
+      "source": "release 2026-10-02-chassis-frame (aim_pn_classification_release_2026-10-02-chassis-frame.csv, sha256 9bb86a9b...) + 24 High-confidence missing billed parts + engine gasket sets, EVRV valves, antennas and DEF injectors on AIM labels + camera parts on the catalogue tree",
+      "recommendation": "APPROVAL_SUMMARY_2026-10-04.md; Jerome decisions 2026-10-04; MISSING_BILLED_REVIEW.md",
+      "notes": "Cut 2026-10-04 by claude from the approved 2026-10-02-chassis-frame. Change log aim_pn_classification_release_2026-10-04.changes.csv. One new AIM label: Intake Exhaust Emission > DEF System > DEF Injector (Jerome approved). Release id: 2026-10-04 not taken, date alone.",
+      "approved_by": "Jerome",
+      "approved_on": "2026-10-04",
+      "approved_note": "Jerome approved in chat on 2026-10-04 (answer 'approve' to APPROVAL_SUMMARY_2026-10-04.md): 24 high-confidence billed parts added; engine gasket sets to Engine > Gasket & Sealing > Gasket; EVRV valves to EGR Component; antennas to Audio > Radio; rear cameras on the catalogue tree only; DEF injectors to the new AIM label Intake Exhaust Emission > DEF System > DEF Injector. Includes the parts whose description is only in the Japanese parts-code file (111 parts, EUR 60). sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-04.gate.json): 18 checks pass, release_approved PENDING, 0 fail. Supersedes 2026-10-02-chassis-frame in the same edit. Approval covers the release file only; AIM pages, the page-input export and deploy copies were not changed by it."
+    }
+  ]
+}

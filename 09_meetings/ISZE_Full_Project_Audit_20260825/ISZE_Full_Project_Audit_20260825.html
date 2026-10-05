@@ -170,7 +170,7 @@ tbody tr:nth-child(even){background:#f7f4ee;}
 <div class="callout green">
   <strong>Week-1 execute update (25 Aug 2026, same evening):</strong> verify green; sales_fact → 30 Jun 2026;
   parts base €112.09M; sell-out long CSVs re-emitted for 5 DBs + second layer rebuilt; INBOX 1,677→545;
-  UIO_v17 quarantined; UMI ask drafted; leakage € stays Mode B until list-to-pocket signed.
+  UIO_v17 quarantined; UMI ask drafted; leakage € stays internal until list-to-pocket signed.
   Cover KPIs above are post-execute. Body sections below still describe the audit-time baseline where noted.
 </div>
 <div class="callout">
@@ -203,7 +203,7 @@ tbody tr:nth-child(even){background:#f7f4ee;}
     <tr><td>Core data integrity</td><td class="score">90</td><td class="score">95</td><td>Billing → PMS → GPS → BVP spine on PRISM is production-grade. Not the blocker.</td></tr>
     <tr><td>Freshness</td><td class="score">58</td><td class="score">90</td><td>sales_fact now through 30 Jun 2026. Jul–Aug still need the next SAP extract; Q1FY2027 SaTy gap remains.</td></tr>
     <tr><td>Sell-out coverage</td><td class="score">28</td><td class="score">90</td><td>Only 5 DBs report dealer retail. UMI + DE/BE/PT/Nordics missing — elasticity and share-of-wallet stay blocked.</td></tr>
-    <tr><td>Price honesty</td><td class="score">55</td><td class="score">85</td><td>Lists landed; list-to-pocket joins not signed. Leakage € stays Mode B until that lands.</td></tr>
+    <tr><td>Price honesty</td><td class="score">55</td><td class="score">85</td><td>Lists landed; list-to-pocket joins not signed. Leakage € stays internal until that lands.</td></tr>
     <tr><td>Mail→action</td><td class="score">48</td><td class="score">85</td><td>G0a interaction layer live; PartSales/StD attachment intake still manual.</td></tr>
     <tr><td>Ops loop</td><td class="score">22</td><td class="score">90</td><td>Ledger exists; 0 outcomes. Until Monday triage closes loops, 23k rows are inventory — not an OS.</td></tr>
     <tr><td>Tender honesty</td><td class="score">45</td><td class="score">85</td><td>Dragged by thin sized set (€1,488 on 3 rows) and incomplete national portals — not addressable market.</td></tr>
@@ -391,7 +391,7 @@ World-class aftersales analytics for this channel means the following eight trut
     <tr><td>12</td><td>Signed list-to-pocket validation</td><td>Quotable leakage</td><td>Join QA on history lists</td></tr>
     <tr><td>13</td><td>Network fill / lost-sales</td><td>Ops KPI beyond ITUK leakage</td><td>New extract family</td></tr>
     <tr><td>14</td><td>VIN ITUK/UTI + AT/MT</td><td>Parc cohorts beyond JP</td><td>VIN packs</td></tr>
-    <tr><td>15</td><td>Fresh IAM scrape with visible as-of</td><td>Honest Mode A competitor packs</td><td>Scheduler + labels</td></tr>
+    <tr><td>15</td><td>Fresh IAM scrape with visible as-of</td><td>Honest shared competitor packs</td><td>Scheduler + labels</td></tr>
     <tr><td>16</td><td>Sort 90_INBOX → numbered folders</td><td>Wire landed gold (Gina margin, IDS, PMS)</td><td>Manifest §0 discipline</td></tr>
   </tbody>
 </table>
@@ -500,7 +500,7 @@ Also present: shared stores <strong>Sales</strong> and <strong>Parts</strong> (G
 
 <h3>Stub / not KPI yet</h3>
 <ul class="small">
-  <li>P4 Account health (parquet live; draft thresholds; no Mode A widget)</li>
+  <li>P4 Account health (parquet live; draft thresholds; no shared widget)</li>
   <li>PMS Marketing Calendar (no ROI) · Master/HTML V4 Supabase live KPIs (creds open)</li>
 </ul>
 
@@ -564,12 +564,12 @@ Also present: shared stores <strong>Sales</strong> and <strong>Parts</strong> (G
   <li><strong>Permanent green quote gate</strong> — clear raw_cy2025 fail; delete or quarantine stale UIO v17.</li>
   <li><strong>Refresh sales_fact</strong> past 2026-03-31 (ingest Q1FY2027 + latest month).</li>
   <li><strong>Weekly ledger triage</strong> — Book B / leakage / defection only → action_ledger_decisions.csv; never invent realised_eur.</li>
-  <li><strong>P4 threshold calibration</strong> then thin Mode A widget (or PRISM internal).</li>
+  <li><strong>P4 threshold calibration</strong> then thin shared widget (or PRISM internal).</li>
   <li><strong>One more large-DB sell-out</strong> on long schema — prefer UMI.</li>
   <li><strong>Sign off list-to-pocket or keep leakage internal</strong> — stop the half-quote.</li>
   <li><strong>IML air:oil + ITUK brake evidence</strong> — lock or explicitly provisional-label.</li>
   <li><strong>Tender honesty pass</strong> — release notes = live 211/186 / €1,488; Nordics keys if available.</li>
-  <li><strong>IAM vintage labels</strong> on Mode A competitor packs.</li>
+  <li><strong>IAM vintage labels</strong> on shared competitor packs.</li>
   <li><strong>Empty INBOX</strong> — sort Gina margin, IDS packs, PMS pulls; fix runbook paths; add monthly mailbox intake skill.</li>
 </ol>
 
@@ -760,7 +760,7 @@ This is contract drift, not a missing year of sales. Still: the gate is red, so 
   <li>PR00 + ZPR1 history for 2023/2024/2025 landed 2026-08-11 under 01_Pricing/history/ plus 2026 current lists.</li>
   <li>Catalogue PR00 coverage raised to <strong>98.2%</strong> after Spec C4 SAP pull (residual admin non-PN + parked UMI Shell + 24 PN / €67k ZPR1-path hardware).</li>
   <li>Supersession billed-on-old: <strong>925 PN / €2.48M</strong> on IE40 cross-reference — not EPC-validated. Do not treat as confirmed leakage.</li>
-  <li>Eucon 2023 OEM+IAM survey raw sits beside PartsPool scrape dated <strong>2026-03-29</strong>. Mode A packs must show vintage labels or they mislead.</li>
+  <li>Eucon 2023 OEM+IAM survey raw sits beside PartsPool scrape dated <strong>2026-03-29</strong>. shared packs must show vintage labels or they mislead.</li>
   <li>Gina Z2SDAB42 margin masterdata (Jun/Jul 2026, ~24–29 MB) was pulled into INBOX — not yet a pipeline citizen.</li>
   <li>Rik Cornille monthly margin (~0.2 MB) is PC aggregate — wrong grain for PN work.</li>
 </ul>
@@ -959,7 +959,7 @@ Data-sufficiency verdict already says: sufficient to build; insufficient for mea
   <li>Sales_fact refresh cadence = within 5 working days of month close.</li>
   <li>Monday ledger ritual is mandatory for VP Sales analytics time (30–45 min).</li>
   <li>UMI sell-out is the next coverage priority over any new HTML.</li>
-  <li>Leakage € remains Mode B until list-to-pocket signed.</li>
+  <li>Leakage € remains internal until list-to-pocket signed.</li>
   <li>No new AIM-like composite score in 2026 without a pre-registered backtest plan.</li>
   <li>Mailbox intake skill added to AUTOMATION_REGISTER (CHEAP tier).</li>
   <li>G0b remains blocked until works-council step — no “quiet” shared-mailbox processing.</li>
@@ -1084,7 +1084,7 @@ Data-sufficiency verdict already says: sufficient to build; insufficient for mea
 <ul>
   <li>New dashboard shells without a new data contract.</li>
   <li>Composite 0–100 “risk scores” without pre-registered backtests.</li>
-  <li>ISZE→DB elasticity charts for Mode A.</li>
+  <li>ISZE→DB elasticity charts for shared.</li>
   <li>Re-asking SAP for gross/SPA/condition columns.</li>
   <li>Cloning Data Integrity / Early Warning into yet another HTML.</li>
   <li>Expanding revision_exception_queue UI before Monday triage exists.</li>
@@ -1101,7 +1101,7 @@ Data-sufficiency verdict already says: sufficient to build; insufficient for mea
   <li>Draft UMI sell-out ask (mirror UTI PartSales language).</li>
   <li>Emit long CSVs for ITUK / UTI / Greece from existing raw.</li>
   <li>Quarantine prism UIO_v17.xlsx.</li>
-  <li>Label Mode A competitor packs with Eucon 2023 vs PartsPool 2026-03 vintages.</li>
+  <li>Label shared competitor packs with Eucon 2023 vs PartsPool 2026-03 vintages.</li>
   <li>Write DECISIONS entry: leakage € stays internal until list-to-pocket signed.</li>
   <li>Add “mailbox intake” stub to AUTOMATION_REGISTER (even if script lands next week).</li>
 </ol>
@@ -1124,7 +1124,7 @@ Data-sufficiency verdict already says: sufficient to build; insufficient for mea
     <tr><td>P4</td><td>Account-health / who-went-quiet signals</td></tr>
     <tr><td>P5</td><td>Forecast track</td></tr>
     <tr><td>P8</td><td>Action Ledger pipeline</td></tr>
-    <tr><td>Mode A / Mode B</td><td>External-shareable vs internal-only surfaces</td></tr>
+    <tr><td>shared / internal</td><td>External-shareable vs internal-only surfaces</td></tr>
     <tr><td>FACTS</td><td>Single narrative authority for headline numbers</td></tr>
   </tbody>
 </table>
@@ -1136,7 +1136,7 @@ Data-sufficiency verdict already says: sufficient to build; insufficient for mea
 
 
 
-<div class="footer"><span>ISZE Full Project Audit · Confidential · Mode B internal</span><span>Audit as-of 25 Aug 2026</span></div>
+<div class="footer"><span>ISZE Full Project Audit · Confidential · internal internal</span><span>Audit as-of 25 Aug 2026</span></div>
 </div><!-- wrap -->
 
 <script>

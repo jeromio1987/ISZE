@@ -9,6 +9,6 @@ last_validated: 2026-08-12
 
 **As of 2026-08-12**
 
-- Israel: sold-to **1797 = UMI**, **1799 = UTI**. Same payer name. Never blend for Mode A / IDS.
+- Israel: sold-to **1797 = UMI**, **1799 = UTI**. Same payer name. Never blend for shared / IDS.
 - Sales Review QA: rule `isze-db-sales-review.mdc`, skill `isze-db-sales-review`, gate `qa_deck_gate.py`, retro under `09_meetings/UMI_Sales_Review_2026/`.
-- PBI first when profile has `pbi:`; no IBX exclude copy; no PMS Best>100%; SaTy = SOR/VOR coded only on Mode A.
+- PBI first when profile has `pbi:`; no IBX exclude copy; no PMS Best>100%; SaTy = SOR/VOR coded only on shared.

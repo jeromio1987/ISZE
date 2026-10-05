@@ -1,0 +1,50 @@
+{
+ "schema": "ship_receipt/v1",
+ "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\leakage_packs\\ISZE_Sales_Performance_Review_SWEDEN.html",
+ "artifact_mtime_ms": 1789653082756,
+ "written_at": "2026-09-17T13:53:38.339Z",
+ "ok": true,
+ "checks": [
+  {
+   "id": "exists",
+   "ok": true,
+   "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\leakage_packs\\ISZE_Sales_Performance_Review_SWEDEN.html"
+  },
+  {
+   "id": "min_size",
+   "ok": true,
+   "detail": "232879 bytes"
+  },
+  {
+   "id": "open_cmd",
+   "ok": true,
+   "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\leakage_packs\\OPEN_Sales_Performance_Review_SWEDEN.cmd"
+  },
+  {
+   "id": "open_cmd_crlf",
+   "ok": true,
+   "detail": "launcher is CRLF for double-click"
+  },
+  {
+   "id": "strip_and_vocab_verifier",
+   "ok": true,
+   "detail": "VERIFY_OK - 49 checks passed, 0 failed"
+  },
+  {
+   "id": "rendered_paint_qa",
+   "ok": true,
+   "detail": "PAINT_OK - 52 rendered checks passed, 0 failed"
+  },
+  {
+   "id": "visual_screenshots",
+   "ok": true,
+   "detail": "3 PNG(s) - agent read them before shipping"
+  }
+ ],
+ "screenshots": [
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\_build\\leakage\\_qa\\SWEDEN_full_1440.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\_build\\leakage\\_qa\\SWEDEN_mobile_390.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\_build\\leakage\\_qa\\SWEDEN_top_1440.png"
+ ],
+ "notes": "Two audiences from one payload. The customer pack strips other markets, dealer names and internal registers out of the data at build time, and the partner league panel is not compiled into it at all. Year comparisons are like for like: the same months of each year, with an average month shown, so a part year is never set against a full year."
+}

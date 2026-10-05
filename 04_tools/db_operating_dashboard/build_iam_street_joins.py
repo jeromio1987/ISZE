@@ -36,6 +36,40 @@ GBP_EUR = 1.17
 SEK_EUR = 0.089
 KS_PLACEHOLDER_GBP = 2.00  # skip AM prices at or below the £2 no-results placeholder
 CY = 2025
+
+# ---------------------------------------------------------------------------
+# RETIRED — Mekonomen, 2026-09-24 (Jerome's go, card 0.4/C3).
+#
+# Mekonomen's part-number search does not search by part number. It echoes the
+# query and serves one unrelated in-stock item, and the scraper records the first
+# price on the page against our part. Verified against the scraper's own dump,
+# `autodoc_scraper/_diag/MEK_8975056801.txt`: asking for 8975056801
+# "PAD KIT; CALIPER,DISC BRK,FRT" returns "Spiralfjaeder Lesjoefors" (a coil
+# spring) at 957 SEK. All seven "ok" rows are this shape, and every number returns
+# exactly ONE hit, on every snapshot from 2026-07-09 to 2026-09-22.
+#
+# These are false positives, not misses, so no row from this source is written.
+# The seven PNs below carried EUR 582,085 of UMI CY2025 billed revenue between
+# them (largest: the brake pad kit, EUR 308,819) — pricing a brake pad against a
+# coil spring made our position read as undercut by far more than it is.
+#
+# The scraper is also retired from the weekly run, see
+# `autodoc_scraper/refresh_and_check_drift.py` JOBS.
+#
+# To re-enable: set MEKONOMEN_RETIRED = False AND delete the PN from the false set
+# only with a real product page in hand showing that part number and a price on
+# the same page. `mekonomen_results.csv` stays on disk for the audit trail.
+# ---------------------------------------------------------------------------
+MEKONOMEN_RETIRED = True
+MEKONOMEN_FALSE_PNS = frozenset({
+    "8975056801",  # PAD KIT; CALIPER,DISC BRK,FRT -> returned a Kilen coil spring, 957 SEK
+    "8983373180",  # SENSOR ASM; DEF TANK
+    "8982932120",  # DRIVE ASM; FINAL,RR
+    "8982924321",  # SENSOR; SPD,FRT WHEEL
+    "8983937793",  # SUPPORT; RR BUMPER
+    "8983288004",  # LAMP ASM; RR COMB
+    "8982606011",  # DOOR ASM; FRT,WO/TRIM
+})
 CHANNEL_COMBINED = 1.785  # PR00 × 1.40 × 1.275 projected retail
 # 18 GPS DBs. Israel split at sold_to — never blend 1797/1799, never "Israel".
 NETWORK_SOLD_TO = {
@@ -213,6 +247,17 @@ def load_ks_am() -> pd.DataFrame:
 
 
 def load_mekonomen_am() -> pd.DataFrame:
+    """RETIRED 2026-09-24 — returns an empty frame unless someone deliberately
+    re-enables the source. Mekonomen's PN search returns unrelated items (a Kilen
+    coil spring for a brake pad kit); all seven of its rows were false, so none is
+    usable. See the MEKONOMEN_RETIRED block at the top of this file."""
+    if MEKONOMEN_RETIRED:
+        print("  Mekonomen: RETIRED — source not read (all 7 historical rows were "
+              "false positives; see load_mekonomen_am docstring)")
+        return pd.DataFrame(
+            columns=["pn", "status", "am_min_sek", "am_avg_sek", "am_count",
+                     "mek_am_min_eur", "mek_am_avg_eur"]
+        )
     path = os.path.join(SCRAPER, "mekonomen_results.csv")
     mek = pd.read_csv(path)
     mek["pn"] = mek["PN"].map(norm_pn)
@@ -220,6 +265,8 @@ def load_mekonomen_am() -> pd.DataFrame:
     mek["am_min_sek"] = pd.to_numeric(mek["MEK_AM_MinPrice_SEK"], errors="coerce")
     mek["am_avg_sek"] = pd.to_numeric(mek["MEK_AM_AvgPrice_SEK"], errors="coerce")
     mek["am_count"] = pd.to_numeric(mek["MEK_AM_Count"], errors="coerce").fillna(0).astype(int)
+    # even if re-enabled wholesale, the proven-false PNs never come back
+    mek = mek[~mek["pn"].isin(MEKONOMEN_FALSE_PNS)]
     keep = (
         (mek["status"] == "ok")
         & mek["am_min_sek"].notna()

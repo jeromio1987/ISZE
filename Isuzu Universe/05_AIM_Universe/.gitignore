@@ -1,0 +1,47 @@
+# ---------------------------------------------------------------------------
+# Aim Universe - development repository exclusions (BASE-02)
+#
+# The point of this file: the maintainable source can be versioned, while the
+# restricted business payload never can. Ignore rules are a supplement to
+# keeping restricted data in the authorised local area - not a security control.
+# ---------------------------------------------------------------------------
+
+# Restricted: the extracted embedded business payload (pilot accounts, supplier
+# purchase-cost series). Regenerable locally from the authorised v03 artifact.
+payload/*.json
+!payload/*.synthetic.json
+
+# Restricted: the frozen v03 reproduction reference embeds both pilots and the
+# supplier cost table. It stays on disk as a reference and out of version control.
+reference/*.html
+reference/*.htm
+
+# Generated internal artifact (embeds the restricted payload when built from it)
+dist/*.html
+dist/*.cmd
+
+# Local QA output
+_qa/
+_qa/**
+**/_qa/**
+
+# Test run output. These are regenerated on every run, and they are NOT safe to
+# version: the checks that run against the real payload echo scenario fields into
+# their result files, which include the restricted parts purchase cost. Measured:
+# accept_01_engine.json, accept_02_journey.json and accept_04_participant.json
+# each carry a cost value. 277 output files were reachable before this rule.
+tests/accept/_out/**
+tests/**/_out/**
+test-results/
+*.test.log
+
+# Local baseline captures from an authorised payload run
+_baseline_real.json
+
+# Tool noise
+__pycache__/
+*.pyc
+node_modules/
+.tmp/
+*.tmp
+*.log

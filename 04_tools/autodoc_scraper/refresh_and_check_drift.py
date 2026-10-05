@@ -84,12 +84,20 @@ SUBPROC_ENV = {**os.environ, "PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8"}
 # overwrite every run (no resume state), so they don't need this.
 # Mekonomen gets 5400s: Playwright + per-PN waits run ~24s/PN, so 200 PNs need
 # ~4800s — the old blanket 1800s cut the 2026-07-13 run off at PN 75/200.
+# 2026-09-24 (Jerome's go — card 0.4 / C3): Mekonomen, Auto365 and Tranzparts are RETIRED
+# from the schedule. Only the calling stops; the scripts and their CSVs stay on disk.
+#   Mekonomen  — its search ignores the part number and returns a live but UNRELATED item,
+#                which the scraper then prices as if it were the part. Verified 2026-09-24:
+#                8975056801 "PAD KIT; CALIPER,DISC BRK,FRT" came back as a Kilen coil spring,
+#                957 SEK. All 7 of its "hits" are this shape, unchanged since at least 24 Aug.
+#                False positives, not misses — and 7 rows already reached a UMI pricing pack.
+#   Auto365    — no OEM part number anywhere on its pages (internal Hebrew SKU only), so it
+#                cannot answer a PN question; also robots.txt disallows every agent.
+#   Tranzparts — carries no Isuzu; every 8-digit handle on it is Volvo, Iveco or DAF.
+# Re-plug any of them here only if someone re-verifies it with a real product page.
 JOBS = [
     ("ks_scraper.py", "ks_results.csv", ["PN"], "KS_AM_MinPrice_GBP", True, 1800),
-    ("tranzparts_scraper.py", "tranzparts_results.csv", ["PMS_Category"], "Price_EUR", False, 1800),
     ("tmc_scraper.py", "tmc_results.csv", ["PMS_Category"], "Price_EUR", False, 1800),
-    ("mekonomen_scraper.py", "mekonomen_results.csv", ["PN"], "MEK_AM_MinPrice_SEK", True, 5400),
-    ("auto365_scraper.py", "auto365_results.csv", ["PMS_Category"], "Price_EUR", False, 1800),
 ]
 
 
@@ -186,6 +194,7 @@ def main():
             pass
 
     prior_paths: dict[str, Path | None] = {}
+    failed_sources: list[tuple[str, str, str]] = []
     for _, csv_name, _, _, _, _ in JOBS:
         csv_path = SCRIPT_DIR / csv_name
         # _snapshot_existing() copies today's *pre-refresh* file (i.e. the
@@ -202,6 +211,15 @@ def main():
     for script, csv_name, _, _, needs_reset, timeout_s in JOBS:
         print(f"\n--- {script} ---")
         csv_path = SCRIPT_DIR / csv_name
+        # FIX 2026-09-18 (second pass): the reset-and-restore path below only exists
+        # for sources marked needs_reset=True (ks, mekonomen). The other three write by
+        # full overwrite, so if one of them dies leaving last week's file behind, the
+        # file is still there, the row count is still non-zero, and nothing noticed -
+        # the run reported "all sources fresh" and exited 0. That is the same shape as
+        # the incident that made ten weeks of history read as flat. So record the file's
+        # state BEFORE the scraper runs, and treat "not rewritten" as a failure for
+        # every source, reset-type or not.
+        pre_mtime_ns = csv_path.stat().st_mtime_ns if csv_path.exists() else None
         # Non-destructive reset: the incremental writer would otherwise skip
         # everything as already-done, but a plain delete lost ks_results.csv on
         # 2026-07-13 when the scraper crashed at startup. Park the old file as a
@@ -221,6 +239,7 @@ def main():
             )
         except Exception as e:
             print(f"  !! failed to run {script}: {e}")
+            failed_sources.append((script, csv_name, f"scraper raised: {e}"))
         if backup_path:
             if _data_row_count(csv_path) > 0:
                 backup_path.unlink()
@@ -230,7 +249,26 @@ def main():
                     csv_path.unlink()  # header-only / empty file from the failed run
                 backup_path.rename(csv_path)
                 _PENDING_BACKUPS.pop(csv_path, None)
-                print(f"  !! {script} produced no rows — restored previous {csv_name} from backup")
+                # FIX 2026-09-18: this used to be a bare note, and the run then went on
+                # to report "no significant drift" on a file we had just restored from
+                # the previous week. That made a total scrape outage indistinguishable
+                # from a quiet market - it is why ten weeks of history read as flat when
+                # part of it was weeks we had no data at all. A restore is a FAILURE and
+                # must be counted as one and surfaced as one.
+                failed_sources.append(
+                    (script, csv_name, "produced no rows - previous file restored"))
+        else:
+            # non-reset source: it must have written fresh data, or it is a failure
+            rows_now = _data_row_count(csv_path)
+            if not csv_path.exists():
+                failed_sources.append((script, csv_name, "wrote no file at all"))
+            elif rows_now == 0:
+                failed_sources.append(
+                    (script, csv_name, "wrote a file with no data rows"))
+            elif pre_mtime_ns is not None and csv_path.stat().st_mtime_ns == pre_mtime_ns:
+                failed_sources.append(
+                    (script, csv_name,
+                     f"left last week's file untouched ({rows_now} stale rows still on disk)"))
 
     print("\n" + "=" * 60)
     print("  Price drift since last run (>= {:.0%} move)".format(DRIFT_THRESHOLD))
@@ -240,6 +278,14 @@ def main():
     for _, csv_name, key_cols, price_col, _, _ in JOBS:
         csv_path = SCRIPT_DIR / csv_name
         prior = prior_paths.get(csv_name)
+        # FIX 2026-09-18: a source that just failed must not get the reassuring
+        # "no moves" line. It was restored from last week or never rewritten, so its
+        # comparison is against itself and the absence of moves means nothing. This
+        # is the exact line the ten-weeks-flat incident produced.
+        if any(csv_name == f[1] for f in failed_sources):
+            print(f"  {csv_name}: NOT COMPARABLE - source failed this run, excluded "
+                  f"from the drift read")
+            continue
         if not csv_path.exists():
             print(f"  {csv_name}: no results this run, skipping")
             continue
@@ -263,6 +309,24 @@ def main():
     if not any_drift:
         print("\n  No significant drift detected.")
 
+    # ---- FIX 2026-09-18: a source that failed must never read as "no drift".
+    print("\n" + "=" * 60)
+    print("  SOURCE HEALTH")
+    print("=" * 60)
+    healthy = len(JOBS) - len(failed_sources)
+    print(f"  {healthy} of {len(JOBS)} sources produced fresh rows this run")
+    if failed_sources:
+        print()
+        print(f"  {len(failed_sources)} SOURCE(S) FAILED - the market is NOT readable for these:")
+        for script, csv_name, why in failed_sources:
+            print(f"    {csv_name:<26} {why}")
+        print()
+        print("  A restored file is last week's data. Any comparison that includes it is")
+        print("  a comparison against the past, not against the market. Do not read this")
+        print("  run as evidence that prices were stable.")
+    else:
+        print("  All sources fresh - the drift comparison covers the whole monitored set.")
+
     print("\n--- rebuilding executive dashboards ---")
     subprocess.run(
         [sys.executable, str(SCRIPT_DIR / "build_executive_dashboard.py"), "--variant", "all"],
@@ -283,6 +347,15 @@ def main():
 
     print("\nDone.")
 
+    # FIX 2026-09-18: exit non-zero when a source failed, so a scheduled run goes
+    # red instead of green. Previously this always exited 0 whatever happened, so
+    # the weekly task reported success through a total scrape outage.
+    if failed_sources:
+        print(f"\nEXIT 2 - {len(failed_sources)} source(s) failed. "
+              f"Run is NOT a clean refresh.")
+        return 2
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

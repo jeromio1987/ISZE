@@ -28,6 +28,15 @@ NON_PART_LINE_KIND = {
     "5874123810": "tool",
     "5874123811": "tool",
     "5874123812": "tool",
+    # Non-part sold_to entities mapped to NON_PARTS in sap_sold_to_mapping.csv
+    # (2026-09-03). Registered here as well as in EXCLUDED_CODES so the rows stay
+    # out of parts revenue even if the distributor code is ever remapped.
+    # Found 2026-09-17: EUR 180,715.11 across 9 rows, all CY2026, was entering the
+    # parts base through the line_kind == "part" filter.
+    "SERVICE": "service_fee",
+    "SERVICE FEE OUTSIDE EUROPE": "service_fee",
+    "COST DEMURRAGE": "demurrage",
+    "COMPENSATIONS SALE E-CREDIT": "e_credit",
 }
 
 # Known master-data description corrections (data-integrity flag B). Keyed by the

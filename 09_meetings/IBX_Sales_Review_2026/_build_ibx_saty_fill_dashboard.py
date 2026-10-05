@@ -1,4 +1,4 @@
-"""Build IBX-only Mode A dashboard: SaTy mix + Individual Fill Rate.
+"""Build IBX-only shared dashboard: SaTy mix + Individual Fill Rate.
 
 Self-contained HTML (embedded JSON + Chart.js CDN with local fallback).
 Outlook draft helper: --draft-mail (Save only — never Send).

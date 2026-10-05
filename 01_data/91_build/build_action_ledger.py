@@ -565,7 +565,7 @@ def write_review_memo(
     lines = [
         f"# Action Ledger review — {today}",
         "",
-        "**Mode B · internal only.** Attribution wording: co-movement only.",
+        "**internal · internal only.** Attribution wording: co-movement only.",
         "",
         "## Data-sufficiency verdict",
         "",
@@ -790,7 +790,7 @@ def build_html(
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ISZE Action Ledger · Mode B</title>
+<title>ISZE Action Ledger · internal</title>
 <style>
 {TIER_A_CSS}
 {SSR.SSR_CHART_CSS}
@@ -803,7 +803,7 @@ def build_html(
 <body>
 <header class="hero">
   <div class="hero-inner">
-    <div class="brand">ISZE · Mode B · Action Ledger P8</div>
+    <div class="brand">ISZE · internal · Action Ledger P8</div>
     <h1>Action Ledger</h1>
     <div class="rule"></div>
     <p class="lead">What we said we would do about the euro leaks already on the board — and whether the number co-moved with the action window on the next refresh. No new KPI; re-stated source euros only.</p>
@@ -879,7 +879,7 @@ def build_html(
     </div>
   </section>
 
-  <p class="foot">Mode B · internal only · run_id {esc(meta.get('run_id'))} · produced {esc(produced)} ·
+  <p class="foot">internal · internal only · run_id {esc(meta.get('run_id'))} · produced {esc(produced)} ·
   billing horizon {esc(horizon)} · euros re-stated from source columns — not recomputed.
   Attribution: co-moved with the action window only.</p>
 </main>

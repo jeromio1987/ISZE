@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Isuzu OS — operating console</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;background:#f7f4ee;font-size:14px;line-height:1.45}
+h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;margin:0}
+.hero{background:linear-gradient(155deg,#15233c 0%,#203759 55%,#2b4a78 100%);color:#eef1f6;padding:34px 24px 24px}
+.hero-inner{max-width:1240px;margin:0 auto}
+.brand{font-family:Georgia,serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#c9d4e6;margin-bottom:12px}
+.hero h1{color:#fff;font-size:31px;line-height:1.1;margin:0 0 10px;font-weight:400}
+.hero .rule{width:64px;height:3px;background:#c0552d;margin:0 0 14px}
+.hero .lead{max-width:900px;font-size:14.5px;color:#d5dce8;margin:0 0 18px}
+.hero-kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.hk{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);padding:11px 12px;position:relative}
+.hk .v{font-size:23px;font-weight:700;letter-spacing:-.4px;color:#fff;line-height:1.1}
+.hk .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:#aeb9cb;margin-top:5px}
+.hk .n{font-size:11.5px;color:#9aa8bd;margin-top:5px;line-height:1.3}
+.wrap{max-width:1240px;margin:0 auto;padding:24px 24px 70px}
+h2{font-size:20px;margin:6px 0 6px;padding-bottom:7px;border-bottom:2px solid #1a2b4a}
+h2 .no{color:#c0552d}
+h3{font-size:14.5px}
+.lead{color:#5d564b;margin:0 0 14px;max-width:980px}
+.sub{color:#5d564b;margin:2px 0 12px;font-size:13px}
+section{margin-bottom:34px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{background:#fff;border:1px solid #d9d3c8;padding:14px 15px 12px;min-width:0}
+.card h3{font-size:14px;margin:0 0 4px}
+.card .cap{font-size:12px;color:#6b6256;margin:0 0 10px}
+.card.wide{grid-column:1/-1}
+/* tooltips */
+.kpi{position:relative;display:inline-block;border-bottom:1px dotted #8a7f6d;cursor:help}
+.kpi.measured{color:#1d6b4f;border-bottom-color:#1d6b4f}
+.kpi.modelled{color:#8a6500;border-bottom-color:#8a6500}
+.kpi.excluded{color:#6b6256;border-bottom-color:#6b6256}
+.kpi.judgement{color:#a8451f;border-bottom-color:#c0552d}
+.tip{display:none;position:absolute;left:0;top:calc(100% + 7px);width:min(330px,72vw);
+ background:#15233c;color:#f7f4ee;border-top:3px solid #c0552d;padding:10px 12px;
+ font-size:12px;line-height:1.42;z-index:60;box-shadow:0 8px 22px rgba(0,0,0,.28);text-align:left;font-weight:400}
+.kpi:hover .tip,.kpi:focus .tip,.kpi:focus-within .tip{display:block}
+.tip b{display:block;font-family:Georgia,serif;font-size:12.5px;color:#fff;margin-bottom:5px}
+.tr{display:block;margin-top:4px}
+.tr i{display:block;font-style:normal;text-transform:uppercase;letter-spacing:.06em;font-size:10px;color:#9aa8bd}
+.tr.warn{color:#f2c5b4}
+.tip-r .tip{left:auto;right:0}
+/* bars */
+.bars{display:block}
+.bar-row{display:grid;grid-template-columns:132px minmax(0,1fr) 118px;gap:9px;align-items:center;margin:0 0 5px}
+.bl{font-size:12px;color:#33302a;line-height:1.25;overflow-wrap:anywhere;min-width:0}
+.track{position:relative;background:#efece5;height:16px;min-width:0;overflow:hidden}
+.track.zero::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:#b9b2a5;z-index:2}
+.fill{position:absolute;left:0;top:0;bottom:0;background:#15233c;display:block;max-width:100%}
+.fill.vol{background:#15233c}
+.fill.price{background:#c0552d}
+.fill.mix{background:#888780}
+.fill.net{background:#1a2b4a}
+.fill.led{background:#2b4a78}
+.fill.zero{background:#c0552d}
+.bl .sub{display:block;font-size:10.5px;color:#6b6256;line-height:1.2}
+.bar-row.tot .bl{font-weight:600;color:#15233c}
+.bar-row.tot .bv{font-weight:700;color:#15233c}
+.bar-row.tot .fill.net{background:#1a2b4a}
+.centerrule{position:relative;height:0;border-top:1px dashed #b9b2a5;margin:6px 0 8px 132px}
+.centerrule span{position:absolute;right:0;top:-8px;background:#fff;padding:0 4px;font-size:10px;color:#8a8172}
+.avg{position:absolute;top:0;bottom:0;width:2px;background:#c0552d;z-index:3}
+.bar-avg{display:grid;grid-template-columns:132px minmax(0,1fr) 118px;gap:9px;margin-top:8px}
+.bar-avg span{grid-column:2;font-size:11.5px;color:#6b6256}
+.avg-key{display:inline-block;width:12px;height:2px;background:#c0552d;vertical-align:middle;margin-right:6px}
+.bv{font-size:12px;text-align:right;color:#222;white-space:nowrap;min-width:0;overflow-wrap:anywhere}
+.bv .kpi{white-space:nowrap}
+.bar-row .bv .tip{left:auto;right:0}
+.bar-row:first-child .bv .tip{max-width:300px}
+.legendline{font-size:11.5px;color:#6b6256;margin:0 0 8px}
+.sw{display:inline-block;width:10px;height:10px;background:#15233c;margin-right:3px;vertical-align:-1px}
+.sw.price{background:#c0552d}
+.sw.mix{background:#888780}
+/* stacks */
+.stack{display:flex;width:100%;height:42px;border:1px solid #d9d3c8;overflow:hidden}
+.seg{display:flex;flex-direction:column;justify-content:center;padding:0 8px;min-width:0;overflow:hidden}
+.seg .segl{font-size:11.5px;line-height:1.2;white-space:normal;overflow-wrap:anywhere}
+.seg .segv{font-size:11px;opacity:.85;line-height:1.2;overflow-wrap:anywhere}
+.seg.cap{background:#15233c;color:#f7f4ee}
+.seg.unc{background:#dcd7cd;color:#222}
+.seg.gen{background:#15233c;color:#f7f4ee}
+.seg.bvp{background:#c0552d;color:#fff}
+.seg.miss{background:#e8e4dc;color:#222}
+.stacknote{font-size:12px;color:#4a453d;margin:8px 0 0;line-height:1.45}
+/* sensors */
+.sensor{background:#fff;border:1px solid #d9d3c8;border-top:3px solid #1a2b4a;padding:13px 14px;min-width:0}
+.sh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sno{font-family:Georgia,serif;color:#c0552d;font-size:13px}
+.sensor h3{font-size:14px;margin:0}
+.sabbr{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;background:#eef3f9;color:#1a4a7a;padding:2px 6px}
+.shl{font-size:12.5px;color:#15233c;font-weight:600;margin:8px 0 4px}
+.srole{font-size:12px;color:#5d564b;margin:0 0 10px}
+.break{display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;border-left:3px solid #c0552d;padding:6px 0 6px 8px;margin-bottom:7px;background:#fdf7f4}
+.bx{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:#c0552d;font-weight:700;padding-top:2px}
+.break b{font-size:12px;display:block;color:#15233c}
+.break p{margin:2px 0 0;font-size:12px;color:#33302a}
+.ssrc{font-size:10.5px;color:#8a8172;margin:6px 0 0;line-height:1.35;overflow-wrap:anywhere}
+/* loop */
+.loop-wide{display:block}
+.loop-narrow{display:none}
+.loopbox{background:#fff;border:1px solid #d9d3c8;padding:10px 12px}
+.loopbox .lt{font-family:Georgia,serif;color:#15233c;font-size:14px}
+.loopbox .ld{font-size:11.5px;color:#4a453d;margin-top:3px}
+.loopbox .ln{font-size:11px;color:#6b6256;margin-top:5px}
+.step{background:#fff;border:1px solid #d9d3c8;border-left:4px solid #1a2b4a;padding:10px 12px}
+.stept{font-family:Georgia,serif;color:#15233c;font-size:14px}
+.step p{margin:3px 0 0;font-size:12.5px}
+.stepn{font-size:11px;color:#6b6256;margin-top:5px}
+.wire{font-size:11.5px;color:#c0552d;padding:5px 0 5px 14px;border-left:2px dashed #c0552d;margin-left:12px}
+.wire.back{border-left:2px solid #c0552d;color:#15233c}
+/* queue */
+table.queue{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;table-layout:fixed}
+.queue col.c1{width:32px}.queue col.c2{width:25%}.queue col.c3{width:22%}
+.queue col.c4{width:12%}.queue col.c5{width:16%}.queue col.c6{width:64px}.queue col.c7{width:15%}
+.queue thead th{background:#15233c;color:#f7f4ee;text-align:left;padding:8px 9px;font-size:10.5px;
+ text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.queue td{padding:8px 9px;border-bottom:1px solid #e8e4dc;color:#222;vertical-align:top;overflow-wrap:anywhere}
+.queue tbody tr:nth-child(odd) td{background:#fff;color:#222}
+.queue tbody tr:nth-child(even) td{background:#faf8f4;color:#222}
+.qn{font-family:Georgia,serif;color:#c0552d;font-size:14px}
+.qdate{white-space:nowrap;color:#33302a}
+.qsrc{display:block;font-size:10px;color:#8a8172;margin-top:5px;overflow-wrap:anywhere}
+/* chips */
+.chip{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;
+ padding:2px 7px;font-weight:700;white-space:nowrap}
+.chip.measured{background:#e4f5ee;color:#1d6b4f}
+.chip.modelled{background:#fff3d6;color:#8a6500}
+.chip.excluded{background:#eceae4;color:#444}
+.chip.judgement{background:#f8e4dc;color:#8a3030}
+/* honesty */
+.staterow{display:grid;grid-template-columns:132px minmax(0,1fr);gap:10px;align-items:start;padding:6px 0;border-bottom:1px solid #e8e4dc}
+.staterow p{margin:0;font-size:12.5px;color:#33302a}
+.flagrow{display:grid;grid-template-columns:220px minmax(0,1fr) minmax(0,1fr);gap:12px;padding:10px 0;border-bottom:1px solid #e8e4dc}
+.fgt{font-family:Georgia,serif;color:#15233c;font-size:13.5px}
+.fglab{display:block;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#c0552d;font-weight:700;margin-bottom:3px}
+.flagrow p{margin:0;font-size:12px;color:#33302a;min-width:0;overflow-wrap:anywhere}
+.foot{margin-top:26px;padding-top:12px;border-top:1px solid #d9d3c8;font-size:11px;color:#6b6256;line-height:1.6}
+.small{font-size:11.5px;color:#5d564b}
+ul.breaks{margin:6px 0 0;padding-left:18px}
+ul.breaks li{font-size:12px;color:#33302a;margin-bottom:4px}
+@media(max-width:1100px){
+ .hero-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .flagrow{grid-template-columns:1fr 1fr}
+ .fgt{grid-column:1/-1}
+}
+@media(max-width:900px){
+ .grid2,.grid3{grid-template-columns:1fr}
+ .loop-wide{display:none}
+ .loop-narrow{display:block}
+ .stacknote,.foot,.cap,.srole,.break p,.staterow p,.queue td,.ssrc{overflow-wrap:anywhere}
+ table.queue{display:block;table-layout:auto}
+ .queue colgroup,.queue thead{display:none}
+ .queue tbody,.queue tr,.queue td{display:block;width:auto}
+ .queue tr{border:1px solid #d9d3c8;border-left:4px solid #1a2b4a;background:#fff;margin-bottom:10px;padding:4px 2px}
+ .queue tbody tr:nth-child(even) td,.queue tbody tr:nth-child(odd) td{background:transparent}
+ .queue td{border-bottom:0;padding:4px 11px}
+ .queue td[data-label]::before{content:attr(data-label);display:block;font-size:9.5px;
+  letter-spacing:.07em;text-transform:uppercase;color:#c0552d;font-weight:700;margin-bottom:1px}
+ .queue td.qn{font-size:16px;color:#c0552d;padding-bottom:0}
+ .queue td.qn::before{content:"Decision "}
+ .flagrow{grid-template-columns:1fr}
+ .staterow{grid-template-columns:1fr}
+}
+@media(max-width:760px){
+ .bar-row,.bar-avg{grid-template-columns:104px minmax(0,1fr) 92px;gap:6px}
+ .bl,.bv{font-size:11px}
+ .loop-wide{display:none}
+ .loop-narrow{display:block}
+}
+@media(max-width:620px){
+ .hero h1{font-size:24px}
+ .hero-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .wrap,.hero{padding-left:14px;padding-right:14px}
+ .bar-row,.bar-avg{grid-template-columns:minmax(0,1fr);gap:2px;margin-bottom:10px}
+ .bl{font-size:12px;font-weight:600}
+ .bv{text-align:left;font-size:11.5px;padding-left:0;white-space:normal}
+ .bar-row .bv .tip,.bar-row:first-child .bv .tip{left:0;right:auto;max-width:min(300px,86vw)}
+    .bar-avg span{grid-column:1}
+    .avg{display:none}
+    .centerrule{margin-left:0;border-top:0;height:0}
+    .centerrule span{display:none}
+ .stack{height:auto;flex-direction:column}
+ .seg{width:100%!important;padding:6px 8px}
+ .seg .segl,.seg .segv{font-size:11.5px}
+ .tip{width:min(260px,86vw);font-size:11.5px}
+ .chip{white-space:normal}
+}
+@media print{
+ .tip{display:none!important}
+ .loop-wide{display:block}
+ .loop-narrow{display:none}
+}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="brand">Isuzu Europe · aftersales OS</div>
+    <h1>The operating console</h1>
+    <div class="rule"></div>
+    <p class="lead">The OS is the loop: data to decision to action to result, with the key figures as its instrument
+    panel. The car park, PRISM and the classification layer are its sensors. This page is the loop, the instruments
+    and the decisions waiting on a person. Figures are 2025 unless the label says otherwise.</p>
+    <div class="hero-kpis"><div class="hk" tabindex="0"><div class="v">€30 756 772</div><div class="l">Parts billed, CY2025</div><div class="n">18 measured markets</div><span class="tip"><b>Parts billed, CY2025</b><span class="tr"><i>Formula</i>Sum of net parts billed on the 2025 rows of gps_spu_by_distributor.csv that carry a vehicle-in-service basis.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 rows, 18 of 22 distributors · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Four markets that bill parts but have no vehicle count, and Palestine. Credit-note and return lines excluded.</span></span></div><div class="hk" tabindex="0"><div class="v">€188.16</div><div class="l">Spend per vehicle (GPS)</div><div class="n">Network average, CY2025</div><span class="tip"><b>Spend per vehicle (GPS)</b><span class="tr"><i>Formula</i>€30,756,772 ÷ 163,459 vehicles in service.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Not the fleet-wide base: only the 18 markets with a vehicle count. Warranty parts are included in this figure.</span></span></div><div class="hk" tabindex="0"><div class="v">163 459</div><div class="l">Vehicles in service (UIO)</div><div class="n">18 markets, CY2025</div><span class="tip"><b>Vehicles in service (UIO)</b><span class="tr"><i>Formula</i>Sum of the vehicle-in-service column on the 2025 rows with a count.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Ukraine, Armenia, Kazakhstan and Palestine bill parts with no count and are outside it.</span></span></div><div class="hk" tabindex="0"><div class="v">55.7%</div><div class="l">Cover of target spend</div><div class="n">€30.76M of a €55.25M ceiling</div><span class="tip"><b>Cover of target spend</b><span class="tr"><i>Formula</i>Billed parts ÷ modelled target spend per vehicle. €30,756,772 ÷ €60,217,570.</span><span class="tr"><i>Snapshot &amp; source</i>wallet_waterfall.csv, 2025 rows, 18 distributors · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>37.0% of the ceiling is one flat €250 per vehicle, so this is a direction, not a precision. Warranty is a separate lane.</span></span></div><div class="hk" tabindex="0"><div class="v">€24 727 686</div><div class="l">Uncaptured spend value</div><div class="n">€22.28M of it is a flat placeholder</div><span class="tip"><b>Uncaptured spend value</b><span class="tr"><i>Formula</i>Ceiling minus billed parts across the 18 markets, floored at zero per market. €60,217,570 − €30,756,772.</span><span class="tr"><i>Snapshot &amp; source</i>wallet_waterfall.csv, addressable uncaptured, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Not a forecast and not cash. It moves with the ceiling assumption: €22.28M of that ceiling is one flat rate.</span></span></div><div class="hk" tabindex="0"><div class="v">71.6%</div><div class="l">Service parts not bought</div><div class="n">714,094 of 996,890 expected units</div><span class="tip"><b>Service parts not bought</b><span class="tr"><i>Formula</i>Expected units minus genuine and best-value units actually sold, 14 categories, 18 distributors. 996,890 − (197,666 + 85,130) = 714,094.</span><span class="tr"><i>Snapshot &amp; source</i>pms_capture_by_db_year.csv, 2025, weighted by expected quantity · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Filters, brakes, clutch and the other eleven scored categories. It is not all parts, and a unit is not a euro.</span></span></div></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<section>
+  <h2><span class="no">01</span> · The loop, and where the sensors are blind</h2>
+  <p class="lead">Three sensors feed one loop. A blind sensor is drawn as a break in the line, not as a footnote:
+  the loop runs on what is measured and the break stays visible in the picture.</p>
+
+  <div class="loop-wide">
+  <svg viewBox="0 0 1200 520" role="img" aria-label="The operating loop: three sensors feed data, decision, action and result, with the instrument panel attached">
+    <defs>
+      <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="#15233c"/>
+      </marker>
+      <marker id="ahr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="#c0552d"/>
+      </marker>
+    </defs>
+    <text x="16" y="24" font-family="Georgia,serif" font-size="15" fill="#15233c">Sensors — what the loop can see</text>
+    <text x="470" y="24" font-family="Georgia,serif" font-size="15" fill="#15233c">The loop — what the business does</text>
+    <text x="985" y="24" font-family="Georgia,serif" font-size="15" fill="#15233c">Instruments</text>
+
+    <rect x="16" y="40" width="330" height="140" fill="#fff" stroke="#d9d3c8"/>
+    <rect x="16" y="40" width="4" height="140" fill="#1a2b4a"/>
+    <text x="32" y="64" font-size="13" fill="#15233c" font-weight="700">Car park &amp; vehicle identity</text>
+    <text x="32" y="84" font-size="12" fill="#33302a">163,459 vehicles in service</text>
+    <text x="32" y="102" font-size="12" fill="#33302a">18 of 22 markets have a count</text>
+    <text x="32" y="126" font-size="11" fill="#c0552d">Break 1 — no count: 4 markets bill, no denominator</text>
+    <text x="32" y="144" font-size="11" fill="#c0552d">Break 2 — no identity: Israel + UK out of the register</text>
+    <text x="32" y="162" font-size="11" fill="#c0552d">Break 3 — no weight class: one combined truck column</text>
+
+    <rect x="16" y="196" width="330" height="140" fill="#fff" stroke="#d9d3c8"/>
+    <rect x="16" y="196" width="4" height="140" fill="#1a2b4a"/>
+    <text x="32" y="220" font-size="13" fill="#15233c" font-weight="700">Demand &amp; capture (PRISM)</text>
+    <text x="32" y="240" font-size="12" fill="#33302a">14 service categories · 18 distributors</text>
+    <text x="32" y="258" font-size="12" fill="#33302a">996,890 expected units in 2025</text>
+    <text x="32" y="282" font-size="11" fill="#c0552d">Break 4 — air-to-oil factor 0.5 provisional</text>
+    <text x="32" y="300" font-size="11" fill="#c0552d">Break 5 — brake wear factor 0.4 vs 0.8 undecided</text>
+    <text x="32" y="318" font-size="11" fill="#c0552d">Break 6 — one global 20,000 km against a 3.7× spread</text>
+
+    <rect x="16" y="352" width="330" height="104" fill="#fff" stroke="#d9d3c8"/>
+    <rect x="16" y="352" width="4" height="104" fill="#1a2b4a"/>
+    <text x="32" y="376" font-size="13" fill="#15233c" font-weight="700">Part classification (AIM)</text>
+    <text x="32" y="396" font-size="12" fill="#33302a">1.8% of 2025 revenue unclassified</text>
+    <text x="32" y="420" font-size="11" fill="#c0552d">Break 7 — the 93.5% count figure is superseded</text>
+    <text x="32" y="438" font-size="11" fill="#c0552d">Break 8 — pricing-risk score is a null result</text>
+
+    <line x1="346" y1="110" x2="404" y2="150" stroke="#15233c" stroke-width="1.6" marker-end="url(#ah)"/>
+    <line x1="346" y1="266" x2="404" y2="216" stroke="#15233c" stroke-width="1.6" marker-end="url(#ah)"/>
+    <line x1="346" y1="404" x2="404" y2="256" stroke="#15233c" stroke-width="1.6" marker-end="url(#ah)"/>
+    <text x="352" y="536" font-size="0" fill="none">.</text>
+
+    <rect x="410" y="96" width="240" height="96" fill="#fff" stroke="#d9d3c8"/>
+    <text x="424" y="120" font-size="13.5" fill="#15233c" font-weight="700">1 · DATA</text>
+    <text x="424" y="140" font-size="11.5" fill="#33302a">Billed euro, expected demand, vehicle count</text>
+    <text x="424" y="158" font-size="11.5" fill="#33302a">and state. 23,236 open opportunities, €22.1M</text>
+    <text x="424" y="176" font-size="11.5" fill="#33302a">on mixed bases — an inventory, not yet a queue.</text>
+
+    <rect x="700" y="96" width="240" height="96" fill="#fff" stroke="#d9d3c8"/>
+    <text x="714" y="120" font-size="13.5" fill="#15233c" font-weight="700">2 · DECISION</text>
+    <text x="714" y="140" font-size="11.5" fill="#33302a">A person chooses and writes it down with an</text>
+    <text x="714" y="158" font-size="11.5" fill="#33302a">owner and a date. 13 decisions wait on this</text>
+    <text x="714" y="176" font-size="11.5" fill="#33302a">page. None decided. The decisions file is empty.</text>
+
+    <rect x="700" y="252" width="240" height="96" fill="#fff" stroke="#d9d3c8"/>
+    <text x="714" y="276" font-size="13.5" fill="#15233c" font-weight="700">3 · ACTION</text>
+    <text x="714" y="296" font-size="11.5" fill="#33302a">Price, order, dealer visit, file request. The</text>
+    <text x="714" y="314" font-size="11.5" fill="#33302a">choice leaves the building here. 0 of 23,236</text>
+    <text x="714" y="332" font-size="11.5" fill="#33302a">ledger rows carry an action.</text>
+
+    <rect x="410" y="252" width="240" height="96" fill="#fff" stroke="#d9d3c8"/>
+    <text x="424" y="276" font-size="13.5" fill="#15233c" font-weight="700">4 · RESULT</text>
+    <text x="424" y="296" font-size="11.5" fill="#33302a">Billing returns as actual against target spend</text>
+    <text x="424" y="314" font-size="11.5" fill="#33302a">per vehicle. Billing horizon 2026-06-30;</text>
+    <text x="424" y="332" font-size="11.5" fill="#33302a">nothing past it is measurable and is left null.</text>
+
+    <line x1="650" y1="144" x2="694" y2="144" stroke="#15233c" stroke-width="1.6" marker-end="url(#ah)"/>
+    <text x="652" y="132" font-size="10.5" fill="#6b6256">euro at stake, owner, state</text>
+    <line x1="820" y1="192" x2="820" y2="246" stroke="#15233c" stroke-width="1.6" marker-end="url(#ah)"/>
+    <text x="826" y="222" font-size="10.5" fill="#6b6256">choice + owner + date</text>
+    <line x1="694" y1="300" x2="656" y2="300" stroke="#15233c" stroke-width="1.6" marker-end="url(#ah)"/>
+    <text x="600" y="292" font-size="10.5" fill="#6b6256">orders, prices, visits</text>
+    <path d="M400 350 L400 430 L530 430 L530 196" fill="none" stroke="#c0552d" stroke-width="1.6"
+          stroke-dasharray="5 4" marker-end="url(#ahr)"/>
+    <text x="404" y="422" font-size="10.5" fill="#c0552d">feedback — actual vs target, back into the data</text>
+
+    <rect x="966" y="40" width="218" height="252" fill="#fff" stroke="#d9d3c8" stroke-top="3"/>
+    <rect x="966" y="40" width="218" height="4" fill="#c0552d"/>
+    <text x="982" y="66" font-size="13" fill="#15233c" font-weight="700">Instrument panel</text>
+    <text x="982" y="86" font-size="11" fill="#33302a">8 charts on this page:</text>
+    <text x="982" y="104" font-size="11" fill="#33302a">spend per vehicle by market (18)</text>
+    <text x="982" y="120" font-size="11" fill="#33302a">capture rate by market (18)</text>
+    <text x="982" y="136" font-size="11" fill="#33302a">category gap (14 categories)</text>
+    <text x="982" y="152" font-size="11" fill="#33302a">growth split three ways</text>
+    <text x="982" y="168" font-size="11" fill="#33302a">cover vs uncaptured value</text>
+    <text x="982" y="184" font-size="11" fill="#33302a">three-way service-part split</text>
+    <text x="982" y="200" font-size="11" fill="#33302a">layer visibility (4 sensors)</text>
+    <text x="982" y="216" font-size="11" fill="#33302a">distance by weight class</text>
+    <text x="982" y="240" font-size="11" fill="#c0552d">The instruments read the loop.</text>
+    <text x="982" y="256" font-size="11" fill="#c0552d">They are not the loop.</text>
+    <text x="982" y="278" font-size="11" fill="#33302a">Panel state: 6 key figures,</text>
+    <text x="982" y="292" font-size="11" fill="#33302a">4 of them modelled or needing</text>
+
+    <rect x="966" y="308" width="218" height="148" fill="#fdf7f4" stroke="#c0552d"/>
+    <text x="982" y="332" font-size="13" fill="#15233c" font-weight="700">Decision queue</text>
+    <text x="982" y="352" font-size="11" fill="#33302a">13 rows · 1 due this week</text>
+    <text x="982" y="368" font-size="11" fill="#33302a">5 are open data gaps</text>
+    <text x="982" y="384" font-size="11" fill="#33302a">6 need a person to choose</text>
+    <text x="982" y="400" font-size="11" fill="#33302a">2 are publication choices</text>
+    <text x="982" y="424" font-size="11" fill="#c0552d">A break in a sensor line</text>
+    <text x="982" y="438" font-size="11" fill="#c0552d">becomes a row here.</text>
+  </svg>
+  </div>
+
+  <div class="loop-narrow">
+    <div class="grid3" style="margin-bottom:14px"><article class="sensor"><div class="sh"><span class="sno">01</span><h3>Car park &amp; vehicle identity</h3><span class="sabbr">UIO</span></div><div class="shl">163,459 vehicles in service · 18 of 22 markets</div><p class="srole">Feeds the loop with the denominator: how many vehicles exist to spend money on them at all.</p><div class="break"><span class="bx">break</span><div><b>Break — no vehicle count</b><p>Ukraine, Armenia, Kazakhstan and Palestine bill parts but have no target-spend basis. Any spend-per-vehicle figure for them would be invented.</p></div></div><div class="break"><span class="bx">break</span><div><b>Break — no identity</b><p>Israel and the UK are excluded from the VIN register by design. The register holds 3,238 vehicles in 7 markets (PT 2,111 · IE 647 · DE 183 · MT 130 · CY 114 · BE 49 · GR 4). The UK mail extract of 29,935 VINs is not loaded.</p></div></div><div class="break"><span class="bx">break</span><div><b>Break — no weight class</b><p>The fleet bucket file carries one combined column of 36,793 trucks with no 3.5 t / 7.5 t split, so a measured per-class distance cannot reach the count.</p></div></div><p class="ssrc">vin/VIN_register_summary.json · uio_by_model_bucket.csv · gps_spu_by_distributor.csv</p></article><article class="sensor"><div class="sh"><span class="sno">02</span><h3>Demand &amp; capture</h3><span class="sabbr">PRISM</span></div><div class="shl">14 service categories · 18 distributors</div><p class="srole">Feeds the loop with expected demand per category, so billed euro can be read as a share of a plausible total.</p><div class="break"><span class="bx">break</span><div><b>Break — provisional factor</b><p>The air-to-oil replacement ratio of 0.5 is provisional until the engine maker confirms it. Capture is comparable across categories, not locked.</p></div></div><div class="break"><span class="bx">break</span><div><b>Break — factor open</b><p>The brake wear factor sits at 0.4 with 0.8 undecided. UK brake capture is not quotable as locked.</p></div></div><div class="break"><span class="bx">break</span><div><b>Break — one global distance</b><p>Every category is computed on one global 20,000 km a year, against a measured 12,165 to 51,680 spread by truck class.</p></div></div><p class="ssrc">pms_capture_by_db_year.csv · pms_opportunity_matrix.csv · _data_integrity_open_issues.md</p></article><article class="sensor"><div class="sh"><span class="sno">03</span><h3>Part classification</h3><span class="sabbr">AIM</span></div><div class="shl">Revenue-weighted residual 1.8% unclassified (2025)</div><p class="srole">Feeds the loop with what a part is, so gaps can be grouped into families a distributor can act on.</p><div class="break"><span class="bx">break</span><div><b>Break — count basis superseded</b><p>The 93.5% completeness figure of March 2026 is count-based, superseded, and is not used anywhere on this page.</p></div></div><div class="break"><span class="bx">break</span><div><b>Break — pricing-risk layer</b><p>The pricing-risk score is a null result (a fitted replacement failed its backtest). It is not a key figure and does not appear here.</p></div></div><p class="ssrc">AIM gap report 2 Jul 2026 · DECISIONS.md · _archived_kpi_candidates.md</p></article></div>
+    <div class="step"><div class="stept">1 · DATA</div><p>Billed euro, expected demand, vehicle count and state. 23,236 open opportunities, €22.1M on mixed bases.</p></div>
+    <div class="wire">euro at stake, owner, state</div>
+    <div class="step"><div class="stept">2 · DECISION</div><p>A person chooses and writes it down with an owner and a date. 13 decisions wait on this page; the decisions file is empty.</p></div>
+    <div class="wire">choice + owner + date</div>
+    <div class="step"><div class="stept">3 · ACTION</div><p>Price, order, dealer visit, file request. 0 of 23,236 ledger rows carry an action.</p></div>
+    <div class="wire">orders, prices, visits</div>
+    <div class="step"><div class="stept">4 · RESULT</div><p>Billing returns as actual against target spend per vehicle. Billing horizon 2026-06-30; nothing past it is measurable.</p></div>
+    <div class="wire back">feedback — actual vs target, back into the data</div>
+    <div class="card" style="margin-top:14px"><h3>Sensors and their breaks</h3>
+      <ul class="breaks"><li>Break — no vehicle count — Ukraine, Armenia, Kazakhstan and Palestine bill parts but have no target-spend basis. Any spend-per-vehicle figure for them would be invented.</li><li>Break — no identity — Israel and the UK are excluded from the VIN register by design. The register holds 3,238 vehicles in 7 markets (PT 2,111 · IE 647 · DE 183 · MT 130 · CY 114 · BE 49 · GR 4). The UK mail extract of 29,935 VINs is not loaded.</li><li>Break — no weight class — The fleet bucket file carries one combined column of 36,793 trucks with no 3.5 t / 7.5 t split, so a measured per-class distance cannot reach the count.</li><li>Break — provisional factor — The air-to-oil replacement ratio of 0.5 is provisional until the engine maker confirms it. Capture is comparable across categories, not locked.</li><li>Break — factor open — The brake wear factor sits at 0.4 with 0.8 undecided. UK brake capture is not quotable as locked.</li><li>Break — one global distance — Every category is computed on one global 20,000 km a year, against a measured 12,165 to 51,680 spread by truck class.</li><li>Break — count basis superseded — The 93.5% completeness figure of March 2026 is count-based, superseded, and is not used anywhere on this page.</li><li>Break — pricing-risk layer — The pricing-risk score is a null result (a fitted replacement failed its backtest). It is not a key figure and does not appear here.</li></ul></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="no">02</span> · The instrument panel</h2>
+  <p class="lead">Eight instruments. Every bar carries its value; every figure carries its formula, its source and
+  what it leaves out.</p>
+
+  <div class="grid2">
+    <div class="card wide">
+      <h3>Chart 1 — What does a vehicle in each market actually spend on parts?</h3>
+      <p class="cap">Parts billed per vehicle in service, 2025, 18 markets, sorted. Dashed line = network average.</p>
+      <div class="bars "><div class="bar-row"><div class="bl">IRELAND</div><div class="track"><span class="fill" style="width:97.14%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€388.57<span class="tip"><b>Spend per vehicle, IRELAND</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, IRELAND: €1 187 459 ÷ 3 056 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">UTI</div><div class="track"><span class="fill" style="width:80.58%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€322.32<span class="tip"><b>Spend per vehicle, UTI</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, UTI: €3 331 512 ÷ 10 336 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">ITUK</div><div class="track"><span class="fill" style="width:62.13%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€248.54<span class="tip"><b>Spend per vehicle, ITUK</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, ITUK: €5 564 544 ÷ 22 389 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">FINLAND</div><div class="track"><span class="fill" style="width:57.71%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€230.83<span class="tip"><b>Spend per vehicle, FINLAND</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, FINLAND: €277 921 ÷ 1 204 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">BELGIUM</div><div class="track"><span class="fill" style="width:54.97%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€219.86<span class="tip"><b>Spend per vehicle, BELGIUM</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, BELGIUM: €2 109 332 ÷ 9 594 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">ICELAND</div><div class="track"><span class="fill" style="width:52.51%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€210.05<span class="tip"><b>Spend per vehicle, ICELAND</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, ICELAND: €85 282 ÷ 406 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">PORTUGAL</div><div class="track"><span class="fill" style="width:52.28%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€209.12<span class="tip"><b>Spend per vehicle, PORTUGAL</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, PORTUGAL: €1 709 794 ÷ 8 176 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">MALTA</div><div class="track"><span class="fill" style="width:49.64%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€198.56<span class="tip"><b>Spend per vehicle, MALTA</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, MALTA: €206 502 ÷ 1 040 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">GERMANY</div><div class="track"><span class="fill" style="width:49.32%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€197.27<span class="tip"><b>Spend per vehicle, GERMANY</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, GERMANY: €2 535 932 ÷ 12 855 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">CYPRUS</div><div class="track"><span class="fill" style="width:46.41%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€185.63<span class="tip"><b>Spend per vehicle, CYPRUS</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, CYPRUS: €428 443 ÷ 2 308 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">UMI</div><div class="track"><span class="fill" style="width:44.76%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€179.02<span class="tip"><b>Spend per vehicle, UMI</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, UMI: €3 319 344 ÷ 18 542 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">NORWAY</div><div class="track"><span class="fill" style="width:44.66%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€178.65<span class="tip"><b>Spend per vehicle, NORWAY</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, NORWAY: €1 416 552 ÷ 7 929 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">DENMARK</div><div class="track"><span class="fill" style="width:43.54%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€174.17<span class="tip"><b>Spend per vehicle, DENMARK</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, DENMARK: €148 221 ÷ 851 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">ROMANIA</div><div class="track"><span class="fill" style="width:40.90%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€163.60<span class="tip"><b>Spend per vehicle, ROMANIA</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, ROMANIA: €175 218 ÷ 1 071 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">SWEDEN</div><div class="track"><span class="fill" style="width:37.85%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€151.42<span class="tip"><b>Spend per vehicle, SWEDEN</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, SWEDEN: €1 278 462 ÷ 8 443 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">GREECE</div><div class="track"><span class="fill" style="width:34.76%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€139.04<span class="tip"><b>Spend per vehicle, GREECE</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, GREECE: €520 304 ÷ 3 742 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">IUK</div><div class="track"><span class="fill" style="width:32.08%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€128.33<span class="tip"><b>Spend per vehicle, IUK</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, IUK: €6 131 920 ÷ 47 783 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-row"><div class="bl">HUNGARY</div><div class="track"><span class="fill" style="width:22.10%"></span><span class="avg" style="left:47.04%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€88.39<span class="tip"><b>Spend per vehicle, HUNGARY</b><span class="tr"><i>Formula</i>Parts billed ÷ vehicles in service, HUNGARY: €330 031 ÷ 3 734 vehicles.</span><span class="tr"><i>Snapshot &amp; source</i>gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Warranty parts are inside this figure. The target-spend ceiling is not: a high bar is spend, not cover.</span></span></span></div></div><div class="bar-avg"><span class="avg-key"></span>Network average €188.16 (dashed line)</div></div>
+    </div>
+
+    <div class="card">
+      <h3>Chart 2 — How much of the change was more trucks, price, or real volume?</h3>
+      <p class="cap">Year-on-year parts revenue split, whole network, € per year.</p>
+      <div class="legendline"><span class="sw vol"></span>volume · <span class="sw price"></span>price · <span class="sw mix"></span>mix is not populated in the source file</div><div class="centerrule"><span>centre line = no change</span></div><div class="bar-row diverge"><div class="bl">2023 → 2024<span class="sub">more or fewer trucks (volume)</span></div><div class="track zero"><span class="fill vol" style="left:50.000%;width:50.000%"></span></div><div class="bv">+€521 030</div></div><div class="bar-row diverge"><div class="bl">2023 → 2024<span class="sub">price effect</span></div><div class="track zero"><span class="fill price" style="left:36.185%;width:13.815%"></span></div><div class="bv">−€143 956</div></div><div class="bar-row diverge tot"><div class="bl">net change</div><div class="track zero"><span class="fill net" style="left:50.000%;width:36.185%"></span></div><div class="bv">+€377 074</div></div><div class="bar-row diverge"><div class="bl">2024 → 2025<span class="sub">more or fewer trucks (volume)</span></div><div class="track zero"><span class="fill vol" style="left:23.832%;width:26.168%"></span></div><div class="bv">−€272 688</div></div><div class="bar-row diverge"><div class="bl">2024 → 2025<span class="sub">price effect</span></div><div class="track zero"><span class="fill price" style="left:50.000%;width:1.854%"></span></div><div class="bv">+€19 323</div></div><div class="bar-row diverge tot"><div class="bl">net change</div><div class="track zero"><span class="fill net" style="left:25.686%;width:24.314%"></span></div><div class="bv">−€253 365</div></div>
+    </div>
+
+    <div class="card">
+      <h3>Chart 3 — How much of the target spend did the network capture?</h3>
+      <p class="cap">Billed parts against the modelled target-spend ceiling, 2025, 18 markets.</p>
+      <div class="stack"><span class="seg cap" style="width:55.665%"><span class="segl">Captured 55.7% — €30 756 772</span><span class="segv">30756772.0</span></span><span class="seg unc" style="width:44.753%"><span class="segl">Uncaptured €24 727 686</span><span class="segv">24727686.01</span></span></div><div class="stacknote">One bar is the whole €55.25M ceiling. The grey end is the €24.73M the network did not sell against its own target. €0.23M of the book sits above target and is not shown as a negative. 8 markets holding €22.28M of that ceiling sit on one flat €250 a vehicle, so the split is direction, not precision.</div>
+    </div>
+
+    <div class="card wide">
+      <h3>Chart 4 — Of the service parts that were expected to be sold, how many were not bought at all?</h3>
+      <p class="cap">Expected units against genuine and competitive units actually sold, 14 scored categories, 18 distributors, 2025.</p>
+      <div class="stack"><span class="seg gen" style="width:19.828%"><span class="segl">Genuine 197,666 units</span><span class="segv">197666</span></span><span class="seg bvp" style="width:8.540%"><span class="segl">Competitive parts 85,130</span><span class="segv">85130</span></span><span class="seg miss" style="width:71.632%"><span class="segl">Not bought 714,094 — 71.6%</span><span class="segv">714094</span></span></div><div class="stacknote">Expected units across 14 scored service categories, 18 distributors, 2025: <b>996,890</b>. Of those, 282,796 were bought (197,666 genuine + 85,130 competitive) and <b>714,094 were not bought at all</b> — three units expected for every one sold. Competitive parts are 36.7% of what was bought in this universe, and 3.5% of the whole parts book.</div>
+    </div>
+
+    <div class="card">
+      <h3>Chart 5 — How much of the book does each sensor actually see?</h3>
+      <p class="cap">Coverage of the four sensors, as a share of the thing each one is supposed to cover.</p>
+      <div class="bar-row"><div class="bl">Vehicle identity, VIN register</div><div class="track"><span class="fill " style="width:31.82%"></span></div><div class="bv">7 of 22 markets</div></div><div class="bar-row"><div class="bl">Vehicle count (the denominator)</div><div class="track"><span class="fill " style="width:81.82%"></span></div><div class="bv">18 of 22 markets</div></div><div class="bar-row"><div class="bl">Sales to dealer, 2025</div><div class="track"><span class="fill " style="width:54.40%"></span></div><div class="bv">54.4% of billed euro</div></div><div class="bar-row"><div class="bl">Service categories scored</div><div class="track"><span class="fill " style="width:100.00%"></span></div><div class="bv">14 of 14</div></div><div class="bar-row"><div class="bl">Weight class inside the count</div><div class="track"><span class="fill zero" style="width:0.00%"></span></div><div class="bv">none</div></div>
+      <p class="small" style="margin-top:8px">Vehicle identity: 3,238 vehicles across 7 markets, plus a UK mail extract of
+      29,935 VINs that is not loaded. A zero bar means the split does not exist in the file, not that it is small.</p>
+    </div>
+
+    <div class="card">
+      <h3>Chart 6 — Which markets capture the least of their own service demand?</h3>
+      <p class="cap">Weighted capture across 14 service categories, 2025, 18 distributors, sorted.</p>
+      <div class="bars "><div class="bar-row"><div class="bl">IRELAND</div><div class="track"><span class="fill" style="width:93.36%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">102.7%<span class="tip"><b>Service-part capture, IRELAND</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">ITUK</div><div class="track"><span class="fill" style="width:59.91%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">65.9%<span class="tip"><b>Service-part capture, ITUK</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">CYPRUS</div><div class="track"><span class="fill" style="width:45.55%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">50.1%<span class="tip"><b>Service-part capture, CYPRUS</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">UTI</div><div class="track"><span class="fill" style="width:44.00%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">48.4%<span class="tip"><b>Service-part capture, UTI</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">GREECE</div><div class="track"><span class="fill" style="width:36.64%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">40.3%<span class="tip"><b>Service-part capture, GREECE</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">ROMANIA</div><div class="track"><span class="fill" style="width:33.36%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">36.7%<span class="tip"><b>Service-part capture, ROMANIA</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">MALTA</div><div class="track"><span class="fill" style="width:29.91%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">32.9%<span class="tip"><b>Service-part capture, MALTA</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">PORTUGAL</div><div class="track"><span class="fill" style="width:29.45%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">32.4%<span class="tip"><b>Service-part capture, PORTUGAL</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">DENMARK</div><div class="track"><span class="fill" style="width:27.45%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">30.2%<span class="tip"><b>Service-part capture, DENMARK</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">ICELAND</div><div class="track"><span class="fill" style="width:27.45%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">30.2%<span class="tip"><b>Service-part capture, ICELAND</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">FINLAND</div><div class="track"><span class="fill" style="width:26.36%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">29.0%<span class="tip"><b>Service-part capture, FINLAND</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">NORWAY</div><div class="track"><span class="fill" style="width:24.45%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">26.9%<span class="tip"><b>Service-part capture, NORWAY</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">BELGIUM</div><div class="track"><span class="fill" style="width:23.55%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">25.9%<span class="tip"><b>Service-part capture, BELGIUM</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">SWEDEN</div><div class="track"><span class="fill" style="width:21.91%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">24.1%<span class="tip"><b>Service-part capture, SWEDEN</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">UMI</div><div class="track"><span class="fill" style="width:19.36%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">21.3%<span class="tip"><b>Service-part capture, UMI</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">HUNGARY</div><div class="track"><span class="fill" style="width:17.36%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">19.1%<span class="tip"><b>Service-part capture, HUNGARY</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">IUK</div><div class="track"><span class="fill" style="width:15.73%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">17.3%<span class="tip"><b>Service-part capture, IUK</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div><div class="bar-row"><div class="bl">GERMANY</div><div class="track"><span class="fill" style="width:12.73%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">14.0%<span class="tip"><b>Service-part capture, GERMANY</b><span class="tr"><i>Formula</i>Actual units ÷ expected units across the 14 scored categories, weighted by expected units.</span><span class="tr"><i>Snapshot &amp; source</i>pms_summary_by_db.csv, 2025 · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>Network lane only, on one denominator. Ireland reads above 100% because its book includes demand from vehicles outside its own count: it is a signal, not a target. Not the service-schedule lane.</span></span></span></div></div></div>
+    </div>
+
+    <div class="card">
+      <h3>Chart 7 — Where is the uncaptured service-part value concentrated?</h3>
+      <p class="cap">Uncaptured value by service category, 2025, 14 scored categories, €18.22M in total.</p>
+      <div class="bars "><div class="bar-row"><div class="bl">Clutch disc</div><div class="track"><span class="fill" style="width:100.00%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€3 142 767<span class="tip"><b>Uncaptured service-part value, Clutch disc</b><span class="tr"><i>Formula</i>Expected units minus sold units at average selling price, summed over 18 distributors, 2025.</span><span class="tr"><i>Snapshot &amp; source</i>pms_opportunity_matrix.csv, 2025, 14 scored categories · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>The 14 scored categories only; total €18.22M. Not all parts, and the unit prices are averages, so it is not a euro forecast.</span></span></span></div></div><div class="bar-row"><div class="bl">Brake pad</div><div class="track"><span class="fill" style="width:88.46%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€2 780 016<span class="tip"><b>Uncaptured service-part value, Brake pad</b><span class="tr"><i>Formula</i>Expected units minus sold units at average selling price, summed over 18 distributors, 2025.</span><span class="tr"><i>Snapshot &amp; source</i>pms_opportunity_matrix.csv, 2025, 14 scored categories · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>The 14 scored categories only; total €18.22M. Not all parts, and the unit prices are averages, so it is not a euro forecast.</span></span></span></div></div><div class="bar-row"><div class="bl">Brake shoe</div><div class="track"><span class="fill" style="width:78.58%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€2 469 688<span class="tip"><b>Uncaptured service-part value, Brake shoe</b><span class="tr"><i>Formula</i>Expected units minus sold units at average selling price, summed over 18 distributors, 2025.</span><span class="tr"><i>Snapshot &amp; source</i>pms_opportunity_matrix.csv, 2025, 14 scored categories · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>The 14 scored categories only; total €18.22M. Not all parts, and the unit prices are averages, so it is not a euro forecast.</span></span></span></div></div><div class="bar-row"><div class="bl">Clutch pressure plate</div><div class="track"><span class="fill" style="width:63.09%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€1 982 854<span class="tip"><b>Uncaptured service-part value, Clutch pressure plate</b><span class="tr"><i>Formula</i>Expected units minus sold units at average selling price, summed over 18 distributors, 2025.</span><span class="tr"><i>Snapshot &amp; source</i>pms_opportunity_matrix.csv, 2025, 14 scored categories · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>The 14 scored categories only; total €18.22M. Not all parts, and the unit prices are averages, so it is not a euro forecast.</span></span></span></div></div><div class="bar-row"><div class="bl">Blower filter</div><div class="track"><span class="fill" style="width:45.24%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€1 421 877<span class="tip"><b>Uncaptured service-part value, Blower filter</b><span class="tr"><i>Formula</i>Expected units minus sold units at average selling price, summed over 18 distributors, 2025.</span><span class="tr"><i>Snapshot &amp; source</i>pms_opportunity_matrix.csv, 2025, 14 scored categories · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>The 14 scored categories only; total €18.22M. Not all parts, and the unit prices are averages, so it is not a euro forecast.</span></span></span></div></div><div class="bar-row"><div class="bl">Brake rotor</div><div class="track"><span class="fill" style="width:44.36%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€1 394 154<span class="tip"><b>Uncaptured service-part value, Brake rotor</b><span class="tr"><i>Formula</i>Expected units minus sold units at average selling price, summed over 18 distributors, 2025.</span><span class="tr"><i>Snapshot &amp; source</i>pms_opportunity_matrix.csv, 2025, 14 scored categories · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>The 14 scored categories only; total €18.22M. Not all parts, and the unit prices are averages, so it is not a euro forecast.</span></span></span></div></div><div class="bar-row"><div class="bl">Fuel filter</div><div class="track"><span class="fill" style="width:32.41%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€1 018 496<span class="tip"><b>Uncaptured service-part value, Fuel filter</b><span class="tr"><i>Formula</i>Expected units minus sold units at average selling price, summed over 18 distributors, 2025.</span><span class="tr"><i>Snapshot &amp; source</i>pms_opportunity_matrix.csv, 2025, 14 scored categories · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>The 14 scored categories only; total €18.22M. Not all parts, and the unit prices are averages, so it is not a euro forecast.</span></span></span></div></div><div class="bar-row"><div class="bl">Clutch kit</div><div class="track"><span class="fill" style="width:30.47%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€957 623<span class="tip"><b>Uncaptured service-part value, Clutch kit</b><span class="tr"><i>Formula</i>Expected units minus sold units at average selling price, summed over 18 distributors, 2025.</span><span class="tr"><i>Snapshot &amp; source</i>pms_opportunity_matrix.csv, 2025, 14 scored categories · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>The 14 scored categories only; total €18.22M. Not all parts, and the unit prices are averages, so it is not a euro forecast.</span></span></span></div></div><div class="bar-row"><div class="bl">Urea filter</div><div class="track"><span class="fill" style="width:29.16%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€916 329<span class="tip"><b>Uncaptured service-part value, Urea filter</b><span class="tr"><i>Formula</i>Expected units minus sold units at average selling price, summed over 18 distributors, 2025.</span><span class="tr"><i>Snapshot &amp; source</i>pms_opportunity_matrix.csv, 2025, 14 scored categories · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>The 14 scored categories only; total €18.22M. Not all parts, and the unit prices are averages, so it is not a euro forecast.</span></span></span></div></div><div class="bar-row"><div class="bl">Clutch booster</div><div class="track"><span class="fill" style="width:22.30%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€700 953<span class="tip"><b>Uncaptured service-part value, Clutch booster</b><span class="tr"><i>Formula</i>Expected units minus sold units at average selling price, summed over 18 distributors, 2025.</span><span class="tr"><i>Snapshot &amp; source</i>pms_opportunity_matrix.csv, 2025, 14 scored categories · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>The 14 scored categories only; total €18.22M. Not all parts, and the unit prices are averages, so it is not a euro forecast.</span></span></span></div></div><div class="bar-row"><div class="bl">Air filter</div><div class="track"><span class="fill" style="width:20.87%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€655 917<span class="tip"><b>Uncaptured service-part value, Air filter</b><span class="tr"><i>Formula</i>Expected units minus sold units at average selling price, summed over 18 distributors, 2025.</span><span class="tr"><i>Snapshot &amp; source</i>pms_opportunity_matrix.csv, 2025, 14 scored categories · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>The 14 scored categories only; total €18.22M. Not all parts, and the unit prices are averages, so it is not a euro forecast.</span></span></span></div></div><div class="bar-row"><div class="bl">Release bearing</div><div class="track"><span class="fill" style="width:13.65%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€428 962<span class="tip"><b>Uncaptured service-part value, Release bearing</b><span class="tr"><i>Formula</i>Expected units minus sold units at average selling price, summed over 18 distributors, 2025.</span><span class="tr"><i>Snapshot &amp; source</i>pms_opportunity_matrix.csv, 2025, 14 scored categories · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>The 14 scored categories only; total €18.22M. Not all parts, and the unit prices are averages, so it is not a euro forecast.</span></span></span></div></div><div class="bar-row"><div class="bl">Oil filter</div><div class="track"><span class="fill" style="width:10.17%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€319 619<span class="tip"><b>Uncaptured service-part value, Oil filter</b><span class="tr"><i>Formula</i>Expected units minus sold units at average selling price, summed over 18 distributors, 2025.</span><span class="tr"><i>Snapshot &amp; source</i>pms_opportunity_matrix.csv, 2025, 14 scored categories · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>The 14 scored categories only; total €18.22M. Not all parts, and the unit prices are averages, so it is not a euro forecast.</span></span></span></div></div><div class="bar-row"><div class="bl">Pilot bearing</div><div class="track"><span class="fill" style="width:0.87%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">€27 302<span class="tip"><b>Uncaptured service-part value, Pilot bearing</b><span class="tr"><i>Formula</i>Expected units minus sold units at average selling price, summed over 18 distributors, 2025.</span><span class="tr"><i>Snapshot &amp; source</i>pms_opportunity_matrix.csv, 2025, 14 scored categories · snapshot 2026-09-16</span><span class="tr warn"><i>Not included</i>The 14 scored categories only; total €18.22M. Not all parts, and the unit prices are averages, so it is not a euro forecast.</span></span></span></div></div></div>
+    </div>
+
+    <div class="card wide">
+      <h3>Chart 8 — Is one global distance assumption defensible across a mixed fleet?</h3>
+      <p class="cap">Median annual distance by truck class, measured from warranty odometer readings. PROVISIONAL — a duplicate-sheet check is pending. Dashed line = the single global assumption the model uses today.</p>
+      <div class="bars "><div class="bar-row"><div class="bl">N35 (NLR, 3.5 t)</div><div class="track"><span class="fill" style="width:21.72%"></span><span class="avg" style="left:35.71%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">12 165 km/yr<span class="tip"><b>N35 (NLR, 3.5 t) — median annual distance</b><span class="tr"><i>Formula</i>Median annual distance between the last two warranty odometer readings per vehicle, from claim files.</span><span class="tr"><i>Snapshot &amp; source</i>warranty_cv_km_age_by_market.csv, _cv_warranty_mileage_validation.md · 2026-09-16 · PROVISIONAL</span><span class="tr warn"><i>Not included</i>A duplicate-sheet check is still pending, so treat as provisional. Claims-derived: only vehicles that claimed a warranty repair enter the sample. Israel's N35 column is empty because there are no 3.5 t trucks in that book.</span></span></span></div></div><div class="bar-row"><div class="bl">N75 (NPR / NMR / NNR)</div><div class="track"><span class="fill" style="width:62.89%"></span><span class="avg" style="left:35.71%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">35 217 km/yr<span class="tip"><b>N75 (NPR / NMR / NNR) — median annual distance</b><span class="tr"><i>Formula</i>Median annual distance between the last two warranty odometer readings per vehicle, from claim files.</span><span class="tr"><i>Snapshot &amp; source</i>warranty_cv_km_age_by_market.csv, _cv_warranty_mileage_validation.md · 2026-09-16 · PROVISIONAL</span><span class="tr warn"><i>Not included</i>A duplicate-sheet check is still pending, so treat as provisional. Claims-derived: only vehicles that claimed a warranty repair enter the sample. Israel's N35 column is empty because there are no 3.5 t trucks in that book.</span></span></span></div></div><div class="bar-row"><div class="bl">F-series (7.5 t+)</div><div class="track"><span class="fill" style="width:81.48%"></span><span class="avg" style="left:35.71%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">45 630 km/yr<span class="tip"><b>F-series (7.5 t+) — median annual distance</b><span class="tr"><i>Formula</i>Median annual distance between the last two warranty odometer readings per vehicle, from claim files.</span><span class="tr"><i>Snapshot &amp; source</i>warranty_cv_km_age_by_market.csv, _cv_warranty_mileage_validation.md · 2026-09-16 · PROVISIONAL</span><span class="tr warn"><i>Not included</i>A duplicate-sheet check is still pending, so treat as provisional. Claims-derived: only vehicles that claimed a warranty repair enter the sample. Israel's N35 column is empty because there are no 3.5 t trucks in that book.</span></span></span></div></div><div class="bar-row"><div class="bl">Israel, all classes</div><div class="track"><span class="fill" style="width:92.29%"></span><span class="avg" style="left:35.71%"></span></div><div class="bv"><span class="kpi measured " tabindex="0">51 680 km/yr<span class="tip"><b>Israel, all classes — median annual distance</b><span class="tr"><i>Formula</i>Median annual distance between the last two warranty odometer readings per vehicle, from claim files.</span><span class="tr"><i>Snapshot &amp; source</i>warranty_cv_km_age_by_market.csv, _cv_warranty_mileage_validation.md · 2026-09-16 · PROVISIONAL</span><span class="tr warn"><i>Not included</i>A duplicate-sheet check is still pending, so treat as provisional. Claims-derived: only vehicles that claimed a warranty repair enter the sample. Israel's N35 column is empty because there are no 3.5 t trucks in that book.</span></span></span></div></div><div class="bar-avg"><span class="avg-key"></span>The one global assumption in the model today: 20,000 km a year</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="no">03</span> · What the action ledger holds</h2>
+  <p class="lead">The loop's action end already has an inventory. It has no triage: every row sits in state NEW and the
+  decisions file is empty, so no outcome can be measured.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>Open opportunities by signal, and the euro attached</h3>
+      <p class="cap">23,236 open rows, €22.1M at stake on mixed bases — the euro total is not one comparable sum.</p>
+      <div class="bar-row"><div class="bl">Book B price revision</div><div class="track"><span class="fill led" style="width:100.00%"></span></div><div class="bv">500 · €9 995 481</div></div><div class="bar-row"><div class="bl">Replenishment exception</div><div class="track"><span class="fill led" style="width:41.71%"></span></div><div class="bv">1 595 · €4 168 788</div></div><div class="bar-row"><div class="bl">Dealer leakage (UK trucks)</div><div class="track"><span class="fill led" style="width:39.25%"></span></div><div class="bv">300 · €3 922 774</div></div><div class="bar-row"><div class="bl">Defection alert</div><div class="track"><span class="fill led" style="width:29.16%"></span></div><div class="bv">204 · €2 914 197</div></div><div class="bar-row"><div class="bl">Catalogue gap (no list price)</div><div class="track"><span class="fill led" style="width:5.92%"></span></div><div class="bv">31 · €591 916</div></div><div class="bar-row"><div class="bl">Early warning</div><div class="track"><span class="fill led" style="width:2.93%"></span></div><div class="bv">18 · €293 130</div></div><div class="bar-row"><div class="bl">Price revision queue</div><div class="track"><span class="fill led" style="width:2.24%"></span></div><div class="bv">20 572 · €224 277</div></div><div class="bar-row"><div class="bl">Account health</div><div class="track"><span class="fill led" style="width:0.00%"></span></div><div class="bv">16 · €0</div></div>
+      <p class="small" style="margin-top:8px">Run 20260825T175229Z_48a077 · billing horizon 2026-06-30 · 0 rejects ·
+      all 23,236 rows in state NEW · 0 outcomes.</p>
+    </div>
+    <div class="card">
+      <h3>Why nothing can close yet</h3>
+      <div class="staterow"><span class="chip measured">Measured</span><p>Billing spine complete through 2026-06-30, nine
+      source surfaces green, 23,236 rows built and backfilled.</p></div>
+      <div class="staterow"><span class="chip excluded">Excluded</span><p>Any outcome past the billing horizon. Those rows
+      stay not-measurable with a null result and are never estimated.</p></div>
+      <div class="staterow"><span class="chip judgement">Needs a judgement</span><p>Triage. Own, defer or drop the top of
+      the ledger. That is a decision, not a data gap — and it is the reason the action half of the loop is still empty.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="no">04</span> · The decision queue</h2>
+  <p class="lead">13 decisions the OS is waiting on. Five come from the open data-gap register, the rest from the
+  assumption and ownership work of 16 September. Nothing here is invented: the source file is on every row.</p>
+  <table class="queue">
+    <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"><col class="c6"><col class="c7"></colgroup>
+    <thead><tr><th>#</th><th>What the data says</th><th>Decision it implies</th><th>Owner</th><th>Blocked by</th><th>Date</th><th>State · source</th></tr></thead>
+    <tbody><tr><td class="qn" data-label="#">1</td><td data-label="What the data says"><b>Warranty_LCV_2025.xlsx</b> ends November 2025. Full-year light-commercial warranty from this file is one month short; CY2025 spend per unit was built on it as-is.</td><td data-label="Decision it implies">Publish CY2025 light-commercial cover as eleven months with the hole named, or hold the market until the December file lands.</td><td data-label="Owner">Warranty team → ISZE</td><td data-label="Blocked by">Next light-commercial claim export (December 2025 onward)</td><td class="qdate" data-label="Date">2026-09-30</td><td class="qstate" data-label="State"><span class="chip judgement">Needs a judgement</span><span class="qsrc">01_data/00_derived/_data_integrity_open_issues.md · LCV-DEC</span></td></tr><tr><td class="qn" data-label="#">2</td><td data-label="What the data says">The 2026 rows of the spend-per-unit file carry a <b>part-year</b> euro column against a <b>full-year</b> ceiling. Read naively they show a 43% collapse that did not happen (first-half 2026 parts are +12% on first-half 2025). Contained 15 Sep: the false capture % and traffic light are blanked.</td><td data-label="Decision it implies">Drop the 2026 year from the file until a dated extract exists, or rebuild the row from a quarter that reconciles to sales_fact.</td><td data-label="Owner">ISZE</td><td data-label="Blocked by">A dated 2026 billing extract (Q1 9.99M / Q2 8.72M vs a 9.18M row sum — basis unverified)</td><td class="qdate" data-label="Date">2026-10-15</td><td class="qstate" data-label="State"><span class="chip excluded">Excluded</span><span class="qsrc">01_data/00_derived/_data_integrity_open_issues.md · SPU-PARTIAL</span></td></tr><tr><td class="qn" data-label="#">3</td><td data-label="What the data says">The Japanese VIN register holds <b>3,238 vehicles across seven markets</b> and excludes the two largest aftersales books. Israel has no vehicle age and no model detail in the register.</td><td data-label="Decision it implies">Ask UTI for the Israel VIN pack, or state that Israel age and model mix are not derivable and stop showing them.</td><td data-label="Owner">Jerome — supply UTI VIN pack</td><td data-label="Blocked by">Israel VIN pack</td><td class="qdate" data-label="Date">2026-10-01</td><td class="qstate" data-label="State"><span class="chip excluded">Excluded</span><span class="qsrc">01_data/07_UIO/vin/VIN_register_summary.json · VIN-IL</span></td></tr><tr><td class="qn" data-label="#">4</td><td data-label="What the data says">The UK VIN list sits in a mail from the UK parts director: <b>29,935 VINs</b> with registration dates (the earlier 29,926 was wrong). It is extracted but not loaded, and the register still excludes UK.</td><td data-label="Decision it implies">Make the UK extract a second, separately labelled register lane, or leave the UK without a register-based age layer.</td><td data-label="Owner">Jerome / ITUK</td><td data-label="Blocked by">Loading the mail extract into the register</td><td class="qdate" data-label="Date">2026-10-01</td><td class="qstate" data-label="State"><span class="chip measured">Measured</span><span class="qsrc">01_data/90_INBOX/_ituk_vins_from_duncan_mail.md · VIN-ITUK</span></td></tr><tr><td class="qn" data-label="#">5</td><td data-label="What the data says">The 2026–2030 vehicle-in-service forecast scraps 3% a year while the 1990–2025 history implies 10.2% (trucks) and 12.3% (light commercial). Verified 16 Sep: +9% (2026) to +59% (2030) too high; Israel is 25% low in every year.</td><td data-label="Decision it implies">Rebuild to V20 before any 2026–2030 vehicle count is quoted, and keep every forecast column off published pages until then.</td><td data-label="Owner">Vehicle population model owner</td><td data-label="Blocked by">V20 rebuild (spec drafted)</td><td class="qdate" data-label="Date">2026-10-31</td><td class="qstate" data-label="State"><span class="chip excluded">Excluded</span><span class="qsrc">01_data/00_derived/_data_integrity_open_issues.md · UIO-FCAST · 06_uio/_CURRENT/V20_SPEC.md</span></td></tr><tr><td class="qn" data-label="#">6</td><td data-label="What the data says">Every 3.5-tonne truck is charged the vehicle weight of a 7.5-tonne truck: the model code is read as tonnage, so the fleet reads 26,689 t against a real 19,687 t (8.24 t a truck instead of 6.08 t).</td><td data-label="Decision it implies">Approve the series-to-weight map (NLR 3.5, NMR 5.5, NNR 6.5, NPR 7.5, FRR 11–12, FSR 13.5) and its effect on the target-spend denominator.</td><td data-label="Owner">ISZE — approve the map</td><td data-label="Blocked by">Nothing technical; it changes published spend per unit</td><td class="qdate" data-label="Date">2026-09-23</td><td class="qstate" data-label="State"><span class="chip judgement">Needs a judgement</span><span class="qsrc">06_uio/_CURRENT/V20_SPEC.md · problem 6</span></td></tr><tr><td class="qn" data-label="#">7</td><td data-label="What the data says">Mileage tracks truck class, not market: 3.5 t <b>12,165 km/yr</b>, 7.5 t <b>35,217</b>, F-series <b>45,630</b> — a 3.7× spread against one global assumption of 20,000. Israel measured 51,680 (confirmed at three of three estimators); the UK sample says 16,688 against an assumed 50,000.</td><td data-label="Decision it implies">Switch the model default to per-weight-class mileage, or keep the global number and treat the measured table as a selectable alternative.</td><td data-label="Owner">Jerome / PRISM</td><td data-label="Blocked by">One question to the UK distributor: average annual distance of the N-series fleet</td><td class="qdate" data-label="Date">2026-09-23</td><td class="qstate" data-label="State"><span class="chip judgement">Needs a judgement</span><span class="qsrc">01_data/00_derived/warranty_cv_km_age_by_market.csv · 01_data/90_INBOX/_cv_warranty_mileage_validation.md · provisional</span></td></tr><tr><td class="qn" data-label="#">8</td><td data-label="What the data says">Six different vehicle ages are in play for the same fleet: <b>6.86</b> (registration weight), <b>6.07</b> (survivor-weighted model), <b>5.84</b> (model steady state, all trucks), <b>5.06</b> (model steady state, light commercial), <b>3.30</b> (shipment date), <b>1.9</b> (claims-derived).</td><td data-label="Decision it implies">Choose which age basis goes on a published tile, and label it on the tile.</td><td data-label="Owner">Jerome</td><td data-label="Blocked by">Nothing</td><td class="qdate" data-label="Date">2026-09-23</td><td class="qstate" data-label="State"><span class="chip judgement">Needs a judgement</span><span class="qsrc">01_data/90_INBOX/_assumption_reversibility_spec.md · §5</span></td></tr><tr><td class="qn" data-label="#">9</td><td data-label="What the data says">8 markets — <b>€22.28M, 40.3%</b> of the €55.25M target ceiling — sit on one flat €250 per vehicle. Denmark reads €250.57 and is not flat; the nine-market count was wrong. Re-cut on defensible alternatives the same billed book reads 43.6%, 40.6% or 29.4%.</td><td data-label="Decision it implies">Own the ceiling assumption in public (and turn the age-spend curve into a named data ask), or keep the ceiling internal and quote only billed euro.</td><td data-label="Owner">Jerome / VP Sales</td><td data-label="Blocked by">A per-market, per-age target-spend basis</td><td class="qdate" data-label="Date">2026-10-15</td><td class="qstate" data-label="State"><span class="chip modelled">Modelled</span><span class="qsrc">00_docs/OWNED_NUMBER_SHORTLIST_20260916.md · candidate 2</span></td></tr><tr><td class="qn" data-label="#">10</td><td data-label="What the data says">Sales to dealer is visible on <b>54.4%</b> of the 2025 billed book in the measured markets (60.0% with Portugal). On the full €112.09M parts base the same six files would read about 14.9%.</td><td data-label="Decision it implies">Fix the denominator for the published number: the €30.76M eighteen-market basis, or the €112.09M full parts base. It has no owner today.</td><td data-label="Owner">Jerome</td><td data-label="Blocked by">The denominator choice itself; Germany, Belgium and Portugal are €6.36M of files away</td><td class="qdate" data-label="Date">2026-09-30</td><td class="qstate" data-label="State"><span class="chip judgement">Needs a judgement</span><span class="qsrc">00_docs/OWNED_NUMBER_SHORTLIST_20260916.md · candidate 1 · dealer_sellout_gps_2025.csv</span></td></tr><tr><td class="qn" data-label="#">11</td><td data-label="What the data says">The fleet bucket file carries one <b>cv_std</b> column of 36,793 trucks and no N35 / N75 split, so per-class mileage cannot reach the denominator even though it is measured.</td><td data-label="Decision it implies">Approve splitting cv_std into n35 and n75 (total unchanged) so the weight-class design can actually reach the vehicle count.</td><td data-label="Owner">ISZE</td><td data-label="Blocked by">Nothing; changes no published figure until a scenario gives the two halves different mileage</td><td class="qdate" data-label="Date">2026-10-01</td><td class="qstate" data-label="State"><span class="chip judgement">Needs a judgement</span><span class="qsrc">03_analytics/Isuzu/prism/data/uio_by_model_bucket.csv · _assumption_reversibility_spec.md §2.5</span></td></tr><tr><td class="qn" data-label="#">12</td><td data-label="What the data says">The action ledger holds <b>23,236 open opportunities worth €22.1M</b> on mixed bases. <b>Every row is in state NEW</b> and the decisions file is empty (header only) — nothing has been triaged, so no outcome can ever be measured.</td><td data-label="Decision it implies">Triage the top of the ledger into own / defer / drop, or accept that the ledger is an inventory and not a queue.</td><td data-label="Owner">ISZE</td><td data-label="Blocked by">An empty decisions file — a 30-minute intentional act, not a data gap</td><td class="qdate" data-label="Date">2026-09-23</td><td class="qstate" data-label="State"><span class="chip judgement">Needs a judgement</span><span class="qsrc">01_data/00_derived/action_ledger_open.csv · action_ledger_decisions.csv · ACTION_LEDGER_REVIEW_20260825.md</span></td></tr><tr><td class="qn" data-label="#">13</td><td data-label="What the data says">Several pages claim to be the aftersales entry point: the command centre, the executive paper, the operating dashboards, this console, the old orientation hub.</td><td data-label="Decision it implies">Name one aftersales front page; the others become references behind it.</td><td data-label="Owner">Jerome</td><td data-label="Blocked by">Nothing</td><td class="qdate" data-label="Date">2026-09-23</td><td class="qstate" data-label="State"><span class="chip judgement">Needs a judgement</span><span class="qsrc">02_dashboards/hub/ISZE_OS_Hub.html · 02_dashboards/sales/ISZE_After_Sales_Paper.html · this page</span></td></tr></tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="no">05</span> · Honesty layer</h2>
+  <p class="lead">Four states on every figure on this page, then the figures that are wrong elsewhere in the estate
+  and what this page does instead.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>The four states</h3>
+      <div class="staterow"><span class="chip measured">Measured</span><p>Counted in a file, from a named extract, on a stated date.</p></div><div class="staterow"><span class="chip modelled">Modelled</span><p>Built from an assumption that is stated on the figure. A placeholder is a model.</p></div><div class="staterow"><span class="chip excluded">Excluded</span><p>Would be wrong to publish. Named on the page, left out of the arithmetic.</p></div><div class="staterow"><span class="chip judgement">Needs a judgement</span><p>The data is not the blocker. A person has to choose.</p></div>
+    </div>
+    <div class="card">
+      <h3>Where this page's figures sit</h3>
+      <div class="staterow"><span class="chip measured">Measured</span><p>Parts billed €30.76M · vehicles 163,459 · spend
+      per vehicle €188.16 · the 18-market spend league · 54.4% sales-to-dealer visibility · 23,236 ledger rows.</p></div>
+      <div class="staterow"><span class="chip modelled">Modelled</span><p>The €55.25M target-spend ceiling and everything
+      derived from it (55.7% cover, €24.73M uncaptured) · the 996,890 expected service units · category gaps at average
+      selling price.</p></div>
+      <div class="staterow"><span class="chip excluded">Excluded</span><p>2026 rows of the spend-per-unit file · every
+      2026–2030 vehicle forecast · the AIM completeness percentage · the pricing-risk score · the service-schedule
+      capture lane.</p></div>
+      <div class="staterow"><span class="chip judgement">Needs a judgement</span><p>Which age basis goes on a tile · the
+      sales-to-dealer denominator · the flat-target ceiling · the mileage default · which page is the aftersales front
+      page · ledger triage.</p></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h3>Figures that are wrong elsewhere in the estate</h3>
+    <p class="cap">Four known defects that a reader of other pages will meet. Each one is stated, not repeated.</p>
+    <div class="flagrow"><div class="fgt">AIM classification completeness, 93.5%</div><div class="fgw"><span class="fglab">Wrong elsewhere</span><p>Printed in `FACTS.md` (line 109), the master dashboard and the pricing pack as a March 2026 completeness figure. The basis is count-based and superseded; the source itself says it must not be compared with the revenue-weighted figure beside it.</p></div><div class="fgh"><span class="fglab">What this page does instead</span><p>This console publishes no AIM completeness percentage. The only classification statement on the page is the revenue-weighted residual (1.8% of 2025 revenue unclassified).</p></div></div><div class="flagrow"><div class="fgt">The mixed-lane cell on the master dashboard</div><div class="fgw"><span class="fglab">Wrong elsewhere</span><p>One cell puts an IML service-schedule cover figure (35.1%, on 1.25 services a year) beside a PRISM denominator (7,836, on a half-service basis). Two systems in one tile; the row beneath inherits it.</p></div><div class="fgh"><span class="fglab">What this page does instead</span><p>No service-schedule-lane figure appears on this console at all. Every capture figure here is the network lane, on one denominator, and the lane is named in the tooltip.</p></div></div><div class="flagrow"><div class="fgt">A 43% parts collapse in 2026</div><div class="fgw"><span class="fglab">Wrong elsewhere</span><p>The 2026 rows of the spend-per-unit file compare a part-year euro column with a full-year ceiling, so a year-on-year read shows a collapse that did not happen.</p></div><div class="fgh"><span class="fglab">What this page does instead</span><p>This console shows 2023, 2024 and 2025 only. The 2026 rows are excluded and the reason is stated on the decision row that owns the fix.</p></div></div><div class="flagrow"><div class="fgt">A 2026–2030 vehicle forecast</div><div class="fgw"><span class="fglab">Wrong elsewhere</span><p>The published forecast is 9% too high for 2026 and 59% too high for 2030, and 25% low for Israel in every year.</p></div><div class="fgh"><span class="fglab">What this page does instead</span><p>No forecast vehicle count appears anywhere on this page. Every denominator here is a measured 2025 figure.</p></div></div>
+  </div>
+</section>
+
+<p class="foot">
+Built 2026-09-16 by <code>build_os_console.py</code> — rebuild rather than edit the HTML.
+Sources, all re-derived on 2026-09-16: <code>gps_spu_by_distributor.csv</code> ·
+<code>wallet_waterfall.csv</code> · <code>pms_capture_by_db_year.csv</code> ·
+<code>pms_summary_by_db.csv</code> · <code>pms_opportunity_matrix.csv</code> ·
+<code>mix_genuine_bvp_by_group.csv</code> · <code>revenue_waterfall.csv</code> ·
+<code>dealer_sellout_gps_2025.csv</code> · <code>warranty_cv_km_age_by_market.csv</code> ·
+<code>uio_by_model_bucket.csv</code> · <code>VIN_register_summary.json</code> ·
+<code>action_ledger_open.csv</code> · <code>action_ledger.meta.json</code> ·
+<code>_data_integrity_open_issues.md</code> · <code>OWNED_NUMBER_SHORTLIST_20260916.md</code> ·
+<code>_cv_warranty_mileage_validation.md</code> · <code>_assumption_reversibility_spec.md</code> ·
+<code>V20_SPEC.md</code>.
+No customer names, no dealer names, no line-level billing, no personal data. The 2026–2030 vehicle forecast is
+deliberately absent: the direction of its error is confirmed and its endpoint is not.
+</p>
+</div>
+<p class="note mobile-bar-note" style="font-size:12px;color:#555">On narrow screens these bars switch to equal-width labelled blocks so values stay readable; they are not the same proportional geometry as the desktop chart.</p>
+</body>
+</html>

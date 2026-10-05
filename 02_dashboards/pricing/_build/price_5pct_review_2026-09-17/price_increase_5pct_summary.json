@@ -1,0 +1,118 @@
+{
+  "built_utc": "2026-09-24T17:40:12Z",
+  "stamp": "2026-09-17",
+  "status": "paper exercise - nothing published, nothing mailed, no live list touched",
+  "basis": {
+    "source": "01_data/00_derived/price_bp_weighted_compare_pn.csv",
+    "filter": "in_scope == True",
+    "window": "2025-07-01 .. 2026-06-30",
+    "lines": 48653,
+    "part_numbers": 15872,
+    "billed_eur": 34993609.39
+  },
+  "headline": {
+    "rate_under_review_pct": 5.0,
+    "step_5pct_on_all_in_scope_eur": 1749680.47,
+    "step_5pct_on_movable_eur": 1629792.63,
+    "euro_weighted_move_pct": 5.0,
+    "primary_label": "Value of a flat +5% on the in-scope base",
+    "collectable_label": "Collectable once lines with no move available are excluded",
+    "note": "Both figures are reported with equal weight. A single flat rate makes the euro-weighted move equal the rate itself. The collectable figure is the one that lands as money; the larger figure is the arithmetic on the whole in-scope base and must not be quoted as cash."
+  },
+  "movability": {
+    "mask": "bp_new_jpy.notna() AND bp_prior_revised.notna()",
+    "mask_note": "A line can take a new price only if it already carries a price on both sides of the revision. This is the same mask the pricing policy paper uses when it states 47,617 lines / EUR 32,595,852.63 / 93.15% of billed.",
+    "movable_lines": 47617,
+    "movable_billed_eur": 32595852.63,
+    "movable_share_pct": 93.15,
+    "immovable_lines": 1036,
+    "immovable_billed_eur": 2397756.76,
+    "immovable_share_pct": 6.85,
+    "immovable_composition": [
+      {
+        "reason": "no_price_on_one_side",
+        "lines": 1010,
+        "billed_eur": 1110782.49,
+        "share_of_in_scope_billed_pct": 3.17
+      },
+      {
+        "reason": "rebate_or_non_part_admin",
+        "lines": 19,
+        "billed_eur": 781252.09,
+        "share_of_in_scope_billed_pct": 2.23
+      },
+      {
+        "reason": "lubricant_no_pr00_in_sap",
+        "lines": 7,
+        "billed_eur": 505722.18,
+        "share_of_in_scope_billed_pct": 1.45
+      }
+    ],
+    "not_a_no_list_claim": "This is not the CY2025 no-list gap of 522 part numbers / EUR 4.96M that the pricing policy paper records. That figure is a different window (CY2025) and a different mask, and it is not used here. The immovable set on this basis is the unpriced residual the paper states for this window: EUR 2,397,756.76.",
+    "superseded_error": "An earlier build of this page reported 1,647 lines / EUR 4.48M immovable, using `value_eur_step != 0` as the test. That wrongly excluded 611 lines that carry a price on both sides but did not move in the last revision (EUR 2,085,484.90). Corrected 2026-09-17."
+  },
+  "versus_existing_revision": {
+    "step_existing_eur": 1652140.71,
+    "rate_existing_published_pct": 5.9616,
+    "step_tie_out": "exact",
+    "rate_bases": {
+      "published_headline": {
+        "value_pct": 5.9616,
+        "basis": "quantity-weighted base-price move on the movable set",
+        "source": "01_data/92_archive/pricing_papers_superseded_2026-10-02/01_data_90_INBOX/PRICING_POLICY_PAPER_2026-09-17.md - stated as the headline in section 1 and confirmed in the AIM priority-list handoff"
+      },
+      "simulation_quantity": {
+        "value_pct": 6.0652,
+        "basis": "weighted on the simulation's own quantity rather than billed quantity",
+        "source": "same paper, section 2.1 - documented as 6.06%"
+      },
+      "euro_weighted": {
+        "value_pct": 6.0064,
+        "basis": "each line's move weighted by the euro it billed",
+        "source": "recomputed here; the paper names the two bases above and not this one"
+      },
+      "step_on_priced_volume": {
+        "value_pct": 5.0686,
+        "basis": "value_eur_step divided by billed euro on the movable set",
+        "source": "same paper, section 2.1 - documented as 5.068%"
+      }
+    },
+    "rate_note": "There is no second reconciliation story. The published 5.9616% is the quantity-weighted base-price move and it ties to the published step to the cent. The two sensitivities the paper already documents are 6.06% (simulation quantity) and 5.068% (step on priced volume), and both reproduce on this file. An earlier build of this page reported 5.9787% and 6.2347% on the wrong masks and claimed the published rate had an unreproducible denominator. That claim was unsupported and has been withdrawn.",
+    "step_5pct_eur": 1749680.47,
+    "difference_eur_5pct_minus_existing": 97539.76,
+    "same_basis": false,
+    "note": "Both are measured on the in-scope L12M base. They are two separate proposals, not two components of one increase."
+  },
+  "fx_fork_open": {
+    "engine_fx": 163.7,
+    "engine_fx_as_of": "2025-10-01",
+    "engine_fx_source": "03_analytics/isze_pricing/config.yaml",
+    "spa_fx": 172.6,
+    "spa_fx_source": "01_data/90_INBOX/_eran_spa_two_options_20260917/build_spa2_two_options.py",
+    "yen_weakening_pct": 5.4368,
+    "note": "A 163.7 -> 172.6 move cuts our euro purchase cost by about 5.2%, which is approximately the size of this entire increase. Settling this before the list is built is Jerome's call and is deliberately left open."
+  },
+  "memo_cross_check": {
+    "source": "01_data/01_Pricing/DECISION_MEMO_PRICE_ADJUSTMENT_20260916.md (option B)",
+    "note": "Illustrative +5% euro on the forecast-weight basis. A different base from the in-scope revision base above; do not add the two.",
+    "l12m_base_eur": 12761292.6,
+    "forecast_weight_base_eur": 14517267.95,
+    "plus5_on_l12m_eur": 638064.63,
+    "plus5_on_forecast_weight_eur": 725863.4
+  },
+  "concentration_share_of_step_pct": {
+    "top_10": 7.6,
+    "top_100": 25.6,
+    "top_250": 37.9,
+    "top_1000": 59.0
+  },
+  "caveats": [
+    "No volume response is modelled. No elasticity coefficient exists in this workspace.",
+    "The billing extract carries net value only - no gross, discount or condition.",
+    "AIM level 1 covers less than the whole book; the remainder is shown explicitly.",
+    "Lines with no base price on one side cannot take a new price, so their euro is not collectable by pricing. They are counted and labelled, never dropped.",
+    "The collectable figure is the one that lands as money. The all-in-scope figure is whole-base arithmetic and must not be quoted as cash.",
+    "The CY2025 no-list gap of 522 part numbers / EUR 4.96M is a different window and is not used anywhere on this page.",
+    "This is a paper exercise on the current list. Nothing was published, nothing was mailed, and no live list was touched."
+  ]
+}

@@ -1,0 +1,96 @@
+==============================================================================
+WHY ARE THERE STILL ~1,100 OPEN ON THE IE40 PR00 EXTRACT?
+run 2026-09-24T16:02:51+02:00
+read-only; nothing written outside C:\Users\jerom\Desktop\claude\ISZE\01_data\91_build\export_aim_open_why_20260924
+==============================================================================
+
+INPUT 1  the queue (the parts that still need a family)
+  rows 1311  unique part numbers 1303
+  part numbers carrying more than one wording: 0
+  duplicate queue rows (the same part twice): 8
+  master rows 165257  duplicate part numbers on the master: 0
+
+INPUT 2  the wording dictionary, rebuilt the way the published file is built
+  master rows with a usable family 19973 of 165257
+  distinct wordings 3988 | meaning more than one family 27 | clearing the full bar (one family, >=3 parts on one path): 1595
+
+INPUT 3  what is open, read off the master as it stands today
+  unique part numbers on the queue 1303
+  closed today (44 appended + 162 filled) 206
+  of those, stamped export_pr00_20260924 206
+  OPEN 1097
+
+REPRODUCIBILITY CHECK  does this script's dictionary agree with today's write?
+  closed parts 206 | dictionary prediction disagrees with the written family: 0
+
+SELF-CHECK  every open part number lands in exactly one group
+  open part numbers 1097
+  sum of group counts 1097
+  distinct part numbers classified 1097
+  RECONCILES: YES
+  join accounting (nothing silent)
+    on the master today: 1054 | not: 43
+    on the overlay today: 1024 | not: 73
+    in the published file: 1054 | not: 43
+    on the price extract: 1097 | not: 0
+    what the published file shows for the open set (these three are disjoint and sum to 1097):
+      a row exists but the family is blank: 209
+      the deliberate Unknown marker: 845
+      no row in the published file at all: 43
+      a real family (must be 0 -- anything else is a defect): 0
+
+THE SPLIT OF THE OPEN PARTS
+  group                                         parts   share   list EUR
+  blocked by the deliberate Unknown marker (a decision, not data)    845   77.0%      43,837.98
+  wording the master has never carried, so the rule has nothing to match    146   13.3%       6,863.50
+  no row in the master at all, so there is nothing to write a family to     43    3.9%      18,898.61
+  wording the master carries, but on fewer than 3 parts     31    2.8%       1,108.38
+  looks decidable, but the wordings were deliberately held back     11    1.0%       1,482.00
+  wording the master itself splits across more than one family      8    0.7%       3,624.38
+  the only family the wording ever lands in is a residual bucket      6    0.5%       5,315.53
+  the wording resolves, but the figure key itself is multi-family so the check cannot pass      4    0.4%         124.07
+  one family, but the master splits it across more than one leave-path      2    0.2%          84.56
+  the figure key carries one family and it is not the wording's, so the rule stops      1    0.1%           0.60
+  TOTAL                                          1097  100.0%      81,339.61
+
+THE 20 HIGHEST-PRICED EXAMPLES OF THE LARGEST GROUP (blocked by the deliberate Unknown marker (a decision, not data))
+  7552440900    1,424.92  CASE; RR AXLE
+  8975027141    1,179.06  CONTROLLER; ABS
+  7552357310    1,177.96  HYDRAULIC UNIT; ANTI LOCK BRK
+  8974848540    1,175.65  HYDRAULIC UNIT; ANTI LOCK BRK
+  8978769020    1,157.36  CONTROLLER; ABS
+  8976881030      990.27  HYDRAULIC UNIT; ANTI LOCK BRK
+  8982324801      860.85  HYDRAULIC UNIT; ANTI LOCK BRK
+  8981415211      701.50  AXLE; FRT
+  8982568371      641.23  COMPRESSOR ASM; A/C
+  8973509931      568.34  TANK; FUEL
+  8975503180      559.10  CONVERTER ASM; TORQUE,A/T
+  8981512140      516.21  RAIL ASM; COMMON
+  8980563890      502.31  CONVERTER ASM; TORQUE,A/T
+  8984818621      447.02  CASE; RR AXLE
+  8974254120      444.74  BACK ASM; SEAT
+  8974641320      415.72  BACK ASM; SEAT
+  8982415692      414.00  MODULATOR; RR
+  8975451910      411.75  COMPRESSOR ASM; A/C
+  8981992711      401.42  AXLE; FRT
+  8983938821      397.10  COOLER ASM; A/T SECONDARY
+
+WHAT WOULD CLEAR EACH GROUP
+  (a) a relaxed rule that allows fewer than 3 supporting parts
+      clears 31 open parts outright (wording known, 1 or 2 master parts behind it)
+      if the rule is also allowed to use single-family wordings of any size, to stop refusing the five residual buckets, to pick a leave-path where two are strong, and to stop letting the figure key veto, it reaches 53 in total
+  (b) the parts-catalogue / Snap-on EPC lookup
+      only it can settle 199 open parts (no master wording for them, or the master's own wording conflicts with itself)
+  (c) deciding the Unknown marker
+      clears 845 open parts once the marker is cleared and the wording is allowed to stand
+      of those, 88 have a wording that resolves to one family with the figure key agreeing, so a plain re-run would place them the moment the marker is gone; 113 have a wording the master carries but on fewer than 3 parts, so they would also need the relaxed rule; 13 resolve to one family but stop on a split leave-path, a multi-family figure key or a hand carve-out; 14 have a wording that is split across families; and 617 have no wording evidence at all
+
+  overlap, stated so the counts are not added twice:
+    the 845 marker parts are blocked on a decision first; until the marker is cleared, the relaxed rule in (a) cannot reach them either
+    of the 845, the 88 resolve as soon as the marker is lifted with no rule change at all, and the 617 would still need the EPC afterwards
+    so the most that any rule change can clear is 898 of 1097; the other 199 need the EPC walk
+
+PART-NUMBER HYGIENE ON THE OPEN SET (the join traps)
+  open part numbers starting with a zero: 0
+  open part numbers that are not all digits: 0
+  the 44 part numbers the master had no row for at all were appended today; the 43 that are open today with no master row are a different, overlapping-in-spirit set: they never had a row and are not among the 44 (verified: all 44 carry a family and the stamp)

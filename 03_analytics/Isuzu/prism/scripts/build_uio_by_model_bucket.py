@@ -2,6 +2,23 @@
 """
 Real per-distributor UIO split by model-type bucket (CV-standard [LD+MD], F-Series, LCV).
 
+WHY cv_std STAYS COLLAPSED (reviewed 2026-09-17 — do not "fix" this without reading):
+
+`cv_std` merges N35 and N75 deliberately. This file feeds the PMS capture engine
+(`expected_by_category_bucketed`), where what matters is SERVICES PER YEAR, and the pipeline
+applies one rate to both bands (0.5 svc/yr). Splitting them here would yield an identical
+expected_qty, so the bucket stays collapsed rather than implying a distinction the service
+model does not make.
+
+The GPS side DOES need the split, because the rate card prices N35 at EUR 296 and N75 at
+EUR 739 — a 2.5x difference. That split is applied downstream in
+`modules/data_prep._split_collapsed_ld_rows()`, which reads the workbook's own ITUK carpark
+breakdown (sheet '2. Vehicle Volume' section B) and emits explicit N35 / N75 rows before the
+rate mapper sees them. See `modules/gps_model_targets.map_uio_row_to_model_group`.
+
+Net effect for ITUK: cv_std 22,190.9 is still N35 11,206 + N75 10,984. Same total either way;
+only the GPS ceiling moves.
+
 Fixes the PMS capture pipeline's hardcoded 2-market scope allowlist
 (pms_scope_for_distributor's LCV_DISTRIBUTORS={"IUK","UMI"} / CV_TRUCK_DISTRIBUTORS=
 {"ITUK","UTI"}, everything else silently defaulted to N75-truck scope). 14 of 18
@@ -126,7 +143,6 @@ def build_uio_by_model_bucket() -> pd.DataFrame:
         for code, vals in sorted(acc.items())
     ]
     return pd.DataFrame(out_rows)
-
 
 if __name__ == "__main__":
     df = build_uio_by_model_bucket()

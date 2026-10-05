@@ -659,7 +659,8 @@
       ],
       "do_not_use": {
         "file": "01_data/00_derived/pms_summary_by_db.csv",
-        "reason": "Contains year 2026 ONLY, and CY2026 is Jan-Mar actual against a FULL-YEAR expected_qty. Structurally understates by ~4x."
+        "reason": "RESOLVED 2026-09-17 — this warning is stale and must not be acted on. The file now contains CY2025 only, which is a COMPLETE year against a complete-year expected_qty, and it is the correct 2025 league file. The 2026 caveat applied before the 2026 columns were removed. Read it for 2025; it is safe.",
+        "history": "2026-09-17 and earlier: contained year 2026, being Jan-Mar actual against a FULL-YEAR expected_qty, structurally understating by ~4x. The 2026 rows have since been removed from the file."
       },
       "parallel_lane": {
         "label": "IML / ITUK signed-off lane (v7)",
@@ -13522,7 +13523,7 @@
           "example": "Unmapped brands default here"
         }
       ],
-      "source": "iam_brand_tiers.csv + pricing-engine Mode A ceilings (+30/+60/+150/+250)",
+      "source": "iam_brand_tiers.csv + pricing-engine shared ceilings (+30/+60/+150/+250)",
       "n_iam_pns_in_this_db": 60,
       "n_over_ceiling": 7,
       "rows": [

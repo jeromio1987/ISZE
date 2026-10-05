@@ -66,7 +66,7 @@ This is contract drift, not a missing year of sales. Still: the gate is red, so 
   <li>PR00 + ZPR1 history for 2023/2024/2025 landed 2026-08-11 under 01_Pricing/history/ plus 2026 current lists.</li>
   <li>Catalogue PR00 coverage raised to <strong>98.2%</strong> after Spec C4 SAP pull (residual admin non-PN + parked UMI Shell + 24 PN / €67k ZPR1-path hardware).</li>
   <li>Supersession billed-on-old: <strong>925 PN / €2.48M</strong> on IE40 map — not EPC-validated. Do not treat as confirmed leakage.</li>
-  <li>Eucon 2023 OEM+IAM survey raw sits beside PartsPool scrape dated <strong>2026-03-29</strong>. Mode A packs must show vintage labels or they mislead.</li>
+  <li>Eucon 2023 OEM+IAM survey raw sits beside PartsPool scrape dated <strong>2026-03-29</strong>. shared packs must show vintage labels or they mislead.</li>
   <li>Gina Z2SDAB42 margin masterdata (Jun/Jul 2026, ~24–29 MB) was pulled into INBOX — not yet a pipeline citizen.</li>
   <li>Rik Cornille monthly margin (~0.2 MB) is PC aggregate — wrong grain for PN work.</li>
 </ul>
@@ -265,7 +265,7 @@ Data-sufficiency verdict already says: sufficient to build; insufficient for mea
   <li>Sales_fact refresh cadence = within 5 working days of month close.</li>
   <li>Monday ledger ritual is mandatory for VP Sales analytics time (30–45 min).</li>
   <li>UMI sell-out is the next coverage priority over any new HTML.</li>
-  <li>Leakage € remains Mode B until list-to-pocket signed.</li>
+  <li>Leakage € remains internal until list-to-pocket signed.</li>
   <li>No new AIM-like composite score in 2026 without a pre-registered backtest plan.</li>
   <li>Mailbox intake skill added to AUTOMATION_REGISTER (CHEAP tier).</li>
   <li>G0b remains blocked until works-council step — no “quiet” shared-mailbox processing.</li>

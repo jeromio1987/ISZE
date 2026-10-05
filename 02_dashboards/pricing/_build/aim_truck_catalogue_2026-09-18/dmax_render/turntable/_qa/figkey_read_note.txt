@@ -1,0 +1,37 @@
+Image reading in this environment returned NO VISUAL CONTENT for every screenshot
+tried. The Read tool reported "Read image file: <path>" and supplied nothing that
+could be looked at. This is the same limitation the turntable build recorded in its
+README ("image viewing returned no visual content to the agent that built this, for
+every file tried including the known-good dmax_hero.png").
+
+Files tried in this run, one at a time, at full resolution:
+  _qa/figkey_02_zones_on.png
+  _qa/figkey_04_chassis_detail.png
+  _qa/figkey_05_cab_no_brake.png
+  _qa/figkey_03_clicked_front.png
+
+None of them produced a picture. No claim is made in the report that these
+screenshots were looked at.
+
+Substitute, which is numeric and is run by qa_figkey_shots.py:
+  - the stage is 1140x588, with a vehicle silhouette covering 33.0% of it and a
+    studio floor visible across 50.2%
+  - the zone tints cover 20,186 pixels at frame 1, spanning x 42..1108, y 74..586
+  - choosing a zone raises the tint to 45,947 pixels, so the selection paints
+  - the six cards form two rows of three, with five vertical gutters between them
+  - the cab detail panel carries 15.0% ink across 18 content bands
+  - frame 1 and the clicked frame differ across 4.9% of the stage
+
+Plus, from verify_figkey_page.py, which reads back what is actually painted rather
+than what exists in the markup:
+  - a zone card paints "POSITIONAL Front and lamps EUR14,713,948 what we billed,
+    all parts, 2023 to 2026 to date EUR4,924,428 of brake parts"
+  - the chassis panel paints "WHAT WE BILLED EUR24,856,405 ... BRAKE PARTS
+    EUR6,836,646 6,345 part numbers ... EUR5,299,935 Chapter does not say which axle"
+  - the cab panel paints "No brake parts in this zone"
+  - the line under the grid paints "Not on the vehicle: EUR14,299,043 of
+    EUR103,993,893 (13.8%) carries no place on a vehicle in the catalogue"
+
+Somebody with working eyes should still look at the four files listed above before
+this goes in front of anyone. A texture or layout fault would not be caught by any
+of the measurements above.

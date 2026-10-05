@@ -1,0 +1,51 @@
+{
+  "probed_at": "2026-09-22T17:22:48.825887+00:00",
+  "lookback_days": 30,
+  "from_dt": "2026-08-23T17:20:18.708499+00:00",
+  "counts": {
+    "Spain PLACSP": {
+      "raw": 216,
+      "gated": 10,
+      "error": null
+    },
+    "Italy PNCP": {
+      "raw": 22,
+      "gated": 2,
+      "error": null
+    },
+    "Germany oeffentlichevergabe": {
+      "raw": 590,
+      "gated": 163,
+      "error": null
+    }
+  },
+  "sample_titles": {
+    "ES": [
+      "Adquisición de una furgoneta para el servicio municipal de aguas del Ayuntamiento de Valdáliga (Cantabria).",
+      "Suministro de un vehículo polivalente 4x4 pick-up extinción de incendios para la agrupación municipal de voluntarios de ",
+      "Contrato de suministro consistente en la adquisición de un vehículo nuevo todoterreno tipo pick-up, con tracción total (",
+      "Suministro de combustible Gasoil y Aditivo AD Blue para los vehículos de la Fundación Canaria de Atención a las Personas",
+      "Servicio sanitario, compuesto de vehículos y personal especializados necesario para dar cobertura a los espectáculos púb"
+    ],
+    "IT": [
+      "Affidamento del servizio di manutenzione del parco mezzi comunale – anni 2027-2028-2029",
+      "Fornitura di n.4 pick up",
+      "LAVORI RIGUARDANTI L'OPERA PUBBLICA: “PROGETTO “AREE MARINE PROTETTE PER IL CLIMA” ANNUALITÀ 2020. AMP CAPO CACCIA – ISO",
+      "Servizio di supporto per la gestione tecnico-amministrativa delle pratiche relative alle autorizzazioni alle emissioni i",
+      "Nolo caldo T5 o più grande con gru per trasporto vegetazione"
+    ],
+    "DE": [
+      "Lieferung von zwei baugleichen Feuerwehrfahrzeugen LF10 nach DIN 14530-5 für die Stadt Miltenberg",
+      "Rahmenvereinbarung zur Durchführung von Fahrzeugkonservierungen an den Einsatzfahrzeugen der Branddirektion Leipzig",
+      "Lieferung von fünf Krankentransportwagen mit elektrohydraulischer Trage und medizinscher Teilbeladung + zwei Fahrzeuge o",
+      "LKW mit Wechselsystem, Kran und Winterdienststreuer",
+      "Rahmenvereinbarung über das Abschleppen und die Verwertung herrenloser Fahrzeuge (2026-2030)"
+    ]
+  },
+  "side_xlsx": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\04_tools\\ISZE_Tender_Monitor_Install\\isuzu_tenders_v3_es_it_de.xlsx",
+  "modules": [
+    "national_fetchers_es.py",
+    "national_fetchers_it.py",
+    "national_fetchers_de.py"
+  ]
+}

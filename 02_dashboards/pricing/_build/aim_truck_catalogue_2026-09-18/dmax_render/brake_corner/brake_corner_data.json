@@ -1,0 +1,592 @@
+{
+ "sources": {
+  "parts_catalog_dimension.csv": "part_number, fig_key, fig_key_label, pms_category, classification_source, pr00_family, pr00_group, pr00_level3_type, pms_registry, in_bvp_catalog",
+  "sales_by_db_fig_key_year.csv": "year, distributor_code, fig_key, fig_key_label, billed_qty, net_sales_eur, distinct_pns",
+  "price_bp_weighted_compare_pn.csv": "customer_code, sold_to_names, distributor_code, gps_db_label, country, region, scope, network_role, in_scope, is_non_parts, is_direct_account, part_number, billed_description, billed_qty, net_sales_value, class_new_raw, bp_new_class, class_mapped, unpriced_reason, bp_new_jpy, bp_prior_revised, bp_prior_billed, delta_jpy, delta_pct, value_jpy, value_eur_step"
+ },
+ "period": "all years present in the sales file (2023 to 2026 to date)",
+ "unit_note": "billed_eur is net sales value in euro as recorded in the billing file; billed_qty is the number of pieces billed. Both cover every distributor in the file.",
+ "callouts": [
+  {
+   "id": "A",
+   "part": "Brake disc (front)",
+   "kind": "disc",
+   "described_in_billing_as": "ROTOR; DISC BRK,FRT",
+   "part_numbers_billed": 16,
+   "billed_qty_own_lines": 12809.0,
+   "billed_eur_own_lines": 1032098.67,
+   "top_part_numbers": [
+    [
+     "8983767550",
+     703198.7
+    ],
+    [
+     "8983767530",
+     88434.34
+    ],
+    [
+     "8982488951",
+     69980.76
+    ],
+    [
+     "8979488071",
+     56177.84
+    ],
+    [
+     "8982488930",
+     35505.21
+    ]
+   ],
+   "distributors": [
+    [
+     "IUK",
+     390230.81999999995
+    ],
+    [
+     "ITUK",
+     118191.43
+    ],
+    [
+     "GERMANY",
+     117975.46000000002
+    ],
+    [
+     "NORWAY",
+     103062.56
+    ],
+    [
+     "BELGIUM",
+     69464.45
+    ]
+   ],
+   "part_numbers_matched_in_catalogue": 16,
+   "fig_keys": [
+    {
+     "fig_key": "411-025",
+     "fig_key_label": "Brake disc",
+     "pms_category": "brake_rotor",
+     "billed_eur": 2806991.48,
+     "billed_qty": 35533.0,
+     "distinct_pns": 16,
+     "by_year": {
+      "2023": 644607.05,
+      "2024": 963822.38,
+      "2025": 966864.9,
+      "2026": 231697.15
+     },
+     "top_distributors": [
+      [
+       "IUK",
+       1023637.3899999999
+      ],
+      [
+       "ITUK",
+       361993.89999999997
+      ],
+      [
+       "GERMANY",
+       359187.04000000004
+      ],
+      [
+       "NORWAY",
+       214359.82
+      ]
+     ],
+     "part_number_eur_share": 1032098.67
+    }
+   ],
+   "fig_key": "411-025",
+   "fig_key_label": "Brake disc",
+   "pms_category": "brake_rotor",
+   "billed_eur": 2806991.48,
+   "billed_qty": 35533.0,
+   "distinct_pns": 16,
+   "fig_key_label_describes_part": true,
+   "fig_key_eur": 2806991.48,
+   "fig_key_qty": 35533.0,
+   "own_lines_share_of_fig_key_pct": 36.8
+  },
+  {
+   "id": "B",
+   "part": "Brake pads (front)",
+   "kind": "pads",
+   "described_in_billing_as": "PAD KIT; CALIPER,DISC BRK,FRT",
+   "part_numbers_billed": 20,
+   "billed_qty_own_lines": 11778.0,
+   "billed_eur_own_lines": 919990.63,
+   "top_part_numbers": [
+    [
+     "8982447940",
+     342394.39
+    ],
+    [
+     "8975056801",
+     233749.86
+    ],
+    [
+     "8975546610",
+     86138.77
+    ],
+    [
+     "8982169210",
+     79679.33
+    ],
+    [
+     "8976526220",
+     63161.16
+    ]
+   ],
+   "distributors": [
+    [
+     "ITUK",
+     354849.58999999997
+    ],
+    [
+     "IUK",
+     95395.49
+    ],
+    [
+     "NORWAY",
+     85003.68000000001
+    ],
+    [
+     "UTI",
+     67392.37
+    ],
+    [
+     "GERMANY",
+     59425.99999999999
+    ]
+   ],
+   "part_numbers_matched_in_catalogue": 20,
+   "fig_keys": [
+    {
+     "fig_key": "302-017",
+     "fig_key_label": "Pad kit; caliper,disc BRK,FRT",
+     "pms_category": "brake_pad",
+     "billed_eur": 3548179.68,
+     "billed_qty": 47635.0,
+     "distinct_pns": 18,
+     "by_year": {
+      "2023": 1084052.41,
+      "2024": 1217688.25,
+      "2025": 1021767.31,
+      "2026": 224671.71
+     },
+     "top_distributors": [
+      [
+       "ITUK",
+       1066615.03
+      ],
+      [
+       "IUK",
+       687743.86
+      ],
+      [
+       "GERMANY",
+       270254.64999999997
+      ],
+      [
+       "NORWAY",
+       247665.49000000002
+      ]
+     ],
+     "part_number_eur_share": 612923.06
+    },
+    {
+     "fig_key": "302-017",
+     "fig_key_label": "Pad kit; caliper,disc BRK,FRT",
+     "pms_category": "brake_pad_front",
+     "billed_eur": 3548179.68,
+     "billed_qty": 47635.0,
+     "distinct_pns": 18,
+     "by_year": {
+      "2023": 1084052.41,
+      "2024": 1217688.25,
+      "2025": 1021767.31,
+      "2026": 224671.71
+     },
+     "top_distributors": [
+      [
+       "ITUK",
+       1066615.03
+      ],
+      [
+       "IUK",
+       687743.86
+      ],
+      [
+       "GERMANY",
+       270254.64999999997
+      ],
+      [
+       "NORWAY",
+       247665.49000000002
+      ]
+     ],
+     "part_number_eur_share": 307067.57
+    }
+   ],
+   "fig_key": "302-017",
+   "fig_key_label": "Pad kit; caliper,disc BRK,FRT",
+   "pms_category": "brake_pad",
+   "billed_eur": 3548179.68,
+   "billed_qty": 47635.0,
+   "distinct_pns": 18,
+   "fig_key_label_describes_part": true,
+   "fig_key_eur": 3548179.68,
+   "fig_key_qty": 47635.0,
+   "own_lines_share_of_fig_key_pct": 25.9
+  },
+  {
+   "id": "C",
+   "part": "Brake pads, without shim and clip",
+   "kind": "pads",
+   "described_in_billing_as": "PAD KIT; DISC BRK,W/O SHIM & CLIP",
+   "part_numbers_billed": 4,
+   "billed_qty_own_lines": 4344.0,
+   "billed_eur_own_lines": 251496.28,
+   "top_part_numbers": [
+    [
+     "8978279610",
+     146010.08
+    ],
+    [
+     "5876150640",
+     71973.69
+    ],
+    [
+     "8978279590",
+     23593.43
+    ],
+    [
+     "5876150650",
+     9919.08
+    ]
+   ],
+   "distributors": [
+    [
+     "IUK",
+     121108.67000000001
+    ],
+    [
+     "GERMANY",
+     30008.949999999997
+    ],
+    [
+     "BELGIUM",
+     20947.32
+    ],
+    [
+     "SWEDEN",
+     16709.02
+    ],
+    [
+     "UMI",
+     15478.8
+    ]
+   ],
+   "part_numbers_matched_in_catalogue": 4,
+   "fig_keys": [
+    {
+     "fig_key": "302-133",
+     "fig_key_label": "Pad kit; disc BRK,w/o shim & clip",
+     "pms_category": "brake_pad",
+     "billed_eur": 482562.81,
+     "billed_qty": 8590.0,
+     "distinct_pns": 5,
+     "by_year": {
+      "2023": 58725.72,
+      "2024": 143296.85,
+      "2025": 228509.3,
+      "2026": 52030.94
+     },
+     "top_distributors": [
+      [
+       "IUK",
+       199595.36000000002
+      ],
+      [
+       "GERMANY",
+       57649.46000000001
+      ],
+      [
+       "UMI",
+       44242.24
+      ],
+      [
+       "PORTUGAL",
+       40336.94
+      ]
+     ],
+     "part_number_eur_share": 251496.28
+    }
+   ],
+   "fig_key": "302-133",
+   "fig_key_label": "Pad kit; disc BRK,w/o shim & clip",
+   "pms_category": "brake_pad",
+   "billed_eur": 482562.81,
+   "billed_qty": 8590.0,
+   "distinct_pns": 5,
+   "fig_key_label_describes_part": true,
+   "fig_key_eur": 482562.81,
+   "fig_key_qty": 8590.0,
+   "own_lines_share_of_fig_key_pct": 52.1
+  },
+  {
+   "id": "D",
+   "part": "Brake caliper (front)",
+   "kind": "caliper",
+   "described_in_billing_as": "CALIPER; FRT DISC BRK",
+   "part_numbers_billed": 19,
+   "billed_qty_own_lines": 852.0,
+   "billed_eur_own_lines": 99327.33,
+   "top_part_numbers": [
+    [
+     "8984893170",
+     20276.7
+    ],
+    [
+     "8984893180",
+     16391.02
+    ],
+    [
+     "8983034660",
+     9901.72
+    ],
+    [
+     "8980779970",
+     8644.14
+    ],
+    [
+     "8983034600",
+     7236.17
+    ]
+   ],
+   "distributors": [
+    [
+     "ITUK",
+     25810.83
+    ],
+    [
+     "IUK",
+     20083.49
+    ],
+    [
+     "NORWAY",
+     10028.11
+    ],
+    [
+     "IRELAND",
+     7998.72
+    ],
+    [
+     "UMI",
+     7942.269999999999
+    ]
+   ],
+   "part_numbers_matched_in_catalogue": 19,
+   "fig_keys": [
+    {
+     "fig_key": "302-001",
+     "fig_key_label": "Brake disc",
+     "pms_category": "brake_rotor",
+     "billed_eur": 330067.78,
+     "billed_qty": 2755.0,
+     "distinct_pns": 17,
+     "by_year": {
+      "2023": 112971.58,
+      "2024": 99156.17,
+      "2025": 92782.22,
+      "2026": 25157.81
+     },
+     "top_distributors": [
+      [
+       "ITUK",
+       95132.27
+      ],
+      [
+       "IUK",
+       60814.96
+      ],
+      [
+       "IRELAND",
+       36094.950000000004
+      ],
+      [
+       "UMI",
+       27683.87
+      ]
+     ],
+     "part_number_eur_share": 99327.33
+    }
+   ],
+   "fig_key": "302-001",
+   "fig_key_label": "Brake disc",
+   "pms_category": "brake_rotor",
+   "billed_eur": 330067.78,
+   "billed_qty": 2755.0,
+   "distinct_pns": 17,
+   "fig_key_label_describes_part": false,
+   "fig_key_note": "Catalogue label mismatch: this part bills under the figure key 302-001, which the parts catalogue labels 'Brake disc' - a label that does not describe it. The key and its billed euro are stated as the catalogue has them.",
+   "fig_key_eur": 330067.78,
+   "fig_key_qty": 2755.0,
+   "own_lines_share_of_fig_key_pct": 30.1
+  },
+  {
+   "id": "E",
+   "part": "Road wheel",
+   "kind": "wheel",
+   "described_in_billing_as": "WHEEL; DISC,AL and WHEEL; DISC (not split by axle)",
+   "part_numbers_billed": 39,
+   "billed_qty_own_lines": 1151.0,
+   "billed_eur_own_lines": 183216.7,
+   "top_part_numbers": [
+    [
+     "7552259810",
+     34832.08
+    ],
+    [
+     "8972678500",
+     22217.5
+    ],
+    [
+     "8972729890",
+     15281.59
+    ],
+    [
+     "8972677150",
+     14052.06
+    ],
+    [
+     "8975274900",
+     12625.08
+    ]
+   ],
+   "distributors": [
+    [
+     "BELGIUM",
+     52053.439999999995
+    ],
+    [
+     "ITUK",
+     27810.549999999996
+    ],
+    [
+     "IUK",
+     23450.829999999998
+    ],
+    [
+     "GERMANY",
+     17098.130000000005
+    ],
+    [
+     "UMI",
+     12455.43
+    ]
+   ],
+   "part_numbers_matched_in_catalogue": 39,
+   "fig_keys": [
+    {
+     "fig_key": "480-022",
+     "fig_key_label": "Other mechanical",
+     "pms_category": null,
+     "billed_eur": 240149.48,
+     "billed_qty": 1207.0,
+     "distinct_pns": 15,
+     "by_year": {
+      "2023": 70506.55,
+      "2024": 62357.02,
+      "2025": 81899.3,
+      "2026": 25386.61
+     },
+     "top_distributors": [
+      [
+       "BELGIUM",
+       55986.299999999996
+      ],
+      [
+       "IUK",
+       47066.979999999996
+      ],
+      [
+       "GERMANY",
+       32842.78
+      ],
+      [
+       "UMI",
+       28980.88
+      ]
+     ],
+     "part_number_eur_share": 99165.97
+    },
+    {
+     "fig_key": "480-002",
+     "fig_key_label": "Other mechanical",
+     "pms_category": null,
+     "billed_eur": 219328.85,
+     "billed_qty": 1716.0,
+     "distinct_pns": 9,
+     "by_year": {
+      "2023": 55077.87,
+      "2024": 72242.4,
+      "2025": 70754.58,
+      "2026": 21254.0
+     },
+     "top_distributors": [
+      [
+       "ITUK",
+       83829.48000000001
+      ],
+      [
+       "BELGIUM",
+       41933.08999999999
+      ],
+      [
+       "IUK",
+       25818.21
+      ],
+      [
+       "UTI",
+       18491.21
+      ]
+     ],
+     "part_number_eur_share": 84050.73
+    }
+   ],
+   "fig_key": "480-022",
+   "fig_key_label": "Other mechanical",
+   "pms_category": null,
+   "billed_eur": 240149.48,
+   "billed_qty": 1207.0,
+   "distinct_pns": 15,
+   "fig_key_label_describes_part": false,
+   "fig_key_note": "Catalogue label mismatch: this part bills under the figure key 480-022, which the parts catalogue labels 'Other mechanical' - a label that does not describe it. The key and its billed euro are stated as the catalogue has them.",
+   "fig_key_eur": 240149.48,
+   "fig_key_qty": 1207.0,
+   "own_lines_share_of_fig_key_pct": 76.3
+  },
+  {
+   "id": "F",
+   "part": "Tyre",
+   "kind": "tyre",
+   "described_in_billing_as": null,
+   "part_numbers_billed": 0,
+   "billed_qty_own_lines": 0.0,
+   "billed_eur_own_lines": 0.0,
+   "top_part_numbers": [],
+   "distributors": [],
+   "part_numbers_matched_in_catalogue": 0,
+   "fig_keys": [],
+   "fig_key": null,
+   "fig_key_label": null,
+   "pms_category": null,
+   "billed_eur": null,
+   "billed_qty": null,
+   "distinct_pns": null,
+   "fig_key_note": "No figure key in the parts catalogue covers this part, so the figure key is not shown. The billed figures beside it come from the billing file only.",
+   "billing_note": "No part of this kind is billed anywhere in the billing file, so this part has no billed figure at all.",
+   "fig_key_label_describes_part": false
+  }
+ ]
+}

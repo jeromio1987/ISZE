@@ -1,4 +1,4 @@
-"""Two Mode A workbooks for Duncan: coverage/1% and aftermarket compare.
+"""Two shared workbooks for Duncan: coverage/1% and aftermarket compare.
 
 ISZE to ITUK is shown. Projected ITUK to dealers = ISZE x mark-up (yellow).
 Aftermarket = UK workshop purchase. Sign only at ITUK-to-dealers vs aftermarket.

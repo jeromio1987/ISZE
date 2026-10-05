@@ -7,7 +7,7 @@
 
 Hi Koen,
 
-Please find attached the Sales Review & FY2027 Target decks (Mode A) for:
+Please find attached the Sales Review & FY2027 Target decks (shared) for:
 
 - BL (Iceland)
 - Romania
@@ -21,7 +21,7 @@ Jerome
 
 ---
 
-## Attachments (Mode A only)
+## Attachments (shared only)
 
 All under `C:\Users\jerom\Desktop\claude\ISZE\09_meetings\`:
 

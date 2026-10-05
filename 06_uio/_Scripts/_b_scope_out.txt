@@ -1,0 +1,29 @@
+﻿sanity: BASE reproduces candidate a on all rows? False
+
+=== PRECISION ONLY (global) ===
+  rows whose 2026-2030 cells move by >=1 unit: 6
+     r12  delta=[0, 0, 1, 1, 1]
+     r15  delta=[0, -1, -1, -2, -3]
+     r25  delta=[0, 0, -1, -1, 0]
+     r63  delta=[1, 1, 1, 1, 1]
+     r69  delta=[-1, -1, -1, -1, -1]
+     r84  delta=[0, 0, 1, 1, 1]
+  Grand Total: 2026=217285  2027=208849  2028=200158  2029=191928  2030=184178
+
+=== PRECISION + seam on r54/r90 ===
+  rows whose 2026-2030 cells move by >=1 unit: 8
+     r12  delta=[0, 0, 1, 1, 1]
+     r15  delta=[0, -1, -1, -2, -3]
+     r25  delta=[0, 0, -1, -1, 0]
+     r54  delta=[-87, 13, 268, 417, 440]
+     r63  delta=[1, 1, 1, 1, 1]
+     r69  delta=[-1, -1, -1, -1, -1]
+     r84  delta=[0, 0, 1, 1, 1]
+     r90  delta=[1014, 1168, 1263, 1291, 1254]
+  Grand Total: 2026=218212  2027=210030  2028=201689  2029=193636  2030=185872
+
+=== harness signature on the four adjudicated rows, final combination ===
+  r33  v20=[137, 160, 181, 202, 223]              deltas=[23, 21, 21, 21]       mean=0.9710 | C1 switch=True  C5 hit=True
+  r54  v20=[5022, 5438, 5977, 6384, 6691]         deltas=[416, 539, 407, 307]   mean=0.9350 | C1 switch=False C5 hit=False
+  r79  v20=[51, 65, 79, 93, 107]                  deltas=[14, 14, 14, 14]       mean=1.0000 | C1 switch=True  C5 hit=False
+  r90  v20=[3252, 3507, 3708, 3812, 3868]         deltas=[255, 201, 104, 56]    mean=0.6147 | C1 switch=False C5 hit=False

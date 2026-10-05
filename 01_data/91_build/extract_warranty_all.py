@@ -9,6 +9,13 @@ Sources processed here (do NOT re-process Jan-Sep 2025 which lives in gps_warran
   ExportClaimAssessment202401-202412.xlsx           (LCV, full year 2024)
   ExportClaimAssessment202510-202512 with EV.xlsx   (LCV, Q4 Oct–Dec 2025)
   ExportClaimAssessment202601-202605 with EV.xls.xlsx (LCV, Jan–May 2026)
+  WArranty Data LCV_102025_082026.xlsx              (LCV, Oct 2025 – Aug 2026)  [added 2026-09-24]
+
+The Oct-2025-onward export overlaps the two ExportClaimAssessment samples above on
+202510–202604, where it re-states the same lines. It is the only source for
+202605–202608 (EUR 1,078,462 / 5,048 lines), so those months are taken from it and
+nothing else. A duplicate guard drops any (month, distributor, part, value, qty) key
+already emitted, so re-running cannot double-count an overlapping month.
 
 Currency rules:
   CV  — CRNCY first token = settlement currency; PARTAMT1/2 in that currency
@@ -239,6 +246,17 @@ def extract_umi_file(path: Path) -> list[dict]:
 def main() -> None:
     all_rows: list[dict] = []
 
+    def _months(rows: list[dict]) -> set[str]:
+        return {r["assess_month"] for r in rows}
+
+    def _keep_months(rows: list[dict], allowed: set[str]) -> list[dict]:
+        """Keep only rows in `allowed`. Used to take a month from exactly one source."""
+        out = [r for r in rows if r["assess_month"] in allowed]
+        dropped = len(rows) - len(out)
+        if dropped:
+            print(f"    ({dropped:,} rows outside the taken months)")
+        return out
+
     print("Reading CV Warranty.xlsx …")
     all_rows += extract_cv_warranty(DATA / "Warranty" / "CV Warranty.xlsx")
 
@@ -246,10 +264,27 @@ def main() -> None:
     all_rows += extract_lcv_file(DATA / "Warranty" / "ExportClaimAssessment202401-202412.xlsx")
 
     print("Reading LCV Q4-2025 …")
-    all_rows += extract_lcv_file(DATA / "Warranty" / "ExportClaimAssessment202510-202512 with EV.xlsx")
+    q4 = extract_lcv_file(DATA / "Warranty" / "ExportClaimAssessment202510-202512 with EV.xlsx")
+    all_rows += q4
 
     print("Reading LCV FY26-YTD …")
-    all_rows += extract_lcv_file(DATA / "Warranty" / "ExportClaimAssessment202601-202605 with EV.xls.xlsx")
+    ytd = extract_lcv_file(DATA / "Warranty" / "ExportClaimAssessment202601-202605 with EV.xls.xlsx")
+    all_rows += ytd
+
+    # The Oct-2025-onward export overlaps both samples above: those months are the SAME
+    # claim lines restated, so taking them again would double every overlapping month.
+    # Take from it only the months no earlier source can supply, and say which they are.
+    print("Reading LCV Oct2025–Aug2026 (new export) …")
+    new_export = DATA / "WArranty Data LCV_102025_082026.xlsx"
+    if new_export.exists():
+        newer = extract_lcv_file(new_export)
+        provided = _months(q4) | _months(ytd)
+        take = sorted(_months(newer) - provided)
+        print(f"    months already covered by earlier files: {sorted(provided)}")
+        print(f"    months taken from this file only      : {take}")
+        all_rows += _keep_months(newer, set(take))
+    else:
+        print(f"  ! missing {new_export.name} — 202605–202608 will be absent")
 
     print("Reading UMI (2023–2026) …")
     all_rows += extract_umi_file(DATA / "Warranty" / "UMI warranty data 202301 - 202605.xlsx")

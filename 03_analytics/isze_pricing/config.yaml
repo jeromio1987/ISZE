@@ -10,11 +10,54 @@ meta:
 # ---------------------------------------------------------------- IML formula
 # Non-negotiable. SP = (BP_JPY / FX * source_discount) / class_factor
 formula:
-  fx_rate: 163.7                # JPY/EUR, FY2026 (Oct 2025)
-  fx_as_of: '2025-10-01'        # audit checks this for staleness
+  # ------------------------------------------------------------------ FX vintages
+  # CORRECTED 2026-09-19 (Jerome). Three vintages, highest last. DO NOT confuse
+  # the previous rate with the rate the price list sits on - that conflation
+  # produced a wrong "they cancel" reading for two days:
+  #   163.7  FY2026, as_of 2025-10-01  TWO VINTAGES BACK. The settled 5.9616%
+  #                                    base-price revision was priced on THIS,
+  #                                    and the selling price list still sits on
+  #                                    it. It is NOT the before rate.
+  #   172.6  2026-04-01 to 2026-09-30  THE PREVIOUS vintage - the correct
+  #                                    "before" for the move to 178.5.
+  #   178.5  2026-10-01 to 2027-03-31  LIVE, and it covers BOTH sources, Japan
+  #                                    and Thailand. Suzuki san's rate is not
+  #                                    Japan-only.
+  # FX is the DENOMINATOR of FOB_EUR = BP_JPY / FX * source_discount, so a HIGHER
+  # JPY/EUR LOWERS our euro cost; a HIGHER discount RAISES it.
+  #   Rate move alone        172.6 / 178.5 = 0.966947  = -3.31% on landed cost
+  #   Discount move alone    0.673 / 0.620 = 1.085484  = +8.55% on landed cost
+  #   BOTH, if both were new 0.966947 x 1.085484 = 1.049605 = +4.96%, a cost
+  #                          INCREASE. They do NOT cancel.
+  # The discount is NOT a new move inside the 172.6 window: it took effect
+  # 2026-01-05, three months BEFORE 172.6 began. So between the previous vintage
+  # and the live one the only new move is the rate: -3.31%.
+  #
+  # SUPERSEDED 2026-09-19, recorded not deleted. This pairing used 163.7 as the
+  # prior rate, which is two vintages back and therefore wrong; it is the source
+  # of the "the two changes very nearly cancel" reading:
+  #   0.9171 x 1.0855 = 0.9955, i.e. -0.45% on landed cost.
+  #
+  # Japan purchase discount: 0.620 -> 0.673.
+  #   EFFECTIVE 2026-01-05 - Suzuki san, subject "discount/whole sales ratio
+  #   revisoin from Jan 5th 2026", mail of 2025-12-22, timed with the annual EBP
+  #   revision. NOT 2026-09-18: that is only the date this file was updated.
+  #   Margin on the yen base price: 1 - 0.620 = 38.0% -> 1 - 0.673 = 32.7%
+  #   (-5.3 pp). Source: rate-revision workbook, sheet "change applicable whole
+  #   sale ratio", customer K208FJ, category "vehicle parts"; confirmed by Jerome
+  #   as the vehicle-parts discount.
+  fx_rate: 178.5                # JPY/EUR, live for 2026-10-01 to 2027-03-31
+  fx_as_of: '2026-10-01'        # audit checks this for staleness
+  fx_period_end: '2027-03-31'
+  fx_prior_vintages:            # audit/traceability only - never used as the live rate
+    2026-04-01: 172.6           # ran to 2026-09-30 - THE PREVIOUS vintage: the correct "before" for the move to 178.5
+    2025-10-01: 163.7           # two vintages back - what the settled 5.9616% revision was priced on, and what the selling list still sits on. NOT the before rate.
   source_discount:
-    J: 0.62                     # Japan / IML
-    T: 0.611                    # Thailand / IMIT
+    J: 0.673                    # Japan / IML - was 0.620. EFFECTIVE 2026-01-05, so it is not a new move inside the 172.6 window.
+    T: 0.611                    # Thailand / IMIT - NOT revised in this update
+  source_discount_prior:
+    J: 0.620
+    T: 0.611
   class_factor:                 # PR00 FY2026
     C: 0.47                     # 53.0% GM
     D: 0.48                     # 52.0%
@@ -23,15 +66,17 @@ formula:
     M: 0.50                     # 50.0%
     P: 0.44                     # 56.0%
     V: 0.55                     # 45.0%
-    T: 0.80                     # 20.0%
+    T: 0.60                     # 40.0%
   # genuine street = list x DB margin x dealer margin
   street_factor: 1.785          # 1.40 * 1.275
 
 # ---------------------------------------------------------------- allocation
 allocation:
   target: 0.03                  # weighted increase on net-to-DB
-  cap: 0.08                     # per-line ceiling
-  cap_top50: 0.05               # tighter ceiling inside a DB's top-50 basket
+  # Per-line % ceilings REMOVED 2026-09-20 — Jerome: not binding; delete everywhere.
+  # null = no upper clip in the engine (floor still applies).
+  cap: null
+  cap_top50: null
   floor: -0.12
 
   # Target genuine position vs the benchmark brand — IN PERCENT, then stored

@@ -412,6 +412,29 @@ returns next year.
 
 ---
 
+### Correction — 2026-09-18: the "LD" label is not a weight class
+
+Applied in the same pass as the source spec, `V20_SPEC.md` §Problem 4/5. The short version: Israel's
+CV `LD` row holds **no 3.5 t truck** (CV claim VINs: NPR75/FRR90/FSR90 only, zero NLR; ministry
+table starts at 6.5–7.5 t), so it is already priced at the 7.5 t rate. The label was the defect, not
+the number. Germany's 3.5 t share is **22 %** on the Helwig parc bands, not "0 % — no change" as the
+table below states. Full per-market table, bases and wallet impact are in `V20_SPEC.md` §Problem 4.
+
+### Tonnage dimension — 2026-09-19 *(do not fork this section; `V20_SPEC.md` is the source)*
+
+`V20_SPEC.md` §**Problem 9** was added on 19 September 2026 and is the live text for the tonnage
+dimension: the band set, the per-market source table, what is measured versus not, what replaces the
+`LD` token, and the honest coverage list. It also reports what each ITUK (Duncan) VIN pack actually
+contains, and that the Israel registration band table (`UIO ISUZU 2025.xlsx`, 1994–2025) and the
+Portugal per-VIN banded register (`Matriculas Isuzu SAP.xlsx`, 2005–2026) were **both already on disk** —
+which supersedes parts of *Still open* below. **This draft is frozen at 9 August 2026 and is not
+maintained for tonnage** — read `V20_SPEC.md` §Problem 9 rather than extending this file.
+
+No model rebuild is authorised by that section, and the 2026–2030 columns remain separately known-broken
+(`UIO-FCAST`, §Problem 1).
+
+---
+
 ## Problem 5 — Four markets have no real fleet history at all
 
 Belgium, Cyprus, Malta and Greece are built from the IML backbone and the old scrap-adjusted car park,

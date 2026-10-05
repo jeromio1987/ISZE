@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Isuzu truck renders - review sheet</title>
+<style>
+  :root{--navy:#15233c;--terra:#c0552d;--paper:#f7f4ee;--muted:#6b6459;--line:#d9d3c8}
+  body{margin:0;background:var(--paper);color:#22262e;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+  .wrap{max-width:1500px;margin:0 auto;padding:18px}
+  h1{font-family:Georgia,serif;font-size:22px;color:var(--navy);margin:0 0 4px}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.5}
+  .sub b{color:var(--navy)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:1000px){.grid{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--line);padding:12px}
+  .card h2{font-family:Georgia,serif;font-size:15px;color:var(--navy);margin:0 0 2px}
+  .card .meta{font-size:11.5px;color:var(--muted);margin-bottom:9px}
+  .card img{display:block;width:100%;height:auto;background:#fff;
+    border:1px solid var(--line)}
+  .note{margin-top:16px;background:#fdf3e3;border:1px solid #e6cf9f;
+    border-left:4px solid #a8721f;padding:11px 14px;font-size:13px;color:#5e4a1c}
+  .note b{color:#4a3a12}
+  .note ul{margin:7px 0 0;padding-left:18px}
+  .note li{margin-bottom:4px}
+  code{background:#eef3f9;padding:1px 4px;font-size:11.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Isuzu truck renders — review sheet</h1>
+  <div class="sub">
+    Four vehicles modelled in Blender from Isuzu's published dimensions, rendered with
+    Cycles. These are the <b>raw vehicle renders</b>, before the clickable zone overlay
+    goes on and before any page rebuild. Reload this page to pick up new renders —
+    the background job is still refining them.
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>D-Max</h2>
+      <div class="meta">Pickup / LCV · 5.265 m long · 1.870 m wide · 1.785 m high ·
+        3.125 m wheelbase · 0.905 m front overhang</div>
+      <img src="dmax.png" alt="Isuzu D-Max render">
+    </div>
+    <div class="card">
+      <h2>N-Series light (NLR)</h2>
+      <div class="meta">Cab-over light truck · 4.730 m long · 1.815 m wide ·
+        2.195 m high · 2.475 m wheelbase</div>
+      <img src="nlr.png" alt="Isuzu NLR render">
+    </div>
+    <div class="card">
+      <h2>N-Series heavy (NMR)</h2>
+      <div class="meta">Cab-over medium truck · 6.020 m long · 1.995 m wide ·
+        2.265 m high · 3.345 m wheelbase</div>
+      <img src="nmr.png" alt="Isuzu NMR render">
+    </div>
+    <div class="card">
+      <h2>F-Series (FRR)</h2>
+      <div class="meta">Cab-over heavy truck · 7.255 m long · 2.170 m wide ·
+        2.585 m cab height · 4.360 m wheelbase</div>
+      <img src="frr.png" alt="Isuzu FRR render">
+    </div>
+  </div>
+
+  <div class="note">
+    <b>What I can see, and what needs your call.</b>
+    <ul>
+      <li><b>The front faces are blank.</b> Headlights and grille are modelled but sit
+        inside the body volume, so you see a plain panel where the face should be. This
+        is a bug and it is the main reason the cab-overs read as generic box trucks.</li>
+      <li><b>The D-Max cab is too upright.</b> The windscreen rake is nearly vertical and
+        the bonnet is long and flat, so it reads as a light truck with a box on the back
+        rather than a pickup. This is the weakest of the four.</li>
+      <li><b>The cab-overs have the right proportions</b> but nothing identifies them:
+        no grille shape, no badge, no windscreen contrast, flat cab sides.</li>
+      <li><b>Wheels are off.</b> Rims too large and too bright; tyres read thin.</li>
+      <li><b>Angle.</b> A three-quarter front view shows the face and reads far more like
+        a truck, at the cost of hiding some clickable zone area on the far side.</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+{
+  "angle": "chart_form_quality",
+  "html_checked": 158,
+  "findings": [
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/pricing",
+      "what": "ISZE_Aftermarket_Live_Pricing_Dashboard.html declares 4 charts but has no canvas element",
+      "evidence": "02_dashboards/pricing/ISZE_Aftermarket_Live_Pricing_Dashboard.html",
+      "action": "check the chart container renders",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "low",
+      "workstream": "02_dashboards/pricing",
+      "what": "ISZE_IAM_Quality_Positioning_Engine.html uses one chart form (bar) for all 10 charts; check the form matches each question",
+      "evidence": "02_dashboards/pricing/ISZE_IAM_Quality_Positioning_Engine.html",
+      "action": "review against isze-best-chart",
+      "artifact_is_recent": true,
+      "attribution": "recent: written at or after this toolkit's stamp. Not attributable to a specific agent - another agent may be writing concurrently."
+    },
+    {
+      "severity": "low",
+      "workstream": "02_dashboards/pricing",
+      "what": "ISZE_IAM_Quality_Positioning_Engine_IMOTORS.html uses one chart form (bar) for all 10 charts; check the form matches each question",
+      "evidence": "02_dashboards/pricing/ISZE_IAM_Quality_Positioning_Engine_IMOTORS.html",
+      "action": "review against isze-best-chart",
+      "artifact_is_recent": true,
+      "attribution": "recent: written at or after this toolkit's stamp. Not attributable to a specific agent - another agent may be writing concurrently."
+    },
+    {
+      "severity": "low",
+      "workstream": "02_dashboards/pricing",
+      "what": "ISZE_IAM_Quality_Positioning_Engine_ISD.html uses one chart form (bar) for all 10 charts; check the form matches each question",
+      "evidence": "02_dashboards/pricing/ISZE_IAM_Quality_Positioning_Engine_ISD.html",
+      "action": "review against isze-best-chart",
+      "artifact_is_recent": true,
+      "attribution": "recent: written at or after this toolkit's stamp. Not attributable to a specific agent - another agent may be writing concurrently."
+    },
+    {
+      "severity": "low",
+      "workstream": "02_dashboards/pricing",
+      "what": "ISZE_Price_BP_Weighted_Compare.html uses one chart form (bar) for all 3 charts; check the form matches each question",
+      "evidence": "02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html",
+      "action": "review against isze-best-chart",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "low",
+      "workstream": "02_dashboards/pricing",
+      "what": "ISZE_Price_Increase_5pct_Flat_REVIEW_2026-09-17.html uses one chart form (bar) for all 4 charts; check the form matches each question",
+      "evidence": "02_dashboards/pricing/ISZE_Price_Increase_5pct_Flat_REVIEW_2026-09-17.html",
+      "action": "review against isze-best-chart",
+      "artifact_is_recent": true,
+      "attribution": "recent: written at or after this toolkit's stamp. Not attributable to a specific agent - another agent may be writing concurrently."
+    },
+    {
+      "severity": "low",
+      "workstream": "09_meetings/HUNGARY_Sales_Review_2026",
+      "what": "HUNGARY_All_parts_groups_H1_dashboard.html uses one chart form (bar) for all 4 charts; check the form matches each question",
+      "evidence": "09_meetings/HUNGARY_Sales_Review_2026/HUNGARY_All_parts_groups_H1_dashboard.html",
+      "action": "review against isze-best-chart",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "low",
+      "workstream": "09_meetings/IBX_Sales_Review_2026",
+      "what": "IBX_All_parts_groups_H1_dashboard.html uses one chart form (bar) for all 4 charts; check the form matches each question",
+      "evidence": "09_meetings/IBX_Sales_Review_2026/IBX_All_parts_groups_H1_dashboard.html",
+      "action": "review against isze-best-chart",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "medium",
+      "workstream": "09_meetings/ISZE_Full_Project_Audit_20260825",
+      "what": "ISZE_Full_Project_Audit_20260825.html has a pie/donut with ~16 segments; that many is unreadable",
+      "evidence": "09_meetings/ISZE_Full_Project_Audit_20260825/ISZE_Full_Project_Audit_20260825.html",
+      "action": "split it or use ranked bars",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    }
+  ],
+  "note": "Mechanical proxies only. Design quality still needs a human eye.",
+  "generated_utc": "2026-09-18T01:00:03Z",
+  "description": "Mechanical chart-form proxies (one form everywhere, fat pies)",
+  "findings_count": 9,
+  "recent_count": 4,
+  "backlog_count": 5
+}

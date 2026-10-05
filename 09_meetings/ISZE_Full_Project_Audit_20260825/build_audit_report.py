@@ -77,7 +77,7 @@ tr{page-break-inside:avoid;}
 </style>
 </head>
 <body>
-<div class="footer"><span>ISZE Full Project Audit · Confidential · Mode B internal</span><span>Audit as-of 25 Aug 2026</span></div>
+<div class="footer"><span>ISZE Full Project Audit · Confidential · internal internal</span><span>Audit as-of 25 Aug 2026</span></div>
 
 <!-- ===================== COVER ===================== -->
 <section class="cover">
@@ -329,7 +329,7 @@ World-class aftersales analytics for this channel means the following eight trut
     <tr><td>12</td><td>Signed list-to-pocket validation</td><td>Quotable leakage</td><td>Join QA on history lists</td></tr>
     <tr><td>13</td><td>Network fill / lost-sales</td><td>Ops KPI beyond ITUK leakage</td><td>New extract family</td></tr>
     <tr><td>14</td><td>VIN ITUK/UTI + AT/MT</td><td>Parc cohorts beyond JP</td><td>VIN packs</td></tr>
-    <tr><td>15</td><td>Fresh IAM scrape with visible as-of</td><td>Honest Mode A competitor packs</td><td>Scheduler + labels</td></tr>
+    <tr><td>15</td><td>Fresh IAM scrape with visible as-of</td><td>Honest shared competitor packs</td><td>Scheduler + labels</td></tr>
     <tr><td>16</td><td>Sort 90_INBOX → numbered folders</td><td>Wire landed gold (Gina margin, IDS, PMS)</td><td>Manifest §0 discipline</td></tr>
   </tbody>
 </table>
@@ -438,7 +438,7 @@ Also present: shared stores <strong>Sales</strong> and <strong>Parts</strong> (G
 
 <h3>Stub / not KPI yet</h3>
 <ul class="small">
-  <li>P4 Account health (parquet live; draft thresholds; no Mode A widget)</li>
+  <li>P4 Account health (parquet live; draft thresholds; no shared widget)</li>
   <li>PMS Marketing Calendar (no ROI) · Master/HTML V4 Supabase live KPIs (creds open)</li>
 </ul>
 
@@ -502,12 +502,12 @@ Also present: shared stores <strong>Sales</strong> and <strong>Parts</strong> (G
   <li><strong>Permanent green quote gate</strong> — clear raw_cy2025 fail; delete or quarantine stale UIO v17.</li>
   <li><strong>Refresh sales_fact</strong> past 2026-03-31 (ingest Q1FY2027 + latest month).</li>
   <li><strong>Weekly ledger triage</strong> — Book B / leakage / defection only → action_ledger_decisions.csv; never invent realised_eur.</li>
-  <li><strong>P4 threshold calibration</strong> then thin Mode A widget (or PRISM internal).</li>
+  <li><strong>P4 threshold calibration</strong> then thin shared widget (or PRISM internal).</li>
   <li><strong>One more large-DB sell-out</strong> on long schema — prefer UMI.</li>
   <li><strong>Sign off list-to-pocket or keep leakage internal</strong> — stop the half-quote.</li>
   <li><strong>IML air:oil + ITUK brake evidence</strong> — lock or explicitly provisional-label.</li>
   <li><strong>Tender honesty pass</strong> — release notes = live 211/186 / €1,488; Nordics keys if available.</li>
-  <li><strong>IAM vintage labels</strong> on Mode A competitor packs.</li>
+  <li><strong>IAM vintage labels</strong> on shared competitor packs.</li>
   <li><strong>Empty INBOX</strong> — sort Gina margin, IDS packs, PMS pulls; fix runbook paths; add monthly mailbox intake skill.</li>
 </ol>
 

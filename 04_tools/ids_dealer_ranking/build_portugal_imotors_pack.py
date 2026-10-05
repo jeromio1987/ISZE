@@ -301,7 +301,7 @@ def _leaflet_map_script(
 
 
 def _strip_changelog_ui(html: str) -> str:
-    """Remove Changelog tab/panel — Mode A client pack must not show agent update notes."""
+    """Remove Changelog tab/panel — shared client pack must not show agent update notes."""
     html = re.sub(
         r'\n?\s*<button class="tab" data-tab="changelog"[^>]*>\s*Changelog\s*</button>',
         "",
@@ -319,7 +319,7 @@ def _strip_changelog_ui(html: str) -> str:
 
 
 def render_portugal_html(payload: dict[str, Any], *, built_at: str) -> str:
-    """Portugal / Imotors Mode A shell on top of the shared v1.2 template (map included)."""
+    """Portugal / Imotors shared shell on top of the shared v1.2 template (map included)."""
     html = render_html(payload, built_at=built_at)
     html = html.replace(
         "<title>IDS 2026 — Dealer Compare</title>",
@@ -459,7 +459,7 @@ def write_map_workbook(
         1,
         "Network average columns / charts in the HTML compare use the full IDS 2026 network as an anonymous benchmark.",
     )
-    ws.cell(note_row + 3, 1, "Mode A pack for Imotors — Portugal dealers only.")
+    ws.cell(note_row + 3, 1, "shared pack for Imotors — Portugal dealers only.")
 
     for col, width in zip("ABCDEFGHIJK", [8, 32, 12, 12, 14, 14, 12, 14, 12, 12, 14]):
         ws.column_dimensions[col].width = width
@@ -717,7 +717,7 @@ def build_fiches(
             strengths_q=highs,
             built_at=built_at,
         )
-        # Ensure Mode A GPS label is explicit on card
+        # Ensure shared GPS label is explicit on card
         html = html.replace(
             "GPS capture % 2025",
             "GPS Capture (genuine parts share)",
@@ -779,7 +779,7 @@ def zip_fiches(fiches_dir: Path, zip_path: Path) -> None:
 def write_readme(pack_dir: Path, *, dealer_count: int, geo: dict[str, Any]) -> None:
     text = f"""# IDS 2026 — Portugal pack (Imotors)
 
-Meeting pack for Imotors / Portugal. **Mode A** (external language).
+Meeting pack for Imotors / Portugal. **shared** (external language).
 
 ## Contents
 
@@ -924,7 +924,7 @@ def main() -> int:
         f"Map Leaflet wired: standalone={map_ok} embedded_compare={compare_map_ok} · "
         f"geo {geo['geo_ok']}/{geo['dealer_count']}"
     )
-    print(f"Changelog stripped (Mode A): {changelog_gone}")
+    print(f"Changelog stripped (shared): {changelog_gone}")
     print(f"Pack: {pack}")
     print(f"  dealers: {payload['dealer_count']}")
     print(f"  countries listed: {payload['countries']}")

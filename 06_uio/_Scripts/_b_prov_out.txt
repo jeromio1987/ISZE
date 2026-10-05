@@ -1,0 +1,57 @@
+﻿### V19 'Assumptions & Mapping' ÔÇö full text, rows 28-80, cols A-E ###
+r28  Year 11 || 0.4 || 0.2 ||  || 
+r29  Year 12 || 0.3 || 0 ||  || 
+r30  Year 13 || 0.2 || ÔÇö ||  || 
+r31  Year 14 || 0.1 || ÔÇö ||  || 
+r32  Year 15 || 0.05 || ÔÇö ||  || 
+r33  Year 16 ||  ||  ||  || 
+r34  Source: IML Calculation.xlsx (5.Survival Rate) + LCV UIO (Nov 2025) ||  ||  ||  || 
+r36  3.  Scrap-Adjusted Car Park 2025 ||  ||  ||  || 
+r38  Sheet || UIO.xlsx ÔåÆ 'CV customers with scrap logic', column O = Scrap Adj Car Park 2025 ||  ||  || 
+r39  Countries || Belgium, Cyprus, Denmark, Germany, Greece, Ireland, Malta, Portugal ||  ||  || 
+r40  Methodology || ~100% survival yrs 1ÔÇô11, ~47% at yr 12, 0% at yr 13+  (milder than IML CV curve) ||  ||  || 
+r41  Usage || 2025 scrap-adj value anchors the historical series; 2014ÔÇô2025 scaled proportionally ||  ||  || 
+r42  Germany 2025 || 406 units (IML showed 0) ||  ||  || 
+r43  Ireland LD 2025 ||  ||  ||  || 
+r44  Portugal LD 2025 || 2,585 units; F-Series 2025 = 292 units (FRR90 + FSR90) ||  ||  || 
+r45  3b.  Ireland UIO ÔÇö SIMI-Based Methodology (V18) ||  ||  ||  || 
+r46  Source || isuzuregdata.xlsx ÔÇö SIMI (Society of the Irish Motor Industry) annual new vehicle registration data, classified by model/weight band. Government-issued data. Accessed Jun 2026. ||  ||  || 
+r47  Coverage || CY2013ÔÇô2025 (SIMI). Pre-2013 cohorts sourced from IML 6.CV Vol N-column (IML Japan shipment records, 1990ÔÇô2012). ||  ||  || 
+r48  Priority rule || SIMI data used wherever available (2013ÔÇô2025). IML used for pre-2013 only. IMIT LCV UIO Study (Nov 2025) used for LCV 2026ÔÇô2030 growth rates only, applied to SIMI 2025 base. ||  ||  || 
+r50  CV LD ÔÇö N Series 7.5T ||  ||  ||  || 
+r51  SIMI category ||  ||  ||  || 
+r52  Annual regs used || 2013=69, 2014=100, 2015=80, 2016=95, 2017=71, 2018=89, 2019=65, 2020=63, 2021=98, 2022=96, 2023=71, 2024=117, 2025=61 ||  ||  || 
+r53  Pre-2013 source || IML 6.CV Vol N-column (Ireland ctry 206): 1990=860, 1991=754, 1992=890, 1993=296, 1994=203, 1995=204, 1996=378, 1997=409, 1998=558, 1999=582, 2000=534, 2001=372, 2002=516, 2003=246, 2004=618, 2005=432, 2006=570, 2007=498, 2008=456, 2009=0(gap), 2010=102, 2011=77, 2012=50 ||  ||  || 
+r54  Survival curve || IML Advanced Economy CV: age 1=99%, declining to 0% at age 15. Source: IML 5.Survival Rate sheet. ||  ||  || 
+r55  UIO results || 2019=820, 2020=731, 2021=718, 2022=718, 2023=713, 2024=749, 2025E=731 ||  ||  || 
+r56  2026ÔÇô2030 method || UIO(T) = UIO(T-1) ├ù 0.97 + new_sales_plan. Plan: Isuzu Ireland LD = 216 CBU/yr from FY2026 (source: 2. Vehicle Volume sheet). Results: 2026=925, 2027=1113, 2028=1296, 2029=1473, 2030=1645. ||  ||  || 
+r57  V17 vs V18 delta || CV LD 2024: V17=1,255 ÔåÆ V18=749 (ÔêÆ506). Gap was due to V17 using scrap-adjusted car park source (UIO.xlsx col O) which included pre-2010 fleet not in SIMI. V18 uses SIMI as primary government source. ||  ||  || 
+r59  CV F-Series ||  ||  ||  || 
+r60  SIMI category || 2 Axle Rigid 10ÔÇô11.9T  (Sheet2, row 10: F series). Note: F135/F150 (12ÔÇô14T) not separately visible in SIMI; assumed negligible based on zero entries in 12ÔÇô13.9T band 2015ÔÇô2025. ||  ||  || 
+r61  Annual regs used ||  ||  ||  || 
+r62  Pre-2013 source || No pre-2013 F-Series data in SIMI or IML Ireland. Cohort model starts 2013. ||  ||  || 
+r63  UIO results || 2019=48, 2020=47, 2021=48, 2022=59, 2023=65, 2024=67, 2025E=92 ||  ||  || 
+r64  2026ÔÇô2030 method || Pure decay: UIO(T) = UIO(T-1) ├ù 0.97. No F-Series in Ireland sales plan FY2026+. Results: 2026=89, 2027=86, 2028=83, 2029=81, 2030=79. ||  ||  || 
+r65  Note || SIMI 2025 spike to 32 new F-Series (vs FY2025 plan 1 CBU) included as-is. Possible batch delivery or grey market ÔÇö flag for Isuzu Ireland confirmation. ||  ||  || 
+r67  LCV (D-Max dominant) ||  ||  ||  || 
+r68  SIMI category || D-Max (Sheet2, row 4) + N Series 3.5T (Sheet2, row 5, negligible from 2023). ||  ||  || 
+r69  D-Max annual regs || 2013=74, 2014=95, 2015=154, 2016=138, 2017=96, 2018=110, 2019=124, 2020=86, 2021=113, 2022=178, 2023=111, 2024=225, 2025=317 ||  ||  || 
+r70  Pre-2013 source || Estimated 60 D-Max units/yr for 2003ÔÇô2012 (conservative; no SIMI or IML LCV data available for Ireland pre-2013). ||  ||  || 
+r71  Survival curve || IMIT LCV 12-year window: age 1=99%, age 12=10%, age 13=0%. Source: LCV UIO (Nov 2025) Study. ||  ||  || 
+r72  UIO results || 2019=870, 2020=884, 2021=916, 2022=1004, 2023=1018, 2024=1135, 2025E=1338 ||  ||  || 
+r73  2026ÔÇô2030 method || IMIT growth rates applied to SIMI 2025 base (1,338). IMIT rates: 2026=+32.1%, 2027=+18.9%, 2028=+8.0%, 2029=+8.0%, 2030=+8.0%. Results: 2026=1768, 2027=2102, 2028=2271, 2029=2452, 2030=2648. ||  ||  || 
+r74  4.  UK (ITUK) Actual Car Park ||  ||  ||  || 
+r76  Source || SMMT data via ITUK (Duncan's file) ÔÇö actual registered car park by model and registration year cohort ||  ||  || 
+r77  N-series 2024 || Actual car park = 21,584 (N35 + N50/55 + N62/65 + N75 + Unspecified) ||  ||  || 
+r78  F-Series 2024 || Actual car park = 805 (F110/120 + F135 + F150/180) ||  ||  || 
+r79  Method ||  ||  ||  || 
+
+### IML 1.UIO header rows 1-6 ###
+r1 ['Overseas UIO', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+r2 ['SUBTOTAL', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+r3 ['Growth Rate Y-o-Y', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+r4 ['Total UIO (incl JP)', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+r5 ['Ctry Code', 'Country Name', None, 'Model', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+r6 ['Õø¢Òé│Òâ╝Òâë', 'Õø¢ÕÉì', 'CV/LCV', 'þ¿«Úí×', 'ASC/DB', 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005]
+
+### IML 1.UIO rows containing codes 230 / 233 / 217 / 208 ###

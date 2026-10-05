@@ -1,0 +1,2386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__PAGE_TITLE__</title>
+<style>
+:root{
+  --navy:#15233c; --navy2:#1d3054; --terra:#c0552d; --paper:#f7f4ee;
+  --ink:#22262e; --muted:#6b6459; --line:#d9d3c8; --band:#eef3f9;
+  --good:#1e6b4f; --amber:#a8721f; --red:#b4453a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:14px;line-height:1.5}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:var(--navy);margin:0}
+h1{font-size:26px;letter-spacing:-.2px}
+h2{font-size:19px;margin-bottom:2px}
+h3{font-size:15px}
+.wrap{max-width:1400px;margin:0 auto;padding:22px 22px 60px}
+header.top{border-bottom:3px solid var(--navy);padding-bottom:14px;margin-bottom:18px}
+.sub{color:var(--muted);font-size:13px;margin-top:6px}
+.badge{display:inline-block;background:var(--navy);color:var(--paper);
+  font-size:11px;letter-spacing:.6px;text-transform:uppercase;
+  padding:3px 9px;border-radius:2px;margin-right:8px}
+.badge.terra{background:var(--terra)}
+.badge.ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}
+
+.controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;
+  background:#fff;border:1px solid var(--line);border-left:4px solid var(--terra);
+  padding:14px 16px;margin-bottom:14px}
+.ctrl{display:flex;flex-direction:column;gap:5px}
+.ctrl label{font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:var(--muted)}
+select{font-size:14px;padding:7px 10px;border:1px solid var(--line);background:#fff;
+  color:var(--ink);border-radius:2px;min-width:190px}
+select:focus{outline:2px solid var(--terra);outline-offset:-1px}
+select:disabled{background:#f2efe9;color:#9a958c;cursor:not-allowed}
+.cmpnote{font-size:12px;color:var(--muted);margin:-4px 0 8px;line-height:1.45}
+.cmpnote.blocked{color:#8d332a}
+.cmpnote b{color:inherit}
+.seg{display:flex;border:1px solid var(--line);border-radius:2px;overflow:hidden;flex-wrap:wrap}
+.seg button{background:#fff;border:0;border-right:1px solid var(--line);
+  padding:7px 13px;font-size:13px;cursor:pointer;color:var(--ink)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--navy);color:var(--paper)}
+.reset{background:#fff;border:1px solid var(--line);padding:7px 13px;font-size:13px;
+  cursor:pointer;color:var(--terra);border-radius:2px}
+.check{display:flex;align-items:center;gap:7px;font-size:13px;padding-bottom:8px}
+.check input{width:15px;height:15px;accent-color:var(--terra)}
+
+.tl{background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);
+  padding:12px 16px 14px;margin-bottom:18px}
+.tlrow{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:#fff;border:1px solid var(--line);border-radius:2px;padding:5px 10px;
+  font-size:12.5px;cursor:pointer;color:var(--ink)}
+.chip:hover{border-color:var(--terra);color:var(--terra)}
+.chip.on{background:var(--navy);color:var(--paper);border-color:var(--navy)}
+.tlmeta{font-size:12.5px;color:var(--navy);font-weight:600}
+.tlhint{font-size:12px;color:var(--muted)}
+.stripbox{position:relative;height:74px;margin:6px 0 2px;
+  border-bottom:1px solid var(--line);cursor:crosshair;user-select:none}
+.strip{position:relative;height:72px}
+.col{position:absolute;top:0;bottom:0}
+.col .b,.col .s{position:absolute;left:1px;right:1px}
+.col .b{background:var(--navy);border-radius:1px 1px 0 0}
+.col .s{background:var(--terra);border-radius:0 0 1px 1px}
+.col .miss{position:absolute;left:1px;right:1px;height:5px;border-radius:1px;
+  background:repeating-linear-gradient(45deg,#c9c2b6 0 3px,#efeae1 3px 6px)}
+.axline{position:absolute;left:0;right:0;top:36px;border-top:1px solid #cfc9bf}
+.tbrush{position:absolute;top:-3px;bottom:-3px;background:rgba(192,85,45,.12);
+  border:1px solid var(--terra);pointer-events:none;border-radius:2px}
+.than{position:absolute;top:-4px;bottom:-4px;width:9px;background:var(--terra);
+  border-radius:2px;cursor:ew-resize;pointer-events:auto}
+.than.l{left:-5px}.than.r{right:-5px}
+.tlabels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);
+  margin-top:3px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);
+  align-items:center;margin-top:6px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;
+  vertical-align:-1px}
+.legend i.hatch{background:repeating-linear-gradient(45deg,#c9c2b6 0 3px,#efeae1 3px 6px)}
+
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;margin-bottom:20px}
+@media(max-width:1180px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:860px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr}}
+.kpi{background:#fff;border:1px solid var(--line);padding:14px 16px;position:relative;
+  border-top:3px solid var(--navy);min-height:104px;display:flex;flex-direction:column}
+.kpi .lab{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+  display:flex;align-items:flex-start;gap:5px;min-height:26px;line-height:1.25}
+.kpi .val{font-size:23px;font-weight:600;color:var(--navy);margin-top:auto;
+  font-variant-numeric:tabular-nums;line-height:1.15}
+.kpi .note{font-size:11.5px;color:var(--muted);margin-top:4px;min-height:2.4em}
+.kpi.t{border-top-color:var(--terra)}
+.kpi.t .val{color:var(--terra)}
+.kpi.g{border-top-color:var(--good)}
+.kpi.w{border-top-color:var(--amber)}
+.kpi .dlt{font-size:12px;font-weight:600;margin-left:6px}
+.kpi .dlt.up{color:var(--good)}.kpi .dlt.dn{color:var(--red)}
+.info{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;
+  border-radius:50%;background:var(--navy);color:#fff;font-size:9.5px;cursor:help;
+  position:relative;flex:0 0 auto}
+.info .tip{display:none;position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+  width:280px;background:var(--navy);color:var(--paper);font-size:12px;line-height:1.45;
+  padding:9px 11px;border-radius:3px;z-index:80;text-transform:none;letter-spacing:0;
+  font-weight:400;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.info .tip b{color:#f0b49a}
+.info:hover .tip,.info:focus .tip{display:block}
+
+.grid{display:grid;gap:16px;margin-bottom:18px}
+.grid > *{min-width:0}
+.g2{grid-template-columns:1fr 1fr}
+.g1{grid-template-columns:1fr}
+@media(max-width:1050px){.g2{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);padding:16px 18px 14px;min-width:0;
+  display:flex;flex-direction:column}
+.card > h2{padding-right:34px}
+.card .q{font-size:13.5px;color:var(--muted);margin:4px 0 14px;max-width:96ch}
+/* numbered section marker, so the page reads as one ordered document */
+.secno{position:absolute;top:14px;right:16px;width:24px;height:24px;border-radius:50%;
+  background:var(--navy);color:var(--paper);font-size:12px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.card{position:relative}
+.chartbox{position:relative;height:350px}
+.chartbox.tall{height:430px}
+.chartbox.short{height:255px}
+
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{background:var(--navy);color:var(--paper);text-align:left;padding:8px 9px;
+  font-weight:600;font-size:11.5px;letter-spacing:.4px;text-transform:uppercase;
+  position:sticky;top:0;white-space:nowrap;z-index:2}
+th.n,td.n{text-align:right;font-variant-numeric:tabular-nums}
+td{padding:6px 9px;border-bottom:1px solid var(--line)}
+tbody tr:nth-child(even){background:var(--band)}
+tbody tr:hover{background:#e3ecf6}
+.tblwrap{max-height:440px;overflow:auto;border:1px solid var(--line);max-width:100%}
+.pill{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;
+  border:1px solid var(--line);background:var(--paper);color:var(--muted)}
+.pill.jp{border-color:#9db4cf;color:#2c4b74}
+.pill.th{border-color:#d9b48c;color:#8a5622}
+.pill.na{border-color:#c9c2b6;color:#8a8275}
+.pill.red{background:#fbe9e7;border-color:#e0b3ac;color:#8d332a}
+.pill.gr{background:#e8f2ec;border-color:#a9c9b7;color:#1e6b4f}
+.pill.am{background:#fdf3e3;border-color:#e6cf9f;color:#7a5a15}
+.sortmark{opacity:.5;font-size:10px;margin-left:4px;font-weight:400}
+.muted{color:var(--muted)}
+.warn{background:#fdf3e3;border:1px solid #e6cf9f;border-left:4px solid var(--amber);
+  padding:11px 14px;font-size:12.5px;color:#5e4a1c;margin-bottom:14px}
+.warn b{color:#4a3a12}
+.empty{background:#fff;border:1px dashed var(--line);padding:26px;text-align:center;
+  color:var(--muted);font-size:13.5px}
+.foot{font-size:12px;color:var(--muted);border-top:1px solid var(--line);
+  padding-top:12px;margin-top:24px}
+.foot code{background:#fff;border:1px solid var(--line);padding:1px 5px;border-radius:2px;
+  font-size:11.5px;word-break:break-all;overflow-wrap:anywhere}
+.foot div{overflow-wrap:anywhere}
+.crumb{font-size:12.5px;color:var(--muted);margin-bottom:9px;display:flex;
+  align-items:center;gap:6px;flex-wrap:wrap}
+.crumb b{color:var(--navy)}
+.crumb span{cursor:pointer;color:var(--terra);text-decoration:underline}
+.cbtn{background:#fff;border:1px solid var(--line);padding:5px 10px;font-size:12.5px;
+  cursor:pointer;color:var(--terra);border-radius:2px}
+.cbtn.on{background:var(--navy);color:var(--paper);border-color:var(--navy)}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
+.tools input[type=search]{font-size:13px;padding:6px 9px;border:1px solid var(--line);
+  border-radius:2px;min-width:210px}
+.hm td{text-align:center;font-variant-numeric:tabular-nums;padding:5px 7px}
+.hm th{text-align:center;position:static;font-size:10.5px}
+.hm th:first-child,.hm td:first-child{text-align:left;white-space:nowrap}
+.scale{display:flex;gap:14px;font-size:11.5px;color:var(--muted);margin-top:8px;
+  flex-wrap:wrap;align-items:center}
+.scale i{display:inline-block;width:13px;height:13px;border-radius:2px;margin-right:4px;
+  vertical-align:-2px}
+@media(max-width:640px){
+  .wrap{padding:14px 12px 40px}
+  h1{font-size:21px}
+  .kpi .val{font-size:19px}
+  .chartbox{height:280px}
+  .chartbox.tall{height:330px}
+  select{min-width:140px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div><span class="badge">AIM deep dive</span><span class="badge terra" id="run-badge"></span><span class="badge ghost" id="db-badge"></span></div>
+  <h1 style="margin-top:9px">What we billed, against what the distributor sold to its dealers</h1>
+  <div class="sub">
+    Both sales stages side by side, always, part number by part number, inside the AIM product tree.
+    <b>Billed</b> is what ISZE invoiced to the distributor. <b>Sold to dealer</b> is what the
+    distributor sold on to its dealer network, on its own report.
+    <span id="genline"></span>
+  </div>
+</header>
+
+<div class="warn" id="values-note">
+  <b>How the euros are read.</b> Sales to dealer arrives with no price of its own, so its euro is
+  modelled and the page says so everywhere it appears. The <b>primary</b> comparison figure is
+  units &times; the ISZE price list of 10 Aug 2026, so the two stages are measured on the same
+  list. Beside it the page also shows a <b>modelled dealer price</b>: the same figure plus 35%
+  gross margin, which is the price-list euro divided by 0.65. Neither one is the distributor's
+  turnover, its revenue, or an actual dealer purchase price. Only the billed side carries a real
+  invoiced price, so the average actual price and the price index are shown on the billed side
+  alone and no margin is added to them.
+</div>
+<div class="warn" id="scope-warn" style="display:none"></div>
+<div class="warn" id="common-warn" style="display:none"></div>
+<div class="warn" id="thin-warn" style="display:none"></div>
+
+<div class="controls">
+  <div class="ctrl">
+    <label for="db">Distributor</label>
+    <select id="db"></select>
+  </div>
+  <div class="ctrl">
+    <label for="src">Source of supply</label>
+    <select id="src"></select>
+  </div>
+  <div class="ctrl">
+    <label for="bvp">Genuine / BVP</label>
+    <select id="bvp"></select>
+  </div>
+  <div class="ctrl">
+    <label for="measure">Measure</label>
+    <select id="measure">
+      <option value="units">Units</option>
+      <option value="eur_list">EUR at price list</option>
+      <option value="eur_gm">EUR at list + 35% GM</option>
+      <option value="eur_actual">EUR actual, billed only</option>
+      <option value="avg_price">Average actual price, billed only</option>
+      <option value="price_index">Price index, billed only</option>
+      <option value="pms_cover">PMS cover %</option>
+      <option value="ratio">Bought &divide; sold</option>
+    </select>
+  </div>
+  <div class="ctrl">
+    <label>&nbsp;</label>
+    <div class="check"><input type="checkbox" id="pmsOnly"><label for="pmsOnly" style="text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink)">PMS families only</label></div>
+  </div>
+  <div class="ctrl" id="fleetwrap" style="display:none">
+    <label>Portugal fleet base</label>
+    <button class="cbtn" id="fleetbtn">Network model</button>
+  </div>
+  <div class="ctrl">
+    <label>&nbsp;</label>
+    <button class="reset" id="reset">Reset</button>
+  </div>
+</div>
+
+<div class="tl">
+  <div class="tlrow">
+    <div class="chips" id="chips"></div>
+    <div style="flex:1"></div>
+    <div class="ctrl" style="gap:3px">
+      <label for="cmp">Compare with</label>
+      <select id="cmp" style="min-width:250px">
+        <option value="none">nothing</option>
+        <option value="ly">same months last year</option>
+        <option value="prev">previous period of equal length</option>
+      </select>
+    </div>
+  </div>
+  <div class="cmpnote" id="cmpnote"></div>
+  <div class="tlmeta" id="wintitle"></div>
+  <div class="tlhint">Drag on the strip to set the window, or pull either orange handle.
+    One bar a month: billed above the line, sold to dealer below it.</div>
+  <div class="stripbox" id="stripbox"><div class="strip" id="strip"></div></div>
+  <div class="tlabels" id="tlabels"></div>
+  <div class="legend">
+    <span><i style="background:var(--navy)"></i>Billed units</span>
+    <span><i style="background:var(--terra)"></i>Sold-to-dealer units</span>
+    <span><i class="hatch"></i>No data for that stage that month</span>
+    <span class="muted" id="stripnote"></span>
+  </div>
+</div>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="grid g1">
+  <div class="card" id="s1">
+    <div class="secno">1</div>
+    <h2 id="t-drill"></h2>
+    <div class="q" id="q-drill"></div>
+    <div class="crumb" id="crumb"></div>
+    <div class="chartbox tall"><canvas id="c-drill"></canvas></div>
+  </div>
+</div>
+
+<div class="grid g2">
+  <div class="card" id="s2">
+    <div class="secno">2</div>
+    <h2 id="t-monthly">Is the network buying more than it sells, or using stock up?</h2>
+    <div class="q" id="q-monthly"></div>
+    <div class="chartbox tall"><canvas id="c-monthly"></canvas></div>
+  </div>
+  <div class="card" id="s3">
+    <div class="secno">3</div>
+    <h2>Which service families are covered, and which are not?</h2>
+    <div class="q" id="q-pms"></div>
+    <div class="chartbox tall"><canvas id="c-pms"></canvas></div>
+    <div class="legend" id="pms-legend"></div>
+  </div>
+</div>
+
+<div class="grid g2">
+  <div class="card" id="s4">
+    <div class="secno">4</div>
+    <h2>Where is price holding dealer volume back?</h2>
+    <div class="q" id="q-scatter"></div>
+    <div class="chartbox tall"><canvas id="c-scatter"></canvas></div>
+  </div>
+  <div class="card" id="s5">
+    <div class="secno">5</div>
+    <h2>How few part numbers carry the gap?</h2>
+    <div class="q" id="q-pareto"></div>
+    <div class="tools">
+      <div class="seg" id="pareto-mode">
+        <button data-v="sold_billed" class="on">Sold to dealer &minus; billed</button>
+        <button data-v="demand_sold">PMS demand &minus; sold to dealer</button>
+      </div>
+    </div>
+    <div class="chartbox tall"><canvas id="c-pareto"></canvas></div>
+  </div>
+</div>
+
+<div class="grid g1" id="heat-card">
+  <div class="card" id="s6">
+    <div class="secno">6</div>
+    <h2>Which distributor covers which family best?</h2>
+    <div class="q" id="q-heat"></div>
+    <div class="tools">
+      <div class="seg" id="heat-mode">
+        <button data-v="cover" class="on">PMS cover on sales to dealer</button>
+        <button data-v="ratio">Bought &divide; sold</button>
+      </div>
+    </div>
+    <div class="tblwrap" style="max-height:520px"><table class="hm" id="t-heat"></table></div>
+    <div class="scale" id="heat-scale"></div>
+  </div>
+</div>
+
+<div class="grid g1" id="dealer-card">
+  <div class="card" id="s7">
+    <div class="secno">7</div>
+    <h2>Which dealers take which families?</h2>
+    <div class="q" id="q-dealer"></div>
+    <div class="tblwrap" style="max-height:430px"><table id="t-dealer"></table></div>
+  </div>
+</div>
+
+<div class="grid g1">
+  <div class="card" id="s8">
+    <div class="secno">8</div>
+    <h2>Every part number, with both stages beside it</h2>
+    <div class="q" id="q-table"></div>
+    <div class="tools">
+      <input type="search" id="search" placeholder="Part number or description">
+      <button class="cbtn" id="csv">Download the rows on screen</button>
+      <span class="muted" id="tcount"></span>
+    </div>
+    <div class="tblwrap" style="max-height:520px"><table id="t-drilltb"><thead></thead><tbody></tbody></table></div>
+  </div>
+</div>
+
+<div class="grid g1">
+  <div class="card" id="s9">
+    <div class="secno">9</div>
+    <h2>What the data covers, and what it does not</h2>
+    <div class="q">Read this before quoting any figure. Months missing for a stage are missing;
+      nothing is filled in and nothing is scaled up. The thresholds that suppress a comparison are
+      stated here in full.</div>
+    <div class="tblwrap" style="max-height:none"><table id="t-cover"></table></div>
+    <div id="cover-extra" style="margin-top:14px;font-size:12.5px;color:var(--muted)"></div>
+  </div>
+</div>
+
+<footer class="foot" id="foot"></footer>
+</div>
+
+<script>/*__CHART_JS__*/</script>
+<script type="application/json" id="data">__DATA_JSON__</script>
+<script>
+(function(){
+"use strict";
+
+/* ================================================================= the payload */
+var D = JSON.parse(document.getElementById("data").textContent);
+var MONTHS = D.months, DBS = D.dbs, PN = D.pn, FACTS = D.facts, PRES = D.presence;
+var L1 = D.aim.l1, L2 = D.aim.l2, L3 = D.aim.l3;
+var FAMS = D.pms.fams, FAMLAB = D.pms.labels;
+var CLUTCH = {}; D.pms.clutch.forEach(function(f){ CLUTCH[f] = 1; });
+var SRC = D.src, BVPL = D.bvp;
+var NM = MONTHS.length;
+
+/* one list per distributor, so a distributor change never rescans the whole table */
+var BYDB = DBS.map(function(){ return []; });
+for (var _i = 0; _i < FACTS.length; _i++) BYDB[FACTS[_i][0]].push(FACTS[_i]);
+var DBIDX = {}; DBS.forEach(function(d, i){ DBIDX[d.code] = i; });
+
+/* demand: distributor -> year -> 14 family quantities */
+var DEM = {}; DBS.forEach(function(d){
+  var years = {};
+  (D.demand[d.code] || []).forEach(function(r){
+    if (!years[r[0]]) years[r[0]] = new Array(14).fill(0);
+    years[r[0]][r[1]] = r[2];
+  });
+  DEM[d.code] = years;
+});
+var DEMREG = D.demand_reg;
+
+/* ================================================================= state */
+var S = {
+  db: 0, measure: "units", src: null, bvp: null, pmsOnly: false,
+  from: 0, to: 0, cmp: "none", node: { l1: null, l2: null, l3: null },
+  pareto: "sold_billed", heat: "cover", regBase: false, custom: false
+};
+/*
+ * Sales to dealer carries no price of its own, so its euro is modelled. The base is the ISZE
+ * price list; the second measure adds the 35% gross margin Jerome supplied. Margin is measured on
+ * the SELLING price, so SP = list / (1 - 0.35): divide by 0.65, never multiply by 1.35.
+ */
+var GM_RATE = 0.35;
+var GM_DIVISOR = 1 - GM_RATE;                    // 0.65
+var GM_FACTOR = 1 / GM_DIVISOR;                  // 1.53846...
+var GM_WORDS = "the ISZE price list of 10 Aug 2026 plus 35% gross margin (the price-list euro " +
+               "divided by 0.65)";
+
+/* ================================================================= formatting */
+function fmtInt(v){ return (v === null || v === undefined || isNaN(v)) ? "\u2014"
+  : Math.round(v).toLocaleString("en-GB"); }
+function fmtEur(v, dp){ return (v === null || v === undefined || isNaN(v) || !isFinite(v)) ? "\u2014"
+  : "\u20ac" + Number(v).toLocaleString("en-GB", { minimumFractionDigits: dp || 0, maximumFractionDigits: dp || 0 }); }
+function fmtPct(v, dp){ return (v === null || v === undefined || isNaN(v) || !isFinite(v)) ? "\u2014"
+  : (100 * v).toFixed(dp === undefined ? 1 : dp) + "%"; }
+function fmtNum(v, dp){ return (v === null || v === undefined || isNaN(v) || !isFinite(v)) ? "\u2014"
+  : Number(v).toLocaleString("en-GB", { minimumFractionDigits: dp || 0, maximumFractionDigits: dp || 0 }); }
+var MN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+function mLabel(m){ return MONTHS[0] === undefined ? "" :
+  MN[parseInt(m.slice(5, 7), 10) - 1].slice(0, 3) + " " + m.slice(0, 4); }
+function mShort(m){ return m.slice(2, 4) + " " + MN[parseInt(m.slice(5, 7), 10) - 1].slice(0, 3); }
+function esc(s){ return String(s === null || s === undefined ? "" : s)
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+function el(id){ return document.getElementById(id); }
+function dbCode(){ return DBS[S.db].code; }
+function hasSold(){ return DBS[S.db].has_sold; }
+function ratioWord(r){
+  if (r === null || r === undefined || isNaN(r)) return "not available";
+  if (r < 0.95) return "running stock down";
+  if (r > 1.15) return "building stock";
+  return "in step";
+}
+function ratioColour(r){
+  if (r === null || r === undefined || isNaN(r)) return "#c9c2b6";
+  if (r < 0.95) return "#b4453a";
+  if (r > 1.15) return "#c98b28";
+  return "#9a958c";
+}
+/* why a cover can sit above 100%: the two honest reasons, in the order they usually apply */
+function coverOverReason(){
+  var bits = [];
+  if (DBS[S.db].sold_scope === "D-MAX" || DBS[S.db].sold_scope === "CV"){
+    bits.push("This distributor reports " + (DBS[S.db].sold_scope === "D-MAX"
+      ? "D-Max only" : "commercial vehicles only") + " on the dealer side, so part of what we " +
+      "billed to it is not in the dealer report at all, and the two sides are not the same fleet.");
+  }
+  bits.push("The demand model spreads the fleet over the families it knows; where a part number " +
+    "is mapped to the wrong family, that family's demand is understated and its cover rises above " +
+    "100%. Treat a figure over 100% as a question about the mapping first, and about the sales " +
+    "second.");
+  return esc(bits.join(" "));
+}
+
+/* ================================================================= filters and grouping */
+function inNode(p){
+  if (S.node.l1 !== null && PN.l1[p] !== S.node.l1) return false;
+  if (S.node.l2 !== null && PN.l2[p] !== S.node.l2) return false;
+  if (S.node.l3 !== null && PN.l3[p] !== S.node.l3) return false;
+  return true;
+}
+function passFilters(p){
+  if (S.src !== null && PN.s[p] !== S.src) return false;
+  if (S.bvp !== null && PN.b[p] !== S.bvp) return false;
+  if (S.pmsOnly && PN.f[p] < 0) return false;
+  return true;
+}
+function levelNo(){
+  if (S.node.l1 === null) return 1;
+  if (S.node.l2 === null) return 2;
+  if (S.node.l3 === null) return 3;
+  return 4;
+}
+function groupKey(p){
+  var lv = levelNo();
+  if (lv === 1) return PN.l1[p];
+  if (lv === 2) return PN.l2[p];
+  if (lv === 3) return PN.l3[p];
+  return p;
+}
+function groupLabel(k){
+  var lv = levelNo();
+  if (lv === 1) return L1[k];
+  if (lv === 2) return L2[k];
+  if (lv === 3) return L3[k];
+  return PN.n[k];
+}
+function shortLab(s){
+  if (!s) return "";
+  return s.replace("Intake Exhaust Emission", "Intake/Exhaust")
+          .replace("Maintenance Service", "Maintenance")
+          .replace("Accident & Body", "Accident/Body")
+          .replace("Literature Marketing", "Literature/Mktg")
+          .replace("Logistics Packaging", "Logistics/Pkg")
+          .replace("Tools Equipment", "Tools/Equip")
+          .replace("Driveline Axle", "Driveline/Axle")
+          .replace("Wheels Hub", "Wheels/Hub")
+          .replace("Fuel System", "Fuel");
+}
+
+/* ================================================================= demand */
+function monthsInWindow(from, to){ return to - from + 1; }
+function demandFor(code, famIdx, from, to){
+  if (S.regBase && DEMREG && code === "PORTUGAL")
+    return DEMREG.qty[famIdx] * monthsInWindow(from, to) / 12;
+  var years = DEM[code] || {}, tot = 0;
+  for (var m = from; m <= to; m++){
+    var arr = years[parseInt(MONTHS[m].slice(0, 4), 10)];
+    if (arr) tot += arr[famIdx] / 12;
+  }
+  return tot;
+}
+function demandTotal(code, from, to){
+  var t = 0, per = [];
+  for (var f = 0; f < 14; f++){ var q = demandFor(code, f, from, to); per.push(q); t += q; }
+  return { total: t, per: per };
+}
+
+/* ================================================================= one aggregation pass */
+/*
+ * Everything the page draws for one window comes out of this single pass over the selected
+ * distributor's rows: per-group totals, per-group family units, the totals, and the
+ * month series.
+ */
+function aggWindow(from, to, dbIdx){
+  var rows = BYDB[dbIdx === undefined ? S.db : dbIdx];
+  var g = new Map(), t = { ub: 0, eb: 0, ubp: 0, us: 0, usp: 0, ubq0: 0, usq0: 0, pns: 0 };
+  var famU = new Float64Array(14), famS = new Float64Array(14);
+  for (var i = 0; i < rows.length; i++){
+    var r = rows[i];
+    if (r[1] < from || r[1] > to) continue;
+    var p = r[2];
+    if (!inNode(p) || !passFilters(p)) continue;
+    var k = groupKey(p), o = g.get(k);
+    if (!o){ o = { ub: 0, eb: 0, ubp: 0, us: 0, usp: 0, ubq0: 0, usq0: 0, npn: 0,
+                   fam: new Float64Array(28),
+                   set: (levelNo() === 4 ? null : new Set()) }; g.set(k, o); }
+    var sp = PN.p[p], ub = r[3], eb = r[4], us = r[5];
+    o.ub += ub; o.eb += eb; o.us += us;
+    if (sp !== null && sp > 0){ o.ubp += ub * sp; o.usp += us * sp; }
+    else { o.ubq0 += ub; o.usq0 += us; }
+    var f = PN.f[p];
+    if (f >= 0){ o.fam[2 * f] += ub; o.fam[2 * f + 1] += us;
+      famU[f] += ub; famS[f] += us; }
+    if (o.set) o.set.add(p); else o.npn = 1;
+    t.ub += ub; t.eb += eb; t.us += us;
+    if (sp !== null && sp > 0){ t.ubp += ub * sp; t.usp += us * sp; }
+    else { t.ubq0 += ub; t.usq0 += us; }
+  }
+  g.forEach(function(o){ if (o.set){ o.npn = o.set.size; o.set = null; } });
+  t.npn = g.size;
+  t.famU = famU; t.famS = famS;
+  return { g: g, t: t };
+}
+function totalsRow(o){
+  var ub = o.ub, eb = o.eb, ubp = o.ubp, ubq0 = o.ubq0;
+  var avg = ub > 0 ? eb / ub : null;
+  var listed = (ub - ubq0) > 0 ? ubp / (ub - ubq0) : null;
+  return { ub: ub, eb: eb, ubp: ubp, us: o.us, usp: o.usp,
+           uspGm: o.usp * GM_FACTOR, usqGm: o.usq0 * GM_FACTOR,
+           ubq0: ubq0, usq0: o.usq0,
+           avg: avg, listed: listed,
+           idx: (avg !== null && listed) ? avg / listed : null,
+           ratio: o.us > 0 ? ub / o.us : null, npn: o.npn };
+}
+/* cover for one group, on the demand of the families that the group actually holds */
+function coverOf(o, from, to, code){
+  var ub = 0, us = 0, dm = 0;
+  for (var f = 0; f < 14; f++){
+    if (!o.fam[2 * f] && !o.fam[2 * f + 1]) continue;
+    var q = demandFor(code || dbCode(), f, from, to);
+    if (q > 0){ ub += o.fam[2 * f]; us += o.fam[2 * f + 1]; dm += q; }
+  }
+  return { billed: dm > 0 ? ub / dm : null, sold: dm > 0 ? us / dm : null, demand: dm };
+}
+
+/* ================================================================= measures */
+var MEASURE_TITLE = {
+  units: "units", eur_list: "EUR at price list", eur_gm: "EUR at list plus 35% GM",
+  eur_actual: "EUR actual, billed",
+  avg_price: "average actual price", price_index: "price index",
+  pms_cover: "PMS cover", ratio: "bought \u00f7 sold"
+};
+/*
+ * Both stages are always shown, so this returns one stage at a time and the caller pairs them.
+ * The euro on the billed side is real; on the sold side it is modelled (price list, optionally
+ * plus the 35% gross margin). Nothing here ever mixes the two.
+ */
+function measureOf(o, stage, tr, from, to){
+  var billed = stage === "billed";
+  switch (S.measure){
+    case "units": return billed ? tr.ub : tr.us;
+    case "eur_list": return billed ? tr.ubp : tr.usp;
+    case "eur_gm": return billed ? null : tr.uspGm;
+    case "eur_actual": return billed ? tr.eb : null;
+    case "avg_price": return billed ? tr.avg : null;
+    case "price_index": return billed ? tr.idx : null;
+    case "pms_cover": {
+      var c = coverOf(o, from, to);
+      return billed ? c.billed : c.sold;
+    }
+    case "ratio": return tr.ratio;
+  }
+  return null;
+}
+function fmtMeasure(v){
+  switch (S.measure){
+    case "units": return fmtInt(v);
+    case "eur_list": case "eur_gm": case "eur_actual": return fmtEur(v);
+    case "avg_price": return fmtEur(v, 2);
+    case "price_index": return fmtNum(v, 2);
+    case "pms_cover": return fmtPct(v);
+    case "ratio": return fmtNum(v, 2);
+  }
+  return fmtInt(v);
+}
+/* the measure is a euro on both sides: used to pick the axis format */
+function measureIsEuro(){ return S.measure === "eur_list" || S.measure === "eur_gm" ||
+                                S.measure === "eur_actual"; }
+
+/* ================================================================= thin data (change 4) */
+/*
+ * A comparison needs something to compare. These are the floors this data set actually sets:
+ * below them the deltas and the comparison series are suppressed and the page says why, instead
+ * of printing a percentage that looks as solid as a large selection's.
+ */
+var THIN = { units: 500, months: 6, parts: 8 };
+
+function thinState(o){
+  var t = o.t || o;
+  var n = o.monthsInWindow !== undefined ? o.monthsInWindow : null;
+  var units = t.ub + t.us;                 // both stages, since both are always shown now
+  var parts = t.npn !== undefined ? t.npn : (t.npn || 0);
+  var reasons = [];
+  if (units < THIN.units) reasons.push("only " + fmtInt(units) + " units move in the selection " +
+    "against a floor of " + fmtInt(THIN.units));
+  if (n !== null && n < THIN.months) reasons.push("the window is " + n + " months against a " +
+    "floor of " + THIN.months);
+  if (parts && parts < THIN.parts) reasons.push("only " + parts + " part numbers sit under it " +
+    "against a floor of " + THIN.parts);
+  return { thin: reasons.length > 0, reasons: reasons, units: units, parts: parts,
+           months: n, floor: THIN };
+}
+function thinFloorWords(){
+  return "more than " + fmtInt(THIN.units) + " units, at least " + THIN.parts +
+         " part numbers and at least " + THIN.months + " months";
+}
+function thinNote(){
+  return " <b>Too thin to compare.</b> A comparison is suppressed here: " +
+    "this selection has to clear " + thinFloorWords() +
+    " before a percentage delta means anything. The units, the euro and the cover above are " +
+    "unaffected and still stand.";
+}
+function noCmpNote(){
+  return "<b>No comparison on this window.</b> " + cmpRuleWords() +
+    " The units, the euro and the cover are unaffected and still stand.";
+}
+
+/*
+ * Bought over sold, on the months both stages cover (section 5.4), grouped and per part number.
+ * Never on the raw window: a month where the distributor did not report would otherwise read as
+ * stock being drawn down.
+ */
+/*
+ * Everything measured on the months BOTH stages report (section 5.4): the bought-over-sold ratio
+ * and the PMS numerator, so the ratio, the cover and the demand denominator all sit on the same
+ * months. Never on the raw window: a month the distributor did not report would otherwise read as
+ * stock being drawn down and would inflate a cover above the demand it belongs to.
+ */
+function aggCommonDetail(from, to){
+  var rows = BYDB[S.db], pr = PRES[S.db];
+  var byGroup = new Map(), byPart = new Map();
+  var famU = new Float64Array(14), famS = new Float64Array(14);
+  var t = { ub: 0, us: 0, famU: famU, famS: famS };
+  for (var i = 0; i < rows.length; i++){
+    var r = rows[i];
+    if (r[1] < from || r[1] > to) continue;
+    if (!pr.b[r[1]] || !pr.s[r[1]]) continue;
+    var p = r[2];
+    if (!inNode(p) || !passFilters(p)) continue;
+    var k = groupKey(p), o = byGroup.get(k);
+    if (!o){ o = { ub: 0, us: 0, fam: new Float64Array(28) }; byGroup.set(k, o); }
+    o.ub += r[3]; o.us += r[5];
+    var q = byPart.get(p);
+    if (!q){ q = { ub: 0, us: 0 }; byPart.set(p, q); }
+    q.ub += r[3]; q.us += r[5];
+    var f = PN.f[p];
+    if (f >= 0){
+      o.fam[2 * f] += r[3]; o.fam[2 * f + 1] += r[5];
+      famU[f] += r[3]; famS[f] += r[5];
+    }
+    t.ub += r[3]; t.us += r[5];
+  }
+  t.ratio = t.us > 0 ? t.ub / t.us : null;
+  var m = 0;
+  for (var mm = from; mm <= to; mm++) if (pr.b[mm] && pr.s[mm]) m++;
+  t.months = m;
+  return { byGroup: byGroup, byPart: byPart, t: t };
+}
+
+/* PMS cover on the same shared months as the denominator (section 5.4) */
+function coverCommon(A, from, to, cr){
+  if (!cr) return { billed: null, sold: null, demand: 0, over: [] };
+  var common = aggCommonDetail(from, to);
+  var dm = demandTotal(dbCode(), cr[0], cr[1]);
+  var ub = 0, us = 0, dem = 0, over = [];
+  for (var f = 0; f < 14; f++){
+    var q = dm.per[f];
+    if (q <= 0) continue;
+    if (!common.t.famU[f] && !common.t.famS[f]) continue;
+    ub += common.t.famU[f]; us += common.t.famS[f]; dem += q;
+    if (common.t.famU[f] / q > 1) over.push(FAMLAB[FAMS[f]] + " at " + fmtPct(common.t.famU[f] / q));
+  }
+  return { billed: dem > 0 ? ub / dem : null, sold: dem > 0 ? us / dem : null,
+           demand: dem, over: over, months: common.t.months };
+}
+
+/* how many distinct part numbers the current selection actually holds */
+function countParts(from, to){
+  var rows = BYDB[S.db], seen = new Set();
+  for (var i = 0; i < rows.length; i++){
+    var r = rows[i];
+    if (r[1] < from || r[1] > to) continue;
+    if (!inNode(r[2]) || !passFilters(r[2])) continue;
+    seen.add(r[2]);
+  }
+  return seen.size;
+}
+/* the one thin-data verdict the whole page reads */
+function selectionThin(from, to, cr){
+  var months = cr ? (cr[1] - cr[0] + 1) : monthsInWindow(from, to);
+  var rows = BYDB[S.db], ub = 0, us = 0;
+  for (var i = 0; i < rows.length; i++){
+    var r = rows[i];
+    if (r[1] < from || r[1] > to) continue;
+    if (!inNode(r[2]) || !passFilters(r[2])) continue;
+    ub += r[3]; us += r[5];
+  }
+  return thinState({ t: { ub: ub, us: us }, monthsInWindow: months,
+                     npn: countParts(from, to) });
+}
+
+/* ================================================================= chart plumbing */
+var charts = {};
+function draw(id, cfg){
+  var c = el(id);
+  if (!c) return;
+  if (charts[id]) { charts[id].destroy(); charts[id] = null; }
+  try {
+    charts[id] = new Chart(c.getContext("2d"), cfg);
+  } catch (e){
+    console.error("chart " + id + " failed to draw", e);
+    throw e;
+  }
+}
+/*
+ * A chart must never be destroyed inside its own click or hover handler: Chart.js keeps using
+ * the chart after the handler returns, and rebuilding it there throws once the event finishes.
+ * Anything a chart triggers goes through this, which redraws on the next tick instead.
+ */
+var pendingRender = false;
+function renderSoon(){
+  if (pendingRender) return;
+  pendingRender = true;
+  setTimeout(function(){ pendingRender = false; render(); }, 0);
+}
+var GRID = "#e6e1d8", TICK = "#6b6459", NAVY = "#15233c", TERRA = "#c0552d";
+Chart.defaults.font.family = "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif";
+Chart.defaults.font.size = 11.5;
+Chart.defaults.color = TICK;
+Chart.defaults.animation = false;
+function emptyChart(id, text){
+  draw(id, { type: "bar", data: { labels: [], datasets: [] }, options: {
+    responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false },
+      title: { display: true, text: text, color: TICK, font: { size: 13 } } } } });
+}
+
+/* ================================================================= warnings */
+function renderHeader(){
+  el("db-badge").textContent = DBS[S.db].label;
+  el("run-badge").textContent = D.run === "ALL" ? "All distributors" : "Portugal";
+  var st = DBS[S.db], txt = [];
+  if (st.sold_scope === "D-MAX"){
+    txt.push("<b>Scope badge: " + esc(st.label) + "</b> sells D-Max to its dealers, and only D-Max. " +
+      "Its sales-to-dealer figures cover light commercial vehicles alone, so they are never added " +
+      "into a truck-family total. Billed units in the same months may include other models.");
+  }
+  if (st.code === "UTI"){
+    txt.push("<b>" + esc(st.label) + "</b> did not report February to July 2025. Those months are " +
+      "left empty and are not filled from the year total in its file, which holds about 37,000 extra units.");
+  }
+  if (!hasSold()){
+    txt.push("<b>No sales to dealer from " + esc(st.label) + ".</b> This distributor is not one of " +
+      "the six that report what they sell to their dealer network, so the page shows the billed side " +
+      "alone. Nothing is estimated for the stage that is absent.");
+  }
+  var w = el("scope-warn");
+  if (txt.length){ w.innerHTML = txt.join("<br><br>"); w.style.display = ""; } else w.style.display = "none";
+
+  var n = monthsInWindow(S.from, S.to), pr = PRES[S.db], nb = 0, ns = 0;
+  for (var m = S.from; m <= S.to; m++){ if (pr.b[m]) nb++; if (pr.s[m]) ns++; }
+  var cw = el("common-warn");
+  if (hasSold() && (nb < n || ns < n)){
+    cw.innerHTML = "<b>Common window.</b> In the window you picked, " + nb + " of " + n +
+      " months carry billing and " + ns + " of " + n + " carry sales to dealer. Everything that " +
+      "compares the two stages - bought \u00f7 sold, and PMS cover on both sides - is computed on " +
+      "the months that carry both. Nothing is scaled up and no month is filled in.";
+    cw.style.display = "";
+  } else cw.style.display = "none";
+}
+
+/* ================================================================= timeline strip */
+var STRIPN = 1;
+function renderStrip(){
+  var pr = PRES[S.db], rows = BYDB[S.db];
+  var ub = new Float64Array(NM), us = new Float64Array(NM);
+  for (var i = 0; i < rows.length; i++){
+    var r = rows[i], p = r[2];
+    if (!inNode(p) || !passFilters(p)) continue;
+    ub[r[1]] += r[3]; us[r[1]] += r[5];
+  }
+  var mx = 1;
+  for (var m = 0; m < NM; m++){ if (ub[m] > mx) mx = ub[m]; if (us[m] > mx) mx = us[m]; }
+  var w = 100 / NM, html = '<div class="axline"></div>';
+  for (var k = 0; k < NM; k++){
+    var hb = Math.max(Math.round(ub[k] / mx * 30), ub[k] > 0 ? 2 : 0);
+    var hs = Math.max(Math.round(us[k] / mx * 30), us[k] > 0 ? 2 : 0);
+    html += '<div class="col" style="left:' + (k * w) + '%;width:' + w + '%" title="' +
+      esc(mLabel(MONTHS[k])) + " \u00b7 billed " + fmtInt(ub[k]) + " \u00b7 sold to dealer " +
+      fmtInt(us[k]) + '">';
+    if (pr.b[k]) html += '<div class="b" style="bottom:36px;height:' + hb + 'px"></div>';
+    else html += '<div class="miss" style="bottom:44px"></div>';
+    if (pr.s[k]) html += '<div class="s" style="top:36px;height:' + hs + 'px"></div>';
+    else html += '<div class="miss" style="top:44px"></div>';
+    html += "</div>";
+  }
+  var l = S.from * w, r2 = (S.to + 1) * w;
+  html += '<div class="tbrush" id="tbrush" style="left:' + l + '%;width:' + (r2 - l) + '%">' +
+          '<div class="than l" data-h="l"></div><div class="than r" data-h="r"></div></div>';
+  el("strip").innerHTML = html;
+  STRIPN = NM;
+  el("tlabels").innerHTML = "<span>" + esc(mShort(MONTHS[0])) + "</span><span>" +
+    esc(mShort(MONTHS[NM - 1])) + "</span>";
+  el("stripnote").textContent = "Tallest month in this view: " + fmtInt(mx) + " units.";
+  wireBrush();
+}
+function wireBrush(){
+  var strip = el("strip"), drag = null, startK = 0;
+  function kOf(ev){
+    var rc = strip.getBoundingClientRect();
+    var x = (ev.touches ? ev.touches[0].clientX : ev.clientX) - rc.left;
+    return Math.max(0, Math.min(STRIPN - 1, Math.floor(x / rc.width * STRIPN)));
+  }
+  function paintBrush(){
+    var w = 100 / STRIPN, br = el("tbrush");
+    if (!br) return;
+    br.style.left = (S.from * w) + "%";
+    br.style.width = ((S.to + 1 - S.from) * w) + "%";
+  }
+  strip.onmousedown = function(ev){
+    var h = ev.target.getAttribute && ev.target.getAttribute("data-h");
+    drag = h ? { handle: h } : { from: kOf(ev) };
+    startK = drag.from;
+    ev.preventDefault();
+  };
+  strip.ontouchstart = strip.onmousedown;
+  document.onmousemove = function(ev){
+    if (!drag) return;
+    var k = kOf(ev);
+    if (drag.handle === "l") S.from = Math.min(k, S.to);
+    else if (drag.handle === "r") S.to = Math.max(k, S.from);
+    else { S.from = Math.min(startK, k); S.to = Math.max(startK, k); }
+    S.custom = true;
+    paintBrush();
+    renderSoon();
+    ev.preventDefault();
+  };
+  document.ontouchmove = document.onmousemove;
+  document.onmouseup = function(){ if (drag) { drag = null; render(); } };
+  document.ontouchend = function(){ if (drag) { drag = null; render(); } };
+}
+function commonMonths(from, to){
+  var pr = PRES[S.db], out = [];
+  for (var m = from; m <= to; m++) if (pr.b[m] && pr.s[m]) out.push(m);
+  return out;
+}
+function rangeOf(list){ return list.length ? [list[0], list[list.length - 1]] : null; }
+
+/* ================================================================= KPIs */
+function dlt(now, before, invert, suppressed){
+  /* no delta is shown when the selection is too thin to compare, or when the window does not
+     carry both stages in every month of both periods. Either way the reason is printed on the
+     page; a percentage here would claim an authority the data has not earned. */
+  if (suppressed) return "";
+  if (before === null || before === undefined || !isFinite(before) || before === 0) return "";
+  if (now === null || now === undefined || !isFinite(now)) return "";
+  var d = now / before - 1, up = (d >= 0) === !invert;
+  return '<span class="dlt ' + (up ? "up" : "dn") + '">' + (d >= 0 ? "+" : "") +
+    (100 * d).toFixed(1) + "%</span>";
+}
+function kpi(cls, lab, val, note, tip, delta){
+  return '<div class="kpi' + (cls ? " " + cls : "") + '"><div class="lab">' + lab +
+    (tip ? ' <span class="info" tabindex="0">i<span class="tip">' + tip + "</span></span>" : "") +
+    '</div><div class="val">' + val + (delta || "") + '</div><div class="note">' + note + "</div></div>";
+}
+function renderKpis(A, C, from, to, cr, cmpOk){
+  var k = [], t = A.t, n = monthsInWindow(from, to), pr = PRES[S.db], nb = 0, ns = 0;
+  for (var m = from; m <= to; m++){ if (pr.b[m]) nb++; if (pr.s[m]) ns++; }
+  var cm = cr ? commonMonths(from, to) : [];
+  var ct = C ? C.t : null;
+  var common = hasSold() ? aggCommonDetail(from, to) : null;
+  var rng = compareRange();
+  var commonC = (rng && hasSold()) ? aggCommonDetail(rng[0], rng[1]) : null;
+  var thin = selectionThin(from, to, cr);
+  /* two independent reasons to hold a comparison back: the selection is too small, or the window
+     (or its reference) does not carry both stages in every month. Both suppress every delta. */
+  var covBlocked = !cmpOk;
+  var th = thin.thin || covBlocked;
+  var THIN_TIP = th ? (" A comparison is suppressed here because " +
+                       (thin.thin ? thin.reasons.join(" and ") : "") +
+                       (thin.thin && covBlocked ? ", and " : "") +
+                       (covBlocked ? "this window does not carry billing and sales to dealer in " +
+                         "every month of both periods" : "") +
+                       ". This selection has to clear " + thinFloorWords() +
+                       ", and the window has to be complete on both stages, before a delta means " +
+                       "anything.") : "";
+
+  k.push(kpi("", "Units billed", fmtInt(t.ub),
+    n + " months \u00b7 billing reported in " + nb,
+    "Sum of billed units in the window. Credit notes, returns, debit notes and free deliveries are " +
+    "removed before anything is summed." + THIN_TIP,
+    dlt(t.ub, ct ? ct.ub : null, false, th)));
+  k.push(kpi("t", "Units sold to dealer", hasSold() ? fmtInt(t.us) : "\u2014",
+    hasSold() ? ("reported in " + ns + " of " + n + " months") : "this distributor does not report to dealers",
+    "Sum of the quantities in the distributor's own sales-to-dealer report, month rows only. " +
+    "A month that is not reported is left empty." + THIN_TIP,
+    dlt(t.us, (ct && hasSold()) ? ct.us : null, false, th)));
+
+  k.push(kpi("", "EUR at price list, billed", fmtEur(t.ubp),
+    "both stages valued on the same list",
+    "Billed units multiplied by the ISZE price list of 10 August 2026. This is the primary euro " +
+    "measure, because it is the only one on which the two stages compare like for like." + THIN_TIP,
+    dlt(t.ubp, ct ? ct.ubp : null, false, th)));
+  k.push(kpi("t", "EUR at price list, sold to dealer", hasSold() ? fmtEur(t.usp) : "\u2014",
+    hasSold() ? "valued at the ISZE price list" : "not available",
+    "Sales-to-dealer units multiplied by the ISZE price list. A modelled figure: not the " +
+    "distributor's turnover and not an actual dealer purchase price." + THIN_TIP,
+    dlt(t.usp, (ct && hasSold()) ? ct.usp : null, false, th)));
+  k.push(kpi("t", "EUR at list + 35% GM, sold to dealer", hasSold() ? fmtEur(t.uspGm) : "\u2014",
+    hasSold() ? "modelled dealer price, list \u00f7 0.65" : "not available",
+    "Sales-to-dealer units valued at " + GM_WORDS + ". This is a modelled dealer price, so that " +
+    "the sold side can be read beside the billed side in euro. It is not the distributor's " +
+    "turnover, its revenue, or an actual dealer purchase price. The billed side carries no " +
+    "margin: it already has a real invoiced price." + THIN_TIP,
+    dlt(t.uspGm, (ct && hasSold()) ? ct.uspGm : null, false, th)));
+  k.push(kpi("", "EUR actual, billed", fmtEur(t.eb),
+    "what was really invoiced",
+    "Sum of net sales value on the billed lines. The only true price on the page, and no margin " +
+    "is added to it." + THIN_TIP,
+    dlt(t.eb, ct ? ct.eb : null, false, th)));
+
+  /* the two ratio-style tiles sit side by side, always the middle of the grid */
+  if (hasSold() && common && common.t.ratio !== null){
+    var cr_t = common.t;
+    var rb = (commonC && commonC.t.ratio !== null) ? commonC.t.ratio : null;
+    k.push(kpi("w", "Bought \u00f7 sold", fmtNum(cr_t.ratio, 2),
+      ratioWord(cr_t.ratio) + " \u00b7 on the " + cr_t.months + " months both stages report",
+      "Billed units divided by sales-to-dealer units, counted only over the months that carry both " +
+      "stages, so a month the distributor did not report cannot be read as building or running down " +
+      "stock. Below 0.95 the network is running stock down, above 1.15 it is building it. On those " +
+      "months: billed " + fmtInt(cr_t.ub) + " against sold " + fmtInt(cr_t.us) + "." + THIN_TIP,
+      dlt(cr_t.ratio, rb, true, th)));
+  } else if (hasSold()){
+    k.push(kpi("", "Bought \u00f7 sold", "\u2014",
+      "not shown: no month in this window carries both stages",
+      "The ratio is shown only when at least one month of the window carries both stages, so a " +
+      "missing month cannot be read as either building or running down stock."));
+  }
+
+  var cov = coverCommon(A, from, to, cr);
+  var covB = cov.billed, covS = cov.sold;
+  k.push(kpi("", "PMS cover on billing", covB === null ? "\u2014" : fmtPct(covB),
+    covB === null ? "no PMS family in this selection"
+                  : "of modelled service demand \u00b7 " + (cov.months || 0) + " shared months",
+    "Units billed in the 14 PMS families over the modelled service demand, both measured on the " +
+    "months that carry billing and sales to dealer together." +
+    (covB !== null && covB > 1 ? " ABOVE 100% - this is a warning, see the cover chart." : "")));
+  k.push(kpi("t", "PMS cover on sales to dealer", covS === null ? "\u2014" : fmtPct(covS),
+    covS === null ? "no PMS family in this selection" : "the same demand over the same months",
+    "Sales-to-dealer units in the 14 PMS families over the same modelled demand." +
+    (covS !== null && covS > 1 ? " ABOVE 100% - this is a warning, see the cover chart." : "")));
+
+  var idx = t.idx;
+  k.push(kpi("", "Price index, billed", idx === null ? "\u2014" : fmtNum(idx, 2),
+    idx === null ? "not available on these lines"
+                 : (idx < 1 ? "below list" : idx > 1.0005 ? "above list" : "exactly at list"),
+    "Average invoiced price divided by the list price on the same lines. 1.00 is exactly at list. " +
+    "The billed side only: the sold side has no invoiced price to index against.",
+    dlt(idx, ct ? ct.idx : null, false, th)));
+
+  var naU = 0, naE = 0, allU = 0, allE = 0, rows = BYDB[S.db];
+  for (var i = 0; i < rows.length; i++){
+    var r = rows[i];
+    if (r[1] < from || r[1] > to) continue;
+    if (!inNode(r[2]) || !passFilters(r[2])) continue;
+    allU += r[3]; allE += r[4];
+    if (PN.l1[r[2]] === 0){ naU += r[3]; naE += r[4]; }
+  }
+  k.push(kpi("", "Not classified in AIM", allU ? fmtPct(naU / allU) : "\u2014",
+    "of billed units \u00b7 " + (allE ? fmtPct(naE / allE) : "\u2014") + " of billed euros",
+    "Part numbers with no AIM level at all. They are kept in a bucket of their own at all three " +
+    "levels, never dropped silently, and this figure is their share."));
+  k.push(kpi("", "No price on the list", allU ? fmtPct(t.ubq0 / allU) : "\u2014",
+    "of billed units \u00b7 " + fmtInt(t.usq0) + " sold units",
+    "Part numbers whose price on the ISZE list is missing or sits at zero. They still count in " +
+    "units and in the actual euros; only the price-list euro is affected."));
+
+  el("kpis").innerHTML = k.join("");
+  return { covB: covB, covS: covS, thin: thin, cmpSuppressed: th };
+}
+
+/* ================================================================= drill chart */
+function renderDrill(A, from, to, C, thin){
+  var lv = levelNo();
+  var sold = hasSold();
+  var rows = [];
+  A.g.forEach(function(o, k){
+    var tr = totalsRow(o);
+    rows.push({ k: k, o: o, tr: tr, lab: groupLabel(k),
+                vB: measureOf(o, "billed", tr, from, to),
+                vS: sold ? measureOf(o, "sold", tr, from, to) : null });
+  });
+  /* sort on the sold side when there is one, since that is the side the question is about */
+  var sk = (sold && S.measure !== "eur_actual" && S.measure !== "avg_price" &&
+            S.measure !== "price_index") ? "vS" : "vB";
+  rows = rows.filter(function(r){
+    return (r.vB !== null && isFinite(r.vB)) || (r.vS !== null && isFinite(r.vS));
+  }).sort(function(a, b){
+    var av = a[sk], bv = b[sk];
+    if (av === null || !isFinite(av)) av = -Infinity;
+    if (bv === null || !isFinite(bv)) bv = -Infinity;
+    return bv - av;
+  });
+  var lim = lv === 4 ? 40 : (lv === 1 ? 30 : 26);
+  var shown = rows.slice(0, lim);
+  var extra = 0;
+  if (!shown.length){
+    el("t-drill").textContent = "Nothing to show at this level";
+    emptyChart("c-drill", "Nothing in this selection");
+    el("q-drill").innerHTML = "";
+    renderCrumb(lv);
+    return;
+  }
+  el("t-drill").textContent = (lv === 4 ? "Part numbers" : "Level " + lv + " of the AIM tree") +
+    " \u2014 " + MEASURE_TITLE[S.measure];
+  el("q-drill").innerHTML = "Billed next to sold to dealer, always. " +
+    (lv < 4 ? "Click a bar to open the level below it."
+            : "Click a bar to drop that part number into the table's search box.") +
+    (shown.length < rows.length ? " The " + shown.length + " largest of " + rows.length + " are drawn." : "");
+
+  var labels = shown.map(function(r){
+    var s = r.lab === null || r.lab === undefined ? "(blank)" : String(r.lab);
+    return s.length > 46 ? s.slice(0, 44) + "\u2026" : s;
+  });
+  var ds = [{ label: "Billed", data: shown.map(function(r){ return r.vB; }),
+              backgroundColor: NAVY, borderWidth: 0, borderRadius: 2 }];
+  if (sold){
+    ds.push({ label: "Sold to dealer", data: shown.map(function(r){ return r.vS; }),
+              backgroundColor: TERRA, borderWidth: 0, borderRadius: 2 });
+  }
+  /* the comparison series only exists when the reader's choice is available (so C is set) and the
+     selection is thick enough to carry it */
+  var suppressed = !!(thin && thin.thin);
+  if (C && S.cmp !== "none" && !suppressed){
+    var cf = S.cmp === "ly" ? from - 12 : from - monthsInWindow(from, to);
+    var ct2 = S.cmp === "ly" ? to - 12 : to - monthsInWindow(from, to);
+    var Cl = aggWindow(cf, ct2);
+    var backVals = shown.map(function(r){
+      var o = Cl.g.get(r.k);
+      if (!o) return null;
+      return measureOf(o, (sold && sk === "vS") ? "sold" : "billed", totalsRow(o), cf, ct2);
+    });
+    if (backVals.some(function(v){ return v !== null && isFinite(v); })){
+      ds.push({ label: S.cmp === "ly" ? "Same months a year earlier (comparison)"
+                                      : "Previous period (comparison)",
+                data: backVals, backgroundColor: "rgba(107,100,89,.3)", borderWidth: 0,
+                borderRadius: 2 });
+      extra = 1;
+    }
+  }
+
+  draw("c-drill", {
+    type: "bar",
+    data: { labels: labels, datasets: ds },
+    options: {
+      indexAxis: "y", responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: ds.length > 1, position: "top", labels: { boxWidth: 12, boxHeight: 12 } },
+        tooltip: { callbacks: {
+          title: function(items){
+            var r = shown[items[0].dataIndex];
+            return (lv < 4 ? String(labels[items[0].dataIndex]) : "") +
+              (r.tr.npn ? "  (" + r.tr.npn + " part number" + (r.tr.npn === 1 ? "" : "s") + ")" : "");
+          },
+          label: function(ctx){
+            var r = shown[ctx.dataIndex], out = [];
+            if (isFinite(ctx.parsed.x)) out.push(ctx.dataset.label + ": " + fmtMeasure(ctx.parsed.x));
+            else out.push(ctx.dataset.label + ": no data in that window");
+            if (!/comparison/.test(ctx.dataset.label)){
+              out.push("Billed " + fmtInt(r.tr.ub) + " units \u00b7 sold " + fmtInt(r.tr.us) + " units");
+              out.push("EUR at list " + fmtEur(r.tr.ubp) + " \u00b7 " + fmtEur(r.tr.usp) +
+                       " \u00b7 at list + 35% GM " + fmtEur(r.tr.uspGm));
+              if (r.tr.ratio !== null) out.push("Bought \u00f7 sold " + fmtNum(r.tr.ratio, 2) +
+                " (" + ratioWord(r.tr.ratio) + ")");
+              if (r.tr.idx !== null) out.push("Price index " + fmtNum(r.tr.idx, 2));
+              if (!suppressed) out.push(lv < 4 ? "Click to open the level below"
+                                               : "Click to open this part number");
+            }
+            return out;
+          } } }
+      },
+      scales: {
+        x: { grid: { color: GRID }, ticks: { callback: function(v){
+          if (S.measure === "pms_cover") return (100 * v).toFixed(0) + "%";
+          if (measureIsEuro()) return "\u20ac" + Number(v).toLocaleString("en-GB");
+          return Number(v).toLocaleString("en-GB"); } } },
+        y: { grid: { display: false }, ticks: { autoSkip: false, font: { size: 11 } } }
+      },
+      onClick: function(ev, items){
+        if (!items.length) return;
+        var r = shown[items[0].index];
+        if (lv === 1) S.node = { l1: r.k, l2: null, l3: null };
+        else if (lv === 2) S.node = { l1: S.node.l1, l2: r.k, l3: null };
+        else if (lv === 3) S.node = { l1: S.node.l1, l2: S.node.l2, l3: r.k };
+        renderSoon();
+      },
+      onHover: function(ev, items){
+        var t = ev && ev.native && ev.native.target;
+        if (t && t.style) t.style.cursor = (items && items.length) ? "pointer" : "default";
+      }
+    }
+  });
+  renderCrumb(lv);
+}
+function renderCrumb(lv){
+  var cr = el("crumb"), parts = ['<span data-jump="root">All AIM level 1</span>'];
+  if (S.node.l1 !== null) parts.push("<b>" + esc(L1[S.node.l1]) + "</b>");
+  if (S.node.l2 !== null) parts.push("<b>" + esc(L2[S.node.l2]) + "</b>");
+  if (S.node.l3 !== null) parts.push("<b>" + esc(L3[S.node.l3]) + "</b>");
+  cr.innerHTML = parts.join(" &rsaquo; ") +
+    (lv > 1 ? ' <button class="cbtn" id="crumb-up">Up one level</button>' : "") +
+    (lv > 1 ? ' <button class="cbtn" id="crumb-root">Back to level 1</button>' : "");
+  cr.querySelectorAll("[data-jump]").forEach(function(e){
+    e.onclick = function(){ S.node = { l1: null, l2: null, l3: null }; render(); };
+  });
+  if (el("crumb-up")) el("crumb-up").onclick = function(){
+    if (S.node.l3 !== null) S.node.l3 = null;
+    else if (S.node.l2 !== null) S.node.l2 = null;
+    else S.node.l1 = null;
+    render();
+  };
+  if (el("crumb-root")) el("crumb-root").onclick = function(){
+    S.node = { l1: null, l2: null, l3: null }; render();
+  };
+}
+
+/* ================================================================= monthly */
+function renderMonthly(from, to){
+  var rows = BYDB[S.db], ub = new Float64Array(NM), us = new Float64Array(NM);
+  for (var i = 0; i < rows.length; i++){
+    var r = rows[i], p = r[2];
+    if (r[1] < from || r[1] > to) continue;
+    if (!inNode(p) || !passFilters(p)) continue;
+    ub[r[1]] += r[3]; us[r[1]] += r[5];
+  }
+  var pr = PRES[S.db], lab = [], bu = [], su = [], cum = [], run = 0, started = false;
+  for (var m = from; m <= to; m++){
+    lab.push(mLabel(MONTHS[m]));
+    bu.push(ub[m]);
+    su.push(pr.s[m] ? us[m] : null);
+    if (!started && pr.b[m] && pr.s[m]) started = true;
+    if (started || !hasSold()) run += ub[m] - (pr.s[m] ? us[m] : 0);
+    cum.push((started || !hasSold()) ? run : null);
+  }
+  var cr = rangeOf(commonMonths(from, to));
+  el("q-monthly").innerHTML = "Billed units against sales to dealer, with the running difference " +
+    "between them underneath - the stock the network has taken on or used up." +
+    (hasSold() && cr ? " The running line starts in " + esc(mLabel(MONTHS[cr[0]])) +
+      ", the first month in the window where both stages report." : "") +
+    (hasSold() ? "" : " This distributor reports no sales to dealer, so only the billed line is drawn.");
+  var ds = [{ label: "Billed units", data: bu, borderColor: NAVY, backgroundColor: NAVY,
+              borderWidth: 2, pointRadius: 2, tension: 0.15, spanGaps: false }];
+  if (hasSold()){
+    ds.push({ label: "Sold to dealer units", data: su, borderColor: TERRA, backgroundColor: TERRA,
+              borderWidth: 2, pointRadius: 2, tension: 0.15, spanGaps: false });
+    ds.push({ label: "Running difference, billed minus sold", data: cum, borderColor: "#1e6b4f",
+              backgroundColor: "rgba(30,107,79,.08)", borderWidth: 2, borderDash: [5, 4],
+              pointRadius: 0, yAxisID: "y2", tension: 0.1, fill: true });
+  }
+  draw("c-monthly", {
+    type: "line", data: { labels: lab, datasets: ds },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: { legend: { position: "top", labels: { boxWidth: 12, boxHeight: 12 } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { maxRotation: 60, autoSkip: true, maxTicksLimit: 18 } },
+        y: { grid: { color: GRID }, title: { display: true, text: "units a month" } },
+        y2: { position: "right", grid: { display: false }, title: {
+              display: hasSold(), text: "running difference, units" } }
+      }
+    }
+  });
+}
+
+/* ================================================================= PMS cover */
+function renderPms(A, from, to, cr){
+  var code = dbCode();
+  var scoped = DBS[S.db].sold_scope;
+  var dm = demandTotal(code, cr ? cr[0] : from, cr ? cr[1] : to);
+  /* the numerator must sit on the same shared months as the denominator and the ratio */
+  var common = cr ? aggCommonDetail(from, to) : null;
+  var useU = common ? common.t.famU : A.t.famU;
+  var useS = common ? common.t.famS : A.t.famS;
+  var labels = [], covB = [], covS = [], overFam = [], clutch = [];
+  var detail = FAMS.map(function(fa, fi){
+    var q = dm.per[fi], ub = useU[fi], us = useS[fi];
+    var lab = FAMLAB[fa];
+    var isClutch = !!CLUTCH[fa];
+    if (isClutch) clutch.push(fa);
+    if (q > 1 && ub / q > 1) lab += " \u26a0";
+    labels.push(lab);
+    covB.push(q > 0 ? ub / q : null);
+    covS.push(q > 0 ? us / q : null);
+    if (q > 1 && ub / q > 1) overFam.push(FAMLAB[fa] + " at " + fmtPct(ub / q) + " on billing");
+    return { fam: fa, lab: FAMLAB[fa], demand: q, ub: ub, us: us,
+             cob: q > 0 ? ub / q : null, cos: q > 0 ? us / q : null, clutch: isClutch };
+  });
+  el("q-pms").innerHTML = "Units in each of the 14 PMS families over the modelled service demand " +
+    "for the same months. The denominator is identical on both sides and so are the months: the " +
+    "units and the demand are both taken on the months that carry billing and sales to dealer " +
+    "together" + (cr ? " (" + common.t.months + " months)" : "") +
+    (S.regBase && DEMREG && code === "PORTUGAL"
+      ? ", and here the demand is the registration-based fleet from the I Motors deck: " +
+        fmtInt(DEMREG.fleet) + " vehicles" : "") + "." +
+    (cr ? "" : " This window has no shared months, so the two stages cannot be compared.");
+  el("pms-legend").innerHTML =
+    "<span><b>*</b> " + esc(D.pms.clutch_note) + "</span>" +
+    (overFam.length ? '<span style="color:var(--red)"><b>\u26a0 Over 100% of modelled demand:</b> ' +
+      esc(overFam.join(", ")) + ". " + coverOverReason() + "</span>" : "") +
+    (scoped ? '<span style="color:var(--amber)"><b>Read the sold side with the scope in mind.</b> ' +
+      esc(DBS[S.db].label) + " sells " + esc(scoped === "D-MAX" ? "D-Max" : "commercial vehicles") +
+      " to its dealers, while the demand below covers the whole fleet behind this distributor. " +
+      "Its cover on sales to dealer therefore reads low for reasons that have nothing to do with " +
+      "how well those dealers sell.</span>" : "") +
+    "<span class=\"muted\">AdBlue (urea) filter sits near zero because it is rarely replaced on " +
+    "these models, which is a mapping question rather than a sales one.</span>";
+
+  draw("c-pms", {
+    type: "bar",
+    data: { labels: labels, datasets: [
+      { label: "Cover on billing", data: covB, backgroundColor: NAVY },
+      { label: "Cover on sales to dealer", data: covS,
+        backgroundColor: hasSold() ? TERRA : "rgba(192,85,45,.25)" }
+    ] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: "top", labels: { boxWidth: 12, boxHeight: 12 } },
+        tooltip: { callbacks: {
+          afterLabel: function(ctx){
+            var d = detail[ctx.dataIndex];
+            return ["Demand " + fmtInt(d.demand) + " units in this window",
+                    "Billed " + fmtInt(d.ub) + " \u00b7 sold to dealer " + fmtInt(d.us)];
+          },
+          label: function(ctx){ return ctx.dataset.label + ": " + fmtPct(ctx.parsed.y); }
+        } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { maxRotation: 55, autoSkip: false, font: { size: 10.5 } } },
+        y: { grid: { color: GRID }, ticks: { callback: function(v){ return (100 * v).toFixed(0) + "%"; } },
+             title: { display: true, text: "billed or sold units, over modelled demand" } }
+      }
+    }
+  });
+  return { over: overFam.length ? Math.max.apply(null, detail.map(function(d){ return d.cob || 0; })) : null };
+}
+
+/* ================================================================= scatter */
+function renderScatter(from, to, thin, cmpOk){
+  var n = monthsInWindow(from, to), cf, ct;
+  /* a vertical axis that is a change between two windows needs an earned comparison window */
+  var useCmp = cmpOk && S.cmp !== "none";
+  var cf = useCmp ? (S.cmp === "ly" ? from - 12 : from - n) : from - n;
+  var ct = useCmp ? (S.cmp === "ly" ? to - 12 : to - n) : to - n;
+  var note = useCmp ? (S.cmp === "ly" ? "the same months a year earlier"
+                                      : "the previous " + n + " months")
+                    : "the previous " + n + " months";
+  var suppressed = !!(thin && thin.thin) || !cmpOk;
+  if (cf < 0){
+    emptyChart("c-scatter", "No earlier window inside the data to compare against");
+    el("q-scatter").innerHTML = "The comparison window would fall before the first month in the " +
+      "data, so there is nothing to plot yet. Move the window later or pick another comparison.";
+    return;
+  }
+  var rows = BYDB[S.db], mov = new Map(), per = new Map();
+  for (var i = 0; i < rows.length; i++){
+    var r = rows[i], p = r[2];
+    if (!inNode(p) || !passFilters(p)) continue;
+    var mv = mov.get(p); if (!mv){ mv = { now: 0, before: 0 }; mov.set(p, mv); }
+    if (r[1] >= from && r[1] <= to) mv.now += r[5];
+    if (r[1] >= cf && r[1] <= ct) mv.before += r[5];
+    if (r[1] < from || r[1] > to) continue;
+    var q = per.get(p); if (!q){ q = { ub: 0, eb: 0, ubp: 0, ubq0: 0 }; per.set(p, q); }
+    q.ub += r[3]; q.eb += r[4];
+    var sp = PN.p[p];
+    if (sp !== null && sp > 0) q.ubp += r[3] * sp; else q.ubq0 += r[3];
+  }
+  var pts = [];
+  per.forEach(function(q, p){
+    if (q.ub <= 0 || q.ubq0 >= q.ub || q.ubp <= 0) return;
+    var mv = mov.get(p);
+    var idx = (q.eb / q.ub) / (q.ubp / (q.ub - q.ubq0));
+    if (!isFinite(idx)) return;
+    /* when the comparison is not earned, the vertical axis is the level itself, not a change */
+    var yVal = useCmp && mv ? (mv.now - mv.before) : (mv ? mv.now : 0);
+    if (useCmp && (!mv || Math.abs(mv.before) < 25)) return;
+    if (!useCmp && yVal <= 0) return;
+    pts.push({ x: idx, y: yVal, r: Math.max(Math.sqrt(q.ubp) / 3.2, 2), p: p,
+               ub: q.ub, now: mv ? mv.now : 0, before: mv ? mv.before : 0, eur: q.ubp });
+  });
+  pts.sort(function(a, b){ return b.eur - a.eur; });
+  pts = pts.slice(0, 240);
+  el("q-scatter").innerHTML = "One bubble per part number. Across: its price index on billing, " +
+    "1.00 being exactly at list. " +
+    (useCmp
+      ? "Up and down: how its sold-to-dealer units moved against " + esc(note) + ". "
+      : "Up and down: the sold-to-dealer units it moved in this window, shown as a level because " +
+        "this window does not carry a comparison. ") +
+    "Bubble size is the euro at price list. " +
+    (useCmp ? "The lower right is where a price conversation is worth having: price at or above " +
+              "list while the network bought less. The vertical axis is a change between two " +
+              "windows, so it is only as strong as those windows. "
+            : "Read it as price position against volume. ") +
+    (thin && thin.thin ? thinNote() : "") +
+    (!useCmp ? " " + noCmpNote() : "");
+  var yTitle = useCmp ? "change in sold-to-dealer units" : "sold-to-dealer units in this window";
+  if (!pts.length){
+    emptyChart("c-scatter", useCmp ? "No part number has both a price and a dealer volume in both windows"
+                                   : "No part number has both a price and a dealer volume here");
+    return;
+  }
+  draw("c-scatter", {
+    type: "bubble",
+    data: { datasets: [{ label: "Part number", data: pts,
+      backgroundColor: pts.map(function(q){ return (useCmp && q.y < 0) ? "rgba(180,69,58,.5)"
+                                                                        : "rgba(21,35,60,.4)"; }),
+      borderColor: pts.map(function(q){ return (useCmp && q.y < 0) ? "#b4453a" : NAVY; }),
+      borderWidth: 1 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: {
+          title: function(items){ return PN.n[items[0].raw.p] + "  " + (PN.d[items[0].raw.p] || ""); },
+          label: function(ctx){
+            var q = ctx.raw;
+            return ["Price index " + fmtNum(q.x, 2) + " \u00b7 " + fmtEur(q.eur) + " at list",
+                    useCmp ? ("Sold to dealer " + fmtInt(q.now) + " now against " +
+                              fmtInt(q.before) + " before")
+                           : ("Sold to dealer " + fmtInt(q.now) + " units in this window"),
+                    "Billed " + fmtInt(q.ub) + " units"];
+          } } }
+      },
+      scales: {
+        x: { grid: { color: GRID }, title: { display: true,
+             text: "price index on billing, 1.00 = exactly at list" } },
+        y: { grid: { color: GRID }, title: { display: true, text: yTitle } }
+      }
+    }
+  });
+}
+
+/* ================================================================= pareto */
+function renderPareto(from, to, cr, thin){
+  var mode = S.pareto, rows = BYDB[S.db], per = new Map();
+  var suppressed = !!(thin && thin.thin);
+  for (var i = 0; i < rows.length; i++){
+    var r = rows[i], p = r[2];
+    if (r[1] < from || r[1] > to) continue;
+    if (!inNode(p) || !passFilters(p)) continue;
+    var o = per.get(p); if (!o){ o = { ub: 0, us: 0, ubp: 0 }; per.set(p, o); }
+    o.ub += r[3]; o.us += r[5];
+    var sp = PN.p[p]; if (sp !== null && sp > 0) o.ubp += r[3] * sp;
+  }
+  var items = [];
+  per.forEach(function(o, p){
+    items.push({ p: p, ub: o.ub, us: o.us, ubp: o.ubp, fam: PN.f[p], gap: null });
+  });
+  if (mode === "sold_billed"){
+    if (!hasSold()){
+      emptyChart("c-pareto", "This distributor reports no sales to dealer");
+      el("q-pareto").innerHTML = "Without a sales-to-dealer report there is no gap between the two " +
+        "stages to rank.";
+      return;
+    }
+    items.forEach(function(x){ x.gap = x.us - x.ub; });
+  } else {
+    if (!cr){
+      emptyChart("c-pareto", "No shared months to measure demand on");
+      return;
+    }
+    /* the family's modelled demand is split over its part numbers by their share of euro at list */
+    var tot = {}, eur = {}, fallback = {};
+    items.forEach(function(x){
+      if (x.fam < 0) return;
+      tot[x.fam] = demandFor(dbCode(), x.fam, cr[0], cr[1]);
+      eur[x.fam] = (eur[x.fam] || 0) + Math.max(x.ubp, 0);
+      fallback[x.fam] = (fallback[x.fam] || 0) + Math.max(x.ub, 0);
+    });
+    items.forEach(function(x){
+      if (x.fam < 0){ x.gap = null; return; }
+      var base = eur[x.fam] > 0 ? eur[x.fam] : fallback[x.fam];
+      var share = base > 0 ? Math.max(x.ubp > 0 ? x.ubp : x.ub, 0) / base : 0;
+      x.gap = (tot[x.fam] || 0) * share - x.us;
+      if (!isFinite(x.gap)) x.gap = null;
+    });
+    items = items.filter(function(x){ return x.gap !== null; });
+  }
+  items = items.filter(function(x){ return x.gap !== null && x.gap > 0; })
+               .sort(function(a, b){ return b.gap - a.gap; });
+  el("q-pareto").innerHTML = mode === "sold_billed"
+    ? "Part numbers where the dealer network sold more than ISZE billed to the distributor, biggest " +
+      "first. The line is the share of the whole positive gap that the bars up to that point carry. " +
+      "This ranks a gap inside one window; it is not a comparison between windows." + (suppressed ? thinNote() : "")
+    : "Part numbers behind their share of modelled service demand. Each family's demand is split " +
+      "over its part numbers by their share of euro at list, then the units actually sold to dealers " +
+      "are taken off. The line is the cumulative share of the gap. It is an estimate of where the " +
+      "gap sits inside a family, not a measurement of any single part number." + (suppressed ? thinNote() : "");
+  if (!items.length){
+    emptyChart("c-pareto", "No positive gap in this selection");
+    return;
+  }
+  var lim = items.slice(0, 25);
+  var total = lim.reduce(function(a, x){ return a + x.gap; }, 0), run = 0;
+  var cum = lim.map(function(x){ run += x.gap; return total > 0 ? run / total : 0; });
+  var firstFew = 0, needed = 0;
+  while (needed < cum.length && firstFew < 1){ firstFew += lim[needed].gap; needed++; }
+  var at80 = 1;
+  for (at80 = 1; at80 <= cum.length; at80++) if (cum[at80 - 1] >= 0.8) break;
+  el("q-pareto").innerHTML += " Here " + Math.min(at80, lim.length) + " part numbers carry " +
+    fmtPct(cum[Math.min(at80, lim.length) - 1]) + " of the gap in this selection.";
+  draw("c-pareto", {
+    data: { labels: lim.map(function(x){ return PN.n[x.p]; }),
+      datasets: [
+        { type: "bar", label: "Gap, units", data: lim.map(function(x){ return x.gap; }),
+          backgroundColor: TERRA, yAxisID: "y" },
+        { type: "line", label: "Cumulative share", data: cum, borderColor: NAVY,
+          backgroundColor: NAVY, borderWidth: 2, pointRadius: 2, yAxisID: "y2" }
+      ] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: "top", labels: { boxWidth: 12, boxHeight: 12 } },
+        tooltip: { callbacks: {
+          title: function(items){ return items[0].label + "  " + (PN.d[lim[items[0].dataIndex].p] || ""); },
+          label: function(ctx){
+            if (ctx.dataset.type === "line") return "Cumulative share " + fmtPct(ctx.parsed.y);
+            var x = lim[ctx.dataIndex];
+            return ["Gap " + fmtInt(x.gap) + " units",
+                    "Billed " + fmtInt(x.ub) + " \u00b7 sold to dealer " + fmtInt(x.us)];
+          } } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { maxRotation: 70, autoSkip: false, font: { size: 10 } } },
+        y: { grid: { color: GRID }, title: { display: true, text: "gap in units" } },
+        y2: { position: "right", grid: { display: false }, min: 0, max: 1,
+              ticks: { callback: function(v){ return (100 * v).toFixed(0) + "%"; } } }
+      }
+    }
+  });
+}
+
+/* ================================================================= heatmap, run 2 */
+function renderHeat(from, to, cr){
+  var card = el("heat-card");
+  if (D.run !== "ALL"){ card.style.display = "none"; return; }
+  card.style.display = "";
+  var L1N = L1.length, act = [];
+  DBS.forEach(function(d, i){ if (BYDB[i].length) act.push(i); });
+  var grid = act.map(function(){ return new Array(L1N).fill(null); });
+
+  act.forEach(function(di, row){
+    var rows = BYDB[di], code = DBS[di].code, pr = PRES[di];
+    /* one pass: units by level 1, and units by level 1 and family */
+    var ub = new Float64Array(L1N), us = new Float64Array(L1N);
+    var ubC = new Float64Array(L1N), usC = new Float64Array(L1N);
+    var byFam = {};
+    for (var i = 0; i < rows.length; i++){
+      var r = rows[i];
+      if (r[1] < from || r[1] > to) continue;
+      var l = PN.l1[r[2]];
+      ub[l] += r[3]; us[l] += r[5];
+      var shared = pr.b[r[1]] && pr.s[r[1]];
+      if (shared){ ubC[l] += r[3]; usC[l] += r[5]; }
+      var f = PN.f[r[2]];
+      if (f >= 0 && shared){
+        if (!byFam[l]) byFam[l] = new Float64Array(14);
+        byFam[l][f] += r[5];
+      }
+    }
+    for (var l2 = 1; l2 < L1N; l2++){
+      if (S.heat === "ratio"){ grid[row][l2] = usC[l2] > 0 ? ubC[l2] / usC[l2] : null; }
+      else {
+        var su = 0, dm = 0, fam = byFam[l2];
+        if (fam && cr){
+          for (var f2 = 0; f2 < 14; f2++){
+            if (!fam[f2]) continue;
+            var q = demandFor(code, f2, cr[0], cr[1]);
+            if (q > 0){ su += fam[f2]; dm += q; }
+          }
+        }
+        grid[row][l2] = dm > 0 ? su / dm : null;
+      }
+    }
+    /* the all-level-1 column: the same measure summed over every level 1, so it is not a dead cell */
+    if (S.heat === "ratio"){
+      var tU = 0, tS = 0;
+      for (var l3 = 1; l3 < L1N; l3++){ tU += ubC[l3]; tS += usC[l3]; }
+      grid[row][0] = tS > 0 ? tU / tS : null;
+    } else {
+      var tSu = 0, tDm = 0;
+      for (var l4 = 1; l4 < L1N; l4++){
+        var fam4 = byFam[l4];
+        if (!fam4 || !cr) continue;
+        for (var f4 = 0; f4 < 14; f4++){
+          if (!fam4[f4]) continue;
+          var q4 = demandFor(code, f4, cr[0], cr[1]);
+          if (q4 > 0){ tSu += fam4[f4]; tDm += q4; }
+        }
+      }
+      grid[row][0] = tDm > 0 ? tSu / tDm : null;
+    }
+  });
+
+  function colour(v){
+    if (v === null || !isFinite(v)) return "#f2efe9";
+    if (S.heat === "ratio"){
+      if (v < 0.95) return "#e3b1aa";
+      if (v > 1.15) return "#f0d9a8";
+      return "#e6e1d8";
+    }
+    var t = Math.min(v, 1.5) / 1.5;
+    return "rgb(" + Math.round(247 - t * 190) + "," + Math.round(244 - t * 145) +
+      "," + Math.round(238 - t * 125) + ")";
+  }
+  function cellText(v){
+    if (v === null || !isFinite(v)) return '<span class="muted">\u2014</span>';
+    return S.heat === "ratio" ? fmtNum(v, 2) : fmtPct(v);
+  }
+  var h = "<thead><tr><th>Distributor</th>";
+  for (var l = 1; l < L1N; l++) h += "<th title='" + esc(L1[l]) + "'>" + esc(shortLab(L1[l])) + "</th>";
+  h += "<th title='Every AIM level 1 together'>All level 1</th>";
+  h += "</tr></thead><tbody>";
+  act.forEach(function(di, row){
+    h += "<tr><td><b>" + esc(DBS[di].label) + "</b>" +
+      (DBS[di].has_sold ? "" : ' <span class="pill na">no dealer data</span>') + "</td>";
+    h += '<td style="background:' + colour(grid[row][0]) + '"><b>' +
+         cellText(grid[row][0]) + "</b></td>";
+    for (var l2 = 1; l2 < L1N; l2++)
+      h += '<td style="background:' + colour(grid[row][l2]) + '">' + cellText(grid[row][l2]) + "</td>";
+    h += "</tr>";
+  });
+  el("t-heat").innerHTML = h + "</tbody>";
+  el("q-heat").innerHTML = S.heat === "ratio"
+    ? "Billed units divided by sales-to-dealer units, per distributor and AIM level 1, counted on " +
+      "the months that distributor reports both stages. Red is below 0.95, running stock down; " +
+      "amber is above 1.15, building stock. If a distributor sells D-Max only to its dealers while " +
+      "we bill it across other models, its ratio sits high for that reason rather than because of " +
+      "stock. A distributor with no sales-to-dealer report has no ratio and stays blank."
+    : "PMS cover on sales to dealer, per distributor and AIM level 1, on the same modelled demand " +
+      "used everywhere else on this page and on the months both stages report. Darker means more of " +
+      "the modelled service demand was actually sold on to dealers. The first number column is " +
+      "every level 1 together, so it can be read against the figures beside it. Where a distributor " +
+      "sells D-Max only to its dealers, its cover reads low because part of what we billed it is " +
+      "not in the dealer report at all. A distributor with no sales-to-dealer report stays blank.";
+  el("heat-scale").innerHTML = S.heat === "ratio"
+    ? '<span><i style="background:#e3b1aa"></i>below 0.95, running stock down</span>' +
+      '<span><i style="background:#e6e1d8"></i>0.95 to 1.15, in step</span>' +
+      '<span><i style="background:#f0d9a8"></i>above 1.15, building stock</span>'
+    : '<span><i style="background:#f2efe9"></i>0%</span>' +
+      '<span><i style="background:#e0e3e0"></i>about 75%</span>' +
+      '<span><i style="background:#7d9a9c"></i>150% and over</span>';
+}
+
+/* ================================================================= dealer layer */
+function renderDealer(){
+  var card = el("dealer-card"), q = card.querySelector(".q"), code = dbCode();
+  var tbl = el("t-dealer");
+  if (D.run !== "ALL" || !D.dealer || code !== "ITUK"){
+    q.innerHTML = code === "ITUK"
+      ? "Dealer-level detail appears in the all-distributors run. This is the Portugal run, so it " +
+        "is switched off here."
+      : "No dealer-level data from this distributor. Only Isuzu Truck UK reports its sales to dealer " +
+        "broken down by dealer, and only for calendar 2025. The section stays empty rather than " +
+        "showing a figure that does not exist.";
+    tbl.innerHTML = "";
+    return;
+  }
+  var dl = D.dealer, L1N = L1.length, grid = {};
+  dl.cells.forEach(function(c){ (grid[c[0]] = grid[c[0]] || {})[c[1]] = c[2]; });
+  q.innerHTML = "Isuzu Truck UK, calendar 2025, month rows only. Units that reached each dealer by " +
+    "AIM level 1. This is the only dealer-level cut anywhere in the data, so it is shown as it is " +
+    "and not extended to any other distributor.";
+  var h = "<thead><tr><th>Dealer</th>";
+  for (var l = 1; l < L1N; l++) h += "<th class='n'>" + esc(shortLab(L1[l])) + "</th>";
+  h += "<th class='n'>Total</th></tr></thead><tbody>";
+  var totals = new Array(L1N).fill(0), anyRows = 0;
+  dl.dealers.forEach(function(d, di){
+    var row = grid[di] || {}, tot = 0, cells = [];
+    for (var l2 = 1; l2 < L1N; l2++){ var v = row[l2] || 0; tot += v; totals[l2] += v; cells.push(v); }
+    if (tot === 0) return;
+    anyRows++;
+    h += "<tr><td>" + esc(d) + "</td>" + cells.map(function(v){
+      return "<td class='n'>" + (v ? fmtInt(v) : "") + "</td>"; }).join("") +
+      "<td class='n'><b>" + fmtInt(tot) + "</b></td></tr>";
+  });
+  var all = 0;
+  for (var l3 = 1; l3 < L1N; l3++) all += totals[l3];
+  h += "<tr><td><b>All dealers</b></td>" + totals.slice(1).map(function(v){
+      return "<td class='n'><b>" + fmtInt(v) + "</b></td>"; }).join("") +
+    "<td class='n'><b>" + fmtInt(all) + "</b></td></tr>";
+  tbl.innerHTML = h + "</tbody>";
+  if (!anyRows) tbl.innerHTML = "<tbody><tr><td class='muted'>No dealer rows in this window.</td></tr></tbody>";
+}
+
+/* ================================================================= part-number table */
+var TABLE_ROWS = [], SORTCOL = "eur_gm", SORTDIR = -1;
+function sortVal(r, key){
+  switch (key){
+    case "name": return r.p;
+    case "billed": return r.o.ub;
+    case "sold": return r.o.us;
+    case "ratio": return r.ratio === null ? -Infinity : r.ratio;
+    case "eur_billed": return r.o.ubp;
+    case "eur_sold": return r.o.usp;
+    case "eur_gm": return r.o.uspGm;
+    case "avg": return r.avg === null ? -Infinity : r.avg;
+    case "list": return r.listed === null ? -Infinity : r.listed;
+    case "idx": return r.idx === null ? -Infinity : r.idx;
+    case "cob": return r.cob === null ? -Infinity : r.cob;
+    case "cos": return r.cos === null ? -Infinity : r.cos;
+  }
+  return 0;
+}
+function renderTable(from, to, cr){
+  var rows = BYDB[S.db], per = new Map();
+  for (var i = 0; i < rows.length; i++){
+    var r = rows[i], p = r[2];
+    if (r[1] < from || r[1] > to) continue;
+    if (!inNode(p) || !passFilters(p)) continue;
+    var o = per.get(p); if (!o){ o = { ub: 0, eb: 0, ubp: 0, us: 0, usp: 0, ubq0: 0, usq0: 0 }; per.set(p, o); }
+    o.ub += r[3]; o.eb += r[4]; o.us += r[5];
+    var sp = PN.p[p];
+    if (sp !== null && sp > 0){ o.ubp += r[3] * sp; o.usp += r[5] * sp; }
+    else { o.ubq0 += r[3]; o.usq0 += r[5]; }
+  }
+  var out = [], maxCover = 0;
+  var common = cr ? aggCommonDetail(from, to) : null;
+  per.forEach(function(o, p){
+    var o2 = o;
+    if (cr && common && common.byPart.has(p)) o2 = common.byPart.get(p);
+    var tr = totalsRow({ ub: o2.ub, eb: o.eb, ubp: o.ubp, us: o2.us, usp: o.usp,
+                         ubq0: o.ubq0, usq0: o.usq0, npn: 1 });
+    var fam = PN.f[p], cob = null, cos = null;
+    if (fam >= 0 && cr){
+      /* the family's cover is the same for every part number in that family, measured on the
+         shared months so it ties to the KPI strip and the cover chart */
+      var cg = common ? common.byGroup.get(groupKey(p)) : null;
+      var q = demandFor(dbCode(), fam, cr[0], cr[1]);
+      if (cg && q > 0){
+        cob = (cg.fam[2 * fam] || 0) / q;
+        cos = (cg.fam[2 * fam + 1] || 0) / q;
+        if (cob > maxCover) maxCover = cob;
+      }
+    }
+    out.push({ p: p, o: tr, avg: tr.avg, listed: tr.listed, idx: tr.idx,
+               cob: cob, cos: cos, fam: fam, ratio: tr.ratio });
+  });
+  TABLE_ROWS = out;
+  el("q-table").innerHTML = "Every part number in this view, both stages side by side. Click a " +
+    "column heading to sort, type in the box to narrow it down, and the button writes the rows you " +
+    "can see to a file you can open in Excel. A price index above 1.00 means we billed above the " +
+    "list price on those lines." +
+    (cr ? " Units bought, units sold and bought \u00f7 sold are counted on the " +
+      aggCommonDetail(from, to).t.months + " months both stages report, matching the KPI strip. " +
+      "The euro columns, the average actual price and the price index cover the whole window. " +
+      "The sold-to-dealer euro comes in two forms, because it has no price of its own: at the ISZE " +
+      "price list, and at " + GM_WORDS + ", which is a modelled dealer price and not the " +
+      "distributor's turnover or an actual dealer purchase price. " +
+      "The PMS cover columns show the whole family's cover, because demand is modelled for the " +
+      "family and not for one part number inside it." : "");
+  renderTableBody();
+  renderSort();
+  return { maxCover: maxCover, n: out.length };
+}
+function renderSort(){
+  el("t-drilltb").querySelectorAll("th").forEach(function(th){
+    th.onclick = function(){
+      var key = th.getAttribute("data-k");
+      if (!key) return;
+      if (SORTCOL === key) SORTDIR = -SORTDIR; else { SORTCOL = key; SORTDIR = -1; }
+      renderTableBody();
+    };
+  });
+}
+function renderTableBody(){
+  var rows = TABLE_ROWS.slice().sort(function(a, b){
+    var av = sortVal(a, SORTCOL), bv = sortVal(b, SORTCOL);
+    if (typeof av === "string") return SORTDIR * String(av).localeCompare(String(bv));
+    return SORTDIR * (bv - av);
+  });
+  var q = (el("search").value || "").trim().toLowerCase();
+  if (q) rows = rows.filter(function(r){
+    return r.p.toLowerCase().indexOf(q) >= 0 || (PN.d[r.p] || "").toLowerCase().indexOf(q) >= 0; });
+  var cols = [
+    ["Part number", "name", "n"], ["Description", null, ""],
+    ["AIM 1", null, ""], ["AIM 2", null, ""], ["AIM 3", null, ""],
+    ["PMS family", null, ""], ["Genuine / BVP", null, ""], ["Source", null, ""],
+    ["Units billed", "billed", "n"], ["Units sold", "sold", "n"],
+    ["Bought \u00f7 sold", "ratio", "n"], ["EUR list billed", "eur_billed", "n"],
+    ["EUR list sold", "eur_sold", "n"],
+    ["EUR list + 35% GM sold", "eur_gm", "n"],
+    ["Avg actual price", "avg", "n"],
+    ["List price", "list", "n"], ["Price index", "idx", "n"],
+    ["PMS cover billed", "cob", "n"], ["PMS cover sold", "cos", "n"], ["Superseded", null, ""]
+  ];
+  el("t-drilltb").querySelector("thead").innerHTML = "<tr>" + cols.map(function(c){
+    var mark = c[1] && SORTCOL === c[1] ? (SORTDIR < 0 ? " \u25bc" : " \u25b2") : "";
+    var tip = c[1] === "eur_gm" ? " title=\"A modelled dealer price: the ISZE price-list euro " +
+      "divided by 0.65, that is plus 35% gross margin on the selling price. Not the " +
+      "distributor's turnover, its revenue, or an actual dealer purchase price.\"" : "";
+    return "<th" + (c[2] ? " class='" + c[2] + "'" : "") +
+      (c[1] ? " data-k='" + c[1] + "'" : "") + tip + ">" + c[0] + "<span class='sortmark'>" + mark +
+      "</span></th>"; }).join("") + "</tr>";
+  var lim = rows.slice(0, 900);
+  el("t-drilltb").querySelector("tbody").innerHTML = lim.map(function(r){
+    var t = r.o, oldN = PN.oc[r.p] || 0;
+    var srcCls = PN.s[r.p] === 0 ? "jp" : PN.s[r.p] === 1 ? "th" : "na";
+    var ratioPill = r.ratio === null ? "\u2014"
+      : '<span class="pill ' + (r.ratio < 0.95 ? "red" : r.ratio > 1.15 ? "am" : "") + '">' +
+        fmtNum(r.ratio, 2) + "</span>";
+    return "<tr>" +
+      "<td><b>" + esc(r.p) + "</b></td>" +
+      "<td>" + esc(PN.d[r.p] || "") + "</td>" +
+      "<td>" + esc(L1[PN.l1[r.p]] || "") + "</td>" +
+      "<td>" + esc(PN.l2[r.p] ? L2[PN.l2[r.p]] : "\u2014") + "</td>" +
+      "<td>" + esc(PN.l3[r.p] ? L3[PN.l3[r.p]] : "\u2014") + "</td>" +
+      "<td>" + (r.fam >= 0 ? esc(FAMLAB[FAMS[r.fam]]) + (CLUTCH[FAMS[r.fam]] ? " *" : "") : "\u2014") + "</td>" +
+      "<td>" + esc(BVPL[PN.b[r.p]]) + "</td>" +
+      "<td><span class='pill " + srcCls + "'>" + esc(SRC[PN.s[r.p]] || "Not held") + "</span></td>" +
+      "<td class='n'>" + fmtInt(t.ub) + "</td>" +
+      "<td class='n'>" + fmtInt(t.us) + "</td>" +
+      "<td class='n'>" + ratioPill + "</td>" +
+      "<td class='n'>" + fmtEur(t.ubp) + "</td>" +
+      "<td class='n'>" + (hasSold() ? fmtEur(t.usp) : "\u2014") + "</td>" +
+      "<td class='n'>" + (hasSold() ? fmtEur(t.uspGm) : "\u2014") + "</td>" +
+      "<td class='n'>" + (r.avg === null ? "\u2014" : fmtEur(r.avg, 2)) + "</td>" +
+      "<td class='n'>" + (r.listed === null ? "\u2014" : fmtEur(r.listed, 2)) + "</td>" +
+      "<td class='n'>" + (r.idx === null ? "\u2014" : fmtNum(r.idx, 2)) + "</td>" +
+      "<td class='n'>" + (r.cob === null ? "\u2014" : fmtPct(r.cob)) + "</td>" +
+      "<td class='n'>" + (r.cos === null ? "\u2014" : fmtPct(r.cos)) + "</td>" +
+      "<td>" + (oldN ? "<span class='pill' title='" +
+        esc((PN.o[r.p] || []).join(", ")) + "'>" + oldN + " earlier number" +
+        (oldN > 1 ? "s" : "") + "</span>" : "") + "</td></tr>";
+  }).join("") || "<tr><td colspan='20' class='muted' style='padding:18px'>Nothing matches. " +
+    "Clear the search box.</td></tr>";
+  el("tcount").textContent = rows.length.toLocaleString("en-GB") + " part numbers" +
+    (rows.length > lim.length ? ", showing the first " + lim.length : "");
+}
+function downloadCsv(){
+  var cols = ["part_number", "description", "aim_level_1", "aim_level_2", "aim_level_3",
+    "pms_family", "genuine_bvp", "source_of_supply", "superseded_numbers", "units_billed",
+    "units_sold", "bought_div_sold", "eur_list_billed", "eur_list_sold",
+    "eur_list_plus_35gm_sold", "avg_actual_price",
+    "list_price", "price_index", "pms_cover_billed", "pms_cover_sold"];
+  var q = (el("search").value || "").trim().toLowerCase();
+  var rows = TABLE_ROWS.slice().sort(function(a, b){
+    var av = sortVal(a, SORTCOL), bv = sortVal(b, SORTCOL);
+    if (typeof av === "string") return SORTDIR * String(av).localeCompare(String(bv));
+    return SORTDIR * (bv - av);
+  }).filter(function(r){
+    return !q || r.p.toLowerCase().indexOf(q) >= 0 ||
+      (PN.d[r.p] || "").toLowerCase().indexOf(q) >= 0; });
+  var lines = [cols.join(",")];
+  rows.forEach(function(r){
+    var t = r.o;
+    var row = [r.p, PN.d[r.p] || "", L1[PN.l1[r.p]] || "",
+      PN.l2[r.p] ? L2[PN.l2[r.p]] : "", PN.l3[r.p] ? L3[PN.l3[r.p]] : "",
+      r.fam >= 0 ? FAMS[r.fam] : "", BVPL[PN.b[r.p]], SRC[PN.s[r.p]] || "Not held",
+      (PN.o[r.p] || []).join(" "), Math.round(t.ub), Math.round(t.us),
+      r.ratio === null ? "" : r.ratio.toFixed(4), t.ubp.toFixed(2), t.usp.toFixed(2),
+      t.uspGm.toFixed(2),
+      r.avg === null ? "" : r.avg.toFixed(4), r.listed === null ? "" : r.listed.toFixed(4),
+      r.idx === null ? "" : r.idx.toFixed(4), r.cob === null ? "" : r.cob.toFixed(4),
+      r.cos === null ? "" : r.cos.toFixed(4)];
+    lines.push(row.map(function(v){
+      var s = String(v === null || v === undefined ? "" : v);
+      return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }).join(","));
+  });
+  var blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "AIM_deep_dive_" + dbCode() + "_" + MONTHS[S.from] + "_" + MONTHS[S.to] + ".csv";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+/* why the long runs break where they do: the months where billing is absent while the dealer
+   report carries on. Built from the payload's own coverage, so it cannot go stale. */
+function gapCause(){
+  var bits = [], bothAbsent = {}, anyGap = false;
+  D.coverage.forEach(function(x){
+    var r = x.comparison_reach || {};
+    var g = r.gaps || [];
+    if (g.length){
+      anyGap = true;
+      var key = g.join(",");
+      if (!bothAbsent[key]) bothAbsent[key] = [];
+      bothAbsent[key].push(x.label);
+    }
+  });
+  if (!anyGap) return "";
+  var lines = Object.keys(bothAbsent).map(function(k){
+    var mm = k.split(",");
+    return "<b>" + esc(mm.map(mLabel).join(", ")) + "</b> for " +
+      esc(bothAbsent[k].join(", "));
+  });
+  return "<br><br><b>Why the runs break.</b> In " + lines.join("; the same months for ") +
+    " the billing file carries rows but every one of them has a blank document type, and a blank " +
+    "document type is excluded along with the credit notes. Those months therefore show zero " +
+    "billing while the dealer report for the same months is intact, so the two stages do not " +
+    "overlap there and the run stops. The page reads such a month as an absent month, which is " +
+    "the conservative reading: it does not assume the billing was nil, only that it is not " +
+    "usable. If those months were usable, every run listed above would be longer.";
+}
+/* ================================================================= coverage */
+function renderCoverage(){
+  var h = "<thead><tr><th>Distributor</th><th>Scope of its dealer figures</th>" +
+    "<th>Billed, months</th><th>Sold to dealer, months</th>" +
+    "<th>Both stages on the last 12 months</th>" +
+    "<th>Longest unbroken both-stage run</th>" +
+    "<th>Longest comparison it can carry</th></tr></thead><tbody>";
+  D.coverage.forEach(function(x){
+    var l12 = x.l12 || {};
+    var lr = x.comparison_reach || {};
+    var able = (lr.longest || {}).n;
+    var run = lr.run;
+    var ableTxt = able ? (monthsWord(able) + " against " + monthsWord(able))
+                       : "none at all";
+    h += "<tr><td><b>" + esc(x.label) + "</b></td>" +
+      "<td>" + esc(x.sold_scope || x.scope || "\u2014") + (x.sold_scope ? " \u2014 " + esc(x.sold_scope === "D-MAX" ? "D-Max only" : x.sold_scope === "CV" ? "commercial vehicles only" : "network level") : "") + "</td>" +
+      "<td class='n'>" + x.billed_months + "</td>" +
+      "<td class='n'>" + x.sold_months + "</td>" +
+      "<td class='n'>" + ((l12.both === undefined ? "\u2014" : l12.both + " of " + l12.n)) + "</td>" +
+      "<td class='n'>" + (run === undefined ? "\u2014" : run + " months" +
+        (lr.run_end ? ", ending " + esc(mLabel(lr.run_end)) : "")) + "</td>" +
+      "<td>" + esc(ableTxt) + "</td></tr>";
+  });
+  el("t-cover").innerHTML = h + "</tbody>";
+
+  var ex = D.excluded, ec = ex.doc_types, sc = ex.scope;
+  var extra = "<b>What was left out of the billing, and why.</b><br>" +
+    esc(ec.rule) + ": " + fmtInt(ec.rows) + " rows and " + fmtEur(ec.eur, 2) +
+    " across the distributors on this page. Credit notes, returns, debit notes and free deliveries " +
+    "are not sales, so they come out before anything is summed.<br><br>" +
+    "<b>Lubricants and non-part lines.</b> AIM level 1 <i>Fluids Chemicals</i> is dropped, and so is " +
+    "every line whose kind is not a part - freight, service fees, rebates, merchandise, tools, " +
+    "marketing items, core deposits, finance and demurrage. AIM level 1 <i>Lubrication</i> stays: " +
+    "those are engine parts such as oil pumps and drain plugs, not oils. On billing that removed " +
+    fmtInt(sc.billing.rows) + " rows worth " + fmtEur(sc.billing.eur, 2) + "; on sales to dealer " +
+    fmtInt(sc.sold.rows) + " rows worth " + fmtInt(sc.sold.units) + " units.<br><br>" +
+    "<b>Part numbers with no AIM level.</b> They are not thrown away. They appear as " +
+    "'" + esc(L1[0]) + "' at level 1, level 2 and level 3, and their share of units and euros is on " +
+    "the KPI strip and at every level of the drill.<br><br>" +
+    "<b>When a comparison is held back.</b> " + esc(cmpRuleWords()) +
+    " A twelve-month window therefore needs 24 months of both-stage data. Two conditions are " +
+    "checked and they are independent: whether the two windows are fully covered, stated on the " +
+    "Compare with control, and whether the selection is too small to compare at all, stated " +
+    "above the KPI strip once it clears <b>" + thinFloorWords() + "</b>. Either one withholds the " +
+    "delta and the lighter comparison bars, and neither ever withholds the units, the euro or the " +
+    "PMS cover. The table above shows how far each distributor's both-stage data can reach." +
+    gapCause() + "<br><br>" +
+    "<b>How the sales-to-dealer euro is arrived at.</b> That report carries no price, so its euro " +
+    "is modelled, and it is shown in two forms so the two stages can be read side by side. The " +
+    "primary form is units &times; the ISZE price list of 10 Aug 2026. The second is " +
+    esc(GM_WORDS) + ", which is a <b>modelled dealer price</b>: the price-list euro divided by " +
+    esc(String(GM_DIVISOR)) + ". Both are on the KPI strip and both are columns in the part-number " +
+    "table. Neither is the distributor's turnover, its revenue, or an actual dealer purchase price. " +
+    "The billed side carries no margin at all, because it already has a real invoiced price, and " +
+    "the average actual price and the price index are built from that price alone.";
+  var by = ex.doc_types.by_db || {}, keys = Object.keys(by).sort(function(a, b){ return by[b] - by[a]; });
+  if (keys.length){
+    extra += "<br><br><b>Excluded billing by distributor, largest first.</b> " +
+      keys.slice(0, 8).map(function(k){ return esc(k) + " " + fmtEur(by[k], 2); }).join(" \u00b7 ") + ".";
+  }
+  el("cover-extra").innerHTML = extra;
+
+  var f = "<b>Where the numbers come from.</b><br>";
+  D.sources.forEach(function(s){
+    f += "<div style='margin:5px 0'><b>" + esc(s.what) + "</b> \u2014 <code>" + esc(s.path) +
+      "</code><br><span style='color:var(--muted)'>" + esc(s.note) + "</span></div>";
+  });
+  f += "<div style='margin-top:10px'>Built " + esc(String(D.built).slice(0, 16).replace("T", " ")) +
+    " UTC. The first stage is the ISZE billing; the second is the distributor's own report of what " +
+    "it sold to its dealers. The two are never added together, and neither is presented as the other.</div>";
+  if (D.open_questions && D.open_questions.length){
+    f += "<div style='margin-top:14px'><b>Open, and waiting on a decision - not decided here.</b>" +
+      "<ul style='margin:6px 0 0 18px;color:var(--muted)'>";
+    D.open_questions.forEach(function(q){ f += "<li style='margin:4px 0'>" + esc(q) + "</li>"; });
+    f += "</ul></div>";
+  }
+  el("foot").innerHTML = f;
+}
+
+/* ================================================================= chips, hash */
+function lastDataMonthIdx(){
+  var pr = PRES[S.db], last = 0;
+  for (var m = 0; m < NM; m++){ if (pr.b[m] || pr.s[m]) last = m; }
+  return last;
+}
+/*
+ * The last window of `want` months in which BOTH stages report in EVERY month.
+ *
+ * Prefers a full `want`-month window ending as late as possible, so a distributor with a long run
+ * resolves to the twelve months ending March 2026 rather than to a short tail after the April to
+ * June 2026 break. Where no full window exists it falls back to the longest covered window there
+ * is and reports how many months that really is, so the reader is never handed a short window
+ * under a long label.
+ */
+function lastCoveredWindow(want){
+  var pr = PRES[S.db];
+  var runs = [], cur = 0;
+  for (var m = 0; m <= NM; m++){
+    if (m < NM && pr.b[m] && pr.s[m]) cur++;
+    else { if (cur > 0) runs.push({ end: m - 1, len: cur }); cur = 0; }
+  }
+  if (!runs.length) return null;
+  var full = null;                                  // latest end with a long-enough run
+  for (var i = 0; i < runs.length; i++) if (runs[i].len >= want) full = runs[i];
+  if (full) return { from: full.end - want + 1, to: full.end, n: want, short: false };
+  var best = runs[0];                               // otherwise the longest window available
+  for (var j = 1; j < runs.length; j++) if (runs[j].len > best.len) best = runs[j];
+  var n = Math.min(want, best.len);
+  return { from: best.end - n + 1, to: best.end, n: n, short: true, want: want };
+}
+function renderChips(){
+  var last = lastDataMonthIdx();
+  function at(name){ return MONTHS.indexOf(name); }
+  var spec = [
+    { label: "CY2025", from: at("2025-01"), to: at("2025-12") },
+    { label: "CY2026 YTD", from: at("2026-01"), to: last },
+    { label: "FY2026 (Apr 25 \u2013 Mar 26)", from: at("2025-04"), to: at("2026-03") },
+    { label: "FY2027 YTD", from: at("2026-04"), to: last }
+  ];
+  /* the two rolling chips are resolved against full two-stage coverage and labelled with the
+     count they will actually set, so the reader is never surprised after clicking */
+  [["Last 12 months", 12], ["Last 3 months", 3]].forEach(function(pair){
+    var w = lastCoveredWindow(pair[1]);
+    if (!w || w.n <= 0) return;                       // cannot resolve: hide it
+    spec.push({ label: pair[0] + " (both stages)", from: w.from, to: w.to,
+                months: w.n, want: pair[1], short: w.short });
+  });
+  var html = spec.filter(function(s){ return s.from >= 0 && s.to >= 0 && s.from <= s.to; })
+    .map(function(s){
+      var n = s.to - s.from + 1;
+      var on = (!S.custom && S.from === s.from && S.to === s.to) ? " on" : "";
+      var tag = s.months ? " \u00b7 " + s.months + " month" + (s.months === 1 ? "" : "s") : "";
+      var tip = s.months
+        ? "Sets " + s.months + " month" + (s.months === 1 ? "" : "s") + ", the longest tail this " +
+          "distributor reports both stages in a row." +
+          (s.short ? " It asked for " + s.want + " months but the data only carries " + s.months +
+                     ", so the shorter window is named rather than a longer one that would be " +
+                     "partly empty." : "")
+        : "Sets " + n + " month" + (n === 1 ? "" : "s") + ".";
+      return '<button class="chip' + on + '" data-a="' + s.from + '" data-b="' + s.to + '" title="' +
+        esc(tip) + '">' + esc(s.label + tag) + "</button>";
+    }).join("");
+  html += '<button class="chip' + (S.custom ? " on" : "") + '" id="allchip" title="Every month in ' +
+    'the data, whether or not both stages report in it.">All the months in the data</button>';
+  el("chips").innerHTML = html;
+  el("chips").querySelectorAll("[data-a]").forEach(function(b){
+    b.onclick = function(){
+      S.from = parseInt(b.getAttribute("data-a"), 10);
+      S.to = parseInt(b.getAttribute("data-b"), 10);
+      S.custom = false; render();
+    };
+  });
+  el("allchip").onclick = function(){
+    var w = defWindow(S.db); S.from = w[0]; S.to = w[1]; S.custom = false; render();
+  };
+  var pr = PRES[S.db], nb = 0, ns = 0, n = monthsInWindow(S.from, S.to);
+  for (var m = S.from; m <= S.to; m++){ if (pr.b[m]) nb++; if (pr.s[m]) ns++; }
+  el("wintitle").innerHTML = "Window: " + esc(mLabel(MONTHS[S.from])) + " \u2013 " +
+    esc(mLabel(MONTHS[S.to])) + " \u00b7 " + n + " month" + (n === 1 ? "" : "s") +
+    " \u00b7 billed " + (nb === n ? "\u2713 " : "") + nb + "/" + n +
+    " \u00b7 sold to dealer " + (ns === n ? "\u2713 " : "") + ns + "/" + n +
+    (hasSold() ? "" : " (this distributor reports none)") +
+    (nb === n && ns === n ? " \u00b7 both stages complete" : " \u00b7 not every month carries both stages");
+}
+function writeHash(){
+  var h = "#db=" + dbCode() + "&from=" + MONTHS[S.from] + "&to=" + MONTHS[S.to] +
+    "&cmp=" + S.cmp + "&m=" + S.measure;
+  try { if (history.replaceState) history.replaceState(null, "", h); } catch (e){ /* file:// is fine */ }
+}
+function readHash(){
+  var h = location.hash.replace(/^#/, "");
+  if (!h) return false;
+  var p = {};
+  h.split("&").forEach(function(kv){ var a = kv.split("="); p[a[0]] = decodeURIComponent(a[1] || ""); });
+  if (p.db && DBIDX[p.db] !== undefined){
+    S.db = DBIDX[p.db];
+    var w = defWindow(S.db); S.from = w[0]; S.to = w[1];
+  }
+  if (p.from && MONTHS.indexOf(p.from) >= 0) S.from = MONTHS.indexOf(p.from);
+  if (p.to && MONTHS.indexOf(p.to) >= 0) S.to = MONTHS.indexOf(p.to);
+  if (p.cmp && /^(none|ly|prev)$/.test(p.cmp)) S.cmp = p.cmp;
+  if (p.m && /^(units|eur_list|eur_gm|eur_actual|avg_price|price_index|pms_cover|ratio)$/.test(p.m))
+    S.measure = p.m;
+  if (S.from > S.to){ var t = S.from; S.from = S.to; S.to = t; }
+  /* a link may name a comparison this window cannot carry; render() drops it to nothing and the
+     control note says so, rather than drawing a comparison that was never earned */
+  return true;
+}
+function defWindow(dbIdx){
+  var rows = BYDB[dbIdx], lo = null, hi = null;
+  for (var i = 0; i < rows.length; i++){
+    var m = rows[i][1];
+    if (lo === null || m < lo) lo = m;
+    if (hi === null || m > hi) hi = m;
+  }
+  if (lo === null){ lo = 0; hi = NM - 1; }
+  return [lo, hi];
+}
+
+/* ================================================================= comparison eligibility
+ *
+ * A comparison of two N-month windows needs 2N contiguous months in which BOTH stages carry
+ * data, with both windows sitting fully inside that run. For a twelve-month window that is 24
+ * months, which is what "we need 24 months to compare" means. Contiguity matters as much as the
+ * count: UTI has twelve both-stage months but they are split by the February to July 2025 gap, so
+ * they never form a clean run.
+ *
+ * Where the run is not there, there is NO comparison. A shorter one is not offered as a
+ * consolation, and nothing is pro-rated or filled (spec section 5.4). The two comparison types
+ * are judged on their own, because one can be possible where the other is not.
+ */
+function bothStage(m){
+  var pr = PRES[S.db];
+  return !!(pr.b[m] && pr.s[m]);
+}
+/* how the window reads: total months, months with billing, months with sales to dealer */
+function coverageOf(from, to){
+  var pr = PRES[S.db], both = 0, billed = 0, sold = 0, n = monthsInWindow(from, to);
+  for (var m = from; m <= to; m++){
+    if (pr.b[m]) billed++;
+    if (pr.s[m]) sold++;
+    if (pr.b[m] && pr.s[m]) both++;
+  }
+  return { from: from, to: to, n: n, both: both, billed: billed, sold: sold,
+           complete: both === n && n > 0 };
+}
+/* every month from `a` to `b` carries both stages */
+function spanCovered(a, b){
+  if (a < 0 || b < a || b >= NM) return false;
+  for (var m = a; m <= b; m++) if (!bothStage(m)) return false;
+  return true;
+}
+/* the run of consecutive both-stage months that ends at `to` */
+function runEndingAt(to){
+  var n = 0, m = to;
+  while (m >= 0 && bothStage(m)){ n++; m--; }
+  return n;
+}
+/* the reference window a comparison type needs, or null when it falls outside the data */
+function referenceRange(type, from, to){
+  if (type === "none") return null;
+  var n = monthsInWindow(from, to);
+  var rf = type === "ly" ? from - 12 : from - n;
+  var rt = type === "ly" ? to - 12 : to - n;
+  return rf >= 0 ? [rf, rt] : null;
+}
+var CMP_LABEL = { ly: "same months last year", prev: "previous period of equal length" };
+var MONTHS_WORD = { 1: "one month", 2: "two months", 3: "three months", 6: "six months",
+                    9: "nine months", 10: "ten months", 12: "twelve months" };
+function monthsWord(n){ return MONTHS_WORD[n] || (n + " months"); }
+
+/* the whole verdict for every comparison type, for the current window */
+function cmpState(from, to){
+  var n = monthsInWindow(from, to);
+  var curCov = coverageOf(from, to);
+  var out = {};
+  ["ly", "prev"].forEach(function(type){
+    if (!hasSold()){
+      out[type] = { ok: false, why: "this distributor reports no sales to dealer, so there is " +
+                                    "nothing to compare against", range: null, need: null };
+      return;
+    }
+    var rng = referenceRange(type, from, to);
+    if (!rng){
+      out[type] = { ok: false, range: null, need: null,
+                    why: "the " + CMP_LABEL[type] + " would start before the first month in the " +
+                         "data, so there is no earlier window to compare against" };
+      return;
+    }
+    /* the whole span, current window and reference window together, must be one clean run */
+    var spanFrom = Math.min(rng[0], from), spanTo = Math.max(rng[1], to);
+    var spanLen = spanTo - spanFrom + 1;
+    var whole = spanCovered(spanFrom, spanTo);
+    var curOk = curCov.complete;
+    var refCov = coverageOf(rng[0], rng[1]);
+    var need = { from: spanFrom, to: spanTo, n: spanLen,
+                 want: 2 * n, contiguous: whole };
+    if (!curOk || !refCov.complete || !whole){
+      var got = 0;
+      for (var m = spanFrom; m <= spanTo; m++) if (bothStage(m)) got++;
+      out[type] = { ok: false, range: rng, need: need, cov: refCov, got: got,
+                    why: "a comparison of " + monthsWord(n) + " needs " +
+                         (2 * n) + " months with both billing and sales to dealer, and " +
+                         DBS[S.db].label + " covers " + got + " of them, from " +
+                         mLabel(MONTHS[spanFrom]) + " to " + mLabel(MONTHS[spanTo]) +
+                         (!whole && got > 0 && got < spanLen
+                           ? " (they do not form one unbroken run)" : "") };
+      return;
+    }
+    out[type] = { ok: true, range: rng, need: need, cov: refCov, why: "" };
+  });
+  out.anyOk = out.ly.ok || out.prev.ok;
+  out.cur = curCov;
+  out.n = n;
+  return out;
+}
+/* the range the page will actually use, or null when the reader's choice is not available */
+function compareRange(){
+  if (S.cmp === "none") return null;
+  var st = cmpState(S.from, S.to);
+  var e = st[S.cmp];
+  return (e && e.ok) ? e.range : null;
+}
+function cmpRuleWords(){
+  return "A comparison is only shown when both stages cover every month of both windows - twice " +
+         "the window length in total. Nothing is scaled up and no month is filled in.";
+}
+
+/* ================================================================= render */
+function render(){
+  if (S.from > S.to){ var t = S.from; S.from = S.to; S.to = t; }
+  renderHeader();
+  renderChips();
+  renderStrip();
+  var cr = hasSold() ? rangeOf(commonMonths(S.from, S.to)) : null;
+  var A = aggWindow(S.from, S.to);
+  /* the comparison is only aggregated when the reader's choice is actually available, so no
+     delta and no comparison series can exist on an unearned window */
+  var cmp = cmpState(S.from, S.to);
+  if (S.cmp !== "none" && (!cmp[S.cmp] || !cmp[S.cmp].ok)){
+    /* remember what the link asked for, so the control can say it was dropped rather than
+       silently pretending the reader never asked */
+    S.cmpDropped = S.cmp;
+    S.cmp = "none";
+  } else if (S.cmp !== "none"){
+    S.cmpDropped = null;
+  }
+  var C = null;
+  var crng = compareRange();
+  if (crng) C = aggWindow(crng[0], crng[1]);
+  renderCmpControl(cmp);
+  var k = renderKpis(A, C, S.from, S.to, cr, cmp.anyOk);
+  renderThinWarn(k.thin, cmp);
+  renderDrill(A, S.from, S.to, C, k.thin);
+  renderMonthly(S.from, S.to);
+  renderPms(A, S.from, S.to, cr);
+  renderScatter(S.from, S.to, k.thin, cmp.anyOk);
+  renderPareto(S.from, S.to, cr, k.thin);
+  renderHeat(S.from, S.to, cr);
+  renderDealer();
+  renderTable(S.from, S.to, cr);
+  renderCoverage();
+  var over = [];
+  if (k.covB !== null && k.covB > 1) over.push("billing");
+  if (k.covS !== null && k.covS > 1) over.push("sales to dealer");
+  el("s3").style.outline = over.length ? "2px solid var(--amber)" : "none";
+  writeHash();
+}
+
+/* the Compare with control states its own availability, per option, and says why not */
+function renderCmpControl(cmp){
+  var sel = el("cmp"), note = el("cmpnote"), cur = cmp.cur;
+  ["ly", "prev"].forEach(function(type){
+    var opt = sel.querySelector('option[value="' + type + '"]');
+    if (!opt) return;
+    var e = cmp[type];
+    opt.disabled = !e.ok;
+    var base = type === "ly" ? "same months last year" : "previous period of equal length";
+    opt.textContent = e.ok ? base : base + " \u2013 not available";
+  });
+  sel.disabled = !cmp.anyOk;
+  sel.value = S.cmp;
+
+  var why = [];
+  ["ly", "prev"].forEach(function(type){
+    var e = cmp[type];
+    if (!e.ok) why.push("<b>" + CMP_LABEL[type] + ":</b> " + esc(e.why) + ".");
+  });
+  if (!cmp.anyOk){
+    sel.classList.add("blocked");
+    note.className = "cmpnote blocked";
+    note.innerHTML = "<b>No comparison with " + monthsWord(cmp.n) + ".</b> " +
+      why.join(" ") +
+      " Choose a shorter window that the data can carry." +
+      (S.cmpDropped ? " The comparison named in the link you followed (" +
+        esc(CMP_LABEL[S.cmpDropped] || S.cmpDropped) + ") was not available on this window, so it " +
+        "has been switched to nothing rather than drawn." : "") +
+      " " + esc(cmpRuleWords());
+  } else {
+    sel.classList.remove("blocked");
+    note.className = "cmpnote";
+    note.innerHTML = (why.length ? why.join(" ") + " " : "") + esc(cmpRuleWords());
+  }
+}
+
+/* the small-selection banner (change 4 of the previous round): independent of coverage */
+function renderThinWarn(thin, cmp){
+  var w = el("thin-warn");
+  var hasThin = !!(thin && thin.thin);
+  var covBlocked = !(cmp && cmp.anyOk);
+  if (!hasThin && !covBlocked){ w.style.display = "none"; return; }
+  var bits = [];
+  if (hasThin){
+    bits.push("<b>This selection is too small for a reliable comparison.</b> Billed against " +
+      "sold to dealer is shown as normal, and the units, the euro and the cover all still stand. " +
+      "What is held back is the comparison, because here it would look as solid as a large " +
+      "selection's when it is not. The reason: " + esc(thin.reasons.join("; ")) + ". A comparison " +
+      "is only shown once a selection clears " + thinFloorWords() + ".");
+  }
+  if (covBlocked){
+    bits.push("<b>No comparison is available on this window.</b> " +
+      "The window and its reference together have to hold billing and sales to dealer in every " +
+      "single month before a comparison can be drawn. " + esc(cmpRuleWords()));
+  }
+  w.style.display = "";
+  w.innerHTML = bits.join("<br><br>");
+}
+
+/* ================================================================= controls */
+var FLEETWIRED = false;
+function fillSelects(){
+  var dbsel = el("db");
+  dbsel.innerHTML = DBS.map(function(d, i){
+    return '<option value="' + i + '">' + esc(d.label) +
+      (d.has_sold ? "" : " \u2013 billing only") + "</option>";
+  }).join("");
+  dbsel.value = String(S.db);
+  dbsel.onchange = function(){
+    S.db = parseInt(dbsel.value, 10);
+    var w = defWindow(S.db); S.from = w[0]; S.to = w[1]; S.custom = false;
+    render();
+  };
+
+  el("src").innerHTML = '<option value="">All sources</option>' +
+    SRC.map(function(s, i){ return '<option value="' + i + '">' + esc(s) + "</option>"; }).join("");
+  el("src").onchange = function(){
+    S.src = el("src").value === "" ? null : parseInt(el("src").value, 10); render(); };
+
+  el("bvp").innerHTML = '<option value="">All part lines</option>' +
+    BVPL.map(function(s, i){ return '<option value="' + i + '">' + esc(s) + "</option>"; }).join("");
+  el("bvp").onchange = function(){
+    S.bvp = el("bvp").value === "" ? null : parseInt(el("bvp").value, 10); render(); };
+
+  el("measure").value = S.measure;
+  el("measure").onchange = function(){ S.measure = el("measure").value; render(); };
+
+  el("cmp").value = S.cmp;
+  el("cmp").onchange = function(){ S.cmp = el("cmp").value; render(); };
+
+  el("pmsOnly").checked = S.pmsOnly;
+  el("pmsOnly").onchange = function(){ S.pmsOnly = el("pmsOnly").checked; render(); };
+
+  el("pareto-mode").querySelectorAll("button").forEach(function(b){
+    b.classList.toggle("on", b.getAttribute("data-v") === S.pareto);
+    b.onclick = function(){
+      S.pareto = b.getAttribute("data-v");
+      el("pareto-mode").querySelectorAll("button").forEach(function(x){ x.classList.remove("on"); });
+      b.classList.add("on"); render();
+    };
+  });
+  el("heat-mode").querySelectorAll("button").forEach(function(b){
+    b.classList.toggle("on", b.getAttribute("data-v") === S.heat);
+    b.onclick = function(){
+      S.heat = b.getAttribute("data-v");
+      el("heat-mode").querySelectorAll("button").forEach(function(x){ x.classList.remove("on"); });
+      b.classList.add("on"); render();
+    };
+  });
+  el("heat-mode").style.display = D.run === "ALL" ? "" : "none";
+
+  var fw = el("fleetwrap");
+  if (D.run === "PORTUGAL" && DEMREG){ fw.style.display = ""; }
+  else fw.style.display = "none";
+  if (!FLEETWIRED){
+    el("fleetbtn").onclick = function(){
+      S.regBase = !S.regBase;
+      el("fleetbtn").textContent = S.regBase ? "I Motors registrations" : "Network model";
+      el("fleetbtn").classList.toggle("on", S.regBase);
+      render();
+    };
+    FLEETWIRED = true;
+  }
+
+  el("search").oninput = renderTableBody;
+  el("csv").onclick = downloadCsv;
+  el("reset").onclick = function(){
+    S.measure = "units"; S.src = null; S.bvp = null; S.pmsOnly = false;
+    S.cmp = "none"; S.node = { l1: null, l2: null, l3: null }; S.custom = false;
+    S.pareto = "sold_billed"; S.heat = "cover"; S.regBase = false;
+    el("src").value = ""; el("bvp").value = ""; el("measure").value = "units";
+    el("cmp").value = "none"; el("search").value = "";
+    el("fleetbtn").textContent = "Network model"; el("fleetbtn").classList.remove("on");
+    fillSelects();
+    var w = defWindow(S.db); S.from = w[0]; S.to = w[1];
+    render();
+  };
+}
+
+/* ================================================================= boot */
+try {
+  var w0 = defWindow(S.db);
+  S.from = w0[0]; S.to = w0[1];
+  readHash();
+  fillSelects();
+  render();
+  el("genline").textContent = "Built " + String(D.built).slice(0, 10) + ".";
+  /* a link that changes only the hash does not reload the page, so a shared view would otherwise
+     be ignored. Re-read it and redraw. A hash naming a comparison this window cannot carry is
+     dropped to nothing inside render(), and the control note says so. */
+  window.addEventListener("hashchange", function(){
+    S.node = { l1: null, l2: null, l3: null };
+    S.custom = false;
+    readHash();
+    fillSelects();
+    render();
+  });
+  window.__AIM_READY = true;
+} catch (err){
+  window.__AIM_ERROR = (err && err.message) || String(err);
+  document.body.insertAdjacentHTML("afterbegin",
+    '<div class="warn" style="margin:12px"><b>The page failed to draw.</b> ' +
+    esc(err && err.message) + ". Open the console for the detail.</div>");
+  if (window.console && console.error) console.error(err);
+}
+})();
+</script>
+</body>
+</html>

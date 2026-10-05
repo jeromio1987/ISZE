@@ -1,4 +1,4 @@
-# FY2027 VPACC Action Plan — pointer (Mode B)
+# FY2027 VPACC Action Plan — pointer (internal)
 
 **Status:** Active · July 2026 update on git.
 

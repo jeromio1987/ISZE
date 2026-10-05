@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dealer parts demand &mdash; UK truck book, CY2025 (internal draft)</title>
+<style>
+:root{--navy:#15233c;--ink:#22303f;--terra:#c0552d;--paper:#f7f4ee;--line:#d8d2c6;--grey:#5d6b7a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 "Segoe UI",Helvetica,Arial,sans-serif}
+header{background:var(--navy);color:var(--paper);padding:26px 32px 22px}
+header h1{margin:0 0 6px;font:600 25px/1.25 Georgia,serif;color:#fff}
+header .sub{color:#c9d2e0;font-size:13.5px}
+.wrap{max-width:1220px;margin:0 auto;padding:0 24px 60px}
+section{margin:34px 0 0}
+h2{font:600 19px/1.3 Georgia,serif;color:var(--navy);border-bottom:2px solid var(--line);padding-bottom:7px;margin:0 0 14px}
+h3{font:600 15.5px/1.3 "Segoe UI",sans-serif;color:var(--navy);margin:20px 0 8px}
+p{margin:0 0 12px;max-width:1040px}
+.lede{font-size:16px}
+.card{background:#fff;border:1px solid var(--line);border-left:5px solid var(--terra);padding:16px 18px;margin:0 0 16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin:16px 0 6px}
+.kpi{background:#fff;border:1px solid var(--line);padding:14px 16px}
+.kpi .lab{font-size:12px;letter-spacing:.045em;text-transform:uppercase;color:var(--grey)}
+.kpi .val{font:600 25px/1.15 Georgia,serif;color:var(--navy);margin:6px 0 3px}
+.kpi .foot{font-size:12.5px;color:var(--grey)}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:13.5px}
+th{background:var(--navy);color:var(--paper);text-align:left;padding:9px 10px;font-weight:600;font-size:12.5px;vertical-align:bottom}
+td{padding:8px 10px;border-top:1px solid var(--line);vertical-align:top}
+tbody tr:nth-child(even) td{background:#fbfaf7}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.neg{color:#9b2c1c}
+.badge{display:inline-block;padding:2px 8px;border-radius:11px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.b-calibrated{background:#e2efe4;color:#1f5c2e}
+.b-estimated{background:#fbeedc;color:#8a5310}
+.b-definition{background:#e6e9f2;color:#2b3a63}
+.b-not-judgeable{background:#f0eeea;color:#6a655c}
+.amber{background:#fdf3e2;border:1px solid #e3b877;border-left:5px solid #d99a2b;padding:14px 16px;margin:14px 0}
+.amber strong{color:#8a5310}
+.small{font-size:12.5px;color:var(--grey)}
+.sub{font-size:11.5px;color:var(--grey)}
+.dot{fill:#15233c;fill-opacity:.66}
+.scatterbox{background:#fff;border:1px solid var(--line);padding:12px;margin:14px 0}
+footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--grey)}
+ol,ul{max-width:1040px}
+li{margin:0 0 7px}
+</style></head><body>
+<header>
+  <h1>Dealer parts demand &mdash; UK truck book</h1>
+  <div class="sub">Internal draft &middot; CY2025 &middot; 64 dealers &middot;
+   22,389 trucks in service &middot; built 24 Sep 2026</div>
+</header>
+<div class="wrap">
+
+<section>
+  <div class="card">
+    <p class="lede"><strong>The short version.</strong> We hold the trucks in service for the market,
+    not for each dealer. So each dealer is given a share of the 22,389 trucks using their share
+    of oil filters, and the model then expects the same share of every other service family from them.
+    The test of that idea is whether it beats simply knowing how big the dealer is &mdash; and on this
+    book it mostly does not. That matters, because every euro below sits on top of it.</p>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="lab">Dealers</div>
+      <div class="val">64</div>
+      <div class="foot">named in the sales-to-dealer file for the UK truck book</div>
+    </div>
+    <div class="kpi">
+      <div class="lab">What we billed, that file</div>
+      <div class="val">&euro;5,506,143</div>
+      <div class="foot">CY2025, valued at what we billed the distributor per part number</div>
+    </div>
+    <div class="kpi">
+      <div class="lab">Families this can judge</div>
+      <div class="val">23.2%</div>
+      <div class="foot">share of those euros that sits in a family with a service rhythm</div>
+    </div>
+    <div class="kpi">
+      <div class="lab">Gap across judged families</div>
+      <div class="val">&euro;1,955,643</div>
+      <div class="foot">across 7 families where the model can judge at all, on the filter-share expected side</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>1. Does the filter share actually hold?</h2>
+  <p>Two questions, answered with numbers rather than asserted.</p>
+
+  <h3>Is the share stable across families?</h3>
+  <p>Take each dealer's share of network oil filters and compare it with their actual share of
+  another family. If the idea works, those two should agree. On the strongest independent family
+  &mdash; fuel filter &mdash; the
+  rank agreement is <strong>0.98</strong> and the average dealer is off by
+  <strong>0.22 percentage points</strong>. Dealer shares are also narrow: the average
+  dealer holds about 1.6% of the network and the largest holds about
+  6.3%, so an error of a fraction of a point is a small
+  number of trucks but a large slice of a dealer's own expectation.</p>
+
+  <h3>Does it beat just knowing the dealer's size?</h3>
+  <p>This is the test that matters. A dealer's total parts volume already tells you a lot about
+  how much of anything they buy. Before the numbers, the shape: each point below is one dealer,
+  their share of oil filters across the bottom against their share of fuel filters up the side.
+  On a working proxy the points sit on the dashed line.</p>
+  <div class="scatterbox"><svg viewBox="0 0 640 320" width="100%" height="auto" role="img"
+     aria-label="Each dealer's share of oil filters against their share of fuel filters">
+  <rect x="52" y="52" width="536" height="216" fill="#fff" stroke="#d8d2c6"></rect>
+  <line x1="52" y1="268" x2="588.0" y2="52.0" stroke="#c0552d" stroke-dasharray="5 4"></line>
+  <circle class="dot" cx="260.7" cy="181.5" r="4.5"></circle><circle class="dot" cx="52.0" cy="268.0" r="4.5"></circle><circle class="dot" cx="99.7" cy="238.1" r="4.5"></circle><circle class="dot" cx="105.3" cy="250.3" r="4.5"></circle><circle class="dot" cx="85.5" cy="250.3" r="4.5"></circle><circle class="dot" cx="74.8" cy="260.5" r="4.5"></circle><circle class="dot" cx="69.3" cy="259.0" r="4.5"></circle><circle class="dot" cx="286.5" cy="189.7" r="4.5"></circle><circle class="dot" cx="177.4" cy="207.7" r="4.5"></circle><circle class="dot" cx="138.3" cy="235.8" r="4.5"></circle><circle class="dot" cx="175.9" cy="223.0" r="4.5"></circle><circle class="dot" cx="263.7" cy="203.9" r="4.5"></circle><circle class="dot" cx="190.1" cy="211.2" r="4.5"></circle><circle class="dot" cx="140.3" cy="223.3" r="4.5"></circle><circle class="dot" cx="95.2" cy="252.8" r="4.5"></circle><circle class="dot" cx="189.6" cy="207.7" r="4.5"></circle><circle class="dot" cx="266.2" cy="172.0" r="4.5"></circle><circle class="dot" cx="345.9" cy="134.2" r="4.5"></circle><circle class="dot" cx="84.0" cy="258.2" r="4.5"></circle><circle class="dot" cx="69.3" cy="263.7" r="4.5"></circle><circle class="dot" cx="53.0" cy="267.9" r="4.5"></circle><circle class="dot" cx="379.5" cy="139.5" r="4.5"></circle><circle class="dot" cx="113.4" cy="249.3" r="4.5"></circle><circle class="dot" cx="287.6" cy="175.7" r="4.5"></circle><circle class="dot" cx="137.3" cy="230.3" r="4.5"></circle><circle class="dot" cx="308.4" cy="176.8" r="4.5"></circle><circle class="dot" cx="256.6" cy="184.1" r="4.5"></circle><circle class="dot" cx="86.0" cy="257.5" r="4.5"></circle><circle class="dot" cx="119.0" cy="240.8" r="4.5"></circle><circle class="dot" cx="242.9" cy="189.2" r="4.5"></circle><circle class="dot" cx="193.6" cy="220.6" r="4.5"></circle><circle class="dot" cx="311.4" cy="166.7" r="4.5"></circle><circle class="dot" cx="253.0" cy="190.5" r="4.5"></circle><circle class="dot" cx="281.5" cy="184.5" r="4.5"></circle><circle class="dot" cx="176.4" cy="221.7" r="4.5"></circle><circle class="dot" cx="143.9" cy="233.1" r="4.5"></circle><circle class="dot" cx="114.4" cy="249.5" r="4.5"></circle><circle class="dot" cx="200.2" cy="223.3" r="4.5"></circle><circle class="dot" cx="179.4" cy="237.2" r="4.5"></circle><circle class="dot" cx="87.0" cy="256.7" r="4.5"></circle><circle class="dot" cx="162.7" cy="233.0" r="4.5"></circle><circle class="dot" cx="107.8" cy="244.5" r="4.5"></circle><circle class="dot" cx="67.2" cy="261.0" r="4.5"></circle><circle class="dot" cx="166.2" cy="212.3" r="4.5"></circle><circle class="dot" cx="115.5" cy="238.2" r="4.5"></circle><circle class="dot" cx="73.3" cy="255.7" r="4.5"></circle><circle class="dot" cx="405.3" cy="86.2" r="4.5"></circle><circle class="dot" cx="119.5" cy="246.1" r="4.5"></circle><circle class="dot" cx="200.2" cy="185.0" r="4.5"></circle><circle class="dot" cx="240.3" cy="188.8" r="4.5"></circle><circle class="dot" cx="93.6" cy="255.9" r="4.5"></circle><circle class="dot" cx="52.0" cy="268.0" r="4.5"></circle><circle class="dot" cx="52.0" cy="268.0" r="4.5"></circle><circle class="dot" cx="154.6" cy="212.6" r="4.5"></circle><circle class="dot" cx="185.5" cy="216.4" r="4.5"></circle><circle class="dot" cx="113.9" cy="249.9" r="4.5"></circle><circle class="dot" cx="65.2" cy="258.3" r="4.5"></circle><circle class="dot" cx="149.5" cy="235.4" r="4.5"></circle><circle class="dot" cx="111.9" cy="240.8" r="4.5"></circle><circle class="dot" cx="79.4" cy="255.5" r="4.5"></circle><circle class="dot" cx="65.2" cy="262.4" r="4.5"></circle><circle class="dot" cx="85.5" cy="258.0" r="4.5"></circle><circle class="dot" cx="507.9" cy="68.0" r="4.5"></circle><circle class="dot" cx="84.5" cy="254.5" r="4.5"></circle>
+  <text x="320.0" y="306" text-anchor="middle" font-size="12" fill="#5d6b7a">Share of oil filters (the proxy for trucks)</text>
+  <text x="14" y="160.0" text-anchor="middle" font-size="12" fill="#5d6b7a"
+        transform="rotate(-90 14 160.0)">Share of fuel filters (actual)</text>
+  <text x="58" y="68" font-size="12" fill="#c0552d">dashed line = the proxy being exactly right</text>
+</svg></div>
+  <p>Run the same comparison using dealer size alone and the filter share stops looking clever:</p>
+  <table>
+    <thead><tr><th>Family judged</th><th>Filter share</th><th>Dealer size alone</th><th>Difference</th></tr></thead>
+    <tbody>
+    <tr><td>Brake shoe</td><td class='n'>0.75</td><td class='n'>0.78</td><td class='n'>-0.03</td></tr><tr><td>Brake pad</td><td class='n'>0.89</td><td class='n'>0.91</td><td class='n'>-0.02</td></tr><tr><td>Brake disc / rotor</td><td class='n'>0.68</td><td class='n'>0.77</td><td class='n'>-0.09</td></tr><tr><td>Fuel filter</td><td class='n'>0.98</td><td class='n'>0.96</td><td class='n'>+0.01</td></tr><tr><td>Air filter</td><td class='n'>0.91</td><td class='n'>0.92</td><td class='n'>-0.01</td></tr><tr><td>Clutch kit</td><td class='n'>0.69</td><td class='n'>0.70</td><td class='n'>-0.01</td></tr><tr><td>Urea (AdBlue) filter</td><td class='n'>0.68</td><td class='n'>0.70</td><td class='n'>-0.02</td></tr><tr><td>Oil filter</td><td class='n'>1.00</td><td class='n'>0.96</td><td class='n'>+0.04</td></tr>
+    </tbody>
+  </table>
+  <div class="amber">
+    <p><strong>The honest verdict.</strong> The filter share wins on 2 of 8
+    families judged, ties on 0 and loses on 6. On air filter it is actually behind
+    dealer size. The method is not useless &mdash; it carries the family split, which size alone
+    cannot, because a big dealer's mix between filters and brakes is exactly what we are short of
+    &mdash; but as a <em>better estimate of a dealer's trucks</em> it is not established by this
+    book. Treat every euro below as an allocation on a stated rule, not as a measured gap.</p>
+  </div>
+</section>
+
+<section>
+  <h2>2. Family by family</h2>
+  <p>Expected euros per family come from the market service-demand table on the truck basis, split
+  across dealers on the filter share. What we billed is what the dealers actually bought. The last
+  column is the average dealer's error against the average dealer's share, so it reads as a share
+  of the dealer's own position rather than an abstract percentage point. The figure in brackets is
+  the same agreement using dealer size alone.</p>
+  <table>
+    <thead><tr>
+      <th>Service family</th><th>Driven by</th><th class="n">What we billed</th>
+      <th class="n">Expected</th><th class="n">Share of expected</th><th class="n">Gap</th>
+      <th class="n">Average error</th><th class="n">Agreement<br>(size only)</th>
+      <th>Row basis</th><th>Reads as</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+      <td>Brake shoe</td>
+      <td>Failure driven</td>
+      <td class="n">&euro;37,965</td>
+      <td class="n">&euro;912,268</td>
+      <td class="n">4.2%</td>
+      <td class="n">&euro;874,304</td>
+      <td class="n">56 pp</td>
+      <td class="n">0.75
+          <span class="sub">(0.78)</span></td>
+      <td><span class="badge b-estimated">estimated</span></td>
+      <td class="small">Dealer size alone does the job better.</td>
+    </tr><tr>
+      <td>Brake pad</td>
+      <td>Failure driven</td>
+      <td class="n">&euro;316,572</td>
+      <td class="n">&euro;593,749</td>
+      <td class="n">53.3%</td>
+      <td class="n">&euro;277,178</td>
+      <td class="n">37 pp</td>
+      <td class="n">0.89
+          <span class="sub">(0.91)</span></td>
+      <td><span class="badge b-estimated">estimated</span></td>
+      <td class="small">Dealer size alone does the job better.</td>
+    </tr><tr>
+      <td>Brake disc / rotor</td>
+      <td>Failure driven</td>
+      <td class="n">&euro;277,729</td>
+      <td class="n">&euro;559,103</td>
+      <td class="n">49.7%</td>
+      <td class="n">&euro;281,375</td>
+      <td class="n">66 pp</td>
+      <td class="n">0.68
+          <span class="sub">(0.77)</span></td>
+      <td><span class="badge b-estimated">estimated</span></td>
+      <td class="small">Dealer size alone does the job better.</td>
+    </tr><tr>
+      <td>Clutch booster</td>
+      <td>Failure driven</td>
+      <td class="n">&euro;274</td>
+      <td class="n">&euro;406,366</td>
+      <td class="n">0.1%</td>
+      <td class="n">&euro;406,092</td>
+      <td class="n">n/a</td>
+      <td class="n">&mdash;
+          <span class="sub">(n/a)</span></td>
+      <td><span class="badge b-not-judgeable">not judgeable</span></td>
+      <td class="small">Not judgeable &mdash; too few of these sold in the market to split between dealers.</td>
+    </tr><tr>
+      <td>Fuel filter</td>
+      <td>Mileage rhythm</td>
+      <td class="n">&euro;241,830</td>
+      <td class="n">&euro;340,030</td>
+      <td class="n">71.1%</td>
+      <td class="n">&euro;98,199</td>
+      <td class="n">14 pp</td>
+      <td class="n">0.98
+          <span class="sub">(0.96)</span></td>
+      <td><span class="badge b-calibrated">calibrated</span></td>
+      <td class="small">The filter share adds nothing over dealer size.</td>
+    </tr><tr>
+      <td>Clutch pressure plate</td>
+      <td>Failure driven</td>
+      <td class="n">&euro;12,330</td>
+      <td class="n">&euro;314,077</td>
+      <td class="n">3.9%</td>
+      <td class="n">&euro;301,747</td>
+      <td class="n">n/a</td>
+      <td class="n">&mdash;
+          <span class="sub">(n/a)</span></td>
+      <td><span class="badge b-not-judgeable">not judgeable</span></td>
+      <td class="small">Not judgeable &mdash; too few of these sold in the market to split between dealers.</td>
+    </tr><tr>
+      <td>Clutch disc</td>
+      <td>Failure driven</td>
+      <td class="n">&euro;28,660</td>
+      <td class="n">&euro;300,148</td>
+      <td class="n">9.5%</td>
+      <td class="n">&euro;271,488</td>
+      <td class="n">n/a</td>
+      <td class="n">&mdash;
+          <span class="sub">(n/a)</span></td>
+      <td><span class="badge b-not-judgeable">not judgeable</span></td>
+      <td class="small">Not judgeable &mdash; too few of these sold in the market to split between dealers.</td>
+    </tr><tr>
+      <td>Air filter</td>
+      <td>Mileage rhythm</td>
+      <td class="n">&euro;147,946</td>
+      <td class="n">&euro;243,081</td>
+      <td class="n">60.9%</td>
+      <td class="n">&euro;95,135</td>
+      <td class="n">28 pp</td>
+      <td class="n">0.91
+          <span class="sub">(0.92)</span></td>
+      <td><span class="badge b-calibrated">calibrated</span></td>
+      <td class="small">The filter share adds nothing over dealer size.</td>
+    </tr><tr>
+      <td>Clutch kit</td>
+      <td>Failure driven</td>
+      <td class="n">&euro;61,176</td>
+      <td class="n">&euro;235,833</td>
+      <td class="n">25.9%</td>
+      <td class="n">&euro;174,657</td>
+      <td class="n">58 pp</td>
+      <td class="n">0.69
+          <span class="sub">(0.70)</span></td>
+      <td><span class="badge b-estimated">estimated</span></td>
+      <td class="small">The filter share adds nothing over dealer size.</td>
+    </tr><tr>
+      <td>Urea (AdBlue) filter</td>
+      <td>Mileage rhythm</td>
+      <td class="n">&euro;45,882</td>
+      <td class="n">&euro;200,678</td>
+      <td class="n">22.9%</td>
+      <td class="n">&euro;154,795</td>
+      <td class="n">86 pp</td>
+      <td class="n">0.68
+          <span class="sub">(0.70)</span></td>
+      <td><span class="badge b-calibrated">calibrated</span></td>
+      <td class="small">Dealer size alone does the job better.</td>
+    </tr><tr>
+      <td>Cabin / blower filter</td>
+      <td>Mileage rhythm</td>
+      <td class="n">&euro;0</td>
+      <td class="n">&euro;164,671</td>
+      <td class="n">0.0%</td>
+      <td class="n">&euro;164,671</td>
+      <td class="n">n/a</td>
+      <td class="n">&mdash;
+          <span class="sub">(n/a)</span></td>
+      <td><span class="badge b-not-judgeable">not judgeable</span></td>
+      <td class="small">Not judgeable &mdash; too few of these sold in the market to split between dealers.</td>
+    </tr><tr>
+      <td>Oil filter</td>
+      <td>Mileage rhythm</td>
+      <td class="n">&euro;104,067</td>
+      <td class="n">&euro;106,552</td>
+      <td class="n">97.7%</td>
+      <td class="n">&euro;2,484</td>
+      <td class="n">0 pp</td>
+      <td class="n">1.00
+          <span class="sub">(0.96)</span></td>
+      <td><span class="badge b-definition">definition</span></td>
+      <td class="small">The filter share lands closer than dealer size alone.</td>
+    </tr><tr>
+      <td>Release bearing</td>
+      <td>Failure driven</td>
+      <td class="n">&euro;2,819</td>
+      <td class="n">&euro;75,129</td>
+      <td class="n">3.8%</td>
+      <td class="n">&euro;72,310</td>
+      <td class="n">n/a</td>
+      <td class="n">&mdash;
+          <span class="sub">(n/a)</span></td>
+      <td><span class="badge b-not-judgeable">not judgeable</span></td>
+      <td class="small">Not judgeable &mdash; too few of these sold in the market to split between dealers.</td>
+    </tr><tr>
+      <td>Pilot bearing</td>
+      <td>Failure driven</td>
+      <td class="n">&euro;0</td>
+      <td class="n">&euro;4,927</td>
+      <td class="n">0.0%</td>
+      <td class="n">&euro;4,927</td>
+      <td class="n">n/a</td>
+      <td class="n">&mdash;
+          <span class="sub">(n/a)</span></td>
+      <td><span class="badge b-not-judgeable">not judgeable</span></td>
+      <td class="small">Not judgeable &mdash; too few of these sold in the market to split between dealers.</td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="amber">
+    <p><strong>A cabin and blower filter row worth &euro;164,671 of expected demand has nothing
+    behind it.</strong> Not one cabin filter was sold to any of the 64 dealers in CY2025. That is
+    either a real gap or a part that is not sold under this number, and this model cannot tell
+    which. It is shown as not judgeable rather than as a gap.</p>
+  </div>
+</section>
+
+<section>
+  <h2>3. Dealer by dealer</h2>
+  <p>Ranked by the gap on the families this method can judge. Trucks in service is the dealer's
+  apportioned share of the 22,389 &mdash; an allocation, not a measured fleet. What we billed
+  is what they actually bought.</p>
+  <table>
+    <thead><tr>
+      <th>Dealer</th><th class="n">Trucks in service<br>(apportioned)</th><th class="n">Share of network</th>
+      <th class="n">Expected</th><th class="n">What we billed</th><th class="n">Gap</th>
+      <th class="n">Families</th><th>Note</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+      <td>WARRINGTON VEHICLE CENTRE LTD</td>
+      <td class="n">1,413</td>
+      <td class="n">6.31%</td>
+      <td class="n">&euro;194,639</td>
+      <td class="n">&euro;67,187</td>
+      <td class="n ">&euro;127,451</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>FERNDOWN COMMERCIALS LTD</td>
+      <td class="n">1,015</td>
+      <td class="n">4.53%</td>
+      <td class="n">&euro;139,802</td>
+      <td class="n">&euro;41,853</td>
+      <td class="n ">&euro;97,949</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>DT TRUCKS LTD</td>
+      <td class="n">911</td>
+      <td class="n">4.07%</td>
+      <td class="n">&euro;125,496</td>
+      <td class="n">&euro;36,554</td>
+      <td class="n ">&euro;88,942</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>SW COMMERCIALS LTD</td>
+      <td class="n">1,095</td>
+      <td class="n">4.89%</td>
+      <td class="n">&euro;150,856</td>
+      <td class="n">&euro;68,515</td>
+      <td class="n ">&euro;82,340</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>MC TRUCK & BUS LTD (MAIDSTONE)</td>
+      <td class="n">804</td>
+      <td class="n">3.59%</td>
+      <td class="n">&euro;110,758</td>
+      <td class="n">&euro;38,481</td>
+      <td class="n ">&euro;72,277</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>JDS TRUCKS LIMITED - LEEDS</td>
+      <td class="n">794</td>
+      <td class="n">3.55%</td>
+      <td class="n">&euro;109,457</td>
+      <td class="n">&euro;37,903</td>
+      <td class="n ">&euro;71,555</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>CORDWALLIS COMMERCIALS (HEATHROW)</td>
+      <td class="n">656</td>
+      <td class="n">2.93%</td>
+      <td class="n">&euro;90,383</td>
+      <td class="n">&euro;22,021</td>
+      <td class="n ">&euro;68,362</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>NORFOLK TRUCK & VAN LTD (ENFIELD)</td>
+      <td class="n">711</td>
+      <td class="n">3.18%</td>
+      <td class="n">&euro;97,970</td>
+      <td class="n">&euro;30,217</td>
+      <td class="n ">&euro;67,753</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>DITCHBURN TRUCK SERVICES LLP</td>
+      <td class="n">664</td>
+      <td class="n">2.97%</td>
+      <td class="n">&euro;91,467</td>
+      <td class="n">&euro;26,714</td>
+      <td class="n ">&euro;64,753</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>JDS TRUCKS LTD (MANCHESTER)</td>
+      <td class="n">634</td>
+      <td class="n">2.83%</td>
+      <td class="n">&euro;87,349</td>
+      <td class="n">&euro;27,963</td>
+      <td class="n ">&euro;59,386</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>AK COMMERCIALS LTD</td>
+      <td class="n">647</td>
+      <td class="n">2.89%</td>
+      <td class="n">&euro;89,083</td>
+      <td class="n">&euro;30,488</td>
+      <td class="n ">&euro;58,595</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>AQUILA TRUCK CENTRES LTD (TIPTON)</td>
+      <td class="n">727</td>
+      <td class="n">3.25%</td>
+      <td class="n">&euro;100,137</td>
+      <td class="n">&euro;41,994</td>
+      <td class="n ">&euro;58,143</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>HARRY MOORE COMMERCIALS LTD</td>
+      <td class="n">730</td>
+      <td class="n">3.26%</td>
+      <td class="n">&euro;100,571</td>
+      <td class="n">&euro;47,005</td>
+      <td class="n ">&euro;53,565</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>MC TRUCK & BUS (BURGESS HILL)</td>
+      <td class="n">592</td>
+      <td class="n">2.64%</td>
+      <td class="n">&euro;81,497</td>
+      <td class="n">&euro;33,078</td>
+      <td class="n ">&euro;48,418</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>PAYNES GARAGES LTD</td>
+      <td class="n">459</td>
+      <td class="n">2.05%</td>
+      <td class="n">&euro;63,290</td>
+      <td class="n">&euro;16,644</td>
+      <td class="n ">&euro;46,646</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>PR FLEET</td>
+      <td class="n">395</td>
+      <td class="n">1.76%</td>
+      <td class="n">&euro;54,403</td>
+      <td class="n">&euro;8,236</td>
+      <td class="n ">&euro;46,168</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>MC TRUCK & BUS (THURROCK)</td>
+      <td class="n">439</td>
+      <td class="n">1.96%</td>
+      <td class="n">&euro;60,472</td>
+      <td class="n">&euro;15,675</td>
+      <td class="n ">&euro;44,797</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>CORDWALLIS COMMERCIALS (MAIDENHEAD) LTD</td>
+      <td class="n">428</td>
+      <td class="n">1.91%</td>
+      <td class="n">&euro;58,955</td>
+      <td class="n">&euro;14,292</td>
+      <td class="n ">&euro;44,663</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>T.I.M. COMMERCIALS</td>
+      <td class="n">584</td>
+      <td class="n">2.61%</td>
+      <td class="n">&euro;80,413</td>
+      <td class="n">&euro;37,245</td>
+      <td class="n ">&euro;43,168</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>CUMBRIA TRUCK CENTRE LTD</td>
+      <td class="n">426</td>
+      <td class="n">1.90%</td>
+      <td class="n">&euro;58,738</td>
+      <td class="n">&euro;21,680</td>
+      <td class="n ">&euro;37,059</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>T&M COMMERCIALS</td>
+      <td class="n">459</td>
+      <td class="n">2.05%</td>
+      <td class="n">&euro;63,290</td>
+      <td class="n">&euro;26,424</td>
+      <td class="n ">&euro;36,866</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>NORFOLK TRUCK & VAN LTD (IPSWICH)</td>
+      <td class="n">385</td>
+      <td class="n">1.72%</td>
+      <td class="n">&euro;53,103</td>
+      <td class="n">&euro;21,089</td>
+      <td class="n ">&euro;32,014</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>COMMERCIAL MOTORS (WALES) LTD</td>
+      <td class="n">384</td>
+      <td class="n">1.71%</td>
+      <td class="n">&euro;52,886</td>
+      <td class="n">&euro;21,604</td>
+      <td class="n ">&euro;31,283</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>THOMPSON COMMERCIALS - SHEFFIELD</td>
+      <td class="n">302</td>
+      <td class="n">1.35%</td>
+      <td class="n">&euro;41,615</td>
+      <td class="n">&euro;10,598</td>
+      <td class="n ">&euro;31,017</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>MOTUS GROUP UK LTD</td>
+      <td class="n">623</td>
+      <td class="n">2.78%</td>
+      <td class="n">&euro;85,832</td>
+      <td class="n">&euro;55,007</td>
+      <td class="n ">&euro;30,825</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>ARLESEY CAR & COMMERCIALS LTD</td>
+      <td class="n">389</td>
+      <td class="n">1.74%</td>
+      <td class="n">&euro;53,536</td>
+      <td class="n">&euro;23,154</td>
+      <td class="n ">&euro;30,382</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>RH COMMERCIAL VEHICLES LTD (NORTHAMPTON)</td>
+      <td class="n">343</td>
+      <td class="n">1.53%</td>
+      <td class="n">&euro;47,251</td>
+      <td class="n">&euro;17,346</td>
+      <td class="n ">&euro;29,905</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>JDS TRUCKS LIMITED - BLACKBURN</td>
+      <td class="n">264</td>
+      <td class="n">1.18%</td>
+      <td class="n">&euro;36,413</td>
+      <td class="n">&euro;7,676</td>
+      <td class="n ">&euro;28,738</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>ARTHUR SPRIGGS AND SONS LTD</td>
+      <td class="n">267</td>
+      <td class="n">1.19%</td>
+      <td class="n">&euro;36,847</td>
+      <td class="n">&euro;9,126</td>
+      <td class="n ">&euro;27,721</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>THOMPSON COMMERCIAL-NEWCASTLE</td>
+      <td class="n">414</td>
+      <td class="n">1.85%</td>
+      <td class="n">&euro;57,004</td>
+      <td class="n">&euro;30,127</td>
+      <td class="n ">&euro;26,878</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>NORFOLK TRUCK & VAN LTD (NORWICH)</td>
+      <td class="n">285</td>
+      <td class="n">1.27%</td>
+      <td class="n">&euro;39,231</td>
+      <td class="n">&euro;12,534</td>
+      <td class="n ">&euro;26,697</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>SAPPHIRE VEHICLE SERVICES LIMITED</td>
+      <td class="n">354</td>
+      <td class="n">1.58%</td>
+      <td class="n">&euro;48,768</td>
+      <td class="n">&euro;24,531</td>
+      <td class="n ">&euro;24,237</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>THOMPSON COMMERCIAL-BILLINGHAM</td>
+      <td class="n">318</td>
+      <td class="n">1.42%</td>
+      <td class="n">&euro;43,783</td>
+      <td class="n">&euro;21,142</td>
+      <td class="n ">&euro;22,641</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>CORDWALLIS COMMERCIALS (OXFORD)</td>
+      <td class="n">274</td>
+      <td class="n">1.22%</td>
+      <td class="n">&euro;37,714</td>
+      <td class="n">&euro;16,268</td>
+      <td class="n ">&euro;21,446</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>SHEPPARD COMMERCIAL SERVICES</td>
+      <td class="n">197</td>
+      <td class="n">0.88%</td>
+      <td class="n">&euro;27,093</td>
+      <td class="n">&euro;6,653</td>
+      <td class="n ">&euro;20,441</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>T R AUTOS 2003</td>
+      <td class="n">209</td>
+      <td class="n">0.93%</td>
+      <td class="n">&euro;28,827</td>
+      <td class="n">&euro;10,174</td>
+      <td class="n ">&euro;18,653</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>RH COMMERCIAL VEHICLES LTD (TUXFORD)</td>
+      <td class="n">173</td>
+      <td class="n">0.77%</td>
+      <td class="n">&euro;23,842</td>
+      <td class="n">&euro;5,227</td>
+      <td class="n ">&euro;18,615</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>ALLPORTS GARAGES LTD - FRADLEY</td>
+      <td class="n">165</td>
+      <td class="n">0.74%</td>
+      <td class="n">&euro;22,758</td>
+      <td class="n">&euro;4,393</td>
+      <td class="n ">&euro;18,365</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>MANCHETTS PB LIMITED</td>
+      <td class="n">208</td>
+      <td class="n">0.93%</td>
+      <td class="n">&euro;28,611</td>
+      <td class="n">&euro;10,636</td>
+      <td class="n ">&euro;17,975</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>NORSCOT TRUCK & VAN LTD</td>
+      <td class="n">193</td>
+      <td class="n">0.86%</td>
+      <td class="n">&euro;26,660</td>
+      <td class="n">&euro;8,849</td>
+      <td class="n ">&euro;17,811</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>THOMPSON COMMERCIALS LTD (HULL)</td>
+      <td class="n">186</td>
+      <td class="n">0.83%</td>
+      <td class="n">&euro;25,576</td>
+      <td class="n">&euro;9,595</td>
+      <td class="n ">&euro;15,981</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>GRAYCOLL TRUCK & TRAILER LTD</td>
+      <td class="n">190</td>
+      <td class="n">0.85%</td>
+      <td class="n">&euro;26,226</td>
+      <td class="n">&euro;10,553</td>
+      <td class="n ">&euro;15,674</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>TANNER ELECTRICS LTD</td>
+      <td class="n">129</td>
+      <td class="n">0.58%</td>
+      <td class="n">&euro;17,773</td>
+      <td class="n">&euro;5,515</td>
+      <td class="n ">&euro;12,258</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>THOMPSON COMMERCIALS - GRIMSBY</td>
+      <td class="n">192</td>
+      <td class="n">0.86%</td>
+      <td class="n">&euro;26,443</td>
+      <td class="n">&euro;14,197</td>
+      <td class="n ">&euro;12,246</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>CROSS STREET GARAGE (SWINDON) LTD</td>
+      <td class="n">134</td>
+      <td class="n">0.60%</td>
+      <td class="n">&euro;18,423</td>
+      <td class="n">&euro;6,307</td>
+      <td class="n ">&euro;12,117</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>L&P MOBILE VEHICLE REPAIRS LTD</td>
+      <td class="n">105</td>
+      <td class="n">0.47%</td>
+      <td class="n">&euro;14,522</td>
+      <td class="n">&euro;3,193</td>
+      <td class="n ">&euro;11,329</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>RH COMMERCIAL VEHICLES LTD (LEICESTER)</td>
+      <td class="n">109</td>
+      <td class="n">0.48%</td>
+      <td class="n">&euro;14,956</td>
+      <td class="n">&euro;4,070</td>
+      <td class="n ">&euro;10,886</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>ALLPORTS GARAGES LIMITED (STOKE)</td>
+      <td class="n">148</td>
+      <td class="n">0.66%</td>
+      <td class="n">&euro;20,374</td>
+      <td class="n">&euro;10,293</td>
+      <td class="n ">&euro;10,081</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>WMS 2007 LTD T/A WMS SERVICE CENTRE</td>
+      <td class="n">101</td>
+      <td class="n">0.45%</td>
+      <td class="n">&euro;13,872</td>
+      <td class="n">&euro;4,756</td>
+      <td class="n ">&euro;9,115</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>ELGIN TRUCK & VAN CENTRE LTD</td>
+      <td class="n">99</td>
+      <td class="n">0.44%</td>
+      <td class="n">&euro;13,655</td>
+      <td class="n">&euro;6,714</td>
+      <td class="n ">&euro;6,941</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>AQUILA TRUCK (GLOUCESTER)</td>
+      <td class="n">71</td>
+      <td class="n">0.32%</td>
+      <td class="n">&euro;9,754</td>
+      <td class="n">&euro;3,114</td>
+      <td class="n ">&euro;6,640</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>ELGIN TRUCK & VAN LTD INVERNESS</td>
+      <td class="n">53</td>
+      <td class="n">0.24%</td>
+      <td class="n">&euro;7,369</td>
+      <td class="n">&euro;1,051</td>
+      <td class="n ">&euro;6,318</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>AQUILA TRUCK (WORCESTER)</td>
+      <td class="n">53</td>
+      <td class="n">0.24%</td>
+      <td class="n">&euro;7,369</td>
+      <td class="n">&euro;1,739</td>
+      <td class="n ">&euro;5,630</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>ANDY POWELL COMMERCIALS LTD</td>
+      <td class="n">104</td>
+      <td class="n">0.46%</td>
+      <td class="n">&euro;14,305</td>
+      <td class="n">&euro;8,831</td>
+      <td class="n ">&euro;5,474</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>WADES TRUCK SERVICES LTD</td>
+      <td class="n">41</td>
+      <td class="n">0.18%</td>
+      <td class="n">&euro;5,635</td>
+      <td class="n">&euro;1,168</td>
+      <td class="n ">&euro;4,467</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>SMV COMMERCIALS LTD</td>
+      <td class="n">66</td>
+      <td class="n">0.30%</td>
+      <td class="n">&euro;9,103</td>
+      <td class="n">&euro;4,721</td>
+      <td class="n ">&euro;4,382</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>TRUCK & BUS CYMRU LTD</td>
+      <td class="n">85</td>
+      <td class="n">0.38%</td>
+      <td class="n">&euro;11,704</td>
+      <td class="n">&euro;8,134</td>
+      <td class="n ">&euro;3,570</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>WALDRON COMMERCIALS LTD</td>
+      <td class="n">104</td>
+      <td class="n">0.46%</td>
+      <td class="n">&euro;14,305</td>
+      <td class="n">&euro;10,813</td>
+      <td class="n ">&euro;3,493</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>RH COMMERCIAL VEHICLES LTD(PETERBOROUGH)</td>
+      <td class="n">47</td>
+      <td class="n">0.21%</td>
+      <td class="n">&euro;6,502</td>
+      <td class="n">&euro;3,600</td>
+      <td class="n ">&euro;2,903</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>THOMPSON COMMERCIALS - RAINTON</td>
+      <td class="n">41</td>
+      <td class="n">0.18%</td>
+      <td class="n">&euro;5,635</td>
+      <td class="n">&euro;3,956</td>
+      <td class="n ">&euro;1,679</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr><tr>
+      <td>TGS GROUP</td>
+      <td class="n"></td>
+      <td class="n"></td>
+      <td class="n">&euro;0</td>
+      <td class="n">&euro;0</td>
+      <td class="n ">&euro;0</td>
+      <td class="n">7</td>
+      <td class="small">No oil filters bought &mdash; no share exists, nothing expected.</td>
+    </tr><tr>
+      <td>ALKS LIMITED</td>
+      <td class="n"></td>
+      <td class="n"></td>
+      <td class="n">&euro;0</td>
+      <td class="n">&euro;0</td>
+      <td class="n ">&euro;0</td>
+      <td class="n">7</td>
+      <td class="small">No oil filters bought &mdash; no share exists, nothing expected.</td>
+    </tr><tr>
+      <td>TECHNI LTD</td>
+      <td class="n"></td>
+      <td class="n"></td>
+      <td class="n">&euro;0</td>
+      <td class="n">&euro;0</td>
+      <td class="n ">&euro;0</td>
+      <td class="n">7</td>
+      <td class="small">No oil filters bought &mdash; no share exists, nothing expected.</td>
+    </tr><tr>
+      <td>ERIK SOMMER AS</td>
+      <td class="n">3</td>
+      <td class="n">0.01%</td>
+      <td class="n">&euro;433</td>
+      <td class="n">&euro;475</td>
+      <td class="n neg">&euro;-42</td>
+      <td class="n">7</td>
+      <td class="small"></td>
+    </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>4. What this model can see at all</h2>
+  <p>The method covers parts replaced on a rhythm. It says nothing about repair, body, electrical
+  or hardware demand, where a dealer who sold nothing may simply have had no accident to repair.
+  Of everything the 64 dealers bought in CY2025, 23.5% of the
+  pieces and 23.2% of the euro sit in a family this can judge.
+  The rest is out of scope, not missing.</p>
+  <table>
+    <thead><tr><th>Family</th><th class="n">What we billed</th><th class="n">Pieces</th>
+      <th class="n">Share of all dealer pieces</th><th>Dealers buying</th></tr></thead>
+    <tbody>
+    <tr>
+      <td>Oil filter</td>
+      <td class="n">&euro;104,067</td>
+      <td class="n">14,232</td>
+      <td class="n">6.4%</td>
+      <td>61 of 64 dealers</td>
+    </tr><tr>
+      <td>Air filter</td>
+      <td class="n">&euro;147,946</td>
+      <td class="n">5,261</td>
+      <td class="n">2.3%</td>
+      <td>59 of 64 dealers</td>
+    </tr><tr>
+      <td>Fuel filter</td>
+      <td class="n">&euro;241,830</td>
+      <td class="n">20,440</td>
+      <td class="n">9.1%</td>
+      <td>61 of 64 dealers</td>
+    </tr><tr>
+      <td>Cabin / blower filter</td>
+      <td class="n">&euro;0</td>
+      <td class="n">0</td>
+      <td class="n">0.0%</td>
+      <td><span class="badge b-not-judgeable">none sold</span></td>
+    </tr><tr>
+      <td>Urea (AdBlue) filter</td>
+      <td class="n">&euro;45,882</td>
+      <td class="n">1,316</td>
+      <td class="n">0.6%</td>
+      <td>54 of 64 dealers</td>
+    </tr><tr>
+      <td>Brake pad</td>
+      <td class="n">&euro;316,572</td>
+      <td class="n">3,573</td>
+      <td class="n">1.6%</td>
+      <td>59 of 64 dealers</td>
+    </tr><tr>
+      <td>Brake disc / rotor</td>
+      <td class="n">&euro;277,729</td>
+      <td class="n">5,581</td>
+      <td class="n">2.5%</td>
+      <td>59 of 64 dealers</td>
+    </tr><tr>
+      <td>Brake shoe</td>
+      <td class="n">&euro;37,965</td>
+      <td class="n">840</td>
+      <td class="n">0.4%</td>
+      <td>51 of 64 dealers</td>
+    </tr><tr>
+      <td>Clutch disc</td>
+      <td class="n">&euro;28,660</td>
+      <td class="n">192</td>
+      <td class="n">0.1%</td>
+      <td>43 of 64 dealers</td>
+    </tr><tr>
+      <td>Clutch kit</td>
+      <td class="n">&euro;61,176</td>
+      <td class="n">882</td>
+      <td class="n">0.4%</td>
+      <td>56 of 64 dealers</td>
+    </tr><tr>
+      <td>Clutch pressure plate</td>
+      <td class="n">&euro;12,330</td>
+      <td class="n">179</td>
+      <td class="n">0.1%</td>
+      <td>43 of 64 dealers</td>
+    </tr><tr>
+      <td>Clutch booster</td>
+      <td class="n">&euro;274</td>
+      <td class="n">2</td>
+      <td class="n">0.0%</td>
+      <td>2 of 64 dealers</td>
+    </tr><tr>
+      <td>Pilot bearing</td>
+      <td class="n">&euro;0</td>
+      <td class="n">15</td>
+      <td class="n">0.0%</td>
+      <td>8 of 64 dealers</td>
+    </tr><tr>
+      <td>Release bearing</td>
+      <td class="n">&euro;2,819</td>
+      <td class="n">125</td>
+      <td class="n">0.1%</td>
+      <td>37 of 64 dealers</td>
+    </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>5. What is measured and what is not</h2>
+  <table>
+    <thead><tr><th>Layer</th><th>Basis</th><th>Where it comes from</th></tr></thead>
+    <tbody>
+      <tr><td>What the dealers bought</td><td><span class="badge b-calibrated">measured</span></td>
+        <td>The 2025 sales-to-dealer file for the UK truck book, 66,018 lines,
+        64 named dealers, part number by month.</td></tr>
+      <tr><td>The euro beside it</td><td><span class="badge b-estimated">derived</span></td>
+        <td>Pieces multiplied by the median CY2025 price we billed the distributor for that part
+        number. This is what we billed the distributor, not the dealer invoice.
+        4.7% of pieces carry no ISZE price and are worth
+        nothing here.</td></tr>
+      <tr><td>Trucks in service per dealer</td><td><span class="badge b-estimated">estimated</span></td>
+        <td>The market fleet apportioned on the dealer's oil-filter share. Not measured at dealer
+        level anywhere in this workspace.</td></tr>
+      <tr><td>Expected euro per family</td><td><span class="badge b-calibrated">modelled</span></td>
+        <td>The market service-demand table for the truck book, split on the filter share.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>6. Limits, stated plainly</h2>
+  <ol>
+    <li><strong>One market, one year.</strong> The UK truck book is the only place we can see both
+    the trucks and what each dealer bought. Nothing here shows the rule travels to another market.</li>
+    <li><strong>The fleet is apportioned, not counted.</strong> 22,389 trucks is a market
+    figure. Which dealer serves which truck is an assumption on a stated rule.</li>
+    <li><strong>The rule is not proven to be better than dealer size.</strong> See section 1.</li>
+    <li><strong>Three families carry the biggest gaps and rest on the weakest footing.</strong>
+    Brake shoe shows a &euro;874,304 gap on
+    840 pieces. Clutch booster shows
+    &euro;406,092 on two pieces. Those
+    are questions, not findings.</li>
+    <li><strong>Currency, warranty and returns are not in this.</strong> The file is quantities; the
+    value is a price proxy; nothing here nets off credits or warranty claims.</li>
+    <li><strong>Four dealers are absent from the expected side.</strong> They bought parts but no
+    oil filters, so no share exists and nothing is expected of them. That is a finding about the
+    dealer, and it is labelled as one rather than printed as a zero gap.</li>
+  </ol>
+  <div class="amber">
+    <p><strong>Israel is not in this model at all.</strong> No Israel row is read. Separately, and
+    not acted on: the dealer survey file used elsewhere in this workspace carries 78 rows labelled
+    Israel LCV, while we hold no dealer names for Israel. That file's labelling is wrong and has
+    been recorded, not corrected.</p>
+  </div>
+</section>
+
+<footer>
+  Internal working draft. Not published, not synced to any deploy mirror, nothing mailed.
+  Every figure is read from the dated derived tables at build time. Sources: the 2025
+  sales-to-dealer file for the UK truck book, the market service-demand table for the truck book,
+  the CY2025 billing table for part-number prices, and the published fleet figure for the UK truck
+  book. Fleet denominator: 22,389 trucks (ituk_dvla_2026, full_year).
+</footer>
+</div></body></html>

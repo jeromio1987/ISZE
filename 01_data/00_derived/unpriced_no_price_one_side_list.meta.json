@@ -1,0 +1,31 @@
+{
+  "source": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\price_bp_weighted_compare_pn.csv",
+  "bucket": "no_price_on_one_side",
+  "scope": "in_scope rows only, to tie to the shipped pack",
+  "lines": 1010,
+  "part_numbers": 589,
+  "qty": 4794.0,
+  "eur": 1110782.49,
+  "customers": 23,
+  "by_side": {
+    "Neither list has it": {
+      "lines": 239,
+      "part_numbers": 135,
+      "eur": 609756.4
+    },
+    "Prior price file has no entry": {
+      "lines": 631,
+      "part_numbers": 369,
+      "eur": 333869.8
+    },
+    "New price file has no entry": {
+      "lines": 140,
+      "part_numbers": 85,
+      "eur": 167156.29
+    }
+  },
+  "outputs": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\unpriced_no_price_one_side_list.csv",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\Unpriced_lines_no_matching_price.xlsx"
+  ]
+}

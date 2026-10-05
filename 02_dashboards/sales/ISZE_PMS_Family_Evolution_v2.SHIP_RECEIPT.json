@@ -1,0 +1,74 @@
+{
+ "schema": "ship_receipt/v2",
+ "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\ISZE_PMS_Family_Evolution_v2.html",
+ "artifact_mtime_ms": 1790259729278,
+ "artifact_bytes": 837982,
+ "artifact_sha256": "aaa52622d1742976107b82c5e8b3dcda15aa7b28deef743cada3ef951f9fefb8",
+ "written_at": "2026-09-24T14:25:08+00:00",
+ "ok": true,
+ "screenshots_taken": 5,
+ "screenshots_read": 5,
+ "checks": [
+  {
+   "id": "exists",
+   "ok": true,
+   "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\ISZE_PMS_Family_Evolution_v2.html"
+  },
+  {
+   "id": "size_and_hash",
+   "ok": true,
+   "detail": "837,982 bytes, sha256 aaa52622d1742976107b82c5e8b3dcda15aa7b28deef743cada3ef951f9fefb8"
+  },
+  {
+   "id": "no_cdn",
+   "ok": true,
+   "detail": "0 off-site script/link references (checked in the gate)"
+  },
+  {
+   "id": "visual_screenshots",
+   "ok": true,
+   "detail": "headless Chrome, file://, no server: 5 taken and 5 read by eye, one at a time at full resolution (01_headline_1440.png, 02_full_page_1440.png, 03_nseries_bands.png, 04_service_families.png, 05_part_numbers.png). Headline, full page, the N-series band level, the service-family level and the part-number level all carry numbers; no blank table shell and no empty panel."
+  },
+  {
+   "id": "language_gate",
+   "ok": true,
+   "detail": "04_tools/workspace/check_spoken_labels.ps1 on the page: 0 violations, 0 advisories, CLEAN"
+  },
+  {
+   "id": "page_gate",
+   "ok": true,
+   "detail": "qa_family_evolution_v2.py QA PASS (exit 0): controls 1 line at 1440, first chart 446->746 px, ink 10.52%, drill 5 types -> 5 bands -> 10 families -> 9 part numbers, family euro tie worst EUR 0.0 on 20 rows, book EUR 5,769,755, 0 page errors"
+  },
+  {
+   "id": "backup_taken_before_overwrite",
+   "ok": true,
+   "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_backsafe_20260924_widened_rebase_before (page, receipt, rendered before-state, the first rebuild)"
+  },
+  {
+   "id": "change_attributed",
+   "ok": true,
+   "detail": "Step 1 re-based vehicle_band_applicability.csv and tonnage_capable_part_numbers.csv on the corrected band file: 30 part numbers, 6 in family, EUR 370,967.20, had their single-band verdict withdrawn. Step 2 re-keyed the page's exclusivity onto the exclusivity column that now carries it (176 -> 131 part numbers). No band value moved in any file."
+  },
+  {
+   "id": "launcher",
+   "ok": true,
+   "detail": "OPEN_ISZE_PMS_Family_Evolution_v2.cmd present, CRLF only, 62 bytes"
+  }
+ ],
+ "screenshots": [
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_ship_20260924_widened\\01_headline_1440.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_ship_20260924_widened\\02_full_page_1440.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_ship_20260924_widened\\03_nseries_bands.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_ship_20260924_widened\\04_service_families.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_ship_20260924_widened\\05_part_numbers.png"
+ ],
+ "notes": [
+  "Rebuilt 2026-09-24 after the widened-row re-base. The page filename and version label are unchanged.",
+  "The page prints no exclusive-attribution share and never has: the corrected share (EUR 966,401.31 of EUR 4,501,286.47 = 21.4694%) lives in the band file and the evolution meta, not in this page's payload. What moved on the page is the service-family comparability, keyed on the exclusivity column.",
+  "Deliberate basis difference: the page's exclusivity is taken from the re-based tonnage_capable_part_numbers.csv (131 part numbers, EUR 994,070.54 = 22.0841% of the in-family total), which still includes parked-code rows and rows whose band sits outside the three N-series rungs. It is therefore not the band file's 36-part-number, 21.4694% slice, and the two must not be quoted as the same number."
+ ],
+ "not_done": [
+  "deploy sync (02_dashboards/sync_to_deploys.ps1) NOT run: it copies into 07_deploy / publish-site, which is a publish step and was not asked for. The 07_deploy copies are therefore older than this page.",
+  "ship_gate_check.ps1 (workspace-wide) NOT passing: it fails in verify_tier_a_html_json.py on ISZE_Aftermarket_BI_Command_Center.html, dated 2026-09-19, with 'hero leakage missing'. Pre-existing and unrelated to this work; deliberately not fixed."
+ ]
+}

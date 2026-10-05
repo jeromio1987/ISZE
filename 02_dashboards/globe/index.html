@@ -1,0 +1,2596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ISZE Globe — uncaptured parts spend by market</title>
+<!-- Inline favicon so the browser never requests /favicon.ico, which would be
+     a 404 in the console and noise in every verification run. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2315233c'/%3E%3Ccircle cx='8' cy='8' r='5' fill='none' stroke='%23c0552d' stroke-width='1.5'/%3E%3C/svg%3E">
+
+<!--
+  ISZE Globe
+  ==========
+
+  Internal prototype. Jerome only. Not a shared pack.
+
+  What it is
+  ----------
+  One column per market standing on a globe. Column height is a data value,
+  column colour is a second value, clicking a column opens that market's
+  numbers. The first two values are named in data/market_spine.json under
+  settings.height_metric and settings.color_metric, so the same page renders a
+  different measure without touching this file.
+
+  Why it must be served over http
+  -------------------------------
+  MapLibre GL JS does its geometry work in a Web Worker. Browsers refuse to
+  start a Worker from a file:// origin, and fetch() of the sibling JSON is
+  blocked for the same reason. Double-clicking this file will not work; that is
+  expected, not a bug. Use OPEN_ISZE_Globe.cmd, which starts the local server.
+
+  Everything is local: maplibre-gl.js and maplibre-gl.css are vendored under
+  _ui/. There is no CDN reference to MapLibre anywhere in this page.
+-->
+
+<link rel="stylesheet" href="_ui/maplibre-gl.css">
+<style>
+  :root {
+    --navy: #15233c;
+    --navy-soft: #1e3054;
+    --terracotta: #c0552d;
+    --paper: #f7f4ee;
+    --paper-dim: #e8e2d6;
+    --line: rgba(21, 35, 60, 0.18);
+    --amber: #b8860b;
+    --panel-w: 430px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--paper);
+    color: var(--navy);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .serif { font-family: Georgia, "Times New Roman", serif; }
+
+  /* ---------- shell ---------- */
+  #shell { position: relative; height: 100vh; width: 100vw; overflow: hidden; }
+  #map { position: absolute; inset: 0; background: #0b1526; }
+  body.panel-open #map { right: var(--panel-w); }
+
+  /* ---------- title ---------- */
+  #titlebar {
+    position: absolute; top: 16px; left: 16px; z-index: 30;
+    max-width: 470px; padding: 16px 20px 15px;
+    background: var(--navy); color: var(--paper);
+    border-left: 5px solid var(--terracotta);
+    box-shadow: 0 6px 26px rgba(11, 21, 38, 0.4);
+  }
+  #titlebar h1 { margin: 0 0 5px; font-size: 21px; font-weight: 400; letter-spacing: 0.2px; }
+  #titlebar .sub { font-size: 12.5px; line-height: 1.5; color: #cdd8e8; }
+  #titlebar .sub b { color: #fff; font-weight: 600; }
+  #titlebar .period {
+    display: inline-block; margin-top: 9px; padding: 3px 9px;
+    background: rgba(247, 244, 238, 0.13); border: 1px solid rgba(247, 244, 238, 0.28);
+    font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase;
+  }
+
+  /* ---------- controls ---------- */
+  #controls {
+    position: absolute; top: 16px; right: 16px; z-index: 30;
+    display: flex; flex-direction: column; gap: 9px;
+    width: 232px;
+    /* With every control unfolded the stack is taller than a short window. It
+       scrolls instead of running off the bottom, and the scrollbar is only
+       drawn when it is actually needed. */
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  body.panel-open #controls { right: calc(var(--panel-w) + 16px); }
+
+  .ctl {
+    background: var(--paper); border: 1px solid var(--line);
+    box-shadow: 0 3px 12px rgba(11, 21, 38, 0.12); padding: 11px 12px;
+  }
+  .ctl h3 {
+    margin: 0 0 8px; font-size: 10.5px; letter-spacing: 1.1px;
+    text-transform: uppercase; color: #5d6b82; font-family: inherit; font-weight: 700;
+  }
+  .seg { display: flex; border: 1px solid var(--line); overflow: hidden; }
+  .seg button {
+    flex: 1; padding: 6px 4px; font-size: 11.5px; cursor: pointer;
+    background: #fff; color: var(--navy); border: 0;
+    border-right: 1px solid var(--line); font-family: inherit;
+    transition: background 0.12s, color 0.12s;
+  }
+  .seg button:last-child { border-right: 0; }
+  .seg button:hover { background: var(--paper-dim); }
+  .seg button[aria-pressed="true"] { background: var(--navy); color: var(--paper); font-weight: 600; }
+
+  select {
+    width: 100%; padding: 6px 7px; font-size: 12.5px; font-family: inherit;
+    color: var(--navy); background: #fff; border: 1px solid var(--line);
+  }
+  .ctl .hint { margin-top: 7px; font-size: 11px; line-height: 1.45; color: #5d6b82; }
+
+  /* ---------- collapsible overlay panels ----------
+     The controls and the legend both float over the map. Each one folds to its
+     header so they can be got out of the way without losing the map. */
+  .ctl-head, #legend-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; cursor: pointer; width: 100%; background: none; border: 0;
+    padding: 0; font-family: inherit; text-align: left; color: inherit;
+  }
+  .ctl-head h3, #legend-head h3 { margin: 0; }
+  .fold {
+    flex: 0 0 auto; width: 20px; height: 20px; line-height: 1;
+    border: 1px solid var(--line); background: #fff; color: #5d6b82;
+    font-family: inherit; font-size: 12px; cursor: pointer; padding: 0;
+  }
+  .fold:hover { background: var(--paper-dim); color: var(--navy); }
+  .ctl.is-collapsed .ctl-body { display: none; }
+  #legend.is-collapsed .leg-body { display: none; }
+  #legend.is-collapsed { padding-bottom: 11px; }
+
+  /* ---------- legend ---------- */
+  #legend {
+    position: absolute; left: 16px; bottom: 16px; z-index: 30;
+    width: 288px; background: var(--paper); border: 1px solid var(--line);
+    box-shadow: 0 3px 14px rgba(11, 21, 38, 0.14); padding: 12px 14px 13px;
+  }
+  #legend h3 {
+    margin: 0 0 3px; font-size: 11px; letter-spacing: 1px;
+    text-transform: uppercase; color: #5d6b82; font-family: inherit; font-weight: 700;
+  }
+  #legend .leg-sub { font-size: 11px; color: #5d6b82; margin-bottom: 9px; line-height: 1.4; }
+  .swatch-row { display: flex; align-items: center; gap: 8px; margin: 4px 0; font-size: 12px; }
+  .swatch { width: 26px; height: 13px; border: 1px solid rgba(21, 35, 60, 0.28); flex: 0 0 26px; }
+  .ramp-bar {
+    height: 13px; border: 1px solid rgba(21, 35, 60, 0.28); margin: 6px 0 3px;
+    background: linear-gradient(90deg, #e8e2d6, #c0552d);
+  }
+  .ramp-ends { display: flex; justify-content: space-between; font-size: 10.5px; color: #5d6b82; }
+  #legend .foot {
+    margin-top: 10px; padding-top: 9px; border-top: 1px solid var(--line);
+    font-size: 11px; line-height: 1.5; color: #5d6b82;
+  }
+  #legend details { margin-top: 8px; }
+  #legend summary {
+    cursor: pointer; font-size: 11px; color: var(--terracotta); font-weight: 600;
+    list-style: none;
+  }
+  #legend summary::-webkit-details-marker { display: none; }
+  #legend summary::before { content: "+ "; }
+  #legend details[open] summary::before { content: "- "; }
+  #legend .glossary { margin-top: 7px; font-size: 11px; line-height: 1.5; color: #43506a; }
+  #legend .glossary dt { font-weight: 700; color: var(--navy); margin-top: 5px; }
+  #legend .glossary dd { margin: 0; }
+
+  /* The legend sits bottom-left under the title block. On a 1440x900 window its
+     full height would reach the title block, and it would cover the map, so it
+     folds above a height threshold and the body scrolls rather than extending.
+     A short screen gets the folded legend; a tall one gets the full legend. */
+  @media (max-height: 1010px) {
+    #legend { max-height: 46vh; overflow-y: auto; overscroll-behavior: contain; }
+    #legend.is-collapsed { max-height: none; }
+  }
+
+  /* ---------- IDS dealer key ---------- */
+  #ids-key {
+    position: absolute; right: 16px; bottom: 16px; z-index: 30;
+    width: 292px; max-height: 58vh; overflow-y: auto; overscroll-behavior: contain;
+    background: var(--paper); border: 1px solid var(--line);
+    box-shadow: 0 3px 14px rgba(11, 21, 38, 0.14); padding: 12px 14px 13px;
+    display: none;
+  }
+  #ids-key.show { display: block; }
+  body.panel-open #ids-key { right: calc(var(--panel-w) + 16px); }
+
+  /* ---------- hover tooltip ---------- */
+  #tip {
+    position: absolute; z-index: 40; pointer-events: none; display: none;
+    max-width: 290px; padding: 8px 10px; background: var(--navy); color: var(--paper);
+    font-size: 12px; line-height: 1.45; box-shadow: 0 5px 18px rgba(11, 21, 38, 0.35);
+    border-left: 3px solid var(--terracotta);
+  }
+  #tip .tip-h { font-weight: 700; margin-bottom: 3px; }
+  #tip .tip-r { color: #c3cfe1; }
+
+  /* ---------- labels ---------- */
+  #labels { position: absolute; inset: 0; z-index: 20; pointer-events: none; }
+  .mlabel {
+    position: absolute; top: 0; left: 0; white-space: nowrap;
+    padding: 2px 6px; font-size: 11px; line-height: 1.3;
+    background: rgba(247, 244, 238, 0.94); color: var(--navy);
+    border: 1px solid rgba(21, 35, 60, 0.3);
+    box-shadow: 0 1px 4px rgba(11, 21, 38, 0.2);
+  }
+  .mlabel b { font-weight: 700; }
+  .mlabel .v { color: var(--terracotta); font-weight: 700; margin-left: 4px; }
+  .mlabel.is-ghost { background: rgba(247, 244, 238, 0.82); color: #5d6b82; border-style: dashed; }
+  .mlabel.is-city {
+    background: transparent; border: 0; box-shadow: none;
+    color: #4a566c; font-size: 10.5px; font-weight: 600;
+    text-shadow: 0 0 3px rgba(247,244,238,0.95), 0 0 3px rgba(247,244,238,0.95);
+  }
+  .mlabel.is-selected { background: var(--navy); color: var(--paper); border-color: var(--navy); }
+  .mlabel.is-selected .v { color: #ffb894; }
+
+  /* ---------- IDS dealer layer ----------
+     Navy ring, pale fill: unmistakably not a market column and not a grey "no
+     target spend" placeholder. Dealers on real coordinates get a solid outline;
+     dealers whose position is a town centre get a broken outline, so the two
+     kinds of pin are told apart at map scale and not only in the panel. */
+  .pin-key { display: flex; align-items: center; gap: 7px; margin: 5px 0; font-size: 11.5px; }
+  .pin-key i {
+    flex: 0 0 14px; width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid var(--navy); background: #fff;
+  }
+  .pin-key.real i { background: #fff; border-color: var(--navy); }
+  .pin-key.approx i { background: rgba(247,244,238,0.9); border-style: dashed; border-color: #43506a; }
+  .pin-key.good i { background: #2d8a5e; border-color: #1f6b47; }
+  .pin-key.medium i { background: #c48a1a; border-color: #96690f; }
+  .pin-key.below i { background: #a8341c; border-color: #7d2614; }
+  .pin-key span small { color: #5d6b82; }
+
+  .band-chip {
+    display: inline-block; font-size: 11px; padding: 2px 7px; font-weight: 700;
+    border: 1px solid rgba(21, 35, 60, 0.25);
+  }
+  .band-chip.above { background: #dff0e7; color: #1f6b47; }
+  .band-chip.near { background: #f7edd6; color: #8a6410; }
+  .band-chip.below { background: #f6e2dc; color: #8f2c17; }
+  .band-chip.unknown { background: #eceff3; color: #5d6b82; }
+
+  /* a disclosed source-gap note: amber, on paper, dark text (never pale on pale) */
+  .gapnote {
+    margin-top: 9px; padding: 9px 11px; background: #fdf6e3;
+    border-left: 4px solid var(--amber); font-size: 12px; line-height: 1.5; color: #5c4a10;
+  }
+  .gapnote b { color: #3f3208; }
+
+  /* The same disclosed source-gap note, for the legend key: a full popup panel
+     over the map is too much, so the short note goes inline. */
+  .keynote { font-size: 11.5px; line-height: 1.5; color: #5c4a10; }
+  .secline { margin-top: 7px; }
+  .secline .sl { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; }
+  .secline .sl .sn { color: #43506a; }
+  .secline .sl .sv { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .secline .sl .sv .avg { color: #5d6b82; font-weight: 400; }
+  .secline .sl.muted .sv { color: #5d6b82; font-weight: 400; }
+  .secline .stab { height: 6px; background: var(--paper-dim); border: 1px solid rgba(21,35,60,0.12); margin: 1px 0 5px; }
+  .secline .stab i { display: block; height: 100%; background: var(--navy-soft); }
+
+  /* Cluster count on the map. Navy disc, paper text — never pale on pale. */
+  .mlabel.clabel {
+    background: var(--navy); color: var(--paper); border: 1px solid var(--paper);
+    width: 22px; height: 22px; padding: 0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10.5px; font-weight: 700;
+  }
+
+  /* ---------- side panel ---------- */
+  #panel {
+    position: absolute; top: 0; right: 0; bottom: 0; width: var(--panel-w); z-index: 35;
+    background: var(--paper); border-left: 1px solid var(--line);
+    box-shadow: -8px 0 30px rgba(11, 21, 38, 0.2);
+    transform: translateX(100%); transition: transform 0.22s ease;
+    display: flex; flex-direction: column;
+  }
+  body.panel-open #panel { transform: translateX(0); }
+
+  #panel-head { background: var(--navy); color: var(--paper); padding: 18px 20px 16px; flex: 0 0 auto; }
+  #panel-head .crumb {
+    font-size: 10.5px; letter-spacing: 1.1px; text-transform: uppercase;
+    color: #a9b8ce; margin-bottom: 6px;
+  }
+  #panel-head h2 { margin: 0 0 4px; font-size: 22px; font-weight: 400; line-height: 1.15; }
+  #panel-head .entity { font-size: 12.5px; color: #cdd8e8; line-height: 1.45; }
+  #panel-head .chips { margin-top: 11px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-size: 10.5px; letter-spacing: 0.5px; text-transform: uppercase;
+    padding: 3px 8px; background: rgba(247, 244, 238, 0.14);
+    border: 1px solid rgba(247, 244, 238, 0.3); color: #e6ecf5;
+  }
+  .chip.warn { background: rgba(184, 134, 11, 0.28); border-color: rgba(255, 205, 90, 0.65); color: #ffe2a0; }
+  #panel-close {
+    position: absolute; top: 14px; right: 16px; width: 30px; height: 30px;
+    background: transparent; border: 1px solid rgba(247, 244, 238, 0.4); color: var(--paper);
+    font-size: 17px; line-height: 1; cursor: pointer; font-family: inherit;
+  }
+  #panel-close:hover { background: rgba(247, 244, 238, 0.16); }
+
+  #panel-body { flex: 1 1 auto; overflow-y: auto; padding: 4px 20px 26px; }
+
+  .sec { margin-top: 19px; }
+  .sec > h3 {
+    margin: 0 0 9px; padding-bottom: 5px; font-size: 11px; letter-spacing: 1.1px;
+    text-transform: uppercase; color: #5d6b82; border-bottom: 1px solid var(--line);
+    font-family: inherit; font-weight: 700;
+  }
+
+  .hero { margin-top: 15px; padding: 14px 15px; background: var(--navy); color: var(--paper); }
+  .hero .lab { font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; color: #a9b8ce; }
+  .hero .big { font-family: Georgia, serif; font-size: 31px; line-height: 1.1; margin: 3px 0 2px; }
+  .hero .exp { font-size: 11.5px; color: #c3cfe1; line-height: 1.5; }
+
+  .kv { display: flex; justify-content: space-between; gap: 14px; padding: 6px 0; border-bottom: 1px dotted rgba(21, 35, 60, 0.16); }
+  .kv:last-child { border-bottom: 0; }
+  .kv .k { color: #43506a; font-size: 12.5px; }
+  .kv .v { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+
+  /* every calculated number carries a hover explanation, not just a title= */
+  .hx { border-bottom: 1px dotted var(--terracotta); cursor: help; position: relative; }
+  .hx::after {
+    content: attr(data-exp); position: absolute; right: 0; bottom: 140%;
+    width: 270px; padding: 9px 11px; background: var(--navy); color: var(--paper);
+    font-size: 11.5px; font-weight: 400; line-height: 1.5; text-align: left;
+    box-shadow: 0 6px 20px rgba(11, 21, 38, 0.4); z-index: 60;
+    opacity: 0; visibility: hidden; transition: opacity 0.13s; pointer-events: none;
+    border-left: 3px solid var(--terracotta); white-space: normal;
+  }
+  .hx:hover::after { opacity: 1; visibility: visible; }
+  .hero .hx::after { bottom: auto; top: 150%; }
+
+  .bar-track { height: 9px; background: var(--paper-dim); margin: 4px 0 0; border: 1px solid rgba(21, 35, 60, 0.14); }
+  .bar-fill { height: 100%; background: var(--terracotta); }
+  .bar-note { font-size: 11px; color: #5d6b82; margin-top: 4px; }
+
+  .amber {
+    margin-top: 9px; padding: 9px 11px; background: #fdf6e3;
+    border-left: 4px solid var(--amber); font-size: 12px; line-height: 1.5; color: #5c4a10;
+  }
+  .amber b { color: #3f3208; }
+
+  .notes { margin: 0; padding-left: 17px; }
+  .notes li { font-size: 12px; line-height: 1.55; color: #43506a; margin-bottom: 5px; }
+
+  #pms-primary {
+    padding: 12px 13px; background: #fff; border: 1px solid var(--line);
+  }
+  #pms-primary .pl { font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; color: #5d6b82; }
+  #pms-primary .pv { font-family: Georgia, serif; font-size: 25px; margin: 2px 0 1px; }
+  #pms-secondary { margin-top: 9px; font-size: 12px; color: #43506a; }
+
+  .fam { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; font-size: 12.5px; border-bottom: 1px dotted rgba(21, 35, 60, 0.16); }
+  .fam:last-child { border-bottom: 0; }
+  .fam .fg { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--terracotta); }
+
+  .notyet { background: #fff; border: 1px dashed #b9ae9c; padding: 12px 13px; }
+  .notyet h4 { margin: 0 0 8px; font-size: 11.5px; letter-spacing: 0.8px; text-transform: uppercase; color: #5d6b82; }
+  .ny-row { padding: 6px 0; border-bottom: 1px dotted rgba(21, 35, 60, 0.16); font-size: 12px; line-height: 1.5; }
+  .ny-row:last-child { border-bottom: 0; }
+  .ny-row b { color: var(--navy); }
+  .ny-row span { color: #43506a; }
+
+  /* ---------- states ---------- */
+  #boot {
+    position: absolute; inset: 0; z-index: 80; display: flex;
+    align-items: center; justify-content: center; background: var(--paper);
+    text-align: center; padding: 30px;
+  }
+  #boot .box { max-width: 560px; }
+  #boot h2 { font-size: 22px; margin: 0 0 10px; font-weight: 400; }
+  #boot p { font-size: 13.5px; line-height: 1.6; color: #43506a; margin: 0 0 10px; }
+  #boot code {
+    display: inline-block; background: var(--navy); color: var(--paper);
+    padding: 3px 8px; font-size: 12.5px; font-family: ui-monospace, Consolas, monospace;
+  }
+  #boot.is-error { background: #fdf6e3; }
+  #boot.is-error h2 { color: #8a5a00; }
+
+  #banner {
+    position: absolute; left: 50%; transform: translateX(-50%); bottom: 16px; z-index: 32;
+    max-width: 620px; padding: 9px 14px; background: var(--navy); color: var(--paper);
+    font-size: 12px; line-height: 1.5; box-shadow: 0 5px 18px rgba(11, 21, 38, 0.35);
+    border-left: 3px solid var(--amber); display: none;
+  }
+  body.panel-open #banner { left: calc((100vw - var(--panel-w)) / 2); }
+  #banner.show { display: block; }
+
+  .maplibregl-ctrl-attrib { font-size: 10px; }
+  #map canvas { outline: none; }
+</style>
+</head>
+<body>
+
+<div id="shell">
+  <div id="map"></div>
+  <div id="labels"></div>
+
+  <div id="titlebar">
+    <h1>Uncaptured parts spend by market</h1>
+    <div class="sub">
+      One column per market. Height is the money the market supports but we did not bill.
+      Colour is the share of that target we captured. Click a column for the numbers.
+    </div>
+    <div class="period" id="period-chip">2025 &middot; full year</div>
+  </div>
+
+  <div id="controls">
+    <div class="ctl is-collapsed" id="ctl-height">
+      <div class="ctl-head">
+        <h3>Column height</h3>
+        <button class="fold" type="button" aria-label="Show or hide column height">+</button>
+      </div>
+      <div class="ctl-body">
+        <select id="height-select"></select>
+        <div class="hint" id="height-hint"></div>
+      </div>
+    </div>
+    <div class="ctl is-collapsed" id="ctl-color">
+      <div class="ctl-head">
+        <h3>Column colour</h3>
+        <button class="fold" type="button" aria-label="Show or hide column colour">+</button>
+      </div>
+      <div class="ctl-body">
+        <select id="color-select"></select>
+        <div class="hint" id="color-hint"></div>
+      </div>
+    </div>
+    <div class="ctl is-collapsed" id="ctl-base">
+      <div class="ctl-head">
+        <h3>Base map</h3>
+        <button class="fold" type="button" aria-label="Show or hide base map options">+</button>
+      </div>
+      <div class="ctl-body">
+        <div class="seg" id="basemap-seg">
+          <button type="button" data-base="offline" aria-pressed="true">Offline</button>
+          <button type="button" data-base="live" aria-pressed="false">Live streets</button>
+        </div>
+        <div class="hint" id="basemap-hint">Offline geography is drawn from a local file and needs no network.</div>
+      </div>
+    </div>
+    <div class="ctl" id="ctl-ids">
+      <div class="ctl-head">
+        <h3>IDS dealers</h3>
+        <button class="fold" type="button" aria-label="Show or hide IDS dealer options">&minus;</button>
+      </div>
+      <div class="ctl-body">
+        <div class="seg" id="ids-seg">
+          <button type="button" data-ids="off" aria-pressed="true">Off</button>
+          <button type="button" data-ids="on" aria-pressed="false">On</button>
+        </div>
+        <div class="hint" id="ids-hint"></div>
+      </div>
+    </div>
+    <div class="ctl is-collapsed" id="ctl-view">
+      <div class="ctl-head">
+        <h3>View</h3>
+        <button class="fold" type="button" aria-label="Show or hide view options">+</button>
+      </div>
+      <div class="ctl-body">
+        <div class="seg" id="proj-seg">
+          <button type="button" data-proj="globe" aria-pressed="true">Globe</button>
+          <button type="button" data-proj="mercator" aria-pressed="false">Flat</button>
+        </div>
+        <div class="seg" style="margin-top:6px">
+          <button type="button" id="btn-labels" aria-pressed="true">Labels on</button>
+          <button type="button" id="btn-reset">Reset view</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="legend">
+    <button id="legend-head" type="button" aria-label="Show or hide the legend">
+      <h3 id="legend-title">Share of target spend captured</h3>
+      <span class="fold" id="legend-fold">&minus;</span>
+    </button>
+    <div class="leg-body">
+      <div class="leg-sub" id="legend-sub"></div>
+      <div id="legend-body"></div>
+      <div class="foot" id="legend-foot"></div>
+      <details>
+        <summary>What these words mean</summary>
+        <dl class="glossary" id="glossary"></dl>
+      </details>
+    </div>
+  </div>
+
+  <!-- The IDS dealer key is its own floating panel, bottom right, and only
+       exists while the dealer layer is drawn. It is not folded into the market
+       legend because the two together do not fit above that legend's bottom
+       edge on a 900 px window, and the market legend is the one that has to
+       stay where it is. -->
+  <div id="ids-key" aria-hidden="true">
+    <div class="leg-sub" style="margin-bottom:2px"><b>IDS dealers</b> — the Isuzu Dealer Standard,
+      an annual dealer evaluation. Each pin is coloured by how that dealer scores against
+      <i>its own</i> national average.</div>
+    <div class="pin-key good"><i></i><span>Above &middot; <small>3 points or more over its national average</small></span></div>
+    <div class="pin-key medium"><i></i><span>Around &middot; <small>within 3 points either side</small></span></div>
+    <div class="pin-key below"><i></i><span>Below &middot; <small>3 points or more under its national average</small></span></div>
+    <div class="pin-key real"><i></i><span>Solid ring &middot; <small>position from the MIDI network survey</small></span></div>
+    <div class="pin-key approx"><i></i><span>Broken ring, pale centre &middot; <small>position is a town centre or coarser</small></span></div>
+    <div class="keynote" style="margin-top:9px;padding-top:8px;border-top:1px solid var(--line)">
+      <b>160 of 564 dealers</b> carry a surveyed coordinate. The other <b>404</b> sit on a town, a
+      directory entry or, for nine of them, the country centre. Open a pin to see which note its own
+      position came from.
+    </div>
+  </div>
+
+  <div id="tip"></div>
+  <div id="banner"></div>
+
+  <aside id="panel" aria-hidden="true">
+    <div id="panel-head">
+      <button id="panel-close" type="button" title="Close">&times;</button>
+      <div class="crumb" id="p-crumb"></div>
+      <h2 id="p-title"></h2>
+      <div class="entity" id="p-entity"></div>
+      <div class="chips" id="p-chips"></div>
+    </div>
+    <div id="panel-body"></div>
+  </aside>
+
+  <div id="boot">
+    <div class="box" id="boot-box">
+      <h2>Starting the globe</h2>
+      <p>Loading the market data and the map engine.</p>
+    </div>
+  </div>
+</div>
+
+<script src="_ui/maplibre-gl.js"></script>
+<script>
+"use strict";
+
+/* =========================================================================
+   PAGE CONFIG
+   -------------------------------------------------------------------------
+   The measure that drives column height and the measure that drives column
+   colour are NOT set here. They are read from data/market_spine.json, under
+   settings.height_metric and settings.color_metric, so the same page can be
+   re-pointed at a different data set by rebuilding that JSON only.
+
+   The only thing this block does is allow a temporary override from the URL,
+   which is handy when testing a different measure:
+       index.html?height=spend_per_unit_eur&color=total_sales_eur
+   ========================================================================= */
+const PAGE_CONFIG = {
+  dataUrl: "data/market_spine.json",
+  basemapUrl: "data/basemap_land.geojson",
+  dealersUrl: "data/ids_dealers.json",
+  // A market with no usable value for the chosen measure is drawn as a flat
+  // grey marker rather than a column, so it is never mistaken for a zero.
+  labelMinZoomForAll: 3.4,
+  // The IDS dealer layer appears once you are inside a country. Below this zoom
+  // the market columns stay the primary mark, so 564 pins never clutter the
+  // default Europe view. The default view sits at about zoom 3.1, so a click on
+  // the toggle at that view explains the threshold instead of appearing to do
+  // nothing.
+  dealerMinZoom: 5,
+  // Group dealer pins up to this zoom. France alone has 84 dealers and several
+  // towns hold more than one, so without grouping a country view is a pile of
+  // overlapping dots; grouping leaves a readable bubble with a count.
+  dealerClusterMaxZoom: 7
+};
+
+/* =========================================================================
+   Live tiles
+   -------------------------------------------------------------------------
+   Two CARTO Voyager mirrors of the same map, and nothing else.
+
+   Why only CARTO: MapLibre walks a raster `tiles` array by tile sequence to
+   spread load across mirrors (verified on 5.6.2 — it does not treat later
+   entries as fallbacks). That means every tile service listed here is a tile
+   service the user actually sees, roughly a share of tiles each. An earlier
+   version listed Esri World_Street_Map third; Esri now stamps tiles served
+   without an API key with the words API KEY REQUIRED across the map, and that
+   watermark was painting over about a third of the view. It is removed rather
+   than keyed: the workspace uses no Esri service and has no Esri account.
+
+   With one tile provider there is no load to spread, so `a` and `b` are the
+   same service and either one is correct. A second, different provider was
+   deliberately not added — the attribution and the probe both have to match
+   whatever is really drawn.
+   ========================================================================= */
+const LIVE_TILES = [
+  "https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
+  "https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png"
+];
+const LIVE_ATTRIBUTION = "Offline geography: Natural Earth. Live tiles: CARTO Voyager, \u00a9 OpenStreetMap contributors.";
+
+const OVERRIDE = (function () {
+  const q = new URLSearchParams(window.location.search);
+  return { height: q.get("height"), color: q.get("color") };
+})();
+
+/* =========================================================================
+   House palette
+   ========================================================================= */
+const C = {
+  navy: "#15233c",
+  navySoft: "#1e3054",
+  terracotta: "#c0552d",
+  paper: "#f7f4ee",
+  paperDim: "#e8e2d6",
+  land: "#e6dfd0",
+  landLive: "#f0ece2",
+  border: "#b3a893",
+  amber: "#b8860b"
+};
+
+/* =========================================================================
+   State + status
+   ========================================================================= */
+const state = {
+  spine: null,
+  settings: null,
+  heightMetric: null,
+  colorMetric: null,
+  features: [],
+  columns: [],
+  placeholders: [],
+  labelsOn: true,
+  basemap: "offline",
+  projection: "globe",
+  selectedId: null,
+  selectedDealerId: null,
+  labels: new Map(),
+  cityLabels: new Map(),
+  liveTilesOk: null,
+  ids: null,
+  idsOn: false,
+  idsVisible: false,
+  errors: []
+};
+
+/* Read by the QA script after load so verification is not a guess. */
+window.__globeStatus = {
+  ready: false, columns: 0, placeholders: 0, heightMetric: null, colorMetric: null,
+  projectionRequested: null, projectionApiReadable: false,
+  projectionVerifiedByRender: null,
+  labelsVisible: 0, labelsTotal: 0,
+  basemap: "offline", liveTiles: null, tileFetchErrors: 0, errors: [],
+  ids: null
+};
+
+function fail(title, detail) {
+  const boot = document.getElementById("boot");
+  boot.className = "is-error";
+  document.getElementById("boot-box").innerHTML =
+    '<h2>' + title + "</h2><p>" + detail + "</p>" +
+    '<p>Started by double-clicking <code>index.html</code>? That cannot work. ' +
+    "MapLibre needs a Web Worker and the data is read with fetch(), and browsers block " +
+    "both from a file:// page.</p>" +
+    '<p>Close this tab and double-click <code>OPEN_ISZE_Globe.cmd</code> instead.</p>';
+  state.errors.push(title + ": " + detail);
+  window.__globeStatus.errors.push(title + ": " + detail);
+}
+
+/* =========================================================================
+   Formatting
+   ========================================================================= */
+function fmtEur(v, compact) {
+  if (v === null || v === undefined || !isFinite(v)) return "no data";
+  if (compact && Math.abs(v) >= 1000000) return "\u20ac" + (v / 1000000).toFixed(2) + "M";
+  if (compact && Math.abs(v) >= 10000) return "\u20ac" + Math.round(v / 1000) + "k";
+  return "\u20ac" + Math.round(v).toLocaleString("en-GB");
+}
+
+function fmtNum(v) {
+  if (v === null || v === undefined || !isFinite(v)) return "no data";
+  return Math.round(v).toLocaleString("en-GB");
+}
+
+function fmtPct(v) {
+  if (v === null || v === undefined || !isFinite(v)) return "no data";
+  return (v * 100).toFixed(1) + "%";
+}
+
+function fmtValue(field, def, v, compact) {
+  if (def.format === "pct") return fmtPct(v);
+  if (def.format === "eur") {
+    if (field === "spend_per_unit_eur" || field === "spend_per_unit_ex_warranty_eur") {
+      return v === null || v === undefined ? "no data" : "\u20ac" + Math.round(v).toLocaleString("en-GB");
+    }
+    return fmtEur(v, compact);
+  }
+  return String(v);
+}
+
+function esc(s) {
+  return String(s === null || s === undefined ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/* =========================================================================
+   Colour maths — driven entirely by the metric registry in the JSON
+   ========================================================================= */
+function hexToRgb(h) {
+  const s = h.replace("#", "");
+  return [parseInt(s.slice(0, 2), 16), parseInt(s.slice(2, 4), 16), parseInt(s.slice(4, 6), 16)];
+}
+function rgbToHex(r, g, b) {
+  return "#" + [r, g, b].map(function (n) {
+    return Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, "0");
+  }).join("");
+}
+function mix(a, b, t) {
+  const A = hexToRgb(a), B = hexToRgb(b);
+  return rgbToHex(A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t, A[2] + (B[2] - A[2]) * t);
+}
+
+function metricDef(field) {
+  return state.settings.metrics[field];
+}
+
+function colorForValue(field, value) {
+  const def = metricDef(field);
+  const cs = def.color_scale;
+  if (value === null || value === undefined || !isFinite(value)) return cs.missing_color;
+
+  if (cs.type === "step") {
+    for (let i = 0; i < cs.classes.length; i++) {
+      if (value < cs.classes[i].max) return cs.classes[i].color;
+    }
+    return cs.classes[cs.classes.length - 1].color;
+  }
+
+  // continuous ramp
+  const ref = def.height_reference;
+  let t = ref && ref > 0 ? Math.max(0, value) / ref : 0;
+  if (cs.mode === "sqrt") t = Math.sqrt(t);
+  t = Math.max(0, Math.min(1, t));
+  const stops = cs.stops;
+  for (let i = 0; i < stops.length - 1; i++) {
+    if (t >= stops[i].at && t <= stops[i + 1].at) {
+      const span = stops[i + 1].at - stops[i].at;
+      const local = span > 0 ? (t - stops[i].at) / span : 0;
+      return mix(stops[i].color, stops[i + 1].color, local);
+    }
+  }
+  return stops[stops.length - 1].color;
+}
+
+function heightForValue(field, value) {
+  const def = metricDef(field);
+  const h = state.settings.height;
+  if (value === null || value === undefined || !isFinite(value)) return 0;
+  const ref = def.height_reference;
+  let t = ref && ref > 0 ? Math.max(0, value) / ref : 0;
+  if ((def.height_mode || "sqrt") === "sqrt") t = Math.sqrt(t);
+  t = Math.max(0, Math.min(1, t));
+  return h.floor_m + (h.peak_m - h.floor_m) * t;
+}
+
+function classLabelForValue(field, value) {
+  const def = metricDef(field);
+  const cs = def.color_scale;
+  if (cs.type !== "step") return null;
+  if (value === null || value === undefined) return "no value";
+  for (let i = 0; i < cs.classes.length; i++) {
+    if (value < cs.classes[i].max) return cs.classes[i].label;
+  }
+  return cs.classes[cs.classes.length - 1].label;
+}
+
+/* =========================================================================
+   Boot
+   ========================================================================= */
+function boot() {
+  if (typeof maplibregl === "undefined") {
+    fail("The map engine did not load",
+      "maplibregl is not defined, so _ui/maplibre-gl.js did not load. Check that the _ui folder sits next to index.html.");
+    return;
+  }
+
+  // The IDS dealer file is optional for the page to work: if it is missing the
+  // globe still draws the market columns and the dealer toggle reports the gap.
+  // It is not allowed to be silent about a missing file, though, so a failure
+  // is recorded and shown on the layer's own hint.
+  const dealersFetch = fetch(PAGE_CONFIG.dealersUrl).then(function (r) {
+    if (!r.ok) throw new Error(PAGE_CONFIG.dealersUrl + " returned HTTP " + r.status);
+    return r.json();
+  }).catch(function (err) {
+    state.ids = null;
+    window.__globeStatus.ids = { loaded: false, error: String(err && err.message ? err.message : err) };
+    return null;
+  });
+
+  Promise.all([
+    fetch(PAGE_CONFIG.dataUrl).then(function (r) {
+      if (!r.ok) throw new Error(PAGE_CONFIG.dataUrl + " returned HTTP " + r.status);
+      return r.json();
+    }),
+    fetch(PAGE_CONFIG.basemapUrl).then(function (r) {
+      if (!r.ok) throw new Error(PAGE_CONFIG.basemapUrl + " returned HTTP " + r.status);
+      return r.json();
+    }),
+    dealersFetch
+  ]).then(function (res) {
+    state.spine = res[0];
+    state.settings = res[0].settings;
+    state.idsRaw = res[2];
+    buildPage(res[0], res[1]);
+  }).catch(function (err) {
+    fail("The market data did not load", String(err && err.message ? err.message : err));
+  });
+}
+
+/* =========================================================================
+   Build the page
+   ========================================================================= */
+function buildPage(spine, basemap) {
+  state.columns = spine.columns;
+  state.placeholders = spine.unmodelled;
+
+  // --- which measure drives what -----------------------------------------
+  const wantHeight = OVERRIDE.height || state.settings.height_metric;
+  const wantColor = OVERRIDE.color || state.settings.color_metric;
+  state.heightMetric = state.settings.metrics[wantHeight] ? wantHeight : state.settings.height_metric;
+  state.colorMetric = state.settings.metrics[wantColor] ? wantColor : state.settings.color_metric;
+  // --- header --------------------------------------------------------------
+  const years = {};
+  state.columns.concat(state.placeholders).forEach(function (c) { years[c.year] = 1; });
+  const yearList = Object.keys(years).sort();
+  document.getElementById("period-chip").textContent =
+    yearList.join("/") + " \u00b7 full year";
+  document.title = "ISZE Globe \u2014 uncaptured parts spend, " + yearList.join("/");
+
+  buildGeometry();
+  buildIds();
+  buildControls();
+  buildLegend();
+  buildGlossary();
+  initMap(basemap);
+}
+
+/* =========================================================================
+   IDS dealer records — read once, drawn as map features
+   -------------------------------------------------------------------------
+   IDS is the Isuzu Dealer Standard: an annual dealer evaluation. Each dealer
+   scores a percentage of the points available, and the national average is the
+   average of that country's own dealers.
+
+   Two things are carried through from the IDS source rather than recomputed:
+   the coordinates, and `geo_label`, which states how each position was derived.
+   Only the MIDI-sourced pins sit on surveyed coordinates; the rest are town
+   centres or worse. The map draws the two kinds differently and the panel says
+   which one is which, because presenting all 564 as addresses would be a lie.
+   ========================================================================= */
+function buildIds() {
+  const ids = state.idsRaw;
+  if (!ids || !ids.dealers) {
+    window.__globeStatus.ids = { loaded: false, features: 0 };
+    return;
+  }
+
+  const feats = ids.dealers.map(function (d) {
+    let band = "unknown";
+    if (d.total_pct !== null && d.country_avg_pct !== null) {
+      if (d.delta_pp >= 3) band = "above";
+      else if (d.delta_pp <= -3) band = "below";
+      else band = "near";
+    }
+    return {
+      type: "Feature",
+      properties: {
+        dkey: d.id,
+        kind: "dealer",
+        band: band,
+        geo_real: d.geo_real ? 1 : 0,
+        name: d.name,
+        country: d.country,
+        country_label: d.country_label,
+        place: d.place,
+        total_pct: d.total_pct,
+        country_avg_pct: d.country_avg_pct,
+        delta_pp: d.delta_pp,
+        geo_label: d.geo_label,
+        excluded_from_average: d.excluded_from_average ? 1 : 0
+      },
+      geometry: { type: "Point", coordinates: [d.lon, d.lat] }
+    };
+  });
+
+  state.ids = { meta: ids, byId: {}, features: feats };
+  ids.dealers.forEach(function (d) { state.ids.byId[d.id] = d; });
+
+  window.__globeStatus.ids = {
+    loaded: true,
+    source: ids.source && ids.source.file,
+    embedded_built_at: ids.source && ids.source.embedded_built_at,
+    dealers: ids.counts ? ids.counts.dealers : ids.dealers.length,
+    real_coordinates: ids.counts ? ids.counts.real_coordinates : null,
+    approximate_coordinates: ids.counts ? ids.counts.approximate_coordinates : null,
+    features: feats.length,
+    per_country: (function () {
+      const t = {};
+      ids.dealers.forEach(function (d) { t[d.country] = (t[d.country] || 0) + 1; });
+      return t;
+    })(),
+    layerPresent: false,
+    layerVisible: false,
+    minZoom: PAGE_CONFIG.dealerMinZoom
+  };
+}
+
+/* Band relative to the dealer's own national average. The IDS dealer compare
+   uses the same plus or minus three percentage points, so the globe and that
+   page agree on which dealers are above and below. */
+function bandLabel(band) {
+  return band === "above" ? "Above national average"
+    : band === "below" ? "Below national average"
+    : band === "near" ? "Around national average"
+    : "No national average to compare with";
+}
+
+function buildGeometry() {
+  const feats = [];
+  state.columns.forEach(function (c) {
+    const p = Object.assign({}, c);
+    delete p.geometry;
+    delete p.pms;
+    p.kind = "market";
+    // mkey is the stable key MapLibre is told to use as the feature id, via
+    // promoteId on the source. Without it MapLibre assigns its own numeric ids,
+    // which cannot be matched back to a market.
+    p.mkey = c.id;
+    p.hf = heightForValue(state.heightMetric, c[state.heightMetric]);
+    p.cf = colorForValue(state.colorMetric, c[state.colorMetric]);
+    p.vlabel = fmtValue(state.heightMetric, metricDef(state.heightMetric), c[state.heightMetric], true);
+    feats.push({
+      type: "Feature", id: c.id, properties: p, geometry: c.geometry
+    });
+  });
+  state.features = feats;
+}
+
+function featureIdFrom(feature) {
+  // Read the key from properties, not from feature.id: that keeps this
+  // independent of how the source promotes ids.
+  const p = feature && feature.properties ? feature.properties : {};
+  return p.mkey || p.dkey || p.id || null;
+}
+
+/* Recolour and re-height when a metric changes. Nothing else in the page
+   knows any measure by name. */
+function refreshGeometry() {
+  state.features.forEach(function (f) {
+    const c = state.columns.find(function (x) { return x.id === f.id; });
+    f.properties.hf = heightForValue(state.heightMetric, c[state.heightMetric]);
+    f.properties.cf = colorForValue(state.colorMetric, c[state.colorMetric]);
+    f.properties.vlabel = fmtValue(state.heightMetric, metricDef(state.heightMetric),
+      c[state.heightMetric], true);
+  });
+  const src = map.getSource("markets");
+  if (src) src.setData({ type: "FeatureCollection", features: state.features });
+  updateLegend();
+  renderLabels();
+  if (state.selectedId) {
+    const c = state.columns.find(function (x) { return x.id === state.selectedId; });
+    if (c) openPanel(c);
+  }
+}
+
+/* =========================================================================
+   Controls
+   ========================================================================= */
+function buildControls() {
+  const hSel = document.getElementById("height-select");
+  const cSel = document.getElementById("color-select");
+  Object.keys(state.settings.metrics).forEach(function (key) {
+    const def = state.settings.metrics[key];
+    hSel.appendChild(new Option(def.label, key));
+    cSel.appendChild(new Option(def.label, key));
+  });
+  hSel.value = state.heightMetric;
+  cSel.value = state.colorMetric;
+
+  hSel.addEventListener("change", function () {
+    state.heightMetric = hSel.value;
+    syncMetricStatus();
+    refreshGeometry();
+    updatePageStatus();
+  });
+  cSel.addEventListener("change", function () {
+    state.colorMetric = cSel.value;
+    syncMetricStatus();
+    refreshGeometry();
+    updatePageStatus();
+  });
+
+  document.getElementById("basemap-seg").addEventListener("click", function (e) {
+    const b = e.target.closest("button[data-base]");
+    if (!b) return;
+    setBasemap(b.getAttribute("data-base"));
+  });
+
+  document.getElementById("ids-seg").addEventListener("click", function (e) {
+    const b = e.target.closest("button[data-ids]");
+    if (!b) return;
+    setDealerLayer(b.getAttribute("data-ids"));
+  });
+
+  wireFolds();
+
+  document.getElementById("proj-seg").addEventListener("click", function (e) {
+    const b = e.target.closest("button[data-proj]");
+    if (!b) return;
+    setProjection(b.getAttribute("data-proj"));
+  });
+
+  document.getElementById("btn-labels").addEventListener("click", function () {
+    state.labelsOn = !state.labelsOn;
+    this.setAttribute("aria-pressed", String(state.labelsOn));
+    this.textContent = state.labelsOn ? "Labels on" : "Labels off";
+    renderLabels();
+  });
+
+  document.getElementById("btn-reset").addEventListener("click", resetView);
+  document.getElementById("panel-close").addEventListener("click", closePanel);
+
+  syncMetricStatus();
+}
+
+/* Fold / unfold the floating overlays. Collapsed state is a class on the
+   container, so the CSS decides what it looks like; the button only flips the
+   class and its own glyph. */
+function wireFolds() {
+  document.querySelectorAll(".ctl").forEach(function (ctl) {
+    const head = ctl.querySelector(".ctl-head");
+    const btn = ctl.querySelector(".fold");
+    if (!head || !btn) return;
+    head.addEventListener("click", function () {
+      const collapsed = ctl.classList.toggle("is-collapsed");
+      btn.textContent = collapsed ? "+" : "\u2212";
+    });
+  });
+  const legend = document.getElementById("legend");
+  const legendHead = document.getElementById("legend-head");
+  const legendFold = document.getElementById("legend-fold");
+  if (legend && legendHead) {
+    legendHead.addEventListener("click", function () {
+      const collapsed = legend.classList.toggle("is-collapsed");
+      if (legendFold) legendFold.textContent = collapsed ? "+" : "\u2212";
+    });
+  }
+}
+
+/* Called once at load and again whenever the metric switches, so the status
+   object a verification script reads always reflects what is on screen. */
+function updatePageStatus() {
+  window.__globeStatus.heightMetric = state.heightMetric;
+  window.__globeStatus.colorMetric = state.colorMetric;
+  window.__globeStatus.columns = state.columns.length;
+  window.__globeStatus.placeholders = state.placeholders.length;
+  window.__globeStatus.basemap = state.basemap;
+  window.__globeStatus.projectionRequested = state.projection;
+  window.__globeStatus.selectedId = state.selectedId;
+  window.__globeStatus.selectedDealerId = state.selectedDealerId;
+  window.__globeStatus.idsVisible = state.idsVisible;
+}
+
+function syncMetricStatus() {
+  const hDef = metricDef(state.heightMetric);
+  const cDef = metricDef(state.colorMetric);
+  document.getElementById("height-hint").textContent =
+    hDef.long_label + ". Value range in this data set: " +
+    rangeText(state.heightMetric, hDef) + ".";
+  document.getElementById("color-hint").textContent =
+    cDef.long_label + ". Value range in this data set: " +
+    rangeText(state.colorMetric, cDef) + ".";
+}
+
+function rangeText(field, def) {
+  const vals = state.columns
+    .map(function (c) { return c[field]; })
+    .filter(function (v) { return v !== null && v !== undefined; });
+  if (!vals.length) return "no values";
+  const lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+  return fmtValue(field, def, lo) + " to " + fmtValue(field, def, hi);
+}
+
+/* =========================================================================
+   Map
+   ========================================================================= */
+let map = null;
+let labelFrame = null;
+
+function initMap(basemap) {
+  map = new maplibregl.Map({
+    container: "map",
+    style: {
+      version: 8,
+      // No glyphs URL on purpose. MapLibre only fetches font glyphs for symbol
+      // layers that ask for text; the map is built without any, and the market
+      // labels are HTML elements drawn over the canvas. That keeps the whole
+      // page free of network dependencies.
+      sources: {},
+      layers: [{ id: "bg", type: "background", paint: { "background-color": C.paperDim } }]
+    },
+    center: [8, 50],
+    zoom: 3.1,
+    pitch: 42,
+    bearing: 0,
+    attributionControl: false,
+    antialias: true,
+    maxPitch: 72,
+    projection: { type: "globe" }
+  });
+
+  map.on("error", function (e) {
+    const msg = e && e.error ? String(e.error.message || e.error) : String(e);
+    // Tile fetches fail routinely when the network or a corporate proxy blocks
+    // them, and the page is designed to cope. Those are counted separately so
+    // they cannot drown out a genuine rendering error.
+    if (/AJAXError|Failed to fetch/i.test(msg)) {
+      window.__globeStatus.tileFetchErrors += 1;
+      return;
+    }
+    state.errors.push("map error: " + msg);
+    window.__globeStatus.errors.push("map error: " + msg);
+  });
+
+  map.on("load", function () {
+    // --- globe sky ------------------------------------------------------
+    try {
+      map.setSky({
+        "sky-color": "#0d2137",
+        "horizon-color": "#cfe0f2",
+        "fog-color": "#f0ece2",
+        "sky-horizon-blend": 0.55,
+        "horizon-fog-blend": 0.45,
+        "fog-ground-blend": 0.9,
+        "atmosphere-blend": 0.6
+      });
+    } catch (e) { state.errors.push("setSky: " + e.message); }
+
+    setupSources(basemap);
+    setupLayers();
+    wireInteractions();
+    // resetView() calls fitBounds with duration 0, but the camera move still
+    // settles a frame later. Sort the labels once more when it does, so the
+    // stacked layout does not depend on a later, unrelated event.
+    map.once("idle", function () { sortLabelsNow(); });
+    resetView();
+    syncDealerVisibility();
+
+    document.getElementById("boot").style.display = "none";
+    window.__globeStatus.ready = true;
+    updatePageStatus();
+    checkProjection();
+    updatePageStatus();
+    renderLabels();
+  });
+}
+
+function checkProjection() {
+  // Honest reporting note for MapLibre 5.6.2:
+  //   - map.getProjection() exists as a function but returns undefined in this
+  //     build.
+  //   - map.getStyle().projection is null when the projection was set through
+  //     setProjection() rather than declared in the style, so it cannot be used
+  //     to read back what is active either.
+  // So this function reports what was REQUESTED, and says plainly that it could
+  // not read back what is ACTIVE. Whether the globe really renders as a sphere
+  // is verified from the rendered pixels instead (see _qa/verify_encoding.py,
+  // which compares sphere_globe.png against sphere_mercator.png).
+  let apiAvailable = false;
+  try {
+    apiAvailable = typeof map.getProjection === "function" && map.getProjection() !== undefined;
+  } catch (e) { apiAvailable = false; }
+
+  window.__globeStatus.projectionRequested = state.projection;
+  window.__globeStatus.projectionApiReadable = apiAvailable;
+  window.__globeStatus.projectionVerifiedByRender = null; // set by the QA script
+  window.__globeStatus.projectionNote = apiAvailable
+    ? "projection read back from the API"
+    : "MapLibre 5.6.2 does not expose the active projection to script; " +
+      "globe rendering was verified from screenshots instead";
+}
+
+function setupSources(basemap) {
+  map.addSource("basemap", { type: "geojson", data: PAGE_CONFIG.basemapUrl });
+  map.addSource("markets", {
+    type: "geojson",
+    promoteId: "mkey",
+    data: { type: "FeatureCollection", features: state.features }
+  });
+  map.addSource("placeholder", {
+    type: "geojson",
+    promoteId: "mkey",
+    data: {
+      type: "FeatureCollection",
+      features: state.placeholders.map(function (c) {
+        const p = Object.assign({}, c);
+        delete p.geometry;
+        delete p.pms;
+        p.kind = "placeholder";
+        p.mkey = c.id;
+        return {
+          type: "Feature", id: c.id, properties: p,
+          geometry: { type: "Point", coordinates: [c.lon, c.lat] }
+        };
+      })
+    }
+  });
+
+  // Hover and selection highlighting is a separate source holding just the one
+  // column in question. That avoids MapLibre feature-state, which needs stable
+  // numeric feature ids that a GeoJSON source reassigns on setData.
+  map.addSource("highlight", {
+    type: "geojson",
+    data: { type: "FeatureCollection", features: [] }
+  });
+
+  // --- IDS dealers --------------------------------------------------------
+  // 564 points. Clustered up to zoom 7 so a country view carries grouped
+  // bubbles rather than hundreds of overlapping pins; they separate above that.
+  // The selected dealer rides in its own source so the highlight does not force
+  // the whole dealer source to be re-set.
+  const dealerFeatures = state.ids ? state.ids.features : [];
+  map.addSource("dealers", {
+    type: "geojson",
+    promoteId: "dkey",
+    data: { type: "FeatureCollection", features: dealerFeatures },
+    cluster: true,
+    clusterRadius: 48,
+    clusterMaxZoom: PAGE_CONFIG.dealerClusterMaxZoom
+  });
+  map.addSource("dealer-highlight", {
+    type: "geojson",
+    data: { type: "FeatureCollection", features: [] }
+  });
+
+  // The live raster source is declared up front but its layer stays hidden, so
+  // MapLibre never requests a tile until the user switches to it. Declaring it
+  // here rather than on first toggle avoids a "source not found" error from the
+  // layer that references it.
+  map.addSource("live", {
+    type: "raster",
+    tiles: LIVE_TILES.slice(),
+    tileSize: 256,
+    maxzoom: 19,
+    attribution: LIVE_ATTRIBUTION
+  });
+
+  map.addSource("globe-cities", {
+    type: "geojson",
+    data: { type: "FeatureCollection", features: [] }
+  });
+  buildCityLabels();
+}
+
+/* Reference points so the user can tell where the globe is pointing when the
+   geocoded light-tile layer is the only background. Hand-picked coordinates. */
+const CITIES = [
+  ["London", -0.13, 51.51], ["Paris", 2.35, 48.86], ["Berlin", 13.40, 52.52],
+  ["Madrid", -3.70, 40.42], ["Rome", 12.50, 41.90], ["Warsaw", 21.01, 52.23],
+  ["Kyiv", 30.52, 50.45], ["Stockholm", 18.07, 59.33], ["Oslo", 10.75, 59.91],
+  ["Helsinki", 24.94, 60.17], ["Reykjavik", -21.94, 64.15], ["Lisbon", -9.14, 38.72],
+  ["Dublin", -6.26, 53.35], ["Brussels", 4.35, 50.85], ["Vienna", 16.37, 48.21],
+  ["Budapest", 19.04, 47.50], ["Bucharest", 26.10, 44.43], ["Athens", 23.73, 37.98],
+  ["Nicosia", 33.38, 35.19], ["Valletta", 14.51, 35.90], ["Jerusalem", 35.21, 31.77],
+  ["Amsterdam", 4.90, 52.37], ["Copenhagen", 12.57, 55.68], ["Prague", 14.42, 50.09]
+];
+
+function buildCityLabels() {
+  const feats = CITIES.map(function (c) {
+    return {
+      type: "Feature",
+      properties: { name: c[0] },
+      geometry: { type: "Point", coordinates: [c[1], c[2]] }
+    };
+  });
+  map.getSource("globe-cities").setData({ type: "FeatureCollection", features: feats });
+}
+
+function setupLayers() {
+  // --- offline geography (paints with no network) --------------------------
+  map.addLayer({
+    id: "bm-land", type: "fill", source: "basemap",
+    filter: ["==", ["get", "layer"], "land"],
+    paint: { "fill-color": C.land, "fill-opacity": 1 }
+  });
+  map.addLayer({
+    id: "bm-border", type: "line", source: "basemap",
+    filter: ["==", ["get", "layer"], "border"],
+    paint: { "line-color": C.border, "line-width": 0.6, "line-opacity": 0.9 }
+  });
+
+  // --- live raster, added above the offline geography but below the columns
+  map.addLayer({
+    id: "live-tiles", type: "raster", source: "live", layout: { visibility: "none" },
+    paint: { "raster-opacity": 0.92 }
+  });
+
+  // --- city reference points ---------------------------------------------
+  // Dots only, no text layer: a MapLibre symbol layer would need font glyphs
+  // fetched from a server. The city names are HTML labels instead, drawn with
+  // the market labels.
+  map.addLayer({
+    id: "city-dots", type: "circle", source: "globe-cities",
+    paint: {
+      "circle-radius": ["interpolate", ["linear"], ["zoom"], 3, 1.6, 6, 3],
+      "circle-color": "#5d6b82",
+      "circle-opacity": 0.75
+    }
+  });
+
+  // --- the columns --------------------------------------------------------
+  map.addLayer({
+    id: "markets-fill",
+    type: "fill-extrusion",
+    source: "markets",
+    paint: {
+      "fill-extrusion-color": ["get", "cf"],
+      "fill-extrusion-height": ["get", "hf"],
+      "fill-extrusion-base": 0,
+      "fill-extrusion-opacity": 0.9
+    }
+  });
+
+  // An outline on each column so the vertical edges read against the map. The
+  // hovered and selected outlines come from the dedicated highlight source,
+  // added after this one so they sit on top.
+  map.addLayer({
+    id: "markets-edge",
+    type: "line",
+    source: "markets",
+    paint: {
+      "line-color": "rgba(21,35,60,0.5)",
+      "line-width": 0.9
+    }
+  });
+
+  map.addLayer({
+    id: "highlight-edge",
+    type: "line",
+    source: "highlight",
+    paint: {
+      "line-color": ["get", "edge"],
+      "line-width": ["get", "edgeWidth"]
+    }
+  });
+
+  // --- markets with no usable value: flat grey marker, never a fake column --
+  map.addLayer({
+    id: "placeholder-dot", type: "circle", source: "placeholder",
+    paint: {
+      "circle-radius": ["interpolate", ["linear"], ["zoom"], 3, 5, 7, 12],
+      "circle-color": "#6b7280",
+      "circle-opacity": 0.82,
+      "circle-stroke-color": "#f7f4ee",
+      "circle-stroke-width": 1.6
+    }
+  });
+  map.addLayer({
+    id: "placeholder-ring", type: "circle", source: "placeholder",
+    paint: {
+      "circle-radius": ["interpolate", ["linear"], ["zoom"], 3, 11, 7, 22],
+      "circle-color": "rgba(0,0,0,0)",
+      "circle-stroke-color": "#6b7280",
+      "circle-stroke-width": 1.1,
+      "circle-stroke-opacity": 0.7
+    }
+  });
+
+  setupDealerLayers();
+}
+
+/* =========================================================================
+   IDS dealer layers
+   -------------------------------------------------------------------------
+   Four layers, all with visibility driven by the toggle and the zoom:
+
+     dealer-cluster      grouped pins, below the zoom threshold
+     dealer-cluster-count the number in each group, drawn as text
+     dealer-pin-real     dealers on surveyed coordinates (MIDI-sourced)
+     dealer-pin-approx   dealers whose position is a town centre or worse
+
+   The two pin layers carry the same size and differ in colour and outline, so
+   real and approximate pins are told apart at map scale. Colour is the band
+   relative to that dealer's national average.
+   ========================================================================= */
+const BAND_COLORS = {
+  above: "#2d8a5e",
+  near: "#c48a1a",
+  below: "#a8341c",
+  unknown: "#8a94a6"
+};
+
+/* MapLibre layers have no font glyphs in this page on purpose (see the style
+   block), so the cluster count is written as HTML over the canvas rather than
+   as a symbol layer. Labelling every dealer as a DOM element would put 564
+   nodes in the page, which is what this avoids: only cluster counts, and only
+   while the dealer layer is on. */
+function setupDealerLayers() {
+  if (!map.getSource("dealers")) return;
+
+  map.addLayer({
+    id: "dealer-cluster", type: "circle", source: "dealers",
+    filter: ["has", "point_count"],
+    layout: { visibility: "none" },
+    paint: {
+      "circle-color": "#15233c",
+      "circle-opacity": 0.9,
+      "circle-radius": ["interpolate", ["linear"], ["get", "point_count"], 1, 11, 10, 15, 60, 21],
+      "circle-stroke-color": "#f7f4ee",
+      "circle-stroke-width": 1.6
+    }
+  });
+
+  // Real-coordinate pins: solid navy outline, filled by band.
+  map.addLayer({
+    id: "dealer-pin-real", type: "circle", source: "dealers",
+    filter: ["all", ["!", ["has", "point_count"]], ["==", ["get", "geo_real"], 1]],
+    layout: { visibility: "none" },
+    paint: {
+      "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 4.5, 8, 7, 12, 10],
+      "circle-color": ["match", ["get", "band"],
+        "above", BAND_COLORS.above, "near", BAND_COLORS.near,
+        "below", BAND_COLORS.below, BAND_COLORS.unknown],
+      "circle-stroke-color": "#15233c",
+      "circle-stroke-width": 1.7,
+      "circle-opacity": 0.95
+    }
+  });
+
+  // Approximate pins: same size and fill, but a dashed ring and a pale centre,
+  // so "this position is a town centre" is visible without opening the panel.
+  map.addLayer({
+    id: "dealer-pin-approx", type: "circle", source: "dealers",
+    filter: ["all", ["!", ["has", "point_count"]], ["==", ["get", "geo_real"], 0]],
+    layout: { visibility: "none" },
+    paint: {
+      "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 5, 8, 8, 12, 11],
+      "circle-color": "#f7f4ee",
+      "circle-opacity": 0.92,
+      "circle-stroke-color": ["match", ["get", "band"],
+        "above", BAND_COLORS.above, "near", BAND_COLORS.near,
+        "below", BAND_COLORS.below, BAND_COLORS.unknown],
+      "circle-stroke-width": 2.0,
+      "circle-stroke-opacity": 0.95
+    }
+  });
+
+  // The selected dealer, on top, ringing whichever marker it is.
+  map.addLayer({
+    id: "dealer-selected", type: "circle", source: "dealer-highlight",
+    paint: {
+      "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 10, 12, 17],
+      "circle-color": "rgba(0,0,0,0)",
+      "circle-stroke-color": "#15233c",
+      "circle-stroke-width": 3,
+      "circle-stroke-opacity": 1
+    }
+  });
+}
+
+function dealerLayerIds() {
+  return ["dealer-cluster", "dealer-pin-real", "dealer-pin-approx"];
+}
+
+/* The layer is drawn when the toggle is on AND the view is closer than the
+   threshold. Below the threshold it reports why rather than doing nothing. */
+function syncDealerVisibility() {
+  if (!map || !map.getLayer("dealer-pin-real")) return;
+  const zoom = map.getZoom();
+  const zoomOk = zoom >= PAGE_CONFIG.dealerMinZoom;
+  const on = state.idsOn && !!state.ids;
+  const visible = on && zoomOk;
+
+  dealerLayerIds().forEach(function (id) {
+    if (map.getLayer(id)) {
+      map.setLayoutProperty(id, "visibility", visible ? "visible" : "none");
+    }
+  });
+  state.idsVisible = visible;
+
+  if (window.__globeStatus.ids) {
+    window.__globeStatus.ids.layerPresent = true;
+    window.__globeStatus.ids.layerVisible = visible;
+    window.__globeStatus.ids.toggle = state.idsOn;
+    window.__globeStatus.ids.zoom = Number(zoom.toFixed(2));
+    window.__globeStatus.ids.zoomOk = zoomOk;
+    window.__globeStatus.ids.clustersVisible = visible
+      ? map.queryRenderedFeatures({ layers: ["dealer-cluster"] }).length : 0;
+    window.__globeStatus.ids.clusterGrouping =
+      zoom <= PAGE_CONFIG.dealerClusterMaxZoom ? "grouped" : "individual pins";
+  }
+
+  const hint = document.getElementById("ids-hint");
+  const key = document.getElementById("ids-key");
+  if (key) {
+    key.classList.toggle("show", visible);
+    key.setAttribute("aria-hidden", String(!visible));
+  }
+  if (hint) {
+    const zlo = PAGE_CONFIG.dealerMinZoom.toFixed(1);
+    const zhi = PAGE_CONFIG.dealerClusterMaxZoom.toFixed(1);
+    if (!state.ids) {
+      hint.innerHTML = "The dealer file did not load, so no dealers are drawn. " +
+        "Everything else on the page is unaffected.";
+    } else if (!state.idsOn) {
+      hint.innerHTML = state.ids.meta.counts.dealers + " dealers across " +
+        state.ids.meta.counts.countries + " IDS tabs, ready to draw. " +
+        "<b>Show</b> turns them on.";
+    } else if (!zoomOk) {
+      hint.innerHTML = "<b>Zoom in to see dealers.</b> They appear from zoom " + zlo +
+        " so " + state.ids.meta.counts.dealers + " pins never clutter the Europe view. " +
+        "Current zoom " + zoom.toFixed(1) + ".";
+    } else if (zoom <= PAGE_CONFIG.dealerClusterMaxZoom) {
+      hint.innerHTML = "Grouped while zoomed out: a bubble carries the number of dealers " +
+        "at that place. Click a bubble to move in; they separate above zoom " + zhi + ".";
+    } else {
+      hint.innerHTML = state.ids.meta.counts.dealers + " dealers on " +
+        state.ids.meta.counts.countries + " IDS tabs. Colour is the band against that " +
+        "dealer's own national average. " + state.ids.meta.counts.real_coordinates +
+        " sit on surveyed coordinates; " + state.ids.meta.counts.approximate_coordinates +
+        " are town-level or coarser \u2014 the two are drawn differently and each panel says which.";
+    }
+  }
+  renderClusterLabels();
+}
+
+function setDealerLayer(mode) {
+  state.idsOn = mode === "on";
+  document.querySelectorAll("#ids-seg button").forEach(function (b) {
+    b.setAttribute("aria-pressed", String(b.getAttribute("data-ids") === mode));
+  });
+
+  // The pin colours mean nothing without the key, and on a short window the
+  // market legend starts folded. Turning the layer on unfolds it so the map is
+  // not left with two overlapping panels, but the key itself is its own panel
+  // and shows on its own.
+  if (state.idsOn) {
+    const legend = document.getElementById("legend");
+    const fold = document.getElementById("legend-fold");
+    if (legend && legend.classList.contains("is-collapsed")) {
+      legend.classList.remove("is-collapsed");
+      if (fold) fold.textContent = "\u2212";
+    }
+  }
+
+  if (state.idsOn && state.ids && map.getZoom() < PAGE_CONFIG.dealerMinZoom) {
+    // Move to the smallest zoom that actually shows the layer, centred on the
+    // dealer network, so turning it on answers with the dealers.
+    const b = new maplibregl.LngLatBounds();
+    state.ids.features.forEach(function (f) {
+      b.extend(f.geometry.coordinates);
+    });
+    if (!b.isEmpty()) {
+      map.fitBounds(b, { padding: { top: 110, bottom: 90, left: 330, right: 60 },
+                         maxZoom: PAGE_CONFIG.dealerMinZoom, duration: 700 });
+    }
+  }
+  syncDealerVisibility();
+  updatePageStatus();
+}
+
+/* Cluster counts as HTML over the canvas. Only clusters, never one node per
+   dealer, so the DOM stays small at any zoom.
+
+   A cluster count is placed only where it collides with nothing: not another
+   cluster count, not the floating overlays, and not a market or city label.
+   layoutLabels() in turn avoids the cluster boxes, so the two label sets do not
+   fight over the same ground. */
+function renderClusterLabels() {
+  const box = document.getElementById("labels");
+  if (!box) return;
+  Array.prototype.forEach.call(box.querySelectorAll(".clabel"), function (n) { n.remove(); });
+  if (!state.idsVisible || !map || !map.getLayer("dealer-cluster")) {
+    if (window.__globeStatus.ids) window.__globeStatus.ids.clusterLabelsInDom = 0;
+    return;
+  }
+
+  // The floating panels are not part of the map, but a label under one is
+  // unreadable, so they count as occupied ground.
+  const overlays = ["titlebar", "controls", "legend"].map(function (id) {
+    const el = document.getElementById(id);
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    return { x1: r.left, y1: r.top, x2: r.right, y2: r.bottom };
+  }).filter(Boolean).filter(function (r) { return r.x2 > r.x1; });
+
+  const taken = overlays.slice();
+  let drawn = 0;
+  const feats = map.queryRenderedFeatures({ layers: ["dealer-cluster"] });
+
+  // Biggest groups first: they carry the most information, so they win a spot.
+  feats.slice().sort(function (a, b) {
+    return (b.properties.point_count || 0) - (a.properties.point_count || 0);
+  }).forEach(function (f) {
+    const pt = map.project(f.geometry.coordinates);
+    if (pt.x < 14 || pt.y < 14 ||
+        pt.x > map.getCanvas().clientWidth - 14 ||
+        pt.y > map.getCanvas().clientHeight - 14) return;
+
+    const half = 13;
+    const b = { x1: pt.x - half, x2: pt.x + half, y1: pt.y - half, y2: pt.y + half };
+    for (let i = 0; i < taken.length; i++) {
+      const t = taken[i];
+      if (!(b.x2 < t.x1 || b.x1 > t.x2 || b.y2 < t.y1 || b.y1 > t.y2)) return;
+    }
+    taken.push(b);
+
+    const el = document.createElement("div");
+    el.className = "mlabel clabel";
+    el.textContent = f.properties.point_count_abbreviated || f.properties.point_count;
+    el.style.transform = "translate(-50%,-50%) translate(" + pt.x.toFixed(1) + "px," +
+      pt.y.toFixed(1) + "px)";
+    box.appendChild(el);
+    drawn += 1;
+  });
+
+  if (window.__globeStatus.ids) {
+    window.__globeStatus.ids.clusterLabelsInDom = drawn;
+  }
+}
+
+function ensureLiveTiles() {
+  // The source is created with the map in setupSources(); nothing to do here.
+  return map.getSource("live");
+}
+
+function setBasemap(mode) {
+  state.basemap = mode;
+  window.__globeStatus.basemap = mode;
+  document.querySelectorAll("#basemap-seg button").forEach(function (b) {
+    b.setAttribute("aria-pressed", String(b.getAttribute("data-base") === mode));
+  });
+  const hint = document.getElementById("basemap-hint");
+
+  if (mode === "live") {
+    ensureLiveTiles();
+    map.setLayoutProperty("live-tiles", "visibility", "visible");
+    hint.textContent = "Checking whether the tile servers are reachable\u2026";
+    state.liveTilesOk = null;
+    window.__globeStatus.liveTiles = null;
+    // Do not dim the offline geography until tiles are confirmed working.
+    probeLiveTiles(hint);
+  } else {
+    if (map.getLayer("live-tiles")) map.setLayoutProperty("live-tiles", "visibility", "none");
+    map.setPaintProperty("bm-land", "fill-opacity", 1);
+    map.setPaintProperty("bm-border", "line-opacity", 0.9);
+    hint.textContent = "Offline geography is drawn from a local file and needs no network.";
+    hideBanner();
+  }
+}
+
+/* Decide whether the live tile servers are actually reachable by fetching one
+   real tile. Watching the map's own data events is not reliable for this: a
+   source reports itself loaded even when every tile request failed, which made
+   an earlier version of this page claim "tiles loaded" on a machine with no
+   network. A direct fetch is unambiguous. */
+function probeLiveTiles(hint) {
+  // One real tile from the one live source this page draws. Fetching a tile
+  // directly is unambiguous: the map's own data events report a source as
+  // loaded even when every tile request failed.
+  const candidates = [
+    "https://a.basemaps.cartocdn.com/rastertiles/voyager/3/4/2.png"
+  ];
+
+  let settled = false;
+
+  const finish = function (ok) {
+    if (settled) return;
+    settled = true;
+    state.liveTilesOk = ok;
+    window.__globeStatus.liveTiles = ok;
+
+    if (ok) {
+      // Live tiles cover the view; soften the offline geography underneath so
+      // streets are not double-printed.
+      map.setPaintProperty("bm-land", "fill-opacity", 0.18);
+      map.setPaintProperty("bm-border", "line-opacity", 0.35);
+      hint.textContent = "Live street tiles loaded (CARTO Voyager). " +
+        "The offline geography stays underneath.";
+      hideBanner();
+    } else {
+      // Put the map back the way it was and say so, rather than leaving a
+      // washed-out map and an untrue "loaded" message.
+      if (map.getLayer("live-tiles")) map.setLayoutProperty("live-tiles", "visibility", "none");
+      map.setPaintProperty("bm-land", "fill-opacity", 1);
+      map.setPaintProperty("bm-border", "line-opacity", 0.9);
+      document.querySelectorAll("#basemap-seg button").forEach(function (b) {
+        b.setAttribute("aria-pressed", String(b.getAttribute("data-base") === "offline"));
+      });
+      state.basemap = "offline";
+      window.__globeStatus.basemap = "offline";
+      hint.textContent = "Live tiles are unreachable, so the page has fallen back to the offline " +
+        "geography. The map and the columns are unaffected \u2014 only street detail is missing.";
+      showBanner("Live street tiles could not be reached. The offline geography underneath is " +
+        "still drawn, so the map is complete \u2014 only the street detail is missing.");
+    }
+  };
+
+  // If neither probe answers within 6 seconds, treat the network as unavailable.
+  const timer = setTimeout(function () { finish(false); }, 6000);
+
+  let remaining = candidates.length;
+  candidates.forEach(function (url) {
+    const ctrl = new AbortController();
+    const t = setTimeout(function () { ctrl.abort(); }, 5500);
+    fetch(url, { mode: "no-cors", signal: ctrl.signal, cache: "no-store" })
+      .then(function () {
+        clearTimeout(t);
+        finish(true);
+      })
+      .catch(function () {
+        clearTimeout(t);
+        remaining -= 1;
+        if (remaining === 0) { clearTimeout(timer); finish(false); }
+      });
+  });
+}
+
+function setProjection(kind) {
+  document.querySelectorAll("#proj-seg button").forEach(function (b) {
+    b.setAttribute("aria-pressed", String(b.getAttribute("data-proj") === kind));
+  });
+  try {
+    map.setProjection({ type: kind });
+    state.projection = kind;
+  } catch (e) {
+    state.errors.push("setProjection(" + kind + "): " + e.message);
+    showBanner("This browser refused the " + kind + " projection: " + e.message);
+    return;
+  }
+  checkProjection();
+  renderLabels();
+}
+
+function resetView() {
+  const b = new maplibregl.LngLatBounds();
+  state.columns.forEach(function (c) { b.extend([c.lon, c.lat]); });
+  state.placeholders.forEach(function (c) { b.extend([c.lon, c.lat]); });
+  // The left padding clears the title block and the legend; the top clears the
+  // title block. The dealer layer is not part of this framing: its pins include
+  // overseas territories, and the columns are the primary mark at this view.
+  map.fitBounds(b, { padding: { top: 130, bottom: 40, left: 320, right: 60 }, duration: 0 });
+  if (map.getZoom() > 4.2) map.setZoom(4.2);
+  syncDealerVisibility();
+  renderLabels();
+}
+
+/* =========================================================================
+   Interactions
+   ========================================================================= */
+let hoveredId = null;
+
+function wireInteractions() {
+  const interactive = ["markets-fill", "placeholder-dot"];
+
+  // Dealer pins and clusters are only clickable while they are drawn, so the
+  // handlers use the layers that exist at click time rather than the layer set
+  // as it was when this ran.
+  const dealerLayers = function () {
+    return dealerLayerIds().filter(function (id) { return !!map.getLayer(id); });
+  };
+
+  map.on("mousemove", function (e) {
+    const dl = state.idsVisible ? dealerLayers() : [];
+    const dfeats = dl.length ? map.queryRenderedFeatures(e.point, { layers: dl }) : [];
+    if (dfeats.length) {
+      const isCluster = dfeats[0].layer.id === "dealer-cluster";
+      map.getCanvas().style.cursor = "pointer";
+      clearHover();
+      hideTip();
+      if (!isCluster) showDealerTip(dfeats[0], e.point);
+      return;
+    }
+
+    const feats = map.queryRenderedFeatures(e.point, { layers: interactive });
+    if (!feats.length) {
+      clearHover();
+      map.getCanvas().style.cursor = "";
+      hideTip();
+      return;
+    }
+    map.getCanvas().style.cursor = "pointer";
+    const f = feats[0];
+    setHover(featureIdFrom(f));
+    showTip(f, e.point);
+  });
+
+  map.on("mouseleave", function () {
+    clearHover();
+    hideTip();
+    map.getCanvas().style.cursor = "";
+  });
+
+  interactive.forEach(function (layer) {
+    map.on("click", layer, function (e) {
+      if (!e.features || !e.features.length) return;
+      const id = featureIdFrom(e.features[0]);
+      const c = state.columns.concat(state.placeholders).find(function (x) { return x.id === id; });
+      if (c) openPanel(c);
+    });
+  });
+
+  // Clicking a cluster moves in until the pins separate, which is the normal
+  // drill-down for grouped points. Clicking a pin opens its panel.
+  map.on("click", "dealer-cluster", function (e) {
+    const f = e.features && e.features[0];
+    if (!f) return;
+    const src = map.getSource("dealers");
+    const clusterId = f.properties.cluster_id;
+    src.getClusterExpansionZoom(clusterId).then(function (zoom) {
+      map.easeTo({ center: f.geometry.coordinates, zoom: zoom + 0.2, duration: 500 });
+    }).catch(function () { /* cluster already expanded; nothing to do */ });
+  });
+
+  ["dealer-pin-real", "dealer-pin-approx"].forEach(function (layer) {
+    map.on("click", layer, function (e) {
+      if (!e.features || !e.features.length) return;
+      const key = featureIdFrom(e.features[0]);
+      const d = state.ids && state.ids.byId[key];
+      if (d) openDealerPanel(d);
+    });
+  });
+
+  // The layer-specific handlers above run first, so a click that lands on a
+  // dealer pin or a dealer group has already opened what it should — this one
+  // must not immediately close it again. A click anywhere else that is not a
+  // market column closes the panel, the way it did before the dealers existed.
+  map.on("click", function (e) {
+    const dl = state.idsVisible ? dealerLayers() : [];
+    if (dl.length && map.queryRenderedFeatures(e.point, { layers: dl }).length) return;
+    const feats = map.queryRenderedFeatures(e.point, { layers: interactive });
+    if (!feats.length) closePanel();
+  });
+
+  // keep labels glued to their columns
+  ["move", "rotate", "pitch", "render"].forEach(function (ev) {
+    map.on(ev, scheduleLabels);
+  });
+  ["moveend", "zoomend"].forEach(function (ev) {
+    map.on(ev, function () { syncDealerVisibility(); });
+  });
+  map.on("sourcedata", function (e) {
+    if (e.sourceId === "dealers" && e.isSourceLoaded && state.idsVisible) renderClusterLabels();
+  });
+  // the city labels only exist above a zoom threshold, so a zoom change has to
+  // rebuild the label set rather than just reposition it
+  map.on("zoom", function () {
+    const wantCities = map.getZoom() >= 4.4;
+    if (wantCities !== state.cityLabels.size > 0) renderLabels();
+    else scheduleLabels();
+  });
+}
+
+function updateHighlight() {
+  if (!map || !map.getSource("highlight")) return;
+  const feats = [];
+  // The selected column keeps its outline; a hovered column gets a brighter one.
+  if (state.selectedId) {
+    const c = state.columns.find(function (x) { return x.id === state.selectedId; });
+    if (c) {
+      feats.push({
+        type: "Feature", properties: { edge: C.navy, edgeWidth: 3.0 },
+        geometry: { type: "Polygon", coordinates: c.geometry.coordinates }
+      });
+    }
+  }
+  if (hoveredId !== null && hoveredId !== state.selectedId) {
+    const c = state.columns.find(function (x) { return x.id === hoveredId; });
+    if (c) {
+      feats.push({
+        type: "Feature", properties: { edge: "#ffffff", edgeWidth: 2.4 },
+        geometry: { type: "Polygon", coordinates: c.geometry.coordinates }
+      });
+    }
+  }
+
+  map.getSource("highlight").setData({ type: "FeatureCollection", features: feats });
+}
+
+function setHover(id) {
+  if (hoveredId === id) return;
+  hoveredId = id;
+  updateHighlight();
+}
+
+function clearHover() { setHover(null); }
+
+/* The ring on the selected dealer, kept in its own single-feature source so the
+   564-feature dealer source never has to be re-set just to move a marker. */
+function updateDealerHighlight() {
+  if (!map || !map.getSource("dealer-highlight")) return;
+  const feats = [];
+  if (state.selectedDealerId && state.idsVisible && state.ids && state.ids.byId[state.selectedDealerId]) {
+    const d = state.ids.byId[state.selectedDealerId];
+    feats.push({
+      type: "Feature", properties: {},
+      geometry: { type: "Point", coordinates: [d.lon, d.lat] }
+    });
+  }
+  map.getSource("dealer-highlight").setData({ type: "FeatureCollection", features: feats });
+}
+
+/* =========================================================================
+   Tooltip
+   ========================================================================= */
+function showTip(feature, point) {
+  const p = feature.properties;
+  const tip = document.getElementById("tip");
+  const hDef = metricDef(state.heightMetric);
+  const cDef = metricDef(state.colorMetric);
+
+  let html = '<div class="tip-h">' + esc(p.label) + "</div>";
+
+  if (p.kind === "placeholder") {
+    html += '<div class="tip-r">no target spend in the source, so no column. ' +
+      "This is a missing figure, not a zero.</div>";
+  } else {
+    html += '<div class="tip-r">' + esc(hDef.label) + ": <b>" +
+      esc(labelValueText(p)) + "</b></div>";
+    // Only show the colour metric as a second line when it is a different
+    // measure from the height one, so the same number never appears twice.
+    if (state.colorMetric !== state.heightMetric) {
+      html += '<div class="tip-r">' + esc(cDef.label) + ": <b>" +
+        esc(fmtValue(state.colorMetric, cDef, p[state.colorMetric])) + "</b></div>";
+    }
+    if (state.heightMetric !== "gap_eur" && state.colorMetric !== "gap_eur" && p.gap_eur !== null) {
+      html += '<div class="tip-r">Uncaptured parts spend: <b>' + esc(fmtEur(p.gap_eur, true)) + "</b></div>";
+    }
+    if (p.uio_missing) {
+      html += '<div class="tip-r" style="color:#ffd88a">no fleet count in the source</div>';
+    }
+  }
+  html += '<div class="tip-r" style="margin-top:4px; opacity:.75">click for the full market panel</div>';
+
+  placeTip(tip, point, html);
+}
+
+function hideTip() { document.getElementById("tip").style.display = "none"; }
+
+/* Hover text for a dealer pin. Deliberately short: the panel carries the rest,
+   and the honest note about how the position was derived is on both so it
+   cannot be missed. */
+function showDealerTip(feature, point) {
+  const p = feature.properties;
+  const tip = document.getElementById("tip");
+  const band = p.band;
+  let html = '<div class="tip-h">' + esc(p.name) + "</div>";
+  html += '<div class="tip-r">' + esc(p.country_label) +
+    (p.place ? " \u00b7 " + esc(p.place) : "") + "</div>";
+  if (p.total_pct !== null && p.total_pct !== undefined) {
+    html += '<div class="tip-r">IDS score: <b>' + fmtPct(p.total_pct) + "</b>";
+    if (p.country_avg_pct !== null && p.country_avg_pct !== undefined) {
+      const sign = p.delta_pp >= 0 ? "+" : "\u2212";
+      html += " \u00b7 national average " + fmtPct(p.country_avg_pct) +
+        " (" + sign + Math.abs(p.delta_pp).toFixed(1) + " pp)";
+    }
+    html += "</div>";
+    html += '<div class="tip-r">' + esc(bandLabel(band)) + "</div>";
+  } else {
+    html += '<div class="tip-r">no total score in the IDS result for this dealer</div>';
+  }
+  if (!p.geo_real) {
+    html += '<div class="tip-r" style="color:#ffd88a">position is approximate \u2014 ' +
+      esc(p.geo_label) + "</div>";
+  }
+  html += '<div class="tip-r" style="margin-top:4px; opacity:.75">click for the dealer panel</div>';
+  placeTip(tip, point, html);
+}
+
+function placeTip(tip, point, html) {
+  tip.innerHTML = html;
+  tip.style.display = "block";
+
+  const shell = document.getElementById("shell").getBoundingClientRect();
+  let x = point.x + 18, y = point.y + 14;
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  const limitRight = shell.width - (document.body.classList.contains("panel-open") ? 430 : 0) - 12;
+  if (x + w > limitRight) x = point.x - w - 16;
+  if (y + h > shell.height - 12) y = point.y - h - 12;
+  tip.style.left = Math.max(8, x) + "px";
+  tip.style.top = Math.max(8, y) + "px";
+}
+
+/* =========================================================================
+   Labels — DOM markers with collision handling.
+   MapLibre's own symbol layer cannot show HTML, so the market labels are HTML
+   elements positioned with map.project() and hidden when they would collide.
+   Priority goes to the tallest column, so at a wide view the biggest gaps
+   keep their names and the small markets drop theirs rather than overprint.
+   ========================================================================= */
+/* A short form of a metric value for on-map labels and tooltips. Uses the
+   metric's own short unit so a rate never reads as an absolute euro amount. */
+function labelValueText(c) {
+  const field = state.heightMetric;
+  const def = metricDef(field);
+  const v = c[field];
+  if (v === null || v === undefined) return "no value";
+  if (def.format === "pct") return fmtPct(v);
+  if (def.unit === "EUR per truck") return "\u20ac" + Math.round(v) + "/truck";
+  if (Math.abs(v) >= 1000000) return "\u20ac" + (v / 1000000).toFixed(2) + "M";
+  if (Math.abs(v) >= 10000) return "\u20ac" + Math.round(v / 1000) + "k";
+  return "\u20ac" + Math.round(v).toLocaleString("en-GB");
+}
+
+function renderLabels() {
+  const box = document.getElementById("labels");
+  box.innerHTML = "";
+  state.labels.clear();
+
+  const all = state.columns.concat(state.placeholders);
+  all.forEach(function (c) {
+    const el = document.createElement("div");
+    el.className = "mlabel" + (c.gap_eur === null ? " is-ghost" : "");
+    if (c.gap_eur === null) {
+      el.innerHTML = "<b>" + esc(c.label) + "</b> <span class=\"v\">no target spend</span>";
+    } else {
+      el.innerHTML = "<b>" + esc(c.label) + "</b><span class=\"v\">" +
+        esc(labelValueText(c)) + "</span>";
+    }
+    el.setAttribute("data-id", c.id);
+    box.appendChild(el);
+    state.labels.set(c.id, el);
+  });
+
+  // City reference labels, only once zoomed in far enough that they help
+  // rather than compete with the market names.
+  state.cityLabels = new Map();
+  if (map && map.getZoom() >= 4.4) {
+    CITIES.forEach(function (ct, i) {
+      const key = "city:" + i;
+      const el = document.createElement("div");
+      el.className = "mlabel is-city";
+      el.textContent = ct[0];
+      box.appendChild(el);
+      state.cityLabels.set(key, { el: el, lon: ct[1], lat: ct[2] });
+    });
+  }
+
+  scheduleLabels();
+}
+
+function sortPriority(a, b) {
+  const ah = a.gap_eur === null ? -1 : a[state.heightMetric] || 0;
+  const bh = b.gap_eur === null ? -1 : b[state.heightMetric] || 0;
+  if (bh !== ah) return bh - ah;
+  return String(a.label).localeCompare(String(b.label));
+}
+
+function scheduleLabels() {
+  if (labelFrame) return;
+  labelFrame = requestAnimationFrame(function () {
+    labelFrame = null;
+    layoutLabels();
+  });
+}
+
+function layoutLabels() {
+  if (!map || !state.columns.length) return;
+  const showAll = state.labelsOn;
+  const placed = [];
+
+  // The dealer cluster counts are already on screen. They are drawn first and
+  // this function gives way to them, so the two label sets never overprint.
+  Array.prototype.forEach.call(document.querySelectorAll(".clabel"), function (el) {
+    const r = el.getBoundingClientRect();
+    if (r.width && r.height) {
+      placed.push({ x1: r.left, y1: r.top, x2: r.right, y2: r.bottom });
+    }
+  });
+  const startPlaced = placed.length;
+  let visible = 0;
+  let stacked = 0;
+
+  const hideGhosts = state.labelsOn && state.placeholders.length > 0;
+  const ordered = state.columns.concat(state.placeholders).slice().sort(sortPriority);
+
+  // Candidate vertical offsets in pixels, tried in order. The first is the
+  // normal position just above the column base. The rest let a label stack
+  // above or below a neighbour instead of being dropped — which matters for the
+  // two markets that share a coordinate in the source, because dropping one
+  // would leave a labelled column looking like it had no partner.
+  const OFFSETS = [-13, -33, 7, -53, 27, -73, 47];
+
+  ordered.forEach(function (c) {
+    const el = state.labels.get(c.id);
+    if (!el) return;
+    if (!showAll) { el.style.display = "none"; return; }
+
+    // The four grey "no target spend" markers are drawn and clickable, but at
+    // the default Europe view their four labels are what tips the middle of the
+    // map into a wall of text. They stay clickable and their panel still says
+    // the figure is missing; the label appears once zoomed in.
+    if (hideGhosts && c.gap_eur === null && map.getZoom() < 4.0) {
+      el.style.display = "none";
+      return;
+    }
+
+    const pt = map.project([c.lon, c.lat]);
+    const inView = isFinite(pt.x) && isFinite(pt.y) &&
+      pt.x > -200 && pt.y > -200 &&
+      pt.x < map.getCanvas().clientWidth + 200 &&
+      pt.y < map.getCanvas().clientHeight + 200;
+    if (!inView) { el.style.display = "none"; return; }
+
+    el.style.display = "";
+    const w = el.offsetWidth || 90, h = el.offsetHeight || 18;
+    const cx = pt.x;
+
+    let chosen = null;
+    for (let k = 0; k < OFFSETS.length; k++) {
+      const cy = pt.y + OFFSETS[k];
+      const box = { x1: cx - w / 2, x2: cx + w / 2, y1: cy - h / 2, y2: cy + h / 2 };
+      let clash = false;
+      for (let i = 0; i < placed.length; i++) {
+        const p = placed[i];
+        if (!(box.x2 < p.x1 || box.x1 > p.x2 || box.y2 < p.y1 || box.y1 > p.y2)) { clash = true; break; }
+      }
+      if (!clash) { chosen = { box: box, cy: cy, k: k }; break; }
+    }
+
+    if (!chosen) { el.style.display = "none"; return; }
+
+    placed.push(chosen.box);
+    visible++;
+    if (chosen.k > 0) stacked++;
+    el.style.transform = "translate(-50%,-50%) translate(" + cx.toFixed(1) + "px," +
+      chosen.cy.toFixed(1) + "px)";
+    el.classList.toggle("is-selected", state.selectedId === c.id);
+  });
+
+  // City labels go last, so they give way to the market names AND to the
+  // dealer cluster counts already in `placed`.
+  if (showAll && state.cityLabels) {
+    state.cityLabels.forEach(function (obj) {
+      const pt = map.project([obj.lon, obj.lat]);
+      const inView = isFinite(pt.x) && isFinite(pt.y) &&
+        pt.x > -100 && pt.y > -100 &&
+        pt.x < map.getCanvas().clientWidth + 100 &&
+        pt.y < map.getCanvas().clientHeight + 100;
+      if (!inView) { obj.el.style.display = "none"; return; }
+      obj.el.style.display = "";
+      const w = obj.el.offsetWidth || 60, h = obj.el.offsetHeight || 16;
+      const box = { x1: pt.x - w / 2, x2: pt.x + w / 2, y1: pt.y + 5, y2: pt.y + 5 + h };
+      let clash = false;
+      for (let i = 0; i < placed.length; i++) {
+        const p = placed[i];
+        if (!(box.x2 < p.x1 || box.x1 > p.x2 || box.y2 < p.y1 || box.y1 > p.y2)) { clash = true; break; }
+      }
+      if (clash) { obj.el.style.display = "none"; return; }
+      placed.push(box);
+      obj.el.style.transform = "translate(-50%,-50%) translate(" + pt.x.toFixed(1) + "px," +
+        (pt.y + 5 + h / 2).toFixed(1) + "px)";
+    });
+  }
+
+  window.__globeStatus.labelsVisible = visible;
+  window.__globeStatus.labelsTotal = state.labels.size;
+  window.__globeStatus.labelsStacked = stacked;
+  window.__globeStatus.labelsHidden = state.labels.size - visible;
+  window.__globeStatus.ghostLabelsHidden = hideGhosts && map.getZoom() < 4.0;
+  window.__globeStatus.clusterBoxesYieldedTo = startPlaced;
+}
+
+function sortLabelsNow() {
+  if (labelFrame) { cancelAnimationFrame(labelFrame); labelFrame = null; }
+  layoutLabels();
+}
+
+/* =========================================================================
+   Side panel
+   ========================================================================= */
+function openPanel(c) {
+  state.selectedId = c.id;
+  state.selectedDealerId = null;
+  updateHighlight();
+  updateDealerHighlight();
+
+  document.body.classList.add("panel-open");
+  document.getElementById("panel").setAttribute("aria-hidden", "false");
+
+  const multi = c.coord_shared_with && c.coord_shared_with.length > 0;
+  const uioMissing = c.uio_missing;
+
+  // ---- header -----------------------------------------------------------
+  document.getElementById("p-crumb").textContent =
+    (c.country || "market") + (c.region ? " \u00b7 " + c.region : "");
+  document.getElementById("p-title").textContent = c.label;
+  document.getElementById("p-entity").innerHTML =
+    esc(c.display_name) +
+    (c.distributor_code ? ' <span style="opacity:.7">(' + esc(c.distributor_code) + ")</span>" : "") +
+    (c.scope ? " \u00b7 " + esc(c.scope) : "") +
+    (c.territory_label ? " \u00b7 " + esc(c.territory_label) : "");
+  window.__globeStatus.selectedId = c.id;
+  window.__globeStatus.selectedDealerId = null;
+
+  const chips = [];
+  chips.push('<span class="chip">' + esc(c.year) + " \u00b7 " +
+    esc((c.period_basis || "").replace("_", " ")) + "</span>");
+  if (c.traffic_light) {
+    chips.push('<span class="chip">' + esc(c.traffic_light) + "</span>");
+  }
+  if (uioMissing) chips.push('<span class="chip warn">no fleet count</span>');
+  if (multi) chips.push('<span class="chip warn">shares a coordinate</span>');
+  document.getElementById("p-chips").innerHTML = chips.join("");
+
+  // ---- body -------------------------------------------------------------
+  const body = document.getElementById("panel-body");
+  let h = "";
+
+  if (c.gap_eur === null) {
+    h += '<div class="amber"><b>No column for this market.</b> The source has no target ' +
+      "spend for it, so the height measure cannot be computed. Parts billed is shown below, " +
+      "but there is nothing to compare it against. This is a missing figure, not a zero.</div>";
+  } else {
+    const def = metricDef("gap_eur");
+    h += '<div class="hero">' +
+      '<div class="lab">Uncaptured parts spend</div>' +
+      '<div class="big">' + esc(fmtEur(c.gap_eur)) + "</div>" +
+      '<div class="exp"><span class="hx" data-exp="Target spend for the market minus the parts we billed. ' +
+        'Both figures are for ' + esc(c.year) + ', full year. Source: GPS parts-spend model.">' +
+        esc(fmtEur(c.max_spend_eur)) + "</span> target spend, less " +
+        '<span class="hx" data-exp="Parts revenue billed into the market in ' + esc(c.year) + ', full year.">' +
+        esc(fmtEur(c.total_sales_eur)) + "</span> billed.</div></div>";
+  }
+
+  h += '<div class="sec"><h3>The numbers behind the column</h3>';
+  h += kv("Parts billed", fmtEur(c.total_sales_eur),
+    "Parts revenue billed into the market in " + c.year + ", full year.");
+  h += kv("Target spend for the market", fmtEur(c.max_spend_eur),
+    "What the parts-spend model says this market should support, given its fleet and its service intervals. Modelled, not observed.");
+  h += kv("Uncaptured parts spend", fmtEur(c.gap_eur),
+    "Target spend minus parts billed. This is what drives the column height on the map.");
+  h += kv("Share of target captured", fmtPct(c.capture_vs_max),
+    "Parts billed divided by target spend. This drives the column colour.");
+
+  if (c.capture_vs_max !== null) {
+    const pct = Math.max(0, Math.min(1, c.capture_vs_max));
+    h += '<div class="bar-track"><div class="bar-fill" style="width:' + (pct * 100).toFixed(1) +
+      '%"></div></div><div class="bar-note">' + fmtPct(c.capture_vs_max) + " of the target captured. " +
+      fmtPct(1 - c.capture_vs_max) + " left on the table.</div>";
+  }
+  h += "</div>";
+
+  // ---- fleet denominator -------------------------------------------------
+  h += '<div class="sec"><h3>Fleet behind the number</h3>';
+  if (uioMissing) {
+    h += '<div class="amber"><b>No fleet count for this market in the source.</b> ' +
+      "Without a denominator the parts figures above cannot be read as a rate per truck. " +
+      "The count is missing, which is not the same as zero.</div>";
+  } else {
+    h += kv("Vehicles in service (UIO)", fmtNum(c.uio_units),
+      "Units in operation \u2014 the vehicles in service that could buy parts. Source: " +
+      (c.uio_source || "GPS model") + ".");
+    h += kv("Parts billed per truck", "\u20ac" + (c.spend_per_unit_eur || 0).toFixed(2),
+      "Parts billed divided by the vehicles in service. This is the fair way to compare a small and a large market.");
+    if (c.spend_per_unit_ex_warranty_eur !== null) {
+      h += kv("Per truck, excluding warranty", "\u20ac" + c.spend_per_unit_ex_warranty_eur.toFixed(2),
+        "The same rate with warranty parts taken out, since warranty is billed at a different price basis.");
+    }
+  }
+  h += "</div>";
+
+  // ---- PMS ---------------------------------------------------------------
+  h += '<div class="sec"><h3>Parts market scan</h3>';
+  if (!c.pms) {
+    h += '<div class="amber">No parts market scan rows for this market in ' + esc(c.year) +
+      ". It is not modelled in that source, so there is nothing to show rather than a zero.</div>";
+  } else {
+    const pms = c.pms;
+    const t = pms.total;
+    if (t) {
+      h += '<div id="pms-primary"><div class="pl">Total capture \u2014 genuine and alternative parts together</div>' +
+        '<div class="pv"><span class="hx" data-exp="Value-weighted: actual parts revenue divided by ' +
+        'actual plus the modelled revenue gap, across the ' + t.families +
+        ' part families that carry a modelled expectation. Parts bought outside the network are not visible here.">' +
+        esc(fmtPct(t.capture_weighted)) + "</span></div>" +
+        '<div class="bar-track"><div class="bar-fill" style="width:' +
+        (Math.max(0, Math.min(1, t.capture_weighted)) * 100).toFixed(1) + '%"></div></div>' +
+        '<div class="bar-note">' + esc(fmtEur(t.actual_rev_eur)) + " billed against " +
+        esc(fmtEur(t.expected_rev_eur)) + " expected. Gap " + esc(fmtEur(t.revenue_gap_eur)) + ".</div></div>";
+    } else {
+      h += '<div class="amber">No total-capture rows with a quotable expectation for this market.</div>';
+    }
+    const g = pms.genuine, b = pms.bvp;
+    const second = [];
+    if (g) second.push("Genuine only: " + fmtPct(g.capture_weighted) +
+      " (" + fmtEur(g.actual_rev_eur) + " billed)");
+    if (b) second.push("Alternative parts: " + fmtPct(b.capture_weighted) +
+      " (" + fmtEur(b.actual_rev_eur) + " billed)");
+    if (second.length) {
+      h += '<div id="pms-secondary">' + esc(second.join("  \u00b7  ")) +
+        '<div class="bar-note" style="margin-top:5px">Genuine and alternative parts are extra lenses. ' +
+        "The headline above is total capture, because a part sold is a part sold.</div></div>";
+    }
+    if (pms.top_gap_families && pms.top_gap_families.length) {
+      h += '<div style="margin-top:12px"><h3 style="margin:0 0 4px">Three families with the largest gap</h3>';
+      pms.top_gap_families.forEach(function (f) {
+        h += '<div class="fam"><span>' + esc(f.category) +
+          ' <span style="color:#5d6b82">(' + fmtPct(f.capture_rate) + " captured)</span></span>" +
+          '<span class="fg">' + esc(fmtEur(f.gap_eur)) + "</span></div>";
+      });
+      h += '<div class="bar-note">Part family and euro for each, on the vehicles in service above.</div></div>';
+    }
+  }
+  h += "</div>";
+
+  // ---- market notes ------------------------------------------------------
+  if (c.coverage_note || (c.notes && c.notes.length)) {
+    h += '<div class="sec"><h3>What to watch with this market</h3><ul class="notes">';
+    if (c.coverage_note) h += "<li>" + esc(c.coverage_note) + "</li>";
+    (c.notes || []).forEach(function (n) { h += "<li>" + esc(n) + "</li>"; });
+    h += "</ul></div>";
+  }
+
+  // ---- not wired yet -----------------------------------------------------
+  h += '<div class="sec"><h3>Not in this map yet</h3><div class="notyet">' +
+    "<h4>Tracked elsewhere, not plotted here</h4>";
+  (state.spine.not_included || []).forEach(function (n) {
+    h += '<div class="ny-row"><b>' + esc(n.item) + "</b> \u2014 <span>" + esc(n.why) + "</span></div>";
+  });
+  h += '<div class="ny-row" style="border-top:1px solid rgba(21,35,60,.2);margin-top:4px">' +
+    "<span>Nothing on this panel is estimated. Where a figure is missing it says so.</span></div>";
+  h += "</div></div>";
+
+  body.innerHTML = h;
+  body.scrollTop = 0;
+  layoutLabels();
+}
+
+function kv(k, v, exp) {
+  return '<div class="kv"><span class="k">' + esc(k) + '</span><span class="v hx" data-exp="' +
+    esc(exp) + '">' + esc(v) + "</span></div>";
+}
+
+/* =========================================================================
+   IDS dealer panel
+   -------------------------------------------------------------------------
+   What is here: the dealer's score, its country's national average, the gap in
+   percentage points, the five section scores, and how the pin's position was
+   derived.
+
+   What is deliberately not here: a radar, and the per-question view. Both
+   already exist in the IDS dealer compare page, and duplicating them would
+   create a second version of the same chart to keep in step. The panel names
+   the file that has the deeper view instead.
+   ========================================================================= */
+function openDealerPanel(d) {
+  state.selectedId = null;
+  state.selectedDealerId = d.id;
+  updateHighlight();
+  updateDealerHighlight();
+
+  document.body.classList.add("panel-open");
+  document.getElementById("panel").setAttribute("aria-hidden", "false");
+
+  document.getElementById("p-crumb").textContent = "IDS " + (d.country_label || d.country);
+  document.getElementById("p-title").textContent = d.name;
+  document.getElementById("p-entity").innerHTML =
+    esc(d.address || "no address recorded in the IDS result") +
+    (d.place ? ' <span style="opacity:.7">\u00b7 ' + esc(d.place) + "</span>" : "");
+  window.__globeStatus.selectedId = null;
+  window.__globeStatus.selectedDealerId = d.id;
+
+  const chips = [];
+  chips.push('<span class="chip">IDS 2026</span>');
+  const band = bandOf(d);
+  chips.push('<span class="chip">' + esc(bandLabel(band)) + "</span>");
+  if (!d.geo_real) chips.push('<span class="chip warn">position approximate</span>');
+  if (d.excluded_from_average) {
+    chips.push('<span class="chip warn">not in its national average</span>');
+  }
+  document.getElementById("p-chips").innerHTML = chips.join("");
+
+  const body = document.getElementById("panel-body");
+  let h = "";
+
+  if (d.total_pct === null || d.total_pct === undefined) {
+    h += '<div class="amber"><b>No total score for this dealer.</b> The IDS result for this ' +
+      "dealer carries no scoreable total, so there is nothing to compare with the national " +
+      "average. That is a missing figure, not a zero.</div>";
+  } else {
+    const sign = d.delta_pp >= 0 ? "+" : "\u2212";
+    h += '<div class="hero">' +
+      '<div class="lab">IDS score \u00b7 share of points available</div>' +
+      '<div class="big">' + esc(fmtPct(d.total_pct)) + "</div>" +
+      '<div class="exp"><span class="hx" data-exp="' +
+        esc("The dealer's awarded points divided by the points available. IDS is the Isuzu Dealer Standard, an annual dealer evaluation. " +
+            "Score basis for this dealer: " + (d.score_basis || "not stated") + ".") + '">' +
+        esc(d.score_basis || "score basis not stated") + "</span> \u00b7 " +
+      (d.country_avg_pct !== null && d.country_avg_pct !== undefined
+        ? "national average " + esc(fmtPct(d.country_avg_pct))
+        : "no national average in the source") +
+      "<br>" +
+      (d.delta_pp !== null && d.delta_pp !== undefined
+        ? '<span class="hx" data-exp="' +
+          esc("This dealer minus " + (d.country_label || d.country) +
+              "'s national average, in percentage points of the IDS score.") + '">' +
+          sign + Math.abs(d.delta_pp).toFixed(1) + " points against its national average</span>"
+        : "no comparable national average") +
+      "</div></div>";
+  }
+
+  h += '<div class="sec"><h3>Score against the national average</h3>';
+  h += kv("IDS score", fmtPct(d.total_pct),
+    "The dealer's awarded points divided by the points available, across the sections scored for this dealer. " +
+    "Score basis: " + (d.score_basis || "not stated") + ".");
+  h += kv((d.country_label || d.country) + " national average", fmtPct(d.country_avg_pct),
+    "The average IDS score of this dealer's own national network. Dealers the IDS build excludes from the " +
+    "average are left out of it there as well, so the two pages agree.");
+  h += kv("Difference", d.delta_pp === null || d.delta_pp === undefined ? "no data"
+      : (d.delta_pp >= 0 ? "+" : "\u2212") + Math.abs(d.delta_pp).toFixed(1) + " points",
+    "This dealer minus its national average. Positive means the dealer is ahead of its own market's average.");
+  h += "</div>";
+
+  // ---- sections ---------------------------------------------------------
+  h += '<div class="sec"><h3>The five IDS sections</h3>';
+  const sectionMeta = (state.ids.meta.sections || []);
+  let anySection = false;
+  sectionMeta.forEach(function (sec) {
+    const s = d.sections ? d.sections[sec.id] : null;
+    const label = sec.label || sec.id;
+    if (!s || s.pct === null || s.pct === undefined) {
+      const why = s && s.fill === "not_scored"
+        ? "not scored for this dealer"
+        : s && s.fill === "blank" ? "left blank for this dealer" : "no score in the IDS result";
+      h += '<div class="secline"><div class="sl muted"><span class="sn">' +
+        esc(label) + '</span><span class="sv">' + esc(why) + "</span></div>" +
+        '<div class="stab"></div></div>';
+      return;
+    }
+    anySection = true;
+    h += '<div class="secline">' +
+      '<div class="sl"><span class="sn">' + esc(label) + '</span><span class="sv">' +
+      esc(fmtPct(s.pct)) +
+      (s.country_avg_pct !== null && s.country_avg_pct !== undefined
+        ? ' <span class="avg">vs ' + esc(fmtPct(s.country_avg_pct)) + " national</span>" : "") +
+      "</span></div>" +
+      '<div class="stab"><i style="width:' + (Math.max(0, Math.min(1, s.pct)) * 100).toFixed(1) +
+      '%"></i></div></div>';
+  });
+  if (!anySection) {
+    h += '<div class="amber">No section scores for this dealer in the IDS result. ' +
+      "The total above, if it is there, comes from the sections the evaluation did score.</div>";
+  }
+  h += "</div>";
+
+  // ---- position honesty -------------------------------------------------
+  h += '<div class="sec"><h3>Where this pin is</h3>';
+  h += '<div class="gapnote"><b>' + esc(d.geo_label || "position source not stated") + ".</b> " +
+    (d.geo_real
+      ? "This position comes from the MIDI network survey, so it sits on a real surveyed coordinate."
+      : "This position is approximate: the IDS build resolved it from the address, the dealer name " +
+        "or a known directory entry, not from a survey. Read it as a town, not as a forecourt.") +
+    " Positions are not the same for every dealer in this file \u2014 the map draws the approximate " +
+    "ones differently so the two kinds are not confused.</div>";
+  if (d.lat !== null) {
+    h += kv("Position used", d.lat.toFixed(4) + ", " + d.lon.toFixed(4),
+      "The coordinate this pin is drawn on. " + (d.geo_label || ""));
+  }
+  h += "</div>";
+
+  // ---- where the deeper view is -----------------------------------------
+  h += '<div class="sec"><h3>Where the deeper view is</h3><div class="notyet">' +
+    "<h4>This panel is the summary, not the whole evaluation</h4>" +
+    '<div class="ny-row"><b>Dealer radar and per-question scores</b> \u2014 <span>' +
+    "already exist in the IDS dealer compare page, which has all 196 question scores for all " +
+    "564 dealers. This globe shows the total, the national average and the five sections, and " +
+    "points you there rather than drawing a second radar.</span></div>" +
+    '<div class="ny-row"><b>File</b> \u2014 <span>02_dashboards/ids/IDS_2026_dealer_compare.html' +
+    "</span></div>" +
+    '<div class="ny-row"><b>Per-question breakdown on the globe</b> \u2014 <span>not carried into ' +
+    "this page. The per-question array is deliberately left out of the file the globe reads, " +
+    "because it would add about 3.4 MB for a view that already exists.</span></div>" +
+    "</div></div>";
+
+  body.innerHTML = h;
+  body.scrollTop = 0;
+  layoutLabels();
+}
+
+function bandOf(d) {
+  if (d.total_pct === null || d.country_avg_pct === null ||
+      d.total_pct === undefined || d.country_avg_pct === undefined) return "unknown";
+  if (d.delta_pp >= 3) return "above";
+  if (d.delta_pp <= -3) return "below";
+  return "near";
+}
+
+function closePanel() {
+  state.selectedId = null;
+  state.selectedDealerId = null;
+  document.body.classList.remove("panel-open");
+  document.getElementById("panel").setAttribute("aria-hidden", "true");
+  updateHighlight();
+  updateDealerHighlight();
+  layoutLabels();
+}
+
+/* =========================================================================
+   Legend
+   ========================================================================= */
+function buildLegend() { updateLegend(); }
+
+function updateLegend() {
+  const cDef = metricDef(state.colorMetric);
+  const hDef = metricDef(state.heightMetric);
+  const cs = cDef.color_scale;
+
+  document.getElementById("legend-title").textContent = cDef.label;
+  document.getElementById("legend-sub").textContent = cDef.long_label + ".";
+
+  let body = "";
+  if (cs.type === "step") {
+    cs.classes.forEach(function (c) {
+      body += '<div class="swatch-row"><span class="swatch" style="background:' + c.color +
+        '"></span><span>' + esc(c.label) + "</span></div>";
+    });
+    const missing = state.columns.filter(function (c) { return c[state.colorMetric] === null; }).length +
+      state.placeholders.length;
+    if (missing) {
+      body += '<div class="swatch-row"><span class="swatch" style="background:' + cs.missing_color +
+        '"></span><span style="color:#5d6b82">no value in the source (' + missing + ")</span></div>";
+    }
+  } else {
+    body += '<div class="ramp-bar"></div><div class="ramp-ends"><span>' +
+      esc(fmtValue(state.colorMetric, cDef, 0)) + "</span><span>" +
+      esc(fmtValue(state.colorMetric, cDef, cDef.height_reference)) + "</span></div>";
+  }
+  document.getElementById("legend-body").innerHTML = body;
+
+  const hs = state.settings.height;
+  document.getElementById("legend-foot").innerHTML =
+    "<b>Height</b> is " + esc(hDef.label.toLowerCase()) + ", from " +
+    esc(fmtValue(state.heightMetric, hDef, 0)) + " to " +
+    esc(fmtValue(state.heightMetric, hDef, hDef.height_reference)) + ". " +
+    "Every column gets a " + Math.round(hs.floor_m / 1000) + " km base, then the square root of the value " +
+    "adds up to " + Math.round(hs.peak_m / 1000) + " km. Without that, the smallest markets would be a flat line.<br>" +
+    '<span style="opacity:.8">Grey round markers are markets the source has no target spend for; they get a marker, not a column.</span>';
+}
+
+function buildGlossary() {
+  const g = state.settings.glossary || {};
+  let h = "";
+  Object.keys(g).forEach(function (k) {
+    h += "<dt>" + esc(k) + "</dt><dd>" + esc(g[k]) + "</dd>";
+  });
+  document.getElementById("glossary").innerHTML = h;
+}
+
+/* =========================================================================
+   Small helpers
+   ========================================================================= */
+function showBanner(msg) {
+  const b = document.getElementById("banner");
+  b.textContent = msg;
+  b.classList.add("show");
+}
+function hideBanner() {
+  document.getElementById("banner").classList.remove("show");
+}
+
+window.addEventListener("resize", function () { scheduleLabels(); });
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") closePanel();
+});
+
+// Short screens get the floating overlays folded on load, so the map is not
+// covered on first paint. On a tall screen the legend carries the colour key,
+// which is what it is there for, so it stays open.
+(function foldOverlaysForHeight() {
+  try {
+    if (window.innerHeight < 1010) {
+      const legend = document.getElementById("legend");
+      const fold = document.getElementById("legend-fold");
+      if (legend) legend.classList.add("is-collapsed");
+      if (fold) fold.textContent = "+";
+    }
+  } catch (e) { /* the legend is cosmetic; never let this stop the page */ }
+})();
+
+boot();
+</script>
+</body>
+</html>

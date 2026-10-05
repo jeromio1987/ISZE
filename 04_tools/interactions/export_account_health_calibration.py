@@ -4,7 +4,7 @@ Reads  : 01_data/17_interactions/account_health.parquet
 Writes : 01_data/17_interactions/account_health_calibration.csv
          01_data/17_interactions/account_health_latest_flagged.csv
 
-Mode B only — draft thresholds, not a KPI.
+internal only — draft thresholds, not a KPI.
 """
 
 from __future__ import annotations

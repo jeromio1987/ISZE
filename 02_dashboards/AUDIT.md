@@ -17,7 +17,7 @@
 | Pack | Audience | Language |
 |------|----------|----------|
 | **Internal** | ISZE ops + Jerome | Full pipeline detail, leakage/attach/elasticity only in PRISM internal mode |
-| **Distributor (Mode A)** | DB-facing | Plain language, no pipeline jargon, no leakage |
+| **Distributor (shared)** | DB-facing | Plain language, no pipeline jargon, no leakage |
 | **Management** | MD pack / evaluaties / year-end | Deck-style summaries |
 
 ---
@@ -83,16 +83,18 @@
 
 | File | Class | Note |
 |------|-------|------|
-| `ISZE_Aftermarket_Live_Pricing_Dashboard.html` | KEEP | |
+| `ISZE_Aftermarket_Live_Pricing_Dashboard.html` | RETIRED 2026-10-02 | moved to `01_data/92_archive/price_pages_retired_2026-10-02/`; superseded by `ISZE_Parts_Price_Intelligence.html` |
 | `ISZE_Pricing_BI_Dashboard.html` | KEEP | |
 | `ISZE_Pricing_Action_Map.html` | KEEP | |
 | `ISZE_Pricing_Engine_Readiness_Dashboard.html` | KEEP | |
 | `ISZE_Pricing_Full_Analysis_Pack.html` | KEEP | |
 | `ISZE_Pricing_History_Findings_Dashboard.html` | KEEP | |
-| `ISZE_Scraped_Price_Intelligence_Dashboard.html` | KEEP | |
+| `ISZE_Scraped_Price_Intelligence_Dashboard.html` | RETIRED 2026-10-02 | moved to `01_data/92_archive/price_pages_retired_2026-10-02/`; superseded by `ISZE_Parts_Price_Intelligence.html` |
 | `ISZE_IAM_Quality_Positioning_Overview.html` | KEEP | |
 | `ISZE_IAM_Quality_Positioning_Engine*.html` (4) | KEEP | Per-DB engine twins |
 | `ISZE_Pricing_Proposal_v1.html` | MERGE | Superseded by Action Map / Full Analysis |
+| `ISZE_Pricing_Policy_Paper_2026-10-02.html` (+ `.pdf`) | KEEP | Current pricing policy paper, consolidated 2 Oct 2026 |
+| `ISZE_Pricing_Policy_Paper.html`, `ISZE_Pricing_Policy_Paper_REV3.html` (+ openers, receipts) | RETIRED 2026-10-02 | moved to `01_data/92_archive/pricing_papers_superseded_2026-10-02/`; superseded by `ISZE_Pricing_Policy_Paper_2026-10-02.html` |
 
 ### sales — billing & capture
 

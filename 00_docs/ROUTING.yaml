@@ -14,6 +14,18 @@ global_ignore:
   - 90_archive/**
 
 tasks:
+  delegator_pricing_review:
+    description: The 20-minute AIM delegator watch, the shared agent board, and the +5% flat price-increase review
+    read:
+      - 00_docs/agent/DELEGATOR_BOARD.md
+      - 00_docs/agent/DELEGATOR_REFRESH_HOWTO.md
+      - 00_docs/agent/DELEGATOR_STATE.json
+    optional:
+      - 02_dashboards/pricing/ISZE_Price_Increase_5pct_Flat_REVIEW_2026-09-17.html
+      - 01_data/01_Pricing/Price_Increase_5pct_Flat_REVIEW_2026-09-17.xlsx
+      - 04_tools/workspace/isze_delegator_watch.ps1
+    note: Detect-only watch. The shipped pricing deliverables and 03_analytics/isze_pricing/config.yaml are locked read-only; new work goes to new dated files.
+
   roadmap:
     description: What is open / next / already decided across the programme
     read:
@@ -122,9 +134,10 @@ tasks:
       - 03_analytics/Isuzu/pms-pilot/
 
   exec_sales_paper:
-    description: Grade-A Mode A HTML exec aftersales paper (GPS, PMS total, mix, pricing, IDS, tenders, SWOT)
+    description: Grade-A shared HTML exec aftersales opportunity paper (GPS, PMS total, mix, pricing, margin, warranty, IDS, tenders, SWOT)
     read:
       - 00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md
+      - 00_docs/REVIEW_EXEC_AFTERSALES_PAPER_20260915.md
       - 00_docs/ITUK_PRISM_LANE_BRIDGE.md
       - 01_data/00_derived/_verification_report.json
       - 01_data/00_derived/metrics_snapshot.json
@@ -135,6 +148,11 @@ tasks:
       - 00_docs/IAM_CAPTURE_PRICE_HUNT_REVIEW_PROMPT.md
       - 03_analytics/Isuzu/prism/docs/metric_dictionary.md
       - 03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md
+      - 01_data/00_derived/pms_opportunity_matrix.csv
+      - 01_data/00_derived/capture_recovery_model.csv
+      - 01_data/00_derived/wallet_waterfall.csv
+      - 01_data/00_derived/warranty_by_db_year.csv
+      - 01_data/14_dashboards/tender_data.json
     never:
       - 01_data/raw/sales/**
       - 01_data/12_raw/sales/**
@@ -146,11 +164,13 @@ tasks:
       - 02_dashboards/sales/OPEN_ISZE_Exec_Aftersales_Paper.cmd
     rebuild:
       - python 02_dashboards/_build/build_exec_aftersales_paper.py
+      - python 02_dashboards/_build/verify_exec_aftersales_paper.py
     rules:
       - Phase 0 defaults are locked in the prompt. HTML write still requires rebuild or ship in the current message.
+      - Obey .cursor/rules/isze-exec-aftersales-paper.mdc (matrix-led heroes, ceiling placeholder, margin/warranty/telematics, live tenders).
 
   action_ledger:
-    description: P8 Opportunity→Action→Outcome ledger over existing derived euro surfaces (Mode B)
+    description: P8 Opportunity→Action→Outcome ledger over existing derived euro surfaces (internal)
     read:
       - 00_docs/PROMPT_ACTION_LEDGER_P8.md
       - 00_docs/roadmaps/ai_sales_intelligence.md
@@ -206,6 +226,10 @@ tasks:
       - 05_memory/projects/competitiveness.md
       - 01_data/01_Pricing/DB_DLR_COMMERCIAL_STACK.md
       - FACTS.md
+    optional:
+      - 02_dashboards/pricing/ISZE_Pricing_Policy_Paper_2026-10-02.html
+      - 02_dashboards/pricing/ISZE_IAM_Price_vs_Billed_PN.html
+    note: The current pricing policy paper is the consolidated one of 2 Oct 2026 (+5% by part number, 21-market holds, option B). Older papers and decks are archived in 01_data/92_archive/pricing_papers_superseded_2026-10-02/.
 
   aim_prism_reinvention:
     description: After AIM scoring failed — replacement programme (P4, PN prices, PRISM surface)

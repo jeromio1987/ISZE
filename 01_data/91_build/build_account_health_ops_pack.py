@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Account-health ops pack — triage table (Mode B).
+"""Account-health ops pack — triage table (internal).
 
 Runs build_account_health + export_account_health_calibration if needed.
 Writes triage markdown + CSV under 01_data/17_interactions/.
@@ -60,7 +60,7 @@ def main() -> int:
     triage[cols].to_csv(OUT_CSV, index=False)
 
     lines = [
-        "# Account health ops triage (Mode B · draft thresholds · 2026-08-19)",
+        "# Account health ops triage (internal · draft thresholds · 2026-08-19)",
         "",
         f"Latest month: **{latest}** · flagged: **{len(triage)}** distributors",
         "",

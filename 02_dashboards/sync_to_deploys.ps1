@@ -28,7 +28,8 @@ $Targets    = @(
 # Reduced copy set (consolidation 2026-08-20): skip scratch, internal SPA, and
 # the mirrored Data folder (JSON feeds are copied separately below). _composable
 # stays in the deploy set (PRISM map + master desk are still shipped).
-$SkipDirs = @('_archive', '_build', '_working', 'spa_internal', 'Data')
+# pricing is never synced: its pages carry Eucon-derived prices that must stay on this PC (Jerome, 2 Oct 2026).
+$SkipDirs = @('_archive', '_build', '_working', 'spa_internal', 'Data', 'pricing')
 
 function Convert-ToDeployHtml {
     param([string]$Content)
@@ -142,4 +143,6 @@ foreach ($target in $Targets) {
 Write-Host ""
 Write-Host "Done."
 Write-Host "  GitHub Pages : cd '07_deploy\Master Dashboard' ; bash deploy.sh"
-Write-Host "  Netlify      : drag '07_deploy\publish-site' folder to app.netlify.com/drop"
+Write-Host "  Not published: '07_deploy\publish-site' holds dealer-level data. Putting it on a public"
+Write-Host "                 host makes it readable by anyone, with no login. Publishing needs"
+Write-Host "                 Jerome's explicit decision - do not upload this folder."

@@ -1,0 +1,149 @@
+﻿DESCRIPTION-vs-FAMILY TEST  (high-precision rules)
+scope: 153,578 classified part numbers that carry a description
+rule                  matched   wrong  wrong %   billed EUR wrong
+air_filtration            256     128    50.0%          1,160,612
+oil_filter                459       9     2.0%                461
+fuel_filter               259       7     2.7%                 19
+brake_friction          1,021       3     0.3%                  0
+clutch_core               566      10     1.8%                 35
+turbo                     491       9     1.8%                 82
+injector                  660       0     0.0%                  0
+radiator_water_pump       950      19     2.0%                 50
+shock_leaf              1,113       0     0.0%                  0
+bumper                  1,542     201    13.0%            148,994
+mirror                  2,104       9     0.4%                111
+lamp                    2,972       9     0.3%              7,692
+starter_alt               710       0     0.0%                  0
+steering_core             962     235    24.4%            171,854
+driveline                 448       0     0.0%                  0
+ac_core                   349       0     0.0%                  0
+harness                 7,280     673     9.2%             55,201
+silencer                1,269     101     8.0%             29,049
+gasket                 11,060   1,423    12.9%            154,452
+window_regulator          112     107    95.5%             16,556
+king_pin                  536     536   100.0%            219,775
+ball_joint_arm             67      67   100.0%            126,243
+
+TOTAL   3,546 distinct part numbers misfiled by these rules, EUR 2,091,184 billed (4.12% of the 18-month book)
+-> C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\_audit_cls_description_violations.csv
+
+==============================================================================
+the 45 costliest single misfiles
+  EUR    381,447  8974995480  FILTER; ACL                           
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR    123,825  5876100201  ELEMENT; AIR CLEANER                  
+      sits in Competitive parts > Air system > Other air system   | text proves an engine air filter / air-cleaner element
+  EUR    120,375  1876101132  FILTER; ACL                           
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR     90,579  8981772710  FILTER; ACL                           
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR     68,928  8980256421  LINK; DRAG                            
+      sits in Repair parts > Hydraulic / mechanical > Linkage / lever   | text proves a steering box / drag link / tie rod / knuckle arm
+  EUR     65,706  8983621213  BAR; FRT BUMPER                       
+      sits in Competitive parts > Suspension > Leaf / suspension spring   | text proves a bumper
+  EUR     63,147  8980058750  JOINT ASM; BALL,LWR CONT ARM          
+      sits in Repair parts > Hydraulic / mechanical > Linkage / lever   | text proves a control-arm ball joint (suspension geometry)
+  EUR     63,046  5878324001  KING PIN KIT                          
+      sits in Hardware & consumables > Hardware > Pin   | text proves a king pin (steering / axle geometry, not loose hardware)
+  EUR     61,727  5876150521  FILTER; ACL                           
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR     57,008  8983214130  FILTER; ACL                           
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR     51,210  8976739570  FILTER; ACL                           
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR     45,379  8975471071  BAR; FRT BUMPER                       
+      sits in Competitive parts > Suspension > Leaf / suspension spring   | text proves a bumper
+  EUR     43,584  5878323991  KING PIN KIT                          
+      sits in Hardware & consumables > Hardware > Pin   | text proves a king pin (steering / axle geometry, not loose hardware)
+  EUR     42,712  8980067942  LINK; DRAG                            
+      sits in Repair parts > Hydraulic / mechanical > Linkage / lever   | text proves a steering box / drag link / tie rod / knuckle arm
+  EUR     40,896  5876150022  FILTER; ACL                           
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR     38,427  5876102500  ELEMENT; AIR CLEANER                  
+      sits in Competitive parts > Air system > Other air system   | text proves an engine air filter / air-cleaner element
+  EUR     34,024  5878323990  KING PIN KIT                          
+      sits in Hardware & consumables > Hardware > Pin   | text proves a king pin (steering / axle geometry, not loose hardware)
+  EUR     32,072  1876101141  FILTER; ACL,INNER                     
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR     27,484  8980058270  JOINT ASM; BALL,UPR CONT ARM          
+      sits in Repair parts > Hydraulic / mechanical > Linkage / lever   | text proves a control-arm ball joint (suspension geometry)
+  EUR     26,000  8971424521  JOINT ASM; BALL,LWR CONT ARM          
+      sits in Repair parts > Hydraulic / mechanical > Linkage / lever   | text proves a control-arm ball joint (suspension geometry)
+  EUR     25,957  8981402660  FILTER; ACL                           
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR     25,320  8981402650  FILTER; ACL                           
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR     25,279  5876150012  FILTER; ACL                           
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR     23,725  5876150021  FILTER; ACL                           
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR     21,498  8983320341  GASKET; DPD                           
+      sits in Competitive parts > Exhaust > Aftertreatment   | text proves a gasket / oil seal
+  EUR     20,150  5876102900  FILTER; ACL                           
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR     16,653  1443803030  LINK; DRAG                            
+      sits in Repair parts > Hydraulic / mechanical > Linkage / lever   | text proves a steering box / drag link / tie rod / knuckle arm
+  EUR     16,311  5878324000  KING PIN KIT                          
+      sits in Hardware & consumables > Hardware > Pin   | text proves a king pin (steering / axle geometry, not loose hardware)
+  EUR     15,852  5876150041  FILTER; ACL                           
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR     15,603  8980714210  FILTER; ACL                           
+      sits in Comfort parts > Air conditioning > Other A/C   | text proves an engine air filter / air-cleaner element
+  EUR     15,048  5876103040  KING PIN KIT                          
+      sits in Hardware & consumables > Hardware > Pin   | text proves a king pin (steering / axle geometry, not loose hardware)
+  EUR     13,006  5878324011  KING PIN KIT                          
+      sits in Hardware & consumables > Hardware > Pin   | text proves a king pin (steering / axle geometry, not loose hardware)
+  EUR     12,912  8981815400  GASKET; INJ NOZZLE                    
+      sits in High value repair > Injectors > Injector nozzle   | text proves a gasket / oil seal
+  EUR     12,098  1443803050  LINK; DRAG                            
+      sits in Repair parts > Hydraulic / mechanical > Linkage / lever   | text proves a steering box / drag link / tie rod / knuckle arm
+  EUR     11,329  5878324010  KING PIN KIT                          
+      sits in Hardware & consumables > Hardware > Pin   | text proves a king pin (steering / axle geometry, not loose hardware)
+  EUR      9,982  7551987570  PIPE; EXH,BRK VLV TO SILENCER         
+      sits in Competitive parts > Brake parts > Brake hose / pipe   | text proves a silencer / muffler / exhaust pipe
+  EUR      8,935  8982076071  PIPE; EXH,BRK VLV TO SILENCER         
+      sits in Competitive parts > Brake parts > Brake hose / pipe   | text proves a silencer / muffler / exhaust pipe
+  EUR      8,861  8982294320  BAR; FRT BUMPER                       
+      sits in Competitive parts > Suspension > Leaf / suspension spring   | text proves a bumper
+  EUR      8,584  8974926963  HARNESS; DIFF LOCK                    
+      sits in High value repair > Transmission parts > Differential / axle   | text proves a wiring harness
+  EUR      8,497  8982294330  BAR; FRT BUMPER                       
+      sits in Competitive parts > Suspension > Leaf / suspension spring   | text proves a bumper
+  EUR      8,453  8974927351  HARNESS; CABLE,BATTERY TO STARTER     
+      sits in Repair parts > Starter / alternator > Starter motor   | text proves a wiring harness
+  EUR      8,268  8980227130  GASKET; EXH BRK VLV,BODY              
+      sits in Competitive parts > Brake parts > Other brake   | text proves a gasket / oil seal
+  EUR      7,660  8976282570  GASKET; FILTER,DEF                    
+      sits in Competitive parts > Filters > Other filter   | text proves a gasket / oil seal
+  EUR      7,324  8976110800  GASKET; DPD                           
+      sits in Competitive parts > Exhaust > Aftertreatment   | text proves a gasket / oil seal
+  EUR      7,186  8980098112  REGULATOR ASM; DOOR                   
+      sits in Repair parts > Starter / alternator > Voltage regulator   | text proves a door window regulator (a body part, not a voltage regulator)
+
+==============================================================================
+where the misfiled parts are actually sitting
+  EUR    998,360   162 PNs   Comfort parts > Air conditioning > Other A/C
+  EUR    296,565   267 PNs   Repair parts > Hydraulic / mechanical > Linkage / lever
+  EUR    220,071   373 PNs   Hardware & consumables > Hardware > Pin
+  EUR    170,135   170 PNs   Competitive parts > Air system > Other air system
+  EUR    144,290   156 PNs   Competitive parts > Suspension > Leaf / suspension spring
+  EUR     49,799    94 PNs   Competitive parts > Exhaust > Aftertreatment
+  EUR     28,941    87 PNs   Competitive parts > Brake parts > Brake hose / pipe
+  EUR     22,275    41 PNs   High value repair > Injectors > Injector nozzle
+  EUR     19,240    85 PNs   Competitive parts > Exhaust > EGR component
+  EUR     16,556   107 PNs   Repair parts > Starter / alternator > Voltage regulator
+  EUR     16,020    59 PNs   Accident parts > Lighting > Tail / combination lamp
+  EUR     11,977   114 PNs   Competitive parts > Cooling > Cooler / intercooler
+  EUR     11,660    26 PNs   Competitive parts > Exhaust > Exhaust pipe
+  EUR     11,148    84 PNs   High value repair > Turbo > Turbo gasket / kit
+  EUR     10,043   310 PNs   Repair parts > Starter / alternator > Starter motor
+  EUR      9,246    24 PNs   Competitive parts > Filters > Other filter
+  EUR      8,679    75 PNs   Competitive parts > Brake parts > Other brake
+  EUR      8,584     5 PNs   High value repair > Transmission parts > Differential / axle
+  EUR      7,982    12 PNs   Accident parts > Mirrors > Mirror assembly
+  EUR      6,916    39 PNs   High value repair > Injectors > Injector
+  EUR      4,672    92 PNs   Competitive parts > Exhaust > Other exhaust
+  EUR      3,778   125 PNs   Competitive parts > Air system > Air duct / intake
+  EUR      2,754    13 PNs   Competitive parts > Steering > Knuckle / arm
+  EUR      1,789    42 PNs   Accident parts > Lighting > Headlamp
+  EUR      1,220    35 PNs   High value repair > Turbo > Turbo hose / pipe

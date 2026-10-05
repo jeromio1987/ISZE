@@ -681,7 +681,7 @@ def build_scrape() -> dict:
         "revenue_exposure_undercut": exposure,
         "ks_genuine_vs_am": gen_vs_am[:40],
         "category_shop_samples": [],
-        "deep_link_full": "../pricing/ISZE_Aftermarket_Live_Pricing_Dashboard.html",
+        "deep_link_full": "../pricing/ISZE_Parts_Price_Intelligence.html",
         "caveats": [
             "Live shop scrape ≠ Eucon PartsPool (Competitive tab).",
             "Compare point = reference customer / workshop price (ISZE list → +40% distributor → +27.5% dealer).",
@@ -710,9 +710,9 @@ if __name__ == "__main__":
     g = build_gps_pms()
     s = build_scrape()
     sync_sibling()
-    from build_aftermarket_live_dashboard import build_aftermarket_live_html
-
-    am = build_aftermarket_live_html(s)
+    # Aftermarket Live Pricing page retired 2026-10-02 (superseded by
+    # 02_dashboards/pricing/ISZE_Parts_Price_Intelligence.html); its builder is archived in
+    # 01_data/92_archive/price_pages_retired_2026-10-02/. Not regenerated here any more.
     ie = next(x for x in g["gps_pms_scatter_cy2025"] if x["db"] == "IRELAND")
     print(
         "IRELAND uio",
@@ -732,4 +732,4 @@ if __name__ == "__main__":
         "median index",
         s["kpis"]["median_am_vs_street"],
     )
-    print(f"aftermarket live {am} ({am.stat().st_size/1e6:.3f} MB embedded)")
+    print("aftermarket live page retired 2026-10-02: see 02_dashboards/pricing/ISZE_Parts_Price_Intelligence.html")

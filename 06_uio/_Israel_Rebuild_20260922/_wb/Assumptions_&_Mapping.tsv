@@ -1,0 +1,219 @@
+ASSUMPTIONS & MAPPING  |  Key reference for all UIO calculations													
+Colour guide:  BLUE HEADER = section title  |  YELLOW CELL = key input assumption  |  ORANGE = critical override / new (v15)  |  GREEN = source note  |  Alt grey rows = data													
+													
+													
+1.  Model Code Classification													
+													
+Model Code / Series	Maps to	Notes											
+N-Series (NLR, NMR, NNR, NPR, N35, N50/55, N62/65, N75)	LD (N-series label — weight differs by market)	Key assumption: all N-prefix = LD											
+F-Series (FRR90, FSR90, F110/120, F135, F150/180)	F-Series	Separate category. UK + IE + PT have F-series.											
+HD (Heavy Duty)	EXCLUDED	Not in ISZE/ITUK/Israel scope											
+TBR	EXCLUDED	Not in scope											
+LCV													
+MD (Medium Duty)	MD	IML classification; set to 0 for scrap-adj countries											
+													
+2.  Survival Rate Curves													
+													
+Vehicle Age (Years)	CV Advanced Economy (IML)	LCV / IMIT (12-yr)											
+Year 1	1	1											
+Year 2	0.99	0.98											
+Year 3	0.98	0.95											
+Year 4	0.97	0.92											
+Year 5	0.96	0.89											
+Year 6	0.95	0.84											
+Year 7	0.9	0.8											
+Year 8	0.8	0.65											
+Year 9	0.7	0.5											
+Year 10	0.55	0.4											
+Year 11	0.4	0.2											
+Year 12	0.3	0											
+Year 13	0.2	—											
+Year 14	0.1	—											
+Year 15	0.05	—											
+Year 16													
+Source: IML Calculation.xlsx (5.Survival Rate) + LCV UIO (Nov 2025)													
+													
+3.  Scrap-Adjusted Car Park 2025													
+													
+Sheet	UIO.xlsx → 'CV customers with scrap logic', column O = Scrap Adj Car Park 2025												
+Countries	Belgium, Cyprus, Denmark, Germany, Greece, Ireland, Malta, Portugal												
+Methodology	~100% survival yrs 1–11, ~47% at yr 12, 0% at yr 13+  (milder than IML CV curve)												
+Usage	2025 scrap-adj value anchors the historical series; 2014–2025 scaled proportionally												
+Germany 2025	406 units (IML showed 0)												
+Ireland LD 2025													
+Portugal LD 2025	2,585 units; F-Series 2025 = 292 units (FRR90 + FSR90)												
+3b.  Ireland UIO — SIMI-Based Methodology (V18)													
+Source	isuzuregdata.xlsx — SIMI (Society of the Irish Motor Industry) annual new vehicle registration data, classified by model/weight band. Government-issued data. Accessed Jun 2026.												
+Coverage	CY2013–2025 (SIMI). Pre-2013 cohorts sourced from IML 6.CV Vol N-column (IML Japan shipment records, 1990–2012).												
+Priority rule	SIMI data used wherever available (2013–2025). IML used for pre-2013 only. IMIT LCV UIO Study (Nov 2025) used for LCV 2026–2030 growth rates only, applied to SIMI 2025 base.												
+													
+CV LD — N Series 7.5T													
+SIMI category													
+Annual regs used	2013=69, 2014=100, 2015=80, 2016=95, 2017=71, 2018=89, 2019=65, 2020=63, 2021=98, 2022=96, 2023=71, 2024=117, 2025=61												
+Pre-2013 source	IML 6.CV Vol N-column (Ireland ctry 206): 1990=860, 1991=754, 1992=890, 1993=296, 1994=203, 1995=204, 1996=378, 1997=409, 1998=558, 1999=582, 2000=534, 2001=372, 2002=516, 2003=246, 2004=618, 2005=432, 2006=570, 2007=498, 2008=456, 2009=0(gap), 2010=102, 2011=77, 2012=50												
+Survival curve	IML Advanced Economy CV: age 1=99%, declining to 0% at age 15. Source: IML 5.Survival Rate sheet.												
+UIO results	2019=820, 2020=731, 2021=718, 2022=718, 2023=713, 2024=749, 2025E=731												
+2026–2030 method	UIO(T) = UIO(T-1) × 0.97 + new_sales_plan. Plan: Isuzu Ireland LD = 216 CBU/yr from FY2026 (source: 2. Vehicle Volume sheet). Results: 2026=925, 2027=1113, 2028=1296, 2029=1473, 2030=1645.												
+V17 vs V18 delta	CV LD 2024: V17=1,255 → V18=749 (−506). Gap was due to V17 using scrap-adjusted car park source (UIO.xlsx col O) which included pre-2010 fleet not in SIMI. V18 uses SIMI as primary government source.												
+													
+CV F-Series													
+SIMI category	2 Axle Rigid 10–11.9T  (Sheet2, row 10: F series). Note: F135/F150 (12–14T) not separately visible in SIMI; assumed negligible based on zero entries in 12–13.9T band 2015–2025.												
+Annual regs used													
+Pre-2013 source	No pre-2013 F-Series data in SIMI or IML Ireland. Cohort model starts 2013.												
+UIO results	2019=48, 2020=47, 2021=48, 2022=59, 2023=65, 2024=67, 2025E=92												
+2026–2030 method	Pure decay: UIO(T) = UIO(T-1) × 0.97. No F-Series in Ireland sales plan FY2026+. Results: 2026=89, 2027=86, 2028=83, 2029=81, 2030=79.												
+Note	SIMI 2025 spike to 32 new F-Series (vs FY2025 plan 1 CBU) included as-is. Possible batch delivery or grey market — flag for Isuzu Ireland confirmation.												
+													
+LCV (D-Max dominant)													
+SIMI category	D-Max (Sheet2, row 4) + N Series 3.5T (Sheet2, row 5, negligible from 2023).												
+D-Max annual regs	2013=74, 2014=95, 2015=154, 2016=138, 2017=96, 2018=110, 2019=124, 2020=86, 2021=113, 2022=178, 2023=111, 2024=225, 2025=317												
+Pre-2013 source	Estimated 60 D-Max units/yr for 2003–2012 (conservative; no SIMI or IML LCV data available for Ireland pre-2013).												
+Survival curve	IMIT LCV 12-year window: age 1=99%, age 12=10%, age 13=0%. Source: LCV UIO (Nov 2025) Study.												
+UIO results	2019=870, 2020=884, 2021=916, 2022=1004, 2023=1018, 2024=1135, 2025E=1338												
+2026–2030 method	IMIT growth rates applied to SIMI 2025 base (1,338). IMIT rates: 2026=+32.1%, 2027=+18.9%, 2028=+8.0%, 2029=+8.0%, 2030=+8.0%. Results: 2026=1768, 2027=2102, 2028=2271, 2029=2452, 2030=2648.												
+4.  UK (ITUK) Actual Car Park													
+													
+Source	SMMT data via ITUK (Duncan's file) — actual registered car park by model and registration year cohort												
+N-series 2024	Actual car park = 21,584 (N35 + N50/55 + N62/65 + N75 + Unspecified)												
+F-Series 2024	Actual car park = 805 (F110/120 + F135 + F150/180)												
+Method													
+UK LCV	IML historical; IUK UK from LCV UIO file for 2025–2028 forecast												
+													
+3c.  Portugal UIO — I-Motors Registration Data (V18)													
+Source	I-Motors Portugal — annual new vehicle registrations by model code 2006–2025. Received Jun 2026 as pivot table (image). Government/dealer registration records.												
+Models → segments	"CV LD (IML Adv curve): NLR, NMR, NNR, NPR, NKR, N1R, NLS, TRF
+F-Series (IML Adv curve): FRR, FSR
+LCV / D-Max (IMIT curve): TFR, TFS"	CY Used											
+Survival curves	CV LD + F-Series: IML Advanced Economy (age 15=0%). LCV: IMIT 12-year curve (age 12=10%, age 13=0%).	CY2025											
+Coverage	CY2006–2025. Pre-2006 cohorts assumed zero (model range not established in Portugal before 2006 per I-Motors data).	CY2026											
+2025 UIO	CV LD=2,206 | F-Series=269 | LCV=4,733 | Total=7,208	CY2027											
+2026+ method	CV LD + F-Series: 0.97 annual decay (no sales plan data available). LCV: 1.08/yr growth (IMIT market projection). Forecast flagged green in UIO Overview.	CY2028											
+V17 delta 2024	CV LD: 2,728→2,239 (−489). F-Series: 306→254 (−52). LCV: 4,985→4,410 (−575). V17 used IML/scrap-adj source; V18 uses I-Motors registration data as primary source.												
+FY30	2030/4/1 – 2031/3/31	CY2030											
+3d.  UTI (Israel) UIO — Registration Data by Tonnage Band (V18)													
+Source	UTI Israel — annual new vehicle registrations by GVW band 1994–2025. Received Jun 2026 (file: UIO_ISUZU_2025.xlsx, sheet גיליון1).												
+Tonnage → segment	6.5T + 7.5T → CV LD row (N-series). Israel has no 3.5 t class, so this row is not the Grafter class (see cell D7). 10T + 11T → CV MD. 12T → CV F-Series (added to CV MD row in V18 as no separate FS row for UTI).												
+Survival curve	IML Emerging Market curve: 20-year window. Age 1=99%, declining to 5% at age 19, 0% at age 20. Reflects longer vehicle lifetime in Israeli market.	Notes											
+Coverage	CY1994–2025 (complete history per UTI data).	1-to-1											
+2025 UIO	CV LD row=6,059 (all 6.5/7.5 t — no 3.5 t in Israel) | CV MD+F=4,277 | Total=10,336	1-to-1											
+2026+ method	2026+ method (V19): UIO(T) = UIO(T-1) x decay + IML new registrations(T). Decay unchanged (LD x0.914; MD x0.953 + F-Series x0.968 on the combined MD row). New registrations from IML/Office No.3 (M. Hayakawa email 17-Jun-2026). 2025 kept as actual anchor (LD 6,059 / MD+F 4,277). Replaces V18 pure-decay (no forward registrations).	User-confirmed: IBX covers Benelux + PL											
+V17 delta 2024	V17 showed CV LD=6,354, CV MD=4,314, no F-Series. V18: LD=6,071 MD=2,360 F=1,618 using emerging curve. Total: 10,668→10,049.	1-to-1											
+RSA Norway	Norway	1-to-1											
+3e.  Germany (ISD) UIO — Helwig Schmitt External Parc Data (V18)													
+Source	Management Services Helwig Schmitt GmbH — active registered vehicle parc as of 31/12/2025. Provided by ISD Germany Jun 2026.	1-to-1											
+Breakdown used	"D-Max/Pick-Up: 13,048 units → LCV
+N-Series at or under 3.5t: 153 | 3.51-5.5t: 79 | 5.51-6.5t: 147 | 6.51-7.5t: 318 → CV LD row (total 697); 81 of the 697 are at or under 3.5 t
+N-Series 7.51–12.0t: 35 → CV MD"	1-to-1											
+Method	Same logic as Ireland SIMI: IML cohort model (LCV: 7.LCV Vol, IMIT survival) for 2019–2024, scaled by ratio Helwig/IML(2025)=1.066. CV LD/MD back-decayed at 0.97/yr from Helwig 2025 anchor (IML had near-zero LD data for Germany).	1-to-1											
+LCV 2025	Helwig anchor: 13,048 (override). IML 2025 model: 12,236. Scale ratio: 1.066 applied to 2019–2024.	1-to-1											
+CV LD 2025	Helwig anchor: 697. CV MD anchor: 35. Historical 2019–2024 back-calculated via 0.97 decay.	1-to-1											
+2026+ method	CV LD/MD: 0.97 decay/yr. LCV: 0.97 decay/yr (conservative; no Germany-specific growth plan available).	1-to-1											
+V17 delta 2024	V17: CV LD=442, LCV=11,918, no MD. V18: CV LD=719, CV MD=36, LCV=12,709. LCV increase reflects Helwig scale ratio.	1-to-1											
+Remark	Helwig source attributes higher parc vs IML model to longer vehicle lifetime and continued operation of older vehicles in German market — consistent with V18 emerging/developed blend.	1-to-1											
+BL. Ehf. Iceland	Iceland	1-to-1											
+													
+													
+7.  ITUK-Specific Attrition Curves (V12 — ITUK only)													
+													
+Curve	Models applied	Source	Key characteristics										
+ITUK N35	N35 (UK only)	Parts Sales vs Model Mix_attrition rate_ITUK.pptx — Slide 2, N35 table	Gradual attrition: 0% at age 0–1, 4.5% by age 2, ~50% by age 14. Slower scrappage than IML generic curve. Extrapolated to age 18+ = 0%.										
+ITUK N75 (shared)	N75, N50/55, N62/65 (UK only)	Same PPTX — Slide 2, N75 table. N50/55 & N62/65 use N75 rates per Jerome instruction.	Faster heavy attrition: ~30% gone by age 7–8, ~75% gone by age 14. Ages 0–1 adjusted to 100% (raw PPTX shows 98.6%/98.1% due to SMMT reg-lag anomaly).										
+IML CV Adv. Economy	F110/120, F135, F150/180 (all countries)	IML Calculation.xlsx (5.Survival Rate) — unchanged from V11	Step-decay: 100% age 0–1, gradual to 0% at age 16. Simpler than ITUK curves; no ITUK-specific data for F-series.										
+Scope	ITUK sheet only (Sheet 4)	Other distributor rows in Sheet 1 use their existing IML-based methodology.	V12 only changes the ITUK UIO projection. All other distributors (ISZE Europe, Israel) unchanged.										
+*** V15 OVERRIDE: Pre-2008 to 2010 Attrition													
+Attrition Rate Applied	10%	Hardcoded input (blue cell in ITUK Projection row 29)	Pre-2008, 2008, 2009, 2010 cohorts only										
+Survival Rate	90%	1 - attrition rate (= 1 - E29 on Projection sheet)											
+UIO Calculation	Section C modified	Terms 1-4 in each model row replaced — old cohorts × 90% (ISZE owner-operator assumption: 10% scrap rate) instead of IML age curve (which gives 0% for age >18)	Affects 2025 (+2026-2027 decay) only										
+Rationale	Floor correction	IML curve gives 0% for pre-2008 (age>18). Field data (ISZE owner-operator assumption) suggests ~90% residual fleet remainscks kept in service, low scrap rate.	Jerome instruction Apr 2026										
+													
+													
+8.  ITUK Registration Assumptions (V12)													
+													
+Period	Annual Total	Source	Model split										
+2024 (actual)	2,438	SMMT via ITUK (prior DVLA extract)	N35: 1,277, N75: 970, N50/55: 17, N62/65: 5, F110: 30, F135: 136, other: 3										
+CY2025 (FY25/26)	1,956	Niguri FY25.26 Extract 20260413_ITUK.xlsx — Registrations sheet	N35: 944, N75: 859, N50/55: 36, N62/65: 12, F110: 68, F135: 37										
+CY2026 (FY26/27)	2,220	Same Niguri file — FY26/27 columns	N35: 1,224, N75: 851, N50/55: 12, N62/65: 7, F110: 64, F135: 62										
+CY2027 (FY27/28)	2,446	Same Niguri file — FY27/28 columns	N35: 1,286, N75: 1,000, N50/55: 12, N62/65: 8, F110: 74, F135: 66										
+CY2028–2030	2,446 (flat)	Assumption: hold FY27/28 constant (ITUK plan horizon ends FY27/28)	Same split as CY2027										
+V11 assumption (replaced)	2,438 (flat all years)	SMMT 2024 actual — flat from that base	Not split by model in V11										
+										Age	N35 (ITUK)	N75/N50/55/N62/65 (ITUK)	F-Series (IML CV Adv.)
+										0	1	1	1
+										1	1	1	1
+										2	0.955	0.988	0.99
+										3	0.95	0.972	0.98
+										4	0.942	0.963	0.97
+										5	0.894	0.915	0.96
+										6	0.874	0.857	0.95
+										7	0.853	0.753	0.9
+										8	0.807	0.734	0.8
+ITUK Attrition Heatmap — Cumulative Survival Rate by Vehicle Age  |  V12										9	0.773	0.647	0.7
+Colour scale: Green=high survival (fleet still productive), Amber=transition, Red=fleet ageing out, Grey=fully scrapped.										10	0.722	0.516	0.55
+										11	0.638	0.288	0.4
+Age	N35 (ITUK)	"N75 (ITUK)
+N50/55, N62/65"	"F-Series (IML)
+F110/120, F135"							12	0.573	0.297	0.3
+0	100%	100%	100%							13	0.523	0.242	0.2
+1	100%	100%	100%							14	0.505	0.226	0.1
+2	96%	99%	99%							15	0.4	0.15	0.05
+3	95%	97%	98%							16	0.3	0.08	0
+4	94%	96%	97%							17	0.15	0.03	0
+5	89%	92%	96%							18	0	0	0
+6	87%	86%	95%										
+7	85%	75%	90%										
+8	81%	73%	80%										
+9	77%	65%	70%										
+10	72%	52%	55%										
+11	64%	29%	40%							Year	Registrations (SMMT actuals / Niguri forecast)	Type	
+4.  Forecast Methodology — LCV (IMIT) & CV (Mid-term Plan)  [V18 Jun 2026]										2008	278	SMMT actual	
+Formula	"UIO(CY_T) = UIO(CY_T-1) × 0.97  +  new_registrations(FY_T)
+Where 0.97 = annual fleet attrition (3% scrappage). FY aligned to CY: FY2026≈CY2026."	24%	20%							2009	236	SMMT actual	
+LCV source	IMIT_forecast.xlsx — D-Max ICE order volumes per distributor, FY2026–FY2028. FY2029/FY2030 extrapolated at FY2028 volume (no IMIT data beyond FY2028).	23%	10%							2010	276	SMMT actual	
+CV LD/MD source	ISZE_CV_FY2025-FY2030_mid-term_plan___12RS.xlsx — 12RS shipment plan per distributor, FY2025–FY2030. Model LD and MD split used directly as new-cohort input.	15%	5%							2011	300	SMMT actual	
+Colour coding in UIO Overview	Green = IMIT/CV plan input used (formula-driven). Orange = pure 0.97 decay (no forecast input available for that market/segment). Blue = historical actuals (SIMI / IML / Helwig).	8%	scrapped							2012	406	SMMT actual	
+Markets without IMIT data	ITUK CV LD/F-Series: linked to 4. ITUK UIO Projection sheet (unchanged). UTI CV LD/MD: pure decay (no CV plan for UTI). UMI Israel LCV: uses UMI row in IMIT. MIDI-only markets (France, Spain, Poland, Serbia, Switzerland, Austria): excluded from ISZE-level plan; remain at pure decay until MIDI data provided.	3%	scrapped							2013	428	SMMT actual	
+Germany LCV note	Germany LCV 2026–2030: IML 2019–2024 scaled to Helwig 2025 anchor (13,048). 2026+: IMIT ISD Germany = 1,000 units/yr. Resulting UIO grows steadily: 2026=13,657 → 2027=14,247 → 2028=14,820 → 2029=15,375 → 2030=15,914.	scrapped	scrapped							2014	662	SMMT actual	
+Germany CV LD note	Germany CV LD 2026–2030: CV plan (12RS) used: FY26=390, FY27=388, FY28=624, FY29=898, FY30=1,000. Strong growth trajectory reflecting ISD expansion. 2026=1,066 → 2027=1,422 → 2028=2,003 → 2029=2,841 → 2030=3,756.									2015	910	SMMT actual	
+										2016	999	SMMT actual	
+										2017	1012	SMMT actual	
+										2018	1329	SMMT actual	
+										2019	1646	SMMT actual	
+										2020	1774	SMMT actual	
+										2021	2111	SMMT actual	
+										2022	2451	SMMT actual	
+										2023	3289	SMMT actual	
+										2024	2438	SMMT actual	
+										2025	1956	Niguri forecast	
+										2026	2220	Niguri forecast	
+										2027	2446	Niguri forecast	
+										2028	2446	Niguri forecast	
+										2029	2446	Niguri forecast	
+										2030	2446	Niguri forecast	
+													
+													
+													
+													
+													
+													
+													
+													
+													
+													
+													
+										Year	N35 Parc	N75 Parc	F-Series Parc
+										2024	10900	9359	805
+										2025	10673	9024	865
+										2026	11471	9080	943
+										2027	12293	9291	1029
+										2028	13053	9485	1106
+										2029	13778	9642	1174
+										2030	14443	9794	1233
+													
+													
+3d-V19.  UTI IML Registration Update (Jun 2026)													
+Source	IML / Office No.3 new-vehicle registration projection for UTI (Israel), provided by Masumi Hayakawa via email 17-Jun-2026 (table/screenshot). 2025 = actual; 2026-2030 = projection.												
+Mapping	Email 'LD' -> CV LD (row 7). Email 'MD' -> CV MD component of row 8 (10T+11T). F-Series (12T) legacy parc continues pure decay x0.968 (no new F registrations supplied).												
+Year	2025(act)	2026	2027	2028	2029	2030							
+LD registrations	717	563	488	550	541	540							
+MD registrations	538	557	443	485	504	522							
+Resulting UIO LD	6059	6101	6064	6093	6110	6124							
+Resulting UIO MD+F	4277	4659	4908	5187	5471	5758							

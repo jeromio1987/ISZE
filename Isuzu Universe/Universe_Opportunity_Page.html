@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Universe — Opportunity: Warrington Vehicle Centre, wheel and hub fasteners</title>
+<style>
+  :root{
+    --navy:#15233c; --navy2:#1a2b4a; --terr:#c0552d; --paper:#f7f4ee;
+    --ink:#222; --mut:#5b6472; --line:#d8d2c8; --ok:#2f6b45; --warn:#9a6b12;
+    --absent:#8b8578; --panel:#fffdf9;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font:15px/1.55 "Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif;margin:0;color:var(--navy)}
+  .wrap{max-width:1080px;margin:0 auto;padding:26px 22px 60px}
+  header.top{background:var(--navy);color:var(--paper);padding:20px 22px;margin:-26px -22px 22px}
+  header.top .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#cbbfae}
+  header.top h1{color:var(--paper);font-size:27px;margin:6px 0 4px}
+  header.top .sub{color:#dfd7c8;font-size:14px}
+  .badge{display:inline-block;background:var(--terr);color:#fff;font-size:11px;letter-spacing:.1em;
+         text-transform:uppercase;padding:3px 9px;border-radius:2px;font-weight:600}
+
+  /* context strip — scope/period/flow/basis/freshness/coverage, on the face of the page */
+  .strip{display:grid;grid-template-columns:repeat(6,1fr);gap:0;background:var(--panel);
+         border:1px solid var(--line);border-top:3px solid var(--terr);margin-bottom:22px}
+  .strip div{padding:9px 11px;border-right:1px solid var(--line)}
+  .strip div:last-child{border-right:0}
+  .strip .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+  .strip .v{font-size:13px;font-weight:600;color:var(--navy);margin-top:2px}
+  .strip .v.sm{font-weight:400;font-size:12px}
+
+  section{margin:0 0 26px}
+  h2{font-size:20px;padding-bottom:6px;border-bottom:2px solid var(--navy);margin-bottom:14px}
+  h3{font-size:16px;margin:18px 0 8px}
+  h4{font-size:14px;margin:14px 0 6px;color:var(--navy2)}
+  p{margin:0 0 10px}
+  .lead{font-size:16px}
+  .mut{color:var(--mut)}
+  .small{font-size:13px}
+
+  .hero{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--terr);
+        padding:16px 18px;margin-bottom:18px}
+  .hero .big{font-family:Georgia,serif;font-size:19px;color:var(--navy);line-height:1.4}
+  .kpirow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+  .kpi{background:var(--panel);border:1px solid var(--line);padding:12px 14px}
+  .kpi .n{font-family:Georgia,serif;font-size:26px;color:var(--navy);line-height:1.1}
+  .kpi .n.terr{color:var(--terr)}
+  .kpi .l{font-size:12px;color:var(--mut);margin-top:4px}
+  .kpi .b{font-size:11px;color:var(--absent);margin-top:5px;border-top:1px dotted var(--line);padding-top:5px}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--panel)}
+  th{background:var(--navy);color:var(--paper);text-align:left;padding:7px 9px;font-weight:600;font-size:12px;
+     letter-spacing:.03em}
+  td{padding:6px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+  tr:nth-child(even) td{background:#faf7f1}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .mono{font-family:Consolas,"Courier New",monospace;font-size:12.5px}
+
+  .chip{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.05em;padding:2px 8px;border-radius:10px;
+        text-transform:uppercase;white-space:nowrap}
+  .c-ok{background:#e3efe6;color:var(--ok);border:1px solid #bcd6c4}
+  .c-no{background:#f6e5e0;color:var(--terr);border:1px solid #e4c3b8}
+  .c-warn{background:#f7eeda;color:var(--warn);border:1px solid #e2d0a6}
+  .c-abs{background:#eeeeea;color:var(--absent);border:1px solid #d6d2c8}
+
+  .conf{display:grid;grid-template-columns:150px 1fr;gap:0;border:1px solid var(--line);background:var(--panel)}
+  .conf .k{padding:7px 10px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;color:var(--navy)}
+  .conf .v{padding:7px 10px;border-bottom:1px solid var(--line);font-size:13px}
+  .conf .row:last-child .k,.conf .row:last-child .v{border-bottom:0}
+  .bar{height:8px;background:#e8e3da;position:relative;border-radius:4px;margin-top:6px}
+  .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--navy)}
+  .bar i.med{background:var(--warn)} .bar i.abs{background:var(--absent)}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .note{background:#fbf6ec;border:1px solid #e8dcc4;padding:11px 13px;font-size:13.5px}
+  .note.warn{background:#fdf3ef;border-color:#eccfc4}
+  .missing{background:#f4f2ec;border:1px dashed #c9c3b6;color:var(--absent);
+           padding:9px 11px;font-size:13px;font-style:italic}
+
+  .charts{background:var(--panel);border:1px solid var(--line);padding:14px 16px;margin-bottom:16px}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;margin-top:8px}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .sw{width:14px;height:3px;border-radius:2px;display:inline-block}
+  .sw.terr{background:var(--terr)} .sw.navy{background:var(--navy)} .sw.mut{background:#9aa3ae;border-top:1px dotted #6b7280;height:0}
+  svg{display:block;width:100%;height:auto;overflow:visible}
+  .svgtxt{font:11px "Segoe UI",Arial,sans-serif;fill:#5b6472}
+  .svgtxt.b{font-weight:700;fill:#15233c}
+  .svgtxt.pn{font:10.5px Consolas,monospace;fill:#5b6472}
+
+  .action{background:#eef2f6;border:1px solid #c9d4e0;padding:14px 16px}
+  .action h3{margin-top:0}
+  ul{margin:0 0 10px 18px;padding:0} li{margin-bottom:5px}
+  .footer{border-top:1px solid var(--line);margin-top:30px;padding-top:14px;font-size:12px;color:var(--mut)}
+  .printbar{font-size:12px;color:var(--mut);margin-bottom:10px}
+  @media print{ body{background:#fff} .wrap{max-width:none;padding:0} header.top{margin:0 0 16px} }
+  @media (max-width:820px){ .strip{grid-template-columns:repeat(2,1fr)} .two{grid-template-columns:1fr}
+    .kpirow{grid-template-columns:1fr} .conf{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">ISZE / Parts Europe &nbsp;·&nbsp; Universe &nbsp;·&nbsp; opportunity page &nbsp;·&nbsp; internal</div>
+  <h1>One dealer stopped buying five wheel fasteners in August. Every other dealer kept buying them.</h1>
+  <div class="sub">Warrington Vehicle Centre Ltd &nbsp;·&nbsp; wheel and hub fasteners &nbsp;·&nbsp; calendar 2025 &nbsp;·&nbsp; built from files ISZE already holds</div>
+</header>
+
+<div class="strip">
+  <div><div class="k">Scope</div><div class="v">1 account</div><div class="v sm">of 64 named</div></div>
+  <div><div class="k">Period</div><div class="v">2025-01 → 2025-12</div><div class="v sm">all 12 months present</div></div>
+  <div><div class="k">Flow</div><div class="v">sales to dealer</div><div class="v sm">not ISZE billing</div></div>
+  <div><div class="k">Measure basis</div><div class="v">quantity</div><div class="v sm">no price in file</div></div>
+  <div><div class="k">Freshness</div><div class="v">file of 22 Sep 2026</div><div class="v sm">covers CY2025</div></div>
+  <div><div class="k">Coverage</div><div class="v">64 of 64 dealers</div><div class="v sm">60 complete for the year</div></div>
+</div>
+
+<section>
+  <h2>Commercial signal</h2>
+  <div class="hero">
+    <div class="big">Five part numbers fall from <b>452 units</b> in January–June to <b>40 units</b> in July–December —
+      a fall of 91% — while the account's total purchasing moved only from 7,813 to 5,988 units, a fall of 23%.</div>
+  </div>
+
+  <div class="kpirow">
+    <div class="kpi"><div class="n terr">−91%</div><div class="l">the five fastener numbers, first half to second half</div>
+      <div class="b">452 → 40 units · measured, quantity only</div></div>
+    <div class="kpi"><div class="n">−23%</div><div class="l">the same account, everything it buys</div>
+      <div class="b">7,813 → 5,988 units · measured</div></div>
+    <div class="kpi"><div class="n">0</div><div class="l">units on those five numbers after August</div>
+      <div class="b">the account was active in every remaining month</div></div>
+  </div>
+
+  <div class="charts">
+    <h3>The five fastener numbers against the rest of the same family, month by month</h3>
+    <p class="small mut">The business question: did this account stop buying wheel fasteners, or did it stop buying these five numbers?
+      Two series, so a line is the right form. Read the shape, not the magnitude — the two lines are on the same scale and the whole point is that one stops and the other does not.</p>
+    <svg id="chart1" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid meet" role="img"
+         aria-label="Monthly units, the five fastener numbers against the rest of the wheel and hub family"></svg>
+    <div class="legend">
+      <span><i class="sw terr"></i> The five fastener numbers</span>
+      <span><i class="sw navy"></i> The other 38 wheel and hub numbers at this account</span>
+    </div>
+    <div class="note small" style="margin-top:10px">
+      <b>Zero means a recorded absence of a row for those part numbers in a month when the account was active</b> —
+      the account itself traded in every one of those months, at 688 to 1,099 units. So this is not a missing file.
+      It is five part numbers that stop.
+    </div>
+  </div>
+
+  <h3>The five part numbers, each on its own</h3>
+  <table>
+    <thead><tr>
+      <th>Part number</th><th>Its own description, from the parts master</th>
+      <th class="num">First half</th><th class="num">Second half</th><th class="num">Year</th>
+      <th class="num">Months active</th><th>Last month with activity</th>
+    </tr></thead>
+    <tbody id="pnrows"></tbody>
+  </table>
+</section>
+
+<section>
+  <h2>Financial scale</h2>
+  <div class="note warn">
+    <b>Not computable, and stated rather than papered over.</b> The dealer-level purchasing file carries quantity only —
+    no value column, no price, no discount. There is no price in the file to multiply by, so this page
+    <b>does not give the gap a euro figure.</b> A number here would be invented.
+  </div>
+  <p class="small" style="margin-top:10px">
+    For context only, and not this account's loss: the same five part numbers carry
+    <b>€26,170.09</b> of billed value across the whole booked network over the last twelve months
+    (parts master, candidate release). That is a network figure. It is not a gap, not a leak and not a recoverable amount,
+    and it must not be put in a business case.
+  </p>
+</section>
+
+<section>
+  <h2>The elimination record</h2>
+  <p class="lead">Seven tests. Three eliminated an alternative explanation. Four could not be run, and say why.
+     <b>This is the part of the page that makes it a decision rather than a chart</b>, and a finding without it is not publishable.</p>
+  <table>
+    <thead><tr><th style="width:26%">Test</th><th style="width:15%">Result</th><th>What that means</th></tr></thead>
+    <tbody id="elimrows"></tbody>
+  </table>
+
+  <div class="charts" style="margin-top:18px">
+    <h3>Test 3, the decisive one: did this happen everywhere, or only here?</h3>
+    <p class="small mut">If supply had been withdrawn, every dealer would have stopped. One account stopping while fifty-four others continue
+      points at the account, not at the part.</p>
+    <svg id="chart2" viewBox="0 0 1000 260" preserveAspectRatio="xMidYMid meet" role="img"
+         aria-label="Grouped bars: the five fastener numbers, this account against the other 54 dealers, in each half of 2025"></svg>
+    <div class="legend">
+      <span><i class="sw terr" style="width:14px;height:10px;border-radius:2px"></i> Warrington Vehicle Centre</span>
+      <span><i class="sw navy" style="width:14px;height:10px;border-radius:2px"></i> The other 54 dealers using these numbers</span>
+    </div>
+    <p class="small mut" style="margin-top:8px">
+      Other dealers: 3,660 units in the first half, 3,324 in the second — a 9% drift, consistent with the market.
+      This account: 452 to 40. The same five numbers sold in every month of the second half across the network.
+    </p>
+  </div>
+
+  <div class="charts">
+    <h3>Test 5, read carefully: the surrounding family also slowed, but it never stopped</h3>
+    <p class="small mut">This is why the page does not say "the account stopped buying from us". It slowed its whole wheel-and-hub buying.
+      The difference is in the shape: the surrounding numbers carry activity to the last month of the year, at 4 and 5 units.</p>
+    <svg id="chart3" viewBox="0 0 1000 240" preserveAspectRatio="xMidYMid meet" role="img"
+         aria-label="Monthly units for the five fastener numbers, the other family numbers, and the account total"></svg>
+    <div class="legend">
+      <span><i class="sw terr"></i> The five fastener numbers</span>
+      <span><i class="sw navy"></i> The other family numbers</span>
+      <span><i class="sw" style="background:#c9c3b6"></i> The account's total purchasing</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Diagnosis</h2>
+  <p class="lead"><b>Something changed in how this account sources wheel fasteners, in or around August 2025,
+     and it is specific to this account rather than to the part or the supply chain.</b></p>
+  <p>Two explanations survive, and the data cannot choose between them:</p>
+  <ul>
+    <li><b>A stocking cycle that has been allowed to run down and has not been rebuilt.</b> The five numbers are high-consumption
+        fasteners; a workshop that holds a stock of them buys in batches, and a batch that was over-bought in May would suppress
+        buying into the second half.</li>
+    <li><b>The requirement moved elsewhere</b> — another supplier, or another workshop whose purchases are recorded against a
+        different account name.</li>
+  </ul>
+  <p><b>One reading is explicitly excluded, and it is the one somebody will reach for.</b> This is <b>not</b> evidence that the dealer
+     under-services its trucks. The account carries one of the higher self-assessment scores in its country field, and no link exists
+     between a servicing workshop and a buying account for these part numbers — so the fitted-against-bought comparison cannot be made
+     at all. The difference between the two is not a gap, not a leak and not a shortfall: they are two files with different populations
+     and different units of account.</p>
+</section>
+
+<section>
+  <h2>Confidence</h2>
+  <p class="small mut">Not a score. Seven named dimensions, each with its state and its reason. A single confidence number would hide
+     which of these is missing, and in this case three of them are missing entirely.</p>
+  <div class="conf" id="confrows"></div>
+</section>
+
+<section>
+  <h2>Recommended action</h2>
+  <div class="action">
+    <h3>Raise one scoped question, with a named owner and a review date. Not a price decision.</h3>
+    <p class="small"><b>The question to ITUK's parts function:</b> for Warrington Vehicle Centre, five wheel and hub fastener
+      part numbers fall from 452 units in January–June 2025 to 40 units in July–December, with no activity after August, while the same
+      five numbers continued across the rest of the network. Is this a stocking position that has not been rebuilt, or has the
+      requirement moved to another supplier or another workshop?
+      Nothing else is needed — no prices, no margins, no stock value, no customer detail.</p>
+    <table style="margin-top:10px">
+      <tbody>
+        <tr><td style="width:210px"><b>Owner</b></td><td>ISZE commercial owner raises it; ITUK parts function answers it</td></tr>
+        <tr><td><b>Expected observable result</b></td><td>Either purchasing resumes on those five numbers in the next three months,
+            or the answer says where the requirement went. Both are useful. Neither needs a price change.</td></tr>
+        <tr><td><b>Review basis</b></td><td>The next three months of units on those five numbers, against the same five numbers
+            at the other 54 dealers using them</td></tr>
+        <tr><td><b>Owner named?</b></td><td><span class="chip c-no">No — this is the gap</span>
+            &nbsp;No person is recorded as the receiving or answering function anywhere in this programme</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Explicitly not recommended</h4>
+  <div class="missing">
+    A price change. There is no price evidence for these part numbers, no price in the file, and no elimination test that could
+    read a price movement. Recommending a discount here would be a guess dressed as analysis.
+  </div>
+
+  <h4>What would change this conclusion</h4>
+  <table style="margin-top:6px">
+    <thead><tr><th>If we had…</th><th>Then this page would…</th></tr></thead>
+    <tbody>
+      <tr><td>A dealer-level vehicles-in-service figure</td><td>test whether the account's fleet shrank, and if it did, close the case with no action</td></tr>
+      <tr><td>A price history for these five numbers over 2025</td><td>test whether a price move coincides, and rule it in or out</td></tr>
+      <tr><td>A second dealer-level year</td><td>test whether this is seasonal, and whether August is unusual for this account</td></tr>
+      <tr><td>A row value on the purchasing file</td><td>put a euro figure on the change instead of stating that it cannot be computed</td></tr>
+      <tr><td>The dealer-name-to-account list</td><td>place what this dealer fitted against what it bought — the comparison everyone actually wants</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>What this page is, and what it is not</h2>
+  <div class="two">
+    <div>
+      <h4>It is</h4>
+      <ul class="small">
+        <li>Built entirely from files ISZE already holds. No new data collection, no distributor request, no new system.</li>
+        <li>Reproducible: every figure traces to one named file, one stated period and one population.</li>
+        <li>A real finding that nobody had asked for, found by looking at one account's shape rather than a network total.</li>
+        <li>An honest stop: it declines to conclude the interesting-sounding thing, and says what would settle it.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>It is not</h4>
+      <ul class="small">
+        <li>A statement that this dealer under-services its vehicles. That comparison cannot be made.</li>
+        <li>A euro opportunity, a leak, or a recoverable amount. No euro figure is possible from this file.</li>
+        <li>A price case. No price evidence exists for these numbers.</li>
+        <li>Publishable outside ISZE: the family assignment comes from a classification release that is a
+            <b>candidate</b>, not a pinned authority, so no family label goes outside.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  <p><b>Sources.</b> <span class="mono">01_data/00_derived/dealer_sellout_long_ITUK_CY2025.csv</span> (66,018 monthly rows,
+     223,897 units, 64 dealers, calendar 2025, quantity only, no price and no value column);
+     <span class="mono">01_data/00_derived/AIM_Master_PN_Categories_Figkey_20260921.csv</span>
+     (the family tree — <b>candidate release, not a pinned authority</b>).
+     Every figure on this page was recomputed from those two files on 22 September 2026.</p>
+  <p>Internal working page. Standing rules applied: three transaction flows never added; a missing file is not a zero month;
+     no per-dealer rate where no dealer-level fleet exists; no family label published outside ISZE while no classification release
+     is pinned; no euro label on a money unit no source declares.</p>
+</div>
+
+</div>
+
+<script type="application/json" id="data">
+{
+ "months": ["2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12"],
+ "five":   [96,32,24,64,212,24,0,40,0,0,0,0],
+ "rest":   [37,129,65,62,37,55,21,13,12,23,4,5],
+ "account":[1183,1065,1583,991,1881,1110,985,1474,688,982,1099,760],
+ "five_total_h1":452,"five_total_h2":40,"rest_h1":385,"rest_h2":78,
+ "per_pn":[
+  {"pn":"8973598100","desc":"NUT; WHEEL,RR AXLE","h1":112,"h2":8,"year":120,"months":[16,0,24,16,56,0,0,8,0,0,0,0],"active":5,"last":"2025-08"},
+  {"pn":"8973598060","desc":"NUT; WHEEL,INNER,RR AXLE","h1":104,"h2":6,"year":110,"months":[32,0,0,16,50,6,0,6,0,0,0,0],"active":5,"last":"2025-08"},
+  {"pn":"8973598050","desc":"NUT; WHEEL,INNER,RR AXLE","h1":92,"h2":6,"year":98,"months":[20,0,0,16,50,6,0,6,0,0,0,0],"active":5,"last":"2025-08"},
+  {"pn":"8973598090","desc":"NUT; WHEEL,RR AXLE","h1":88,"h2":8,"year":96,"months":[16,0,0,16,56,0,0,8,0,0,0,0],"active":4,"last":"2025-08"},
+  {"pn":"8971684572","desc":"PIN; WHEEL,FRT AXLE","h1":56,"h2":12,"year":68,"months":[12,32,0,0,0,12,0,12,0,0,0,0],"active":4,"last":"2025-08"}
+ ],
+ "network":{"account_h1":452,"account_h2":40,"others_h1":3660,"others_h2":3324,"others_dealers":54,
+            "net_by_month":[798,581,844,433,703,753,474,717,799,441,493,440]},
+ "elim":[
+  {"n":1,"test":"Did the fleet base fall as much?","state":"not","label":"not testable",
+   "means":"No dealer-level or territory-level vehicle population exists anywhere in the estate. The fleet file holds one national figure, repeated across dealers. A per-dealer rate cannot be computed, so this alternative cannot be eliminated from data. It would be settled by a dealer-level vehicles-in-service figure."},
+  {"n":2,"test":"Is a contributing part number superseded?","state":"ok","label":"passed — none is",
+   "means":"Checked against the parts master and the replacement table: five current numbers, no successor. So the fall is not a part number being replaced by another."},
+  {"n":3,"test":"Is the stop network-wide, or specific to this account?","state":"ok","label":"account-specific",
+   "means":"The five numbers kept selling across the rest of the network all year: 3,660 units in the second half across the other 54 dealers, against 3,324 in the first. A supply withdrawal stops every dealer. This stops one."},
+  {"n":4,"test":"Is the first half inflated by one large order?","state":"warn","label":"partial",
+   "means":"May carries 212 of the 452 first-half units, 47%. Remove May entirely and 240 units remain across five months, against 40 in the whole second half. The step survives, but its size depends on whether May is representative."},
+  {"n":5,"test":"Do the other family numbers move the same way?","state":"warn","label":"same direction, different shape",
+   "means":"They nearly halve (385 to 78) and keep running into every remaining month. The five stop dead. The direction is shared; the shape is not, and the shape is the signal."},
+  {"n":6,"test":"Did a price change coincide?","state":"not","label":"not testable",
+   "means":"The file has no price, no value and no discount. A price move cannot be read from it. It would be settled by a price history for these numbers over 2025."},
+  {"n":7,"test":"Is this inside normal variation?","state":"ok","label":"no",
+   "means":"Every one of the five numbers is active in five months or fewer, and all five fall silent in the same two months. Ordinary variation does not synchronise five part numbers onto one stop date."}
+ ],
+ "conf":[
+  {"k":"Purchasing quantity","state":"strong","pct":100,"why":"Twelve months, all present, quantity-only rows, one account, one year"},
+  {"k":"Coverage","state":"strong","pct":100,"why":"66,018 monthly rows reconcile to 223,897 units; this account carries all twelve months"},
+  {"k":"Identity","state":"strong","pct":100,"why":"One exact match between the buying account and the account name, checked one-to-one"},
+  {"k":"Applicability of the family","state":"medium","pct":58,"why":"Family assigned from the parts master, which is a candidate release, not a pinned authority"},
+  {"k":"Fleet base","state":"absent","pct":10,"why":"No dealer-level vehicle population exists. Nothing about purchasing intensity can be claimed"},
+  {"k":"Price","state":"absent","pct":10,"why":"No price in the file. No price observation covers these five part numbers"},
+  {"k":"Trend","state":"absent","pct":10,"why":"One dealer-level year exists, so no year-on-year comparison is possible"}
+ ]
+}
+</script>
+
+<script>
+(function(){
+  var D = JSON.parse(document.getElementById('data').textContent);
+  var NS = "http://www.w3.org/2000/svg";
+  function el(n, a){ var e = document.createElementNS(NS, n);
+    for (var k in a) e.setAttribute(k, a[k]); return e; }
+  function txt(x, y, s, cls, anchor){ var t = el("text", {x:x, y:y, "class":cls||"svgtxt",
+      "text-anchor":anchor||"middle"}); t.textContent = s; return t; }
+
+  /* ---------- chart 1: the two series ---------- */
+  (function(){
+    var svg = document.getElementById("chart1");
+    var W=1000, H=300, L=58, R=18, T=22, B=44;
+    var n=D.months.length, max=Math.max.apply(null,D.five.concat(D.rest))*1.12;
+    var x=i=>L+(W-L-R)*(i/(n-1)), y=v=>T+(H-T-B)*(1-v/max);
+    for(var g=0; g<=4; g++){ var v=max*g/4;
+      svg.appendChild(el("line",{x1:L,x2:W-R,y1:y(v),y2:y(v),stroke:"#e6e1d7","stroke-width":1}));
+      svg.appendChild(txt(L-8,y(v)+4,Math.round(v),"svgtxt","end")); }
+    svg.appendChild(el("line",{x1:L,x2:W-R,y1:y(0),y2:y(0),stroke:"#b9b2a5","stroke-width":1.4}));
+    svg.appendChild(txt(L-8,y(0)+4,"0","svgtxt","end"));
+    svg.appendChild(txt(14,T+8,"units","svgtxt","start"));
+    for(var i=0;i<n;i++) svg.appendChild(txt(x(i),H-B+20,D.months[i].slice(5),"svgtxt"));
+    function line(a,c,w,dash){ var d="";
+      for(var i=0;i<n;i++) d+=(i?" L":"M")+x(i)+" "+y(a[i]);
+      svg.appendChild(el("path",{d:d,fill:"none",stroke:c,"stroke-width":w,"stroke-linejoin":"round","stroke-dasharray":dash||""})); }
+    line(D.rest,"#15233c",2);
+    line(D.five,"#c0552d",3);
+    for(var i=0;i<n;i++){
+      svg.appendChild(el("circle",{cx:x(i),cy:y(D.rest[i]),r:3.2,fill:"#15233c"}));
+      svg.appendChild(el("circle",{cx:x(i),cy:y(D.five[i]),r:D.five[i]===0?4.6:4,fill:D.five[i]===0?"#fff":"#c0552d",
+        stroke:"#c0552d","stroke-width":D.five[i]===0?2:0}));
+      if(D.five[i]===0) svg.appendChild(txt(x(i),y(0)-12,"0","svgtxt pn"));
+    }
+    svg.appendChild(el("line",{x1:x(5.5),x2:x(5.5),y1:T,y2:H-B,stroke:"#c0552d","stroke-width":1,"stroke-dasharray":"4 4",opacity:.55}));
+    svg.appendChild(txt(x(5.5),T-6,"the step: last units in August","svgtxt b"));
+    svg.appendChild(txt(x(2.5),T+16,"452 units in the first half","svgtxt b"));
+    svg.appendChild(txt(x(9),T+16,"40 units in the second","svgtxt b"));
+  })();
+
+  /* ---------- chart 2: account vs the rest of the network ---------- */
+  (function(){
+    var svg = document.getElementById("chart2");
+    var W=1000,H=260,L=240,R=90,T=56,B=40;
+    var max=Math.max(D.network.others_h1,D.network.others_h2)*1.18;
+    var rows=[
+      {label:"The other 54 dealers using these numbers",
+       a:D.network.others_h1,b:D.network.others_h2,c:"#15233c"},
+      {label:"Warrington Vehicle Centre",
+       a:D.network.account_h1,b:D.network.account_h2,c:"#c0552d"}
+    ];
+    var rowH=(H-T-B)/rows.length, barH=30, gap=8;
+    var x=v=>L+(W-L-R)*(v/max);
+    for(var g=0;g<=4;g++){ var v=max*g/4;
+      svg.appendChild(el("line",{x1:x(v),x2:x(v),y1:T-20,y2:H-B,stroke:"#e6e1d7"}));
+      svg.appendChild(txt(x(v),H-B+18,Math.round(v),"svgtxt")); }
+    svg.appendChild(txt((L+W-R)/2,T-30,"Total units on the five part numbers, first half against second half","svgtxt b"));
+    rows.forEach(function(r,ri){
+      var top=T+ri*rowH;
+      svg.appendChild(txt(L-12,top+16,r.label,"svgtxt b","end"));
+      svg.appendChild(el("rect",{x:L,y:top,width:Math.max(x(r.a)-L,1),height:barH,fill:r.c}));
+      svg.appendChild(el("rect",{x:L,y:top+barH+gap,width:Math.max(x(r.b)-L,1),height:barH,fill:r.c,opacity:.42}));
+      svg.appendChild(txt(x(r.a)+10,top+20,r.a.toLocaleString()+" · Jan–Jun","svgtxt b","start"));
+      svg.appendChild(txt(x(r.b)+10,top+barH+gap+20,r.b.toLocaleString()+" · Jul–Dec","svgtxt","start"));
+      ["#15233c","#c0552d"].forEach(function(){});
+    });
+    svg.appendChild(txt(L-12,T+rowH+30,"","svgtxt"));
+    svg.appendChild(txt(L,H-B+34,"The bars for each group are the same two half-years, full strength then faded.","svgtxt"));
+  })();
+
+  /* ---------- chart 3: three shapes ---------- */
+  (function(){
+    var svg = document.getElementById("chart3");
+    var W=1000,H=240,L=58,R=18,T=26,B=40;
+    var n=12, max=Math.max.apply(null,D.account)*1.1;
+    var x=i=>L+(W-L-R)*(i/(n-1));
+    function sc(v,mx){ return T+(H-T-B)*(1-v/mx); }
+    function line(a,c,w,mx){ var d="";
+      for(var i=0;i<n;i++) d+=(i?" L":"M")+x(i)+" "+sc(a[i],mx);
+      svg.appendChild(el("path",{d:d,fill:"none",stroke:c,"stroke-width":w,"stroke-linejoin":"round"})); }
+    svg.appendChild(el("line",{x1:L,x2:W-R,y1:sc(0,max),y2:sc(0,max),stroke:"#b9b2a5"}));
+    svg.appendChild(txt(L-8,sc(0,max)+4,"0","svgtxt","end"));
+    svg.appendChild(txt(L-8,T+4,Math.round(max),"svgtxt","end"));
+    for(var i=0;i<n;i++) svg.appendChild(txt(x(i),H-B+20,D.months[i].slice(5),"svgtxt"));
+    svg.appendChild(el("line",{x1:x(5.5),x2:x(5.5),y1:T,y2:H-B,stroke:"#c0552d","stroke-dasharray":"4 4",opacity:.5}));
+    line(D.account,"#c9c3b6",2,max);
+    line(D.rest,"#15233c",2,max);
+    line(D.five,"#c0552d",3,max);
+    for(var i=0;i<n;i++){
+      svg.appendChild(el("circle",{cx:x(i),cy:sc(D.five[i],max),r:D.five[i]===0?4.4:3.8,
+        fill:D.five[i]===0?"#fff":"#c0552d",stroke:"#c0552d","stroke-width":D.five[i]===0?2:0})); }
+  })();
+
+  /* ---------- tables and confidence ---------- */
+  var tb=document.getElementById("pnrows");
+  D.per_pn.forEach(function(r){
+    var tr=document.createElement("tr");
+    tr.innerHTML='<td class="mono">'+r.pn+'</td><td>'+r.desc+'</td>'+
+      '<td class="num">'+r.h1+'</td><td class="num" style="color:#c0552d;font-weight:700">'+r.h2+'</td>'+
+      '<td class="num">'+r.year+'</td><td class="num">'+r.active+' of 12</td>'+
+      '<td class="mono">'+r.last+'</td>';
+    tb.appendChild(tr);
+  });
+
+  var eb=document.getElementById("elimrows");
+  var cls={ok:"c-ok",no:"c-no",warn:"c-warn",not:"c-abs"};
+  D.elim.forEach(function(r){
+    var tr=document.createElement("tr");
+    tr.innerHTML='<td><b>'+r.n+'.</b> '+r.test+'</td>'+
+      '<td><span class="chip '+cls[r.state]+'">'+r.label+'</span></td><td>'+r.means+'</td>';
+    eb.appendChild(tr);
+  });
+
+  var cb=document.getElementById("confrows");
+  D.conf.forEach(function(r){
+    var d=document.createElement("div"); d.className="row";
+    d.style.display="contents";
+    var k=document.createElement("div"); k.className="k"; k.textContent=r.k;
+    var v=document.createElement("div"); v.className="v";
+    var barcls = r.state==="strong" ? "" : (r.state==="medium" ? "med" : "abs");
+    v.innerHTML='<b>'+r.state+'</b> — '+r.why+
+      '<div class="bar"><i class="'+barcls+'" style="width:'+r.pct+'%"></i></div>';
+    cb.appendChild(k); cb.appendChild(v);
+  });
+})();
+</script>
+</body>
+</html>

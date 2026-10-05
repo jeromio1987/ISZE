@@ -1,0 +1,261 @@
+{
+  "generated": "2026-09-24T17:37:06.758238+00:00",
+  "built_by": "01_data/91_build/build_pricing_aim_source_cube.py",
+  "basis": {
+    "file": "price_bp_weighted_compare_pn.csv",
+    "filter": "in_scope == True",
+    "window": [
+      "2025-07-01",
+      "2026-06-30"
+    ],
+    "fx_jpy_per_eur": 163.7,
+    "rows_in_scope": 48653,
+    "part_numbers_in_scope": 15872,
+    "in_scope_billed_eur": 34993609.39,
+    "rows_priced_both_sides": 47617,
+    "priced_billed_eur": 32595852.63,
+    "step_eur": 1652140.71,
+    "weighted_pct": 5.9616
+  },
+  "tie_out": {
+    "step_matches_published": true,
+    "weighted_matches_published": true
+  },
+  "taxonomy": {
+    "spine": "aim_master_v2.csv -> aim_l1_fixed / aim_l2_fixed / aim_l3",
+    "l1_values": 22,
+    "l2_values": 115,
+    "l3_values": 236,
+    "eur_on_aim_spine": 34345748.19,
+    "eur_on_aim_spine_pct": 98.15,
+    "eur_with_l3": 34344665.79,
+    "eur_with_l3_pct": 98.15,
+    "not_on_spine_bucket": "Not on AIM spine",
+    "l3_gap_bucket": "Not classified at L3"
+  },
+  "source_of_supply": {
+    "rule": "pricing_sim_pr00_l12m.parquet, filled from pricing_list_pn.parquet where that part number carries exactly one source",
+    "billed_eur_by_source_in_scope": {
+      "TH - Thailand": 16703003.33,
+      "JP - Japan": 16057550.15,
+      "Not held": 2233055.91
+    },
+    "billed_eur_by_source_priced": {
+      "TH - Thailand": 16634804.85,
+      "JP - Japan": 15959718.59,
+      "Not held": 1329.19
+    },
+    "share_of_in_scope_eur_labeled_pct": 93.62
+  },
+  "by_db": {
+    "ITUK": {
+      "pn": 4123,
+      "rows": 4123,
+      "billed_eur": 6637851.4,
+      "step_eur": 355797.8,
+      "prior_eur": 5334676.67,
+      "new_eur": 5690474.47,
+      "weighted_pct": 6.67
+    },
+    "IUK": {
+      "pn": 3892,
+      "rows": 3892,
+      "billed_eur": 6531640.7,
+      "step_eur": 316797.07,
+      "prior_eur": 5329453.24,
+      "new_eur": 5646250.32,
+      "weighted_pct": 5.94
+    },
+    "UTI": {
+      "pn": 1902,
+      "rows": 1902,
+      "billed_eur": 3475697.94,
+      "step_eur": 180312.25,
+      "prior_eur": 3230953.12,
+      "new_eur": 3411265.37,
+      "weighted_pct": 5.58
+    },
+    "UMI": {
+      "pn": 2568,
+      "rows": 2568,
+      "billed_eur": 3080200.59,
+      "step_eur": 124532.59,
+      "prior_eur": 2209196.22,
+      "new_eur": 2333728.81,
+      "weighted_pct": 5.64
+    },
+    "ISD": {
+      "pn": 4167,
+      "rows": 4697,
+      "billed_eur": 2807219.62,
+      "step_eur": 114373.96,
+      "prior_eur": 2075692.63,
+      "new_eur": 2190066.6,
+      "weighted_pct": 5.51
+    },
+    "IBX": {
+      "pn": 4506,
+      "rows": 4506,
+      "billed_eur": 2452579.05,
+      "step_eur": 118036.51,
+      "prior_eur": 1898895.09,
+      "new_eur": 2016931.61,
+      "weighted_pct": 6.22
+    },
+    "Imotors": {
+      "pn": 5056,
+      "rows": 6422,
+      "billed_eur": 1872857.53,
+      "step_eur": 90394.74,
+      "prior_eur": 1492623.94,
+      "new_eur": 1583018.68,
+      "weighted_pct": 6.06
+    },
+    "Norway": {
+      "pn": 1913,
+      "rows": 1913,
+      "billed_eur": 1660533.26,
+      "step_eur": 67313.27,
+      "prior_eur": 1229318.61,
+      "new_eur": 1296631.88,
+      "weighted_pct": 5.48
+    },
+    "Sverige": {
+      "pn": 2205,
+      "rows": 2205,
+      "billed_eur": 1579073.49,
+      "step_eur": 63609.99,
+      "prior_eur": 1034824.69,
+      "new_eur": 1098434.68,
+      "weighted_pct": 6.15
+    },
+    "Ireland": {
+      "pn": 3174,
+      "rows": 3174,
+      "billed_eur": 1126672.96,
+      "step_eur": 57912.28,
+      "prior_eur": 913964.37,
+      "new_eur": 971876.65,
+      "weighted_pct": 6.34
+    },
+    "CIS-KTK": {
+      "pn": 2026,
+      "rows": 2026,
+      "billed_eur": 1026580.75,
+      "step_eur": 46383.96,
+      "prior_eur": 902215.42,
+      "new_eur": 948599.39,
+      "weighted_pct": 5.14
+    },
+    "RSA": {
+      "pn": 2284,
+      "rows": 2284,
+      "billed_eur": 496911.44,
+      "step_eur": 25230.15,
+      "prior_eur": 406623.43,
+      "new_eur": 431853.58,
+      "weighted_pct": 6.2
+    },
+    "Loutsios": {
+      "pn": 1937,
+      "rows": 1937,
+      "billed_eur": 410130.21,
+      "step_eur": 20117.41,
+      "prior_eur": 332198.08,
+      "new_eur": 352315.49,
+      "weighted_pct": 6.06
+    },
+    "AutoWallis": {
+      "pn": 1004,
+      "rows": 1004,
+      "billed_eur": 330715.64,
+      "step_eur": 14293.49,
+      "prior_eur": 272625.49,
+      "new_eur": 286918.97,
+      "weighted_pct": 5.24
+    },
+    "Nordic FI": {
+      "pn": 826,
+      "rows": 826,
+      "billed_eur": 326069.42,
+      "step_eur": 13439.71,
+      "prior_eur": 218834.44,
+      "new_eur": 232274.15,
+      "weighted_pct": 6.14
+    },
+    "GA": {
+      "pn": 416,
+      "rows": 416,
+      "billed_eur": 311487.7,
+      "step_eur": 6738.85,
+      "prior_eur": 175091.97,
+      "new_eur": 181830.82,
+      "weighted_pct": 3.85
+    },
+    "GasanZammit": {
+      "pn": 1521,
+      "rows": 1521,
+      "billed_eur": 212483.93,
+      "step_eur": 10855.63,
+      "prior_eur": 165246.19,
+      "new_eur": 176101.83,
+      "weighted_pct": 6.57
+    },
+    "Danmark": {
+      "pn": 834,
+      "rows": 987,
+      "billed_eur": 187243.46,
+      "step_eur": 7169.41,
+      "prior_eur": 124558.09,
+      "new_eur": 131727.5,
+      "weighted_pct": 5.76
+    },
+    "ROM Auto": {
+      "pn": 731,
+      "rows": 731,
+      "billed_eur": 180657.74,
+      "step_eur": 7504.23,
+      "prior_eur": 142705.99,
+      "new_eur": 150210.22,
+      "weighted_pct": 5.26
+    },
+    "CBC": {
+      "pn": 659,
+      "rows": 659,
+      "billed_eur": 159124.1,
+      "step_eur": 3959.57,
+      "prior_eur": 100733.05,
+      "new_eur": 104692.61,
+      "weighted_pct": 3.93
+    },
+    "BL Iceland": {
+      "pn": 683,
+      "rows": 683,
+      "billed_eur": 85778.81,
+      "step_eur": 4456.88,
+      "prior_eur": 67777.64,
+      "new_eur": 72234.52,
+      "weighted_pct": 6.58
+    },
+    "KIMA": {
+      "pn": 177,
+      "rows": 177,
+      "billed_eur": 42099.65,
+      "step_eur": 2910.96,
+      "prior_eur": 54836.07,
+      "new_eur": 57747.03,
+      "weighted_pct": 5.31
+    }
+  },
+  "caveats": [
+    "The weighted % is a base-price move on qty-weighted prior base price. It is not a revenue, margin or elasticity outcome.",
+    "Source of supply is J/T from the pricing model plus the price list. Where it is not held the row is kept and labeled, never dropped.",
+    "Israel is reported as UMI (1797) and UTI (1799) separately, never blended.",
+    "AIM L3 is populated on a minority of part numbers; the explicit bucket is shown.",
+    "The customer level in this pricing file is the distributor trading entity (gps_db_label), which is what the pricing enquiry was run on. It is not dealer level - sales_fact carries no dealer key."
+  ],
+  "outputs": [
+    "01_data\\00_derived\\pricing_aim_source_lines.parquet",
+    "01_data\\00_derived\\pricing_aim_source_cube.csv"
+  ]
+}

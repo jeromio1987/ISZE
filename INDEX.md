@@ -1,6 +1,38 @@
 # ISZE workspace index
 
-**Parent workspace:** [`../../INDEX.md`](../../INDEX.md) · **Layout:** [`paths.yaml`](paths.yaml) · **Agent sync:** 2026-08-26.
+> ## TALK TO JEROME LIKE A PERSON
+>
+> **Read this before you write anything to him.**
+>
+> He has said it repeatedly: *"no bot language", "talk clear to me", "provide a decent
+> explanation".* This is a hard rule, not a style preference.
+>
+> **Do:**
+> - Answer first. One plain sentence with the verdict, then the reasoning.
+> - Explain *why* something happened. He asked for the mechanism, not the status.
+> - Use normal business words. "What we billed", "dealer price", "trucks in service".
+> - Write prose. Paragraphs. Complete sentences.
+> - Say "I" and "you". You are a colleague sitting next to him.
+>
+> **Never:**
+> - **Release-note voice.** No "Rebuilt X", "Fixed Y", "Still open: Z", "Noted." No changelog
+>   stacked in bullets. That reads as a machine ticking tickets.
+> - **Process narration.** No "Let me…", "I'll now…", "First I'll check…". Do the work, then
+>   tell him what you found.
+> - **A table as the answer.** Tables are for data he will look up, never for the reply itself.
+> - **Agent words.** No ship-gate, receipt, harness, loop, packet, drift, lane, surface,
+>   payload. If you must name a thing, describe it in plain English once.
+> - **Status without meaning.** "Pipeline green" means nothing to him. "The numbers now agree"
+>   does.
+> - **Bold every third phrase.** Emphasis stops working when everything is emphasised.
+> - **Sign off with a summary of your own summary.**
+>
+> **Before you send, read it back as if he had spoken it out loud.** If a sentence would sound
+> absurd said by a person, rewrite it.
+>
+> **Full rule:** [`.cursor/rules/jerome-talk-clear.mdc`](.cursor/rules/jerome-talk-clear.mdc)
+
+**Parent workspace:** [`../../INDEX.md`](../../INDEX.md) · **Layout:** [`paths.yaml`](paths.yaml) · **Agent sync:** 2026-09-17.
 
 ## Root (bootstrap only)
 
@@ -40,7 +72,9 @@ Everything else lives in numbered folders below.
 | Task routing | `00_docs/ROUTING.yaml` |
 | Maps / registry | `00_docs/MAPS.md` · `00_docs/MAP_REGISTRY.yaml` |
 | **Programme roadmap (the queue)** | `00_docs/ISZE_ROADMAP.md` — open work §1, decisions waiting on Jerome §2, live §3, closed §5. Domain depth: `00_docs/roadmaps/` |
-| **Exec aftersales paper (Mode A HTML)** | `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html` + `OPEN_ISZE_Exec_Aftersales_Paper.cmd` · brief `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md` |
+| **Exec aftersales paper (shared HTML)** | `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html` + `OPEN_ISZE_Exec_Aftersales_Paper.cmd` · brief `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md` · retro `00_docs/REVIEW_EXEC_AFTERSALES_PAPER_20260915.md` · gate `02_dashboards/_build/verify_exec_aftersales_paper.py` |
+| **Parts pricing policy paper (consolidated 2 Oct 2026)** | `02_dashboards/pricing/ISZE_Pricing_Policy_Paper_2026-10-02.html` + `.pdf` + `OPEN_ISZE_Pricing_Policy_Paper_2026-10-02.cmd` · builder `02_dashboards/pricing/_build/build_pricing_policy_paper_20261002.py` · older papers/decks archived in `01_data/92_archive/pricing_papers_superseded_2026-10-02/` |
+| **IAM shop vs billed (PN scatter)** | `02_dashboards/pricing/ISZE_IAM_Price_vs_Billed_PN.html` + `OPEN_ISZE_IAM_Price_vs_Billed_PN.cmd` |
 | **Decision pack (one sitting)** | `00_docs/DECISION_PACK_20260914.md` — recommended ticks; nothing gated is applied until Jerome answers |
 | Versioned filenames | `00_docs/CANONICAL.md` |
 | **Excel pre-delivery check** | `00_docs/EXCEL_PRE_DELIVERY_CHECK.md` |

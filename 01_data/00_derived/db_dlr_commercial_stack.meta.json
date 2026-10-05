@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14T15:43:59+00:00",
+  "generated_at": "2026-09-19T19:06:53+00:00",
   "builder_version": "db-dlr-stack-v1",
   "year": 2025,
   "distributors": [
@@ -11,8 +11,8 @@
   ],
   "no_alloc_run": true,
   "replenishment": {
-    "bridge_rows": 80219,
-    "dealer_rows": 0,
+    "bridge_rows": 84826,
+    "dealer_rows": 65619,
     "summary_rows": 20750,
     "exception_rows": 1934,
     "by_db": {
@@ -26,20 +26,21 @@
   "revision_queue": {
     "rows": 20750,
     "action_counts": {
-      "REVIEW_LEAKAGE": 7553,
-      "HOLD_DEFAULT": 4712,
-      "REVIEW_HIGH_LIST_EXPOSURE": 4259,
-      "REVIEW_OVERSTOCK": 4153,
-      "REVIEW_IAM_UNDERCUT": 42,
-      "RAISE_OK_ROOM_VS_IAM": 31
+      "REVIEW_LEAKAGE": 6878,
+      "HOLD_DEFAULT": 4493,
+      "REVIEW_HIGH_LIST_EXPOSURE": 3819,
+      "REVIEW_OVERSTOCK": 3771,
+      "REVIEW_PROXY_ADVERSE": 1614,
+      "REVIEW_IAM_UNDERCUT": 140,
+      "RAISE_OK_ROOM_VS_IAM": 35
     },
-    "ks_matched": 135
+    "ks_matched": 302
   },
   "elasticity_dbs": {
     "blocked_yoy": true,
     "ituk": {
-      "n_pn": 5530,
-      "qty": 224001.0,
+      "n_pn": 5528,
+      "qty": 223901.0,
       "years": [
         2025
       ],
@@ -79,13 +80,13 @@
     }
   },
   "outputs": {
-    "replenishment_bridge": "01_data/00_derived/replenishment_bridge.parquet",
-    "replenishment_bridge_ituk_dealer": "01_data/00_derived/replenishment_bridge_ituk_dealer.parquet",
-    "replenishment_summary": "01_data/00_derived/replenishment_summary_cy2025.parquet",
-    "replenishment_exceptions": "01_data/00_derived/replenishment_exceptions_cy2025.csv",
-    "revision_exception_queue": "01_data/00_derived/revision_exception_queue.csv",
-    "price_elasticity_db_dlr_network": "01_data/00_derived/price_elasticity_db_dlr_network.csv",
-    "price_elasticity_db_dlr_ituk_uti_legacy": "01_data/00_derived/price_elasticity_db_dlr_ituk_uti.csv"
+    "replenishment_bridge": "01_data\\00_derived\\replenishment_bridge.parquet",
+    "replenishment_bridge_ituk_dealer": "01_data\\00_derived\\replenishment_bridge_ituk_dealer.parquet",
+    "replenishment_summary": "01_data\\00_derived\\replenishment_summary_cy2025.parquet",
+    "replenishment_exceptions": "01_data\\00_derived\\replenishment_exceptions_cy2025.csv",
+    "revision_exception_queue": "01_data\\00_derived\\revision_exception_queue.csv",
+    "price_elasticity_db_dlr_network": "01_data\\00_derived\\price_elasticity_db_dlr_network.csv",
+    "price_elasticity_db_dlr_ituk_uti_legacy": "01_data\\00_derived\\price_elasticity_db_dlr_ituk_uti.csv"
   },
   "notes": [
     "Revision queue uses planned SP % from pricing_sim_pr00_l12m \u2014 not an alloc run.",

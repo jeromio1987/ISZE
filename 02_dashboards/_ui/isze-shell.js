@@ -18,6 +18,8 @@
 
   var links = [
     { href: prefix + 'index.html', label: 'Home', match: ['index.html'] },
+    { href: prefix + 'ISZE_UNIVERSE_BOARD.html', label: 'Where we stand', match: ['ISZE_UNIVERSE_BOARD.html'] },
+    { href: prefix + 'ISZE_UNIVERSE_MAP.html', label: 'The whole picture', match: ['ISZE_UNIVERSE_MAP.html'] },
     { href: prefix + 'BI_PACKS.html', label: 'Dashboard Index', match: ['BI_PACKS.html'] },
     { href: prefix + 'MASTER_DASHBOARD.html', label: 'Mission Control', match: ['MASTER_DASHBOARD.html'] },
     { href: prefix + 'PROJECT_HUB.html', label: 'Project Hub', match: ['PROJECT_HUB.html'] },

@@ -1,0 +1,1 @@
+@start "" "%~dp0UNIVERSE_SUCCESS_FRAMEWORK_2026-09-23.html"

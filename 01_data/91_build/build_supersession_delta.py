@@ -77,7 +77,7 @@ def main() -> int:
     top = still.head(15)
 
     note_lines = [
-        "# Supersession billing delta (Mode B · 2026-08-19)",
+        "# Supersession billing delta (internal · 2026-08-19)",
         "",
         f"Map rows: **{len(mp):,}** · still billing on old PN: **{len(still):,}** · € on old PN (all-time in sales_fact): **€{still['old_bill_eur_l12m'].sum():,.0f}**",
         "",

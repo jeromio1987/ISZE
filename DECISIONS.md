@@ -6,6 +6,636 @@
 
 ---
 
+## 2026-09-24 — The frozen 2026-09-20 classification release is approved
+
+**Status:** Approved — Jerome, 2026-09-24. The frozen release is the one he approved. The newer candidate stays unapproved.
+
+**Decision:** The parts-classification release `2026-09-20` is **APPROVED**. It is the release the AIM pages are built from, and it is now named and approved rather than pending: hash `60111c104ddeb466e6c15f084039639d35172056b0fd2ea10225a3c50da610e0`, 164,908 rows. The hash was re-verified against the register **before** the status was changed, and the guard script (`01_data/00_derived/_releases/check_classification_release.py`) exits 0 against the frozen file and non-zero against the live one, so the two are provably different files.
+
+**What this means:** the classification the AIM pages read is now a dated, named release with a hash. A build can be pinned to it and a silent change to the classification becomes detectable, which is what the release guard exists for. It is a naming and control decision, not a data change: no classification value was touched.
+
+**Executed:** `01_data/00_derived/_releases/RELEASES.json` — the `2026-09-20` candidate's status set from `PENDING_APPROVAL` to `APPROVED`, with `approved_by: "Jerome"` and `approved_on: "2026-09-24"` added. Hash, rows and source left exactly as they were.
+
+**Not executed, deliberately:** the `2026-09-24-candidate` stays `NOT_RELEASED`. It adds the EXPORT.XLSX classifications (1,197 rows changed on 2026-09-24) and stays unapproved **pending the three white-paper re-tests**. Neither release file was deleted and no classification data was changed.
+
+**Noted, not fixed:** the AIM comparison pages on disk are built from a separately exported master (`AIM_Master_PN_Categories_Figkey_20260924.csv`, 165,290 rows), so this release is named and approved but no builder is pinned to it yet. The gate also still runs against `aim_pn_classification_v2.csv`, not the approved release. Both are recorded, neither was changed here.
+
+---
+
+## 2026-09-22 - The price adjustment ambition is closed, permanently
+
+**Status:** Accepted - Jerome, chat, 2026-09-22, verbatim: *"delete price ambition I will come when it's done for now do a simulation on 5% increase and than never ask again."*
+
+**Decision:** The price-ambition question (+4% / +5% / launch-only, and every form of it) is **closed permanently**. It is not deferred and not parked. No agent asks it again in any form. He returns to it himself when it is done.
+
+**Executed:** The +5% flat simulation was produced the same day and is its last output. New, dated files only; the 17 September pack was not overwritten:
+
+- `01_data/01_Pricing/Price_Increase_5pct_Flat_SIMULATION_2026-09-22.xlsx`
+- `02_dashboards/pricing/ISZE_Price_Increase_5pct_Flat_SIMULATION_2026-09-22.html`
+- `02_dashboards/pricing/ISZE_Price_Increase_5pct_Flat_SIMULATION_2026-09-22.SHIP_RECEIPT.json`
+- `02_dashboards/pricing/_build/price_5pct_review_2026-09-22/price_increase_5pct_sim_summary_2026-09-22.json`
+
+**Not executed, deliberately:** no price list, no price file and no pricing configuration was touched, and nothing was mailed. The simulation is arithmetic on paper only. `03_analytics/isze_pricing/config.yaml` was not opened for editing.
+
+**Number, for the record:** a flat +5% is **EUR 1,749,680.47** on the whole in-scope base and **EUR 1,629,792.63** collectable on the 47,617 lines that can take a new price, against the filed revision measured at **+5.9616%** / EUR 1,652,140.71 on the same lines. The two are separate readings of one base and are **never added**. On this base the refresh reproduced the 17 September figures to the cent, because the base file has not moved.
+
+**Docs updated:** `00_docs/PRICE_AMBITION_CLOSED_2026-09-22.md` (new, the superseding record) - `00_docs/ISZE_ROADMAP.md` section 2 ref B1 and section 5 - `00_docs/roadmaps/pricing.md` section 5 - `00_docs/DECISION_RECONCILE_20260916.md` B1 and B8 - and the "blocked on ambition" headers in `01_data/01_Pricing/PLAN_FORECAST_WEIGHTED_AMBITION.md`, `01_data/01_Pricing/BOOK_B_CONCLUSIONS_20260819.md`, `01_data/01_Pricing/DB_DLR_COMMERCIAL_STACK.md` and `00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md`. No pricing file was rewritten.
+
+**Scope limit:** this closes the **ambition** question only. The filed +5.9616% revision and the other pricing items (`roadmaps/pricing.md` sections 2.2 to 2.8) are untouched.
+
+---
+
+## 2026-09-20 - GPT review forcing decisions executed (8% cap / classification / Portugal)
+
+**Status:** Accepted - Jerome, chat, 2026-09-20, answering the recovered GPT review's three forcing decisions.
+
+### 1. Per-line +8% ceiling - not binding; deleted
+
+**What he said:** *"1) no binding delete it everywhere"*
+
+**Executed:**
+- `03_analytics/isze_pricing/config.yaml` - `allocation.cap` and `allocation.cap_top50` set to `null`
+- `03_analytics/isze_pricing/engine.py` - null caps mean no upper clip; floor still applies
+- Pricing roadmap and policy-paper REV3 builder / HTML rewritten so the +8% line is no longer presented as a live engine rule
+- Historical run folders under `isze_pricing/runs/` left as archives (not rewritten)
+
+### 2. Classification - make the export match the master
+
+**What he said:** *"2+3) just let it be correct"* (classification half)
+
+**Executed:**
+- Rebuilt `aim_pn_classification_20260920.csv` from live `aim_master_v2` + live `pr00_classification`
+- Synced `aim_pn_classification_v2.csv` workbook columns from that join (backup `*.bak_pre_master_sync_*`)
+- Synced fused `aim_pn_classification.csv` `aim_l1/l2/l3` from master (backup taken)
+- Spot-check: clutch pressure plate / clutch disc / tool interface now match master on the exports
+
+### 3. Portugal light share - accept 0.6364 on 2,206 base
+
+**What he said:** same line as (2)
+
+**Executed / recorded:**
+- `uio_ld_n35_share.csv` already holds Portugal **0.6364** / `imotors_parc_bands` / units **2206** - left as-is
+- Register **D24** closed as **decided** (2026-09-20): share accepted; **ceiling rebuild still not authorised**
+
+### Also recorded in the same pass - RECONSTRUCTED
+
+The three sections above are as written on 2026-09-20. This block was rebuilt from the
+decision-register entries of the same date (`00_docs/ISZE_ROADMAP.md`), which the 2026-09-21 drift
+audit confirms this entry referenced. Each line is one factual clause from the register. Treat the
+register as the authority, not this block.
+
+- **D01 / D02** - swap the two action labels in the revision exception builder, and widen the raise / no-raise band to **0.80 / 1.10** with brakes named first. Decided; **not executed.**
+- **D03** - the **margins reading** (37%, then 25-27.5%; combined multiple about 2.15-2.19). The multiplier chain is **not adopted**. Decided and informed; **not executed.**
+- **D08** - rebuild the five live dashboards, the AIM truck catalogue and the BPR deck so the fleet reads **163,198** and the per-truck slide becomes a matched rate (**EUR 188.16** on 163,459, **EUR 188.46** on 163,198). Caveat given at the time: re-running the engine yields **EUR 54,323,455** against the published **EUR 55,253,312**, so a rebuild re-bases the ceiling. **Approved, not run.**
+- **D13** - a bare `.bak` ignore rule added to `.gitignore`, and the nine files under `JEROME_ONLY/` untracked with `git rm --cached`; all nine verified still on disk. Nothing committed, nothing pushed.
+- **D15** - `class_factor.T` in `03_analytics/isze_pricing/config.yaml` changed from `0.80` to `0.60`, the 40% margin the price file charges; nothing else in that file touched. The live price list is still not touched.
+- **D24** - the Portugal share accepted at 0.6364 on the 2,206 base; the ceiling rebuild is **not** authorised.
+- **D25** - no pricing value, band, threshold, label or price file changes through the decision register. Pricing changes are Jerome's to start directly.
+- **D26** - the retired Aftermarket BI Command Center stays retired; the tier-A ship-gate update is outstanding and was deliberately not made.
+
+**Provenance for this whole entry:** it was truncated by an agent write probe on 2026-09-22 and
+restored the same day. No verbatim copy survived, so sections 1-3 were rewritten from the version
+read on disk before the truncation and the block above was reconstructed from the register. Nothing
+decided on 2026-09-20 was changed by the restoration.
+
+---
+
+## 2026-09-19 — Late pass: four further directions recorded (D24, D25, D05, D26)
+
+**Status:** Recorded — Jerome, 2026-09-19, later than the entry below. Four directions are recorded here. **Two are decisions (D25 and D26). One is a factual correction that leaves the item open (D24). One is an instruction to stop the questions, with no answer given (D05).** A standing instruction on pricing is recorded with them, because it now governs every pricing item in this register.
+
+**Standing instruction — pricing does not move through the decision register.** Jerome, verbatim: *"dont change anything from pricing via these questions"*. No pricing value, band, threshold, label or price file is to be changed on the strength of an answer to a register question. Pricing changes are his to start directly, as his own piece of work. This governs the whole register, not only D25. It is also recorded at register level, under `standing_instruction_pricing` in `01_data/90_INBOX/DECISIONS_AWAITING_JEROME_2026-09-19.json`, so it cannot be read as an answer to one item.
+
+### 1. D25 — the price-index label question: no change (decided)
+
+**Status: decided 2026-09-19. No change.**
+
+The question was whether the rows where the peer shop is up to 20% cheaper than us (index 0.60 to 0.95) should carry their own "competitive move candidate" label, or stay unlabelled as the approved 0.80 threshold does. **Neither option is adopted.** He has taken pricing out of this mechanism: nothing in pricing is changed through these questions, so the bands, the thresholds and the row labels stay exactly as they are. The 0.80 threshold recorded under D02 stands as the last pricing change this register captured.
+
+**What this does and does not do to D01 and D02.** Both remain recorded as decided — his instruction governs what is executed, not those records. Whether the label swap and the band widening are still to be applied, and when, is now his direct call and no longer this register's. The brake finding carried on the D25 entry is a finding and is unaffected by any of this: it needs no pricing change to stand.
+
+### 2. D24 — Portugal parc evidence exists; the ceiling rebuild is still not authorised (open)
+
+**Status: open. The evidence question is answered; the rebuild is not authorised.**
+
+**What he said, verbatim:** *"We have parc evidence of Portugal"*. That is a correction of fact, and it corrects two things we had written down. The share file `03_analytics/Isuzu/prism/data/uio_ld_n35_share.csv` carries Portugal with `basis=jp_vin_shipments` and the note that no Portuguese parc-band source exists in the workspace. The register's own `fix_site` repeated that. Both are wrong.
+
+**Where the evidence is.** `01_data/07_UIO/Matriculas Isuzu SAP.xlsx` — the I-Motors Portuguese registration register. Per-VIN sheets `2005-2019` and `2019-2026` carrying explicit tonnage bands, plus a `SUM` sheet by band and year; registration dates run from 2005 to June 2026. On disk since 14 July 2026, 2,010,557 bytes.
+
+**A second file applies the survival curve, so the split is settled.** `01_data/08_Distributor/Imotors_Portugal_UIO_GPS_PMS_Study.xlsx` (on disk since 14 July 2026) convolves that registration history against the survival curve copied verbatim from UIO V19 `Assumptions & Mapping` rows 16-33 — the curve already in use, not a new assumption. Sheet `UIO_Rebuild` carries the cohort × age matrix by block with a TOTAL STOCK row each. On the **2025 basis the Portuguese N-series parc is N35 1,521.31 and N75/N50/N62 869.00 vehicles in service, so the light share is 1,521.31 / 2,390.31 = 0.6364 (63.6% light)**; 2024 gives 0.6386. The 0.690 the register carries is **not a parc figure at all** — it is a JP **shipment** mix (NLR 1,299 of 1,883 N-series in `VIN_register.parquet`, 2020-2026 only). So the `unmeasured` flag on Portugal is wrong, and **0.690 is not supported by the parc evidence**: at 0.6364 the parc-derived share sits **5.4 points below** it, so adopting it would **reduce** the €674,246 ceiling movement attributed to Portugal rather than leave it as it stands. The workbook's own `GPS_Recalc` sheet shows what is at stake — Portuguese target spend €2,480,298 on the rebuilt split against €3,052,087 on the current basis, with the GPS result moving from 53% net / 60% gross to 66% net / 73% gross (its figures, reported not re-derived). **What it does not settle:** whether its rebuilt UIO numbers (CV LD 2,390 in 2025 against V19's 2,206) should replace the current fleet base. That is a fleet-base question and belongs to D09, not here.
+
+**What his sentence does not do.** It does **not** authorise the ceiling rebuild. Nothing in the ceiling chain is approved by this record: the corrected shares are not accepted, the Portuguese share is not replaced, no ceiling is re-based, no coverage figure is recomputed, and no builder has been run. The rebuild authority sits with D08, which is approved but not run, and D08 does not authorise a re-based ceiling either. **The item stays open** because the register's status vocabulary is `open` or `decided`, with no third value, and nothing here is a decision in either direction. The question that actually remains is whether he accepts the parc-derived share (0.6364 on the 2025 basis) or holds, or sets the number himself. Writing it into the share file is a separate data change needing its own explicit authorisation, and this record does not perform it.
+
+### 3. D05 — the sales-review gate: no answer, and he asked for the questions to stop (open)
+
+**Status: open. No answer was given. The gate is unchanged and nothing in it is repaired.**
+
+**What he said, verbatim:** *"stop these questions"*. That is an instruction about the question flow, not an answer to the question. He did not approve the staged repair, did not decline it, and did not pick any part of it. Marking this item decided would be false.
+
+**The three corrections already on the entry stand:** the freshness check is not broken — it is correctly flagging that sixteen summaries predate the 18 September loader change, so those packs really are stale; and the two silent skips are the coded-mix and exclusion checks, not the Power BI check.
+
+**One honest limit on stopping the questions.** The register's own hook — the mechanism that puts open items on his screen — reads this file at the end of the first agent turn in a chat and is written to select strictly on `status == "open"`. That hook is outside this recording pass's write scope and was **not** changed. So D05 will still surface, and the question flow has to be dealt with as a separate piece of work rather than by this record.
+
+### 4. D26 — the retired Aftermarket BI Command Center stays retired (decided)
+
+**Status: decided 2026-09-19. The retirement stands.**
+
+The page is not restored from `HEAD` (b88b9e8). The suite-map stub is the page by design and the old command-center page is not coming back.
+
+**The gate update is outstanding and was deliberately not made.** Accepting the retirement means the tier-A ship gate must stop expecting the retired page: the command-center entry in `02_dashboards/_build/verify_tier_a_html_json.py` (lines 34-43) still demands a hero string and at least 20 server-rendered bar-rows, neither of which a 12 KB suite-map stub can carry, so the gate still fails for the whole tier-A set. It is not a one-line string fix — the entry has to be dropped or replaced outright. **No verifier and no ship-gate script was modified while recording this decision.** Changing a gate on the back of a decision record is exactly what this register must not do; it needs a deliberate pass of its own. Also still open: whether the hero-tile repair in `02_dashboards/_build/aftermarket_bi_data.py` is kept as dead code or removed.
+
+### Register state after this pass
+
+The register now reads **18 open · 0 blocking · 2 high · 16 normal · 8 decided**, with the `counts` block recomputed from the actual status fields rather than estimated. The two high items are D24 (the ceiling chain, held) and D05 (the gate repair, unanswered). All three places agree: this file, [`00_docs/ISZE_ROADMAP.md`](00_docs/ISZE_ROADMAP.md), and the register JSON with its generated `.md` twin.
+
+### Executed and not executed
+
+**Executed: nothing.** No pricing value, band, threshold or label was changed. No verifier or ship-gate script was changed. No ceiling, coverage figure, metrics snapshot or dashboard was rebuilt, and no builder was run. Nothing was committed and nothing was pushed; the nine `git rm --cached` index removals from D13 sit staged exactly as they were found. Writes in this pass were limited to the three decision-record files and to scratch scripts in the gitignored `01_data/90_INBOX/`.
+
+## 2026-09-19 — Six items from the environment-fix approval sheet — answered and recorded
+
+**Status:** Accepted — Jerome, chat, 2026-09-19. Six items were answered in one session and are recorded here: **D01, D02, D03, D08, D13 and D15**. Two of them are answers *different* from the record that already stood in this file, and both are marked below as superseding that wording: **D03** moves from the multiplier chain to the margins reading, and **D15** moves from leaving the configuration at a 20% margin to fixing it to the 40% margin the price file charges. D01 confirms the half that was still awaited. D02 is recorded as a decision for the first time. D08 is the fleet-figure rebuild. D13 is the two ignore-rule actions, which were executed. D05 was asked about and left open, with no decision recorded.
+
+**Register state — the three files now agree, and the earlier reopening was a false negative.** This entry, [`00_docs/ISZE_ROADMAP.md`](00_docs/ISZE_ROADMAP.md) and the register at `01_data/90_INBOX/DECISIONS_AWAITING_JEROME_2026-09-19.json` all carry the six decisions above. The register was **reopened by a concurrent check at about 20:55 on 2026-09-19** with each of the six carrying a `reopened_reason` reading *"NOT CONFIRMED BY JEROME. The closure recorded a chat answer that cannot be verified against the session transcript."* **That reason was wrong, and it has been corrected.** The check that produced it did not read the session: it selected rows by string-matching `decision_source == "Jerome, chat, 2026-09-19"` and inferred from the vague wording that the closure rested on a conversational remark. In fact each of the six was put to Jerome as a **structured multiple-choice question card** and he **selected an option** — D01 "Yes — swap the labels", D02 "Yes — widen it to 0.80 / 1.10", D03 "Yes, deliberate — use the 37% / 25–27.5% margins reading", D08 "Yes — rebuild all seven from their builders", D13 ".bak pattern" plus "untrack the nine going forward", D15 "fix the config to the 40% margin". **A transcript-only audit cannot see this**, because session transcript rows contain only assistant text and tool_use blocks — there is no `tool_result` block and no selection field in the JSONL, so the selection leaves no trace for a checker that reads the transcript. The register's citations on the six now name the card and the selected option, and the register reads **20 open · 0 blocking · 3 high · 17 normal · 6 decided**. **D05 is the item that genuinely was not answered** — he asked what it was about and no decision was given — and it stays open, as do D24, D25 and D26.
+
+**This entry records decisions and one small execution. It is not a rebuild.** See "Executed and not executed" at the end.
+
+### 1. D01 — the revision exception queue: both halves authorised (urgency high)
+
+**Status: decided 2026-09-19. Yes to both.** This supersedes § 1 of the entry below for the label swap, which that entry recorded as not authorised.
+
+**The label swap, now answered.** The two action labels in `01_data/91_build/build_db_dlr_commercial_stack.py` (lines 170–181) are to be **swapped**, so the rows labelled "room to raise" are the ones where we are genuinely cheaper than the independent market. This is the half that was still awaited below; it was put to him as its own question this time and answered yes.
+
+**The band, confirmed.** The raise / no-raise band widens to **0.80 and 1.10**, with the middle left inconclusive on this evidence, and **brakes** remain the first category to examine. Jerome, verbatim: *"I would say raise the bands so we can set a more competitive price, we should be dynamic in our pricing we have a lot of complaints for our brake parts."*
+
+**Why the entry below reads differently.** It read one sentence as authorising two claims and found it supported only the band. That reading was right on the evidence available then. The swap was then asked as its own question and approved, so both halves now stand.
+
+**Blocks.** Every downstream file that carries the label keeps telling us we have room to raise prices on the parts where we already ask two to four times the independent shop price — the Monday stand-up file, the GPS tab table, the open action ledger and the review workbook builder. The regeneration of the exception queue and its downstream pack is authorised but **not run**: it is a separate piece of work.
+
+### 2. D02 — the raise / no-raise band is approved (urgency high)
+
+**Status: decided 2026-09-19. Yes.**
+
+Widen the raise and no-raise band to **0.80 and 1.10**, leaving the middle inconclusive on this evidence. Recorded as its own decision rather than as a rider on D01, because it was asked as the threshold question. It pairs with D01 and the same rebuild carries both. The 0.95 / 1.05 band it replaces was tighter than the measurement supports: roughly ninety percent of the index variation is which listing the scraper happened to match. On today's data the wider band moves 105 rows into no-raise and 42 into raise-defensible. **Not run** — the band change lands with the D01 rebuild. The separate question of whether the 0.60–0.95 rows deserve their own label is D25 and stays open.
+
+### 3. D03 — the price chain: the margins reading, not the chain (urgency blocking)
+
+**Status: decided 2026-09-19. This supersedes § 2 of the entry below and the earlier closure that preceded it.**
+
+**What was asked.** Which basis is approved: the multiplier pair — ISZE list **× 1.40** reaching the distributor, then **× 1.275** reaching the dealer — or the stated margins of a **37%** margin at one step and **25–27.5%** at the next, which is a combined price multiple of about **2.15 to 2.19** on ISZE list?
+
+**What he decided.** **The margins reading.** The multiplier chain is **not** adopted.
+
+**He was told what it costs, and confirmed it anyway.** The margins reading lifts our reference dealer price by **22.6%**, about **€12.4M** on the CY2025 billed base, and none of that is ISZE revenue. Both the pricing paper and the analysis recommend the chain instead, and this reading was rejected once before, in July. He confirmed the margins reading after being shown all of that, so it is recorded as a deliberate, informed decision. **Consequence, stated once:** every shared pack that names a tier has to be rewritten to the margins reading, and any figure measured against our reference dealer price moves by the same 22.6%. This is not re-opened and not re-litigated.
+
+**Blocks.** The tier wording in the executive aftersales paper, the aftermarket pack, the leakage pack and the part-groups payload — the five packs that currently say 1.40 already reaches the dealer. **Not executed**: no shared pack has been rebuilt.
+
+### 4. D08 — the fleet figure rebuild is approved (urgency high)
+
+**Status: decided 2026-09-19. Yes.**
+
+Rebuild the five live dashboards, the AIM truck catalogue and the Business Performance Review deck from their builders, so the fleet reads **163,198** and the **€198 per truck** slide becomes a matched rate. €198.10 is the only figure that divides a 22-entity euro total by an 18-market fleet; the two matched pairs are **€188.16** (18-market billed over the 18-market fleet of 163,459) and **€188.46** (the same euro over the 163,198 target-spend fleet).
+
+**The caveat he was given, and the limit on his yes.** The current engine no longer reproduced the published ceiling — re-running it then yielded **€54,323,455** against the published **€55,253,312** — so the rebuild re-bases the ceiling and every rate that divides by it. His yes approved the **rebuild**. It did **not** approve the re-based ceiling as such: the new ceiling value may need its own look once the rebuild lands. **Not executed** at that date — no builder had been run.
+
+**Outcome, 2026-09-22 evening.** Jerome authorised the ceiling rebuild and it was executed. The
+ceiling is **€54,375,729** on CY2025, cover **56.6%**, uncaptured **€23,950,221** (per-market
+floored definition). **€54,323,455 was already stale on the day it was written** — it reproduces
+only against Portugal at share 0.6899, which was replaced on 2026-09-20 by 0.6364 — so the correct
+wall was €52,274 above the figure recorded here. Six markets moved and all six were **stale, not
+wrong**. Write-up and backup: `01_data\91_build\_backsafe_20260922_ceiling\MANIFEST.md`.
+
+### 5. D13 — the ignore rules: two actions approved, both executed (urgency high)
+
+**Status: decided 2026-09-19. Yes, in two named parts.**
+
+**Action 1 — a `.bak` ignore pattern.** Added to `.gitignore` as a bare `*.bak` rule (line 205). Checked first, deliberately: **exactly four** untracked files ended in a bare `.bak`, and the rule closes all four — `01_data/00_derived/gps_spu_by_distributor.csv.pre_partial_year_fix.bak`, `01_data/91_build/epc_batch2/epc_decode_current_ui.js.bak`, and the `build_truck_page.py.bak` and `qa_truck_catalogue.py.bak` copies under `02_dashboards/pricing/_build/aim_truck_catalogue_2026-09-18/`. Three files ending `.bak` are tracked **on purpose** and are untouched by the rule, because an ignore pattern does not untrack a file that is already tracked: `01_data/00_derived/bvp_pn_dimension.csv.bak`, `01_data/00_derived/price_premium.csv.bak` and `02_dashboards/sales/_build/_extracted/original_app.js.bak`. No rule was widened beyond the four loose files.
+
+**Action 2 — the nine files under `JEROME_ONLY/`.** Untracked with `git rm --cached`, which removes them from the index and from future commits **without deleting them from disk**. All nine were verified present on disk afterwards at their original sizes. The `.gitignore` rule `**/JEROME_ONLY/` was already in the file, so nothing was added for them; `git check-ignore` confirms they are ignored and `git status` confirms they no longer appear as committable. The four markdown files and the five `outlook_extracts` files inside that folder are the nine.
+
+**Nothing was committed and nothing was pushed.** The nine path removals and the `.gitignore` line sit staged in the working tree; they take effect in the next commit that touches them, which is his call. The other drafted ignore rules on the sheet were **not** applied.
+
+### 6. D15 — class T margin: the configuration is fixed to 40% (urgency blocking)
+
+**Status: decided 2026-09-19. Executed. This supersedes § 3 of the entry below.**
+
+**What was asked.** Does class T keep the **40% margin** its own price file charges — a **0.60 divisor** — or is **20%** a deliberate booking rule with the price file the odd one out?
+
+**What he decided.** **Fix the configuration to the 40% margin.** `class_factor.T` in `03_analytics/isze_pricing/config.yaml` was changed from `0.80` to `0.60`. The 20% reading is not adopted. The entry below recorded no change and kept the configuration at a 20% margin; that wording is kept below, unedited, so the correction is visible.
+
+**The live price list still does not move.** The instruction below — *"keep the same price as it was"* — **still stands**: no price changes on those part numbers. What has changed is the margin question itself, which he has now answered.
+
+**One value, nothing else.** The single value was changed and **nothing else in that file was touched** — its comments on the rate vintages and the other class factors are exactly as they were, and the file still parses as valid YAML. The value is a configuration input, not a price.
+
+**Consequence, stated once.** Any margin-based figure that touches those roughly one hundred class-T part numbers now assumes a **40% margin** instead of 20%. Figures produced before this change assumed the lower margin. One honest limit carries over: no written IML class definition of `ST` was found, so the inference still rests on the 99-of-101 match between the code and the part numbers.
+
+### Not recorded: D05
+
+His answer on **D05** was a question back — he asked what the item was about rather than deciding it. **Nothing is recorded for it and it stays open.** The staged repair of the sales-review gate is not approved by this entry.
+
+### Unrecorded and awaiting him: the correspondence files outside the marker
+
+Separate from D13, and deliberately not actioned: `git ls-files` confirms **eight** tracked files under `09_meetings/Preparation Meetings/IML_ITUK_PMS/outlook_extracts/`, which is **outside** the `JEROME_ONLY` marker — five markdown files, a probe script (`_peek_target_attrition.py`) and two small JSON captures (`peek_Attrition_Rate.json`, `peek_Target_Study.json`). **Three of the five markdown files are the ones named in the stopped-push finding:** `DEEP_ANALYSIS_WrapUp_Target_Attrition_N75.md`, `Duncan_WrapUp_thread_verbatim_2026-04.md` and `Masumi_Suzuki_Hadi_IMG_IMIT_digest_2026-07-26.md`. The other two — the `Duncan_PMS_thread_digest` and `Rene_GIDSS_intervals` digests — are the same kind of file with the same exposure. All five sit outside the marker, and each is **byte-identical** to its `mp/JEROME_ONLY/outlook_extracts/` copy that the D13 untracking removed, so identical content is now ignored in one folder and still tracked in the other. The `.gitignore` rule `**/outlook_extracts/**` covers the whole tree, but an ignore rule does not untrack a file already in `HEAD`, so any of the eight would be silently re-added by a bulk commit. **They are not a decision yet.** Untracking would be the same `git rm --cached` operation used in D13 and would delete nothing — the files stay on disk exactly as they are — but the approval given for `JEROME_ONLY/` does not obviously extend to a different tree, so this waits for him.
+
+### Executed and not executed
+
+**Executed.** One value in `03_analytics/isze_pricing/config.yaml` (D15); one `.gitignore` line (D13); nine `git rm --cached` index removals (D13). Nothing else.
+
+**Not executed.** The revision-queue code fix and its regeneration (D01, D02); the fleet-figure rebuild of five dashboards, the AIM truck catalogue and the BPR deck (D08); the shared-layer tier wording (D03). No builder was run, no dashboard, deck or workbook was rebuilt, and `01_data/00_derived/` was not touched. **Nothing was committed and nothing was pushed.**
+
+---
+
+## 2026-09-19 — Decisions from the environment-fix approval sheet — raised; superseded in part
+
+**Status:** Open when written — 26 items, 26 open, 0 decided; 2 blocking, 7 high, 17 normal. **Superseded in part the same day** by the entry above, which records Jerome's actual answers for **D01, D02, D03, D08, D13 and D15**. **D01, D03 and D15 in particular are answered now, and D03 and D15 were answered differently from the wording below.** The wording is kept as it stood, unedited, so the correction is visible. The items below that stay open are D24, D25 and D26, plus D05; **at the time this entry was written** the register read **20 open · 0 blocking · 3 high · 17 normal · 6 decided**. **That count is superseded by the late pass of the same day, recorded in the entry above**, in which D25 and D26 were decided and D24 was corrected but stays open: the register now reads **18 open · 0 blocking · 2 high · 16 normal · 8 decided**. The register at `01_data/90_INBOX/DECISIONS_AWAITING_JEROME_2026-09-19.json` (and its generated `.md` twin) is the single source. D24, D25 and D26 were folded in later on 2026-09-19 from their own companion findings, which is why this entry recorded 26 items and no longer 23.
+
+**This entry records status. It did not execute anything.** See "Not executed" at the end.
+
+### 1. D01 — the revision exception queue: label swap not authorised, and the band is open too (urgency high)
+
+**Status: open.** Two halves — one implemented, one not authorised, and a third question now open beside them.
+
+**Implemented — the threshold.** The raise / no-raise threshold was widened to **0.80 / 1.10**, leaving the middle inconclusive on this evidence, and **brakes** are named as the first category to examine. Jerome, verbatim: *"I would say raise the bands so we can set a more competitive price, we should be dynamic in our pricing we have a lot of complaints for our brake parts."*
+
+**Open — the band is not settled (D25).** That the 0.80 threshold is implemented is not the same as the band being settled. The 0.80 lower bound releases 44 rows carrying **€574,309** of billed business from the guardrail flag — rows where the peer shop is 7% to 18% below our reference dealer price — which works against the very wish for competitive room that prompted the widening. Whether the 0.60 to 0.95 rows deserve their own "competitive move candidate" label is a live question carried by **D25**, which is cross-linked to D02 as a partner entry. Do not quote the band as decided.
+
+**Still awaited — the label swap.** The two action labels in `01_data/91_build/build_db_dlr_commercial_stack.py` (lines 170–181) are **not authorised to be swapped**. Those words do not speak to which label is the inverted one — a separate data-correctness claim that was not put to him as an answered question and was not answered.
+
+**Reasoning.** The evidence for the swap is unchanged and strong — 84 rows labelled "we look undercut" all sit at index 1.06–5.79 and 106 rows labelled "room to raise" all sit at 0.067–0.93, with no overlap and no contrary case. The 0.95 / 1.05 band was tighter than the measurement supports, because roughly ninety percent of the index variation is which listing the scraper happened to match. But the evidence for the swap is this log's own assessment, not his approval: one sentence was read as approving two claims, and it supports one.
+
+**What would close it.** One line from Jerome approving the label swap in the builder.
+
+**Blocks.** Every downstream file that carries the label keeps telling us we have room to raise prices on the parts where we already ask two to four times the independent shop price — the Monday stand-up file, the GPS tab table, the open action ledger and the review workbook builder. The regeneration of the exception queue and its downstream pack is held back, and nothing here is executed.
+
+### 2. D03 — the price chain: recommended reading only, not confirmed (urgency blocking)
+
+**Status: open — blocking.**
+
+**What was asked.** Is the approved basis the multiplier pair: ISZE list **× 1.40 reaching the distributor**, then **× 1.275 reaching the dealer**?
+
+**What is answered.** Nothing that settles it. Jerome replied that he had already answered it — *"I provided that in the previous set of 11question."* That is a statement that an answer exists earlier; it does not contain one and does not confirm the reading.
+
+**What is held as a recommendation, not a decision.** Three tiers: our list times 1.40 reaches the distributor, then times 1.275 reaches the dealer, with the customer one step beyond the dealer. **This is the recommended reading and it is unconfirmed.** The distributor tier is supported by the context pack and the pricing paper, our own paper estimates the trade at 27–29%, and the alternative reading was rejected once in July — but that is the case for the reading, not his agreement to it.
+
+**What would close it.** One line from Jerome confirming the three-tier reading, or naming the correct one.
+
+**Blocks.** Tier wording in every shared pack that names a tier — the executive aftersales paper, the aftermarket pack, the leakage pack and the part-groups payload. The five packs that say 1.40 already reaches the dealer skip a tier and cannot be corrected until this is answered. The other half of sheet item 1 — the multiplier pair against stated margins of 37% and 25–27.5% — is a separate commercial call and also **remains open**; adopting it would raise the reference dealer price by 22.6%, about €12.4M on the CY2025 billed base, none of which is our revenue. Sheet items 1 and 19 are the same question and are carried once.
+
+### 3. D15 — class T margin: the live price is held, the margin question is still open (urgency blocking)
+
+**Status: open — blocking.**
+
+**What was asked.** Does class T keep the **40% margin** its own price file charges (fix the configuration to a 0.60 divisor), or is **20%** a deliberate booking rule and the price file the odd one out?
+
+**What is settled by his words.** The live price list does not change now. Jerome, verbatim: *"This can be discussed keep the same price as it was."* The only operative instruction is "keep the same price as it was". Read narrowly and generously, that half stands: no price changes on those part numbers while this sits, and the configuration is unchanged by default.
+
+**What is not settled.** Which of the two margins is correct. *"This can be discussed"* defers the question that was actually asked; it does not answer it. A deferral is not a decision, so the item stays open.
+
+**Reasoning.** The mismatch is unchanged and remains a finding: 103 live rows all price at 0.60, 100 derived rows all at 40%, and IML's own price disc classes 99 of 101 rows as `ST` with no bare `T` code, against a configuration that says a 20% margin (a 0.80 divisor). No written IML class definition of `ST` was found; the inference rests on that 99-of-101 match. If `ST` is a deliberate booking rule that genuinely means 20%, the configuration is right and the price file is the odd one out.
+
+**What would close it.** One line from Jerome choosing between a 40% margin (the 0.60 divisor its own price file charges) and 20% (a deliberate booking rule), or a note that it stays deferred.
+
+**Blocks.** Any figure that reads a margin for those roughly one hundred part numbers still assumes 20% where the line earns 40%, so any margin-based figure touching them is unsafe to publish without a footnote naming which margin was used.
+
+### 4. D24 — Portugal and Malta vehicle-class shares: rebuild on the corrected splits, or hold for parc evidence (urgency high)
+
+**Status: open — high.** Folded in on 2026-09-19 from a companion finding, not from the approval sheet.
+
+**What was asked.** Accept the corrected light/heavy (N35 / N75) shares including the two flagged `unmeasured` ones — **Portugal 0.690, Malta 0.369** — and rebuild the target-spend ceiling on them, or hold the ceiling until the Portugal and Malta distributors can supply parc evidence?
+
+**What is recommended, not decided.** Rebuild. The corrected split at least labels itself unmeasured, where the basis it replaced was an undocumented guess. One caveat to record with the answer: Portugal is three-quarters of the movement (€674,246 of €929,857) and is a market Jerome knows better than the file does — if he knows the Portuguese light/heavy mix to be different, that one number should be overridden by hand before the rebuild. **A split option is his to take:** accept the seven shares that carry documentary evidence now, and hold only Portugal and Malta.
+
+**Blocks.** The whole ceiling rebuild chain — nothing downstream of the ceiling can be rebuilt honestly until the corrected shares are accepted or replaced. Rebuilding with nothing else changed moves the ceiling from €55,253,312 to €54,323,455, so coverage rises from 55.7% to 56.6% and the uncaptured value falls from €24,496,540 to €23,566,683. The fleet base is unchanged at 163,198 vehicles; what was wrong was how those vehicles were priced. The rebuild itself is D08's decision and is already held.
+
+**Closed 2026-09-22 evening.** The shares were accepted and the ceiling was rebuilt. The numbers
+in the sentence above are superseded: the ceiling is **€54,375,729** on today's Portugal share
+(0.6364, which replaced 0.6899 on 2026-09-20), not €54,323,455; cover is **56.6%**; and the
+uncaptured value is **€23,950,221** on the per-market floored definition, not €23,566,683. The
+direction of the argument above is what mattered and it was right: the fleet base was fine, the
+pricing of it was not.
+
+### 5. D25 — the price-index band: one threshold or two tiers — the band is open, not settled (urgency high; partner D02)
+
+**Status: open — high.** Folded in on 2026-09-19 from a companion finding. **This is the concrete form of the band question carried by D02, which is the same question in the register.** The two are cross-linked as partner entries and are deliberately kept as two entries, not merged: merging would renumber ids that this file and the roadmap cite in headings.
+
+**Do not read the band as settled.** The band half of D01 records that the approved threshold is **0.80 / 1.10** and that it has been implemented. That is not the same as settled intent. The 0.80 threshold releases 44 rows carrying **€574,309** of billed business from the guardrail flag — rows where the peer shop is 7% to 18% below our reference dealer price, of which the intake/exhaust block alone is €369,882. That works against the stated wish for more competitive pricing room, which is why the question is live.
+
+**What was asked.** Should rows where the peer shop is up to 20% cheaper than us (index 0.60 to 0.95) be labelled as competitive-move candidates, or left unlabelled as the approved 0.80 threshold does?
+
+**What is recommended, not decided.** Two tiers rather than one threshold: **0.60 to 0.95** as "competitive move candidate", **below 0.60** as "genuinely exposed". If a single threshold is mandatory, **0.90**.
+
+**Blocks.** The guardrail action list and any competitive price move on the affected families — intake/exhaust, air filter, suspension, and the five brake part numbers. The brake problem is separate and is a finding, not this decision: 38 brake rows sit below 0.80 worth €722,257, which both bands flag. One contradiction to resolve with the brake review: part number 8982447940 is recorded as HOLD_DEFAULT on ITUK and is flagged as exposed at the same time.
+
+### 6. D26 — the retired Aftermarket BI Command Center: accept the retirement or restore the page (urgency normal)
+
+**Status: open — normal.** Folded in on 2026-09-19 from a companion finding.
+
+**What was asked.** The Command Center was replaced by a 12 KB "retired" suite-map stub in an uncommitted working-tree change, which broke the tier-A ship gate (`verify_tier_a_html_json.py` now fails on "hero EUR leakage missing"). **Does the retirement stand, or should the page be restored from `HEAD` (b88b9e8)?**
+
+**Size evidence.** The committed version is 460,678 bytes, the working-tree version 12,507 bytes, so 448,171 bytes come out of the page; `git diff --stat` reports 51 insertions and 449 deletions. The verifier's special case for this page wants the string "Network € leakage" in the hero and at least 20 server-rendered bar-rows, neither of which can exist on a 12 KB index — so this is not a one-line string fix. If the retirement stands, the command-center entry has to be dropped or replaced outright and the hero-tile repair becomes dead code; if it was accidental, the page and its builder come back from `HEAD`.
+
+**Why normal and not high.** The gate fails, but the retirement looks deliberate at the builder level, so no published pack is printing anything false. A gate that refuses a page is a safe failure. Nothing is committed, so this can be answered either way without touching history.
+
+**Not executed by this entry.** Four streams are running elsewhere and this entry does not touch them: the ten safe-tier wording repairs; the revision-queue code fix in `01_data/91_build/build_db_dlr_commercial_stack.py`, whose regeneration of the locked derived files is deliberately held back and was not run; a read-only fleet-ceiling investigation; and the retired-page question itself. No builder was run, no page was restored, no rule file was edited, and `01_data/00_derived/` was not touched. **Nothing was shipped and no version label was changed.**
+
+**Register.** `01_data/90_INBOX/DECISIONS_AWAITING_JEROME_2026-09-19.json` and its generated `.md` twin carried all 26 entries as `status: open` at the time this entry was written — **26 open · 2 blocking · 7 high · 17 normal · 0 decided**. **The counts in this paragraph are the superseded ones.** The entry above records six of them as decided, so at that point the register read **20 open · 0 blocking · 3 high · 17 normal · 6 decided**, and the two blocking items named here (D03 and D15) are both decided. **Count superseded by the late pass of the same day in the entry above: 18 open · 0 blocking · 2 high · 16 normal · 8 decided.** D24, D25 and D26 are folded in; the earlier "not yet folded" wording is withdrawn as wrong.
+
+**Not yet travelling — the register is untracked (note, nothing moved).** The register sits in `01_data/90_INBOX/`, which root `.gitignore` line 9 excludes as `01_data/90_INBOX/**`, so it is untracked and **does not travel to a clone** — a register whose whole purpose is to outlive a chat currently dies with this machine. The recommended destination is **`00_docs/agent/`**, beside `STATE_PACKET.md`. That needs no `.gitignore` change and no policy-lock exception, because that folder is not excluded and is not inside the locked derived tree. The move has to land in one pass or the ping fails silently: the hook's path constant (`.cursor/hooks/decisions-awaiting-on-stop.mjs` line 40, with its own copy in the `.codex` twin) and the two paths it prints from that same constant (its lines 207 and 209); the renderer default (`04_tools/workspace/render_decisions_register.ps1` line 43); the hook test's constants (`04_tools/workspace/_test_decisions_awaiting_hook.ps1` lines 27 and 232); and the two path citations to the register in this file and in [`00_docs/ISZE_ROADMAP.md`](00_docs/ISZE_ROADMAP.md). The register's own `source` field points at the approval sheet, which is a different file and stays in `90_INBOX`. **Nothing was moved, renamed or created, and the register was not edited.**
+
+---
+
+## 2026-09-19 — The exchange-rate fork is settled; the pricing move is a weighted increase
+
+**Status:** Accepted — Jerome, session 2026-09-19. Three corrections he gave directly, plus what the data they imply. **This supersedes the 2026-09-17 entry's decision 3**, which recorded the exchange-rate fork as open at 163.7.
+
+### 1. The live rate is 178.5, and it applies to BOTH sources
+
+**Decision.** `fx_rate: 178.5` JPY/EUR is the live rate for **1 Oct 2026 to 31 Mar 2027**, confirmed verbatim in Suzuki san's mail `Exchange revision from Oct 2026` of **15 September 2026**: *"our exchange rate from 1st Oct 2026 to 31st Mar 2027 will be 178.5 JPY/EUR"*. The rate is in the mail body, not only the attachment.
+
+**It applies to Japan-sourced AND Thailand-sourced parts.** Jerome, verbatim: *"The exchange rate applies for both JP / TH sourced parts"*. Verified from the data: `bp_jpy` is populated for **100%** of Thai rows (31,526 rows, median 5,733), so the Thai base price is a yen figure; and the price book reproduces its own selling price on the **same 163.7** rate for both sources — 87.36% of Japan lines and 85.62% of Thai lines within one cent, collapsing to near zero at 172.6 or 178.5.
+
+**One correction to a shipped artefact:**
+[`02_dashboards/pricing/_build/build_pricing_fx_overlay_20261001.py`](02_dashboards/pricing/_build/build_pricing_fx_overlay_20261001.py) states *"Thailand FOB stays on 172.6… FX relief applies only to Japan-sourced lines"*, and its rendered HTML repeats it. **That is wrong** and was the source of the error here. Left unedited because it is a shipped pack; flagged for the next rebuild.
+
+### 2. The vintage chain — and the rate the list sits on is NOT the previous rate
+
+**Decision.** Three vintages, recorded so they cannot be conflated again:
+
+| Rate | Period | Role |
+|---|---|---|
+| **163.7** | FY2026, as_of 2025-10-01 | **Two vintages back.** What the settled 5.9616% revision was priced on, **and what the selling price list still sits on** |
+| **172.6** | 1 Apr – 30 Sep 2026 | **The previous vintage** |
+| **178.5** | 1 Oct 2026 – 31 Mar 2027 | **Live**, both sources |
+
+The 2026-09-17 entry's fork wording implied 163.7 was the operating rate and 172.6 the alternative. **The error this caused:** using 163.7 as the "before" rate against 178.5 gives 8.29% of relief; the correct previous-vintage pair 172.6 → 178.5 gives **3.31%**. I quoted 3.31% to Jerome as the figure implying a 5% price cut will not do, and it was wrong by 4.99 points. Recorded in [`00_docs/ERROR_REGISTER_20260919_PRICING_SESSION.md`](ERROR_REGISTER_20260919_PRICING_SESSION.md) root cause G.
+
+**Jerome's correction, verbatim:** *"163.7 is 2 exchange rates back why would you need that? The only thing you need to know is our current price from the past."*
+
+### 3. The purchase discount: 67.3% Japan, effective 5 January 2026
+
+**Decision.** Japan purchase discount **62.0% → 67.3%**; Thailand unchanged at **61.1%**. Margin on the yen base price moves **38.0% → 32.7%**, a loss of **5.3 points**.
+
+**Effective 5 January 2026.** Source: Suzuki san's mail `discount/whole sales ratio revisoin from Jan 5th 2026`, sent 22 December 2025, timed with the annual EBP revision. **Not 2026-09-18** — that was only the date this workspace updated `config.yaml`, and the mislabelling is what made a wrong reading look arguable.
+
+**Consequence for measurement:** because the discount took effect 5 January and the 172.6 vintage began 1 April, **the discount was already 67.3% throughout the 172.6 period**. It is therefore not a new move between the previous vintage and the live one.
+
+### 4. The pricing move is the measured weighted increase of all prices
+
+**Decision.** The move is read from the price comparison itself, not assembled from multipliers:
+
+```
+weighted increase = SUM(qty x delta_jpy) / SUM(qty x bp_prior) - 1
+```
+
+on the published recipe, `in_scope == True` AND `unpriced_reason IS NULL` → 47,617 rows.
+
+**Jerome, verbatim:** *"you need to look at the weighted increase of all prices not the formula."*
+
+**What this replaces, and why the difference is large.** An earlier version multiplied the revision by an exchange-rate factor `(163.7 / 178.5)` and a discount factor `(0.673 / 0.620)`. **Both are already in force** — 178.5 is what we pay now, and the 67.3% discount has been active since 5 January 2026 — so multiplying by them treats settled inputs as forward changes. The effect on Thailand was a sign reversal: **−2.45%, a price reduction**, against the measured **+6.3088%, a normal increase**.
+
+**Jerome, verbatim, on the discount:** *"0.673 was already active as of Jan 2026."*
+
+**No historical exchange rate and no historical discount is an input, and no factor chain is used.**
+
+**Jerome, verbatim, on writing values in:** *"please exclude vlookup formula's use copy as value but mention where the data comes from."*
+
+### 5. The 5.9616% index recipe
+
+**Decision.** The published **5.9616%** weighted base-price revision reproduces exactly on the pricing revision base filtered to **`in_scope == True` AND `unpriced_reason IS NULL`** — **47,617 rows**, index **5.961599%** against billed EUR 34,993,609.39 and step EUR 1,652,140.71.
+
+`in_scope` alone gives 48,653 rows and 5.928334%, because the 1,036 extra rows carry a zero base-price change — they add nothing to the numerator and inflate the denominator. **The published figure excludes them.**
+
+Split by source on that recipe: **Japan +6.2081%**, **Thailand +6.3088%** (Thailand 43.08% of the three-way index weight, 47.45% of Japan-plus-Thailand). Source: [`aim_pricing_recalc_2026-09-17.json`](../01_data/00_derived/aim_pricing_recalc_2026-09-17.json) → `basis.file` = `price_bp_weighted_compare_pn.csv`.
+
+### 6. The position this settles
+
+Measured on that recipe, as **the weighted increase of all prices** — not a factor chain:
+
+| Measure | Weighted increase |
+|---|---:|
+| Whole priced book | **+5.9616%** |
+| Japan (IML) | **+6.2081%** |
+| Thailand (IMIT) | **+6.3088%** |
+
+Per market: PR00 +5.9211%, UTI +5.5808%, UMI +5.6370%, CIS +4.8455%. UTI (1799) and UMI (1797) measured separately and never blended. **All four are inside the 4–6% band.** Full detail: [`00_docs/roadmaps/pricing.md`](roadmaps/pricing.md).
+
+**Two corrections stand behind this, both Jerome's.** The move is the **weighted increase of all prices**, not a formula: the exchange rate 178.5 and the 67.3% discount are both already in force, so multiplying by them counts settled inputs as forward changes. That error had put Thailand at **−2.45%**, a reduction, when it is **+6.31%**, a normal increase. And **the exchange rate is not a decision** — it is a corporate rate ISZJ gives us and we apply. An earlier version of this entry proposed a "pass-through dial" for it, which was wrong.
+
+*(Corrected 2026-09-19. An earlier version of this entry said Japan needed "about 92%" and Thailand "about 193%" pass-through. Both figures were meaningless — the calculation applied the grid's scaling factor where its reciprocal was required and then took a complement, and the two errors partly offset. The correct values are 108% and 14%. See `00_docs/ERROR_REGISTER_20260919_PRICING_SESSION.md`.)*
+
+**Nothing published, no mail sent, no price moved.** The workbook and its launcher are at `01_data/01_Pricing/`. `config.yaml` comments were corrected 2026-09-19; **no value in it changed**, so nothing re-runs differently.
+
+---
+
+## 2026-09-18 — "LD" is a label, not a weight class; per-market wallet split; VIN tonnage decode fixed
+
+**Status:** Accepted — Jerome, session 2026-09-18. He approved three changes explicitly after being
+shown the evidence: relabel Israel's `LD` row, extend the wallet split to every measured market, and
+fix the tonnage decode. Draft the ITUK mileage question.
+
+### 1. Israel's "LD" row is 6.5/7.5 t, and its rate was already correct
+
+**Decision.** The parts-wallet model is **unchanged for Israel**. Its `LD` row holds no 3.5 t truck —
+the CV warranty VIN register (2,360 VINs, Dec 2023 → Mar 2026) contains NPR75/FRR90/FSR90 and **zero**
+NLR/NMR/NKR, and the Ministry of Transport band table starts at 6.5–7.5 t. So the row is already
+priced at €739, the 7.5 t rate. **What was wrong was the label**, which read as "light / 3.5 t" to
+anyone but the code.
+
+The workbook label is corrected: Cover line, Cover model-type row, `Assumptions & Mapping` section 1
+and 3d/3e, and Israel's 2025 UIO line. The full note is in **B92** of `1.UIO Overview` — **not D7**,
+because the PRISM loader reads column D as the model field and a paragraph there becomes a model name.
+Changelog V19-5..V19-7.
+
+**No cell value and no formula changed.** Verified by comparing zip parts: all three charts, both
+drawings and all four images are byte-identical to the prior revision. Backup:
+`06_uio/_Archive/ISUZU_UIO_Overview_2026_backup_before_ld_relabel_20260918.xlsx`.
+
+### 2. The wallet split is per market, from each market's own best source
+
+**Decision.** PRISM splits the collapsed `LD` row for **every market with a measured 3.5 t share**,
+not only the UK. Basis is named per row in `03_analytics/Isuzu/prism/data/uio_ld_n35_share.csv`:
+Helwig parc bands (Germany 22%), SIMI bands (Ireland 6.3%), the workbook's own section 2.B read live
+(ITUK 50.5%), CV claim VINs plus the ministry table (Israel 0%), and the JP VIN register shipment mix
+elsewhere (Portugal 62.0%, Malta 36.9%, Belgium 91.8%, Cyprus 5.3%). A shipment mix is normally
+**below** the parc share, so those three corrections are conservative.
+
+Measured 2025E target wallet: **Portugal ×0.801, Malta ×0.895, Ireland ×0.979, Belgium ×0.981,
+Germany ×0.982, Cyprus ×0.993. Israel and ITUK unchanged.**
+
+**Supersedes** V20_SPEC §Problem 6's table, which listed Germany, Malta, Cyprus and Greece as
+"0% — no change". Germany is 22% on the workbook's own Helwig parc bands and its wallet is €3.8 m.
+
+### 3. Chassis number is not a tonnage
+
+**Decision.** `build_vin_register.py` now takes GVW from the ISZJ series (NLR 3.5 / NMR 5.5 / NNR 6.5
+/ NPR 7.5 / FRR 11 / FSR 13.5), not from the numeric code. Rebuilt: **19,545 t over 3,238 trucks,
+6.04 t average**, against 26,689 t / 8.24 t. New `gvw_t_source` column so any fallback is visible.
+
+### 4. ITUK mileage question — drafted only
+
+A draft mail to Duncan Young asking for the average annual mileage of the N-series parc (N35/N75
+split if available) is at `09_meetings/ITUK_MILEAGE_QUESTION_2026-09-18.md`. **Not sent** — Jerome
+sends. The measured UK figures are 16,688 km/yr all classes and 35,478 for N75, against a 50,000
+assumption. This decision records the draft, not an answer.
+
+**Recorded failures during the pass:** a zero share initially deleted Israel's 6,059 trucks instead of
+passing them through; and the note was first placed in D7. Both caught and corrected before the
+session ended. Recorded because both were silent-failure classes, not typos.
+
+**Nothing published, no mail sent, no price moved.** PRISM suite green (71 passed).
+
+---
+
+## 2026-09-17 — Attribute layer on hold (roadmap later)
+
+**Status:** Accepted — Jerome, session 2026-09-17 evening. Reason: doing too much right now.
+
+**Decision.** The **attribute layer** (size / position / duty on catalogue leaves — audit §8 item 10) is **on hold**. Do not build it. Do not lock it as “proceed.” Keep it on the roadmap as **deferred / later**.
+
+**Still locked (unchanged).** The two-axes contract from earlier today stands: Axis A = identity (`catalog_l1/l2/l3`); Axis B = commercial score beside Axis A. No fourth taxonomy layer. This hold does **not** invent new catalogue levels.
+
+**When work resumes.** Attributes-before-levels remains the **recommended** order (fix leaves before adding taxonomy depth). That recommendation is not an active build and is not a “needs your call this week” gate.
+
+**Also not started in this pass.** Axis B scoring, residual “Other / review” clear-out, and attribute schema design stay where they were — status/roadmap only.
+
+**Files.** `00_docs/CLASSIFICATION_FULL_AUDIT_20260917.md` §8 item 10 · `01_data/00_derived/aim_catalog_breakdown_NOTES.md` · `00_docs/ISZE_ROADMAP.md` · shared paper `02_dashboards/sales/ISZE_AIM_Classification_Paper.html` §08–§09.
+
+**Supersedes:** the “Still needs your call” / “Needs your call” wording on the attribute layer only (same-day two-axes entry’s out-of-scope line, audit §8 item 10, paper lock table row 5). Does **not** reopen the two-axes lock.
+
+---
+
+## 2026-09-17 — Delegator watch armed; pricing work moves to new dated files; exchange-rate fork stays open
+
+**Status:** Accepted — Jerome, session 2026-09-17 evening. Three separate decisions recorded together because they came from the same brief.
+
+### 1. Delegator watch and overnight orchestrator — read-only, every 20 minutes
+
+**Decision.** The AIM watch runs **read-only** and is armed as a Windows scheduled task every 20
+minutes (`ISZE_DelegatorWatch_20min` → `04_tools/workspace/run_overnight_orchestrator.cmd` →
+`isze_overnight_orchestrator.ps1`). Inside **22:00–08:00 local** it fingerprints the AIM set, checks
+the evidence of every workstream discovered on disk, and runs **one** audit angle from a 16-angle
+rotating queue (`_overnight_angles.py`). Outside the window it fingerprints and exits. It stops
+itself at 08:00. It does **not** rebuild, publish, sync, mail, bump a version, or move a price.
+Corrective work is written to `OVERNIGHT_TASKS_QUEUE.md` as a **queued task for Jerome to approve**,
+never applied. Findings record whether the artifact was written by this workstream or is pre-existing
+backlog, so backlog is not reported as tonight's regression.
+
+**`-RefreshDerived` exists and is OFF** in the older detect-only script. It is present and tested, but
+not enabled in the task, because the pricing revision is locked read-only (decision 2 below).
+
+**What is not possible, recorded so it is not re-asked.** Agents cannot ping each other. Cursor
+exposes no tool for one agent to message another; the only cross-agent timer surface carries no tools
+in this local session. The board is the substitute: each agent reads the last rows at the start of a
+run and appends a row at the end. "Keeping the agents working" therefore means waking, checking
+on-disk evidence, and queuing corrective work — it cannot command another chat's context or restart a
+stopped session. Rule: `.cursor/rules/isze-delegator-board.mdc`. In-session loop command:
+`00_docs/agent/DELEGATOR_LOOP_COMMAND.md`. Full detail: `00_docs/agent/DELEGATOR_OVERNIGHT.md`.
+
+### 2. Existing pricing deliverables are locked read-only
+
+**Decision.** The following are read-only. Do not overwrite, edit, or regenerate them. New work goes to
+**new, dated filenames**.
+
+| Locked | Note |
+|---|---|
+| `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx` (+ receipt, + `OPEN_*.cmd`) | shipped revision pack |
+| `01_data/Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx` | duplicate copy |
+| `02_dashboards/pricing/ISZE_Pricing_Revision_AIM_Source.html` (+ receipt, + launcher, + `_build/pricing_dashboard_data.json`) | shipped revision page |
+| `02_dashboards/pricing/AIM_PRIORITY_LIST.csv` / `.xlsx` | AIM priority list |
+| `01_data/00_derived/aim_master_v2.csv`, and any existing file under `01_data/00_derived/` | derived spine |
+| `03_analytics/isze_pricing/config.yaml` | see decision 3 |
+
+Enforcement: the watch script refuses to write any protected path even with `-RefreshDerived`, and the
+verifier asserts the builder's declared write targets are non-locked. The locked set and the procedure for
+a future rebuild request are in `00_docs/agent/DELEGATOR_REFRESH_HOWTO.md`.
+
+### 3. The exchange-rate fork is settled — superseded 2026-09-19
+
+**Status: SUPERSEDED** by the 2026-09-19 entry at the top of this file. Kept here so the open fork does not re-appear as unmarked.
+
+The fork was recorded as: the engine carries **163.7** JPY/EUR while the Israel SPA work used **172.6**, and whether IML re-bases the list decided whether a +5% was a real increase or a hold in yen terms.
+
+**What settled it (2026-09-19):** the live rate is **178.5** from Suzuki san's mail of 15 September 2026, applying to **both** sources. The vintage chain is 163.7 (two vintages back — what the list still sits on) → 172.6 (the previous vintage) → 178.5 (live). The discount moved to 67.3% effective 5 January 2026. The move is computed as a ratio of two prices, so **no historical rate is an input at all** — which is what the fork was waiting on.
+
+### 4. The +5% run is a paper exercise on new files
+
+**Decision.** The +5% flat increase was computed as a **paper exercise**, weighted on the in-scope L12M
+volume, on new dated files only:
+
+| Artifact | Path |
+|---|---|
+| Workbook | `01_data/01_Pricing/Price_Increase_5pct_Flat_REVIEW_2026-09-17.xlsx` |
+| HTML page + receipt | `02_dashboards/pricing/ISZE_Price_Increase_5pct_Flat_REVIEW_2026-09-17.html` |
+| Launcher | `02_dashboards/pricing/OPEN_ISZE_Price_Increase_5pct_Flat_REVIEW.cmd` |
+| Builder | `02_dashboards/pricing/_build/price_5pct_review_2026-09-17/build_price_increase_5pct_review.py` |
+| Verifier | same folder, `verify_price_increase_5pct_review.py` |
+
+**Headline, on the in-scope L12M base** (`price_bp_weighted_compare_pn.csv`, `in_scope == True`, window
+2025-07-01 to 2026-06-30, EUR 34,993,609.39 billed over 48,653 lines and 15,872 part numbers):
+
+- **+5% flat = EUR 1,749,680.47**; the euro-weighted move equals the rate (5.0000%) because a single
+  flat rate makes those the same number.
+- The filed revision on the same base is **EUR 1,652,140.71** at 5.9616% published. **The two are separate
+  proposals on one base and are never added.**
+- **Step ties out exactly; the published rate does not.** Recomputed on this file, weighting the per-line
+  move by billed quantity gives **5.9787%** across all in-scope lines and **6.2347%** across priced rows
+  only. The published 5.9616% implies a denominator of about EUR 27.71M, which no column in the file
+  reproduces. The 5.9787% reading is the same sensitivity the pricing policy paper documents as 6.06%.
+  The page therefore claims the step, not the rate. **Do not quote one as the other.**
+- **1,647 lines carrying EUR 4,483,241.66 (12.81% of billed) cannot move** — no base price on one side.
+  On priced lines only, +5% is EUR 1,525,518.39.
+
+**Not done, and not to be inferred.** No publish, no mail, no change to any live list, and no volume
+response modelled (no elasticity coefficient exists in this workspace). Authority rule:
+`.cursor/rules/isze-no-ship-without-ok.mdc`; `00_docs/RUNBOOK_ROUTINE_HANDOVER.md` §5 lists "anything that
+changes a price" as not delegatable.
+
+---
+
+## 2026-09-17 — AIM classification: two axes locked (not a fused Level 1)
+
+**Status:** Accepted — Jerome: “proceed with two axes” (session 2026-09-17 evening).
+
+**Decision.** Parts classification runs on **two separate axes**. Do not fuse them into one Level 1. Do not invent a fourth taxonomy layer. Do not make the commercial score the parent that identity views hang from.
+
+| Axis | What it answers | Where it lives | How to use it |
+|------|-----------------|----------------|---------------|
+| **A — identity** | What the part is / where on the truck | `catalog_l1` / `catalog_l2` / `catalog_l3` (existing three levels only), figure-anchored | Reporting spine for mix, Focus, wear views. Hang wear and family cuts from **L2/L3 or figure key**, not from a commercial posture parent (king-pin case). |
+| **B — commercial score** | Contested or not, **per part per market** | Separate measured attribute (beside Axis A) — not a Level-1 box | What pricing rules read. May later feed a reporting rollup for continuity with management packs. Never the hang-from parent for identity. |
+
+**Also decided (taxonomy wins — audit §8 item 9).** For any given purpose, use one tree and say which:
+
+| Purpose | Wins | Do not use as the axis |
+|---------|------|------------------------|
+| Network mix / Focus / catalogue family | Axis A (`catalog_*`) on `catalog_full` | `aim_source == 'pr00_catalog'` as a completeness filter; workbook L1 as the group |
+| Wear / steering / figure position | Axis A L2/L3 or `fig_key` | Commercial posture as parent |
+| Price-revision AIM spine packs already shipped | AIM workbook spine (`aim_l1_fixed` / `aim_master_v2`) — named as such | Quietly mixing catalogue-tree totals beside AIM-spine totals |
+| Contested / captive pricing posture | Axis B (when scored) | Isuzu figure key as “evidence of competition” |
+
+**Out of scope of this lock.** Attribute layer (audit §8 item 10) and object-vs-system for gaskets/harnesses/pipes (item 8) still need a separate call. EQ-Hit column population continues as measurement for Axis A correctness, not as a new Level.
+
+**Files.** `01_data/91_build/build_aim_classification_v2.py` · `verify_aim_classification.py` · `01_data/00_derived/aim_catalog_breakdown_NOTES.md` · `00_docs/CLASSIFICATION_FULL_AUDIT_20260917.md` §8 · shared paper `02_dashboards/sales/ISZE_AIM_Classification_Paper.html`.
+
+**Supersedes:** the open “Needs your call” on split-the-axes in the AIM classification paper §8 / audit §8 item 6. Does **not** supersede the 2026-08-18 retirement of AIM pricing-risk scoring.
+
+---
+
+## 2026-09-17 — Parts base: one number, two cut-off dates; NON_PARTS leak fixed
+
+**Status:** Accepted — Jerome: "fix now" (session 2026-09-17).
+
+**Decision.** The two published parts-base values are **not two competing definitions**. `€103.57M` (published 2026-07-03) is the same method cut at **2026-03-31**; `€112.09M` (published 2026-08-25) is the same method cut at **2026-06-30**. The difference is the Apr–Jun 2026 billing wired in on 2026-08-25 via `Q1FY2027.XLSX`. Both values are now reproduced by the pipeline on demand. No reconciliation of "two numbers" is needed — the question is closed.
+
+**Also decided.** Chasing the bridge exposed a live defect and it is fixed. On **2026-09-03** `sap_sold_to_mapping.csv` remapped four non-part entities (`SERVICE FEE OUTSIDE EUROPE`, `SERVICE`, `COST DEMURRAGE`, `COMPENSATIONS SALE E-CREDIT`) from `UNMAPPED` to a new code `NON_PARTS`, which was never added to `EXCLUDED_CODES`. Nine CY2026 rows / **€180,715.11** consequently entered the GPS-facing parts base through the `line_kind == "part"` filter. A fresh recompute read €112,270,022 against the published €112,089,307.
+
+**Fix.** `modules/data_prep.py` — `EXCLUDED_CODES` gains `NON_PARTS`. `modules/sales_loader.py` — `NON_PART_LINE_KIND` gains the four placeholder PNs (second line of defence if the code is ever remapped). `scripts/build_metrics_snapshot.py` — emits `sales.parts_base_data_through` and `sales.parts_base_through_prior_quarter_eur` so a period movement can never again read as a method movement.
+
+**Evidence.** Fresh recompute after the fix: **€112,089,307.0 exactly** (500,893 rows), delta 0. `verify_derived_pipeline.py` 116 pass / 0 warn / 0 fail. `verify_facts_drift.py` ALIGNED on both parts-base anchors. Bridge table: `FACTS.md` §4.1. CY2025 unaffected (€0 of the leak fell in 2025) — the 51.1% GPS anchor never moved.
+
+**Supersedes:** nothing. `FACTS.md` §4 line "prior €103.57M … is superseded" reworded — the value was a cut-off, not a supersession.
+
+---
+
 ## 2026-09-16 — ISZE_Dashboard merge timeline: closed, keep as ops sandbox
 
 **Status:** Accepted — closing text already in the workspace; entry is the dated record the old open question was missing.
@@ -65,11 +695,11 @@ Does not supersede: 2026-09-14 pack opened; 2026-08-25 Nordics keys closed.
 
 ---
 
-## 2026-08-25 — Leakage € stays Mode B until list-to-pocket signed
+## 2026-08-25 — Leakage € stays internal until list-to-pocket signed
 
 **Status:** Accepted — audit Week-1 execute (Jerome: please execute).
 
-**Decision.** Do not quote dealer-leakage / list-to-pocket leakage euros externally (Mode A decks, DB packs, FACTS headlines) until year-matched PR00/ZPR1 → net joins are validated and signed off in writing. Internal Mode B / Action Ledger / PRISM internal shelf may keep using source-cell stakes with mixed-basis labels. Does not reopen gross/SPA on billing.
+**Decision.** Do not quote dealer-leakage / list-to-pocket leakage euros externally (shared decks, DB packs, FACTS headlines) until year-matched PR00/ZPR1 → net joins are validated and signed off in writing. Internal internal / Action Ledger / PRISM internal shelf may keep using source-cell stakes with mixed-basis labels. Does not reopen gross/SPA on billing.
 
 **Also this execute batch:** `raw_cy2025` verify flag accepts `CY2024-2025.XLSX`; `sales_fact` extended with `Q1FY2027.XLSX` (2026 Apr–Jun); dealer_sellout_long CSVs re-emitted for ITUK/UTI/IUK/IRELAND/GREECE.
 
@@ -83,7 +713,7 @@ Does not supersede: 2026-09-14 pack opened; 2026-08-25 Nordics keys closed.
 
 **Latest snapshot (2026-08, partial through 12 Aug):** 10 RED / 6 AMBER / 1 NONE (Belgium — too thin to flag). Draft thresholds still fire on most of the book — that is why 4.9 (your calibration) is required before anyone treats this as a call list. Early Warning stays the sales call list.
 
-**Not shipped:** no PRISM page, no Mode A pack, no FACTS.md, no classifier change.
+**Not shipped:** no PRISM page, no shared pack, no FACTS.md, no classifier change.
 
 ---
 
@@ -186,19 +816,19 @@ Lagged AIM high-risk vs 2025 PMS total is ρ = **−0.57** (p=0.014) but loses t
 
 ---
 
-## 2026-08-12 — UMI Sales Review: sold-to gate + Mode A QA (hooks/rules/skill)
+## 2026-08-12 — UMI Sales Review: sold-to gate + shared QA (hooks/rules/skill)
 
 **Status:** Accepted.
 
-**Incident:** UMI Mode A nearly shipped on payer-name sales that blended UTI (1799) into UMI (1797) → fake commercial boom vs PBI −14%. Secondary failures: IBX pattern copy, SaTy Mode B jargon, PMS Best>100%, stale `_summary.json`, Shell 5500* buried, deep-dive qty column zeros.
+**Incident:** UMI shared nearly shipped on payer-name sales that blended UTI (1799) into UMI (1797) → fake commercial boom vs PBI −14%. Secondary failures: IBX pattern copy, SaTy internal jargon, PMS Best>100%, stale `_summary.json`, Shell 5500* buried, deep-dive qty column zeros.
 
 **Locks:**
 - `load_sales` filters `sold_to` when set; Apr+ prefer `q1fy2027_export_with_saty` by Sold_to.
-- PBI months must reconcile (~€2K) before Mode A narrative.
+- PBI months must reconcile (~€2K) before shared narrative.
 - Never plot PMS Best when best >100%; no category exclude without Jerome OK.
 - Artefacts: `.cursor/rules/isze-db-sales-review.mdc`, skill `isze-db-sales-review`, hooks `db-sales-review-*.mjs`, retro `09_meetings/UMI_Sales_Review_2026/RETRO_2026-08-12_UTI_blend_and_ModeA_failures.md`.
 
-**Does not waive:** `isze-no-ship-without-ok.mdc` / UTI≠UMI / Mode A language.
+**Does not waive:** `isze-no-ship-without-ok.mdc` / UTI≠UMI / shared language.
 
 ---
 
@@ -206,7 +836,7 @@ Lagged AIM high-risk vs 2025 PMS total is ρ = **−0.57** (p=0.014) but loses t
 
 **Status:** Accepted (provisional build only).
 
-**What:** First-pass year-matched list-to-pocket via `build_pricing_history_findings.py` + Mode A HTML dashboard. Integrity score logged in `pricing_history_findings.meta.json` (expect weak until joins validated).
+**What:** First-pass year-matched list-to-pocket via `build_pricing_history_findings.py` + shared HTML dashboard. Integrity score logged in `pricing_history_findings.meta.json` (expect weak until joins validated).
 
 **Gate:** Realization / list-to-pocket remains **internal QA / provisional** — do **not** quote externally while integrity is weak. NO_LIST coverage gap and year-stamp assumptions stay as footnotes. MOS KPI days ≠ market elasticity; ISZE→DB volume elasticity stays non-quotable.
 
@@ -718,3 +1348,34 @@ finish. No new dependency (API key) introduced. If this still isn't reliable eno
 after a few weekly runs, the API-key option is still on the table.
 **Docs updated:** `04_tools/manual_review_required.md` Item 4,
 `04_tools/ISZE_Tender_Monitor_Install/tender_scraper_v3.py`.
+
+## 2026-09-23 — NMR / NMR85 ruled onto the 5.5 t rung (European N55 class); 5.5 t rung stays published
+
+**Status:** Accepted (Jerome)
+**Context:** `NMR` and `NMR85` were parked `pending_ruling` in `03_analytics/Isuzu/prism/data/series_to_band.csv`
+(5.5 t or 7.5 t). The 7.5 t reading came from a band list with no 5.5 t entry; no source states 7,500 kg for any NMR.
+Isuzu Sales Deutschland's N55 data sheet (`MODELL NMR88L`, 5.500 kg, Druckstand August 2022) and range page
+(N55/NMR 5,5 t, N75/NPR 7,5 t) were re-read live on 2026-09-23.
+**Decision:** `NMR` and `NMR85` resolve to `5.5t_N50_N55`, scoped to the European N55 class (confidence high / medium).
+The 5.5 t rung stays published (not dropped; dropping it would have moved the exclusive share to 32.39%).
+**Consequences:** Rebuilt the same day: `epc_decode_nseries_banded.csv`, `nseries_tonnage_evolution.csv`,
+`vehicle_band_applicability.csv`, `tonnage_capable_part_numbers.csv`, `ISZE_PMS_Family_Evolution_v2.html`.
+Exclusive share 29.7108% (was 29.7696%; the move is the separate `5878320470` separator fix, not the ruling).
+Outside Europe the same letters are 5.1-6.5 t, so the ruling does not transfer to non-European work.
+**Docs updated:** `01_data/90_INBOX/TONNAGE_FINISH_REPORT_2026-09-23.md`, `TONNAGE_FINISH_CORRECTION_LOG_2026-09-23.md`.
+
+## 2026-09-24 — Malta and Cyprus 3.5 t shares set to 0; FACTS re-anchored
+
+**Status:** Accepted (Jerome: "correct everything, everything should be aligned and corrected")
+**Context:** After the NMR ruling (entry above), Malta's 0.369 and Cyprus's 0.053 "3.5 t share" in `03_analytics/Isuzu/prism/data/uio_ld_n35_share.csv` were shown to be their NMR counts read as N35 (JP register: zero NLR in both).
+**Decision:** Both set to 0; their NMR sit on the 5.5 t rung. Full P0–P5 pipeline re-run (except the `sales_fact` rebuild), FACTS.md and `facts_anchor.yaml` reconciled, including two anchors that had drifted since 2026-09-22 for unrelated reasons (ITUK oil-filter PRISM lane, prior-quarter parts base).
+**Consequences:** Network GPS CY2025 56.6% → 56.5%; Malta GPS 60.9% → 54.5%, Cyprus 63.8% → 63.4%. ITUK oil-filter PRISM-lane capture restated (2025: 79%; 2023 not stated as a rate). Verify 164 pass / 1 warn / 0 fail; facts-drift aligned.
+**Docs updated:** FACTS.md, facts_anchor.yaml, `01_data/90_INBOX/TONNAGE_FINISH_REPORT_2026-09-23.md` (Addendum 4).
+
+## 2026-09-24 — Scrape go given for all six Phase 1 platforms; Eucon-sourced numbers used before legal has cleared the licence terms
+
+**Status:** Accepted (Jerome, chat)
+**Context:** `00_docs/COVERAGE_DECISION_2026-09-24.md` recommended freezing the Eucon-based cross-reference build and testing a paid licence instead, because Eucon's PartsPool contract ended 31 July 2026 and four licence questions are open (`00_docs/EUCON_LICENCE_BRIEF_2026-09-24.md`) — can downloaded data still be used, does it cover price monitoring, can it go outside the EU, must it be deleted. Separately, live scraping of any new platform (Phase 1 of `00_docs/agent/SCRAPER_REDO_DELEGATION.md`) had been waiting on an explicit go since 2026-08-18; only KS and T&M Commercials run today.
+**Decision:** Two explicit calls, same turn. (1) Scrape go given for all six pending Phase 1 platforms (Amayama, Omega, geparden.no, mekster.no, tungen-bil.no, autoline.dk) — built and fetched in parallel, not sequenced one at a time. (2) Eucon-sourced competitor numbers (6,358 of 6,455 links in the crossref graph, 93%) may be used to drive that scrape now, ahead of legal answering the four open licence questions. Jerome was shown the specific risk (using data from an ended contract under unreviewed terms) and chose to proceed.
+**Consequences:** Phase 1 tasks 1.1–1.5 in `SCRAPER_REDO_DELEGATION.md` moved from ⛔ to unblocked. **Not changed by this go:** Eucon-sourced rows still never go to DeepSeek or any outside-EU service — that specific boundary (licence brief §"Stop until a lawyer has read the terms") was not addressed in Jerome's answer and stays in force until he says otherwise. `NOTE_Eucon.txt` (plain-text Eucon password) still needs Jerome to remove it. The four licence questions remain open and unaffected by this decision — this is a decision to accept the risk of using the downloads now, not a finding that the usage is compliant.
+**Docs updated:** `00_docs/agent/SCRAPER_REDO_DELEGATION.md` (header + Phase 1 table), `00_docs/agent/CURSOR_BRIEF_SCRAPER_REDO_20260924.md` (new task block for Cursor), `00_docs/agent/DELEGATOR_BOARD.md`.

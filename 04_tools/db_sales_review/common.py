@@ -487,6 +487,15 @@ def load_bvp_pns() -> set[str]:
 
 # ------------------------------------------------------------- reference data --
 def load_gps_master(profile: dict) -> dict:
+    """Read the gps_master row for this DB, with its flat-rate caveat attached.
+
+    WARNING, verified 2026-09-17: gps_master.csv applies a SINGLE FLAT ``rate`` to every market.
+    ITUK and UTI are both given EUR 739.20 per vehicle, so UTI's wallet is priced at a truck rate
+    its fleet does not match and its GPS% reads ~31.8% here against 40.3% on the model-weighted
+    ceiling. This file's own blueprint already warns about it:
+    ``04_tools/ppt_template_v2/DB_SALES_REVIEW_BLUEPRINT.md`` line 24 — check the rate before
+    quoting. The caveat now travels with the data so a caller cannot forget it.
+    """
     g = pd.read_csv(DERIVED / "gps_master.csv")
     hit = g[g["Unnamed: 0"] == profile["gps_key"]]
     if hit.empty:
@@ -495,7 +504,17 @@ def load_gps_master(profile: dict) -> dict:
     keys = ["bill_FY2024", "bill_FY2025", "bill_FY2026", "net_FY2024", "net_FY2025",
             "net_FY2026", "uio_2025", "rate", "max_spend",
             "gps_pct_FY2024", "gps_pct_FY2025", "gps_pct_FY2026"]
-    return {k: (None if pd.isna(row[k]) else float(row[k])) for k in keys}
+    out = {k: (None if pd.isna(row[k]) else float(row[k])) for k in keys}
+    rate = out.get("rate")
+    out["rate_is_flat_all_markets"] = True
+    out["rate_quotation_block"] = (
+        f"Do not quote the GPS% from this file. It prices every vehicle at a flat EUR {rate}/unit "
+        f"— the same rate for ITUK and UTI — which is not a model-weighted wallet. For ITUK 2025 "
+        f"this reads 31.8%, against 32.4% on the drift-anchored ceiling and 47.0% on the upper "
+        f"reference: three answers for one market. Use wallet_waterfall.csv or "
+        f"gps_spu_by_distributor.csv and state the basis. See 00_docs/GPS_PMS_ALIGNMENT_20260917.md."
+    ) if rate is not None else None
+    return out
 
 
 def load_carpark(profile: dict) -> dict | None:
@@ -549,7 +568,7 @@ def load_segmented_gps(profile: dict) -> dict | None:
     """GPS = gps_master net sales ÷ carpark segmented wallet (CY2025 frozen denom).
 
     Headline for decks is FY2026. If capture exceeds 100%, show_pct is False —
-    Mode A slides must use the amount variant (Ireland-class cases).
+    shared slides must use the amount variant (Ireland-class cases).
     """
     park = load_carpark(profile)
     if not park or not park["wallet_2025"]:
@@ -583,7 +602,7 @@ def load_segmented_gps(profile: dict) -> dict | None:
         "status": park["status"],
         "by_segment": park["by_segment"],
         "source": park["source"],
-        # flat-rate reference from gps_master (never put the recon on a Mode A slide)
+        # flat-rate reference from gps_master (never put the recon on a shared slide)
         "gps_master_flat_FY2026": gm.get("gps_pct_FY2026"),
         "gps_master_max_spend": gm.get("max_spend"),
     }

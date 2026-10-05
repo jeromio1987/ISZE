@@ -277,7 +277,7 @@ def vertical_bar_svg(
 def pipeline_mix_bar(
     mix: dict[str, Any],
     *,
-    labels: tuple[str, str, str] = ("Leakage €", "Overstock €", "Balanced sell-out €"),
+    labels: tuple[str, str, str] = ("Leakage €", "Overstock €", "Balanced sales to dealer €"),
     keys: tuple[str, str, str] = ("leakage", "overstock", "balanced"),
     colors: tuple[str, str, str] = (COLORS["leak"], COLORS["over"], COLORS["bal"]),
     value_fmt: Callable[[Any], str] | None = None,
@@ -305,7 +305,7 @@ def line_chart_svg(
     label_key: str = "label",
     series: tuple[tuple[str, str, str], ...] = (
         ("bill_eur", COLORS["ink"], "Bill €"),
-        ("sellout_eur", COLORS["leak"], "Sell-out €"),
+        ("sellout_eur", COLORS["leak"], "Sales to dealer €"),
     ),
     width: int = 520,
     height: int = 260,
@@ -516,7 +516,7 @@ def sell_through_bars(
     if over:
         foot = (
             f'<p class="chart-footnote">Bar capped at {int(cap_pct)}% for scale — actual: '
-            f'{esc(", ".join(over))}. Ratio = dealer sell-out qty ÷ ISZE bill qty.</p>'
+            f'{esc(", ".join(over))}. Ratio = dealer sales qty ÷ ISZE bill qty.</p>'
         )
     return chart + foot
 
@@ -854,7 +854,7 @@ def pipeline_donut_svg(
     total = sum(vals)
     vf = value_fmt or fmt_eur
     if total <= 0:
-        return '<p class="cap">No pipeline € split — sell-out missing or all zero.</p>'
+        return '<p class="cap">No pipeline € split — dealer sales missing or all zero.</p>'
     cx, cy, r = size / 2, size / 2, (size - stroke) / 2 - 2
     parts = [
         f'<div class="donut-wrap ssr-chart ssr-donut" role="img" aria-label="Pipeline mix donut">',
@@ -933,10 +933,10 @@ def data_unavailable_banner(
     iam_pn: int = 0,
     bill_qty: float = 0,
 ) -> str:
-    """Banner when sell-out qty=0 — leakage € not measurable."""
+    """Banner when dealer sales qty=0 — leakage € not measurable."""
     stats = []
     if overstock_pn:
-        stats.append(f"<strong>{fmt_int(overstock_pn)}</strong> overstock / no-sell-out PNs")
+        stats.append(f"<strong>{fmt_int(overstock_pn)}</strong> overstock / no dealer sales PNs")
     if iam_pn:
         stats.append(f"<strong>{fmt_int(iam_pn)}</strong> PNs with IAM (KS) quotes")
     if bill_qty:

@@ -1,0 +1,110 @@
+{
+  "angle": "receipt_mtime_drift",
+  "receipts_checked": 27,
+  "findings": [
+    {
+      "severity": "high",
+      "workstream": "02_dashboards/hub",
+      "what": "receipt does not cover its file: ISZE_OS_Hub changed 1404.2 min after the receipt was written",
+      "evidence": "02_dashboards/hub/ISZE_OS_Hub.SHIP_RECEIPT.json",
+      "action": "re-verify and rewrite the receipt; the done claim is currently unsupported",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "high",
+      "workstream": "02_dashboards/ops",
+      "what": "receipt does not cover its file: ISZE_OS_Console changed 1313.7 min after the receipt was written",
+      "evidence": "02_dashboards/ops/ISZE_OS_Console.SHIP_RECEIPT.json",
+      "action": "re-verify and rewrite the receipt; the done claim is currently unsupported",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/pricing",
+      "what": "receipt has no artifact_mtime_ms: ISZE_Price_BP_Weighted_Compare.SHIP_RECEIPT.json",
+      "evidence": "02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.SHIP_RECEIPT.json",
+      "action": "rewrite the receipt with the schema field",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "high",
+      "workstream": "02_dashboards/sales",
+      "what": "receipt does not cover its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025 changed 14337.0 min after the receipt was written",
+      "evidence": "02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.SHIP_RECEIPT.json",
+      "action": "re-verify and rewrite the receipt; the done claim is currently unsupported",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "high",
+      "workstream": "02_dashboards/sales",
+      "what": "receipt does not cover its file: ISZE_Aftermarket_BI_Command_Center changed 14038.6 min after the receipt was written",
+      "evidence": "02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.SHIP_RECEIPT.json",
+      "action": "re-verify and rewrite the receipt; the done claim is currently unsupported",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "high",
+      "workstream": "02_dashboards/sales",
+      "what": "receipt does not cover its file: ISZE_DB_Leakage_Review_CY2025 changed 44.0 min after the receipt was written",
+      "evidence": "02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.SHIP_RECEIPT.json",
+      "action": "re-verify and rewrite the receipt; the done claim is currently unsupported",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "high",
+      "workstream": "02_dashboards/sales",
+      "what": "receipt does not cover its file: ISZE_Exec_Aftersales_Paper changed 1572.5 min after the receipt was written",
+      "evidence": "02_dashboards/sales/ISZE_Exec_Aftersales_Paper.SHIP_RECEIPT.json",
+      "action": "re-verify and rewrite the receipt; the done claim is currently unsupported",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/sales",
+      "what": "receipt is not valid JSON: ISZE_Growth_Plan_2026.SHIP_RECEIPT.json",
+      "evidence": "02_dashboards/sales/ISZE_Growth_Plan_2026.SHIP_RECEIPT.json",
+      "action": "repair or delete the receipt",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "high",
+      "workstream": "02_dashboards/sales",
+      "what": "receipt does not cover its file: ISZE_PMS_Family_Compare changed 0.9 min after the receipt was written",
+      "evidence": "02_dashboards/sales/ISZE_PMS_Family_Compare.SHIP_RECEIPT.json",
+      "action": "re-verify and rewrite the receipt; the done claim is currently unsupported",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "medium",
+      "workstream": "02_dashboards/ids/_qa_map_triple",
+      "what": "receipt has no artifact beside it: IDS_2026_dealer_compare.SHIP_RECEIPT.json",
+      "evidence": "02_dashboards/ids/_qa_map_triple/IDS_2026_dealer_compare.SHIP_RECEIPT.json",
+      "action": "delete the orphaned receipt or restore the artifact",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "high",
+      "workstream": "01_data/01_Pricing",
+      "what": "receipt does not cover its file: Pricing_Revision_AIM_Source_Analysis changed 124.5 min after the receipt was written",
+      "evidence": "01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.SHIP_RECEIPT.json",
+      "action": "re-verify and rewrite the receipt; the done claim is currently unsupported",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    }
+  ],
+  "generated_utc": "2026-09-18T03:20:06Z",
+  "description": "Every receipt whose artifact_mtime_ms no longer covers its file",
+  "findings_count": 11,
+  "recent_count": 0,
+  "backlog_count": 11
+}

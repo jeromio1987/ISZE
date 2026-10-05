@@ -1,0 +1,35 @@
+import pandas as pd
+from pathlib import Path
+
+D = Path(r"C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived")
+m = pd.read_csv(D / "aim_master_v1.csv", dtype=str, low_memory=False)
+m["eur"] = pd.to_numeric(m["l12m_billed_eur"], errors="coerce").fillna(0)
+
+tot = m["eur"].sum()
+print("=== TRUE AIM (AIM Category) COVERAGE ===")
+rows_aim = int((m["has_aim"] == "1").sum())
+print("rows total               ", len(m))
+print("rows WITH real AIM       ", rows_aim, f"({100*rows_aim/len(m):.1f}% of rows)")
+print("rows WITHOUT real AIM    ", int((m["has_aim"] == '0').sum()))
+print()
+print("euro WITH real AIM       ", round(m.loc[m['has_aim']=='1','eur'].sum()))
+print("euro WITHOUT real AIM    ", round(m.loc[m['has_aim']=='0','eur'].sum()))
+print("euro coverage            ", round(100*m.loc[m['has_aim']=='1','eur'].sum()/tot,2), "%")
+print()
+print("=== THE OLD v2 'workbook_l1' WAS INFLATED BY CATALOGUE FALLBACK ===")
+v2 = pd.read_csv(D / "aim_pn_classification_v2.csv", dtype=str)
+POP = {"Competitive parts","Repair parts","Accident parts","High value repair","Comfort parts","Hardware & consumables","Other / review"}
+v2c = v2.copy()
+v2c["is_cat_fallback"] = v2c["workbook_l1"].isin(POP)
+print("v2 rows where workbook_l1 is a catalogue POSTURE value:", int(v2c['is_cat_fallback'].sum()),
+      f"({100*v2c['is_cat_fallback'].mean():.1f}%)")
+print("   -> these are NOT AIM Categories; they are price-list fallback written into the AIM column")
+print()
+print("=== AIM L1 distribution (real AIM only, by euro) ===")
+g = (m[m["has_aim"] == "1"].groupby("aim_l1")
+     .agg(rows=("part_number", "size"), eur=("eur", "sum"))
+     .sort_values("eur", ascending=False))
+g["eur"] = g["eur"].round(0)
+g["eur_share_%"] = (100 * g["eur"] / tot).round(2)
+g["cum_%"] = g["eur_share_%"].cumsum().round(1)
+print(g.to_string())

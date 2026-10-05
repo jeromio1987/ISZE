@@ -1,0 +1,24 @@
+{
+  "built": "2026-09-17T23:36:47",
+  "source": "iam_ks_price_gap.csv (same-shop listings)",
+  "governing_caveat": [
+    "The index for a part number is identical in every market it appears in: our list price is global and the observed competitor price is a single national listing. Every market-level average in this file is therefore a composition effect, not a market difference.",
+    "This file cannot support a claim that Israel differs from the UK, or that CV differs from LCV.",
+    "85% of rows carry the identical median index, so market averages are dominated by which parts each market checks."
+  ],
+  "headline": {
+    "part_numbers": 43,
+    "markets": 18,
+    "median_index": 1.6148962148962147,
+    "parts_above_competitor": 35,
+    "parts_matching_means_negative_margin": 13,
+    "parts_matching_means_under_20pct": 2,
+    "rows_with_one_competitor_price": 309,
+    "rows_total": 374,
+    "median_brands_found": 1.0
+  },
+  "caveats": [
+    "Cost is estimated as 50% of list, the book average. It is not a purchase cost.",
+    "The observed prices are what a price-comparison site showed, not a transaction, and 83% of rows rest on a single listing."
+  ]
+}

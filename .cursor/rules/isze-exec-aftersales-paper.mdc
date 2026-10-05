@@ -3,7 +3,7 @@ description: Exec aftersales paper — opportunity/commercialisation ship gates 
 alwaysApply: true
 ---
 
-# Exec aftersales paper (Mode A) — hard gates
+# Exec aftersales paper (shared) — hard gates
 
 **When:** building, reviewing, outlining, or claiming done on `ISZE_Exec_Aftersales_Paper` / `build_exec_aftersales_paper.py` / `PROMPT_ISZE_EXEC_SALES_PAPER.md`.
 
@@ -20,7 +20,7 @@ The paper is an **opportunity + commercialisation** case, not a GPS/PMS audit an
 ## Hard failures (do not claim done)
 
 1. **Hero follows euro, not the worked example** — Cover / page-4 opportunity lead must follow `pms_opportunity_matrix.csv` category gaps (typically clutch disc + brake pad + brake shoe). Oil-filter IML story is a **method illustration only**. Oil filter as the opportunity hero = FAIL.
-2. **Ceiling placeholder disclosed** — Page 1 and page 3 must state what share of the target-spend ceiling is a flat €250/UIO placeholder, plus a short sensitivity band. Silent 51%-class headline = FAIL. **The count must be derived from the live `wallet_waterfall.csv` on the build date, not copied from a review:** recomputed 2026-09-16 from `theoretical_wallet_eur ÷ uio_units` for CY2025, exactly 8 of 18 markets sit at €250.0 (IUK, UMI, Sweden, Norway, Hungary, Finland, Romania, Iceland) holding **37.0%** of the €60.22M ceiling. The 9-market / 37.3% wording that stood in the HTML on 2026-09-15 is wrong. The same gate must recompute the share, so the next build cannot copy a stale count.
+2. **Ceiling placeholder disclosed** — Page 1 and page 3 must state what share of the target-spend ceiling is a flat €250/UIO placeholder, plus a short sensitivity band. A headline that quotes the share without disclosing the flat-€250 placeholder element = FAIL. **The count must be derived from the live `wallet_waterfall.csv` on the build date, not copied from a review:** recomputed 2026-09-19 from `theoretical_wallet_eur ÷ uio_units` for CY2025, exactly 8 of 18 markets sit at €250.0 (IUK, UMI, Sweden, Norway, Hungary, Finland, Romania, Iceland) holding **40.3%** of the live ceiling (re-verified 2026-09-19: €22.278M of €55.253M). The 9-market wording that stood in the HTML on 2026-09-15 is wrong. The same gate must recompute the share, so the next build cannot copy a stale count.
 3. **Matrix and gap types on the page** — Quotable category ranking from `pms_opportunity_matrix.csv` and substitution / under-service / catalogue from `capture_recovery_model.csv` (vintage labelled) must appear. Computed-but-unused = FAIL.
 4. **Margin or UNKNOWN** — When Eucon/GP files exist, print a gross-margin layer (or explicit UNKNOWN). External ATD/NADA GP % must be labelled external — never merged into verify KPIs.
 5. **Warranty quantified** — Billed warranty € / share of book + claim expense YoY (or UNKNOWN). A traffic-light aside alone = FAIL.
@@ -29,9 +29,9 @@ The paper is an **opportunity + commercialisation** case, not a GPS/PMS audit an
 8. **Live tenders** — Counts from current `01_data/14_dashboards/tender_data.json` as-of at build. Size aftersales honestly (footprint vs parts €). Stale snapshot = FAIL.
 9. **Account health / defection honesty** — Print `thresholds_calibrated: false` when true; split defection recoverable vs zero trailing revenue.
 10. **Ready levers ranked** — Book B (the price list we might change) alloc ambition, NO_LIST PNs, DE/BE/PT sell-out must not be buried below weaker asks when they are the highest return-per-effort items already built.
-11. **Entity / lane / language** — UTI≠UMI; IUK≠ITUK; two ITUK lanes never mixed; no wallet/street; no IML v7 / Model B / PRISM lane in Mode A.
+11. **Entity / lane / language** — UTI≠UMI; IUK≠ITUK; two ITUK lanes never mixed; no wallet/street; no IML v7 / Model B / PRISM lane in shared.
 12. **Ship gate** — Builder exit 0 ≠ done. Run `verify_exec_aftersales_paper.py` + paint check + receipt. Sibling `OPEN_*.cmd`.
 
 ## Outline sessions (no rebuild/ship)
 
-Mode B outline must still propose **matrix-led heroes**, ceiling disclose, margin/warranty/telematics treatment, and ready-lever ranking — do not re-propose the oil-filter-led diagnostic outline the retro already rejected.
+internal outline must still propose **matrix-led heroes**, ceiling disclose, margin/warranty/telematics treatment, and ready-lever ranking — do not re-propose the oil-filter-led diagnostic outline the retro already rejected.

@@ -1,0 +1,257 @@
+{
+  "generated_at": "2026-09-23T20:04:27+00:00",
+  "generated_by": "03_analytics/Isuzu/prism/scripts/build_model_code_to_tonnage.py",
+  "table": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\03_analytics\\Isuzu\\prism\\data\\model_code_to_tonnage.csv",
+  "bands": [
+    "LCV_D-Max",
+    "3.5t_N35",
+    "5.5t_N50_N55",
+    "7.5t_N50_N62_N75",
+    "F_series_MD_heavy",
+    "other"
+  ],
+  "rows": 121,
+  "resolved": 70,
+  "unresolved": 51,
+  "by_band": {
+    "(blank)": 51,
+    "other": 37,
+    "F_series_MD_heavy": 17,
+    "3.5t_N35": 2,
+    "5.5t_N50_N55": 2,
+    "7.5t_N50_N62_N75": 6,
+    "LCV_D-Max": 6
+  },
+  "by_confidence": {
+    "unresolved": 51,
+    "medium": 46,
+    "low": 17,
+    "high": 7
+  },
+  "resolved_codes": [
+    "CVR",
+    "CXE",
+    "CXG",
+    "CXH",
+    "CXJ",
+    "CXM",
+    "CXY",
+    "CXZ",
+    "CYE",
+    "CYG",
+    "CYH",
+    "CYJ",
+    "CYL",
+    "CYM",
+    "CYY",
+    "CYZ",
+    "CZH",
+    "ELF100",
+    "ELF200",
+    "ELF300",
+    "ELF350",
+    "ELF400",
+    "ELF500",
+    "ELF600",
+    "EXD",
+    "EXR",
+    "EXY",
+    "EXZ",
+    "FRR",
+    "FRS",
+    "FSR",
+    "FSS",
+    "FTR",
+    "FTS",
+    "FVM",
+    "FVR",
+    "FVZ",
+    "FXM",
+    "FXR",
+    "FXZ",
+    "FYH",
+    "GR",
+    "GSR",
+    "GVR",
+    "GVZ",
+    "GXZ",
+    "LF",
+    "LR",
+    "LR4",
+    "LT",
+    "LV",
+    "LV280",
+    "LV290",
+    "MR",
+    "NKR",
+    "NLR",
+    "NMR",
+    "NMR85",
+    "NNR",
+    "NPR",
+    "NPS",
+    "NQR",
+    "NQR90",
+    "NRR",
+    "TFR",
+    "TFS",
+    "UB",
+    "UBS",
+    "UCR",
+    "UCS"
+  ],
+  "unresolved_codes": [
+    "CHR",
+    "CV",
+    "CX",
+    "CY",
+    "D",
+    "E",
+    "EX",
+    "FR",
+    "FRD",
+    "FS",
+    "FT",
+    "FV",
+    "FX",
+    "FY",
+    "GV",
+    "GX",
+    "GXR",
+    "NAN",
+    "NHR",
+    "NHS",
+    "NJ",
+    "NJR",
+    "NJS",
+    "NK",
+    "NKS",
+    "NL",
+    "NLS",
+    "NMS",
+    "NMS85",
+    "NN",
+    "NNS",
+    "NP",
+    "NQ",
+    "NQS",
+    "PFR",
+    "PHR",
+    "QKR",
+    "QLR",
+    "QMR",
+    "R",
+    "RG",
+    "RT",
+    "S",
+    "TBR",
+    "TF",
+    "UC",
+    "UE",
+    "UES",
+    "X2",
+    "X4",
+    "Z"
+  ],
+  "sources": [
+    "Duncan Young / ITUK PMS brake deck, slide 14 'Appendix: Service Intervals' \u2014 pptx_dump.txt",
+    "Ren\u00e9 Paul / GIDSS GIDSS_maint_{N,F}_MY{14,24}.pdf \u2014 01_data/03_PMS/service_schedules/",
+    "JP VIN register series -> GVW map \u2014 01_data/07_UIO/vin/build_vin_register.py (SERIES_GVW_T), model_dimension.csv",
+    "01_data/00_derived/epc_decode_batch1_20260919.json",
+    "01_data/00_derived/genuine_bvp_crossref.csv"
+  ],
+  "rules": [
+    "Jerome 2026-09-18: Ren\u00e9's files are the reference unless a distributor says it is different. Where Duncan and Ren\u00e9 disagree, Ren\u00e9 wins and evidence_source says so.",
+    "A code the sources do not name is left with an empty band and confidence=unresolved. An unresolved code is a better answer than a plausible one.",
+    "The numeric suffix (75 / 85 / 87 / 88 / 90) is a generation code, not a weight: NLR appears as 85, 87 and 88 and all three are 3.5 t (Duncan slide 14 names NLR87 N35.125 and NLR88 N35.150); FRR90 and FSR90 share the suffix 90 at 11 t and 13.5 t."
+  ],
+  "banded": {
+    "records_in_decode": 260,
+    "pns_written": 250,
+    "duplicate_records_collapsed": 10,
+    "pns_epc_found_nothing": 18,
+    "pns_with_a_vehicle": 232,
+    "single_band": 153,
+    "shared": 79,
+    "no_band_all_codes_unresolved": 0,
+    "eur_single": 33338320.54,
+    "eur_shared": 19489192.12,
+    "eur_with_vehicle": 52827512.66,
+    "eur_epc_found_nothing": 4900487.2299999995,
+    "eur_total_distinct_pns": 57727999.89,
+    "top_unresolved_codes": [
+      [
+        "NN",
+        39
+      ],
+      [
+        "NP",
+        39
+      ],
+      [
+        "NHR",
+        28
+      ],
+      [
+        "NMS85",
+        22
+      ],
+      [
+        "NLS",
+        14
+      ],
+      [
+        "NJR",
+        13
+      ],
+      [
+        "NNS",
+        8
+      ],
+      [
+        "NJ",
+        8
+      ],
+      [
+        "NK",
+        8
+      ],
+      [
+        "NL",
+        8
+      ],
+      [
+        "NHS",
+        6
+      ],
+      [
+        "NQS",
+        5
+      ],
+      [
+        "NMS",
+        3
+      ],
+      [
+        "NJS",
+        3
+      ],
+      [
+        "NKS",
+        3
+      ],
+      [
+        "QLR",
+        1
+      ],
+      [
+        "QMR",
+        1
+      ],
+      [
+        "PHR",
+        1
+      ]
+    ]
+  }
+}

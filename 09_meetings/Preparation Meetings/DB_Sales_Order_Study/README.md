@@ -12,7 +12,7 @@
 
 ## Customer deep deliverables (V4)
 
-FY2024 vs FY2025 (Apr–Mar), PN depth + channel-shift, Mode A single-customer packs.
+FY2024 vs FY2025 (Apr–Mar), PN depth + channel-shift, shared single-customer packs.
 
 | Location | Contents |
 |----------|----------|

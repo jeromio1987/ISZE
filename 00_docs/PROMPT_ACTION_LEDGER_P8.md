@@ -44,7 +44,7 @@ Everything in `01_data/00_derived/` today answers **"what is wrong."** Nothing a
 | 5 | **Human decisions are human-owned.** The builder reads `action_ledger_decisions.csv` and never writes a state into it. If the file is missing, write `action_ledger_decisions.template.csv` and stop. | Unit test §11.5. |
 | 6 | **Append-only history.** `action_ledger_history.parquet` is never rewritten, only appended. Re-running the same day is idempotent (upsert on `(opportunity_id, observed_on)`). | Unit test §11.3. |
 | 7 | **Deterministic only.** No LLM, no mail-text model, no P2b dependency — so **no G0b governance gate** is touched. | Design constraint. |
-| 8 | **Mode B only.** No IML-facing wording, no personal names, no distributor-visible export, no `07_deploy/` write, no GitHub Pages. | §13 + `.cursor/rules/isze-external-iml-language.mdc`. |
+| 8 | **internal only.** No IML-facing wording, no personal names, no distributor-visible export, no `07_deploy/` write, no GitHub Pages. | §13 + `.cursor/rules/isze-external-iml-language.mdc`. |
 | 9 | **Never open `01_data/raw/sales/*.XLSX`.** Derived parquet/CSV only. | `CLAUDE.md` / `AGENTS.md`. |
 | 10 | **Small-n suppression** carries over from roadmap §13: suppress any cell built on fewer than 10 underlying signals; mark `SUPPRESSED_SMALL_N`. | Unit test §11.7. |
 
@@ -182,7 +182,7 @@ For each opportunity with a decision state of `ACTIONED` or later:
 | `01_data/00_derived/action_ledger_rejects.csv` | rows dropped, with the reason |
 | `01_data/00_derived/action_ledger.meta.json` | run_id, counts in/out per adapter, horizons applied, versions |
 | `01_data/00_derived/ACTION_LEDGER_REVIEW_<YYYYMMDD>.md` | "what we said / what happened" memo |
-| `02_dashboards/ops/ISZE_Action_Ledger.html` | Mode B surface, SSR at build time |
+| `02_dashboards/ops/ISZE_Action_Ledger.html` | internal surface, SSR at build time |
 | `02_dashboards/ops/OPEN_ACTION_LEDGER.cmd` | launcher next to the HTML |
 
 HTML reuses `02_dashboards/_build/tier_a_dashboard_common.py` + `render_ssr_charts.py` — the Command Center shell. **Do not invent a second dashboard pattern.**
@@ -239,7 +239,7 @@ python 01_data/91_build/build_action_ledger.py --all --backfill
 ## 11. Explicitly out of scope — do not touch, do not "improve while you are in there"
 
 - Book B **allocation** (+3% / +4% / +5%) — Tier B, Jerome's decision, not this build.
-- Any **Mode A** artefact: IML deck, distributor-facing export, GitHub Pages publish, `07_deploy/` write.
+- Any **shared** artefact: IML deck, distributor-facing export, GitHub Pages publish, `07_deploy/` write.
 - Any **mail LLM / P2b** enrichment. Deterministic only. G0b stays untouched.
 - **New KPIs** in `03_analytics/Isuzu/prism/docs/metric_dictionary.md` — the ledger publishes no new metric; it re-states existing ones.
 - **Changing any existing builder's output.** Adapters read; they never rewrite a source.

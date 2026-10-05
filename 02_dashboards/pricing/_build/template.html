@@ -111,15 +111,43 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
   </div>
 
   <h2 class="sec"><span class="no">4 ·</span> Street price reality check — genuine vs aftermarket at the counter</h2>
-  <p class="lead">Median genuine street premium per family. Two independent measurements: the Eucon competitor panel (network level, ×1.785 on list) and live UK trade-shop scrapes where the same shop lists both genuine and aftermarket. Small samples — treat as direction, not decimals.</p>
+  <p class="lead" id="ladderLead">Every one of the 44 Eucon part numbers, ranked by CY2025 revenue — the primary view below. Two independent measurements feed it: the Eucon competitor panel (network level, ×1.785 on list) and live UK trade-shop scrapes where the same shop lists both genuine and aftermarket. Small samples — treat as direction, not decimals. Toggle to the family rollup for the median-per-family view this page used before.</p>
   <div class="card">
-    <div class="chartbox" style="height:460px;"><canvas id="ladder" role="img" aria-label="Genuine street premium vs aftermarket per family">Street premium chart</canvas></div>
-    <div class="legend">
+    <div class="controls">
+      <label for="grainSel">View:</label>
+      <select id="grainSel">
+        <option value="pn" selected>Part number — all 44 PNs</option>
+        <option value="fam">Family rollup (median)</option>
+      </select>
+      <span class="small" id="grainNote"></span>
+    </div>
+    <div class="chartbox" id="ladderBox" style="height:920px;"><canvas id="ladder" role="img" aria-label="Genuine street premium vs aftermarket, by part number or family">Street premium chart</canvas></div>
+    <div class="legend" id="ladderLegendPN">
+      <span><span class="sw" style="background:#2a78d6"></span>Street premium vs Eucon competitor avg (×1.785 on ISZE list)</span>
+      <span class="small">One bar per part number, sorted by CY2025 revenue (highest first). "Margin if matched" column below is a separate, unrelated competitor read — see note.</span>
+    </div>
+    <div class="legend" id="ladderLegendFam" style="display:none;">
       <span><span class="sw" style="background:#2a78d6"></span>Eucon panel, street ×1.785 (pan-EU)</span>
       <span><span class="sw" style="background:#85b7eb"></span>UK trade shop, observed genuine vs IAM listing</span>
       <span class="small">Bars show median premium; "n" = part numbers behind each bar.</span>
     </div>
     <div class="callout" id="clutchNote"></div>
+
+    <div id="pnTableWrap">
+      <h3 style="font-size:15px;margin:16px 0 6px;">All 44 part numbers — price gap and margin if matched to competitor price</h3>
+      <p class="small" style="margin:0 0 8px;">"Margin if matched to competitor price" = the gross margin ISZE would keep if it matched the competitor price found in <code>competitor_price_panel.csv</code> — a separate, KS/AIM-based competitor read (not the Eucon panel used elsewhere on this page), whose cost is estimated at 50% of list (a book average, not an actual purchase cost). Shown only for the part numbers that exist in that file — blank means no row there, not zero.</p>
+      <div style="max-height:480px;overflow:auto;border:1px solid #d9d3c8;">
+        <table id="pnTbl">
+          <thead><tr>
+            <th>#</th><th>Part</th><th>Description</th><th>Family</th>
+            <th class="num">Rev € 2025</th><th class="num">ISZE list €</th><th class="num">Street €</th>
+            <th class="num">Competitor avg €</th><th class="num">Street premium</th>
+            <th class="num">Margin if matched to competitor price</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <h2 class="sec"><span class="no">5 ·</span> Capture heat-map — family × market</h2>
@@ -137,7 +165,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
       <li><b>ITUK has two published lanes:</b> this page uses the network (PRISM) lane so all 18 markets are comparable. The official ITUK external numbers (IML v7 schedule: weighted cover 35.9%, €2.04M gap across 5 categories) use different intervals and UIO — directionally the same story, different absolutes. Don't mix the two in one document.</li>
       <li><b>Air-filter capture</b> rests on a provisional every-2nd-service interval assumption, not yet confirmed by IML.</li>
       <li><b>Price samples are thin</b> (Eucon 44 PNs, UK shop 39–42 PNs, scraped 9 May; UK/IL category scrapes 13 Jul). Premium medians are direction, not calibration.</li>
-      <li><b>Sweden:</b> 5 of 6 aftermarket price hits from the Swedish chain scrape were page artifacts (identical price on unrelated parts) and were excluded; Sweden has no usable local price evidence this cycle.</li>
+      <li><b>Sweden:</b> the Swedish chain scrape is retired (24 Sep 2026). Every one of its part-number hits was a false match — the site's search does not search by part number and returned an unrelated item each time, including a coil spring in place of a brake pad kit. Its prices are removed from this page and from the file behind it. Sweden has no usable local price evidence this cycle.</li>
     </ul>
   </div>
 
@@ -254,23 +282,79 @@ new Chart(document.getElementById('oneBars'),{type:'bar',
       return fmtE(r.plus1pct_eur)+'/pt · captive base '+fmtM(r.captive_rev_eur)+' of '+fmtM(r.net_sales_eur)+' net';}}}},
     scales:{x:{grid:{color:grid},ticks:{maxTicksLimit:5,callback:v=>fmtM(v)}},y:{grid:{display:false}}}}});
 
-/* ---- 4. street premium ladder ---- */
+/* ---- 4. street premium: part-number grain (primary) with family rollup toggle ---- */
 const famOrder = Object.keys(ev).filter(c=>ev[c].eucon||ev[c].ks_observed);
 famOrder.sort((a,b)=>((ev[b].eucon||{}).med_street_delta_pct||0)-((ev[a].eucon||{}).med_street_delta_pct||0));
 const CAT_LABEL = {brake_pad_front:'Brake pads (frt)', brake_pad_rear:'Brake pads (rr)', leaf_spring:'Leaf spring'};
 cells.forEach(c=>CAT_LABEL[c.cat]=c.label);
 const lb = famOrder.map(c=>{const e=ev[c];let l=CAT_LABEL[c]||c;
   return l+'  (n='+((e.eucon||{}).n||0)+(e.ks_observed?('/'+e.ks_observed.n):'')+')';});
-new Chart(document.getElementById('ladder'),{type:'bar',
-  data:{labels:lb,datasets:[
-    {label:'Eucon ×1.785',data:famOrder.map(c=>ev[c].eucon?Math.round(ev[c].eucon.med_street_delta_pct*100):null),
-      backgroundColor:'#2a78d6',borderRadius:3,barThickness:16},
-    {label:'UK shop observed',data:famOrder.map(c=>ev[c].ks_observed?Math.round(ev[c].ks_observed.med_premium_pct*100):null),
-      backgroundColor:'#85b7eb',borderRadius:3,barThickness:16}]},
-  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': +'+ctx.raw+'% vs aftermarket'}}},
-    scales:{x:{grid:{color:grid},title:{display:true,text:'genuine street premium vs aftermarket, %'},
-      ticks:{maxTicksLimit:6,callback:v=>(v>0?'+':'')+v+'%'}},y:{grid:{display:false},ticks:{font:{size:12}}}}}});
+
+const pnAll = (D.eucon_all||[]).slice().sort((a,b)=>b.rev_eur-a.rev_eur);
+const gmClass = v => v==null ? '' : (v<0 ? 'style="color:#b23b3b;font-weight:700;"' : (v<20 ? 'style="color:#c0552d;"' : 'style="color:#2e7d54;"'));
+const gmText = v => v==null ? '—' : (Math.round(v*10)/10)+'%';
+
+let ladderChart = null;
+const ladderBox = document.getElementById('ladderBox');
+const grainNote = document.getElementById('grainNote');
+const legendPN = document.getElementById('ladderLegendPN');
+const legendFam = document.getElementById('ladderLegendFam');
+const pnTableWrap = document.getElementById('pnTableWrap');
+const pnTbody = document.querySelector('#pnTbl tbody');
+
+function renderPNTable(){
+  pnTbody.innerHTML = pnAll.map(r=>
+    '<tr><td>'+r.rank+'</td><td>'+r.pn+'</td><td>'+r.description+'</td><td>'+r.label+'</td>'+
+    '<td class="num">'+fmtM(r.rev_eur)+'</td>'+
+    '<td class="num">'+r.ISZE_IE40_Price_EUR.toFixed(2)+'</td>'+
+    '<td class="num">'+r.street_eur.toFixed(2)+'</td>'+
+    '<td class="num">'+(r.Avg_Competitor_EUR!=null?r.Avg_Competitor_EUR.toFixed(2):'—')+'</td>'+
+    '<td class="num">'+(r.street_delta_pct!=null?(r.street_delta_pct>=0?'+':'')+Math.round(r.street_delta_pct*100)+'%':'—')+'</td>'+
+    '<td class="num" '+gmClass(r.gm_if_matched_pct)+'>'+gmText(r.gm_if_matched_pct)+'</td></tr>').join('');
+}
+
+function renderPN(){
+  legendPN.style.display=''; legendFam.style.display='none'; pnTableWrap.style.display='';
+  grainNote.textContent = pnAll.length+' of 44 Eucon part numbers shown, sorted by CY2025 revenue; margin-if-matched populated for '+pnAll.filter(r=>r.gm_if_matched_pct!=null).length+' of them (see table).';
+  ladderBox.style.height = Math.max(360, pnAll.length*20+50)+'px';
+  const labels = pnAll.map(r=>r.pn+' · '+r.description.slice(0,28)+(r.label?(' ['+r.label+']'):''));
+  const data = pnAll.map(r=>r.street_delta_pct!=null?Math.round(r.street_delta_pct*100):null);
+  if(ladderChart) ladderChart.destroy();
+  ladderChart = new Chart(document.getElementById('ladder'),{type:'bar',
+    data:{labels,datasets:[{label:'Street premium vs Eucon competitor avg',data,
+      backgroundColor:pnAll.map(r=>(r.street_delta_pct||0)>=0?'#2a78d6':'#85b7eb'),borderRadius:3,barThickness:12}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{
+        const r=pnAll[ctx.dataIndex];
+        const lines=[(r.street_delta_pct>=0?'+':'')+Math.round(r.street_delta_pct*100)+'% vs Eucon competitor avg',
+          'ISZE list €'+r.ISZE_IE40_Price_EUR.toFixed(2)+' · street €'+r.street_eur.toFixed(2)+' · competitor avg €'+(r.Avg_Competitor_EUR||0).toFixed(2),
+          'Rev 2025: '+fmtM(r.rev_eur)+' · brands: '+(r.Brands_Found||'—')];
+        if(r.gm_if_matched_pct!=null) lines.push('Margin if matched to competitor price: '+gmText(r.gm_if_matched_pct)+' (separate competitor read, cost est. 50% of list)');
+        return lines;}}}},
+      scales:{x:{grid:{color:grid},title:{display:true,text:'genuine street premium vs Eucon competitor avg, %'},
+        ticks:{callback:v=>(v>0?'+':'')+v+'%'}},y:{grid:{display:false},ticks:{font:{size:10.5}}}}}});
+  renderPNTable();
+}
+function renderFamily(){
+  legendPN.style.display='none'; legendFam.style.display=''; pnTableWrap.style.display='none';
+  grainNote.textContent = famOrder.length+' families, median street premium (Eucon PN-level rolled up).';
+  ladderBox.style.height = Math.max(360, famOrder.length*26+60)+'px';
+  if(ladderChart) ladderChart.destroy();
+  ladderChart = new Chart(document.getElementById('ladder'),{type:'bar',
+    data:{labels:lb,datasets:[
+      {label:'Eucon ×1.785',data:famOrder.map(c=>ev[c].eucon?Math.round(ev[c].eucon.med_street_delta_pct*100):null),
+        backgroundColor:'#2a78d6',borderRadius:3,barThickness:16},
+      {label:'UK shop observed',data:famOrder.map(c=>ev[c].ks_observed?Math.round(ev[c].ks_observed.med_premium_pct*100):null),
+        backgroundColor:'#85b7eb',borderRadius:3,barThickness:16}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': +'+ctx.raw+'% vs aftermarket'}}},
+      scales:{x:{grid:{color:grid},title:{display:true,text:'genuine street premium vs aftermarket, %'},
+        ticks:{maxTicksLimit:6,callback:v=>(v>0?'+':'')+v+'%'}},y:{grid:{display:false},ticks:{font:{size:12}}}}}});
+}
+document.getElementById('grainSel').addEventListener('input',e=>{
+  e.target.value==='pn' ? renderPN() : renderFamily();});
+renderPN();
+
 const cd=ev.clutch_disc,cp=ev.clutch_pressure_plate;
 if(cd&&cd.eucon&&cd.eucon.med_street_delta_pct<0){
   document.getElementById('clutchNote').innerHTML='<b>Clutch anomaly worth knowing:</b> on the small Eucon sample, genuine clutch discs and pressure plates price <i>below</i> the aftermarket at street level ('+Math.round(cd.eucon.med_street_delta_pct*100)+'% and '+Math.round(cp.eucon.med_street_delta_pct*100)+'%, n='+cd.eucon.n+'+'+cp.eucon.n+'). Yet clutch capture is the worst on the map — the loss there is not a price problem. Verify on a fuller sample, then fix availability and kit coverage, not price.';
@@ -308,7 +392,7 @@ const ACTS = [
  ['verify','<b>Clutch price anomaly: genuine street below aftermarket (n=3).</b> Commission a fuller Eucon pull on clutch before any repricing — if confirmed, clutch list can carry +10% without touching the capture problem (which is availability-driven).'],
  ['verify','<b>Air filter: don\'t reprice yet.</b> Capture looks healthy only under the provisional every-2nd-service interval; the official ITUK lane still shows a €736K air-filter gap. Get IML to confirm the interval ratio first — it flips air filter between "raise" and "defend".'],
  ['verify','<b>Germany + Norway street-price audit: €382K / €373K of revenue sits on Eucon-undercut part numbers.</b> Check actual distributor counter prices against the ×1.785 assumption — if their real markup is higher, we are pricing ourselves out with our own channel.'],
- ['fix','<b>Price-evidence pipeline repaired 16 Jul</b> (UK PN-level scraper restored after the 13 Jul crash; Swedish page-artifact guard in place — 4 clean Swedish price points now on file). One step left: kick a fresh UK PN-level run this week — genuine-vs-IAM evidence is still the 9 May scrape and it is the only source that sees both sides of the counter. Confirm the Sunday scheduled run lands before any repricing decision.'],
+ ['fix','<b>Price-evidence pipeline repaired 16 Jul</b> (UK PN-level scraper restored after the 13 Jul crash). <b>One source retired 24 Sep 2026:</b> the Swedish chain — its part-number search returned an unrelated item every time, so none of its prices is used. One step left: kick a fresh UK PN-level run this week — genuine-vs-IAM evidence is still the 9 May scrape and it is the only source that sees both sides of the counter. Confirm the Sunday scheduled run lands before any repricing decision.'],
 ];
 document.getElementById('acts').innerHTML = ACTS.map(a=>
   '<li><span class="tag '+a[0]+'">'+(a[0]==='raise'?'Raise':a[0]==='defend'?'Win back':a[0]==='verify'?'Verify':'Fix')+'</span> '+a[1]+'</li>').join('');
@@ -316,7 +400,7 @@ document.getElementById('acts').innerHTML = ACTS.map(a=>
 /* ---- sources foot ---- */
 document.getElementById('src').innerHTML =
  '<b>Sources & method.</b> Capture and € gaps: verified sales pipeline (SAP billing 2023–2026, credit notes/returns and non-part lines excluded; pipeline verification green, 106 checks, 6 Jul 2026) against UIO-implied demand per model bucket. '+
- 'Price benchmarks: Eucon competitor panel (44 part numbers, brands incl. Blue Print, Febi, Delphi, Textar — OE/mid-tier, not budget) grossed to street ×1.785; UK trade shop scrape 9 May 2026 (genuine vs IAM listings, same shop); UK & Israel category scrapes 13 Jul 2026; Swedish chain scrape 13 Jul 2026 (artifact-filtered). '+
+ 'Price benchmarks: Eucon competitor panel (44 part numbers, brands incl. Blue Print, Febi, Delphi, Textar — OE/mid-tier, not budget) grossed to street ×1.785; UK trade shop scrape 9 May 2026 (genuine vs IAM listings, same shop); UK & Israel category scrapes 13 Jul 2026. The Swedish chain scrape is retired (24 Sep 2026) — its search returned unrelated items, so no Swedish price is used. '+
  'Whole-base captive split: AIM classification (93.5% of revenue classified, Mar 2026). Channel markups (+40% / +27.5%) are working assumptions — replace with confirmed distributor margins when available. '+
  'Built ' + D.meta.built + ' · CY2025 · MIDI and Turkey excluded by policy (not ISZE-direct customers).';
 </script>

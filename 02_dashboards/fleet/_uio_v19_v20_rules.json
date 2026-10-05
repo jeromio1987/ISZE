@@ -1,0 +1,210 @@
+{
+  "v19": {
+    "title": "UIO V19 — how the car park is built today (distributor level)",
+    "status": "Canonical live workbook: 06_uio/_CURRENT/ISUZU_UIO_Overview_2026.xlsx (Changelog = v19). Confirmed 2026-07-16.",
+    "engine": [
+      "History (roughly 1990–2025): trucks registered each year × survival curve = trucks still in service. Truck curve ≈ 9.9-year life (~10.2% scrap/year). Pickup curve ≈ 8.1-year life (~12.3% scrap/year).",
+      "Forecast (2026–2030) on most Overview rows: flat rule UIO × 0.97 + new registrations (3% scrap). That is the known defect V20 replaces.",
+      "Grand Total (sheet 1 row 2) is a SUMPRODUCT. MIDI toggle B4: policy default Exclude MIDI for ISZE KPIs; live file has often been left on Include — check before quoting.",
+      "Russia excluded from all totals."
+    ],
+    "lanes": [
+      {
+        "lane": "ITUK commercial (Overview rows 22 LD + 24 F-Series)",
+        "dbs": ["ITUK"],
+        "rules": [
+          "Separate sheet: 4. ITUK UIO Projection — not the flat 3% rule.",
+          "2008–2024: SMMT / DVLA registered car park (actual).",
+          "2025–2030: cohort × model survival (N35/N75 from ITUK attrition pack; N50/55 and N62/65 use N75 curve; F-series uses IML CV Advanced Economy).",
+          "New regs: Niguri FY25/26–FY27/28, then flat 2,446/year.",
+          "Owner-operator floor: pre-2008 and 2008–2010 cohorts held at 90% survival / 10% scrap every forecast year (V15/V17 fix).",
+          "Sheet 1 rows 22 and 24 are live-linked to Sheet 4 Section C. Leave alone in V20."
+        ]
+      },
+      {
+        "lane": "IUK light commercial / D-Max (Overview row 25)",
+        "dbs": ["IUK"],
+        "rules": [
+          "Hardcoded on Overview — not linked to Sheet 4.",
+          "V19 uses the same broken 3% scrap + regs roll-forward from 2026F.",
+          "2025E 47,783 is kept (direction matches IMIT). V19 2026F 49,280 is wrong-direction and must not be used for GPS.",
+          "V20 locks CY2026F at 44,926 (see V20 chapter)."
+        ]
+      },
+      {
+        "lane": "Ireland + Portugal (registration-quality history)",
+        "dbs": ["Isuzu Ireland", "Imotors"],
+        "rules": [
+          "June 2026: replaced estimates with government / dealer registration data (SIMI-class for Ireland).",
+          "History rebuilt correctly with survival curves — fleet levels went down vs prior estimates (that drop was correct).",
+          "Forecast columns still inherit the network-wide 3% scrap bug until V20."
+        ]
+      },
+      {
+        "lane": "Israel UTI (CV light + medium)",
+        "dbs": ["UTI"],
+        "rules": [
+          "V19-1 / V19-2 Changelog: UTI parc rebuilt on UTI shipment file (2024 10,049 → 2025 10,336 → 2026 10,760 → 2027 10,972).",
+          "UMI is a separate Israel distributor — never blend UTI + UMI into one 'Israel' for IDS or GPS.",
+          "V20: government Ministry of Transport register shows UTI row still ~25% low every year — rebuild required."
+        ]
+      },
+      {
+        "lane": "Israel UMI",
+        "dbs": ["UMI"],
+        "rules": [
+          "Separate row set from UTI. IDS Israel country pack is UMI network only.",
+          "Do not average or blend with UTI for any IDS-linked or single 'Israel' headline."
+        ]
+      },
+      {
+        "lane": "Other ISZE distributors (IML backbone)",
+        "dbs": ["IBX", "ISD-Lang", "AutoWallis", "RSA", "Nordic Auto.", "Isuzu Denmark", "Isuzu Sverige", "Isuzu Rom Auto", "GasanZammit", "Loutsios & Sons", "Petros Petropoulos", "BL"],
+        "rules": [
+          "IML calculation.xlsx backbone: shipment × survival convolution (Hasegawa-style) for history.",
+          "From V18 (June 2026): forecast driven by IMIT LCV study + ISZE CV mid-term plan registrations, still compounded with the 3% scrap rule on Overview forecast columns.",
+          "Belgium, Cyprus, Malta, Greece: no real registration history — IML / scrap-adjusted estimates only (low confidence; VIN check implies impossible 0.3–3% scrap).",
+          "Germany: history for 2019–2024 partly fabricated by running 3% backwards from a 2025 point — treat as indicative."
+        ]
+      },
+      {
+        "lane": "MIDI Europe (Italy, Spain in extract; FR/CH/PL/RS in full workbook scope)",
+        "dbs": ["MIDI Europe"],
+        "rules": [
+          "Included or excluded via Sheet 1 B4. Exclude for Kosha / action-plan / ISZE-only KPIs.",
+          "Contribute ~92.6k (2024) to ~103.8k (2030F) when included.",
+          "This pack’s network charts use ex-MIDI totals."
+        ]
+      }
+    ],
+    "sources_v19": [
+      "IML calculation.xlsx — backbone most markets 1990–2026",
+      "LCV UIO (November 2025) EU Study IMIT.xlsx — LCV survival + registration forecasts",
+      "UIO.xlsx ITUK sheet — SMMT/DVLA car park 2008–2024",
+      "ISZE CV FY2025–FY2030 mid-term plan (12RS) — truck registration plan inputs",
+      "Niguri FY25.26 Extract — ITUK internal forecast",
+      "Parts Sales vs Model Mix attrition ITUK.pptx — N35/N75 survival",
+      "Ireland / Portugal government & dealer registration updates (June 2026)",
+      "UTI shipment-based Israel rebuild (V19-1/V19-2, July 2026 Changelog)"
+    ],
+    "quote_rules": [
+      "Historical years through 2025: usable with source caveats by market.",
+      "2026–2030 under V19: do not quote externally until survival-curve fix ships.",
+      "Always state MIDI include/exclude.",
+      "Always keep IUK ≠ ITUK and UTI ≠ UMI."
+    ]
+  },
+  "v20": {
+    "title": "UIO V20 — specification and new evidence (not a finished workbook yet)",
+    "status": "Draft in 06_uio/_CURRENT/V20_SPEC.md (27 Jul 2026, amended 30 Jul). Nothing built into the live xlsx yet except the locked IUK LCV decision for planning.",
+    "locked": [
+      {
+        "item": "IUK LCV CY2026F",
+        "value": "44,926",
+        "formula": "47,783 × (1 − 12.3%) + IMIT regs ≈ 3,020",
+        "vs_v19": "V19 had 49,280 (+3.1%) — wrong direction; do not use"
+      }
+    ],
+    "problems": [
+      {
+        "id": "P1",
+        "name": "Forecast scrap rate",
+        "fix": "Delete flat 3% rule for 2026–2030. Use the same survival curves as history on every Overview row except ITUK rows 22/24 (already correct) and Israel (full rebuild).",
+        "evidence": "Grand Total too high by 7.8% (2026) → 37.7% (2030). Ireland 2030 light trucks 1,645 vs 1,382; pickups 3,174 vs 2,527."
+      },
+      {
+        "id": "P2",
+        "name": "Pickup direction",
+        "fix": "Same survival fix — pickups turn down on their own when scrap is real.",
+        "evidence": "IMIT ISZE pickup regs 16,977 (2024) → 10,845 (2026). V19 pickup fleet still grows ~22.8% to 2030. Steady state at 10,845 × 8.1 yr ≈ 88k vs ~125k on the road."
+      },
+      {
+        "id": "P3",
+        "name": "Sales plan vs registrations",
+        "fix": "Use mid-term plan one-to-one for the level (Jerome 27 Jul). Smooth year-to-year; do not treat each plan year as exact registrations. Split empty medium-duty 'plan only' rows out of Grand Total until a real registration appears.",
+        "evidence": "Ireland shipments vs SIMI regs 2020–2024: 451 vs 445 (within 1.3%). Single years swing ±50–70. VIN file: zero medium-duty units in 3,238 trucks — Portugal MD plan to 498 by 2030 is fiction."
+      },
+      {
+        "id": "P4",
+        "name": "Israel government register",
+        "fix": "Rebuild UTI rows on Ministry of Transport data (as Ireland was rebuilt). Add 7.6–10 t and 12.1–16 t classes. Add age floor for 15+ year trucks. Do not multiply by 1.25.",
+        "evidence": "MoT 2026 (30 Jun) 14,019 vs model 10,760 (−23%). Gap ~3.3–3.7k stable across years. Light row 6,101 vs 8,610 (−29%); medium 4,659 vs 5,409 (−14%). 1,680 trucks first registered 1999–2010 still on road."
+      },
+      {
+        "id": "P5",
+        "name": "Low-confidence markets",
+        "fix": "Flag Belgium, Cyprus, Malta, Greece for registration-based rebuild. Do not treat implied 0.3–3% scrap as real.",
+        "evidence": "VIN × fleet movement only looks plausible for Ireland (13.3%/yr) and Portugal (7.4%/yr)."
+      },
+      {
+        "id": "P6",
+        "name": "Weight class → target spend per truck (GPS)",
+        "fix": "Fix VIN GVW decode (NLR=3.5 t not 8.5 t). Split LD car park into N35 vs N75-class where needed. Make GPS mapper able to return the Grafter rate.",
+        "evidence": "3,238 VINs look 8.24 t average vs true ~6.08 t. Portugal ~68.5% of N-series is 3.5 t → target spend per truck overstated; GPS % understated ~quarter (indicative)."
+      },
+      {
+        "id": "P7",
+        "name": "Documentation drift",
+        "fix": "Rewrite Data Sources / method notes to match June rebuild numbers (Ireland/Portugal descriptions still quote old decay paths).",
+        "evidence": "Ireland pickups note says 2,648 in 2030 while sheet shows 3,174; Portugal truck note still says 3% decay with no plan."
+      }
+    ],
+    "new_data": [
+      {
+        "name": "VIN shipment register",
+        "path": "01_data/07_UIO/vin/ (VIN_register.csv / parquet)",
+        "what": "3,238 unique VINs, 2020–mid-2026. Portugal 2,111 · Ireland 647 · Germany 183 · Malta 130 · Cyprus 114 · Belgium 49 · Greece 4.",
+        "use": "Shipments from Japan — not registrations. Measures scrappage, plan-vs-reality, MD fiction, weight decode. Do not substitute for UIO.",
+        "note": "2025 zero shipments outside Portugal = P700 changeover, not a missing file."
+      },
+      {
+        "name": "Israel Ministry of Transport fleet (via UTI July 2026 pack)",
+        "path": "UTI parts presentation slides 14–17 (MoT registered Isuzu)",
+        "what": "Government registered fleet by year and weight class; 14,019 at 30 Jun 2026.",
+        "use": "Primary anchor for Israel V20 rebuild (UTI lane only)."
+      },
+      {
+        "name": "IMIT November 2025 LCV study",
+        "path": "LCV UIO (November 2025) EU Study IMIT",
+        "what": "Pickup / LCV registration forecasts and UK D-Max fleet path under 12-year life.",
+        "use": "IUK LCV regs (~3,020 in 2026E) and network pickup decline case."
+      },
+      {
+        "name": "ISZE CV mid-term plan FY2025–FY2030",
+        "path": "ISZE_CV_FY2025-FY2030_mid-term_plan___12RS.xlsx",
+        "what": "Planned truck volumes by market (Europe total 630 → 1,325 → 1,935).",
+        "use": "Forecast registration inputs; level OK one-to-one, annual profile needs smoothing."
+      },
+      {
+        "name": "Ireland / Portugal registration rebuilds (June 2026)",
+        "path": "Already inside V19 workbook history columns",
+        "what": "Real registration-based history replacing scrap-adjusted estimates.",
+        "use": "Keep; do not confuse with the forecast-method bug introduced the same week."
+      },
+      {
+        "name": "Measured annual distance (parallel aftersales work)",
+        "path": "01_data/00_derived/warranty_cv_km_age_by_market.csv and IUK N35 mileage study",
+        "what": "IUK N35 Grafter ~14,494 km/yr; UTI ~51,680; weight-class spread N35/N75/F.",
+        "use": "Not a UIO count input — changes how hard a given UIO works for parts demand / GPS context."
+      }
+    ],
+    "build_order": [
+      "Archive a dated V19 copy first",
+      "1. Israel MoT rebuild",
+      "2. Survival-curve forecast fix (P1+P2) including IUK LCV row 25 @ 44,926",
+      "3. Sales-plan smoothing + plan-only MD rows out of Grand Total",
+      "4. Flag BE/CY/MT/GR low confidence",
+      "5. Weight decode + GPS N35 target (can run in parallel)",
+      "6. Rewrite documentation"
+    ],
+    "acceptance": [
+      "Back-cast to 2025 for Ireland, Portugal, Israel lands within one unit — no jump at 2025/2026",
+      "Pickup fleet 2030 < 2025",
+      "IUK LCV CY2026F = 44,926",
+      "Israel 2026 reconciles to 14,019 class by class",
+      "No row grows faster than regs ÷ survival length",
+      "Every forecast cell traces to a named file on disk",
+      "B4 = Exclude MIDI before Kosha / action-plan quotes"
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "run_at": "2026-10-01T15:38:09+00:00",
+  "seed": 489,
+  "per_site": {
+    "ks": {
+      "cached": 487,
+      "parsed": 102,
+      "miss": 385,
+      "broken": 0,
+      "rows": 170,
+      "priced": 170
+    },
+    "amayama": {
+      "cached": 282,
+      "parsed": 278,
+      "miss": 0,
+      "broken": 4,
+      "rows": 610,
+      "priced": 610
+    },
+    "omega": {
+      "cached": 487,
+      "parsed": 73,
+      "miss": 141,
+      "broken": 273,
+      "rows": 90,
+      "priced": 90
+    }
+  },
+  "total_rows": 870,
+  "priced_rows": 870,
+  "rows_by_price_type": {
+    "aftermarket_retail": 166,
+    "genuine_grey": 687,
+    "dealer": 17
+  },
+  "downstream_failures": [
+    "ledger",
+    "verbatim check",
+    "additive check"
+  ]
+}

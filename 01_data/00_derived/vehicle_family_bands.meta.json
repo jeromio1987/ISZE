@@ -1,0 +1,66 @@
+{
+  "generated_at": "2026-09-24T05:58:22+00:00",
+  "generated_by": "03_analytics/Isuzu/prism/scripts/build_vehicle_family_bands.py",
+  "universe": {
+    "source": "bvp_pn_dimension.csv + pms_capture_supplement.csv, pms_category not null",
+    "part_numbers": 838,
+    "eur_all_markets": 21732734.59
+  },
+  "by_resolution": {
+    "no_vehicle_reference": {
+      "part_numbers": 413,
+      "eur": 2757940.08
+    },
+    "shared_across_families": {
+      "part_numbers": 54,
+      "eur": 4434661.97
+    },
+    "single_family": {
+      "part_numbers": 371,
+      "eur": 14540132.54
+    }
+  },
+  "by_family": {
+    "heavy_truck": {
+      "part_numbers": 164,
+      "eur": 663707.12
+    },
+    "light_vehicle": {
+      "part_numbers": 104,
+      "eur": 8854190.51
+    },
+    "n_series_truck": {
+      "part_numbers": 103,
+      "eur": 5022234.91
+    }
+  },
+  "by_confidence": {
+    "low": 413,
+    "medium": 392,
+    "high": 33
+  },
+  "sources": {
+    "epc_bands": "epc_decode_batch1_banded_20260919.csv (250 PNs)",
+    "epc_ranges": "epc_decode_batch2_20260919.json (228 of 250 found)",
+    "crossref": "genuine_bvp_crossref.csv vehicle_model (787 PNs)"
+  },
+  "rules": [
+    "Every service part number in the dimension must reach exactly one of: a single family, shared_across_families, or no_vehicle_reference.",
+    "A part that fits more than one family is POOLED and never apportioned. The pooled row carries the part numbers and the families each one fits so it can be opened.",
+    "Where the EPC and the cross-reference name different single families the part is pooled and flagged conflict, rather than trusted to either source.",
+    "A wildcard code still names a family (FR* is F-series, N*R is the N-series). A decision that needed a wildcard is recorded at medium confidence.",
+    "TF* is the D-Max pickup wildcard, not an F-series token. A bare F* substring test reads it as heavy truck, which is how the earlier count of F-series-only part numbers came out at 95 part numbers and EUR 1.96M. Of the 161 part numbers whose model string contains F*, 122 also carry TF* or UC* in the same row, and the euro was dominated by the blower filters whose model string is 'TF*,UC*': six part numbers (8975554500, 8981394280, 8975488420, 5876150180, 5876150540, 5876150550) billing EUR 1,347,222.32 across all years (2023-01 to 2026-06), all markets and all billing lines, which this table places in the Light vehicle family. The three largest of those six read EUR 1,162,159.21 on the same basis. Measured on this table the heavy truck family holds 164 part numbers and EUR 174,832 of 2025 billing on a 1,238-vehicle fleet; 101 of the 164 carry a Forward F&G code. The EUR 1,344,279 that once circulated for that blower quantity has no basis in any file on disk."
+  ],
+  "tokens_naming_no_vehicle": {
+    "nan": 91,
+    "ELF 400": 1,
+    "450": 1,
+    "500": 1,
+    "600": 1,
+    "UES": 1
+  },
+  "not_attempted": [
+    "A 3.5 t versus 7.5 t split inside the N-series. 50 of 120 model codes in prism/data/model_code_to_tonnage.csv are unresolved and the unresolved ones include NN, NP and NHR \u2014 exactly the codes that separate N35 from N75.",
+    "Part numbers that fit only a bus, an industrial engine or a component. Those families are outside the four ISZE bands, so such a part number is left as no_vehicle_reference rather than forced into a truck family."
+  ]
+}

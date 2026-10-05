@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can we run the parts business off the Power BI category list?</title>
+<style>
+  :root{
+    --navy:#15233c; --terracotta:#c0552d; --paper:#f7f4ee;
+    --ink:#22252b; --muted:#5d6470; --line:#d9d2c6; --track:rgba(21,35,60,.09);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font:15px/1.62 "Segoe UI",-apple-system,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:0 26px 72px}
+
+  header{background:var(--navy);color:var(--paper);padding:40px 0 34px;margin-bottom:32px}
+  header .wrap{padding-bottom:0;padding-top:0}
+  .kicker{font:600 11.5px/1 "Segoe UI",Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#c9b9a4;margin:0 0 14px}
+  h1{font:400 34px/1.22 Georgia,"Times New Roman",serif;margin:0 0 14px;color:#fff;max-width:880px}
+  .meta{font-size:13px;color:#b9c2d1;margin:0}
+  .meta b{color:#e8e2d8;font-weight:600}
+
+  h2{font:400 25px/1.25 Georgia,"Times New Roman",serif;color:var(--navy);margin:44px 0 14px;padding-top:22px;border-top:2px solid var(--navy)}
+  h2:first-of-type{border-top:0;padding-top:0;margin-top:8px}
+  h3{font:600 14px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);margin:26px 0 8px;letter-spacing:.02em}
+  p{margin:0 0 14px;max-width:860px}
+  .lede{font-size:16.5px;color:var(--navy)}
+  ul{margin:0 0 16px;padding-left:20px;max-width:860px}
+  li{margin:0 0 7px}
+  code{font:13px/1.5 "Cascadia Mono",Consolas,monospace;background:rgba(21,35,60,.07);padding:1px 5px;border-radius:3px}
+  .call{border-left:4px solid var(--terracotta);background:#fff;padding:16px 20px;margin:22px 0;max-width:900px}
+  .call p:last-child{margin-bottom:0}
+  .call .tag{font:600 11.5px/1 "Segoe UI",Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase;color:var(--terracotta);display:block;margin-bottom:9px}
+
+  .scroll{overflow-x:auto;margin:18px 0 10px}
+  table{border-collapse:collapse;width:100%;background:#fff;font-size:13.4px;table-layout:fixed}
+  caption{caption-side:top;text-align:left;font:600 13.5px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);padding:0 0 9px}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:break-word}
+  thead th{background:var(--navy);color:var(--paper);font-weight:600;text-align:left;border-bottom:0}
+  thead th.n,td.n{text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:normal;word-break:keep-all;white-space:nowrap}
+  /* fix the columns so nothing can run off the page when printed */
+  .t-cat th:nth-child(1),.t-cat td:nth-child(1),.t-l1 th:nth-child(1),.t-l1 td:nth-child(1){width:17%}
+  .t-cat th:nth-child(2),.t-cat td:nth-child(2),.t-l1 th:nth-child(2),.t-l1 td:nth-child(2){width:12%}
+  .t-cat th:nth-child(3),.t-cat td:nth-child(3),.t-l1 th:nth-child(3),.t-l1 td:nth-child(3){width:12%}
+  .t-cat th:nth-child(4),.t-cat td:nth-child(4),.t-l1 th:nth-child(4),.t-l1 td:nth-child(4){width:10%}
+  .t-cat th:nth-child(5),.t-cat td:nth-child(5),.t-l1 th:nth-child(5),.t-l1 td:nth-child(5){width:12%}
+  .t-cat th:nth-child(6),.t-cat td:nth-child(6),.t-l1 th:nth-child(6),.t-l1 td:nth-child(6){width:15%;white-space:normal}
+  .t-cat th:nth-child(7),.t-cat td:nth-child(7),.t-l1 th:nth-child(7),.t-l1 td:nth-child(7){width:11%}
+  .t-fam th:nth-child(1),.t-fam td:nth-child(1){width:15%}
+  .t-fam th:nth-child(2),.t-fam td:nth-child(2){width:13%}
+  .t-fam th:nth-child(3),.t-fam td:nth-child(3){width:10%}
+  .t-fam th:nth-child(4),.t-fam td:nth-child(4){width:11%}
+  .t-fam th:nth-child(5),.t-fam td:nth-child(5){width:46%}
+  .t-fil th:nth-child(1),.t-fil td:nth-child(1){width:34%}
+  .t-fil th:nth-child(2),.t-fil td:nth-child(2){width:10%}
+  .t-fil th:nth-child(3),.t-fil td:nth-child(3){width:22%}
+  .t-fil th:nth-child(4),.t-fil td:nth-child(4){width:10%}
+  .t-fil th:nth-child(5),.t-fil td:nth-child(5){width:13%}
+  .t-sec th:nth-child(1),.t-sec td:nth-child(1){width:31%}
+  .t-sec th:nth-child(2),.t-sec td:nth-child(2){width:11%}
+  .t-sec th:nth-child(3),.t-sec td:nth-child(3){width:11%}
+  .t-sec th:nth-child(4),.t-sec td:nth-child(4){width:47%}
+  .t-mov th:nth-child(1),.t-mov td:nth-child(1){width:19%}
+  .t-mov th:nth-child(2),.t-mov td:nth-child(2){width:11%}
+  .t-mov th:nth-child(3),.t-mov td:nth-child(3){width:11%}
+  .t-mov th:nth-child(4),.t-mov td:nth-child(4){width:11%}
+  .t-mov th:nth-child(5),.t-mov td:nth-child(5){width:15%}
+  .t-mov th:nth-child(6),.t-mov td:nth-child(6){width:33%;white-space:normal}
+  tbody tr:nth-child(even){background:#fdfcfa}
+  tbody tr.key{background:#fbf1ea}
+  tbody tr.key td{font-weight:600}
+  tbody tr.total td{border-top:2px solid var(--navy);font-weight:700;background:#f2ede3}
+  tbody tr.total td .sm{font-weight:400}
+  .neg{color:var(--terracotta)}
+  .pos{color:var(--navy)}
+  .sm{font-size:12.1px;color:var(--muted)}
+  td .sm{display:block;font-weight:400}
+
+  .chart{background:#fff;border:1px solid var(--line);padding:20px 22px 16px;margin:20px 0 8px}
+  .chart .qtitle{font:600 14px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);margin:0 0 4px}
+  .chart .qsub{font-size:12.6px;color:var(--muted);margin:0 0 18px}
+  .legend{display:flex;gap:22px;align-items:center;margin:0 0 16px;font-size:12.4px;color:var(--muted);flex-wrap:wrap}
+  .sw{display:inline-block;width:22px;height:9px;border-radius:2px;margin-right:6px;vertical-align:1px}
+  .sw.u{background:var(--navy)} .sw.e{background:var(--terracotta)}
+
+  .crow{display:grid;grid-template-columns:216px 1fr 104px;gap:12px;align-items:center;padding:5px 0;border-bottom:1px solid #efeae0}
+  .crow:last-child{border-bottom:0}
+  .crow .lbl{font-size:12.8px;color:var(--navy);overflow-wrap:anywhere}
+  .crow .vals{font-size:12.4px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tracks{display:flex;flex-direction:column;gap:3px}
+  .t{background:var(--track);border-radius:2px;height:9px;position:relative}
+  .t i{position:absolute;left:0;top:0;bottom:0;border-radius:2px;display:block;min-width:3px}
+  .t i.u{background:var(--navy)} .t i.e{background:var(--terracotta)}
+  .axis{display:grid;grid-template-columns:216px 1fr 104px;gap:12px;margin-top:8px;padding-top:7px;border-top:1px solid var(--line)}
+  .axis .ticks{display:flex;justify-content:space-between;font-size:11.4px;color:var(--muted)}
+  .axis .ticks+i,.axis .ticks+span{font-size:11.4px;color:var(--muted);text-align:right}
+
+  .stack{margin:26px 0 6px}
+  .stack .sl{font:600 13px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);margin:0 0 7px}
+  .stack .sl span{font-weight:400;color:var(--muted);font-size:12.4px}
+  .sbar{display:flex;height:34px;border-radius:3px;overflow:hidden;background:var(--track)}
+  .sbar b{display:flex;align-items:center;justify-content:center;color:#fff;font:600 11.6px/1 "Segoe UI",Arial,sans-serif;overflow:hidden;white-space:nowrap}
+  .sbar b:nth-child(1){background:#15233c}
+  .sbar b:nth-child(2){background:#2c4166}
+  .sbar b:nth-child(3){background:#4a6189}
+  .sbar b:nth-child(4){background:#c0552d}
+  .sbar b:nth-child(5){background:#d4784f}
+  .sbar b:nth-child(6){background:#e0a184}
+  .key2{font-size:12.3px;color:var(--muted);margin:9px 0 0}
+
+  .foot{font-size:12.4px;color:var(--muted);margin-top:14px;max-width:900px}
+  .foot b{color:var(--navy);font-weight:600}
+  footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);font-size:12.4px;color:var(--muted)}
+
+  @media print{
+    body{background:#fff}
+    header{background:#15233c !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    h2{page-break-after:avoid}
+    table,.chart,.stack{page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="kicker">Internal working note &middot; not for distribution</p>
+    <h1>Can we run the parts business off the Power BI category list?</h1>
+    <p class="meta"><b>22 September 2026</b> &middot; Power BI <i>SALES DATA VP NEW</i> category export against our own parts family tree &middot; 19,417 part numbers &middot; 1,921,252 units in January&ndash;September 2024 against 1,899,712 in January&ndash;September 2025</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2>Bottom line</h2>
+
+<p class="lede">No &mdash; not as the axis of anything a manager reads. The list is a Japanese catalogue index. Where a family tree would name the product, this one hands you a catalogue code, and just over two thirds of the volume and 69% of the money ends up in a bar called OTHERS that names nothing at all.</p>
+
+<p>It is not a bad list. It is a list built to answer a different question, and it answers that one well enough. The problem is what happens when it is used as if it were a family tree: the filter business has to be assembled from nine separate bars spread across two of the eight headings, the same section name appears under several headings, and the largest families by money &mdash; sensors, lamps, steering gear, discs and drums &mdash; are all filed under OTHERS in their entirety.</p>
+
+<p>There is one genuine win for the Power BI list and it runs against us, which is covered in full below. It classifies the air cleaner correctly and our own PR00 catalogue tree does not. That is the most useful thing this comparison produced.</p>
+
+<div class="call">
+  <span class="tag">The one line that matters</span>
+  <p>Sold by units, the Power BI list is 68.6% OTHERS. That is not a rounding problem, it is the headline bar, and it cannot be acted on.</p>
+</div>
+
+<h2>What was compared</h2>
+
+<p>You exported the category table from <i>SALES HISTORY BY CAT.(qty)</i>. It carries 19,417 part numbers under three levels: the eight headings in <code>CATEGORY</code>, 237 section names in <code>ISZJ CLASSIFICATION</code>, and 4,883 figure keys in <code>FIG KEY CLASSIFICATION</code>. The part-level rows add up to exactly 100.00% of every section total, so the file is internally sound and nothing was lost in the export.</p>
+
+<p>I joined every one of those part numbers to our own file on the part number. 19,350 of 19,417 matched &mdash; 99.93% of the 2024 units and 99.82% of the 2025 units. The 67 that did not match carry 1,700 units, 0.18% of the total, and they are almost all bolts and studs; the largest is a single body-mounting bolt at 1,600 units.</p>
+
+<p>Two things about the export worth knowing before reading any number below. It counts units only, there is no euro in it. And the filter panel names the category, the month and the year but not the customers, so this is the whole book rather than one market. Both years cover January to September, so the year-on-year comparison is like for like but it is nine months, not twelve.</p>
+
+<h2>Where the volume sits</h2>
+
+<div class="scroll">
+<table class="t-cat">
+<caption>The eight headings in the Power BI category list, with our own billed euro sitting behind the same part numbers</caption>
+<thead>
+<tr>
+  <th>Heading in the report</th>
+  <th class="n">Units 2024</th>
+  <th class="n">Units 2025</th>
+  <th class="n">Change</th>
+  <th class="n">Share of units</th>
+  <th class="n">Our billed &euro; on those parts</th>
+  <th class="n">Share of our &euro;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="key"><td>OTHERS</td><td class="n">654,318</td><td class="n">651,500</td><td class="n">−0.4%</td><td class="n">68.6%</td><td class="n">&euro;34.77M</td><td class="n">69.3%</td></tr>
+<tr><td>COMPETITIVE PARTS</td><td class="n">204,952</td><td class="n">210,627</td><td class="n pos">+2.8%</td><td class="n">22.2%</td><td class="n">&euro;5.94M</td><td class="n">11.8%</td></tr>
+<tr><td>SEMI COMPETITIVE PARTS</td><td class="n">73,496</td><td class="n">60,295</td><td class="n neg">−18.0%</td><td class="n">6.3%</td><td class="n">&euro;0.54M</td><td class="n">1.1%</td></tr>
+<tr><td>PANEL PARTS</td><td class="n">10,636</td><td class="n">10,476</td><td class="n">−1.5%</td><td class="n">1.1%</td><td class="n">&euro;2.63M</td><td class="n">5.2%</td></tr>
+<tr><td>ENGINE PARTS</td><td class="n">5,953</td><td class="n">8,156</td><td class="n pos">+37.0%</td><td class="n">0.9%</td><td class="n">&euro;1.01M</td><td class="n">2.0%</td></tr>
+<tr class="key"><td>EMISSION RELATED PARTS</td><td class="n">9,272</td><td class="n">6,984</td><td class="n neg">−24.7%</td><td class="n">0.7%</td><td class="n">&euro;4.27M</td><td class="n">8.5%</td></tr>
+<tr><td>GLASS PARTS</td><td class="n">1,836</td><td class="n">1,677</td><td class="n neg">−8.7%</td><td class="n">0.2%</td><td class="n">&euro;0.49M</td><td class="n">1.0%</td></tr>
+<tr><td>LARGE PARTS</td><td class="n">163</td><td class="n">141</td><td class="n neg">−13.5%</td><td class="n">0.0%</td><td class="n">&euro;0.51M</td><td class="n">1.0%</td></tr>
+<tr class="total"><td>Total</td><td class="n">960,626</td><td class="n">949,856</td><td class="n neg">−1.1%</td><td class="n">100%</td><td class="n">&euro;50.17M</td><td class="n">100%</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="foot">Our euro is the parts we billed over the last twelve months &mdash; July 2025 to June 2026 &mdash; on exactly the part numbers in your export. It is there to show the weight behind each bar, not as a like-for-like total against your nine months. The window and the measure differ, so read the two money columns as context and the unit columns as the comparison.</p>
+
+<div class="chart">
+  <p class="qtitle">Is the biggest bar also where the money is?</p>
+  <p class="qsub">Each heading shown twice: its share of units, and its share of our billed euro. Same scale for both, so the two bars are directly comparable. If the list were a good map of the business, the pairs would line up.</p>
+  <div class="legend">
+    <span><span class="sw u"></span>Share of units 2025</span>
+    <span><span class="sw e"></span>Share of our billed euro</span>
+  </div>
+
+  <div class="crow"><div class="lbl">OTHERS</div>
+    <div class="tracks"><div class="t"><i class="u" style="width:98.0%"></i></div><div class="t"><i class="e" style="width:99.0%"></i></div></div>
+    <div class="vals">68.6% / 69.3%</div></div>
+
+  <div class="crow"><div class="lbl">COMPETITIVE PARTS</div>
+    <div class="tracks"><div class="t"><i class="u" style="width:31.7%"></i></div><div class="t"><i class="e" style="width:16.9%"></i></div></div>
+    <div class="vals">22.2% / 11.8%</div></div>
+
+  <div class="crow"><div class="lbl">SEMI COMPETITIVE PARTS</div>
+    <div class="tracks"><div class="t"><i class="u" style="width:9.0%"></i></div><div class="t"><i class="e" style="width:1.6%"></i></div></div>
+    <div class="vals">6.3% / 1.1%</div></div>
+
+  <div class="crow"><div class="lbl">PANEL PARTS</div>
+    <div class="tracks"><div class="t"><i class="u" style="width:1.6%"></i></div><div class="t"><i class="e" style="width:7.4%"></i></div></div>
+    <div class="vals">1.1% / 5.2%</div></div>
+
+  <div class="crow"><div class="lbl">ENGINE PARTS</div>
+    <div class="tracks"><div class="t"><i class="u" style="width:1.3%"></i></div><div class="t"><i class="e" style="width:2.9%"></i></div></div>
+    <div class="vals">0.9% / 2.0%</div></div>
+
+  <div class="crow"><div class="lbl">EMISSION RELATED PARTS</div>
+    <div class="tracks"><div class="t"><i class="u" style="width:1.0%"></i></div><div class="t"><i class="e" style="width:12.1%"></i></div></div>
+    <div class="vals">0.7% / 8.5%</div></div>
+
+  <div class="crow"><div class="lbl">GLASS PARTS</div>
+    <div class="tracks"><div class="t"><i class="u" style="width:0.6%"></i></div><div class="t"><i class="e" style="width:1.4%"></i></div></div>
+    <div class="vals">0.2% / 1.0%</div></div>
+
+  <div class="crow"><div class="lbl">LARGE PARTS</div>
+    <div class="tracks"><div class="t"><i class="u" style="width:0.6%"></i></div><div class="t"><i class="e" style="width:1.4%"></i></div></div>
+    <div class="vals">0.0% / 1.0%</div></div>
+
+  <div class="axis"><div></div><div class="ticks"><span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span><span>50%</span><span>60%</span><span>70%</span></div><div></div></div>
+</div>
+
+<p>Two readings come out of that chart. The first is that OTHERS is not a tail, it is the biggest bar in both units and money, which means the list hides the business rather than describing it. The second is that where the pairs do come apart they come apart violently: EMISSION RELATED PARTS is 0.7% of the pieces and 8.5% of the money, twelve times heavier in money than in volume, and COMPETITIVE PARTS is the reverse, 22.2% of the pieces and 11.8% of the money. So &ldquo;how much of our book is competitive?&rdquo; has no single answer off this list &mdash; it is 22% if you count pieces and 12% if you count euro.</p>
+
+<h2>The same parts through our own tree</h2>
+
+<p>The unit totals below are your export&rsquo;s quantities, regrouped onto our family tree. Nothing is added or removed, so every row is directly comparable with the table above.</p>
+
+<div class="scroll">
+<table class="t-l1">
+<caption>Our tree&rsquo;s first level, carrying your export&rsquo;s units</caption>
+<thead>
+<tr><th>Our level 1</th><th class="n">Units 2024</th><th class="n">Units 2025</th><th class="n">Change</th><th class="n">Share of units</th><th class="n">Our billed &euro;</th><th class="n">Share of our &euro;</th></tr>
+</thead>
+<tbody>
+<tr><td>Maintenance Service</td><td class="n">176,499</td><td class="n">187,671</td><td class="n pos">+6.3%</td><td class="n">19.8%</td><td class="n">&euro;4,874,214</td><td class="n">9.7%</td></tr>
+<tr><td>Accident &amp; Body</td><td class="n">114,100</td><td class="n">107,082</td><td class="n neg">−6.2%</td><td class="n">11.3%</td><td class="n">&euro;8,689,375</td><td class="n">17.3%</td></tr>
+<tr><td>Transmission</td><td class="n">82,234</td><td class="n">96,624</td><td class="n pos">+17.5%</td><td class="n">10.2%</td><td class="n">&euro;1,096,558</td><td class="n">2.2%</td></tr>
+<tr><td>Wheels Hub</td><td class="n">97,573</td><td class="n">80,343</td><td class="n neg">−17.7%</td><td class="n">8.5%</td><td class="n">&euro;1,746,273</td><td class="n">3.5%</td></tr>
+<tr><td>Chassis Frame</td><td class="n">87,713</td><td class="n">77,166</td><td class="n neg">−12.0%</td><td class="n">8.1%</td><td class="n">&euro;525,584</td><td class="n">1.0%</td></tr>
+<tr><td>Electrical</td><td class="n">41,189</td><td class="n">51,207</td><td class="n pos">+24.3%</td><td class="n">5.4%</td><td class="n">&euro;4,190,158</td><td class="n">8.4%</td></tr>
+<tr><td>Lubrication</td><td class="n">49,038</td><td class="n">47,830</td><td class="n">−2.5%</td><td class="n">5.0%</td><td class="n">&euro;89,545</td><td class="n">0.2%</td></tr>
+<tr class="key"><td>Brakes</td><td class="n">41,549</td><td class="n">41,117</td><td class="n">−1.0%</td><td class="n">4.3%</td><td class="n">&euro;4,931,642</td><td class="n">9.8%</td></tr>
+<tr><td>Suspension</td><td class="n">45,219</td><td class="n">39,190</td><td class="n neg">−13.3%</td><td class="n">4.1%</td><td class="n">&euro;1,204,522</td><td class="n">2.4%</td></tr>
+<tr><td>Fuel System</td><td class="n">37,042</td><td class="n">36,845</td><td class="n">−0.5%</td><td class="n">3.9%</td><td class="n">&euro;2,903,280</td><td class="n">5.8%</td></tr>
+<tr><td>Unknown</td><td class="n">38,268</td><td class="n">29,818</td><td class="n neg">−22.1%</td><td class="n">3.1%</td><td class="n">&euro;1,034,355</td><td class="n">2.1%</td></tr>
+<tr><td>Cabin Interior</td><td class="n">25,837</td><td class="n">27,867</td><td class="n pos">+7.9%</td><td class="n">2.9%</td><td class="n">&euro;1,260,720</td><td class="n">2.5%</td></tr>
+<tr><td>Engine</td><td class="n">23,888</td><td class="n">26,305</td><td class="n pos">+10.1%</td><td class="n">2.8%</td><td class="n">&euro;1,325,998</td><td class="n">2.6%</td></tr>
+<tr class="key"><td>Intake Exhaust Emission</td><td class="n">26,109</td><td class="n">25,207</td><td class="n neg">−3.5%</td><td class="n">2.7%</td><td class="n">&euro;7,972,954</td><td class="n">15.9%</td></tr>
+<tr><td>Cooling</td><td class="n">15,280</td><td class="n">22,154</td><td class="n pos">+45.0%</td><td class="n">2.3%</td><td class="n">&euro;907,277</td><td class="n">1.8%</td></tr>
+<tr><td>Steering</td><td class="n">15,408</td><td class="n">16,396</td><td class="n pos">+6.4%</td><td class="n">1.7%</td><td class="n">&euro;2,848,672</td><td class="n">5.7%</td></tr>
+<tr><td>Driveline Axle</td><td class="n">11,282</td><td class="n">10,970</td><td class="n">−2.8%</td><td class="n">1.2%</td><td class="n">&euro;1,330,148</td><td class="n">2.7%</td></tr>
+<tr><td>Fluids Chemicals</td><td class="n">14,026</td><td class="n">10,571</td><td class="n neg">−24.6%</td><td class="n">1.1%</td><td class="n">&euro;262,018</td><td class="n">0.5%</td></tr>
+<tr><td>Clutch</td><td class="n">9,306</td><td class="n">8,152</td><td class="n neg">−12.4%</td><td class="n">0.9%</td><td class="n">&euro;1,028,718</td><td class="n">2.1%</td></tr>
+<tr><td>Unknown Review</td><td class="n">4,366</td><td class="n">3,797</td><td class="n neg">−13.0%</td><td class="n">0.4%</td><td class="n">&euro;115,001</td><td class="n">0.2%</td></tr>
+<tr><td>Nothing set</td><td class="n">3,434</td><td class="n">1,199</td><td class="n neg">−65.1%</td><td class="n">0.1%</td><td class="n">&euro;1,437,090</td><td class="n">2.9%</td></tr>
+<tr><td>Tools Equipment</td><td class="n">584</td><td class="n">588</td><td class="n pos">+0.7%</td><td class="n">0.1%</td><td class="n">&euro;168,617</td><td class="n">0.3%</td></tr>
+<tr><td>Literature Marketing</td><td class="n">44</td><td class="n">36</td><td class="n neg">−18.2%</td><td class="n">0.0%</td><td class="n">&euro;223,921</td><td class="n">0.4%</td></tr>
+<tr><td>Logistics Packaging</td><td class="n">10</td><td class="n">21</td><td class="n pos">+110%</td><td class="n">0.0%</td><td class="n">&euro;48</td><td class="n">0.0%</td></tr>
+<tr class="total"><td>Total</td><td class="n">960,626</td><td class="n">949,856</td><td class="n">−1.1%</td><td class="n">100%</td><td class="n">&euro;50.17M</td><td class="n">100%</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The bottom half of that table is the point. Our three heaviest levels by money &mdash; Accident &amp; Body at &euro;8.69M, Intake Exhaust Emission at &euro;7.97M and Brakes at &euro;4.93M &mdash; are &euro;21.6M between them, 43% of the book. On the Power BI list those same parts are spread across OTHERS, PANEL PARTS, GLASS PARTS, LARGE PARTS and EMISSION RELATED PARTS, with the greater part of every one of them sitting in OTHERS. There is no reading of the list that surfaces them.</p>
+
+<h2>The money the list cannot rank</h2>
+
+<p>This table takes our twenty heaviest families by money and shows where the Power BI list files them. It is the clearest single answer to whether the list can carry a management conversation.</p>
+
+<div class="scroll">
+<table class="t-fam">
+<caption>Our twenty biggest families by billed euro, grouped by whether the Power BI list can rank them at all</caption>
+<thead><tr><th>Our family</th><th class="n">Our billed &euro;</th><th class="n">Share of our &euro;</th><th class="n">Units 2025</th><th>Where the list files it (units 2025)</th></tr></thead>
+<tbody>
+<tr class="key"><td>Sensors</td><td class="n">&euro;3,596,828</td><td class="n">7.2%</td><td class="n">14,257</td><td>OTHERS <span class="sm">all of it &mdash; the list cannot rank this family</span></td></tr>
+<tr class="key"><td>Lamps</td><td class="n">&euro;1,962,527</td><td class="n">3.9%</td><td class="n">11,087</td><td>OTHERS <span class="sm">all of it</span></td></tr>
+<tr><td>Steering Gear</td><td class="n">&euro;1,877,473</td><td class="n">3.7%</td><td class="n">536</td><td>OTHERS <span class="sm">all of it</span></td></tr>
+<tr class="key"><td>Discs &amp; Drums</td><td class="n">&euro;1,667,281</td><td class="n">3.3%</td><td class="n">9,856</td><td>OTHERS <span class="sm">all of it</span></td></tr>
+<tr class="key"><td>DEF System</td><td class="n">&euro;988,477</td><td class="n">2.0%</td><td class="n">1,337</td><td>OTHERS <span class="sm">all of it</span></td></tr>
+<tr class="key"><td>Instruments</td><td class="n">&euro;792,817</td><td class="n">1.6%</td><td class="n">4,395</td><td>OTHERS <span class="sm">all of it</span></td></tr>
+<tr class="total"><td>Invisible on the list, in full</td><td class="n">&euro;10,885,403</td><td class="n">21.7%</td><td class="n">41,468</td><td>six families, 21.7% of our book, no separate bar anywhere</td></tr>
+<tr><td>Panels</td><td class="n">&euro;4,271,900</td><td class="n">8.5%</td><td class="n">65,677</td><td>OTHERS 57,746 &middot; PANEL PARTS 7,022 &middot; GLASS PARTS 869</td></tr>
+<tr><td>Pads &amp; Shoes</td><td class="n">&euro;1,849,464</td><td class="n">3.7%</td><td class="n">19,889</td><td>COMPETITIVE PARTS 15,201 &middot; OTHERS 4,688</td></tr>
+<tr><td>Filters <span class="sm">not yet split by type</span></td><td class="n">&euro;1,569,219</td><td class="n">3.1%</td><td class="n">32,083</td><td>COMPETITIVE 24,593 &middot; OTHERS 7,098 &middot; EMISSION 392</td></tr>
+<tr><td>Wheel Rim</td><td class="n">&euro;1,384,172</td><td class="n">2.8%</td><td class="n">55,257</td><td>SEMI COMPETITIVE 42,917 &middot; OTHERS 10,722 &middot; COMPETITIVE 1,618</td></tr>
+<tr><td>Fuel Control</td><td class="n">&euro;1,239,493</td><td class="n">2.5%</td><td class="n">5,375</td><td>EMISSION RELATED 2,916 &middot; OTHERS 2,459</td></tr>
+<tr><td>EGR</td><td class="n">&euro;985,624</td><td class="n">2.0%</td><td class="n">6,920</td><td>OTHERS 5,346 &middot; EMISSION RELATED 1,574</td></tr>
+<tr><td>DPF / DPD</td><td class="n">&euro;944,500</td><td class="n">1.9%</td><td class="n">1,392</td><td>OTHERS 1,136 &middot; EMISSION RELATED 256</td></tr>
+<tr><td>Turbo</td><td class="n">&euro;880,030</td><td class="n">1.8%</td><td class="n">5,370</td><td>OTHERS 4,894 &middot; EMISSION RELATED 476</td></tr>
+<tr><td>Bumpers</td><td class="n">&euro;799,438</td><td class="n">1.6%</td><td class="n">3,130</td><td>PANEL PARTS 3,097 &middot; OTHERS 33</td></tr>
+<tr class="key"><td>Mapped, but the list splits the family</td><td class="n">&euro;13,923,840</td><td class="n">27.8%</td><td class="n">195,093</td><td>nine families, each spread over two or three of the eight headings</td></tr>
+<tr><td>Air Filter</td><td class="n">&euro;1,203,061</td><td class="n">2.4%</td><td class="n">33,066</td><td>COMPETITIVE PARTS 33,066 <span class="sm">correct, and the only clean large match</span></td></tr>
+<tr><td>Oil Filter</td><td class="n">&euro;944,002</td><td class="n">1.9%</td><td class="n">75,543</td><td>COMPETITIVE PARTS 75,543, but you must add eight other bars for the basket</td></tr>
+<tr><td>Fuel Filter</td><td class="n">&euro;819,592</td><td class="n">1.6%</td><td class="n">36,932</td><td>COMPETITIVE PARTS 36,932, same caveat</td></tr>
+<tr><td>Clutch Kit and Disc</td><td class="n">&euro;1,028,718</td><td class="n">2.1%</td><td class="n">8,152</td><td>SEMI COMPETITIVE, OTHERS and COMPETITIVE between them</td></tr>
+<tr><td>Cooling</td><td class="n">&euro;907,277</td><td class="n">1.8%</td><td class="n">22,154</td><td>OTHERS and COMPETITIVE between them</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Six of the twenty &mdash; sensors, lamps, steering gear, discs and drums, the DEF system and instruments &mdash; are <b>&euro;10.89M of our book with no separate bar anywhere on the list</b>. That is 21.7% of our billing. Nothing about that is a defect in the Japanese file; those parts genuinely have no home in a catalogue-and-price-band index. It does mean the list cannot be the thing a manager reads.</p>
+
+<p>Eight more are mapped but split across two or three headings, another 27.8% of the book. Only the air filter lands cleanly in one place, and the two other big wins an aftersales conversation usually reaches for &mdash; oil and fuel filters &mdash; need eight further bars added before the basket means anything.</p>
+
+<h2>The filter test</h2>
+
+<p>Filters are where the difference stops being academic, because it is the one basket where both systems have a clear view of the same money. To read the filter business off the Power BI list you must find and add nine separate bars, spread across two of the eight headings, using four different names for roughly four products.</p>
+
+<div class="chart">
+  <p class="qtitle">How many bars do you have to add to see the filter business?</p>
+  <p class="qsub">The same filter money, cut both ways, to the same scale. The two totals land within 1% of each other &mdash; 195,912 units on the list against 197,818 on our tree. Neither side is losing the business; they file it differently.</p>
+
+  <div class="stack">
+    <p class="sl">The Power BI list <span>&mdash; nine bars across two headings, 195,912 units</span></p>
+    <div class="sbar">
+      <b style="width:40.07%">Oil 78,497</b>
+      <b style="width:20.35%">Fuel 39,869</b>
+      <b style="width:16.88%">Air 33,066</b>
+      <b style="width:10.74%">Blower 21,035</b>
+      <b style="width:9.55%">Fuel 18,714</b>
+      <b style="width:2.42%"></b>
+    </div>
+    <p class="key2">Read from: OIL COOLER AND OIL FILTER (in COMPETITIVE PARTS <i>and</i> in OTHERS) &middot; FUEL FILTER AND BRACKET (both headings) &middot; AIR CLEANER (both headings) &middot; WATER SEDIMENTER; FUEL (both headings) &middot; BLOWER UNIT (OTHERS). The two large fuel bars are the same product under two names &mdash; 39,869 for the filter with its bracket and 18,714 for the water-sedimenter version.</p>
+  </div>
+
+  <div class="stack">
+    <p class="sl">Our family tree <span>&mdash; one family, five leaves, 197,818 units</span></p>
+    <div class="sbar">
+      <b style="width:38.19%">Oil Filter 75,543</b>
+      <b style="width:18.67%">Fuel Filter 36,932</b>
+      <b style="width:16.72%">Air Filter 33,066</b>
+      <b style="width:10.21%">HVAC 20,194</b>
+      <b style="width:16.22%">Unsplit 32,083</b>
+    </div>
+    <p class="key2">Read from: <b>Maintenance Service</b>. One heading, and three of the four product types are named. Be clear about the pale fifth segment though &mdash; 32,083 of our own filter pieces, 16% of the basket, sit in a leaf our tree still calls simply &ldquo;Filters&rdquo;. We have not finished splitting our own filter business either.</p>
+  </div>
+</div>
+
+<div class="scroll">
+<table class="t-fil">
+<caption>The same filter pieces, filed both ways &mdash; and what each side says it is worth</caption>
+<thead><tr><th>Through the Power BI list (nine bars)</th><th class="n">Units 2025</th><th>Through our tree (one family)</th><th class="n">Units 2025</th><th class="n">Our billed &euro;</th></tr></thead>
+<tbody>
+<tr><td>OIL COOLER AND OIL FILTER <span class="sm">under COMPETITIVE PARTS</span></td><td class="n">78,497</td><td>Oil Filter</td><td class="n">75,543</td><td class="n">&euro;944,002</td></tr>
+<tr><td>FUEL FILTER AND BRACKET <span class="sm">under COMPETITIVE PARTS</span></td><td class="n">39,869</td><td>Fuel Filter</td><td class="n">36,932</td><td class="n">&euro;819,592</td></tr>
+<tr><td>AIR CLEANER <span class="sm">under COMPETITIVE PARTS</span></td><td class="n">33,066</td><td>Air Filter</td><td class="n">33,066</td><td class="n">&euro;1,203,061</td></tr>
+<tr><td>BLOWER UNIT <span class="sm">under OTHERS</span></td><td class="n">21,035</td><td>HVAC Filters</td><td class="n">20,194</td><td class="n">&euro;727,877</td></tr>
+<tr><td>WATER SEDIMENTER; FUEL <span class="sm">under COMPETITIVE PARTS</span></td><td class="n">18,714</td><td>Filters <span class="sm">not yet split by type</span></td><td class="n">32,083</td><td class="n">&euro;1,569,219</td></tr>
+<tr><td>Six smaller bars across COMPETITIVE and OTHERS</td><td class="n">4,731</td><td>&mdash;</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+<tr class="total"><td>Total &mdash; nine bars to add up</td><td class="n">195,912</td><td>Total &mdash; one family</td><td class="n">197,818</td><td class="n">&euro;5,263,752</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The two totals are within 1% on units, so this is not a question of one system seeing more of the business. It is entirely a question of how many bars you have to add up, and whether the answer arrives as one family or as nine pieces. On money the two are further apart: the nine bars together carry &euro;4.37M of our billing and the one family carries &euro;5.26M, a gap of about &euro;900k. That gap is the 32,083 unsplit pieces plus the tail, and it is the part of the basket we should finish mapping before either figure is quoted as the size of the filter business.</p>
+
+<h2>Where the Power BI list splits one name</h2>
+
+<p>This is the sharpest structural finding, and it is easy to miss on the report because both rows look identical. 51 of the 237 section names appear under more than one of the eight headings, and those rows carry 608,239 of 949,856 units &mdash; 64% of the whole book. The same words therefore mean different things depending on which row you are reading.</p>
+
+<div class="scroll">
+<table class="t-sec">
+<caption>Section names used under more than one heading</caption>
+<thead><tr><th>Section name in the report</th><th class="n">Units 2025</th><th class="n">Headings</th><th>Which headings</th></tr></thead>
+<tbody>
+<tr class="key"><td>OIL COOLER AND OIL FILTER</td><td class="n">81,026</td><td class="n">2 headings</td><td>COMPETITIVE PARTS &middot; OTHERS</td></tr>
+<tr><td>REAR AXLE CASE AND SHAFT</td><td class="n">51,176</td><td class="n">3 headings</td><td>COMPETITIVE PARTS &middot; OTHERS &middot; SEMI COMPETITIVE PARTS</td></tr>
+<tr><td>FUEL FILTER AND BRACKET</td><td class="n">41,449</td><td class="n">2 headings</td><td>COMPETITIVE PARTS &middot; OTHERS</td></tr>
+<tr><td>FRONT HUB AND DRUM OR ROTOR</td><td class="n">38,871</td><td class="n">3 headings</td><td>COMPETITIVE PARTS &middot; OTHERS &middot; SEMI COMPETITIVE PARTS</td></tr>
+<tr><td>AIR CLEANER</td><td class="n">33,352</td><td class="n">2 headings</td><td>COMPETITIVE PARTS &middot; OTHERS</td></tr>
+<tr><td>ROAD WHEEL</td><td class="n">33,233</td><td class="n">2 headings</td><td>OTHERS &middot; SEMI COMPETITIVE PARTS</td></tr>
+<tr><td>FRONT BUMPER</td><td class="n">33,087</td><td class="n">2 headings</td><td>OTHERS &middot; PANEL PARTS</td></tr>
+<tr><td>FUEL INJECTION SYSTEM</td><td class="n">23,317</td><td class="n">2 headings</td><td>EMISSION RELATED PARTS &middot; OTHERS</td></tr>
+<tr><td>WATER SEDIMENTER; FUEL</td><td class="n">19,050</td><td class="n">2 headings</td><td>COMPETITIVE PARTS &middot; OTHERS</td></tr>
+<tr><td>EXHAUST PIPE AND SILENCER</td><td class="n">18,524</td><td class="n">2 headings</td><td>EMISSION RELATED PARTS &middot; OTHERS</td></tr>
+<tr><td>LAMP; REAR AND REAR SIDE</td><td class="n">17,953</td><td class="n">2 headings</td><td>OTHERS &middot; SEMI COMPETITIVE PARTS</td></tr>
+<tr><td>FRONT AXLE</td><td class="n">17,611</td><td class="n">2 headings</td><td>OTHERS &middot; SEMI COMPETITIVE PARTS</td></tr>
+<tr><td>FRONT DISC BRAKE CALIPER</td><td class="n">17,480</td><td class="n">2 headings</td><td>COMPETITIVE PARTS &middot; OTHERS</td></tr>
+<tr><td>TURBOCHARGER SYSTEM</td><td class="n">13,873</td><td class="n">2 headings</td><td>EMISSION RELATED PARTS &middot; OTHERS</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The practical consequence is that you cannot filter the report on a section name and trust the answer. Filter on AIR CLEANER and you get 33,352 units; 33,066 of them are under COMPETITIVE PARTS and 286 under OTHERS. Filter on FRONT HUB AND DRUM OR ROTOR and you get three blocks that differ only by heading. On our tree each of those names resolves to one family, which is why the same question gives one answer instead of three.</p>
+
+<h2>What moved in the nine months</h2>
+
+<p>Ranked by how much the piece count moved, on our families, with our billed euro beside each one so the size of the family is visible. These are not equal-sized businesses, and one oil filter is not one wheel rim, so the changes below are read within each family rather than against each other.</p>
+
+<div class="scroll">
+<table class="t-mov">
+<caption>Our families with the largest unit movement, January&ndash;September 2024 against the same nine months of 2025</caption>
+<thead><tr><th>Our family</th><th class="n">Units 2024</th><th class="n">Units 2025</th><th class="n">Change</th><th class="n">Our billed &euro;</th><th>What the list calls it</th></tr></thead>
+<tbody>
+<tr class="key"><td>Sensors</td><td class="n">7,008</td><td class="n">14,257</td><td class="n pos">+103.4%</td><td class="n">&euro;3,596,828</td><td>OTHERS</td></tr>
+<tr><td>Cooling Hoses &amp; Pipes</td><td class="n">9,699</td><td class="n">14,583</td><td class="n pos">+50.4%</td><td class="n">&euro;66,289</td><td>OTHERS and COMPETITIVE PARTS</td></tr>
+<tr class="key"><td>Air Filter</td><td class="n">26,117</td><td class="n">33,066</td><td class="n pos">+26.6%</td><td class="n">&euro;1,203,061</td><td>AIR CLEANER</td></tr>
+<tr><td>Bearings &amp; Seals</td><td class="n">75,321</td><td class="n">90,330</td><td class="n pos">+19.9%</td><td class="n">&euro;408,934</td><td>OTHERS mostly</td></tr>
+<tr class="key"><td>Discs &amp; Drums</td><td class="n">8,272</td><td class="n">9,856</td><td class="n pos">+19.1%</td><td class="n">&euro;1,667,281</td><td>OTHERS</td></tr>
+<tr><td>Wheel Rim</td><td class="n">68,358</td><td class="n">55,257</td><td class="n neg">−19.2%</td><td class="n">&euro;1,384,172</td><td>SEMI COMPETITIVE PARTS mostly</td></tr>
+<tr><td>Hub Seals</td><td class="n">15,168</td><td class="n">11,974</td><td class="n neg">−21.1%</td><td class="n">&euro;54,138</td><td>OTHERS</td></tr>
+<tr><td>Lubricants</td><td class="n">12,001</td><td class="n">8,810</td><td class="n neg">−26.6%</td><td class="n">&euro;59,489</td><td>OTHERS</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The biggest mover is a family the Power BI list files entirely under OTHERS. Sensors doubled, from 7,008 to 14,257 pieces, on a family worth &euro;3.60M &mdash; the second heaviest in the table behind panels. If that movement had needed explaining in a meeting this month, the list you are using would not have shown it at any level. That is the strongest practical argument in this whole comparison.</p>
+
+<h2>What the Power BI list gets right &mdash; and where it caught us</h2>
+
+<p>The fair conclusion includes this, and it runs against our own files.</p>
+
+<p>The list&rsquo;s AIR CLEANER section holds 120 part numbers and 33,352 units in 2025. Put those parts through our tree and 33,066 of them land cleanly in <b>Maintenance Service &gt; Air Filter</b>, worth &euro;1.20M. That is correct.</p>
+
+<p>Put the same parts through our PR00 catalogue tree &mdash; the one our classification paper is built on &mdash; and it files 27,135 of them under <b>Comfort parts &gt; Air conditioning</b>, sending only 1,050 into the air filter family. That is wrong, and it is wrong by about &euro;1.05M.</p>
+
+<div class="call">
+  <span class="tag">Our own files disagree with each other</span>
+  <p>Our file still carries two classifications side by side. Measured on your export, they disagree on 19,325 of 19,350 part numbers &mdash; 97% of our billed euro. On this evidence the workbook tree is the correct one and the PR00 catalogue tree is the one that misfiles air cleaners. Until that is settled in the file itself, any pack built on the catalogue tree will keep getting the air filter business wrong, and the management note we wrote citing a &euro;28k air filter figure is quoting a reading that no longer holds &mdash; the current figure is &euro;1.20M on this population, plus &euro;728k of blower filters that the list files under OTHERS.</p>
+</div>
+
+<h2>Conclusions</h2>
+
+<h3>1. Do not use the Power BI category list as the axis of a management pack</h3>
+<p>Two thirds of the volume and 69% of the money land in OTHERS. It cannot rank our families by money and it cannot answer &ldquo;how is the filter business doing&rdquo; without nine bars. That is not a criticism of the list, it is a statement about what a catalogue index can do.</p>
+
+<h3>2. Keep it, and put it beside the tree the way we keep the price class</h3>
+<p>It is Japan&rsquo;s index and it is free. It is the right unit for the catalogue conversation, for price-band work and as a completeness check, and it demonstrably caught a real error in our own air filter mapping. That is worth having. It simply is not the map.</p>
+
+<h3>3. Our tree has two problems of its own, and both are now measurable</h3>
+<p>First, it carries two classifications that disagree on 97% of the euro &mdash; that has to be settled in the file, not worked around in reports. Second, 32,083 filter pieces (16% of the filter basket) are still in an unsplit &ldquo;Filters&rdquo; leaf, and another &euro;1.44M sits under &ldquo;nothing set&rdquo;. Both are fixable and both currently cap how precise any filter or family figure can be.</p>
+
+<h3>4. Report on the workbook tree, and stop stopping at the first level</h3>
+<p>The workbook tree is the one that reads correctly here. And within it, the second level is where the meaning is: the first level puts &euro;7.97M of emission parts and &euro;4.93M of brakes at similar heights as much smaller families. Read at level 2, with level 3 behind it for investigation.</p>
+
+<h3>5. The next thing worth doing is the clean re-cut, not another comparison</h3>
+<p>What would settle this properly is one table with your three levels and our three levels on the same row, over a full twelve months, with euro on both sides. The rows are built and sitting on disk from this pass, so it is a re-cut rather than a project. Everything above is measured; nothing has been changed.</p>
+
+<h2>What this comparison does not settle</h2>
+
+<ul>
+  <li><b>No euro in your export.</b> Every unit figure is exact and every euro figure is ours, over a different window. The two must not be read as one total.</li>
+  <li><b>Which customers were selected is not visible.</b> The filter panel names category, month and year only, and the total is the whole book. If you meant to send one or two markets, the numbers will move and I will redo it.</li>
+  <li><b>Nine months, twice.</b> Both years cover January to September, so the comparison is like for like, but it is not a full year and the 2025 side is a part-year.</li>
+  <li><b>The measure itself.</b> The export comes from the report&rsquo;s sales table, which sits above a separate demand table on the same page. I read the sales one. Whether those units are invoices or orders is not something the file alone can tell me, and it changes what the movement means.</li>
+  <li><b>Pieces are not comparable across families.</b> Adding units only makes sense inside one basket, which is why the nine-bar comparison above is drawn on filters alone. A single total of 949,856 pieces across every family is not a quantity of anything.</li>
+  <li><b>No fleet counts in this cut.</b> Trucks in service are not in your export, so nothing here is expressed as a rate per vehicle. That makes these volume movements, not performance per truck.</li>
+  <li><b>67 part numbers are in your export and not in our file</b> &mdash; 1,700 units, 0.18%, mostly bolts and studs, the largest a single body-mounting bolt at 1,600 units.</li>
+</ul>
+
+<h2>Sources</h2>
+
+<p class="foot">
+<b>Your export:</b> <code>C:\Users\jerom\Downloads\SALES OVERVEW.xlsx</code> &mdash; sheet <i>Export</i>, 19,417 part numbers, three levels, units for 2024 and 2025.<br>
+<b>Our side:</b> our parts master file with the family tree and the billed euro, and the same file&rsquo;s PR00 catalogue columns for the comparison in the air filter section.<br>
+<b>Row-level output from this pass:</b> one line per part number with your three levels, our three levels, both years and our euro &mdash; <code>ISZE\01_data\90_INBOX\_pbi_vs_our_trees_20260922_parts.csv</code>.<br>
+<b>Nothing was rebuilt, changed or overwritten.</b> This is a read-only measurement and the source files are untouched.
+</p>
+
+<footer>
+  Internal working note prepared 22 September 2026. Contains internal file names, our parts tree and our billed euro &mdash; not for distribution outside ISZE.
+</footer>
+
+</div>
+</body>
+</html>

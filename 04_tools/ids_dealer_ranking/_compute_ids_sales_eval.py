@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compute IDS × sales KPI evaluation payload for Mode A report."""
+"""Compute IDS × sales KPI evaluation payload for shared report."""
 from __future__ import annotations
 
 import json

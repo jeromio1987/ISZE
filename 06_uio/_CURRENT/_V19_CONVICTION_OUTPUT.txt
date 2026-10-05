@@ -1,0 +1,117 @@
+﻿report written: 06_uio\_CURRENT\_uio_v20_verification_report_V19_CONVICTION.json
+==============================================================================
+UIO V20 INDEPENDENT VERIFICATION
+candidate: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\ISUZU_UIO_Overview_2026.xlsx
+generated: 2026-09-22T18:07:11.320838+00:00
+==============================================================================
+[PASS] check9_self_cert_guard             Harness does not self-certify from builder notes
+       Inputs limited to workbook values, the curve table and the VIN register.
+         - workbook (values only): C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\ISUZU_UIO_Overview_2026.xlsx
+         - VIN register: C:\Users\jerom\Desktop\claude\ISZE\01_data\07_UIO\vin\VIN_register.csv
+         - survival curve read from: 3. UIO Calculation!B5:E25 (CV developed); 3. UIO Calculation!B5:E25 (LCV)
+         - method notes / assumptions narrative sheets: NOT read as evidence
+         - C:\...\_CURRENT\V20_SPEC.md, changelog, README, builder logs: NOT read
+         - no builder script was executed; no formula in the workbook was recalculated by the builder's engine
+[FAIL] check1_method_consistency          Every row uses ONE method across 1990-2030
+       14 of 36 row(s) switch method mid-series (survival curve -> slow flat rate).
+         - 14 row(s) switch to a slow flat roll-forward at the 2025/2026 boundary (curve-like history -> 3% rule)
+         - r25 U KING LCV LCV (IUK): forecast flat 3.0% roll-forward (diff ratio 0.970) while history is diff ratio 0.653
+         - r26 IRELAND CV LD (Isuzu Ireland): forecast flat 3.0% roll-forward (diff ratio 0.971) while history is curve-like
+         - r29 IRELAND LCV LCV (Isuzu Ireland): forecast flat 3.0% roll-forward (diff ratio 0.970) while history is diff ratio 2.617
+         - r33 BELGIUM CV LD (IBX): forecast flat 3.0% roll-forward (diff ratio 0.967) while history is curve-like
+         - r35 BELGIUM LCV LCV (IBX): forecast flat 3.0% roll-forward (diff ratio 0.970) while history is diff ratio 3.729
+         - r44 GERMANY LCV LCV (ISD-Lang): forecast flat 3.0% roll-forward (diff ratio 0.970) while history is diff ratio 13.990
+         - r51 PORTUGL CV LD (Imotors): forecast flat 3.0% roll-forward (diff ratio 0.970) while history is diff ratio 1.157
+         - r58 ITALY CV LD (MIDI Europe): forecast flat 3.0% roll-forward (diff ratio 0.970) while history is diff ratio 0.442
+         - r60 ITALY LCV LCV (MIDI Europe): forecast flat 3.0% roll-forward (diff ratio 0.979) while history is diff ratio 0.670
+         - r61 MALTA CV LD (GasanZammit): forecast flat 3.0% roll-forward (diff ratio 0.979) while history is diff ratio 1.750
+         - r69 POLAND LCV LCV (IBX): forecast straight-line (no attrition) (diff ratio 1.000) while history is diff ratio 0.793
+         ... 5 more evidence lines
+[FAIL] check2_ireland_rebuild             Ireland 2025 rebuilds to 731 from own regs + curve
+       Ireland 2025 reproduces the row, but the 2026-2030 segment is STILL the flat 3%% rule (UIO x 0.97 + 216).
+         - curve used: 3. UIO Calculation ┬ºA CV developed (expected life 9.85 yr)
+         - curve source: 3. UIO Calculation!B5:E25 (CV developed); 3. UIO Calculation!B5:E25 (LCV)
+         - registration inputs: IML 6.CV Vol N-column pre-2013, SIMI 2013-2025 (as stated by the workbook's own method text; NOT taken as evidence of anything except what the row claims to use)
+         - best-fit registration boundary for the convolution = 2016
+         - independent rebuild Ireland CV LD 2025 = 734.0
+         - spec anchor = 731 ; workbook row 26 2025 = 731 ; gap = 0.4%
+         - NOTE: the row is a scaled series, so no single breakpoint reproduces 731 exactly. The gap is 3.0 units (0.40%), inside the 0.5% tolerance. The spec's claim that the engine 'reproduces 731 exact' is therefore reported as a near-match, not an exact match.
+         -   independent survival rebuild Ireland trucks 2026 = 895.7 raw / 892.1 scaled-to-2025 (workbook 925)
+         -   independent survival rebuild Ireland trucks 2027 = 1052.4 raw / 1048.2 scaled-to-2025 (workbook 1113)
+         -   independent survival rebuild Ireland trucks 2028 = 1201.0 raw / 1196.2 scaled-to-2025 (workbook 1296)
+         -   independent survival rebuild Ireland trucks 2029 = 1341.1 raw / 1335.7 scaled-to-2025 (workbook 1473)
+         -   independent survival rebuild Ireland trucks 2030 = 1473.9 raw / 1468.0 scaled-to-2025 (workbook 1645)
+         ... 3 more evidence lines
+[FAIL] check2b_ireland_2030               Ireland 2030 ~1,382 trucks / ~2,527 pickups
+       Workbook 2030 is 19.0% above the proper-method trucks target and 25.6% above pickups.
+         - independent truck rebuild 2030 = 1175 (spec 1382, delta -15.0%)
+         - independent pickup rebuild 2030 = 2774 (spec 2527, delta 9.8%)
+         - workbook row 26 2030 = 1645 ; row 29 2030 = 3174
+         - harness rebuild does NOT reproduce the spec anchor: the spec's 1,382 implies a ~651-unit 2026 step (+89%%) on a 731 base, which no smooth plan gets to.
+         - Pickups: workbook 3,174 vs spec 2,527. Harness rebuild on the row's own inputs gives 2774.
+         - workbook vs spec target: trucks +19.0% ; pickups +25.6%
+[FAIL] check3_steady_state                Steady state ~2100 at 216 regs/yr, not 7200
+       Ireland row 26 is on the flat 3% rule and would settle at 7200, not ~2100 (implied life 33 years).
+         - curve 3. UIO Calculation ┬ºA CV developed -> expected life 9.85 yr
+         - proper steady state = 216 x 9.85 = 2128  (spec says ~2100)
+         - flat 3% rule steady state = 216 / 0.03 = 7200
+         - spec life constant for the rounded ~2,100: 2100/216 = 9.72 yr
+         - workbook Ireland row 26: forecast successive-difference ratio = 0.9708 (the 3% rule forces 0.9700) over 3 pairs -> ON the 3% rule
+[WARN] check4_vin_scrappage               Real scrappage from VIN shipments ~13.3%% / 7.4%%
+       Measured Ireland 15.1%, Portugal 9.1% ÔÇö far from the 3% rule (the claim that matters) but not within 1.5 pp of the spec figure; the on-disk register differs from the one the spec used.
+         - Ireland: fleet 820->749, shipped 2020-24 on disk = 523 (spec quotes 451), removed 119/yr -> measured 15.1%/yr (spec 13.3%)
+         -   NOTE: the VIN register on disk does NOT reproduce the spec's shipment total for Ireland (523 vs 451). The register was rebuilt 2026-09-18, after the spec was written. The measured rate is therefore recomputed from the register as it is, and the delta against the spec figure is stated rather than forced.
+         - Portugal: fleet 1502->2239, shipped 2020-24 on disk = 1583 (spec quotes 1427), removed 169/yr -> measured 9.0%/yr (spec 7.4%)
+         -   NOTE: the VIN register on disk does NOT reproduce the spec's shipment total for Portugal (1583 vs 1427). The register was rebuilt 2026-09-18, after the spec was written. The measured rate is therefore recomputed from the register as it is, and the delta against the spec figure is stated rather than forced.
+         - curve the workbook uses for CV = 3. UIO Calculation ┬ºA CV developed, expected life 9.85 yr (implied scrap 10.2%/yr)
+         - flat rule in the forecast columns = 3.0%%/yr
+         - VIN register is shipments from Japan, NOT registrations ÔÇö used only as a scrappage cross-check, per the register's own README.
+[FAIL] check5_flat_rule_present           Candidate forecast no longer applies the 3% flat rule
+       15 row(s) still show the 3% constant-ratio signature in 2026-2030.
+         - 15 row(s) have 2026-2030 first differences in a constant ratio within 1 pp of 0.97 ÔÇö the signature of 3%/yr scrap (33-year implied life)
+         - r25 U KING LCV LCV (IUK): retained 0.9698 -> scrap 3.02%/yr -> implied life 33.1 yr
+         - r26 IRELAND CV LD (Isuzu Ireland): retained 0.9708 -> scrap 2.92%/yr -> implied life 34.2 yr
+         - r27 IRELAND CV MD (Isuzu Ireland): retained 0.9706 -> scrap 2.94%/yr -> implied life 34.0 yr
+         - r29 IRELAND LCV LCV (Isuzu Ireland): retained 0.9700 -> scrap 3.00%/yr -> implied life 33.3 yr
+         - r33 BELGIUM CV LD (IBX): retained 0.9666 -> scrap 3.34%/yr -> implied life 30.0 yr
+         - r35 BELGIUM LCV LCV (IBX): retained 0.9701 -> scrap 2.99%/yr -> implied life 33.4 yr
+         - r44 GERMANY LCV LCV (ISD-Lang): retained 0.9703 -> scrap 2.97%/yr -> implied life 33.7 yr
+         - r51 PORTUGL CV LD (Imotors): retained 0.9700 -> scrap 3.00%/yr -> implied life 33.3 yr
+         - r52 PORTUGL CV MD (Imotors): retained 0.9706 -> scrap 2.94%/yr -> implied life 34.0 yr
+         - r58 ITALY CV LD (MIDI Europe): retained 0.9700 -> scrap 3.00%/yr -> implied life 33.4 yr
+         - r60 ITALY LCV LCV (MIDI Europe): retained 0.9787 -> scrap 2.13%/yr -> implied life 47.0 yr
+         ... 11 more evidence lines
+[PASS] check6_totals_identity             Every year: Grand Total == sum of rows
+       Grand Total reconciles to the sum of rows in every year.
+         - MIDI toggle B4 = 'Include' -> INCLUDED MIDI rows
+         - compared Grand Total row 2 against the sum of rows 7:90 for each year
+         - 41 year(s) reconcile exactly
+[FAIL] check7_overstatement_curve         Overstatement curve 7.8%% in 2026 rising to 37.7%% in 2030
+       Candidate is the V19 file itself: the flat 3% forecast is still in the output. Independent recomputation of the spec's own P1 arithmetic on the candidate gives 2026 9.0%, 2027 18.2%, 2028 27.4%, 2029 36.6%, 2030 45.7% against the spec's 7.8% -> 37.7% ÔÇö the same shape and order of magnitude, rising monotonically, with a stated residual (the spec's per-year plan profile, which is not recoverable from the value-only forecast cells).
+         - NOTE: candidate IS the V19 baseline file, so every measured delta is 0.0%% by construction. That comparison is vacuous and is not used to decide this check.
+         - 2026: candidate 269314 vs V19 269314 -> V19 is +0.0% above the candidate (spec says V19 is +7.8%)
+         - 2027: candidate 279502 vs V19 279502 -> V19 is +0.0% above the candidate (spec says V19 is +15.6%)
+         - 2028: candidate 289529 vs V19 289529 -> V19 is +0.0% above the candidate (spec says V19 is +23.2%)
+         - 2029: candidate 299448 vs V19 299448 -> V19 is +0.0% above the candidate (spec says V19 is +30.6%)
+         - 2030: candidate 309125 vs V19 309125 -> V19 is +0.0% above the candidate (spec says V19 is +37.7%)
+         - independent recomputation, spec P1 arithmetic applied row by row (10.2%% CV / 12.3%% LCV curve vs the 3%% flat rule, each row's own implied plan): 2026 9.0%, 2027 18.2%, 2028 27.4%, 2029 36.6%, 2030 45.7%
+         - independent recompute vs spec: 2026 +1.2 pp, 2027 +2.6 pp, 2028 +4.2 pp, 2029 +6.0 pp, 2030 +8.0 pp (max |delta| 8.0 pp)
+         - year-2030 note: the workbook's 2030 column is partial (June-2026 build; monthly plan runs to Jul-2027 and Aug-2030 onward is empty), so any 2030 figure is a floor, not a final.
+[FAIL] check8_locked_values               Locked values honoured: UK LCV 44,926 / Israel not zeroed / plan-only MD out
+       6 guard violation(s).
+         - row 25 U KING/LCV/LCV CY2026F = 49280 (locked 44926)
+         - row 7 ISRAEL/LD 2019 = 5308
+         - row 7 ISRAEL/LD 2025 = 6059
+         - row 7 ISRAEL/LD 2026 = 6101
+         - row 7 ISRAEL/LD 2030 = 6124
+         - row 8 ISRAEL/MD 2019 = 2080
+         - row 8 ISRAEL/MD 2025 = 4277
+         - row 8 ISRAEL/MD 2026 = 4659
+         - row 8 ISRAEL/MD 2030 = 5758
+         - row 9 ISRAEL/LCV 2019 = 19514
+         - row 9 ISRAEL/LCV 2025 = 18542
+         - row 9 ISRAEL/LCV 2026 = 18886
+         ... 12 more evidence lines
+------------------------------------------------------------------------------
+VERDICT: CONVICTED   (failed: check1_method_consistency, check2_ireland_rebuild, check2b_ireland_2030, check3_steady_state, check5_flat_rule_present, check7_overstatement_curve, check8_locked_values)
+==============================================================================

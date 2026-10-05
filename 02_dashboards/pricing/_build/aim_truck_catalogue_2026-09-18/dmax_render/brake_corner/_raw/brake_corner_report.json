@@ -1,0 +1,369 @@
+{
+ "what": "exploded front brake corner, 2021 Isuzu D-Max",
+ "resolution": [
+  2800,
+  2000
+ ],
+ "samples": 512,
+ "render_seconds": {
+  "shadow": 238.6,
+  "alpha": 260.7
+ },
+ "device": "GPU",
+ "images": {
+  "shadow": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_truck_catalogue_2026-09-18\\dmax_render\\brake_corner\\_raw\\brake_corner_bc.png",
+  "alpha": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_truck_catalogue_2026-09-18\\dmax_render\\brake_corner\\_raw\\brake_corner_bc_alpha.png"
+ },
+ "fill_note": "MARGIN frames the parts with a fixed 6% edge allowance; the ID analysis reports what share of the frame the subject actually covers, so a wastefully loose fit would show up there",
+ "camera": {
+  "type": "ORTHO",
+  "location": [
+   3.00277,
+   -6.24551,
+   1.74329
+  ],
+  "aim": [
+   1.30149,
+   -1.74213,
+   0.39228
+  ],
+  "direction_to_camera": [
+   0.340255,
+   -0.900676,
+   0.270203
+  ],
+  "off_axle_deg": 70.11,
+  "above_horizon_deg": 15.68,
+  "axial_separation_visible_pct": 94.03,
+  "ortho_scale": 1.62023,
+  "matrix": [
+   [
+    0.9354720712,
+    -0.0954898521,
+    0.3402554393,
+    3.002767086
+   ],
+   [
+    0.353400737,
+    0.2527669072,
+    -0.9006759524,
+    -6.2455058098
+   ],
+   [
+    1.42e-08,
+    0.9628037214,
+    0.2702025473,
+    1.7432928085
+   ],
+   [
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ]
+  ],
+  "why": "60 deg off the wheel axis and 19 deg above the wheel centre: straight down the axle would collapse the explosion, straight from the front would hide the disc face. One choice, no sweep."
+ },
+ "wheel_centre_m": [
+  0.7862,
+  -1.7397,
+  0.3935
+ ],
+ "aim_is": "the centre of the exploded assembly, computed from the parts' own measured extent, not the wheel centre - the parts span about 1.05 m along the axis once apart and aiming at the disc would push more than half the subject off one side of the frame",
+ "explosion": {
+  "disc": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "pads": [
+   0.095,
+   0.0,
+   0.0
+  ],
+  "caliper": [
+   0.24,
+   0.0,
+   0.0
+  ],
+  "wheel": [
+   0.6,
+   0.0,
+   0.0
+  ],
+  "tyre": [
+   1.0,
+   0.0,
+   0.0
+  ]
+ },
+ "parts": {
+  "tyre": {
+   "objects": [
+    "Material2.025_corner"
+   ],
+   "materials": [
+    "2021_Isuzu_Dmax_Tires"
+   ],
+   "n_verts": 5108,
+   "explode_dx_mm": 1000.0,
+   "bbox_min": [
+    1.63067,
+    -2.1344,
+    0.0
+   ],
+   "bbox_max": [
+    1.91034,
+    -1.34985,
+    0.78456
+   ],
+   "x_mm": [
+    1630.7,
+    1910.3
+   ],
+   "radius_mm": [
+    244.3,
+    395.2
+   ],
+   "centroid": [
+    1.78836,
+    -1.74173,
+    0.39261
+   ],
+   "centroid_px": [
+    2187.3,
+    1079.6
+   ]
+  },
+  "wheel": {
+   "objects": [
+    "Material2.012_corner",
+    "Material2.013_corner",
+    "Material2.021_corner"
+   ],
+   "materials": [
+    "2021_Isuzu_Dmax_Rims1",
+    "2021_Isuzu_Dmax_Rims2"
+   ],
+   "n_verts": 23710,
+   "explode_dx_mm": 600.0,
+   "bbox_min": [
+    1.23669,
+    -1.98879,
+    0.14543
+   ],
+   "bbox_max": [
+    1.50728,
+    -1.49533,
+    0.63885
+   ],
+   "x_mm": [
+    1236.7,
+    1507.3
+   ],
+   "radius_mm": [
+    0.7,
+    249.6
+   ],
+   "centroid": [
+    1.47196,
+    -1.73949,
+    0.37641
+   ],
+   "centroid_px": [
+    1677.2,
+    1053.4
+   ]
+  },
+  "disc": {
+   "objects": [
+    "Material2.006_corner",
+    "Material2.024_corner"
+   ],
+   "materials": [
+    "2021_Isuzu_Dmax_BrakeRotors",
+    "2021_Isuzu_Dmax_BrakeRotors1"
+   ],
+   "n_verts": 4434,
+   "explode_dx_mm": 0.0,
+   "bbox_min": [
+    0.69264,
+    -1.94692,
+    0.18795
+   ],
+   "bbox_max": [
+    0.83796,
+    -1.51229,
+    0.59755
+   ],
+   "x_mm": [
+    692.6,
+    838.0
+   ],
+   "radius_mm": [
+    2.4,
+    227.4
+   ],
+   "centroid": [
+    0.78631,
+    -1.74118,
+    0.3939
+   ],
+   "centroid_px": [
+    567.7,
+    911.9
+   ]
+  },
+  "caliper": {
+   "objects": [
+    "Material2.014_corner"
+   ],
+   "materials": [
+    "2021_Isuzu_Dmax_Calipers"
+   ],
+   "n_verts": 5022,
+   "explode_dx_mm": 240.0,
+   "bbox_min": [
+    0.9768,
+    -1.63529,
+    0.2562
+   ],
+   "bbox_max": [
+    1.08536,
+    -1.51637,
+    0.5293
+   ],
+   "x_mm": [
+    976.8,
+    1085.4
+   ],
+   "radius_mm": [
+    124.9,
+    225.2
+   ],
+   "centroid": [
+    1.03628,
+    -1.57831,
+    0.39155
+   ],
+   "centroid_px": [
+    1071.3,
+    885.9
+   ]
+  },
+  "pads": {
+   "objects": [
+    "Material2.017_corner"
+   ],
+   "materials": [
+    "2021_Isuzu_Dmax_BrakePads"
+   ],
+   "n_verts": 296,
+   "explode_dx_mm": 95.0,
+   "bbox_min": [
+    0.86062,
+    -1.63564,
+    0.2828
+   ],
+   "bbox_max": [
+    0.91208,
+    -1.52756,
+    0.50287
+   ],
+   "x_mm": [
+    860.6,
+    912.1
+   ],
+   "radius_mm": [
+    128.5,
+    214.4
+   ],
+   "centroid": [
+    0.88635,
+    -1.58695,
+    0.39506
+   ],
+   "centroid_px": [
+    823.6,
+    859.1
+   ]
+  }
+ },
+ "clearances_mm": [
+  {
+   "between": [
+    "disc",
+    "pads"
+   ],
+   "clearance_mm": 22.6,
+   "separated": true
+  },
+  {
+   "between": [
+    "pads",
+    "caliper"
+   ],
+   "clearance_mm": 64.7,
+   "separated": true
+  },
+  {
+   "between": [
+    "caliper",
+    "wheel"
+   ],
+   "clearance_mm": 151.3,
+   "separated": true
+  },
+  {
+   "between": [
+    "wheel",
+    "tyre"
+   ],
+   "clearance_mm": 123.4,
+   "separated": true
+  }
+ ],
+ "min_clearance_mm": 22.6,
+ "separated": true,
+ "separation_note": "every neighbouring pair of parts has positive air along the wheel axis; see analyse_idpass.py for the per-part check that each one is also visible in the rendered image",
+ "lights_added": [
+  "CORNER_KEY",
+  "CORNER_FILL"
+ ],
+ "id_pass_png": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_truck_catalogue_2026-09-18\\dmax_render\\brake_corner\\_raw\\brake_corner_bc_idpass.png",
+ "lights_from_hero": [
+  "KEY",
+  "FILL",
+  "TOP",
+  "RIM"
+ ],
+ "reuse": {
+  "source": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_truck_catalogue_2026-09-18\\dmax_render\\build_dmax_render.py",
+  "sha256": "d1e253a9ccf55f587515500f2146fe68396f0053c8eb6790d9812b0d05574744",
+  "note": "materials, supplementary materials and the whole studio / Cycles / light rig are sliced out of build_dmax_render.py at run time and executed verbatim",
+  "line_ranges": {
+   "camera": [
+    701,
+    745
+   ],
+   "matdefs": [
+    355,
+    383
+   ],
+   "materials": [
+    121,
+    352
+   ],
+   "studio": [
+    585,
+    695
+   ]
+  }
+ },
+ "model": {
+  "glb": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_truck_catalogue_2026-09-18\\dmax_render\\_assets\\dmax_2021_objaverse.glb",
+  "scale_m_per_unit": 0.025592329299112808,
+  "axle_find_method": "brake rotors"
+ },
+ "total_seconds_this_process": 516.4
+}

@@ -1,0 +1,137 @@
+==============================================================================
+REFINED TIER A  (description names one family with >=3 master parts behind it;
+                 figure key does not contradict it; family is not a residual bucket)
+  Tier A rows= 316  unique PN= 315  PR00 EUR=  106,289.22 ( 36.2%)  list EUR=  62,694.28
+  Tier B rows= 995  unique PN= 988  PR00 EUR=  187,529.30 ( 63.8%)  list EUR=  67,482.22
+
+    description does not name ONE family on the master         rows=  817  PR00 EUR=  155,820.57
+    description known but fewer than 3 master parts behind it  rows=  152  PR00 EUR=   20,193.70
+    family is a residual bucket                                rows=    9  PR00 EUR=    9,795.89
+    figure key contradicts the description                     rows=    1  PR00 EUR=        3.60
+    figure key is multi-family on the master                   rows=   16  PR00 EUR=    1,715.54
+
+  ROWS WHERE THE FIGURE KEY CONTRADICTS THE DESCRIPTION (excluded, whatever the price):
+    count=35, PR00 EUR=13,088.15
+      5876102381  PAD KIT; CALIPER, DISC BRK, FR       desc says nan                  fk=302-017   fk says Brakes
+      5873113800  W9081 KIT; TURBOCHARGER              desc says nan                  fk=997-200   fk says Brakes
+      8982863310  PARTICULTE MATTER P                  desc says nan                  fk=826-701   fk says Electrical
+      8979474020  ADJUSTER; RR BRK                     desc says nan                  fk=305-019   fk says Brakes
+      8941292744  COVER; RR COMB                       desc says nan                  fk=803-037   fk says Electrical
+      8979474030  ADJUSTER; RR BRK                     desc says nan                  fk=305-019   fk says Brakes
+      8972582390  BEARING; PILOT                       desc says nan                  fk=015-049   fk says Clutch
+      8972630350  COVER; BRK PEDAL                     desc says nan                  fk=310-006   fk says Brakes
+      8975042471  CONTROL UNIT; GND SHORT DETECT       desc says nan                  fk=826-837   fk says Electrical
+      8980079800  ADJUSTER; RR BRK                     desc says nan                  fk=305-019   fk says Brakes
+      8983960330  JACK;OIL                             desc says nan                  fk=901-193   fk says Tools Equipment
+      8980079790  ADJUSTER; RR BRK                     desc says nan                  fk=305-019   fk says Brakes
+
+==============================================================================
+'ENGINE ASM' -- THE ROW JEROME NAMED
+  pn 8981422000  desc 'ENGINE ASM'  fk=001-HAA
+    list EUR 8,693.31   PR00 value EUR 8,467.28
+    description -> Engine on 27 master parts
+    figure key 001-HAA -> has master evidence? False
+    refined rule verdict: Tier A = True
+
+  is the description route for ENGINE ASM backed by anything independent?
+    the classified workbook has 73 rows described ENGINE ASM
+      its Level 3 Type values: {'Engine assembly': np.int64(73)}
+      its Level 1 Family     : {'Repair parts': np.int64(73)}
+    the master has 27 rows described ENGINE ASM
+      all assigned: {'Engine': np.int64(27)}
+      their aim_source: {'aim_workbook': np.int64(27)}
+    NOTE: a description route built on master rows is the same join the audit
+    calls non-deterministic. For ENGINE ASM the two paths agree, and the text
+    itself is unambiguous, so the assignment is safe; the rule cannot make that
+    distinction by itself.
+
+==============================================================================
+FAMILY SPREAD OF REFINED TIER A
+    Electrical                 rows=  53 EUR=   28,561.40
+    Engine                     rows=  16 EUR=   17,533.72
+    Accident & Body            rows=  65 EUR=   12,373.44
+    Cabin Interior             rows=  29 EUR=    9,289.82
+    Suspension                 rows=  27 EUR=    8,155.27
+    Driveline Axle             rows=   4 EUR=    6,405.14
+    Intake Exhaust Emission    rows=  15 EUR=    5,588.56
+    Fuel System                rows=  16 EUR=    4,473.68
+    Transmission               rows=  12 EUR=    3,452.44
+    Steering                   rows=  11 EUR=    2,700.05
+    Wheels Hub                 rows=  11 EUR=    2,229.63
+    Clutch                     rows=   6 EUR=    1,669.53
+    Cooling                    rows=  16 EUR=    1,660.75
+    Chassis Frame              rows=  22 EUR=    1,055.41
+    Brakes                     rows=   9 EUR=    1,043.71
+    Lubrication                rows=   4 EUR=       96.67
+
+  distinct (description, family, figure key) triples in Tier A: 202
+     1. ENGINE ASM                               -> Engine                 fk=001-HAA   rows=  1 EUR=  8,467.28 master(desc=27, fk=n/a)
+     2. BACK ASM; SEAT                           -> Cabin Interior         fk=750-001   rows= 11 EUR=  7,096.39 master(desc=31, fk=30)
+     3. HEAD ASM; CYL                            -> Engine                 fk=011-001   rows=  2 EUR=  6,391.47 master(desc=12, fk=12)
+     4. SPRING ASM; LEAF,FRT                     -> Suspension             fk=450-002   rows= 10 EUR=  6,209.91 master(desc=40, fk=40)
+     5. LAMP ASM; FOG                            -> Electrical             fk=801-032   rows=  3 EUR=  6,046.28 master(desc=35, fk=35)
+     6. DISPLAY; MULTI                           -> Electrical             fk=890-299   rows=  2 EUR=  4,666.70 master(desc=15, fk=14)
+     7. TURBOCHARGER ASM                         -> Intake Exhaust Emissio fk=036-001   rows=  1 EUR=  4,475.48 master(desc=38, fk=37)
+     8. TRANSFER ASM                             -> Driveline Axle         fk=260-001   rows=  1 EUR=  4,341.71 master(desc=9, fk=9)
+     9. CONTROLLER; ABS                          -> Electrical             fk=826-158   rows=  4 EUR=  4,328.23 master(desc=12, fk=9)
+    10. CONTROL UNIT; ENG                        -> Electrical             fk=060-613   rows=  3 EUR=  3,638.72 master(desc=131, fk=130)
+    11. TANK; FUEL                               -> Fuel System            fk=140-001   rows=  4 EUR=  2,539.69 master(desc=22, fk=22)
+    12. HARNESS; FRAME,FRT                       -> Electrical             fk=810-008   rows=  2 EUR=  2,472.29 master(desc=26, fk=26)
+    13. GEAR SET; FINAL DRIVE,FRT                -> Transmission           fk=415-021   rows=  1 EUR=  2,134.16 master(desc=7, fk=9)
+    14. STARTER ASM                              -> Electrical             fk=060-001   rows=  3 EUR=  1,972.77 master(desc=17, fk=17)
+    15. AXLE; FRT                                -> Driveline Axle         fk=410-001   rows=  2 EUR=  1,804.42 master(desc=4, fk=4)
+    16. STEP; BODY SIDE                          -> Accident & Body        fk=620-102   rows=  4 EUR=  1,794.15 master(desc=40, fk=40)
+    17. LAMP ASM; RR COMB                        -> Accident & Body        fk=803-001   rows=  2 EUR=  1,724.66 master(desc=78, fk=78)
+    18. PLATE ASM; PRESSURE,CLU                  -> Clutch                 fk=201-002   rows=  1 EUR=  1,375.30 master(desc=46, fk=57)
+    19. BUMPER ASM; FRT                          -> Accident & Body        fk=601-001   rows=  2 EUR=  1,328.12 master(desc=36, fk=36)
+    20. LAMP ASM; HEAD                           -> Accident & Body        fk=801-001   rows=  3 EUR=  1,215.32 master(desc=161, fk=160)
+    21. TRANSMITTER; DOOR LOCK                   -> Accident & Body        fk=730-068   rows=  1 EUR=  1,186.60 master(desc=11, fk=11)
+    22. GUIDE; AIR                               -> Cooling                fk=603-138   rows=  7 EUR=  1,130.68 master(desc=3, fk=3)
+    23. COVER; TRIM,FRT SEAT,CUSHION             -> Wheels Hub             fk=750-013   rows=  2 EUR=  1,064.27 master(desc=66, fk=66)
+    24. LINER SET; ENG CYL                       -> Engine                 fk=012-002   rows=  3 EUR=    933.30 master(desc=10, fk=10)
+    25. BAR; FRT BUMPER                          -> Accident & Body        fk=601-024   rows=  1 EUR=    925.95 master(desc=27, fk=38)
+    26. AIR BAG UNIT                             -> Cabin Interior         fk=827-023   rows=  3 EUR=    834.21 master(desc=26, fk=26)
+    27. METER COMPL; CLUSTER                     -> Electrical             fk=821-001   rows=  3 EUR=    830.09 master(desc=97, fk=97)
+    28. SHAFT ASM; STRG                          -> Steering               fk=431-002   rows=  2 EUR=    802.86 master(desc=5, fk=4)
+    29. HARNESS; CAB                             -> Electrical             fk=810-001   rows=  2 EUR=    784.39 master(desc=23, fk=23)
+    30. HARNESS; ENG                             -> Electrical             fk=810-013   rows=  4 EUR=    767.40 master(desc=39, fk=39)
+    31. CRANKSHAFT                               -> Engine                 fk=015-001   rows=  1 EUR=    727.06 master(desc=12, fk=12)
+    32. KING PIN KIT                             -> Steering               fk=410-004   rows=  1 EUR=    622.36 master(desc=13, fk=13)
+    33. ARM; LWR CONT                            -> Suspension             fk=450-084   rows=  2 EUR=    608.86 master(desc=13, fk=11)
+    34. STEERING UNIT                            -> Steering               fk=431-001   rows=  1 EUR=    569.47 master(desc=39, fk=38)
+    35. GASKET SET; ENG OVERHAUL                 -> Transmission           fk=005-001   rows=  2 EUR=    534.94 master(desc=112, fk=113)
+    36. EVAPORATOR ASM; HEATER                   -> Cabin Interior         fk=860-234   rows=  1 EUR=    533.37 master(desc=8, fk=8)
+    37. RAIL ASM; COMMON                         -> Fuel System            fk=040-211   rows=  1 EUR=    531.70 master(desc=7, fk=7)
+    38. DRM                                      -> Electrical             fk=060-897   rows=  2 EUR=    467.83 master(desc=3, fk=4)
+    39. FENDER; FRT                              -> Accident & Body        fk=605-014   rows=  1 EUR=    458.52 master(desc=35, fk=35)
+    40. COVER; RR,TRANS                          -> Transmission           fk=220-421   rows=  1 EUR=    442.58 master(desc=5, fk=5)
+    41. WHEEL; STRG                              -> Wheels Hub             fk=430-003   rows=  3 EUR=    439.68 master(desc=29, fk=27)
+    42. ARM; UPR CONT                            -> Suspension             fk=450-025   rows=  2 EUR=    432.64 master(desc=14, fk=12)
+    43. WHEEL; DISC,AL                           -> Wheels Hub             fk=480-022   rows=  2 EUR=    422.54 master(desc=26, fk=26)
+    44. BRACKET; LAMP,RR COMB                    -> Electrical             fk=803-029   rows=  2 EUR=    419.27 master(desc=4, fk=4)
+    45. PUMP ASM; OIL,P/S                        -> Fuel System            fk=436-001   rows=  1 EUR=    417.21 master(desc=31, fk=31)
+    46. SPRING; COIL,FRT SUSP                    -> Suspension             fk=450-047   rows=  2 EUR=    411.48 master(desc=6, fk=6)
+    47. CYLINDER ASM; CLUTCH MASTER              -> Brakes                 fk=208-001   rows=  1 EUR=    391.89 master(desc=34, fk=34)
+    48. HOSE; RUBBER,FUEL LEAK                   -> Fuel System            fk=040-030   rows=  1 EUR=    385.93 master(desc=30, fk=30)
+    49. CONTROL UNIT; DEF DCM                    -> Electrical             fk=060-995   rows=  1 EUR=    375.67 master(desc=21, fk=21)
+    50. CAMERA; REAR                             -> Electrical             fk=826-580   rows=  1 EUR=    375.56 master(desc=4, fk=4)
+    51. PUMP ASM; OIL                            -> Fuel System            fk=051-001   rows=  2 EUR=    374.99 master(desc=33, fk=21)
+    52. HARNESS; CHAS                            -> Electrical             fk=810-038   rows=  2 EUR=    343.76 master(desc=24, fk=24)
+    53. BODY ASM; DEF TANK                       -> Intake Exhaust Emissio fk=146-061   rows=  1 EUR=    331.25 master(desc=3, fk=3)
+    54. REINFORCEMENT; BUMPER                    -> Accident & Body        fk=601-046   rows=  1 EUR=    331.20 master(desc=4, fk=4)
+    55. BLADE; WIPER                             -> Accident & Body        fk=880-007   rows=  3 EUR=    330.85 master(desc=32, fk=32)
+    56. PISTON                                   -> Engine                 fk=015-063   rows=  2 EUR=    323.88 master(desc=42, fk=44)
+    57. LINK; DRAG                               -> Steering               fk=433-009   rows=  2 EUR=    319.55 master(desc=18, fk=19)
+    58. TRIM; DOOR,UPR                           -> Accident & Body        fk=635-006   rows=  2 EUR=    318.04 master(desc=35, fk=35)
+    59. PIPE; DPD                                -> Intake Exhaust Emissio fk=150-561   rows=  5 EUR=    308.24 master(desc=4, fk=4)
+    60. DOOR ASM; FRT,WO/TRIM                    -> Accident & Body        fk=630-001   rows=  1 EUR=    285.30 master(desc=33, fk=33)
+    61. BRACKET ASM; DEF TANK                    -> Chassis Frame          fk=146-014   rows=  2 EUR=    284.38 master(desc=16, fk=16)
+    62. DOOR ASM; REAR                           -> Accident & Body        fk=650-001   rows=  1 EUR=    271.80 master(desc=17, fk=17)
+    63. KNUCKLE; FRT AXLE                        -> Steering               fk=410-002   rows=  1 EUR=    265.86 master(desc=22, fk=22)
+    64. LINING; HD                               -> Brakes                 fk=666-001   rows=  3 EUR=    263.93 master(desc=29, fk=29)
+    65. CARRIER; DIFF                            -> Driveline Axle         fk=425-055   rows=  1 EUR=    259.01 master(desc=4, fk=4)
+    66. TUBE ASM; DEF DCM                        -> Intake Exhaust Emissio fk=146-141   rows=  2 EUR=    248.05 master(desc=19, fk=18)
+    67. SEAL; OIL,FINAL PINION                   -> Engine                 fk=415-006   rows=  1 EUR=    229.38 master(desc=13, fk=3)
+    68. CUSHION ASM; PASSENGER SEAT              -> Cabin Interior         fk=750-115   rows=  1 EUR=    228.69 master(desc=6, fk=6)
+    69. CHAMBER ASM; SPRING                      -> Brakes                 fk=341-001   rows=  1 EUR=    224.23 master(desc=7, fk=7)
+    70. BRACKET; ENG MTG,RR                      -> Chassis Frame          fk=022-078   rows=  2 EUR=    211.23 master(desc=9, fk=9)

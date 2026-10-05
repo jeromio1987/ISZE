@@ -1,0 +1,93 @@
+{
+  "work_order": "R0",
+  "tasks": [
+    {
+      "id": "C01",
+      "inspection_status": "evidence_returned",
+      "product_disposition": "blocked",
+      "evidence_refs": [
+        "EVIDENCE/BASELINE.md",
+        "EVIDENCE/git_identity.txt"
+      ],
+      "finding": "Expected UNIVERSE app root absent; baseline of documents/atlas/ISZE analytics fingerprint returned. v2.2 unverified.",
+      "blocked_on": [
+        "universe_application_root"
+      ],
+      "next_action": "Locate true app repository or confirm document-only phase."
+    },
+    {
+      "id": "C02",
+      "inspection_status": "evidence_returned",
+      "product_disposition": "already_satisfied",
+      "evidence_refs": [
+        "ORIGINALS/UNIVERSE_STRATEGY_REVIEW_CRITIQUE_2026-09-21.md",
+        "ORIGINALS/Isuzu_Universe_Strategy_Paper_Reviewed_v2.pdf",
+        "EVIDENCE/CRITIQUE_INDEX.md"
+      ],
+      "finding": "Critique and Reviewed Edition 2 paper located, hashed, copied to ORIGINALS; critique indexed. Adjudication reserved for A02.",
+      "blocked_on": [],
+      "next_action": "ChatGPT A02 point-by-point adjudication."
+    },
+    {
+      "id": "C03",
+      "inspection_status": "evidence_returned",
+      "product_disposition": "conditional",
+      "evidence_refs": [
+        "EVIDENCE/FEATURE_BASELINE.md"
+      ],
+      "finding": "Feature inventory completed from file presence. No interaction screenshots. Unified product absent; components partial.",
+      "blocked_on": [],
+      "next_action": "A03 maturity assessment; optional paint QA in a later work order."
+    },
+    {
+      "id": "C04",
+      "inspection_status": "evidence_returned",
+      "product_disposition": "already_satisfied",
+      "evidence_refs": [
+        "EVIDENCE/PACK_STATUS.md",
+        "SOURCE_MANIFEST.json"
+      ],
+      "finding": "ITUK dealer+PRISM pack and tonnage v2 pack found with docs/correction evidence. Named-dealer detail excluded from ZIP.",
+      "blocked_on": [],
+      "next_action": "Use packs as certified inputs once A02/A04 accepts scope."
+    },
+    {
+      "id": "C05",
+      "inspection_status": "evidence_returned",
+      "product_disposition": "conditional",
+      "evidence_refs": [
+        "EVIDENCE/REUSE_MAP.md"
+      ],
+      "finding": "Reuse matrix cites PRISM paths and derived ITUK/AIM artefacts. No merge architecture proposed.",
+      "blocked_on": [],
+      "next_action": "A04 choose reuse vs adapt for first build slice."
+    },
+    {
+      "id": "C06",
+      "inspection_status": "evidence_returned",
+      "product_disposition": "conditional",
+      "evidence_refs": [
+        "EVIDENCE/BASELINE_TEST_REPORT.md"
+      ],
+      "finding": "Historical verification report read (green+2 warn). Pipeline and app tests not executed under R0 write limits.",
+      "blocked_on": [],
+      "next_action": "Authorize a later safe verify re-run if implementation starts."
+    },
+    {
+      "id": "C07",
+      "inspection_status": "evidence_returned",
+      "product_disposition": "already_satisfied",
+      "evidence_refs": [
+        "R0_REVIEW.md",
+        "MANIFEST.json"
+      ],
+      "finding": "Compact R0 package assembled with manifests, originals (strategy), evidence notes; structural validation applied.",
+      "blocked_on": [],
+      "next_action": "Hand to ChatGPT for A02-A04; stop before application changes."
+    }
+  ],
+  "next_work_order_recommendation": {
+    "id": "A02-A04_then_optional_R1",
+    "summary": "Adjudicate critique and publish maturity; then issue the smallest Cursor build order for an ITUK commercial review panel reusing existing sell-out+AIM, without fabricating IDS joins or starting a new framework."
+  }
+}

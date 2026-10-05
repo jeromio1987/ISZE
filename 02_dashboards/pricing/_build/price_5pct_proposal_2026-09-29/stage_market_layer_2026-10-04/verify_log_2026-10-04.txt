@@ -1,0 +1,125 @@
+Workbook: C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\pricing\_build\price_5pct_proposal_2026-09-29\stage_market_layer_2026-10-04\Price_Increase_5pct_Proposal_2026-09-29_market_layer.xlsx
+Replica OFF: t=0.037266 total=1,629,792.63 extra=396,568.23 given=388,914.41 cut=7,653.82 IUK=91,064.86
+Replica ON : t=0.048374 total=1,629,792.63 extra=396,568.23 IUK=0.00
+OK   replica reproduces published OFF (t, extra, IUK, repair, body)
+OK   replica reproduces published ON (t, extra, IUK, repair, body)
+Sheets: Read me, Summary, Market layer, Proposal, Review lists, Dealer response, Not in proposal, Checks, Layer by part and market, Layer by part, Layer solver
+OK   sheet order and names
+Summary switch D5 = 0
+OK   Summary switch D5 delivered at 0 (OFF)
+OK   [OFF] total after treatment = target: excel=1,629,792.6315 target=1,629,792.6315
+OK   [OFF] weighted increase = 5.000%: 0.050000000
+OK   [OFF] extra vs replica: excel=396,568.23 replica=396,568.23
+OK   [OFF] given up vs replica: excel=388,914.41 replica=388,914.41
+OK   [OFF] cut vs replica: excel=7,653.82 replica=7,653.82
+OK   [OFF] solver t vs replica: excel=0.037265536 replica=0.037265536
+OK   [OFF] IUK repair+body extra vs replica: excel=91,064.86
+OK   [OFF] repair extra vs replica: excel=252,972.47
+OK   [OFF] body extra vs replica: excel=143,595.76
+OK   [OFF] service extra = 0
+OK   [OFF] parts carrying the extra: excel=8446 replica=8446
+OK   [OFF] identity own-given-cut+extra=total: 0.000000
+OK   [ON] total after treatment = target: excel=1,629,792.6315 target=1,629,792.6315
+OK   [ON] weighted increase = 5.000%: 0.050000000
+OK   [ON] extra vs replica: excel=396,568.23 replica=396,568.23
+OK   [ON] given up vs replica: excel=388,914.41 replica=388,914.41
+OK   [ON] cut vs replica: excel=7,653.82 replica=7,653.82
+OK   [ON] solver t vs replica: excel=0.048373698 replica=0.048373698
+OK   [ON] IUK repair+body extra vs replica: excel=0.00
+OK   [ON] repair extra vs replica: excel=252,889.19
+OK   [ON] body extra vs replica: excel=143,679.04
+OK   [ON] service extra = 0
+OK   [ON] parts carrying the extra: excel=8062 replica=8062
+OK   [ON] identity own-given-cut+extra=total: 0.000000
+OK   [OFF] published: IUK extra = EUR 91,065, extra EUR 396,568 (rounded): 91,064.86 / 396,568.23
+OK   [ON] published: IUK extra = 0, extra EUR 396,568 (rounded): 0.00 / 396,568.23
+OK   [OFF] given up rounds to EUR 388,914: 388,914.41
+OK   [OFF] total rounds to EUR 1,629,793: 1,629,792.63
+OK   [ON] total rounds to EUR 1,629,793: 1,629,792.63
+OK   [now] column equals switch OFF (delivered state)
+OK   column G 'Matches published' reads OK on every published row: not OK: []
+OK   22 markets in the per-market table: 22
+per-market worst gaps vs published csv / replica: {"avgOFF": 5e-06, "upOFF": 0.00515, "avgON": 4.66e-06, "upON": 0.00361, "own": 1.8e-16, "given": 5.09e-11, "avg_now": 5e-16}
+OK   per-market increase, switch OFF vs published csv (<= 0.00001)
+OK   per-market recovered EUR, switch OFF vs published csv (<= EUR 0.05)
+OK   per-market increase, switch ON vs published csv (<= 0.00001)
+OK   per-market recovered EUR, switch ON vs published csv (<= EUR 0.05)
+OK   per-market own increase and given up vs replica
+OK   per-market increase now vs replica
+OK   ARMENIA: no hold, no extra, increase = own increase (both positions)
+OK   KAZAKHSTAN: no hold, no extra, increase = own increase (both positions)
+OK   IUK: recovered 91,065 (OFF) -> 0 (ON), average increase OFF/ON: OFF 0.04134 / ON 0.02672
+Armenia + Kazakhstan: billed EUR 431,031, increase 3.3937%, EUR 14,628; total if it does not reach them EUR 1,615,165 = 4.9551%
+OK   layer check: Billed base in the layer equals the billed base of the proposal (EUR): value=32595852.629999764 expected=32595852.62999996
+OK   layer check: Every part number of the proposal is on 'Layer by part': value=15273 expected=15273
+OK   layer check: Every part x market row finds its part (rows with an error): value=0 expected=0
+OK   layer check: Every part finds its rows on the part x market sheet (pointers off): value=0 expected=0
+OK   layer check: Own increase in the layer adds up to the proposal's extra euro (Summary B13): value=1629792.631499988 expected=1629792.631499977
+OK   layer check: Total after market treatment equals the target: switch OFF (EUR): value=1629792.631499987 expected=1629792.6314999883
+OK   layer check: Total after market treatment equals the target: switch ON (EUR): value=1629792.631499992 expected=1629792.6314999883
+OK   layer check: Weighted increase equals the Summary target: switch OFF: value=0.04999999999999997 expected=0.05
+OK   layer check: Weighted increase equals the Summary target: switch ON: value=0.050000000000000114 expected=0.05
+OK   layer check: Own - given up - cut + extra = total, both positions (largest gap, EUR): value=0 expected=0
+OK   layer check: Solver lands on the recovery needed: switch OFF and ON (largest gap, EUR): value=0 expected=0
+OK   layer check: Solver can reach the target within the ceiling (both positions): value=1 expected=1
+OK   layer check: Service parts get no extra, both positions (EUR): value=0 expected=0
+OK   layer check: Armenia and Kazakhstan: no hold, no extra, own increase, both positions (EUR vs own increa: value=0 expected=0
+OK   layer check: Exempt market gets no extra when the switch is ON (EUR): value=0 expected=0
+OK   layer check: Per-market table adds up to the reconciliation (recovered, given up, total; largest gap EU: value=0 expected=0
+OK   layer check: Published figures reproduced at the default settings (rows marked in column G above): value=0 expected=0
+OK   layer check: Summary switch holds 0 or 1: value=0 expected=0 or 1
+OK   layer check: All market layer checks: value=None expected=None
+OK   Summary D9 reads OK: OK
+Summary D6 total EUR 1,629,792.63; D7 5.00000%; D8 extra EUR 396,568.23
+OK   Checks row 4: Billed base equals the published in-scope priced base (EUR): OK
+OK   Checks row 5: Published recipe reproduces: quantity x factory move: OK
+OK   Checks row 6: Weighted increase achieved equals the target: OK
+OK   Checks row 7: No part proposed below 0%: OK
+OK   Checks row 8: Market columns add up to the base: OK
+OK   Checks row 9: Every part has a rule: OK
+OK   Checks row 10: By-rule table adds up to the extra euro: OK
+OK   Checks row 11: In-scope lines in the base (count written by the builder): OK
+OK   Checks row 12: Brake pad kits at 0% while the switch is on (sum of their proposed mov: OK
+OK   Checks row 13: Market layer: all checks on the 'Market layer' sheet: OK
+OK   part x market rows = 45,581: 45581
+OK   part x market billed total = EUR 32,595,852.63: 32,595,852.63
+OK   every part x market row matched to the replica
+OK   per-row billed equals replica billed: 1.455e-11
+OK   per-row own increase equals Proposal column P (live): 0
+OK   per-row increase, switch OFF, all 45,581 rows vs replica (max gap): 8.88e-16
+OK   per-row increase, switch ON, all 45,581 rows vs replica (max gap): 1.22e-15
+OK   per-row 'increase now' equals the OFF column (delivered state)
+OK   no error values on the part x market sheet
+conditions now (rows): Own increase + recovery extra: 24,892; Own increase: 11,741; Service parts held at today's price: 7,089; Own increase only: no hold, no extra (option A): 1,072; Body and collision parts held at today's price (Israel D-Max distributor): 515; Lighting held at today's price (Israel D-Max distributor): 142; Lighting held at today's price (Israel trucks distributor): 87; Own increase, held down by the ceiling: 43
+OK   hold rows = 7,833: 7833
+OK   every hold row pays 0%
+OK   every Armenia/Kazakhstan row is own increase only
+OK   no recovery extra on service parts
+OK   recovery-extra rows exist and only on repair/body
+OK   condition text present on every row
+OK   part rows = 15,273 and pointers all 0
+OK   part list increase OFF vs replica (max gap)
+OK   part list increase ON vs replica (max gap)
+OK   new list EUR = current list x (1 + list increase now), rounded to cents
+pad kits held: 29; lubricants: 2; parts carrying the extra (eligible): 8618
+OK   29 pad kits held at 0% list increase
+OK   solver differences are 0.00 and ceiling reaches the target: gaps 0.000000 / 0.000000
+solver t OFF 0.03726554  ON 0.04837370
+OK   Summary: every original cell unchanged (248 cells): diffs=0 first=None new=[]
+OK   Proposal: every original cell unchanged (412,338 cells): diffs=0 first=None new=[]
+OK   Review lists: every original cell unchanged (2,191 cells): diffs=0 first=None new=[]
+OK   Dealer response: every original cell unchanged (221 cells): diffs=0 first=None new=[]
+OK   Not in proposal: every original cell unchanged (235 cells): diffs=0 first=None new=[]
+OK   Checks: every original cell unchanged (42 cells): diffs=0 first=None new=[]
+OK   Read me: original lines unchanged (new lines appended: 3): None
+OK   no formula error cells anywhere in the workbook: 0
+OK   no banned labels in any sheet: []
+OK   present on 'Market layer': switch explained
+OK   present on 'Market layer': reconciliation block
+OK   present on 'Market layer': per-market totals
+OK   present on 'Market layer': distributor conditions per market and category
+OK   present on 'Market layer': Armenia / Kazakhstan note
+OK   present on 'Market layer': open price-basis wording
+OK   present on 'Market layer': sources block
+
+RESULT: ALL OK

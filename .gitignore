@@ -182,6 +182,55 @@ secrets.toml
 isze_config.json
 .streamlit/secrets.toml
 
+# --- Mail / correspondence (private; never commit) ---
+# Meeting packs under 09_meetings/ are deliverables and stay trackable — only the
+# mail-extract trees are excluded, never 09_meetings/ itself.
+*.msg
+*.eml
+*.pst
+*.ost
+*.mbox
+*.vcf
+*.ics
+**/outlook_extracts/**
+09_meetings/_MAIL_MINUTES_*/
+
+# --- Scraped competitor price exports inside the tracked pricing raw folder ---
+# Named families only. A blanket 01_data/01_Pricing/_raw/** would hide files that
+# are tracked on purpose (browser scrape scripts, manifest json, catalogue tree);
+# see the nested 01_data/01_Pricing/_raw/.gitignore for the detail.
+01_data/01_Pricing/_raw/iam_sku_*.csv
+01_data/01_Pricing/_raw/iam_sku_*.json
+01_data/01_Pricing/_raw/ks_*.csv
+01_data/01_Pricing/_raw/ks_*.json
+01_data/01_Pricing/_raw/_ks_*.csv
+01_data/01_Pricing/_raw/_ks_*.json
+01_data/01_Pricing/_raw/oem_peer_*.csv
+01_data/01_Pricing/_raw/oem_peer_*.json
+01_data/01_Pricing/_raw/spareto_*.csv
+01_data/01_Pricing/_raw/spareto_*.json
+
+# --- Browser profile residue (cookies, sessions, saved logins) ---
+_chrome_profile/
+**/_chrome_profile/
+
+# --- Backup churn (regenerable by definition) ---
+*.bak_*
+*.bak2_*
+*.bak_pre_*
+*.backup_*
+*_backup_*
+*.old
+# A bare *.bak rule was approved by Jerome on 2026-09-19 (loose backup files were
+# showing up as committable in the working tree). It was applied, then removed by
+# another process the same day. Do not remove it again without his instruction.
+# An ignore rule never untracks a file that is already committed, so this rule is
+# safe for the three .bak files tracked on purpose:
+#   01_data/00_derived/bvp_pn_dimension.csv.bak
+#   01_data/00_derived/price_premium.csv.bak
+#   02_dashboards/sales/_build/_extracted/original_app.js.bak
+*.bak
+
 # --- Binaries & large media ---
 *.exe
 *.dll
@@ -254,6 +303,56 @@ Thumbs.db
 01_data/_build/
 01_data/_INBOX/
 
+# --- QA screenshot churn -------------------------------------------------
+# Verification screenshots are regenerated on every build and were never meant
+# to be versioned. 1,516 of them had accumulated (390 MB) before this rule.
+# They are QA evidence for a single build, not artefacts of the repo.
+# Exception (do NOT ignore): 02_dashboards/pricing/_build/aim_truck_catalogue_2026-09-18/dmax_render/**
+#   REVIEW_DMAX_RENDER.html embeds qa_accuracy_sheet.png as page content, and the
+#   render tree is a designed visual set, not throwaway QA.
+**/_qa/**
+**/_qa_*/**
+**/_qa*/*.png
+**/_qa*/*.jpg
+**/_qa*/*.jpeg
+**/_qa*/*.webp
+**/_qa*/*.gif
+**/_gpt_review/**
+_tmp_*.png
+_tmp_*.jpg
+_qa*.png
+_qa*.jpg
+# NOTE: no `!dmax_render/**` negation here on purpose. A broad negation would
+# override the __pycache__/ and *.log rules below for that whole tree, which is
+# how 132 .pyc and .log files got swept back into the index. The D-Max _qa sheets
+# and _assets are already tracked and stay tracked; the pattern rules simply do
+# not apply to them retroactively.
+
+# --- D-Max render intermediates ---
+# Only the per-frame PNG renders live here (346 MB). The _raw/*.json camera and
+# silhouette measurements are INPUTS that measure_silhouette_mismatch.py reads
+# (HERO_REPORT = _raw/cam_hero.json), so the folder itself must stay tracked —
+# ignore the images only, never the folder.
+02_dashboards/pricing/_build/aim_truck_catalogue_2026-09-18/dmax_render/_raw/*.png
+02_dashboards/pricing/_build/aim_truck_catalogue_2026-09-18/dmax_render/_raw/*.jpg
+02_dashboards/pricing/_build/aim_truck_catalogue_2026-09-18/dmax_render/_raw/*.jpeg
+
+# --- 02_dashboards/Data deploy mirror ------------------------------------
+# A real folder (not a junction) holding copies of derived data for published
+# HTML, plus ingest leftovers. The root .gitignore excludes the canonical
+# copies under 01_data/, so the same files were being tracked twice here:
+# pricing_pn_enquiry_active.csv (98 MB), pricing_list_pn.csv (58 MB),
+# sales_fact.csv (45 MB) and 900 other files, 414 MB in total. Canonical
+# source is 01_data/, never this path.
+02_dashboards/Data/
+
+# --- Python bytecode that escaped the global __pycache__/ rule ---
+# The D-Max render tree was reaching the index through a broad negation in the
+# QA block above; these are compiled caches and run logs, never source.
+**/__pycache__/**
+**/*.pyc
+02_dashboards/pricing/_build/aim_truck_catalogue_2026-09-18/dmax_render/**/*.log
+
 # --- Action Ledger transient build artefacts ---
 # One .txt per build run; the curated ACTION_LEDGER_BUILD_LOG_*.md is tracked.
 01_data/00_derived/action_ledger_build_log_*.txt
@@ -263,4 +362,18 @@ Thumbs.db
 01_data/14_dashboards/*.backup_*.json
 
 # --- Scratch probe scripts (DATA_MANIFEST.md §8: scratch dump, not a deliverable) ---
-01_data/91_build/_scratch/
+# Blanket rule added 2026-09-25: the same one-off check/probe/verify-script pattern was
+# found loose (and un-ignored) in 02_dashboards/_build/ and several 04_tools/ subfolders,
+# not just 01_data/91_build/ — one rule covers every _scratch/ folder anywhere in the repo.
+**/_scratch/
+
+# Tender monitor runtime output — stays on disk, not in git (Jerome, 2026-10-05)
+04_tools/ISZE_Tender_Monitor_Install/tender_docs/
+04_tools/ISZE_Tender_Monitor_Install/rm_digest/
+04_tools/ISZE_Tender_Monitor_Install/tender_monitor_log.txt
+04_tools/ISZE_Tender_Monitor_Install/_source_health.json
+# Safety backups — once work is committed, git history is the backup (Jerome, 2026-10-05)
+**/_backsafe_*/
+**/_bak_*/
+# Mail logs stay local
+09_meetings/_MAIL_LOG/

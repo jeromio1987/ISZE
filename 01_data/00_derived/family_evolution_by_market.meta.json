@@ -1,0 +1,21 @@
+{
+  "decode_source": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\epc_decode_batch1_20260919.json",
+  "rows": 553,
+  "groups": [
+    "heavy_truck",
+    "light_vehicle",
+    "n_series_truck",
+    "shared_across_families"
+  ],
+  "covered_eur": 54875347.05,
+  "coverage_pct_of_book": 47.69,
+  "clock_definition": {
+    "CY": "calendar year January to December",
+    "FY": "ISZE financial year April to March, labelled by the closing year (FY2026 = Apr 2025 to Mar 2026)"
+  },
+  "limit": [
+    "The EPC gives vehicle FAMILY, not tonnage. TRUCKS N spans NLR to NQR, so 3.5 t and 7.5 t are NOT separated here. A tonnage band needs the model-code table.",
+    "Only the part numbers in EPC batch 1 are covered \u2014 the top 250 by value. Everything else is absent rather than zero.",
+    "A part fitting more than one family is pooled as 'shared_across_families' and is NOT apportioned, because apportioning would be an assumption."
+  ]
+}

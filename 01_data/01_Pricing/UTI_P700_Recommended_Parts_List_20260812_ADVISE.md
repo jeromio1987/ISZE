@@ -1,6 +1,6 @@
 # UTI P700 recommended parts list — advise
 
-**Mode B notes · 2026-08-12T11:49:59Z · UTI ≠ UMI · Shell out · RG21 not mixed**
+**internal notes · 2026-08-12T11:49:59Z · UTI ≠ UMI · Shell out · RG21 not mixed**
 
 ## Deliverables
 

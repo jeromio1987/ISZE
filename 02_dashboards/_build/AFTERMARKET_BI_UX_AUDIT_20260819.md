@@ -1,6 +1,6 @@
 # Aftermarket BI UX audit — reusable patterns across ISZE dashboards
 
-**Date:** 2026-08-19 · **Mode B internal** · **Scope:** sample read via INDEX + listed paths (not full-repo glob)
+**Date:** 2026-08-19 · **internal internal** · **Scope:** sample read via INDEX + listed paths (not full-repo glob)
 
 ## Sources sampled
 

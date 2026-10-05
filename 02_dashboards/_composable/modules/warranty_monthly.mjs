@@ -46,12 +46,19 @@ export default {
     const totalUsd = agg.reduce((s, a) => s + a.total_usd, 0);
     const totalClaims = agg.reduce((s, a) => s + a.claims, 0);
 
+    // The source changes what it counts from Dec-2025 onward: earlier months count only
+    // claim lines carrying a part number, later months count every claim line including
+    // labour-only lines. Parts USD is unaffected; the claim count and total USD are not.
+    const BREAK = "202512";
+    const spansBreak = rows.some((r) => r.period <= BREAK) && rows.some((r) => r.period >= BREAK);
+
     return `
       <div class="kpi-row">
-        <div class="kpi" data-tip="Sum of Total_USD in warranty_fy26_monthly.csv for the selected period rollup. USD as stored — not converted to euro. Dec-2025 is missing from the source (11 of 12 months)."><span class="kpi-lbl">Total warranty</span><span class="kpi-val">${ctx.usd(totalUsd)}</span></div>
+        <div class="kpi" data-tip="Sum of Total_USD in warranty_fy26_monthly.csv for the selected period rollup. USD as stored — not converted to euro."><span class="kpi-lbl">Total warranty</span><span class="kpi-val">${ctx.usd(totalUsd)}</span></div>
         <div class="kpi" data-tip="Claim count in the same monthly file. Not a € figure."><span class="kpi-lbl">Claims</span><span class="kpi-val">${totalClaims.toLocaleString("en-GB")}</span></div>
         <div class="kpi" data-tip="How many buckets the current period control produced. Gaps in the source are listed below — they are not filled."><span class="kpi-lbl">Periods shown</span><span class="kpi-val">${agg.length}</span></div>
       </div>
+      ${spansBreak ? `<p class="warn">The source changes what it counts from <strong>Dec-2025</strong> onward: earlier months count only claim lines that carry a part number, later months count every claim line including labour-only ones. Parts USD is unaffected. The claim count and total USD step up there by more than the volume did — do not read the two halves against each other.</p>` : ""}
       ${gaps.length ? `<p class="warn">Source is missing ${gaps.length} month(s): ${gaps.join(", ")}. Totals below are therefore <strong>not</strong> a full year.</p>` : ""}
       <div class="bars">${bars}</div>
     `;

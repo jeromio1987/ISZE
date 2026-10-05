@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The weighted increase of all prices</title>
+<style>
+:root{--navy:#15233c;--terra:#c0552d;--paper:#f7f4ee;--ink:#22262e;--muted:#6b6459;
+--line:#d9d3c8;--band:#eef3f9;--good:#1e6b4f;--amber:#a8721f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.5;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 20px 56px}
+h1,h2{font-family:Georgia,"Times New Roman",serif;color:var(--navy);margin:0}
+h1{font-size:25px} h2{font-size:17px;margin:0 0 3px}
+header{border-bottom:3px solid var(--navy);padding-bottom:14px;margin-bottom:18px}
+.sub{color:var(--muted);font-size:13px;margin-top:6px;max-width:900px}
+.badge{display:inline-block;background:var(--navy);color:var(--paper);font-size:11px;
+letter-spacing:.6px;text-transform:uppercase;padding:3px 9px;margin-right:8px}
+.badge.t{background:var(--terra)} .badge.g{background:var(--good)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;
+margin:0 0 18px}
+.kpi{background:#fff;border:1px solid var(--line);border-top:3px solid var(--navy);
+padding:12px 14px}
+.kpi.g{border-top-color:var(--good)} .kpi.t{border-top-color:var(--terra)}
+.kpi .l{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.kpi .v{font-size:23px;font-weight:600;color:var(--navy);margin-top:4px;
+font-variant-numeric:tabular-nums}
+.kpi .s{font-size:11.5px;color:var(--muted);margin-top:2px}
+.card{background:#fff;border:1px solid var(--line);padding:15px 16px;margin-bottom:16px}
+.card .q{font-size:12.5px;color:var(--muted);margin:2px 0 11px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{background:var(--navy);color:var(--paper);text-align:left;padding:8px 9px;
+font-size:11px;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
+td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:nth-child(even){background:var(--band)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.big{font-weight:700;color:var(--navy)}
+.sub2{font-size:11px;color:var(--muted);font-weight:400}
+.note{background:#fff;border:1px solid var(--line);border-left:4px solid var(--terra);
+padding:13px 15px;margin-bottom:16px;font-size:13px}
+.note.g{border-left-color:var(--good)}
+.note p{margin:0 0 8px} .note p:last-child{margin:0}
+footer{margin-top:26px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;
+color:var(--muted)} footer p{margin:0 0 5px}
+</style></head><body><div class="wrap">
+<header>
+  <div><span class="badge">Method corrected</span>
+  <span class="badge g">Measured, not a factor chain</span>
+  <span class="badge t">Rate applied, not decided</span></div>
+  <h1 style="margin-top:10px">The weighted increase of all prices</h1>
+  <p class="sub">weighted increase = SUM(quantity x change in yen base price) /
+  SUM(quantity x previous yen base price) - 1. Read off the price comparison
+  itself. The exchange rate and the purchase discount are both already in force,
+  so neither is multiplied in.</p>
+</header>
+
+<div class="kpis">
+  <div class="kpi"><div class="l">All prices</div>
+    <div class="v">+5.9616%</div>
+    <div class="s">47,617 rows across 15,273 part numbers</div></div>
+  <div class="kpi g"><div class="l">Japan (IML)</div>
+    <div class="v">+6.2081%</div>
+    <div class="s">47.71% of the weight</div></div>
+  <div class="kpi t"><div class="l">Thailand (IMIT)</div>
+    <div class="v">+6.3088%</div>
+    <div class="s">43.08% of the weight</div></div>
+  <div class="kpi"><div class="l">Exchange rate, live</div>
+    <div class="v">178.5</div>
+    <div class="s">issued by ISZJ and applied, not a decision</div></div>
+  <div class="kpi g"><div class="l">Class C margin</div>
+    <div class="v">53.0%</div>
+    <div class="s">on the sales price, written per row as a literal</div></div>
+</div>
+
+<div class="note g"><p><b>The exchange rate is applied, not decided.</b> It is a
+corporate rate issued to us, so there is nothing in it to grant or withhold as a
+commercial choice. An earlier version of this analysis presented exactly that as a
+dial. That was invented and has been removed.</p></div>
+
+<div class="card">
+  <h2>By source</h2>
+  <p class="q">The share of weight is the quantity-weighted share of the previous
+  yen base price. The rows do not sum to 100% because 1,801 rows carry no source
+  label in the price list.</p>
+  <table>
+    <thead><tr><th>Source</th><th class="n">Rows</th><th class="n">Share of weight</th>
+    <th class="n">Weighted increase</th></tr></thead>
+    <tbody><tr><td><b>Japan (IML)</b></td><td class='n'>22,731</td><td class='n'>47.71%</td><td class='n big'>+6.2081%</td></tr><tr><td><b>Thailand (IMIT)</b></td><td class='n'>23,085</td><td class='n'>43.08%</td><td class='n big'>+6.3088%</td></tr><tr><td><b>no source label</b></td><td class='n'>1,801</td><td class='n'>9.21%</td><td class='n big'>+3.0601%</td></tr></tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Each market</h2>
+  <p class="q">Taken on the rows belonging to each market, so every market carries
+  a measured figure rather than a ratio of two constructed prices. UTI is sold-to
+  1799 and UMI is sold-to 1797; they are separate distributors and are never
+  combined.</p>
+  <table>
+    <thead><tr><th>Market</th><th class="n">Rows</th><th class="n">Part numbers</th>
+    <th class="n">Billed EUR</th><th class="n">Weighted increase</th>
+    <th class="n">Japan</th><th class="n">Thailand</th></tr></thead>
+    <tbody><tr><td><b>PR00</b><div class='sub2'>Main EU distributor list.</div></td><td class='n'>32,434</td><td class='n'>10,968</td><td class='n'>EUR 12.83M</td><td class='n big'>+5.9211%</td><td class='n'>+6.3925%</td><td class='n'>+6.4001%</td></tr><tr><td><b>UTI</b><div class='sub2'>Israel, sold-to 1799. Never combined with UMI.</div></td><td class='n'>1,869</td><td class='n'>1,869</td><td class='n'>EUR 3.40M</td><td class='n big'>+5.5808%</td><td class='n'>+5.6312%</td><td class='n'>+9.2395%</td></tr><tr><td><b>UMI</b><div class='sub2'>Israel, sold-to 1797. Never combined with UTI.</div></td><td class='n'>2,428</td><td class='n'>2,428</td><td class='n'>EUR 2.43M</td><td class='n big'>+5.6370%</td><td class='n'>+6.2140%</td><td class='n'>+6.2725%</td></tr><tr><td><b>CIS</b><div class='sub2'>GA Armenia and CBC Kazakhstan.</div></td><td class='n'>3,090</td><td class='n'>2,674</td><td class='n'>EUR 1.46M</td><td class='n big'>+4.8455%</td><td class='n'>+4.6445%</td><td class='n'>+6.3769%</td></tr></tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>How the IML base price works</h2>
+  <p class="q">Recorded from the mails. The Export Base Price is built up from IML's
+  own costs and sits above our purchase price by construction.</p>
+  <table>
+    <thead><tr><th class="n">#</th><th>Point</th><th>Source</th></tr></thead>
+    <tbody><tr><td class='n'>1</td><td>The Export Base Price is built up from IML's own costs, and our purchase price is a discount off it.<div class='sub2'>The factors are 62% on vehicle parts and 73.5% on industrial engines, applied to IML's Export Base Price. Worked example: an Export Base Price of 1,000 JPY gives a purchase price of 620 JPY on vehicle parts. The Export Base Price therefore sits above our purchase cost by construction, and it is not a restatement of any single cost line of ours.</div></td><td class='sub2'>Masumi Hayakawa (IML), 10 November 2025, "FW: ISZE 移転価格対応 10/30打ち合わせメモ・今後の対応事項につきまして"</td></tr><tr><td class='n'>2</td><td>IML builds its offer price from supplier cost plus a target gross profit.<div class='sub2'>Normal at 25% gross profit, Best at 17%. So the Export Base Price is a supplier cost plus a stated margin - a build-up, not a rebilling of anyone else's cost.</div></td><td class='sub2'>Hideya Kondou (ISZJ), 24 November 2020, "ITUK向けMMU新規ハーネスの価格設定について"</td></tr><tr><td class='n'>3</td><td>The discount change and the base-price revision happen at the same moment.<div class='sub2'>Valid from 5 January 2026, and the mail states it is "the same timing with annual EBP revision". This is why the discount cannot be treated as a forward move: it was applied when the base price was last revised.</div></td><td class='sub2'>Takayoshi Suzuki, 22 December 2025, "discount/whole sales ratio revisoin from Jan 5th 2026"</td></tr><tr><td class='n'>4</td><td>The base price and the class letter arrive together from Japan.<div class='sub2'>"Please find the B/P, Price Class, and remark as detailed below." The class letter is issued with the base price, so the class factor and the base price move on the same cycle.</div></td><td class='sub2'>Peeraya Sawangsaensuk (IMIT), 29 April 2026, "RE: base price class"</td></tr></tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Two open items</h2>
+  <p class="q">Flagged, not resolved. Nothing here has been assumed away.</p>
+  <table><tbody><tr><td><b>Our configuration carries only the vehicle-parts rate</b><div class='sub2'>03_analytics/isze_pricing/config.yaml holds J: 0.673, which is the vehicle-parts rate - 1 minus the 32.7% discount in Masumi Hayakawa's mail of 10 November 2025. The industrial-engine rate is different: 73.5% in 2025, moving to 79.7% in 2026 (1 minus 20.3%). Our configuration applies that rate to every Japan-sourced part, so an industrial-engine part is priced on the vehicle-parts rate.</div><div class='sub2'><i>Next step: config.yaml is left alone, exactly as it stands. Question for IML: confirm the current industrial-engine rate and which part families it covers.</i></div></td></tr><tr><td><b>IML states a different revision size from ours</b><div class='sub2'>Masumi Hayakawa's mail of 10 November 2025 says the CY2026 IML base price revision has an impact of "around 3% increase for ISZE (weighted average)". We measure 5.9616% on the published recipe. These are probably different revisions or different scopes - theirs may be a purchase-cost impact over a different window.</div><div class='sub2'><i>Next step: Open reconciliation item, and it is left open rather than closed by choosing an explanation. Ask IML for the window, the scope and the weighting behind the 3%.</i></div></td></tr></tbody></table>
+</div>
+
+<footer>
+  <p>Recipe: in_scope and unpriced_reason null, 47,617 rows,
+  published index 5.961599%.</p>
+  <p>Volume and mix held flat. This is the arithmetic of the price move, not a
+  forecast.</p>
+  <p>Built 2026-09-19T10:45:44+00:00.</p>
+</footer>
+</div></body></html>

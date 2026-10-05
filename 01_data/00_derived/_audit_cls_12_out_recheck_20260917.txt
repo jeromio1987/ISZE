@@ -1,0 +1,44 @@
+﻿  competitiveness_autodoc_risk.csv: cumulative checked 298, with an independent brand found 133
+  iam_ks_price_gap.csv: cumulative checked 302, with an independent brand found 133
+  iam_mekonomen_price_gap.csv: cumulative checked 302, with an independent brand found 137
+
+parts scraped against independent brands and present in the classification: 302
+of those, an independent-brand equivalent was found for: 137 (45.4%)
+
+==============================================================================
+DOES THE 'Competitive parts' LABEL PREDICT AN INDEPENDENT-BRAND ALTERNATIVE?
+
+  assigned Level 1            scraped  brand found  hit rate
+  Competitive parts               134           80     59.7%
+  Accident parts                   68           15     22.1%
+  Repair parts                     44           14     31.8%
+  High value repair                34           18     52.9%
+  Other / review                   15            4     26.7%
+  Comfort parts                     7            6     85.7%
+
+  labelled Competitive parts : 80/134 = 59.7% have an independent-brand match
+  labelled anything else     : 57/168 = 33.9%
+  lift of the label          : 1.76x  (1.00x would mean the label carries no information)
+
+  and the reverse: of the parts where an independent brand WAS found,
+       80 ( 58.4%)  sit in Competitive parts
+       18 ( 13.1%)  sit in High value repair
+       15 ( 10.9%)  sit in Accident parts
+       14 ( 10.2%)  sit in Repair parts
+        6 (  4.4%)  sit in Comfort parts
+        4 (  2.9%)  sit in Other / review
+
+==============================================================================
+SELECTION CAVEAT - what was chosen for scraping in the first place
+  Level 1                     % of scrape list  % of whole catalogue
+  Competitive parts                      44.4%                 26.3%
+  Accident parts                         22.5%                 23.4%
+  Repair parts                           14.6%                 29.6%
+  High value repair                      11.3%                  7.5%
+  Other / review                          5.0%                  0.0%
+  Comfort parts                           2.3%                  2.0%
+  Hardware & consumables                  0.0%                 11.2%
+
+  The scrape list was not drawn at random, so the hit rates above measure
+  the label against the parts somebody already suspected. Read the lift, not
+  the absolute rate.

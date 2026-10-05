@@ -1,4 +1,4 @@
-"""Build ISZE Pricing Engine Readiness dashboard (Mode A HTML + JSON).
+"""Build ISZE Pricing Engine Readiness dashboard (shared HTML + JSON).
 
 Reads measured alloc run + readiness CSVs. No invented KPIs.
 Does not sync to deploy.
@@ -23,7 +23,7 @@ OUT_HTML = ROOT / "02_dashboards" / "pricing" / "ISZE_Pricing_Engine_Readiness_D
 
 TARGET = 0.03
 
-# Mode A brand-quality ceilings (config authority)
+# shared brand-quality ceilings (config authority)
 BRAND_TIERS = [
     {"tier": 4, "label": "OE / premium IAM", "ceiling_pct": 30, "example": "Bosch, Delphi, Febi OE-tier"},
     {"tier": 3, "label": "Mainstream IAM", "ceiling_pct": 60, "example": "Solid mid brands"},
@@ -176,7 +176,7 @@ def build_why_engine(d: pd.DataFrame, base: float, eng_rev: float, redistributed
     n_top50_cap = int((d["is_top50"] & np.isclose(d["delta"], d["cap_eff"])).sum())
     n_theta_veto = int(d["theta_vetoed"].sum())
 
-    # Process contrast (Mode A labels — precise)
+    # Process contrast (shared labels — precise)
     prior_process = {
         "title": "How ISZE typically priced before",
         "bullets": [
@@ -192,7 +192,7 @@ def build_why_engine(d: pd.DataFrame, base: float, eng_rev: float, redistributed
         "bullets": [
             "Same +3.0000% weighted index — solver hits the target exactly under constant prior-year units.",
             "Wallet zones (raise / contested / defend from PMS total capture) plus street evidence gates decide who funds vs who is cut.",
-            "Reason codes on every cell; caps (+8%, tighter on top-50) and floors; θ_parc with street veto.",
+            "Reason codes on every cell; floors still apply; per-line % ceilings removed 2026-09-20.",
             "Trusted premium basis required for position moves (oem_benchmark / iam_derived); hold-when-blind on NO_EVIDENCE.",
             "Brand-quality ceiling ladder (+30/+60/+150/+250) in policy; run registry and alloc detail for every logged move.",
         ],
@@ -237,7 +237,7 @@ def build_why_engine(d: pd.DataFrame, base: float, eng_rev: float, redistributed
         },
     ]
 
-    # Process maturity matrix (qualitative, Mode A)
+    # Process maturity matrix (qualitative, shared)
     maturity = [
         {"dim": "Index discipline", "prior": "Target % often applied uniformly", "engine": "+3% weighted exact; logged"},
         {"dim": "Who pays", "prior": "Same % most lines", "engine": "Raise funds; defend/contested cut"},
@@ -1123,7 +1123,7 @@ def svg_launch_compare(L: dict) -> str:
 
 def svg_caps_strip(caps: dict) -> str:
     items = [
-        ("At +8% cap", caps["n_capped"], "#c0552d"),
+        ("At former cap (retired)", caps["n_capped"], "#c0552d"),
         ("θ street-vetoed", caps["n_theta_vetoed"], "#eda100"),
         ("At floor −12%", caps["n_at_floor"], "#8a9bb0"),
     ]
@@ -1473,7 +1473,7 @@ svg.ch .ax{{font-size:11px;fill:#444}}
   </div>
   <div class="card">
     <h3>Maturity matrix — prior vs engine</h3>
-    <p class="cap">Mode A labels. Class factors still set SP = FOB / factor; the revision logic is what changed.</p>
+    <p class="cap">shared labels. Class factors still set SP = FOB / factor; the revision logic is what changed.</p>
     <table>
       <thead><tr><th>Dimension</th><th>Prior process</th><th>Engine</th></tr></thead>
       <tbody>{maturity_rows}</tbody>
@@ -1593,7 +1593,7 @@ svg.ch .ax{{font-size:11px;fill:#444}}
 
 <section id="we-hist">
   <h3 class="sub">5 · Caps, floors, reason codes — Δ distribution</h3>
-  <p class="lead">Under a flat +3%, every euro of weight sits in one bin. Under the engine, weight spreads across cuts, holds, raises, and the +8% cap.</p>
+  <p class="lead">Under a flat +3%, every euro of weight sits in one bin. Under the engine, weight spreads across cuts, holds, and raises (no binding per-line % ceiling).</p>
   <div class="card">
     <h3>Histogram of engine deltas (€ weight)</h3>
     {hist_svg}
@@ -1614,7 +1614,7 @@ svg.ch .ax{{font-size:11px;fill:#444}}
       {evid_svg}
     </div>
     <div class="card">
-      <h3>Gate logic (Mode A)</h3>
+      <h3>Gate logic (shared)</h3>
       <ul class="checklist">
         <li><b>T3_eucon (and stronger):</b> may move within tier limits; street read at PR00 × {W['street_factor']}.</li>
         <li><b>T5_none:</b> NO_EVIDENCE_HOLD — no invented street; base lift only.</li>
@@ -1674,7 +1674,7 @@ svg.ch .ax{{font-size:11px;fill:#444}}
 
 <section id="we-talk">
   <h3 class="sub">9 · What you can tell a distributor</h3>
-  <p class="lead">Short callouts — Mode A English, no internal nicknames.</p>
+  <p class="lead">Short callouts — shared English, no internal nicknames.</p>
   <div class="talks">{talk_cards}</div>
   <div class="callout amber">
     <b>Sales evolution (honest scope).</b> {C['sales_evolution']['under_constant_units']}
@@ -1688,7 +1688,7 @@ svg.ch .ax{{font-size:11px;fill:#444}}
   Sources: allocation run {M['alloc_run_id']}; OEM peer readiness 2026-08-10; D-Max launch run {M['launch_run_id']};
   pricing action map (213 PMS cells); Spec layers 0–5; class factors and brand ceilings from resolved pricing config.
   Charts are inline SVG — no external libraries, no network calls.
-  Mode A · English UI · Built {M['as_of']}.
+  shared · English UI · Built {M['as_of']}.
 </div>
 </div>
 <script>

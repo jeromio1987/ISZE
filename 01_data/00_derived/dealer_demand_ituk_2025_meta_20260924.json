@@ -1,0 +1,136 @@
+{
+  "built_at": "2026-09-24T13:58:05.763261+00:00",
+  "market": "ITUK (UK truck book)",
+  "year": 2025,
+  "fleet_we_bill_against": 22389.0,
+  "fleet_source": "ituk_dvla_2026",
+  "fleet_period_basis": "full_year",
+  "fleet_note": "Read from gps_spu_by_distributor.csv, ITUK 2025 row, uio_units. The wallet-waterfall fleet is not used.",
+  "proxy_family": "oil_filter",
+  "dealers": 64,
+  "dealer_lines": 66018,
+  "dealer_qty_total": 223897.0,
+  "valued_eur_total": 5506143.02,
+  "qty_without_isze_price_share": 0.047244938520837707,
+  "value_convention": "qty x median CY2025 ISZE-to-distributor unit price per part number; this is what we billed the distributor, not the dealer invoice.",
+  "headline_calibration": {
+    "family": "fuel_filter",
+    "spearman_rho": 0.978,
+    "mean_absolute_residual_pp": 0.22,
+    "proxy_family": "oil_filter",
+    "proxy_family_residual_pp": 0.0,
+    "proxy_family_note": "Zero by construction: the filter share IS the family share, so it cannot be scored against itself. The headline family above was never used to build the shares.",
+    "reading": "A dealer's oil-filter share is used as their share of the trucks. The residual is how far that lands from the dealer's actual share of the family."
+  },
+  "expected_basis": "pms_capture_by_family.csv, family = n_series_truck (truck book), ITUK 2025. Not the sum of all fleet rows, which would double-count.",
+  "labels": {
+    "measured": "what the dealers actually bought (all dealer rows)",
+    "calibrated": "expected side from the filter-share proxy, family passed the test",
+    "estimated": "expected side from the filter-share proxy, family did not pass the test",
+    "not judgeable": "family has no service-demand basis for this method at all"
+  },
+  "coverage_of_the_method": {
+    "service_family_qty_share": 0.23509917506710676,
+    "service_family_eur_share": 0.23196812548468823,
+    "note": "Share of everything the 64 dealers bought that sits in a family this method can judge at all. The rest is repair, body, electrical and hardware, which has no service rhythm and is not part of this model."
+  },
+  "falsification_test": {
+    "question": "Does the filter share beat dealer size alone?",
+    "method": "Spearman rank correlation of each dealer's share of the family against (a) their share of network oil filters and (b) their total parts volume.",
+    "reading": "Where the two are close, the proxy is not adding information beyond 'the big dealer is big'. That is the test of the stated method, and it is reported as measured, not as assumed.",
+    "by_family_pairs": [
+      {
+        "family": "Brake shoe",
+        "rho_filter_share": 0.749,
+        "rho_size_only": 0.776,
+        "filter_share_adds": -0.027
+      },
+      {
+        "family": "Brake pad",
+        "rho_filter_share": 0.886,
+        "rho_size_only": 0.907,
+        "filter_share_adds": -0.022
+      },
+      {
+        "family": "Brake disc / rotor",
+        "rho_filter_share": 0.685,
+        "rho_size_only": 0.772,
+        "filter_share_adds": -0.087
+      },
+      {
+        "family": "Clutch booster",
+        "rho_filter_share": null,
+        "rho_size_only": null,
+        "filter_share_adds": null
+      },
+      {
+        "family": "Fuel filter",
+        "rho_filter_share": 0.978,
+        "rho_size_only": 0.965,
+        "filter_share_adds": 0.013
+      },
+      {
+        "family": "Clutch pressure plate",
+        "rho_filter_share": null,
+        "rho_size_only": null,
+        "filter_share_adds": null
+      },
+      {
+        "family": "Clutch disc",
+        "rho_filter_share": null,
+        "rho_size_only": null,
+        "filter_share_adds": null
+      },
+      {
+        "family": "Air filter",
+        "rho_filter_share": 0.912,
+        "rho_size_only": 0.918,
+        "filter_share_adds": -0.006
+      },
+      {
+        "family": "Clutch kit",
+        "rho_filter_share": 0.693,
+        "rho_size_only": 0.699,
+        "filter_share_adds": -0.006
+      },
+      {
+        "family": "Urea (AdBlue) filter",
+        "rho_filter_share": 0.683,
+        "rho_size_only": 0.705,
+        "filter_share_adds": -0.021
+      },
+      {
+        "family": "Cabin / blower filter",
+        "rho_filter_share": null,
+        "rho_size_only": null,
+        "filter_share_adds": null
+      },
+      {
+        "family": "Oil filter",
+        "rho_filter_share": 1.0,
+        "rho_size_only": 0.963,
+        "filter_share_adds": 0.037
+      },
+      {
+        "family": "Release bearing",
+        "rho_filter_share": null,
+        "rho_size_only": null,
+        "filter_share_adds": null
+      },
+      {
+        "family": "Pilot bearing",
+        "rho_filter_share": null,
+        "rho_size_only": null,
+        "filter_share_adds": null
+      }
+    ]
+  },
+  "israel": "Excluded entirely. No Israel row is read by this build. Separately: 01_data/90_INBOX/PPT_GPT_10csv_2026-09-19/06_dealer_master_geo.csv carries 78 rows labelled Israel LCV. Jerome states we hold no dealer names for Israel, so those rows are a labelling problem in that file. Recorded, not acted on, not read here.",
+  "outputs": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\dealer_demand_ituk_2025_calibration_by_family_20260924.csv",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\dealer_demand_ituk_2025_dealer_by_family_20260924.csv",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\dealer_demand_ituk_2025_by_dealer_20260924.csv",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\dealer_demand_ituk_2025_market_expected_20260924.csv",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\dealer_demand_ituk_2025_coverage_20260924.csv"
+  ]
+}

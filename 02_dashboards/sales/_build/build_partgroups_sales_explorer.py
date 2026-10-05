@@ -9,7 +9,7 @@ Usage (from ISZE root):
 Size budget: HTML shell < ~500 KB. Never re-inline plotly.js or pnyear into HTML.
 Data: 01_data/14_dashboards/partgroups_explorer/ (+ synced copy under sales/partgroups_data/).
 Open via OPEN_PartGroups_Explorer.cmd (starts local HTTP). Do not double-click the HTML —
-agg/pnyear are multi-MB and need fetch. Aftermarket Live Pricing is self-contained (embedded JSON).
+agg/pnyear are multi-MB and need fetch. Price comparison: see 02_dashboards/pricing/ISZE_Parts_Price_Intelligence.html (Aftermarket Live Pricing retired 2026-10-02).
 """
 from __future__ import annotations
 
@@ -126,10 +126,10 @@ def patch_app_js(original: str) -> str:
     """Adapt original explorer JS for external JSON, lazy pnyear, and tabs."""
     js = original
 
-    # Mode A wording in competitive notes
-    js = js.replace("Mode B / Jerome-only", "Internal / Jerome-only")
+    # shared wording in competitive notes
+    js = js.replace("internal / Jerome-only", "Internal / Jerome-only")
     js = js.replace("Mode-B work-in-progress", "internal work-in-progress")
-    js = js.replace("explicitly a Mode B", "explicitly an internal")
+    js = js.replace("explicitly a internal", "explicitly an internal")
 
     old_boot = """  function parseCompact(id){
     var obj = JSON.parse(document.getElementById(id).textContent);
@@ -359,7 +359,7 @@ def patch_app_js(original: str) -> str:
     var basis = SCRAPE.compare_basis || {};
     var ks = k.ks_gen_vs_am || {};
     var src = SCRAPE.sources || [];
-    var link = '../pricing/ISZE_Aftermarket_Live_Pricing_Dashboard.html';
+    var link = '../pricing/ISZE_Parts_Price_Intelligence.html';
     function tip(d){ if(!d) return ''; return (d.label||'')+'\n'+(d.formula||'')+'\n'+(d.plain||''); }
     function money(v){ if(v==null||isNaN(v)) return '—'; return '€'+Math.round(v).toLocaleString('en-GB'); }
 
@@ -414,7 +414,7 @@ def patch_app_js(original: str) -> str:
 
     document.getElementById('scrapeKpis').innerHTML = kpiHtml;
     document.getElementById('scrapeCaveats').innerHTML = caveatsHtml;
-    document.getElementById('scrapeSources').innerHTML = '<div class="note">Full briefing (Block-0 frame + charts) → <a href="'+link+'">Aftermarket Live Pricing</a>. Explorer needs <code>OPEN_PartGroups_Explorer.cmd</code> then http://127.0.0.1:8766/</div>';
+    document.getElementById('scrapeSources').innerHTML = '<div class="note">Current price page → <a href="'+link+'">Parts Price Intelligence</a>. Explorer needs <code>OPEN_PartGroups_Explorer.cmd</code> then http://127.0.0.1:8766/</div>';
     var und = document.getElementById('scrapeUndercuts'); if(und) und.innerHTML = '';
     var exp = document.getElementById('scrapeExposure'); if(exp) exp.innerHTML = '';
     var gen = document.getElementById('scrapeGenAm'); if(gen) gen.innerHTML = '';
@@ -784,7 +784,7 @@ HTML shell must stay under ~500 KB (Plotly via local `_ui/plotly.min.js` copy of
 **Always** double-click `OPEN_PartGroups_Explorer.cmd` (starts HTTP on 8766 and opens the page).
 Do **not** open `ISZE_PartGroups_Sales_Explorer.html` via Explorer double-click — multi-MB JSON needs HTTP.
 
-Aftermarket Live Pricing (`02_dashboards/pricing/ISZE_Aftermarket_Live_Pricing_Dashboard.html`) is **self-contained** (scrape JSON embedded) — double-click OK.
+Price comparison page: `02_dashboards/pricing/ISZE_Parts_Price_Intelligence.html` (self-contained, double-click OK). The old Aftermarket Live Pricing page was retired 2026-10-02.
 
 ## Rebuild
 
@@ -841,10 +841,8 @@ def main() -> None:
     build_gps_pms()
     build_scrape()
     sync_sibling()
-    from build_aftermarket_live_dashboard import build_aftermarket_live_html
-
-    am = build_aftermarket_live_html()
-    print(f"wrote {am} ({am.stat().st_size/1e6:.3f} MB, scrape embedded)")
+    # Aftermarket Live Pricing page retired 2026-10-02 (superseded by
+    # 02_dashboards/pricing/ISZE_Parts_Price_Intelligence.html); no longer regenerated here.
     ensure_plotly_copy()
     write_readme()
     # launcher for fat explorer (multi-MB JSON) — never rely on “run http.server” chat tips

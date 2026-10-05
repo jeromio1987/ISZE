@@ -1,0 +1,21 @@
+﻿reg_mode         out      seam      | r33 / r54 / r79 / r90  (mean ratio; C1=switches-flag, C5=hit)
+int_smooth_int   int      pct       | r33 0.9710 C1C5 | r54 0.9693 C1C5 | r79 1.0000 C1   | r90 0.9967 C1   | switches=4 hits=2
+int_smooth_int   int      material  | r33 0.9710 C1C5 | r54 0.9350      | r79 1.0000 C1   | r90 0.6147      | switches=2 hits=1
+int_smooth_int   float    pct       | r33 0.9719 C1C5 | r54 0.9698 C1C5 | r79 1.0252      | r90 0.9927 C1   | switches=3 hits=2
+int_smooth_int   float    material  | r33 0.9719 C1C5 | r54 0.9349      | r79 1.0252      | r90 0.6177      | switches=1 hits=1
+int_smooth       int      pct       | r33 0.9710 C1C5 | r54 0.9693 C1C5 | r79 1.0000 C1   | r90 0.9923 C1   | switches=4 hits=2
+int_smooth       int      material  | r33 0.9710 C1C5 | r54 0.9350      | r79 1.0000 C1   | r90 0.6163      | switches=2 hits=1
+int_smooth       float    pct       | r33 0.9719 C1C5 | r54 0.9698 C1C5 | r79 1.0252      | r90 0.9921 C1   | switches=3 hits=2
+int_smooth       float    material  | r33 0.9719 C1C5 | r54 0.9349      | r79 1.0252      | r90 0.6169      | switches=1 hits=1
+float_smooth     int      pct       | r33 0.9552      | r54 0.9713 C1C5 | r79 1.0238      | r90 0.9967 C1   | switches=2 hits=1
+float_smooth     int      material  | r33 0.9552      | r54 0.9347      | r79 1.0238      | r90 0.6195      | switches=0 hits=0
+float_smooth     float    pct       | r33 0.9687 C1C5 | r54 0.9705 C1C5 | r79 1.0253      | r90 0.9929 C1   | switches=3 hits=2
+float_smooth     float    material  | r33 0.9687 C1C5 | r54 0.9354      | r79 1.0253      | r90 0.6178      | switches=1 hits=1
+nosmooth_float   int      pct       | r33 0.9552      | r54 0.9713 C1C5 | r79 1.0238      | r90 0.9967 C1   | switches=2 hits=1
+nosmooth_float   int      material  | r33 0.9552      | r54 0.9347      | r79 1.0238      | r90 0.6195      | switches=0 hits=0
+nosmooth_float   float    pct       | r33 0.9687 C1C5 | r54 0.9705 C1C5 | r79 1.0253      | r90 0.9929 C1   | switches=3 hits=2
+nosmooth_float   float    material  | r33 0.9687 C1C5 | r54 0.9354      | r79 1.0253      | r90 0.6178      | switches=1 hits=1
+nosmooth_int     int      pct       | r33 0.9710 C1C5 | r54 0.9693 C1C5 | r79 1.0000 C1   | r90 0.9967 C1   | switches=4 hits=2
+nosmooth_int     int      material  | r33 0.9710 C1C5 | r54 0.9350      | r79 1.0000 C1   | r90 0.6147      | switches=2 hits=1
+nosmooth_int     float    pct       | r33 0.9719 C1C5 | r54 0.9698 C1C5 | r79 1.0252      | r90 0.9927 C1   | switches=3 hits=2
+nosmooth_int     float    material  | r33 0.9719 C1C5 | r54 0.9349      | r79 1.0252      | r90 0.6177      | switches=1 hits=1

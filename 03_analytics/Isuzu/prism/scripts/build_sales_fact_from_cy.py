@@ -37,11 +37,26 @@ CY_FILE_YEARS: dict[str, set[int]] = {
     "CY2024-2025.XLSX": {2024, 2025},
     "sales_2026tillApril.XLSX": {2026},
     "Q1FY2027.XLSX": {2026},
+    # Covers Jan-2025 to Aug-2026, but owns 2026 ONLY. All twelve months of 2025
+    # are already loaded from CY2024-2025.XLSX (verified 2026-09-20: 148,778 rows,
+    # 2025-01..2025-12, including a complete 2025-07 at 13,667 and 2025-08 at
+    # 13,061 — identical to this file's counts), so 2025 must be excluded HERE.
+    #
+    # It cannot be excluded by the month allow-list: CY_FILE_MONTHS is year-blind,
+    # so {7, 8} selects Jul/Aug of *both* years and re-adds 2025-07 + 2025-08.
+    # Setting {2025, 2026} returned 565,074 rows against an expected 538,346; the
+    # 26,728-row excess was exactly 2025-07 + 2025-08. Keep this year set at
+    # {2026} or that duplication returns.
+    "CY2025till31082026.XLSX": {2026},
 }
 # Optional (year, month) allow-list per file. None = all months in owned years.
 CY_FILE_MONTHS: dict[str, Optional[set[int]]] = {
     "sales_2026tillApril.XLSX": {1, 2, 3},
     "Q1FY2027.XLSX": {4, 5, 6},
+    # Months 7-8 = Jul/Aug, the only two 2026 months missing from the files above.
+    # Read together with the {2026} year set on the line above: month {7, 8} with
+    # year {2025, 2026} double-counts Jul/Aug 2025. Both must hold.
+    "CY2025till31082026.XLSX": {7, 8},
 }
 CY_FILES = [RAW_SALES_DIR / name for name in CY_FILE_YEARS]
 

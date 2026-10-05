@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-26T20:12:40Z",
+  "generated_at": "2026-09-15T06:40:49Z",
   "tolerances": {
     "identity_eur_per_cell": 5.0,
     "waterfall_eur_per_stage": 10.0,
@@ -87,95 +87,58 @@
     {
       "id": "billing_json_vs_raw",
       "severity": "hard",
-      "status": "PASS",
-      "detail": "all DBxFY cells within EUR5",
+      "status": "SKIP",
+      "detail": "--skip-raw",
       "deltas": [],
-      "files": [
-        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_clean.json"
-      ]
+      "files": []
     },
     {
       "id": "transport_sidecar_vs_raw",
       "severity": "hard",
-      "status": "PASS",
-      "detail": "all DBxFY cells within EUR5",
+      "status": "SKIP",
+      "detail": "--skip-raw",
       "deltas": [],
-      "files": [
-        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_transport_excluded.json"
-      ]
+      "files": []
     },
     {
       "id": "surcharge_sidecar_vs_raw",
       "severity": "hard",
-      "status": "PASS",
-      "detail": "all DBxFY cells within EUR5",
+      "status": "SKIP",
+      "detail": "--skip-raw",
       "deltas": [],
-      "files": [
-        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_surcharge_stripped.json"
-      ]
+      "files": []
     },
     {
       "id": "unmapped_payers",
       "severity": "hard",
-      "status": "WARN",
-      "detail": "unmapped payer buckets: UNK_2686=360 (total EUR360)",
-      "deltas": [
-        "UNK_2686: {\"2026\": 360.0}"
-      ],
+      "status": "SKIP",
+      "detail": "--skip-raw",
+      "deltas": [],
       "files": []
     },
     {
       "id": "waterfall_vs_raw",
       "severity": "hard",
-      "status": "PASS",
-      "detail": "waterfall reproduces gps_billing_fy_waterfall.csv exactly (raw net clean, tol EUR10)",
+      "status": "SKIP",
+      "detail": "--skip-raw",
       "deltas": [],
-      "files": [
-        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_fy_waterfall.csv"
-      ]
+      "files": []
     },
     {
       "id": "allcustomers_vs_raw",
       "severity": "hard",
-      "status": "PASS",
-      "detail": "all non-Israel customer FY cells within EUR5 vs gps_billing_fy_ALLCUSTOMERS.csv",
+      "status": "SKIP",
+      "detail": "--skip-raw",
       "deltas": [],
-      "files": [
-        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_fy_ALLCUSTOMERS.csv"
-      ]
-    },
-    {
-      "id": "allcustomers_israel_basis",
-      "severity": "hard",
-      "status": "PASS",
-      "detail": "Israel totals consistent with dedicated UMI/UTI extract",
-      "deltas": [],
-      "files": [
-        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_fy_ALLCUSTOMERS.csv"
-      ]
+      "files": []
     },
     {
       "id": "snapshot_vs_raw_cy2025",
       "severity": "soft",
-      "status": "WARN",
-      "detail": "12 DBs beyond 2.0% (v9 SALES_25 is a hardcoded ERP extract \u2014 rebuild build_gps_v9.py if raw has been refreshed)",
-      "deltas": [
-        "ITUK: raw CY2025 5,571,234 vs snapshot 5,769,868 (-3.4%)",
-        "IUK: raw CY2025 6,060,535 vs snapshot 6,221,920 (-2.6%)",
-        "GERMANY: raw CY2025 2,486,243 vs snapshot 2,577,766 (-3.6%)",
-        "BELGIUM: raw CY2025 2,046,828 vs snapshot 2,143,952 (-4.5%)",
-        "IRELAND: raw CY2025 1,187,182 vs snapshot 1,213,660 (-2.2%)",
-        "DENMARK: raw CY2025 145,044 vs snapshot 150,218 (-3.4%)",
-        "ICELAND: raw CY2025 84,456 vs snapshot 87,260 (-3.2%)",
-        "CYPRUS: raw CY2025 418,864 vs snapshot 429,512 (-2.5%)",
-        "GREECE: raw CY2025 512,001 vs snapshot 528,391 (-3.1%)",
-        "ROMANIA: raw CY2025 169,310 vs snapshot 177,276 (-4.5%)",
-        "UMI: raw CY2025 2,711,493 vs snapshot 3,388,801 (-20.0%)",
-        "UTI: raw CY2025 3,147,475 vs snapshot 3,402,117 (-7.5%)"
-      ],
-      "files": [
-        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\gps_snapshot.json"
-      ]
+      "status": "SKIP",
+      "detail": "--skip-raw",
+      "deltas": [],
+      "files": []
     },
     {
       "id": "kosha_chain",

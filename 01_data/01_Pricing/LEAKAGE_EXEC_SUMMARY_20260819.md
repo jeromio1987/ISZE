@@ -1,140 +1,153 @@
 # Leakage executive summary · CY2025
 
-**Network total:** €11,938,690 leakage € (qty gap × reference sell-out = PR00 × 1.785). **IUK** carries 79% of leakage (€9,443,615) because intake/exhaust, body, and brakes families dominate high-volume workshop sell-out with bill lag on the largest PNs. **IRELAND** is next at 11%; **ITUK** and **UTI** are smaller but structurally different (dealer grain / Israel sold_to 1799). **GREECE** has no measurable leakage until sell-out reports.
+**Network total:** €2,048,126 leakage € (qty gap × reference dealer price). The reference dealer price is the ISZE list price +40% to the dealer and +27.5% to the customer (PR00 × 1.785 in the data). **ITUK** is the largest at (€944,800), 46% of the network total. Its gap is spread across intake/exhaust and suspension parts, where workshop dealer sales run ahead of the ISZE bill on the biggest part numbers — no single market dominates the network. The next three are **IUK** €697,045 (34%); **UTI** €240,179 (12%); **IRELAND** €117,428 (6%). **GREECE** is measurable for the first time at €48,674: dealer sales became visible once the dealer-sales files were read on the year rollup instead of the year plus the months.
 
-## ITUK — 937,060 € leakage (8% of network)
+## ITUK — 944,800 € leakage (46% of network)
 
-ITUK shows ~€937,060 leakage € (8% of network) with sell-through 1.09× bill qty. UK truck network — dealer grain available; leakage concentrated in exhaust/emission and suspension wear.
+ITUK shows about €944,800 of leakage (46% of network) with sell-through 1.09× bill qty. UK truck network — dealer grain available; leakage concentrated in exhaust/emission and suspension wear.
 
 ### Where money leaks
 - **Intake Exhaust Emission** — €219,803: Emission-era wear and DPD/SCR parts — high workshop velocity vs ISZE bill.
-- **Maintenance Service** — €137,994: PMS basket leakage — service schedule parts moving off official bill.
+- **Maintenance Service** — €139,394: PMS basket leakage — service schedule parts moving off official bill.
 - **Suspension** — €95,053: Truck/LCV wear — check fleet parc and dealer stock covers.
 
 ### Top 10 part numbers
 
 | PN | AIM L1 | € gap | Qty gap | Pipeline | Vehicle note |
 |---|---|---:|---:|---|---|
-| 8983300950 | Intake Exhaust Emission | 64,906 | 94 | Leakage — high sell-through | Likely N75/truck wear (AIM proxy) — not VIN-level unless dealer grain says otherwise |
-| 8983615741 | Intake Exhaust Emission | 50,853 | 82 | Leakage — high sell-through | Likely N75/truck wear (AIM proxy) — not VIN-level unless dealer grain says otherwise |
-| 8978410450 | Suspension | 42,838 | 39 | Leakage — high sell-through | AIM family: Suspension — not VIN-level unless dealer grain says otherwise |
-| 8975425400 | Maintenance Service | 35,872 | 1,600 | Leakage — high sell-through | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
-| 8982878080 | Maintenance Service | 31,987 | 16 | Leakage — high sell-through | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
-| 8978410420 | Suspension | 31,045 | 47 | Leakage — high sell-through | AIM family: Suspension — not VIN-level unless dealer grain says otherwise |
-| 8983320621 | Fuel System | 28,326 | 16 | Leakage — sell-out without bill | AIM family: Fuel System — not VIN-level unless dealer grain says otherwise |
-| 8975452010 | Intake Exhaust Emission | 24,273 | 74 | Leakage — high sell-through | Likely N75/truck wear (AIM proxy) — not VIN-level unless dealer grain says otherwise |
-| 5876101170 | Maintenance Service | 22,403 | 1,260 | Leakage — high sell-through | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
-| 5878324000 | Steering | 21,105 | 277 | Leakage — high sell-through | AIM family: Steering — not VIN-level unless dealer grain says otherwise |
+| 8983300950 | Intake Exhaust Emission | 64,906 | 94 | Leakage — high sales to dealer | Likely N75/truck wear (AIM proxy) — not VIN-level unless dealer grain says otherwise |
+| 8983615741 | Intake Exhaust Emission | 50,853 | 82 | Leakage — high sales to dealer | Likely N75/truck wear (AIM proxy) — not VIN-level unless dealer grain says otherwise |
+| 8978410450 | Suspension | 42,838 | 39 | Leakage — high sales to dealer | AIM family: Suspension — not VIN-level unless dealer grain says otherwise |
+| 8975425400 | Maintenance Service | 35,872 | 1,600 | Leakage — high sales to dealer | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
+| 8982878080 | Maintenance Service | 31,987 | 16 | Leakage — high sales to dealer | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
+| 8978410420 | Suspension | 31,045 | 47 | Leakage — high sales to dealer | AIM family: Suspension — not VIN-level unless dealer grain says otherwise |
+| 8983320621 | Fuel System | 28,326 | 16 | Leakage — sales to dealer without bill | AIM family: Fuel System — not VIN-level unless dealer grain says otherwise |
+| 8975452010 | Intake Exhaust Emission | 24,273 | 74 | Leakage — high sales to dealer | Likely N75/truck wear (AIM proxy) — not VIN-level unless dealer grain says otherwise |
+| 5876101170 | Maintenance Service | 22,403 | 1,260 | Leakage — high sales to dealer | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
+| 5878324000 | Competitive parts | 21,105 | 277 | Leakage — high sales to dealer | AIM family: Competitive parts — not VIN-level unless dealer grain says otherwise |
 
 ### What to do Monday
 
 - Call top 3 ITUK dealers on 8983300950 / 8983615741 exhaust PNs — confirm whether bill lag or genuine parallel supply.
-- Prioritise intake/exhaust & suspension leakage list with ITUK sales lead — €220k+ in those AIM families alone.
+- Prioritise intake/exhaust & suspension leakage list with ITUK sales lead — €300k+ in those AIM families alone.
 - Cross-check N75 / P700 launch buckets on top-10 PNs before any list move — several are carryover wear parts.
 
-## UTI — 239,942 € leakage (2% of network)
+## UTI — 240,179 € leakage (12% of network)
 
-UTI shows ~€239,942 leakage € (2% of network) with sell-through 0.74× bill qty. Israel UTI only (sold_to 1799) — not UMI. Sell-through below bill suggests stocking drag as well as leakage.
+UTI shows about €240,179 of leakage (12% of network) with sell-through 0.74× bill qty. Israel UTI only (sold_to 1799) — not UMI. Dealer sales below bill suggests stocking drag as well as leakage.
 
 ### Where money leaks
-- **Maintenance Service** — €73,482: PMS basket leakage — service schedule parts moving off official bill.
+- **Maintenance Service** — €73,554: PMS basket leakage — service schedule parts moving off official bill.
+- **Competitive parts** — €36,670: Parts where an equivalent is listed — check whether the workshop buys elsewhere.
 - **Intake Exhaust Emission** — €33,381: Emission-era wear and DPD/SCR parts — high workshop velocity vs ISZE bill.
-- **Brakes** — €29,016: Fast-moving safety parts — classic sell-out ahead of bill pattern.
 
 ### Top 10 part numbers
 
 | PN | AIM L1 | € gap | Qty gap | Pipeline | Vehicle note |
 |---|---|---:|---:|---|---|
-| 5876101170 | Maintenance Service | 32,128 | 1,807 | Leakage — high sell-through | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
-| 8982447940 | Brakes | 20,678 | 130 | Leakage — high sell-through | AIM family: Brakes — not VIN-level unless dealer grain says otherwise |
-| 8982049420 | Maintenance Service | 19,992 | 10 | Leakage — high sell-through | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
-| 8975425390 | Maintenance Service | 18,910 | 989 | Leakage — high sell-through | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
+| 5876101170 | Maintenance Service | 32,128 | 1,807 | Leakage — high sales to dealer | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
+| 8982447940 | Brakes | 20,678 | 130 | Leakage — high sales to dealer | AIM family: Brakes — not VIN-level unless dealer grain says otherwise |
+| 8982049420 | Maintenance Service | 19,992 | 10 | Leakage — high sales to dealer | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
+| 8975425390 | Maintenance Service | 18,910 | 989 | Leakage — high sales to dealer | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
 | 8983300950 | Intake Exhaust Emission | 14,500 | 21 | Balanced | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
-| 8982074350 | Fuel System | 11,174 | 32 | Leakage — high sell-through | AIM family: Fuel System — not VIN-level unless dealer grain says otherwise |
+| 8982074350 | Fuel System | 11,174 | 32 | Leakage — high sales to dealer | AIM family: Fuel System — not VIN-level unless dealer grain says otherwise |
 | 8982753180 | Competitive parts | 9,619 | 8 | Balanced | AIM family: Competitive parts — not VIN-level unless dealer grain says otherwise |
 | 8982979331 | Fuel System | 8,730 | 25 | Balanced | AIM family: Fuel System — not VIN-level unless dealer grain says otherwise |
 | 8982688122 | Intake Exhaust Emission | 7,940 | 4 | Balanced | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
-| 5876100201 | Fluids Chemicals | 7,649 | 245 | Balanced | AIM family: Fluids Chemicals — not VIN-level unless dealer grain says otherwise |
+| 5876100201 | Competitive parts | 7,649 | 245 | Balanced | AIM family: Competitive parts — not VIN-level unless dealer grain says otherwise |
 
 ### What to do Monday
 
-- Review 5876101170 and 8975425390 with UTI — high qty gaps on filters; confirm distributor stock vs workshop sell-out.
+- Review 5876101170 and 8975425390 with UTI — high qty gaps on filters; confirm distributor stock vs workshop dealer sales.
 - Do not conflate with UMI IDS network — this cut is UTI sold_to 1799 only.
 - Maintenance-service AIM family is #1 € gap — align PMS capture conversation with leakage register.
 
-## IRELAND — 1,318,074 € leakage (11% of network)
+## IRELAND — 117,428 € leakage (6% of network)
 
-IRELAND shows ~€1,318,074 leakage € (11% of network) with sell-through 2.43× bill qty. Harris Ireland — high sell-through ratio flags sell-out running ahead of ISZE bill on many PNs.
+IRELAND shows about €117,428 of leakage (6% of network) with sell-through 1.21× bill qty. Harris Ireland — sell-through above bill: dealer sales are running ahead of the ISZE bill on many PNs.
 
 ### Where money leaks
-- **Intake Exhaust Emission** — €253,549: Emission-era wear and DPD/SCR parts — high workshop velocity vs ISZE bill.
-- **Body Exterior** — €171,364: Accident / panel demand often billed late or via alternate PN.
-- **Brakes** — €171,238: Fast-moving safety parts — classic sell-out ahead of bill pattern.
+- **Intake Exhaust Emission** — €21,130: Emission-era wear and DPD/SCR parts — high workshop velocity vs ISZE bill.
+- **Brakes** — €16,770: Fast-moving safety parts — classic dealer-sales-ahead-of-bill pattern.
+- **Body Exterior** — €14,916: Accident / panel demand often billed late or via alternate PN.
 
 ### Top 10 part numbers
 
 | PN | AIM L1 | € gap | Qty gap | Pipeline | Vehicle note |
 |---|---|---:|---:|---|---|
-| 8983528481 | Intake Exhaust Emission | 55,798 | 121 | Leakage — high sell-through | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
-| 8978808270 | Intake Exhaust Emission | 29,349 | 68 | Leakage — high sell-through | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
-| 8983767550 | Brakes | 26,315 | 186 | Leakage — high sell-through | AIM family: Brakes — not VIN-level unless dealer grain says otherwise |
-| 8978808250 | Intake Exhaust Emission | 25,464 | 59 | Leakage — high sell-through | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
-| 8981772710 | Maintenance Service | 24,743 | 442 | Leakage — high sell-through | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
-| 8982447940 | Brakes | 23,064 | 145 | Leakage — high sell-through | AIM family: Brakes — not VIN-level unless dealer grain says otherwise |
-| 8982688122 | Intake Exhaust Emission | 15,880 | 8 | Leakage — high sell-through | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
-| 8980139111 | Intake Exhaust Emission | 14,567 | 52 | Leakage — sell-out without bill | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
-| 8981596930 | Maintenance Service | 13,670 | 553 | Leakage — high sell-through | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
-| 8982127181 | Intake Exhaust Emission | 13,394 | 29 | Leakage — high sell-through | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
+| 8983767550 | Brakes | 7,357 | 52 | Leakage — high sales to dealer | AIM family: Brakes — not VIN-level unless dealer grain says otherwise |
+| 8980139111 | Intake Exhaust Emission | 7,284 | 26 | Leakage — sales to dealer without bill | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
+| 8978808250 | Intake Exhaust Emission | 2,590 | 6 | Balanced | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
+| 5878324000 | Competitive parts | 2,425 | 31 | Leakage — high sales to dealer | AIM family: Competitive parts — not VIN-level unless dealer grain says otherwise |
+| 8982330932 | Body Exterior | 2,413 | 11 | Leakage — high sales to dealer | AIM family: Body Exterior — not VIN-level unless dealer grain says otherwise |
+| 8981772710 | Maintenance Service | 2,407 | 43 | Balanced | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
+| 5878323990 | Competitive parts | 2,076 | 16 | Leakage — high sales to dealer | AIM family: Competitive parts — not VIN-level unless dealer grain says otherwise |
+| 5874123812 | Unknown | 2,050 | 2 | Leakage — high sales to dealer | AIM family: Unknown — not VIN-level unless dealer grain says otherwise |
+| 8981654483 | Intake Exhaust Emission | 1,921 | 1 | Leakage — sales to dealer without bill | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
+| 8982395150 | Suspension | 1,871 | 2 | Leakage — high sales to dealer | AIM family: Suspension — not VIN-level unless dealer grain says otherwise |
 
 ### What to do Monday
 
-- Body exterior + brakes workshops: top PNs 8983528481, 8978808270 — verify bill timing vs Harris sell-out reporting.
-- Intake/exhaust €254k gap — check whether DPD/SCR parts are billed under different PN aliases.
-- Set monthly reconcile Harris sell-out vs SAP bill for top 20 leakage rows.
+- Brakes PN 8983767550 and intake/exhaust PN 8980139111 carry the largest single-PN gaps — verify bill timing vs Harris dealer-sales reporting.
+- Intake/exhaust family gap is ~€21k across the register — small enough that the monthly reconcile matters more than a PN chase.
+- Set monthly reconcile of Harris dealer sales against the ISZE bill for the top 20 leakage rows.
 
-## IUK — 9,443,615 € leakage (79% of network)
+## IUK — 697,045 € leakage (34% of network)
 
-IUK shows ~€9,443,615 leakage € (79% of network) with sell-through 1.97× bill qty. Mainland UK — dominates network € gap; body, brakes, and intake/exhaust families drive the story.
+IUK shows about €697,045 of leakage (34% of network) with sell-through 0.98× bill qty. Mainland UK — the second-largest market at about a third of the network; most of the gap sits in intake/exhaust part numbers.
 
 ### Where money leaks
-- **Intake Exhaust Emission** — €1,964,037: Emission-era wear and DPD/SCR parts — high workshop velocity vs ISZE bill.
-- **Brakes** — €1,444,424: Fast-moving safety parts — classic sell-out ahead of bill pattern.
-- **Body Exterior** — €1,363,063: Accident / panel demand often billed late or via alternate PN.
+- **Intake Exhaust Emission** — €229,925: Emission-era wear and DPD/SCR parts — high workshop velocity vs ISZE bill.
+- **Brakes** — €71,637: Fast-moving safety parts — classic dealer-sales-ahead-of-bill pattern.
+- **Fuel System** — €68,207: Filter/hardware mix — verify pack sizes and supersession chains.
 
 ### Top 10 part numbers
 
 | PN | AIM L1 | € gap | Qty gap | Pipeline | Vehicle note |
 |---|---|---:|---:|---|---|
-| 8983767550 | Brakes | 573,277 | 4,052 | Leakage — high sell-through | AIM family: Brakes — not VIN-level unless dealer grain says otherwise |
-| 7552348280 | Steering | 555,970 | 157 | Leakage — high sell-through | AIM family: Steering — not VIN-level unless dealer grain says otherwise |
-| 8978808250 | Intake Exhaust Emission | 458,359 | 1,062 | Leakage — high sell-through | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
-| 8978808270 | Intake Exhaust Emission | 447,138 | 1,036 | Leakage — high sell-through | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
-| 8975359391 | Intake Exhaust Emission | 205,666 | 52 | Leakage — sell-out without bill | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
-| 8982705240 | Maintenance Service | 204,535 | 16,848 | Leakage — high sell-through | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
-| 8975056801 | Brakes | 184,406 | 1,256 | Leakage — high sell-through | AIM family: Brakes — not VIN-level unless dealer grain says otherwise |
-| 8975554500 | Cabin Interior | 180,730 | 6,200 | Leakage — high sell-through | AIM family: Cabin Interior — not VIN-level unless dealer grain says otherwise |
-| 8974995480 | Maintenance Service | 152,677 | 4,038 | Leakage — high sell-through | AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise |
-| 8981901180 | Driveline Axle | 133,726 | 60 | Leakage — high sell-through | AIM family: Driveline Axle — not VIN-level unless dealer grain says otherwise |
+| 8975359391 | Intake Exhaust Emission | 102,833 | 26 | Leakage — sales to dealer without bill | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
+| 8978808250 | Intake Exhaust Emission | 75,962 | 176 | Balanced | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
+| 7552348280 | Steering | 49,577 | 14 | Balanced | AIM family: Steering — not VIN-level unless dealer grain says otherwise |
+| 8982601090 | Fuel System | 41,347 | 90 | Leakage — high sales to dealer | AIM family: Fuel System — not VIN-level unless dealer grain says otherwise |
+| 8978808270 | Intake Exhaust Emission | 40,139 | 93 | Balanced | AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise |
+| 8981394280 | Cabin Interior | 34,269 | 834 | Leakage — high sales to dealer | AIM family: Cabin Interior — not VIN-level unless dealer grain says otherwise |
+| 8983767550 | Brakes | 32,682 | 231 | Balanced | AIM family: Brakes — not VIN-level unless dealer grain says otherwise |
+| 8975554500 | Cabin Interior | 23,320 | 800 | Balanced | AIM family: Cabin Interior — not VIN-level unless dealer grain says otherwise |
+| 8979488071 | Brakes | 23,093 | 143 | Leakage — high sales to dealer | AIM family: Brakes — not VIN-level unless dealer grain says otherwise |
+| 8975293230 | Engine | 14,375 | 1 | Leakage — high sales to dealer | AIM family: Engine — not VIN-level unless dealer grain says otherwise |
 
 ### What to do Monday
 
-- Steering unit 7552348280 (~€556k gap) — commercial owner + LCV parc check before pricing action.
-- Body/exterior cluster (8983767550, 8978808250/8270) — largest single-PN euro gaps; workshop walk with IUK sales.
-- Brakes + intake/exhaust AIM families each >€1.3M gap — treat as portfolio review, not PN-by-PN firefight.
+- Exhaust PN 8975359391 (~€103k gap) is the largest single line — confirm bill lag vs parallel supply before any call.
+- Intake/exhaust (8978808250/8978808270) and steering unit 7552348280 (~€50k) are the next tier; workshop walk with IUK sales.
+- IUK sell-through is 0.98× the ISZE bill, so this is a small residual gap, not a market-wide shortage — treat as a targeted PN list.
 
-## GREECE — 0 € leakage (0% of network)
+## GREECE — 48,674 € leakage (2% of network)
 
-GREECE shows ~€0 leakage € (0% of network) with sell-through 0.00× bill qty. Petros Greece — CY2025 sell-out file reports zero movement; leakage € not measurable until sell-out arrives.
+GREECE shows about €48,674 of leakage (2% of network) with sell-through 0.91× bill qty. Petros Greece — dealer sales are visible for CY2025 for the first time; the gap is small but now measurable.
 
 ### Where money leaks
+- **Body Exterior** — €9,552: Accident / panel demand often billed late or via alternate PN.
+- **Maintenance Service** — €9,499: PMS basket leakage — service schedule parts moving off official bill.
+- **Intake Exhaust Emission** — €6,238: Emission-era wear and DPD/SCR parts — high workshop velocity vs ISZE bill.
 
 ### Top 10 part numbers
 
 | PN | AIM L1 | € gap | Qty gap | Pipeline | Vehicle note |
 |---|---|---:|---:|---|---|
+| 8980139111 | Intake Exhaust Emission | 5,883 | 21 | Leakage — high sales to dealer | No dealer sales in CY2025 file — not VIN-level unless dealer grain says otherwise |
+| 5876150022 | Maintenance Service | 5,308 | 230 | Leakage — high sales to dealer | No dealer sales in CY2025 file — not VIN-level unless dealer grain says otherwise |
+| 8983320591 | Fuel System | 2,734 | 8 | Leakage — high sales to dealer | No dealer sales in CY2025 file — not VIN-level unless dealer grain says otherwise |
+| 5876150170 | Maintenance Service | 2,064 | 165 | Balanced | No dealer sales in CY2025 file — not VIN-level unless dealer grain says otherwise |
+| 8980116055 | Fuel System | 1,279 | 4 | Leakage — high sales to dealer | No dealer sales in CY2025 file — not VIN-level unless dealer grain says otherwise |
+| 7552752270 | Electrical | 1,236 | 1 | Leakage — high sales to dealer | No dealer sales in CY2025 file — not VIN-level unless dealer grain says otherwise |
+| 8978461152 | Body Exterior | 1,102 | 5 | Leakage — high sales to dealer | No dealer sales in CY2025 file — not VIN-level unless dealer grain says otherwise |
+| 8982181430 | Wheels Hub | 1,091 | 5 | Leakage — high sales to dealer | No dealer sales in CY2025 file — not VIN-level unless dealer grain says otherwise |
+| 8981045609 | Body Exterior | 914 | 2 | Leakage — high sales to dealer | No dealer sales in CY2025 file — not VIN-level unless dealer grain says otherwise |
+| 8982330922 | Body Exterior | 878 | 4 | Leakage — sales to dealer without bill | No dealer sales in CY2025 file — not VIN-level unless dealer grain says otherwise |
 
 ### What to do Monday
 
-- Hold pricing moves tied to leakage until Petros sell-out CY2025 feed is validated — current file is all zero sell-out.
-- Separate IAM undercut review (KS quotes exist) from leakage story — overstock/no-sell-out dominates register.
-- Re-run replenishment bridge after next sell-out drop — GREECE rows are in queue but € gap is not yet provable.
+- Dealer sales for CY2025 are now readable; the measured gap is small (~€49k) and concentrated in body exterior and intake/exhaust parts.
+- Separate the IAM undercut review (KS quotes exist) from the leakage story — the register is dominated by overstock and low dealer sales, not by leakage.
+- Keep the monthly reconcile running so the next dealer-sales drop keeps the gap measurable.

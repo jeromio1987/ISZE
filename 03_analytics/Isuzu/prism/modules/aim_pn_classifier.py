@@ -28,6 +28,30 @@ FILTER_ELEMENT_FIG_KEYS = frozenset({"041-002", "050-002", "130-006", "873-042"}
 FILTER_ASSEMBLY_FIG_KEYS = frozenset({"041-001", "050-001"})
 
 
+# ─── Genuine DEF filter kits (2026-09-21) ─────────────────────────────────────
+# The real AdBlue/DEF filter element is "FILTER KIT; PUMP ASM,DEF DCM S" on fig key
+# 146-152 — the filter inside the DEF pump module. Its description contains "KIT" and
+# "ASM", so the role inference below reads it as an assembly or a kit, and the capture
+# step drops those by design; the category then held nothing that could be counted.
+# These part numbers ARE the element, so the role is declared here instead of being
+# guessed from the wording. The demand rate is untouched: this decides which parts the
+# category covers, not what the category expects.
+DEF_FILTER_ELEMENT_PNS = frozenset({
+    "1876102340", "1876102341", "8981694030", "8983507160", "8983507161",
+})
+_DEF_FILTER_NORM = frozenset(p.lstrip("0") for p in DEF_FILTER_ELEMENT_PNS)
+
+
+def resolve_filter_part_role(pn_norm: object) -> str | None:
+    """The role declared for a part number, where someone has declared one.
+
+    None means nothing is declared, so the caller falls back to the
+    description-based inference exactly as before.
+    """
+    pn = normalize_pn_value(pn_norm) or ""
+    return "element" if pn in _DEF_FILTER_NORM else None
+
+
 def _norm_desc(s: pd.Series) -> pd.Series:
     return s.fillna("").astype(str).str.strip().str.upper()
 
@@ -282,6 +306,13 @@ def attach_pms_filter_roles(df: pd.DataFrame) -> pd.DataFrame:
             if pd.notna(r) and str(r).strip():
                 role = str(r).strip()
 
+        # A declared role wins over the description: the genuine DEF filter kit reads
+        # as a kit/assembly, so the wording alone would keep it out of the count even
+        # after it has been filed under the urea category.
+        declared = resolve_filter_part_role(pn_n)
+        if declared:
+            role = declared
+
         if not role and cat in FILTER_CAPTURE_CATEGORIES:
             role = infer_filter_part_role(
                 description=row.get("description"),
@@ -339,6 +370,11 @@ def enrich_dimension_filter_roles(df_dim: pd.DataFrame) -> pd.DataFrame:
             if pd.notna(r) and str(r).strip():
                 role = str(r).strip()
         from_reg = bool(pn_n in registry_norm)
+        # a declared role wins over the description, the same way it does for the
+        # capture rows above (see resolve_filter_part_role)
+        declared = resolve_filter_part_role(pn_n)
+        if declared:
+            role = declared
         if not role and cat in FILTER_CAPTURE_CATEGORIES:
             role = "element" if from_reg else None
         roles.append(role)

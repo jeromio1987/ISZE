@@ -4,7 +4,7 @@
 
 | Subfolder | What |
 |-----------|------|
-| `mp/SHARE/` | Excel · HTML · asks · email drafts (Mode A) |
-| `mp/JEROME_ONLY/` | Speaker notes · Target Study lineup · Outlook extracts (Mode B) |
+| `mp/SHARE/` | Excel · HTML · asks · email drafts (shared) |
+| `mp/JEROME_ONLY/` | Speaker notes · Target Study lineup · Outlook extracts (internal) |
 
 This parent folder keeps builders (`build_iml_pms_study_xlsx.py`), peeks, and GIDSS text dumps.

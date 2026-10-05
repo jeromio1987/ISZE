@@ -1,6 +1,6 @@
 # Aftermarket BI bug audit — 2026-08-19
 
-**Mode B internal** · Fixes applied same day · Rebuild: `--all` + exec summary
+**internal internal** · Fixes applied same day · Rebuild: `--all` + exec summary
 
 ## Critical / fixed
 

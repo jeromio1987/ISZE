@@ -1,0 +1,291 @@
+{
+  "files": {
+    "new": "aim_pn_classification_release_2026-10-02-candidate.csv",
+    "old": "aim_pn_classification_release_2026-10-02.csv"
+  },
+  "l12m_window": "2025-09-01..2026-08-31",
+  "l12m_total_sales_fact_eur": 35212239.65,
+  "rows": {
+    "old": 164916,
+    "new": 164919,
+    "added": [
+      "7475447681",
+      "7551939337",
+      "7552895450"
+    ],
+    "removed": []
+  },
+  "columns_changed": {
+    "catalog_l1": 10,
+    "catalog_l2": 44,
+    "catalog_l3": 46,
+    "catalog_node_present": 3,
+    "catalog_residual": 3,
+    "aim_source": 252,
+    "aim_l1_fixed": 252,
+    "aim_l2_fixed": 252,
+    "aim_l3_fixed": 252,
+    "catalog_changed_vs_master": 3
+  },
+  "parts_changed": 300,
+  "parts_changed_eur": 110101.47,
+  "parts_changed_by_group": {
+    "A_review_proposal": {
+      "parts": 42,
+      "eur": 106445.45
+    },
+    "B_body_filing": {
+      "parts": 256,
+      "eur": 3656.02
+    },
+    "C_wrong_in_both": {
+      "parts": 2,
+      "eur": 0.0
+    }
+  },
+  "catalogue_moves": [
+    {
+      "move": "Competitive parts > Fuel system > Other fuel system  ->  Competitive parts > Air system > Air duct / intake",
+      "parts": 32,
+      "eur": 43702.98,
+      "groups": [
+        "A_review_proposal"
+      ],
+      "examples": [
+        "7551846390",
+        "8971660972",
+        "8971660973"
+      ]
+    },
+    {
+      "move": "Competitive parts > Filters > Other filter  ->  High value repair > Injectors > Injection pump",
+      "parts": 2,
+      "eur": 41805.42,
+      "groups": [
+        "A_review_proposal"
+      ],
+      "examples": [
+        "8980023462",
+        "8981065790"
+      ]
+    },
+    {
+      "move": "Accident parts > Body parts > Grille  ->  Accident parts > Body parts > Step / guard",
+      "parts": 2,
+      "eur": 13889.01,
+      "groups": [
+        "A_review_proposal"
+      ],
+      "examples": [
+        "8983941544",
+        "8983941570"
+      ]
+    },
+    {
+      "move": "Competitive parts > Brake parts > Brake pad  ->  Hardware & consumables > Hardware > Pin",
+      "parts": 1,
+      "eur": 4508.94,
+      "groups": [
+        "A_review_proposal"
+      ],
+      "examples": [
+        "8980475290"
+      ]
+    },
+    {
+      "move": "Competitive parts > Air system > Other air system  ->  Competitive parts > Brake parts > ABS component",
+      "parts": 1,
+      "eur": 2539.1,
+      "groups": [
+        "A_review_proposal"
+      ],
+      "examples": [
+        "8982154541"
+      ]
+    },
+    {
+      "move": "(not in release)  ->  Accident parts > Body parts > Panel",
+      "parts": 3,
+      "eur": 954.5,
+      "groups": [
+        "B_body_filing"
+      ],
+      "examples": [
+        "7475447681",
+        "7551939337",
+        "7552895450"
+      ]
+    },
+    {
+      "move": "Other / review > Miscellaneous > Review needed  ->  Accident parts > Body parts > Panel",
+      "parts": 2,
+      "eur": 96.6,
+      "groups": [
+        "B_body_filing"
+      ],
+      "examples": [
+        "7552458070",
+        "8979363282"
+      ]
+    },
+    {
+      "move": "Competitive parts > Steering > Knuckle / arm  ->  Hardware & consumables > Special tools > Hand tools",
+      "parts": 3,
+      "eur": 0.0,
+      "groups": [
+        "A_review_proposal"
+      ],
+      "examples": [
+        "1852100090",
+        "1852380010",
+        "9852101510"
+      ]
+    },
+    {
+      "move": "Other / review > Miscellaneous > Review needed  ->  Hardware & consumables > Hardware > Spacer / retainer",
+      "parts": 1,
+      "eur": 0.0,
+      "groups": [
+        "A_review_proposal"
+      ],
+      "examples": [
+        "0001481480"
+      ]
+    },
+    {
+      "move": "Competitive parts > Air system > Other air system  ->  Competitive parts > Steering > Knuckle / arm",
+      "parts": 1,
+      "eur": 0.0,
+      "groups": [
+        "C_wrong_in_both"
+      ],
+      "examples": [
+        "5878305371"
+      ]
+    },
+    {
+      "move": "Accident parts > Body parts > Interior trim  ->  Competitive parts > Steering > Other steering",
+      "parts": 1,
+      "eur": 0.0,
+      "groups": [
+        "C_wrong_in_both"
+      ],
+      "examples": [
+        "9443730060"
+      ]
+    }
+  ],
+  "aim_moves": [
+    {
+      "move": "Unknown > Unknown > Unknown  ->  Accident & Body > Panels > Panel",
+      "parts": 2,
+      "eur": 1893.28,
+      "groups": [
+        "B_body_filing"
+      ],
+      "examples": [
+        "7552008820",
+        "8982268360"
+      ]
+    },
+    {
+      "move": "(not in release)  ->  Accident & Body > Panels > Panel",
+      "parts": 3,
+      "eur": 954.5,
+      "groups": [
+        "B_body_filing"
+      ],
+      "examples": [
+        "7475447681",
+        "7551939337",
+        "7552895450"
+      ]
+    },
+    {
+      "move": "Chassis Frame > Crossmember & Brackets > Bracket  ->  Accident & Body > Panels > Panel",
+      "parts": 1,
+      "eur": 711.64,
+      "groups": [
+        "B_body_filing"
+      ],
+      "examples": [
+        "8980107565"
+      ]
+    },
+    {
+      "move": " >  >   ->  Accident & Body > Panels > Panel",
+      "parts": 248,
+      "eur": 0.0,
+      "groups": [
+        "B_body_filing"
+      ],
+      "examples": [
+        "1534506860",
+        "1534506861",
+        "1534506862"
+      ]
+    },
+    {
+      "move": "Electrical > Switch Relay Fuse >   ->  Accident & Body > Panels > Panel",
+      "parts": 1,
+      "eur": 0.0,
+      "groups": [
+        "B_body_filing"
+      ],
+      "examples": [
+        "7552458070"
+      ]
+    }
+  ],
+  "catalogue_moves_total": {
+    "parts": 49,
+    "eur": 107496.55
+  },
+  "aim_moves_total": {
+    "parts": 255,
+    "eur": 3559.42
+  },
+  "page_export": {
+    "rows": 165290,
+    "pns_level_move": 252,
+    "eur_level_move": 2604.92,
+    "other_columns_changed": {
+      "aim_source": 252
+    },
+    "not_classified_in_aim_parts": {
+      "old": 144289,
+      "new": 144039
+    },
+    "not_classified_in_aim_l12m_eur": {
+      "old": 1308332.4,
+      "new": 1306439.12
+    },
+    "candidate_rows_not_in_export": [
+      "7475447681",
+      "7551939337",
+      "7552895450"
+    ],
+    "moves": [
+      {
+        "move": "Unknown > Unknown > Unknown  ->  Accident & Body > Panels > Panel",
+        "parts": 2,
+        "eur": 1893.28
+      },
+      {
+        "move": "Chassis Frame > Crossmember & Brackets > Bracket  ->  Accident & Body > Panels > Panel",
+        "parts": 1,
+        "eur": 711.64
+      },
+      {
+        "move": " >  >   ->  Accident & Body > Panels > Panel",
+        "parts": 248,
+        "eur": 0.0
+      },
+      {
+        "move": "Electrical > Switch Relay Fuse >   ->  Accident & Body > Panels > Panel",
+        "parts": 1,
+        "eur": 0.0
+      }
+    ]
+  }
+}

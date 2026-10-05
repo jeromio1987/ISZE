@@ -1,0 +1,159 @@
+{
+ "image": "_raw\\brake_corner_bc_idpass.png",
+ "size": [
+  2800,
+  2000
+ ],
+ "subject_pixels": 1815580,
+ "subject_pct": 32.42,
+ "parts": {
+  "disc": {
+   "colour_rgb": [
+    255,
+    89,
+    89
+   ],
+   "visible_px": 210256,
+   "solo_footprint_px": 210256,
+   "visible_share_of_own_footprint": 1.0,
+   "occluded_px": 0,
+   "x0": 353,
+   "x1": 720,
+   "y0": 554,
+   "y1": 1259,
+   "w": 368,
+   "h": 706,
+   "hidden_attributed_to": {},
+   "hidden_unattributed_self_occlusion_px": 0
+  },
+  "pads": {
+   "colour_rgb": [
+    255,
+    255,
+    89
+   ],
+   "visible_px": 49246,
+   "solo_footprint_px": 49246,
+   "visible_share_of_own_footprint": 1.0,
+   "occluded_px": 0,
+   "x0": 751,
+   "x1": 902,
+   "y0": 664,
+   "y1": 1071,
+   "w": 152,
+   "h": 408,
+   "hidden_attributed_to": {},
+   "hidden_unattributed_self_occlusion_px": 0
+  },
+  "caliper": {
+   "colour_rgb": [
+    89,
+    255,
+    89
+   ],
+   "visible_px": 85241,
+   "solo_footprint_px": 85675,
+   "visible_share_of_own_footprint": 0.9949,
+   "occluded_px": 434,
+   "x0": 945,
+   "x1": 1168,
+   "y0": 645,
+   "y1": 1119,
+   "w": 224,
+   "h": 475,
+   "hidden_attributed_to": {
+    "wheel": 434
+   },
+   "hidden_unattributed_self_occlusion_px": 0
+  },
+  "wheel": {
+   "colour_rgb": [
+    89,
+    188,
+    255
+   ],
+   "visible_px": 454775,
+   "solo_footprint_px": 530310,
+   "visible_share_of_own_footprint": 0.8576,
+   "occluded_px": 75535,
+   "x0": 1148,
+   "x1": 1815,
+   "y0": 568,
+   "y1": 1457,
+   "w": 668,
+   "h": 890,
+   "hidden_attributed_to": {
+    "caliper": 118,
+    "tyre": 75417
+   },
+   "hidden_unattributed_self_occlusion_px": 0
+  },
+  "tyre": {
+   "colour_rgb": [
+    255,
+    89,
+    255
+   ],
+   "visible_px": 1015588,
+   "solo_footprint_px": 1016200,
+   "visible_share_of_own_footprint": 0.9994,
+   "occluded_px": 612,
+   "x0": 1721,
+   "x1": 2596,
+   "y0": 390,
+   "y1": 1764,
+   "w": 876,
+   "h": 1375,
+   "hidden_attributed_to": {
+    "wheel": 612
+   },
+   "hidden_unattributed_self_occlusion_px": 0
+  }
+ },
+ "unclaimed_subject_px": 474,
+ "unclaimed_pct_of_subject": 0.03,
+ "horizontal_gaps_px": [
+  {
+   "between": [
+    "disc",
+    "pads"
+   ],
+   "gap_px": 31,
+   "separated": true
+  },
+  {
+   "between": [
+    "pads",
+    "caliper"
+   ],
+   "gap_px": 43,
+   "separated": true
+  },
+  {
+   "between": [
+    "caliper",
+    "wheel"
+   ],
+   "gap_px": -20,
+   "separated": false
+  },
+  {
+   "between": [
+    "wheel",
+    "tyre"
+   ],
+   "gap_px": -94,
+   "separated": false
+  }
+ ],
+ "every_part_visible": true,
+ "min_visible_share_of_own_footprint": 0.8576,
+ "order_left_to_right": [
+  "disc",
+  "pads",
+  "caliper",
+  "wheel",
+  "tyre"
+ ],
+ "method": "each part's own footprint comes from an identical render of that part alone. visible_share_of_own_footprint is the share of that footprint where the part is the front-most surface, so a low value means a neighbour is covering it and 100% means nothing covers it at all."
+}

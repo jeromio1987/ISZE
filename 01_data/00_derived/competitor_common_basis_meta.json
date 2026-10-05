@@ -1,0 +1,27 @@
+{
+  "built": "2026-09-18T06:22:58",
+  "dials_are_not_measurements": true,
+  "dials": {
+    "db_margin": 1.4,
+    "dealer_margin": 1.275,
+    "reference_factor": 1.7849999999999997,
+    "our_book_margin": 0.5109,
+    "fx_gbp_eur": 1.17
+  },
+  "tiers": {
+    "K1": "our net price to the distributor = list x (1 - our margin)",
+    "K2": "official list (PR00 / IE40)",
+    "K3": "our reference dealer price = K2 x DB x DLR",
+    "K5": "a competitor's observed retail price (what KS publishes)"
+  },
+  "underidentification": "One retail price cannot yield both the margin and the distributionstructure - two unknowns, one equation. Either the reader supplies a landedcost and we derive their margin, or they supply their margin and we derivethe cost. That is why DB and DLR are dials here.",
+  "correction": [
+    "iam_ks_price_gap.csv carries isze_price_source = IE40_PR00, so its index is official genuine LIST against an aftermarket retail listing. It is not a margin comparison, and it was labelled as one.",
+    "The same gap reads very differently by tier: the document states all three indices side by side so a reader cannot take one for the truth."
+  ],
+  "caveats": [
+    "KS is one UK source, fanned across 18 market rows. There is no market dimension in it; every market average from it is composition.",
+    "KS aftermarket is GBP ex-VAT converted at 1.17, a rate set 2026-05-01.",
+    "The bridge prices are a distributor list, not a market price, and sit in their own column."
+  ]
+}

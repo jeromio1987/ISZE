@@ -1,4 +1,10 @@
-# DB→DLR commercial stack (Mode B)
+# DB→DLR commercial stack (internal)
+
+> **2026-09-22 — the ambition question is CLOSED, permanently.** Jerome, verbatim: *"delete price
+> ambition I will come when it's done for now do a simulation on 5% increase and than never ask
+> again."* Any "still blocked without ambition" wording below is stale as a *question*; nothing was
+> rebuilt. **Do not ask him to choose an ambition value.** Record:
+> [`00_docs/PRICE_AMBITION_CLOSED_2026-09-22.md`](../../00_docs/PRICE_AMBITION_CLOSED_2026-09-22.md).
 
 **Builder:** `01_data/91_build/build_db_dlr_commercial_stack.py`  
 **Rebuild:** `python 01_data/91_build/build_db_dlr_commercial_stack.py`  
@@ -33,13 +39,15 @@
 
 | Action | Meaning |
 |--------|---------|
-| `REVIEW_IAM_UNDERCUT` | KS shop price > reference sell-out (×1.785) — IAM already cheaper |
+| `REVIEW_IAM_UNDERCUT` | Peer shop price more than 20% **below** our reference dealer price (index < 0.80) — the peer is cheaper, we look expensive, guardrail before any list move |
 | `REVIEW_PROXY_ADVERSE` | Category cross-section proxy β < −0.5 (adequate n) |
 | `REVIEW_LEAKAGE` | Sell-through high or sell-out without bill |
 | `REVIEW_OVERSTOCK` | Bill without matching sell-out |
 | `REVIEW_HIGH_LIST_EXPOSURE` | Planned sim list move > +8% on PN |
-| `RAISE_OK_ROOM_VS_IAM` | KS quote below reference sell-out |
+| `RAISE_OK_ROOM_VS_IAM` | Peer shop price more than 10% **above** our reference dealer price (index > 1.10) — we already hold the premium, a raise is defensible on this evidence |
 | `HOLD_DEFAULT` | No rule fired |
+
+**Direction of the index.** `ks_price_index` = peer shop price ÷ our reference dealer price. Below 1.0 the peer shop is cheaper than us; above 1.0 it is dearer. The band 0.80–1.10 is deliberately left unlabelled: inside it the two sides are too close to the measurement noise to act on. The index is built in `db_dlr_commercial_common.load_ks_pn_index` (shop price ÷ reference dealer price). Do not invert this reading — the two labels call for opposite commercial action and were previously swapped.
 
 **Not in scope:** multiplying list deltas by β; running `isze_pricing.cli alloc`.
 
@@ -77,4 +85,4 @@ Chart-first view: € leakage by DB/AIM, ISZE Director vs DB Director tabs, Book
 - Elasticity rows remain **`measure_kind=proxy`** until a second full CY sell-out exists per DB.
 - KS index uses GBP→EUR **1.17** diagnostic; shop = min(KS AM, GEN) where quoted.
 - KS join (2026-08-25): `ks_status=crawl_union_20260825`; **302** queue rows with `ks_has_quote=True` (**126** unique PNs). Catalog tree expand `01_data/01_Pricing/_raw/ks_catalog_tree_expand_20260825.csv` (69 rows / 50 unique SKUs). Autodoc scrape still frozen.
-- Reference sell-out = PR00 × **1.785** (not “street” in Mode A labels).
+- Reference sell-out = PR00 × **1.785** (not “street” in shared labels).

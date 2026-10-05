@@ -1,0 +1,61 @@
+﻿dims A1:B67
+  1| UIO V20 CANDIDATE - assumptions log
+  2| Full text: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\UIO_V20_ASSUMPTIONS_2026-09-22.md
+  3| Generated 2026-09-22
+  5| Method
+  6| UIO(t) = SUM_v [ R_v x S(t-v+1) ] + R_t x S(1).  1990-2025 R_v recovered by recursive decomposition of V19's own history (exact reproduction, no step 
+  7| Curve / life / scrap
+  8| CV developed 16-yr (LD, MD, F-Series): 9.85 yr life, 10.15%/yr scrap
+  9| LCV 12-yr (LCV rows): 8.13 yr life, 12.30%/yr scrap  <-- maximum-life-12 variant; see MD log s.2
+ 10| Flat 3% rule it replaces: 33.33 yr life, 3.00%/yr scrap
+ 12| Scope
+ 13| Rows 7, 8 Israel LD/MD
+ 14| Rows 22, 24 UK CV
+ 15| Row 25 UK LCV
+ 16| Rows 27, 52, 80, 89 IE/PT/GR/CY MD
+ 17| Row 42 Germany LD
+ 18| All other forecast rows
+ 19| Rows 93-200 summary tables
+ 21| Open inputs needed
+ 22| 1. Israeli MoT parc band table as DATA (spec has it only as a PDF slide picture)
+ 23| 2. A German registration series or parc history by year
+ 24| 3. Confirmation of the LCV age-12 survival value (0.10 or 0.00)
+ 25| 4. Written definition of the ISZE pickup perimeter (appendix reconciliation gaps)
+ 26| 5. Owner of the June change that introduced the 3% rule
+ 28| Independent verification
+ 29| Harness: 03_analytics/Isuzu/prism/scripts/verify_uio_v20.py (written separately; reads only workbook values, the curve table and the VIN register)
+ 30| VERDICT on this candidate: CONVICTED - 3 of 10 checks fail. Same harness on live V19: CONVICTED - 7 of 10 fail.
+ 31| FAIL check1_method_consistency + check5_flat_rule_present = FALSE POSITIVE. 4 rows (r33 BE LD, r54 PT LCV, r79 GR LD, r90 CY LCV) are below their ceil
+ 32|    Decisive test: with constant registrations a curve row converges to regs x mean_life; a flat-3% row to regs / 0.03 (~3.4x higher). Projected to 206
+ 33| FAIL check7_overstatement_curve = method artefact plus a tolerance tighter than the method's own ambiguity. 2030 IS inside tolerance (+37.8% vs spec +
+ 34|    V19 is +6.8% above this candidate in 2026 rising to +37.8% in 2030, widening every year - the guarded behaviour is met. The harness's own recomputa
+ 35| PASS: check2/2b Ireland (2030 trucks +0.4%, pickups -1.1% vs spec), check3 steady state (2,128 not 7,200), check6 totals identity (all 41 years), chec
+ 36| WARN check4_vin_scrappage: Ireland 15.1% / Portugal 9.0% measured - far from 3%, but the VIN register on disk was rebuilt 2026-09-18 and no longer rep
+ 37| Full report: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\_uio_v20_CANDIDATE_verification_report.json
+ 39| Fix pass b (2026-09-22b)
+ 40| FIX 1 r79 GREECE CV LD: the +14.0 x 5 straight line was a ROUNDING artefact. The input UIO(t)-0.97*UIO(t-1) was rounded to a whole number before smoot
+ 41| FIX 2 new sheet 'V20 REGS USED': per row and per year 2026-2030, the registration input actually used, the raw pre-smoothing input, the source of each
+ 42| FIX 3 r54 PORTUGAL LCV and r90 CYPRUS LCV: the seam detector never fired on them (it required a negative cohort > 25% of that year's fleet; PT 2005 wa
+ 43| Out-of-scope alternative, measured and NOT done: applying the corrected seam rule to all rows would move 22 rows (8 further LCV rows flagged) and shif
+ 44| r33 BELGIUM and r90's forecast behaviour were adjudicated CURVE and are not re-litigated. r33 is untouched.
+ 45| Unchanged and out of scope: V19, the v18 archive, live price lists, uio_ld_n35_share.csv, the ceiling chain, every harness threshold, and the locked I
+ 47| Independent verification of THIS candidate (2026-09-22b)
+ 48| Harness: 03_analytics/Isuzu/prism/scripts/verify_uio_v20.py - written separately; reads only workbook values, the curve table and the VIN register.
+ 49| VERDICT on this candidate: CONVICTED - 1 of 10 checks fails (was 3 of 10 on candidate a; 7 of 10 on live V19).
+ 50| PASS check1_method_consistency: 0 of 81 rows switch method (candidate a: 4 - r33/r54/r79/r90). The fix is in the workbook, not in the test.
+ 51| PASS check5_flat_rule_present: 0 rows show the 3% constant-ratio signature (candidate a: 2 - r33/r54). Near-miss list fell from 5 rows to 2 (r59 Italy
+ 52| FAIL check7_overstatement_curve: STATED RESIDUAL, deliberately not forced. Max |delta| 0.36 pp against a +/-1.5 pp band; 4 of 5 years inside. The band
+ 53| WARN check4_vin_scrappage: unchanged from candidate a. The VIN register on disk was rebuilt 2026-09-18 and no longer reproduces the spec's shipment to
+ 54| PASS check2/2b Ireland, check3 steady state, check6 totals identity (all 41 years), check8 locked values (row 25 = 44,926, unchanged).
+ 55| Grand Total 2026-2030: V19 1,446,918 -> candidate a 1,190,448 -> candidate b 1,197,489. Candidate b is +0.59% vs candidate a and -17.2% vs V19.
+ 56| Full report: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\_uio_v20_B_verification_report.json
+ 58| Independent verification of THIS candidate (2026-09-22b)
+ 59| Harness: 03_analytics/Isuzu/prism/scripts/verify_uio_v20.py - written separately; reads only workbook values, the curve table and the VIN register.
+ 60| VERDICT on this candidate: CONVICTED - 1 of 10 checks fails (was 3 of 10 on candidate a; 7 of 10 on live V19).
+ 61| PASS check1_method_consistency: 0 of 81 rows switch method (candidate a: 4 - r33/r54/r79/r90). The fix is in the workbook, not in the test.
+ 62| PASS check5_flat_rule_present: 0 rows show the 3% constant-ratio signature (candidate a: 2 - r33/r54). Near-miss list fell from 5 rows to 2 (r59 Italy
+ 63| FAIL check7_overstatement_curve: STATED RESIDUAL, deliberately not forced. Max |delta| 0.36 pp against a +/-1.5 pp band; 4 of 5 years inside. The band
+ 64| WARN check4_vin_scrappage: unchanged from candidate a. The VIN register on disk was rebuilt 2026-09-18 and no longer reproduces the spec's shipment to
+ 65| PASS check2/2b Ireland, check3 steady state, check6 totals identity (all 41 years), check8 locked values (row 25 = 44,926, unchanged).
+ 66| Grand Total 2026-2030: V19 1,446,918 -> candidate a 1,190,448 -> candidate b 1,197,489. Candidate b is +0.59% vs candidate a and -17.2% vs V19.
+ 67| Full report: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\_uio_v20_B_verification_report.json

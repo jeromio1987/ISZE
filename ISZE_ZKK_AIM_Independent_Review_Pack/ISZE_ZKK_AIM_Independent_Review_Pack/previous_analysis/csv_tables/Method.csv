@@ -1,0 +1,24 @@
+Topic,Method / source / limitation
+Purpose,Internal working analysis; not an external or finance-approved publication.
+Period,"Current: 1 July 2025 to 30 June 2026. Previous: 1 July 2024 to 30 June 2025. Month determined from billing_date, not extract label."
+Scope,22 mapped national distributors. United Kingdom entities ITUK and IUK kept separate; Israeli sold-to codes 1797 UMI and 1799 UTI kept separate.
+Mapping,2574/89 IUK; 2575/2194 ITUK; 1797 UMI; 1799 UTI; 90 Belgium; 601/2516/93 Germany; 92/519 Portugal; 86 Norway; 2181 Sweden; 76 Ireland; 2294 Ukraine; 66 Greece; 393 Cyprus; 1576 Iceland; 1759 Malta; 2027/2751 Denmark; 2679 Finland; 537 Hungary; 396 Romania; 2372 Palestine; 2733 Armenia; 2734 Kazakhstan.
+Primary billing basis,Keep numeric material references with positive source value; exclude source sales types CR and RE. Named administrative materials and entities outside the mapped distributor scope are excluded separately. The Scope sheet shows the monetary effects.
+Not accounting net revenue,"Source credit/return code meaning is not ERP-confirmed. Apr-Jun 2026 has no sales-type field. Negative source values are excluded from the main operational comparison, not silently treated as positive revenue."
+April-June type gap,All L12 Apr-Jun 2026 eligible lines have unknown sales type. Do not calculate complete L12 urgent-order shares or SPA effects from these fields.
+Reconciliation,Raw count and raw source monetary control match supplied documentation. Analyst filters produce different calendar-year/distributor totals from supplied summaries; do not overwrite the official totals.
+Repeated exported records,"16,797 identical exported records are retained. No invoice number/line ID is supplied, so identical observations are not proven duplicate transactions."
+Part-number formatting,Numeric identifiers are left-padded to 10 characters for leading-zero consistency. No replacement/supersession chains are merged.
+Catalogue keys,Use the supplied fig_key directly. The same normalised part has one key in this extract. An empty key is retained as Not assigned. No ZKK or AIM interpretation is invented.
+Quantity bridge,For continuing distributor-part pairs: quantity contribution = (current quantity - prior quantity) x prior realised average price. Realised-price contribution = current quantity x (current average price - prior average price). Interaction is assigned to price. Entry/exit values complete the exact reconciliation.
+Price interpretation,"Realised-price movement can reflect discounts, urgent-order charges and other conditions. It is not isolated list-price change, inflation or evidence of customer elasticity."
+Purchasing continuity,First observed means not seen in available pre-July-2024 history beginning January 2023. Reactivated was present earlier but absent from previous L12. No current-period purchase is not proof of product discontinuation or competitor purchasing.
+Downstream,"Use only month-grain network_pn records. Do not add year/YTD snapshots or the alternative named-dealer ITUK data. ITUK non-numeric raw references, including exchange surcharges, are removed. Downstream quantities retain source returns and are not valued as observed revenue."
+UTI downstream,July 2025 is missing. June 2026 appears under two report source files. No L12 UTI downstream comparison is calculated; overlapping series not silently combined.
+Fleet,Historical 2025 figures are contextual only; ITUK context is the DVLA March-2026 basis carried in that source. Zero/missing fleet values are shown blank. No 2026+ forecast or L12 spend-per-truck growth is calculated.
+Historical mix,"04_original_vs_value_parts_mix.csv is a selected-family, calendar-year original/value mix. It is not an L12 classification mapping, a full-book value share, or a market-share measure."
+Billing source,01_all_sales_isze_to_distributor.csv; complete mounted extract read programmatically.
+Downstream source,03_all_sales_to_dealer.csv; monthly source selection and exclusions described above.
+Context / control sources,00_READ_ME_FIRST.md; 01_ISUZU_AND_ISZE_BUSINESS.md; 02_NUMBERS_AND_HOW_THEY_ARE_BUILT.md; 03_OPERATIONS_OPEN_WORK_AND_CAVEATS.md; 04_GLOSSARY_AND_HOW_TO_WRITE.md.
+Other supporting sources,02_spend_per_truck_by_market.csv; 04_original_vs_value_parts_mix.csv; dealer_sellout_aim_mix_2025.csv; dealer_sellout_compare.json. No external web sources used.
+Excluded from deliverable,"No raw invoice-line data, full price list, restricted service-gap euro total or unvalidated future fleet forecast is reproduced."

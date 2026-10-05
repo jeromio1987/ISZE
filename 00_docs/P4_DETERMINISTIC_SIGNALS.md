@@ -1,6 +1,6 @@
 # P4 — Account-health KPIs
 
-**Status 2026-08-18:** builder live — `04_tools/interactions/build_account_health.py` writes gitignored `01_data/17_interactions/account_health.parquet` (`p4-v1`). Draft thresholds. **Not a KPI.** No Mode A / PRISM widget until task 4.9 (your calibration) then 2.3/4.10.
+**Status 2026-08-18:** builder live — `04_tools/interactions/build_account_health.py` writes gitignored `01_data/17_interactions/account_health.parquet` (`p4-v1`). Draft thresholds. **Not a KPI.** No shared / PRISM widget until task 4.9 (your calibration) then 2.3/4.10.
 
 **CC-depth:** uses existing `n_cc` (P2a.9 collector change not required).
 
@@ -22,7 +22,7 @@
 | **Commitment met-rate** | met / (met + missed), rolling 90d | % | Fulfilment quality. Dropping → supply or credibility issue |
 | **Signal→order latency** | ts(order_in_sales_fact) - ts(first_mention_in_mail), rolling 90d | days | Sales cycle speed. Rising → friction in decision chain |
 | **Stakeholder churn** | count(churn_flagged=True) / total_active, rolling 90d | % | Personnel risk. Spike → relationship key-person dependency |
-| **Escalation cadence** | count(CC-depth ≥ 3) / total_threads, rolling 30d | % | Friction signal. Rising → unresolved objections |
+| **Escalation cadence** | count(CC-depth ≥ 3) / total_threads, rolling 30d | % | Pads & Shoes signal. Rising → unresolved objections |
 | **Topic concentration** | 1 - entropy([topic_counts]), rolling 90d | [0,1] | Narrow focus (=0.9) → one-product account; broad (=0.3) → healthy cross-sell |
 | **Email activity volume** | count(interactions), rolling 30d | /day | Engagement baseline. Drop > 30% → alarm |
 | **Open commitments** | count(status='open' AND due_date < today), rolling 30d | count | Overdue actions. > 3 in rolling window → escalate to account mgr |
@@ -93,7 +93,7 @@ CREATE TABLE account_health (
 | 4.7 | Implement alert router (thresholds → alert_level + reasons) | 0.5 d | Deterministic rule engine, versioned |
 | 4.8 | Build parquet writer + metadata | 0.5 d | Rolling monthly, append-only |
 | 4.9 | Manual calibration (run on 6mo backfill, review thresholds) | 1 d | Hand-verify 3–5 accounts; tune amber/red boundaries |
-| 4.10 | Integration with dashboard / ops runbook | 1 d | Either HTML widget (Mode A compatible) or direct CSV export |
+| 4.10 | Integration with dashboard / ops runbook | 1 d | Either HTML widget (shared compatible) or direct CSV export |
 
 **Estimated:** 6–7 d (developer) + 1 d (you: calibration) = 1.5 week.
 

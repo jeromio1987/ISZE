@@ -1,0 +1,25 @@
+{
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\ISZE_PMS_Coverage_2026-09-21.pptx",
+  "created_utc": "2026-09-21T08:53:00Z",
+  "ok": true,
+  "builder": "09_meetings/_build/build_pms_coverage_deck.py",
+  "slides": 12,
+  "purpose": "PMS coverage as an invitation to distributors. Story and structure from the ISZE conference presentation; slide treatment from the IML team-meeting slides. No results numbers.",
+  "sources": [
+    "ISZE_GPS_PMS_Conf26_v3.pptx (conference) - the invisible market; GPS vs PMS; how we measure (5 steps); FY27 rollout; what you get; assumptions and open questions",
+    "01_data/03_PMS/GPS_PMS.pptx (IML team meeting) - PMS as a joint ISZE-IML project, what it is / opportunity; FY27 new projects",
+    "EU Conf 26 ISZE Parts Sales deck - two-lens framing and benefits wording"
+  ],
+  "no_numbers_rule": "No coverage %, no euro gap, no market table, no parc count. Only the working replacement intervals (oil 20,000 km; fuel and air 40,000 km; clutch and brake 100,000 km), which are already published in the conference deck as IML reference.",
+  "checks": {
+    "geometry": "python-pptx bounds vs 13.333 x 7.5 in canvas: 0 of 12 slides with any shape out of bounds",
+    "visual": {
+      "method": "PowerPoint COM export of all 12 slides to PNG at 1600x900, each read at full size",
+      "taken": 12,
+      "read": 12,
+      "reader": "agent",
+      "result": "all slides paint; navy headers, terracotta rules, five-step method row, lens blocks, FY27 quarters, assumption grid and closing ask all rendered with no blank page and no clipped text"
+    },
+    "rejected_earlier_build": "ISZE_PMS_Progress_2026-09-21.pptx (an ITUK results pack) was deleted; it was the wrong artefact. Its builder remains at 09_meetings/_build/build_pms_progress_deck.py if the numbers version is ever wanted."
+  }
+}

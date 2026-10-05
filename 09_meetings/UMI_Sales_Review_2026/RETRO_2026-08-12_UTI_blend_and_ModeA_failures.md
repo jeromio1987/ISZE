@@ -5,9 +5,9 @@
 ## What went wrong (root causes)
 
 1. **UTI blended into UMI** — `load_sales` filtered by payer name `UNIVERSAL MOTORS ISRAEL LTD` only. That name covers sold-to **1797 (UMI)** and **1799 (UTI)**. Story became fake boom (+318% commercial) while PBI showed −14%.
-2. **Narrated before reconcile** — Built Mode A takeaways from contaminated CY H1 without proving Apr–Jun vs Power BI monthals.
+2. **Narrated before reconcile** — Built shared takeaways from contaminated CY H1 without proving Apr–Jun vs Power BI monthals.
 3. **IBX pattern copy** — Excluded Filters / Best>100% / orders / SaTy GPS framing from IBX without UMI-specific Jerome OK.
-4. **Mode B on Mode A** — SaTy notes with sold-to / export / blank-% jargon.
+4. **internal on shared** — SaTy notes with sold-to / export / blank-% jargon.
 5. **Stale rebuild** — PPTX rebuilt on old `_summary.json` after loader intent changed.
 6. **Shell** — `5500*` left UNCLASSIFIED / buried; later forced to “Shell lubricants”.
 7. **Deep-dive zeros** — brake pads showed €0 from `billing_qty` vs `billed_qty`.
@@ -37,6 +37,6 @@
 
 ## Do not
 
-- Average UTI+UMI for IDS-linked or “Israel” Mode A slides.
+- Average UTI+UMI for IDS-linked or “Israel” shared slides.
 - Lead with commercial boom while PBI is down.
 - Copy another DB’s exclude list without an explicit ask.

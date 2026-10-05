@@ -23,10 +23,49 @@ pms_fig_keys:
     label: Air filter
     pms_category: air_filter
     bvp_subgroup: air_filter
+  # CORRECTED 2026-09-21 — this key was wrong. Every part number on EPC fig key
+  # 873-042 in pr00_classification.csv is a cabin blower/heater filter
+  # ("FILTER; BLOWER UNIT", PR00 level3 "Blower / fan"), and the whole 873 figure
+  # numbered group is blower/fan and heater parts (873-010, 873-104, 873-023 …),
+  # not the urea/DEF circuit. The old "Urea (AdBlue) filter" label therefore told
+  # every reader of the AIM/fig-key file that a cabin pollen filter was an AdBlue
+  # filter (16 billed part numbers, ~EUR 620k L12M).
+  #
+  # The genuine DEF/AdBlue filter element sits on fig key 146-152
+  # ("FILTER KIT; PUMP ASM,DEF DCM S" — the filter inside the DEF pump module),
+  # which the PR00 catalogue labels "Other filter". That key is the urea key:
+  # category_default_fig_key and the PR00 rule below both point at it.
   "873-042":
+    # Category was urea_filter: that sent cabin filters to the urea count. (wrong circuit)
+    label: Cabin / blower filter
+    pms_category: blower_filter
+    bvp_subgroup: blower_filter
+
+  # Urea filter — the real DEF/AdBlue filter element ("FILTER KIT; PUMP ASM,DEF
+  # DCM S", the filter in the DEF pump module). This key, not 873-042, is what the
+  # urea_filter category should cover. Declaring pms_category here is what moves
+  # the category off the blower key; the demand rate itself is unchanged.
+  "146-152":
+    # Category added: this key is the real DEF filter. (not the blower key)
     label: Urea (AdBlue) filter
     pms_category: urea_filter
     bvp_subgroup: urea_filter
+
+  # Air-cleaner element keys. EPC figure 130 is the air cleaner, and these two keys hold
+  # only elements: every part number PR00 puts on 130-026 reads "FILTER; ACL,INNER" and
+  # every one on 130-027 reads "FILTER; ACL,OUTER". Neither key had an entry here, so
+  # nothing could map them and the label fell through to the PR00 text "Other A/C" —
+  # which made an engine air filter read as an air-conditioning part.
+  "130-026":
+    # Added: air-cleaner inner element key. (was unlabelled "Other A/C")
+    label: Air filter
+    pms_category: air_filter
+    bvp_subgroup: air_filter
+  "130-027":
+    # Added: air-cleaner outer element key. (was unlabelled "Other A/C")
+    label: Air filter
+    pms_category: air_filter
+    bvp_subgroup: air_filter
 
   # Brake FIG keys — front (301/302) vs rear (305/306), sourced from IML market-research
   # slide "Market Research(PMS parts sales)" (CV/N-series study, Jerome 2026-07-14).
@@ -106,7 +145,8 @@ category_default_fig_key:
   oil_filter: "050-002"
   fuel_filter: "041-002"
   air_filter: "130-006"
-  urea_filter: "873-042"
+  # Was "873-042" (the cabin blower key). Repointed 2026-09-21. (urea sat on wrong key)
+  urea_filter: "146-152"
   brake_pad: null
   brake_shoe: null
   brake_pad_front: "302-017"
@@ -168,8 +208,46 @@ pr00_pms_category_rules:
     category: urea_filter
   - match_level3: "adblue"
     category: urea_filter
-  - match_fig_key: "873-042"
+  - match_fig_key: "146-152"
+    # Repointed 2026-09-21 — this rule forced urea onto the cabin key. (wrong key)
     category: urea_filter
+  # king pin: by figure key (Jerome, 4 Oct 2026), not the whole Steering > Knuckle / arm type
+  - match_fig_key: "410-004"
+    category: king_pin
+  - match_fig_key: "410-026"
+    category: king_pin
+  - match_fig_key: "410-014"
+    category: king_pin
+  - match_fig_key: "410-029"
+    category: king_pin
+  - match_fig_key: "410-025"
+    category: king_pin
+  - match_fig_key: "410-003"
+    category: king_pin
+  - match_fig_key: "410-032"
+    category: king_pin
+  - match_fig_key: "410-364"
+    category: king_pin
+  - match_fig_key: "410-007"
+    category: king_pin
+  - match_fig_key: "410-045"
+    category: king_pin
+  - match_fig_key: "410-044"
+    category: king_pin
+  - match_fig_key: "410-024"
+    category: king_pin
+  - match_fig_key: "410-006"
+    category: king_pin
+  - match_fig_key: "410-008"
+    category: king_pin
+  - match_fig_key: "410-021"
+    category: king_pin
+  - match_fig_key: "410-028"
+    category: king_pin
+  - match_fig_key: "410-030"
+    category: king_pin
+  - match_fig_key: "410-047"
+    category: king_pin
   - match_group: "Suspension"
     level3_contains:
       shock: shock_absorber

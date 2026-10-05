@@ -1,0 +1,243 @@
+{
+  "reviewer": "independent verification reviewer",
+  "review_date": "2026-09-22",
+  "component": "ISZE AIM Universe - Pricing Decisions component",
+  "root": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\05_AIM_Universe",
+  "authority": {
+    "business_approval": false,
+    "technical_approval": false,
+    "privacy_clearance": false,
+    "spending_authority": false,
+    "independent_formal_audit": false,
+    "note": "No test result in this package confers any of these. They are separate decisions."
+  },
+  "frozen_reference": {
+    "file": "reference/ISZE_AIM_Pricing_Decisions_v03_FROZEN.html",
+    "sha256_expected": "7494cea1955be820d0082eef15473610945663fbefc7a06d7969c15822423e14",
+    "sha256_observed": "7494cea1955be820d0082eef15473610945663fbefc7a06d7969c15822423e14",
+    "matches": true
+  },
+  "baseline_reproduced": {
+    "engine": { "pass": 11, "fail": 19, "total": 30,
+      "failing_ids": ["R09","R10","R11","R12","R13","R14","R15","R16","R17","R18","R19","R20","R21","R22","R23","R24","R25","R26","R27"],
+      "command": "node 06_Working/AIM_v03_HANDOFF_20260922/tests/review_engine.cjs reference/ISZE_AIM_Pricing_Decisions_v03_FROZEN.html",
+      "raw": "tests/accept/_out/baseline_engine_frozen.json" },
+    "browser": { "pass": 29, "fail": 1, "total": 30,
+      "failing": "ITUK-TURBO / objectives - v03fmtPct is not defined",
+      "command": "python 06_Working/AIM_v03_HANDOFF_20260922/tests/review_browser.py reference/...FROZEN.html --memory",
+      "raw": "tests/accept/_out/baseline_browser_frozen.json" },
+    "non_zero_exit_is_correct": true
+  },
+  "tested_revision": {
+    "note": "SHA-256 of each file at the moment it was read. Other agents were writing src/ during this review; these are the revisions the results below describe.",
+    "src\\engine\\engine.js": "1db7f3fb6fa8f3993a9c8b1b1ba82ac5f60989fdb787399f5670e8cc5bc44b92",
+    "src\\data\\export.js": "3244bb686ac69da072d635fc4408a0669739692390e4776511a2d78d7d60769e",
+    "src\\output\\recipients.js": "868db5c4d9afb2eba225d9d1d5696060a10fa88439bb79511c0256ffdfb8e6f1",
+    "src\\ui\\app.js": "c91503217d0daa61",
+    "src\\data\\contracts.js": "e826fc9f2216968332a8d318a399210bb464dfe1d0c73bfb68204c30033dd3bc",
+    "dist\\ISZE_AIM_Pricing_Decisions_v04_INTERNAL.html": "157d33a34739bb3962c10520bbdf2acb121ccc7667780a53e46cb008b2bdb223",
+    "dist\\_build_report.json": "86b5364692e0c805c34115bc3139b423d3bcc2781bc0ec9adc650c99f96299e3"
+  },
+  "checks_built": [
+    { "task": "BASE-05", "id": "ACCEPT-01", "command": "node tests/accept/accept_01_engine.cjs",
+      "observed": { "pass": 46, "fail": 1, "total": 47 },
+      "raw": "tests/accept/_out/accept_01_engine.json" },
+    { "task": "ACCEPT-02", "id": "ACCEPT-02", "command": "python tests/accept/accept_02_journey.py",
+      "observed": { "pass": 47, "fail": 5, "total": 52 },
+      "coverage": { "cases": 5, "tabs": 6, "objectives": 2, "load_mode": "file:// URL, persistent profile" },
+      "screenshots_taken": 15, "screenshots_read": 0, "screenshots_read_by": null,
+      "raw": "tests/accept/_out/accept_02_journey.json" },
+    { "task": "ACCEPT-03", "id": "ACCEPT-03", "command": "node tests/accept/accept_03_conservation.cjs",
+      "observed": { "pass": 16, "fail": 1, "total": 17 },
+      "raw": "tests/accept/_out/accept_03_conservation.json" },
+    { "task": "ACCEPT-04", "id": "ACCEPT-04", "command": "node tests/accept/accept_04_participant.cjs",
+      "observed": { "pass": 10, "fail": 3, "total": 13 },
+      "raw": "tests/accept/_out/accept_04_participant.json" },
+    { "task": "SAFE-05 / SAFE-08", "id": "SAFE-05/08", "command": "node tests/accept/accept_05_08_safety.cjs",
+      "observed": { "pass": 13, "fail": 3, "total": 16 },
+      "raw": "tests/accept/_out/accept_05_08_safety.json" }
+  ],
+  "entry_point": "powershell -ExecutionPolicy Bypass -File tests/run_all.ps1",
+  "summary_report": "tests/accept/_out/run_all_summary.json",
+  "brief_naming_note": "The task brief names src/engine/pricing.js. No such file exists in this build; the maintained engine is src/engine/engine.js and that is what was tested.",
+
+  "findings": [
+    {
+      "id": "F01",
+      "title": "The new scenario is not the scenario saved in the case",
+      "verdict": "NOT FIXED",
+      "severity": "high",
+      "evidence": "J10 fails on all five cases: a saved case is not loaded into the working scenario when the case is reopened. Reproduced in a fresh browser, a new process and a fresh profile, five times out of five.",
+      "mechanism": "src/ui/app.js reads the case id on line 597, before readHash() on line 604 has read it out of the page address, so the restore routine looks for the wrong case and returns.",
+      "checks": ["J10-ITUK-PADS", "J10-IMOTORS-CABIN", "J10-ITUK-TURBO", "J10-ITUK-DISCS", "J10-IMOTORS-OIL"],
+      "not_fixed_by_reviewer": true
+    },
+    {
+      "id": "F02",
+      "title": "Gross margin does not equal reported gross profit divided by revenue",
+      "verdict": "FIXED",
+      "severity": "high",
+      "evidence": "R09 and R10 now pass. The review's synthetic example returns 37.93% (4,400 / 11,600) where v03 returned 25%, and with 500 of support it returns 35% where v03 returned 40%.",
+      "checks": ["R09", "R10", "A15"]
+    },
+    {
+      "id": "F03",
+      "title": "Incremental-only break-even uses the all-volume formula",
+      "verdict": "FIXED",
+      "severity": "high",
+      "evidence": "R11, R12, R13 and R18 now pass. An incremental offer demands 100 and 110 units where v03 demanded 125, 200 and 210.",
+      "checks": ["R11", "R12", "R13", "R18", "A03"]
+    },
+    {
+      "id": "F04",
+      "title": "One advertised baseline contains several cost bases",
+      "verdict": "PARTIALLY FIXED",
+      "severity": "high",
+      "evidence": "R19 and R21 now pass: one case ranking uses one profit baseline, and a baseline that does not reconcile to recorded billing is labelled a rounded scenario rather than recorded history. R29 passes on explicit dates. A10 records the consequence that remains: the payload's own default forward basis, OCT26, declares no end date, so the engine cannot select it from its own start date and the cost is unresolved. That is the honest outcome, and it needs the payload's metadata corrected.",
+      "checks": ["R19", "R21", "R29", "A10"]
+    },
+    {
+      "id": "F05",
+      "title": "Turbo objectives fail to render",
+      "verdict": "FIXED",
+      "severity": "high",
+      "evidence": "ITUK-TURBO / objectives renders. In ACCEPT-02 all thirty case and tab combinations render their own content with no page error, which covers the case that failed in the supplied review. A view that throws now renders an error panel rather than leaving the previous tab underneath.",
+      "checks": ["J02-ITUK-TURBO", "J01", "rendered all 30 case/tab combinations"]
+    },
+    {
+      "id": "F06",
+      "title": "Invalid proposed quantities can be accepted as valid",
+      "verdict": "FIXED",
+      "severity": "high",
+      "evidence": "R14, R15, R16 and R17 now pass. Zero is refused as a withdrawal, a negative or non-finite quantity and a non-numeric support value are refused with a reason, an impossible incremental total is refused rather than clamped, and every numeric output is finite or null.",
+      "checks": ["R14", "R15", "R16", "R17", "A04", "A05", "A09", "A11"]
+    },
+    {
+      "id": "F07",
+      "title": "Genuine/BVP migration is a label, not a two-product calculation",
+      "verdict": "FIXED",
+      "severity": "high",
+      "evidence": "R24 passes. The migration alternative is returned unresolved with a stated reason instead of a fabricated zero, and the screen says the product migration is not priced here.",
+      "checks": ["R24"]
+    },
+    {
+      "id": "F08",
+      "title": "Export helper does not enforce the stated restriction",
+      "verdict": "PARTIALLY FIXED - and a new defect found in the same area",
+      "severity": "high for external use",
+      "evidence": "The blacklist is gone. Participant output is now constructed from a permitted field list, and the participant file carries no cost, profit, margin, supplier-discount or FX field at any depth, and no other participant's part number or customer name (D01-D05). The internal file does carry them, which is what makes that result meaningful (D02, D05). The unsolved part is worse than the original in one respect: the brief the build actually produces contains only its limits boilerplate - no part number, no price, no quantity - and its own content check still reports clean, so the operator is told the check passed for a file that says nothing (D06, D11, D12, S01c). The cause is that src/data/export.js adds permitted leaf names but never the permitted containers, and the module that does it correctly, src/output/recipients.js, is not in the build.",
+      "checks": ["R25", "R26", "D01", "D02", "D03", "D04", "D05", "D06", "D11", "D12", "S01c"]
+    },
+    {
+      "id": "F09",
+      "title": "The two engine entry points handle a volume assumption differently",
+      "verdict": "FIXED",
+      "severity": "medium",
+      "evidence": "R20 now passes. Across every alternative in all five cases, ranking and the both-objective view agree on quantity, revenue change and profit change. A01 and A12 assert this over the whole population rather than the single alternative the original check named.",
+      "checks": ["R20", "A01", "A12", "A14"]
+    },
+    {
+      "id": "F10",
+      "title": "Candidate list is not yet an actionable range workbench",
+      "verdict": "PARTIALLY FIXED",
+      "severity": "medium",
+      "evidence": "The screen now declares its reporting basis as undeclared and refuses to infer a period; promotion blockers name the missing period, the missing cost, the missing list, the missing evidence and the missing quantity; rows and distinct part numbers are reported as two different counts; and price-and-cost completeness is separated from approval (C11, C12, R27b). What cannot be fixed here is the underlying gap: the delivered records still carry no period, so the original R27 assertion still fails and is kept as supplied.",
+      "checks": ["R27 (still fails - kept as supplied)", "R27b", "C11", "C12"]
+    },
+    {
+      "id": "F11",
+      "title": "Important v02 wording survives the v03 change",
+      "verdict": "PARTIALLY VERIFIED - not fully checked",
+      "severity": "medium",
+      "evidence": "The version string now reads as a corrected component and the objectives view labels the cost requirement rather than asserting a verified cost. I did not carry out a systematic sweep of every surviving v02 sentence. What I can state is that the built artifact contains none of the banned audience or commercial labels, because the build refuses to produce it if they appear.",
+      "checks": ["not systematically tested - reported as unverified"]
+    },
+    {
+      "id": "F12",
+      "title": "Notes are local mutable state; no shared service",
+      "verdict": "NOT FIXED - and explicitly not claimed to be",
+      "severity": "not implemented as a shared service",
+      "evidence": "There is still no shared backend, no authenticated owner and no server-side permission. The case record is now an append-only revision log with a concurrency guard, a duplicate-submission guard, a declared correction that names its predecessor, a recovery bundle and a re-open by revision (C01-C07, S02). That is a genuine improvement on one mutable blob, and it is still local. The module states on every result that the identity is not authenticated, and says that storage, revocation and tenant policy are unimplemented (S07, S11).",
+      "checks": ["C01", "C02", "C04", "C05", "C06", "C07", "S02", "S07", "S11"]
+    }
+  ],
+
+  "additional_findings_not_in_the_original_review": [
+    {
+      "id": "N01",
+      "title": "The internal record no longer carries the limits it declares",
+      "severity": "medium",
+      "evidence": "S10c. The declared price_approved, current_customer_net_price, no_raw_invoices and no_credentials block is emptied by the allowlist. src/output/recipients.js leaves it as {}, src/data/export.js drops the key entirely.",
+      "not_fixed_by_reviewer": true
+    },
+    {
+      "id": "N02",
+      "title": "The conservation check double-counts a row that was set aside",
+      "severity": "medium",
+      "evidence": "C17. After a set-aside, conservation reports 3 received against 3 added plus 1 set aside = 4, and reports a difference although nothing was lost.",
+      "not_fixed_by_reviewer": true
+    },
+    {
+      "id": "N03",
+      "title": "The attachment file-name check misses a restricted word joined to another",
+      "severity": "medium",
+      "evidence": "S09b. It matches whole words, so 'supplier cost list 2026.xlsx' is refused but 'supplier_cost_list_2026.xlsx', 'gross_margin_report.xlsx', 'my_cost_file.xlsx', 'parts_purchase_price.xlsx' and 'invoices_2026.xlsx' are all accepted. The name check is a convenience; the control is the restricted flag and the recipient allowlist.",
+      "not_fixed_by_reviewer": true
+    },
+    {
+      "id": "N04",
+      "title": "The build does not include the hardened recipient module",
+      "severity": "medium",
+      "evidence": "D10. tools/build.py assembles a module list that does not contain src/output/recipients.js or src/case/schema.js or src/case/store.js. The guard that refuses to hand the internal record to a participant, and the fix for the empty brief, exist on disk but are not reachable from the artifact. A green unit test on an unshipped module is not evidence about the product.",
+      "not_fixed_by_reviewer": true
+    }
+  ],
+
+  "not_verified": [
+    "Server-side access control - there is no backend, so there is nothing to test. A browser-side filter is not access control.",
+    "Production identity, organisation membership and revocation - the module returns IDENTITY_NOT_AVAILABLE and every result states the identity was not authenticated.",
+    "Attachment storage - the permission question is answered, no bytes are stored.",
+    "Concurrent editing, ownership and cross-user isolation.",
+    "The underlying commercial sources: supplier workbooks, FX authority, cost eligibility, price approval. The arithmetic is verified against synthetic figures; the figures are not.",
+    "F11 wording sweep - not carried out systematically.",
+    "F12 durable service - absent, and explicitly not claimed by the implementation.",
+    "Screenshots - 15 taken, 0 read. A take-count is not a read-count."
+  ],
+
+  "environment_faults": [
+    {
+      "what": "Relaunching Chromium into an already-used profile directory kills the page intermittently with 'Target page, context or browser has been closed'.",
+      "effect": "The four-route export step fails for an environment reason, not a product reason.",
+      "isolated_by": "tests/accept/_diag_export.py - with a fresh profile per iteration the exports succeeded six times out of six.",
+      "workaround_in_the_suite": "Each case uses its own profile directory."
+    },
+    {
+      "what": "Playwright's bundled chromium is not installed; the system Chrome is used instead.",
+      "detail": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+    }
+  ],
+
+  "sources_moving_during_the_review": {
+    "observed": true,
+    "detail": "Other agents were writing src/ throughout. src/ui/views.js appeared, tools/build.py was rewritten, and src/data/contracts.js, src/ui/app.js and the built artifact all changed while checks were running.",
+    "consequence": "The checksums in tested_revision are the revision the results describe. Re-run tests/run_all.ps1 and compare its printed checksums before relying on these results.",
+    "confirmed_at_end_of_review": "The final full run, through tests/run_all.ps1, reproduced the same checksum for every file in tested_revision, and the same per-check results. So the results above describe the revision that was current when the review finished, not an intermediate state."
+  },
+
+  "state_of_each_task": {
+    "BASE-05": "implemented, technically verified",
+    "ACCEPT-01": "implemented, technically verified",
+    "ACCEPT-02": "implemented, technically verified, fails on F01",
+    "ACCEPT-03": "implemented, technically verified, fails on N02",
+    "ACCEPT-04": "implemented, technically verified, fails on F08",
+    "SAFE-05": "implemented, technically verified, fails on F08 and N01",
+    "SAFE-08": "implemented, technically verified for what can be tested without a backend",
+    "ACCEPT-05": "not started",
+    "ACCEPT-06": "not started",
+    "ACCEPT-07": "not started",
+    "ACCEPT-08": "not started",
+    "note": "A task is not technically verified because a test file exists. It is verified when the check runs and its result is recorded, which is the case for the rows above that say so."
+  },
+
+  "next_bounded_task": "Fix the four open defects in this order: (1) load the saved revision into the working scenario on reopen so J10 passes; (2) build the participant brief from its permitted containers so D06, D11, D12 and S01c pass and the brief's own check can fail an empty brief; (3) declare the names inside the internal record's limits block so S10c passes; (4) correct the conservation arithmetic so C17 passes. Then re-run tests/run_all.ps1 and confirm the checksums match the revision the fixes were made on. Separately, obtain the candidate reporting period, which no code change can supply."
+}

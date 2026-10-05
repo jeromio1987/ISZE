@@ -61,4 +61,4 @@ France incomplete-lane demo:
 
 Generator: `C:\Users\jerom\Desktop\claude\ISZE\04_tools\ids_dealer_ranking\build_db_feedback_sheet.py` (`VERSION = v0.4`).
 
-Mode B OS one-pager: `C:\Users\jerom\Desktop\claude\ISZE\05_memory\projects\ids-db-leverage-os.md`.
+internal OS one-pager: `C:\Users\jerom\Desktop\claude\ISZE\05_memory\projects\ids-db-leverage-os.md`.

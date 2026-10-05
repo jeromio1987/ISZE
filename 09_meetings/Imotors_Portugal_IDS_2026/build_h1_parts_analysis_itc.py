@@ -1,6 +1,6 @@
 """I-Motors (Portugal) H1 2026 vs H1 2025 parts analysis — with ITC (Newest P/N) rollup.
 
-Mode A deliverable (external language). Rebuilds / extends
+shared deliverable (external language). Rebuilds / extends
 ISZE_Imotors_H1_Parts_Analysis_Jul2026.xlsx:
 
 - Aggregate interchangeable parts via Price file Newest P/N
@@ -527,7 +527,7 @@ def build():
         "  - Some sold PNs (e.g. certain 755* materials) are absent from the price file → family = self.",
         "  - Same description (e.g. STEERING UNIT) can be several independent Newest P/N families.",
         "  - Growing lists exclude the one-off REBATE material line (EUR 20,000 in H1 2026).",
-        "  - Mode A language: no internal model nicknames in this workbook.",
+        "  - shared language: no internal model nicknames in this workbook.",
         "",
         f"Rebuild script: {Path(__file__).name}",
     ]

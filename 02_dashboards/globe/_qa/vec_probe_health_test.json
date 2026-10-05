@@ -1,0 +1,37 @@
+{
+  "1_online_healthy": {
+    "ok": true,
+    "reason": "",
+    "styleStatus": 200,
+    "tileStatus": 200,
+    "tileType": "application/vnd.mapbox-vector-tile",
+    "tileUrl": "https://tiles.openfreemap.org/planet/20260913_164504_pt/4/8/5.pbf",
+    "provider": "OpenFreeMap",
+    "tileBytes": 785834
+  },
+  "2_offline_blocked": {
+    "ok": false,
+    "reason": "style fetch failed: Failed to fetch",
+    "styleStatus": null,
+    "tileStatus": null,
+    "tileType": null,
+    "tileUrl": null,
+    "provider": null,
+    "tileBytes": null,
+    "_blocked_count": 2
+  },
+  "3_tile_404": {
+    "ok": false,
+    "reason": "tile was empty",
+    "styleStatus": 200,
+    "tileStatus": 200,
+    "tileType": "application/vnd.mapbox-vector-tile",
+    "tileUrl": "https://tiles.openfreemap.org/planet/20260913_164504_pt/NOPE/4/8/5.pbf",
+    "provider": null,
+    "tileBytes": 0
+  },
+  "4_old_method_on_404": {
+    "resolved": true,
+    "verdict": "SUCCESS"
+  }
+}

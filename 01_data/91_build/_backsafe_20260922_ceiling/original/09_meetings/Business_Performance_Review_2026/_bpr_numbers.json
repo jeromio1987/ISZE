@@ -1,0 +1,590 @@
+{
+ "sources": {
+  "sales_net": "sales_fact.parquet (billing_date, net_sales_value, saty)",
+  "kpi_master": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\planning\\KPI Master File august 2026.xlsx"
+ },
+ "sf_max_date": "2026-08-31",
+ "sf_rows": 538346,
+ "attributed_rows": 509346,
+ "unattributed_rows": 29000,
+ "fy2026": {
+  "total_eur": 32582307.2,
+  "by_db": {
+   "ITUK": 6957525.3,
+   "IUK": 6048308.97,
+   "UTI (Israel)": 3242539.88,
+   "UMI (Israel)": 3079678.34,
+   "Germany": 2731950.13,
+   "Belgium": 2203112.48,
+   "Portugal": 1853613.42,
+   "Norway": 1653639.12,
+   "Sweden": 1438426.16,
+   "Ireland": 1145256.7,
+   "Greece": 471585.68,
+   "Cyprus": 412223.75,
+   "Hungary": 349882.24,
+   "Finland": 328900.8,
+   "Malta": 205186.8,
+   "Romania": 189715.47,
+   "Denmark": 180802.66,
+   "Iceland": 89959.3
+  },
+  "months_present": [
+   "2025-04",
+   "2025-05",
+   "2025-06",
+   "2025-07",
+   "2025-08",
+   "2025-09",
+   "2025-10",
+   "2025-11",
+   "2025-12",
+   "2026-01",
+   "2026-02",
+   "2026-03"
+  ]
+ },
+ "fy2027": {
+  "total_eur": 13566221.959999999,
+  "by_db": {
+   "ITUK": 2948422.73,
+   "IUK": 2401410.95,
+   "UTI (Israel)": 1489880.21,
+   "Germany": 1230415.24,
+   "UMI (Israel)": 1139061.99,
+   "Belgium": 1007371.0,
+   "Portugal": 701076.5,
+   "Sweden": 648545.17,
+   "Norway": 597828.85,
+   "Ireland": 457356.21,
+   "Greece": 226703.66,
+   "Cyprus": 184586.8,
+   "Hungary": 134338.69,
+   "Finland": 120673.2,
+   "Malta": 95905.35,
+   "Denmark": 79408.05,
+   "Romania": 75546.24,
+   "Iceland": 27691.12
+  },
+  "months_present": [
+   "2026-04",
+   "2026-05",
+   "2026-06",
+   "2026-07",
+   "2026-08"
+  ]
+ },
+ "fy2027_by_quarter": {
+  "Q1": 8140135.27,
+  "Q2": 5426086.69
+ },
+ "fy2027_q2_months": [
+  "2026-07",
+  "2026-08"
+ ],
+ "gps_cy2025": {
+  "by_db": {
+   "Ireland": {
+    "spend_per_unit": 549.4949652938454,
+    "uio": 2161.0,
+    "billed_eur": 1187458.62
+   },
+   "UTI (Israel)": {
+    "spend_per_unit": 322.321201625387,
+    "uio": 10336.0,
+    "billed_eur": 3331511.94
+   },
+   "ITUK": {
+    "spend_per_unit": 241.2339671392032,
+    "uio": 23067.0,
+    "billed_eur": 5564543.92
+   },
+   "Portugal": {
+    "spend_per_unit": 237.20782325194227,
+    "uio": 7208.0,
+    "billed_eur": 1709793.99
+   },
+   "Finland": {
+    "spend_per_unit": 230.83107142857142,
+    "uio": 1204.0,
+    "billed_eur": 277920.61
+   },
+   "Belgium": {
+    "spend_per_unit": 219.88237464818098,
+    "uio": 9593.0,
+    "billed_eur": 2109331.62
+   },
+   "Iceland": {
+    "spend_per_unit": 210.05312807881776,
+    "uio": 406.0,
+    "billed_eur": 85281.57
+   },
+   "Malta": {
+    "spend_per_unit": 198.55987499999998,
+    "uio": 1040.0,
+    "billed_eur": 206502.27
+   },
+   "Cyprus": {
+    "spend_per_unit": 185.63392980935873,
+    "uio": 2308.0,
+    "billed_eur": 428443.11
+   },
+   "Germany": {
+    "spend_per_unit": 184.02988534107402,
+    "uio": 13780.0,
+    "billed_eur": 2535931.82
+   },
+   "UMI (Israel)": {
+    "spend_per_unit": 179.01759033545466,
+    "uio": 18542.0,
+    "billed_eur": 3319344.16
+   },
+   "Norway": {
+    "spend_per_unit": 178.65455038466388,
+    "uio": 7929.0,
+    "billed_eur": 1416551.93
+   },
+   "Denmark": {
+    "spend_per_unit": 174.17216216216218,
+    "uio": 851.0,
+    "billed_eur": 148220.51
+   },
+   "Romania": {
+    "spend_per_unit": 163.60264239028945,
+    "uio": 1071.0,
+    "billed_eur": 175218.43
+   },
+   "Sweden": {
+    "spend_per_unit": 151.42273836314106,
+    "uio": 8443.0,
+    "billed_eur": 1278462.18
+   },
+   "Greece": {
+    "spend_per_unit": 139.04434526990914,
+    "uio": 3742.0,
+    "billed_eur": 520303.94
+   },
+   "IUK": {
+    "spend_per_unit": 128.32849360651278,
+    "uio": 47783.0,
+    "billed_eur": 6131920.41
+   },
+   "Hungary": {
+    "spend_per_unit": 88.38526513122657,
+    "uio": 3734.0,
+    "billed_eur": 330030.58
+   }
+  },
+  "network_spend_per_unit": 188.46291994999942,
+  "network_median_spend_per_unit": 184.83190757521638,
+  "network_billed_eur": 30756771.610000003,
+  "network_uio": 163198.0,
+  "basis": "18-market billed / worksheet fleet 163198 (matched rate; not 22/18 mix)"
+ },
+ "ceiling_cy2025": {
+  "theoretical_eur": 54375729.0,
+  "captured_total_eur": 30756771.610000003,
+  "uncaptured_eur": 23950221.009999998,
+  "addressable_uncaptured_eur": 23950221.009999998,
+  "capture_pct": 56.56341933365161
+ },
+ "pms_cy2025": {
+  "network_capture_pct": 27.924221480136957,
+  "network_gap_eur": 20136134.01,
+  "by_category": {
+   "Clutch Disc": {
+    "gap_eur": 3264619.2600000002,
+    "capture_pct": 5.345168087740131,
+    "billed_eur": 180418.74
+   },
+   "Brake Pad": {
+    "gap_eur": 3009189.48,
+    "capture_pct": 28.265556190230505,
+    "billed_eur": 1248369.58
+   },
+   "Brake Shoe": {
+    "gap_eur": 2606994.5,
+    "capture_pct": 9.14065951333104,
+    "billed_eur": 226490.27
+   },
+   "Clutch Pressure Plate": {
+    "gap_eur": 2089796.1900000002,
+    "capture_pct": 6.120012725090793,
+    "billed_eur": 140653.68
+   },
+   "Blower Unit Filter": {
+    "gap_eur": 1716126.22,
+    "capture_pct": 16.446895953917444,
+    "billed_eur": 369448.3
+   },
+   "Urea (AdBlue) Filter": {
+    "gap_eur": 1610880.59,
+    "capture_pct": 0.5036844708396988,
+    "billed_eur": 40428.01
+   },
+   "Brake Rotor": {
+    "gap_eur": 1409533.3,
+    "capture_pct": 52.195649270636736,
+    "billed_eur": 1295197.49
+   },
+   "Clutch Kit": {
+    "gap_eur": 1036056.39,
+    "capture_pct": 9.655120279532321,
+    "billed_eur": 184202.75
+   },
+   "Fuel Filter": {
+    "gap_eur": 1026413.46,
+    "capture_pct": 44.61916629079281,
+    "billed_eur": 716775.21
+   },
+   "Clutch Booster": {
+    "gap_eur": 793129.98,
+    "capture_pct": 0.20158496176185253,
+    "billed_eur": 8723.78
+   },
+   "Air Filter": {
+    "gap_eur": 744758.01,
+    "capture_pct": 50.062554569885364,
+    "billed_eur": 778814.92
+   },
+   "Release Bearing": {
+    "gap_eur": 450913.45,
+    "capture_pct": 4.279498723289881,
+    "billed_eur": 21525.82
+   },
+   "Oil Filter": {
+    "gap_eur": 350131.47000000003,
+    "capture_pct": 57.97801704913405,
+    "billed_eur": 557885.51
+   },
+   "Pilot Bearing": {
+    "gap_eur": 27591.71,
+    "capture_pct": 1.7323707651409206,
+    "billed_eur": 821.2800000000001
+   }
+  }
+ },
+ "warranty_cy2025": {
+  "network_eur": 4719992.1,
+  "network_pct_of_billed": 14.576284511243026,
+  "by_db": {
+   "Ireland": 34857.0,
+   "UTI (Israel)": 255967.77,
+   "ITUK": 374426.05,
+   "Portugal": 130588.0,
+   "Finland": 48676.0,
+   "Belgium": 74677.0,
+   "Iceland": 7035.0,
+   "Malta": 18219.0,
+   "Cyprus": 28041.0,
+   "Germany": 259675.0,
+   "UMI (Israel)": 1791020.28,
+   "Norway": 290712.0,
+   "Denmark": 9115.0,
+   "Romania": 19377.0,
+   "Sweden": 189618.0,
+   "Greece": 56159.0,
+   "IUK": 1054395.0,
+   "Hungary": 77434.0
+  }
+ },
+ "urgency_fy2026": {
+  "matched_eur": 32582307.2,
+  "matched_pct_of_all": 100.0,
+  "stock_pct": 79.92170066458645,
+  "urgent_pct": 17.49000337827519,
+  "codes": {
+   "CR": 67,
+   "DR": 1102,
+   "FD": 2,
+   "PRD": 3728,
+   "RE": 20,
+   "RUSH": 17937,
+   "SOR": 93029,
+   "SVOR": 148,
+   "VOR": 27929
+  }
+ },
+ "urgency_fy2027_q1": null,
+ "urgency_by_db_fy2026": {
+  "Belgium": {
+   "matched_eur": 2203112.4799999995,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 51.82545559362454,
+   "urgent_pct": 47.030708118906404,
+   "codes": {
+    "CR": 1,
+    "SOR": 6222,
+    "VOR": 11356
+   }
+  },
+  "Cyprus": {
+   "matched_eur": 412223.75,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 60.29859754562905,
+   "urgent_pct": 39.70140245437096,
+   "codes": {
+    "PRD": 24,
+    "SOR": 2011,
+    "SVOR": 30,
+    "VOR": 2089
+   }
+  },
+  "Denmark": {
+   "matched_eur": 180802.65999999997,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 53.20510771246397,
+   "urgent_pct": 35.256483505275874,
+   "codes": {
+    "CR": 2,
+    "DR": 101,
+    "PRD": 4,
+    "RE": 12,
+    "RUSH": 24,
+    "SOR": 875,
+    "SVOR": 2,
+    "VOR": 591
+   }
+  },
+  "Finland": {
+   "matched_eur": 328900.80000000005,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 74.19982256048023,
+   "urgent_pct": 11.161207269790767,
+   "codes": {
+    "DR": 167,
+    "RUSH": 252,
+    "SOR": 1615,
+    "VOR": 91
+   }
+  },
+  "Germany": {
+   "matched_eur": 2731950.13,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 66.54303605461496,
+   "urgent_pct": 32.369680188854694,
+   "codes": {
+    "CR": 2,
+    "PRD": 32,
+    "SOR": 2985,
+    "VOR": 7062
+   }
+  },
+  "Greece": {
+   "matched_eur": 471585.67999999993,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 37.049354424841745,
+   "urgent_pct": 62.95064557515827,
+   "codes": {
+    "PRD": 41,
+    "RUSH": 3624,
+    "SOR": 1657,
+    "SVOR": 12,
+    "VOR": 1061
+   }
+  },
+  "Hungary": {
+   "matched_eur": 349882.24,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 84.22041084451729,
+   "urgent_pct": 15.20423557366044,
+   "codes": {
+    "CR": 3,
+    "DR": 24,
+    "RE": 7,
+    "RUSH": 632,
+    "SOR": 2538,
+    "SVOR": 1,
+    "VOR": 31
+   }
+  },
+  "Iceland": {
+   "matched_eur": 89959.3,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 0.0,
+   "urgent_pct": 100.0,
+   "codes": {
+    "RUSH": 1217,
+    "VOR": 120
+   }
+  },
+  "Ireland": {
+   "matched_eur": 1145256.7000000002,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 89.44110346614866,
+   "urgent_pct": 8.536697493234485,
+   "codes": {
+    "CR": 8,
+    "DR": 164,
+    "PRD": 98,
+    "RUSH": 1,
+    "SOR": 7498,
+    "SVOR": 2,
+    "VOR": 880
+   }
+  },
+  "ITUK": {
+   "matched_eur": 6957525.3,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 85.81228285292761,
+   "urgent_pct": 12.076385119289471,
+   "codes": {
+    "CR": 4,
+    "DR": 1,
+    "PRD": 1684,
+    "RUSH": 1208,
+    "SOR": 11792,
+    "VOR": 2564
+   }
+  },
+  "IUK": {
+   "matched_eur": 6048308.97,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 87.86450520896587,
+   "urgent_pct": 10.54263287743384,
+   "codes": {
+    "CR": 10,
+    "PRD": 1143,
+    "RUSH": 4364,
+    "SOR": 15033,
+    "SVOR": 24,
+    "VOR": 173
+   }
+  },
+  "Malta": {
+   "matched_eur": 205186.8,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 90.53391348761227,
+   "urgent_pct": 5.870801630514244,
+   "codes": {
+    "CR": 8,
+    "DR": 77,
+    "SOR": 2788,
+    "VOR": 155
+   }
+  },
+  "Norway": {
+   "matched_eur": 1653639.12,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 81.00008845944572,
+   "urgent_pct": 8.275229966741474,
+   "codes": {
+    "CR": 8,
+    "DR": 275,
+    "FD": 1,
+    "RE": 1,
+    "RUSH": 1500,
+    "SOR": 3095,
+    "SVOR": 40,
+    "VOR": 28
+   }
+  },
+  "Portugal": {
+   "matched_eur": 1853613.42,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 84.16408907958814,
+   "urgent_pct": 14.752191425113873,
+   "codes": {
+    "CR": 6,
+    "FD": 1,
+    "PRD": 32,
+    "RUSH": 1676,
+    "SOR": 12573,
+    "VOR": 767
+   }
+  },
+  "Romania": {
+   "matched_eur": 189715.47,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 0.394569826066372,
+   "urgent_pct": 97.61235074820203,
+   "codes": {
+    "CR": 1,
+    "DR": 16,
+    "RUSH": 1284,
+    "SOR": 7,
+    "VOR": 21
+   }
+  },
+  "Sweden": {
+   "matched_eur": 1438426.16,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 74.58082380815434,
+   "urgent_pct": 16.436416173076275,
+   "codes": {
+    "CR": 7,
+    "DR": 277,
+    "PRD": 23,
+    "RUSH": 1534,
+    "SOR": 7063,
+    "SVOR": 37,
+    "VOR": 53
+   }
+  },
+  "UMI (Israel)": {
+   "matched_eur": 3079678.34,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 89.63845620318908,
+   "urgent_pct": 7.789883991585953,
+   "codes": {
+    "CR": 6,
+    "PRD": 33,
+    "SOR": 8524,
+    "VOR": 563
+   }
+  },
+  "UTI (Israel)": {
+   "matched_eur": 3242539.88,
+   "matched_pct_of_all": 100.0,
+   "stock_pct": 86.16636690371253,
+   "urgent_pct": 12.785072361238006,
+   "codes": {
+    "CR": 1,
+    "PRD": 614,
+    "RUSH": 621,
+    "SOR": 6753,
+    "VOR": 324
+   }
+  }
+ },
+ "warranty_fy_source": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\warranty_by_db_FY_canonical.csv",
+ "warranty_fy_columns": [
+  "db",
+  "warr_FY2024",
+  "warr_FY2025",
+  "warr_FY2026",
+  "note"
+ ],
+ "bp_fy27_raw_keys": [
+  "generated",
+  "source_xlsx",
+  "source_vp_turnover",
+  "reviewed",
+  "vp_network_total_eur",
+  "note",
+  "by_gps_code",
+  "by_customer_id",
+  "fallback_gps_dbs",
+  "missing_gps_dbs",
+  "non_gps_customers_eur"
+ ],
+ "kpi_sheets": [
+  "Parts Handling",
+  "Recall C. Rate& Dealer Eff.",
+  "Satisfaction & Complaints",
+  "Vehicles Serviced & Visits",
+  "Vehicle Registration, RM, WE",
+  "After Sales Campaigns",
+  "Yearly 24",
+  "Yearly 25"
+ ],
+ "kpi_parts_handling_shape": [
+  135,
+  34
+ ],
+ "kpi_block_rows": {
+  "Days of Parts in Stock": 0,
+  "Fill Rate": 27,
+  "Back Order": 54
+ }
+}

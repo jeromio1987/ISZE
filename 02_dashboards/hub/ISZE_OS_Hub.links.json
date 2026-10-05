@@ -1,0 +1,852 @@
+{
+ "tested": 169,
+ "present": 169,
+ "missing": [],
+ "targets": [
+  {
+   "label": "UIO dashboard (v18, 26 Aug)",
+   "path": "ISZE\\02_dashboards\\fleet\\ISUZU_UIO_Dashboard_2026.html",
+   "exists": true
+  },
+  {
+   "label": "GPS dashboard (canonical, 16 Jul)",
+   "path": "ISZE\\02_dashboards\\fleet\\ISZE_GPS_Dashboard.html",
+   "exists": true
+  },
+  {
+   "label": "Plan tracker 2030",
+   "path": "ISZE\\02_dashboards\\fleet\\ISZE_Plan_Tracker_2030.html",
+   "exists": true
+  },
+  {
+   "label": "PRISM page 1 \u2014 UIO",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\pages\\1_UIO.py",
+   "exists": true
+  },
+  {
+   "label": "PRISM page 22 \u2014 model cohorts",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\pages\\22_Parc_Cohort.py",
+   "exists": true
+  },
+  {
+   "label": "VIN register summary (7 markets, 3 238 VINs)",
+   "path": "ISZE\\01_data\\07_UIO\\vin\\VIN_register_summary.json",
+   "exists": true
+  },
+  {
+   "label": "VIN register \u2014 how it is built",
+   "path": "ISZE\\01_data\\07_UIO\\vin\\README.md",
+   "exists": true
+  },
+  {
+   "label": "UK VIN extract from the ITUK mail (29 935 VINs)",
+   "path": "ISZE\\01_data\\90_INBOX\\_ituk_vins_from_duncan_mail.md",
+   "exists": true
+  },
+  {
+   "label": "UIO workbook repair spec (V20)",
+   "path": "ISZE\\06_uio\\_CURRENT\\V20_SPEC.md",
+   "exists": true
+  },
+  {
+   "label": "PRISM metric dictionary",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\docs\\metric_dictionary.md",
+   "exists": true
+  },
+  {
+   "label": "PRISM page 2 \u2014 GPS",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\pages\\2_GPS.py",
+   "exists": true
+  },
+  {
+   "label": "PRISM page 3 \u2014 PMS capture",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\pages\\3_PMS.py",
+   "exists": true
+  },
+  {
+   "label": "PRISM page 4 \u2014 BVP mix",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\pages\\4_BVP.py",
+   "exists": true
+  },
+  {
+   "label": "PRISM page 23 \u2014 sales to dealer",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\pages\\23_Dealer_Sellout.py",
+   "exists": true
+  },
+  {
+   "label": "PRISM dashboard contracts (column level)",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\docs\\dashboard_contracts.md",
+   "exists": true
+  },
+  {
+   "label": "PRISM information architecture",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\docs\\DASHBOARD_IA.md",
+   "exists": true
+  },
+  {
+   "label": "PRISM launcher",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\run_prism.ps1",
+   "exists": true
+  },
+  {
+   "label": "Capture by distributor and year (the file)",
+   "path": "ISZE\\01_data\\00_derived\\pms_capture_by_db_year.csv",
+   "exists": true
+  },
+  {
+   "label": "Opportunity matrix (the file)",
+   "path": "ISZE\\01_data\\00_derived\\pms_opportunity_matrix.csv",
+   "exists": true
+  },
+  {
+   "label": "AIM dashboard CY2026",
+   "path": "ISZE\\02_dashboards\\sales\\AIM_Dashboard_CY2026.html",
+   "exists": true
+  },
+  {
+   "label": "Competitiveness dashboard",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Competitiveness_Dashboard.html",
+   "exists": true
+  },
+  {
+   "label": "AIM classification gap report",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\docs\\aim_classification_gap_report.md",
+   "exists": true
+  },
+  {
+   "label": "IAM quality positioning overview",
+   "path": "ISZE\\02_dashboards\\pricing\\ISZE_IAM_Quality_Positioning_Overview.html",
+   "exists": true
+  },
+  {
+   "label": "IAM price vs billed part number",
+   "path": "ISZE\\02_dashboards\\pricing\\ISZE_IAM_Price_vs_Billed_PN.html",
+   "exists": true
+  },
+  {
+   "label": "Parts price intelligence (rival prices vs reference dealer price)",
+   "path": "ISZE\\02_dashboards\\pricing\\ISZE_Parts_Price_Intelligence.html",
+   "exists": true
+  },
+  {
+   "label": "Pricing action map",
+   "path": "ISZE\\02_dashboards\\pricing\\ISZE_Pricing_Action_Map.html",
+   "exists": true
+  },
+  {
+   "label": "Pricing history findings (16 Sep)",
+   "path": "ISZE\\02_dashboards\\pricing\\ISZE_Pricing_History_Findings_Dashboard.html",
+   "exists": true
+  },
+  {
+   "label": "Part number classification (the file)",
+   "path": "ISZE\\01_data\\00_derived\\aim_pn_classification.csv",
+   "exists": true
+  },
+  {
+   "label": "Universe board \u2014 every pillar, its score, the roadmap and every live page",
+   "path": "ISZE\\02_dashboards\\hub\\ISZE_UNIVERSE_BOARD.html",
+   "exists": true
+  },
+  {
+   "label": "Universe map \u2014 the whole picture, what is built and what is next",
+   "path": "ISZE\\02_dashboards\\hub\\ISZE_UNIVERSE_MAP.html",
+   "exists": true
+  },
+  {
+   "label": "Dashboard index \u2014 BI packs",
+   "path": "ISZE\\02_dashboards\\hub\\BI_PACKS.html",
+   "exists": true
+  },
+  {
+   "label": "Mission control (26 Aug, carries superseded AIM figure)",
+   "path": "ISZE\\02_dashboards\\hub\\MASTER_DASHBOARD.html",
+   "exists": true
+  },
+  {
+   "label": "Hub home",
+   "path": "ISZE\\02_dashboards\\hub\\index.html",
+   "exists": true
+  },
+  {
+   "label": "Project hub",
+   "path": "ISZE\\02_dashboards\\hub\\PROJECT_HUB.html",
+   "exists": true
+  },
+  {
+   "label": "Workspace landing page (regenerated 16 Sep)",
+   "path": "DASHBOARDS.html",
+   "exists": true
+  },
+  {
+   "label": "Machine registry \u2014 manifest.yaml (81 live entries)",
+   "path": "ISZE\\02_dashboards\\manifest.yaml",
+   "exists": true
+  },
+  {
+   "label": "Monthly sales tracker",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Monthly_Sales_Tracker.html",
+   "exists": true
+  },
+  {
+   "label": "Part-groups sales explorer",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_PartGroups_Sales_Explorer.html",
+   "exists": true
+  },
+  {
+   "label": "Sales to dealer \u2014 AIM and GPS, ITUK / UTI (15 Sep)",
+   "path": "ISZE\\02_dashboards\\sales\\Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html",
+   "exists": true
+  },
+  {
+   "label": "Sales to dealer \u2014 UTI against ITUK",
+   "path": "ISZE\\02_dashboards\\sales\\Dealer_Sellout_UTI_vs_ITUK.html",
+   "exists": true
+  },
+  {
+   "label": "Aftermarket BI command centre",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Aftermarket_BI_Command_Center.html",
+   "exists": true
+  },
+  {
+   "label": "Risk cockpit (1 Aug)",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Risk_Cockpit.html",
+   "exists": true
+  },
+  {
+   "label": "UTI replenishment H2 2025 (19 Aug)",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_UTI_Replenishment_H2_2025.html",
+   "exists": true
+  },
+  {
+   "label": "SPA run rate \u2014 UTI (1 Aug)",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_SPA_RunRate_UTI.html",
+   "exists": true
+  },
+  {
+   "label": "Dealer standard (IDS) compare \u2014 all markets (16 Sep)",
+   "path": "ISZE\\02_dashboards\\ids\\IDS_2026_dealer_compare.html",
+   "exists": true
+  },
+  {
+   "label": "Dealer standard \u2014 UK CV",
+   "path": "ISZE\\02_dashboards\\ids\\IDS_2026_dealer_compare_UK_CV.html",
+   "exists": true
+  },
+  {
+   "label": "Dealer standard \u2014 Israel pickups",
+   "path": "ISZE\\02_dashboards\\ids\\IDS_2026_dealer_compare_Israel_LCV.html",
+   "exists": true
+  },
+  {
+   "label": "Action ledger",
+   "path": "ISZE\\02_dashboards\\ops\\ISZE_Action_Ledger.html",
+   "exists": true
+  },
+  {
+   "label": "OS data map (capability against data)",
+   "path": "ISZE\\02_dashboards\\ops\\ISZE_OS_Data_Map.html",
+   "exists": true
+  },
+  {
+   "label": "Commercial model map",
+   "path": "ISZE\\02_dashboards\\ops\\ISZE_Commercial_Model_Map.html",
+   "exists": true
+  },
+  {
+   "label": "Tender monitor",
+   "path": "ISZE\\02_dashboards\\ops\\ISZE_Tender_Monitor_v2.html",
+   "exists": true
+  },
+  {
+   "label": "AI tools overview",
+   "path": "ISZE\\02_dashboards\\ops\\ISZE_AI_Tools_Overview.html",
+   "exists": true
+  },
+  {
+   "label": "BI twins \u2014 model cohorts (static snapshot)",
+   "path": "ISZE\\02_dashboards\\bi\\Parc_Cohorts.html",
+   "exists": true
+  },
+  {
+   "label": "BI twins \u2014 warranty intelligence (static snapshot)",
+   "path": "ISZE\\02_dashboards\\bi\\Warranty_Intelligence.html",
+   "exists": true
+  },
+  {
+   "label": "BI twins \u2014 price realisation (static snapshot)",
+   "path": "ISZE\\02_dashboards\\bi\\Price_Realization.html",
+   "exists": true
+  },
+  {
+   "label": "BI twins \u2014 dealer sales to dealer (static snapshot)",
+   "path": "ISZE\\02_dashboards\\bi\\Dealer_Sellout.html",
+   "exists": true
+  },
+  {
+   "label": "Exec aftersales paper (16 pages, rebuilt 16 Sep)",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Exec_Aftersales_Paper.html",
+   "exists": true
+  },
+  {
+   "label": "Growth plan 2026 (15 Sep)",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Growth_Plan_2026.html",
+   "exists": true
+  },
+  {
+   "label": "Distributor to dealer replenishment CY2025",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_DB_DLR_Replenishment_CY2025.html",
+   "exists": true
+  },
+  {
+   "label": "Year-end review FY2026",
+   "path": "ISZE\\02_dashboards\\fleet\\ISZE_FY2026_YearEnd_Review.html",
+   "exists": true
+  },
+  {
+   "label": "GPS kickback and stretch proposal FY27 (distributor facing)",
+   "path": "ISZE\\02_dashboards\\gps\\ISZE_GPS_Kickback_Stretch_Proposal_FY27.html",
+   "exists": true
+  },
+  {
+   "label": "ZEV golden window",
+   "path": "ISZE\\02_dashboards\\fleet\\ITUK_ZEV_Golden_Window_Dashboard.html",
+   "exists": true
+  },
+  {
+   "label": "Open data-integrity issues",
+   "path": "ISZE\\01_data\\00_derived\\_data_integrity_open_issues.md",
+   "exists": true
+  },
+  {
+   "label": "Aftersales dashboard status (16 Sep)",
+   "path": "docs\\AFTERSALES_DASHBOARD_STATUS_2026-09-16.md",
+   "exists": true
+  },
+  {
+   "label": "KPI candidates from the archives",
+   "path": "ISZE\\01_data\\90_INBOX\\_archived_kpi_candidates.md",
+   "exists": true
+  },
+  {
+   "label": "Market fleet profile \u2014 workup",
+   "path": "ISZE\\01_data\\90_INBOX\\_market_fleet_profile_workup.md",
+   "exists": true
+  },
+  {
+   "label": "Market fleet profile \u2014 design",
+   "path": "ISZE\\01_data\\90_INBOX\\_market_fleet_profile_design.md",
+   "exists": true
+  },
+  {
+   "label": "Owned number shortlist",
+   "path": "ISZE\\00_docs\\OWNED_NUMBER_SHORTLIST_20260916.md",
+   "exists": true
+  },
+  {
+   "label": "Corrections to stop repeating",
+   "path": "ISZE\\00_docs\\RECURRING_CORRECTIONS_20260916.md",
+   "exists": true
+  },
+  {
+   "label": "Value ledger 2026 Q3",
+   "path": "ISZE\\00_docs\\VALUE_LEDGER_2026Q3.md",
+   "exists": true
+  },
+  {
+   "label": "Decision reconciliation (16 Sep)",
+   "path": "ISZE\\00_docs\\DECISION_RECONCILE_20260916.md",
+   "exists": true
+  },
+  {
+   "label": "Facts anchor",
+   "path": "ISZE\\FACTS.md",
+   "exists": true
+  },
+  {
+   "label": "Decision record",
+   "path": "ISZE\\DECISIONS.md",
+   "exists": true
+  },
+  {
+   "label": "Ship gate (this page must pass it)",
+   "path": "ISZE\\02_dashboards\\_build\\ship_gate_check.ps1",
+   "exists": true
+  },
+  {
+   "label": "UIO dashboard",
+   "path": "ISZE\\02_dashboards\\fleet\\ISUZU_UIO_Dashboard_2026.html",
+   "exists": true
+  },
+  {
+   "label": "GPS dashboard",
+   "path": "ISZE\\02_dashboards\\fleet\\ISZE_GPS_Dashboard.html",
+   "exists": true
+  },
+  {
+   "label": "UIO workbook repair spec",
+   "path": "ISZE\\06_uio\\_CURRENT\\V20_SPEC.md",
+   "exists": true
+  },
+  {
+   "label": "Vehicle register summary",
+   "path": "ISZE\\01_data\\07_UIO\\vin\\VIN_register_summary.json",
+   "exists": true
+  },
+  {
+   "label": "PRISM metric dictionary",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\docs\\metric_dictionary.md",
+   "exists": true
+  },
+  {
+   "label": "PRISM contracts",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\docs\\dashboard_contracts.md",
+   "exists": true
+  },
+  {
+   "label": "PRISM launcher",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\run_prism.ps1",
+   "exists": true
+  },
+  {
+   "label": "Capture file",
+   "path": "ISZE\\01_data\\00_derived\\pms_capture_by_db_year.csv",
+   "exists": true
+  },
+  {
+   "label": "Opportunity matrix",
+   "path": "ISZE\\01_data\\00_derived\\pms_opportunity_matrix.csv",
+   "exists": true
+  },
+  {
+   "label": "AIM dashboard",
+   "path": "ISZE\\02_dashboards\\sales\\AIM_Dashboard_CY2026.html",
+   "exists": true
+  },
+  {
+   "label": "Competitiveness",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Competitiveness_Dashboard.html",
+   "exists": true
+  },
+  {
+   "label": "IAM price positioning",
+   "path": "ISZE\\02_dashboards\\pricing\\ISZE_IAM_Quality_Positioning_Overview.html",
+   "exists": true
+  },
+  {
+   "label": "Part number classification",
+   "path": "ISZE\\01_data\\00_derived\\aim_pn_classification.csv",
+   "exists": true
+  },
+  {
+   "label": "AIM gap report",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\docs\\aim_classification_gap_report.md",
+   "exists": true
+  },
+  {
+   "label": "Dashboard index",
+   "path": "ISZE\\02_dashboards\\hub\\BI_PACKS.html",
+   "exists": true
+  },
+  {
+   "label": "Mission control",
+   "path": "ISZE\\02_dashboards\\hub\\MASTER_DASHBOARD.html",
+   "exists": true
+  },
+  {
+   "label": "Workspace landing page",
+   "path": "DASHBOARDS.html",
+   "exists": true
+  },
+  {
+   "label": "manifest.yaml",
+   "path": "ISZE\\02_dashboards\\manifest.yaml",
+   "exists": true
+  },
+  {
+   "label": "Exec aftersales paper",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Exec_Aftersales_Paper.html",
+   "exists": true
+  },
+  {
+   "label": "Growth plan 2026",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Growth_Plan_2026.html",
+   "exists": true
+  },
+  {
+   "label": "Distributor to dealer replenishment",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_DB_DLR_Replenishment_CY2025.html",
+   "exists": true
+  },
+  {
+   "label": "UIO dashboard (v18, 26 Aug)",
+   "path": "ISZE\\02_dashboards\\fleet\\ISUZU_UIO_Dashboard_2026.html",
+   "exists": true
+  },
+  {
+   "label": "GPS dashboard (canonical, 16 Jul)",
+   "path": "ISZE\\02_dashboards\\fleet\\ISZE_GPS_Dashboard.html",
+   "exists": true
+  },
+  {
+   "label": "Plan tracker 2030",
+   "path": "ISZE\\02_dashboards\\fleet\\ISZE_Plan_Tracker_2030.html",
+   "exists": true
+  },
+  {
+   "label": "PRISM page 1 \u2014 UIO",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\pages\\1_UIO.py",
+   "exists": true
+  },
+  {
+   "label": "PRISM page 22 \u2014 model cohorts",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\pages\\22_Parc_Cohort.py",
+   "exists": true
+  },
+  {
+   "label": "VIN register summary (7 markets, 3 238 VINs)",
+   "path": "ISZE\\01_data\\07_UIO\\vin\\VIN_register_summary.json",
+   "exists": true
+  },
+  {
+   "label": "VIN register \u2014 how it is built",
+   "path": "ISZE\\01_data\\07_UIO\\vin\\README.md",
+   "exists": true
+  },
+  {
+   "label": "UK VIN extract from the ITUK mail (29 935 VINs)",
+   "path": "ISZE\\01_data\\90_INBOX\\_ituk_vins_from_duncan_mail.md",
+   "exists": true
+  },
+  {
+   "label": "UIO workbook repair spec (V20)",
+   "path": "ISZE\\06_uio\\_CURRENT\\V20_SPEC.md",
+   "exists": true
+  },
+  {
+   "label": "PRISM metric dictionary",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\docs\\metric_dictionary.md",
+   "exists": true
+  },
+  {
+   "label": "PRISM page 2 \u2014 GPS",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\pages\\2_GPS.py",
+   "exists": true
+  },
+  {
+   "label": "PRISM page 3 \u2014 PMS capture",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\pages\\3_PMS.py",
+   "exists": true
+  },
+  {
+   "label": "PRISM page 4 \u2014 BVP mix",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\pages\\4_BVP.py",
+   "exists": true
+  },
+  {
+   "label": "PRISM page 23 \u2014 sales to dealer",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\pages\\23_Dealer_Sellout.py",
+   "exists": true
+  },
+  {
+   "label": "PRISM dashboard contracts (column level)",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\docs\\dashboard_contracts.md",
+   "exists": true
+  },
+  {
+   "label": "PRISM information architecture",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\docs\\DASHBOARD_IA.md",
+   "exists": true
+  },
+  {
+   "label": "PRISM launcher",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\run_prism.ps1",
+   "exists": true
+  },
+  {
+   "label": "Capture by distributor and year (the file)",
+   "path": "ISZE\\01_data\\00_derived\\pms_capture_by_db_year.csv",
+   "exists": true
+  },
+  {
+   "label": "Opportunity matrix (the file)",
+   "path": "ISZE\\01_data\\00_derived\\pms_opportunity_matrix.csv",
+   "exists": true
+  },
+  {
+   "label": "AIM dashboard CY2026",
+   "path": "ISZE\\02_dashboards\\sales\\AIM_Dashboard_CY2026.html",
+   "exists": true
+  },
+  {
+   "label": "Competitiveness dashboard",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Competitiveness_Dashboard.html",
+   "exists": true
+  },
+  {
+   "label": "AIM classification gap report",
+   "path": "ISZE\\03_analytics\\Isuzu\\prism\\docs\\aim_classification_gap_report.md",
+   "exists": true
+  },
+  {
+   "label": "IAM quality positioning overview",
+   "path": "ISZE\\02_dashboards\\pricing\\ISZE_IAM_Quality_Positioning_Overview.html",
+   "exists": true
+  },
+  {
+   "label": "IAM price vs billed part number",
+   "path": "ISZE\\02_dashboards\\pricing\\ISZE_IAM_Price_vs_Billed_PN.html",
+   "exists": true
+  },
+  {
+   "label": "Parts price intelligence (rival prices vs reference dealer price)",
+   "path": "ISZE\\02_dashboards\\pricing\\ISZE_Parts_Price_Intelligence.html",
+   "exists": true
+  },
+  {
+   "label": "Pricing action map",
+   "path": "ISZE\\02_dashboards\\pricing\\ISZE_Pricing_Action_Map.html",
+   "exists": true
+  },
+  {
+   "label": "Pricing history findings (16 Sep)",
+   "path": "ISZE\\02_dashboards\\pricing\\ISZE_Pricing_History_Findings_Dashboard.html",
+   "exists": true
+  },
+  {
+   "label": "Part number classification (the file)",
+   "path": "ISZE\\01_data\\00_derived\\aim_pn_classification.csv",
+   "exists": true
+  },
+  {
+   "label": "Universe board \u2014 every pillar, its score, the roadmap and every live page",
+   "path": "ISZE\\02_dashboards\\hub\\ISZE_UNIVERSE_BOARD.html",
+   "exists": true
+  },
+  {
+   "label": "Universe map \u2014 the whole picture, what is built and what is next",
+   "path": "ISZE\\02_dashboards\\hub\\ISZE_UNIVERSE_MAP.html",
+   "exists": true
+  },
+  {
+   "label": "Dashboard index \u2014 BI packs",
+   "path": "ISZE\\02_dashboards\\hub\\BI_PACKS.html",
+   "exists": true
+  },
+  {
+   "label": "Mission control (26 Aug, carries superseded AIM figure)",
+   "path": "ISZE\\02_dashboards\\hub\\MASTER_DASHBOARD.html",
+   "exists": true
+  },
+  {
+   "label": "Hub home",
+   "path": "ISZE\\02_dashboards\\hub\\index.html",
+   "exists": true
+  },
+  {
+   "label": "Project hub",
+   "path": "ISZE\\02_dashboards\\hub\\PROJECT_HUB.html",
+   "exists": true
+  },
+  {
+   "label": "Workspace landing page (regenerated 16 Sep)",
+   "path": "DASHBOARDS.html",
+   "exists": true
+  },
+  {
+   "label": "Machine registry \u2014 manifest.yaml (81 live entries)",
+   "path": "ISZE\\02_dashboards\\manifest.yaml",
+   "exists": true
+  },
+  {
+   "label": "Monthly sales tracker",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Monthly_Sales_Tracker.html",
+   "exists": true
+  },
+  {
+   "label": "Part-groups sales explorer",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_PartGroups_Sales_Explorer.html",
+   "exists": true
+  },
+  {
+   "label": "Sales to dealer \u2014 AIM and GPS, ITUK / UTI (15 Sep)",
+   "path": "ISZE\\02_dashboards\\sales\\Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html",
+   "exists": true
+  },
+  {
+   "label": "Sales to dealer \u2014 UTI against ITUK",
+   "path": "ISZE\\02_dashboards\\sales\\Dealer_Sellout_UTI_vs_ITUK.html",
+   "exists": true
+  },
+  {
+   "label": "Aftermarket BI command centre",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Aftermarket_BI_Command_Center.html",
+   "exists": true
+  },
+  {
+   "label": "Risk cockpit (1 Aug)",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Risk_Cockpit.html",
+   "exists": true
+  },
+  {
+   "label": "UTI replenishment H2 2025 (19 Aug)",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_UTI_Replenishment_H2_2025.html",
+   "exists": true
+  },
+  {
+   "label": "SPA run rate \u2014 UTI (1 Aug)",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_SPA_RunRate_UTI.html",
+   "exists": true
+  },
+  {
+   "label": "Dealer standard (IDS) compare \u2014 all markets (16 Sep)",
+   "path": "ISZE\\02_dashboards\\ids\\IDS_2026_dealer_compare.html",
+   "exists": true
+  },
+  {
+   "label": "Dealer standard \u2014 UK CV",
+   "path": "ISZE\\02_dashboards\\ids\\IDS_2026_dealer_compare_UK_CV.html",
+   "exists": true
+  },
+  {
+   "label": "Dealer standard \u2014 Israel pickups",
+   "path": "ISZE\\02_dashboards\\ids\\IDS_2026_dealer_compare_Israel_LCV.html",
+   "exists": true
+  },
+  {
+   "label": "Action ledger",
+   "path": "ISZE\\02_dashboards\\ops\\ISZE_Action_Ledger.html",
+   "exists": true
+  },
+  {
+   "label": "OS data map (capability against data)",
+   "path": "ISZE\\02_dashboards\\ops\\ISZE_OS_Data_Map.html",
+   "exists": true
+  },
+  {
+   "label": "Commercial model map",
+   "path": "ISZE\\02_dashboards\\ops\\ISZE_Commercial_Model_Map.html",
+   "exists": true
+  },
+  {
+   "label": "Tender monitor",
+   "path": "ISZE\\02_dashboards\\ops\\ISZE_Tender_Monitor_v2.html",
+   "exists": true
+  },
+  {
+   "label": "AI tools overview",
+   "path": "ISZE\\02_dashboards\\ops\\ISZE_AI_Tools_Overview.html",
+   "exists": true
+  },
+  {
+   "label": "BI twins \u2014 model cohorts (static snapshot)",
+   "path": "ISZE\\02_dashboards\\bi\\Parc_Cohorts.html",
+   "exists": true
+  },
+  {
+   "label": "BI twins \u2014 warranty intelligence (static snapshot)",
+   "path": "ISZE\\02_dashboards\\bi\\Warranty_Intelligence.html",
+   "exists": true
+  },
+  {
+   "label": "BI twins \u2014 price realisation (static snapshot)",
+   "path": "ISZE\\02_dashboards\\bi\\Price_Realization.html",
+   "exists": true
+  },
+  {
+   "label": "BI twins \u2014 dealer sales to dealer (static snapshot)",
+   "path": "ISZE\\02_dashboards\\bi\\Dealer_Sellout.html",
+   "exists": true
+  },
+  {
+   "label": "Exec aftersales paper (16 pages, rebuilt 16 Sep)",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Exec_Aftersales_Paper.html",
+   "exists": true
+  },
+  {
+   "label": "Growth plan 2026 (15 Sep)",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_Growth_Plan_2026.html",
+   "exists": true
+  },
+  {
+   "label": "Distributor to dealer replenishment CY2025",
+   "path": "ISZE\\02_dashboards\\sales\\ISZE_DB_DLR_Replenishment_CY2025.html",
+   "exists": true
+  },
+  {
+   "label": "Year-end review FY2026",
+   "path": "ISZE\\02_dashboards\\fleet\\ISZE_FY2026_YearEnd_Review.html",
+   "exists": true
+  },
+  {
+   "label": "GPS kickback and stretch proposal FY27 (distributor facing)",
+   "path": "ISZE\\02_dashboards\\gps\\ISZE_GPS_Kickback_Stretch_Proposal_FY27.html",
+   "exists": true
+  },
+  {
+   "label": "ZEV golden window",
+   "path": "ISZE\\02_dashboards\\fleet\\ITUK_ZEV_Golden_Window_Dashboard.html",
+   "exists": true
+  },
+  {
+   "label": "Open data-integrity issues",
+   "path": "ISZE\\01_data\\00_derived\\_data_integrity_open_issues.md",
+   "exists": true
+  },
+  {
+   "label": "Aftersales dashboard status (16 Sep)",
+   "path": "docs\\AFTERSALES_DASHBOARD_STATUS_2026-09-16.md",
+   "exists": true
+  },
+  {
+   "label": "KPI candidates from the archives",
+   "path": "ISZE\\01_data\\90_INBOX\\_archived_kpi_candidates.md",
+   "exists": true
+  },
+  {
+   "label": "Market fleet profile \u2014 workup",
+   "path": "ISZE\\01_data\\90_INBOX\\_market_fleet_profile_workup.md",
+   "exists": true
+  },
+  {
+   "label": "Market fleet profile \u2014 design",
+   "path": "ISZE\\01_data\\90_INBOX\\_market_fleet_profile_design.md",
+   "exists": true
+  },
+  {
+   "label": "Owned number shortlist",
+   "path": "ISZE\\00_docs\\OWNED_NUMBER_SHORTLIST_20260916.md",
+   "exists": true
+  },
+  {
+   "label": "Corrections to stop repeating",
+   "path": "ISZE\\00_docs\\RECURRING_CORRECTIONS_20260916.md",
+   "exists": true
+  },
+  {
+   "label": "Value ledger 2026 Q3",
+   "path": "ISZE\\00_docs\\VALUE_LEDGER_2026Q3.md",
+   "exists": true
+  },
+  {
+   "label": "Decision reconciliation (16 Sep)",
+   "path": "ISZE\\00_docs\\DECISION_RECONCILE_20260916.md",
+   "exists": true
+  },
+  {
+   "label": "Facts anchor",
+   "path": "ISZE\\FACTS.md",
+   "exists": true
+  },
+  {
+   "label": "Decision record",
+   "path": "ISZE\\DECISIONS.md",
+   "exists": true
+  },
+  {
+   "label": "Ship gate (this page must pass it)",
+   "path": "ISZE\\02_dashboards\\_build\\ship_gate_check.ps1",
+   "exists": true
+  }
+ ]
+}

@@ -633,7 +633,7 @@ _OVERSEAS_PLACE_MARKERS = (
     "SAINT-PIERRE CEDEX",  # Réunion — not Saint-Pierre-Du-Mont / not Madagascar
 )
 
-# Clear Mode A place labels so Réunion is never read as Madagascar.
+# Clear shared place labels so Réunion is never read as Madagascar.
 # Longer / specific markers first — do not add a bare "REUNION" entry that
 # would rewrite "Saint-Pierre (Réunion)" down to "Réunion" on a second pass.
 _OVERSEAS_PLACE_LABELS: tuple[tuple[str, str], ...] = (

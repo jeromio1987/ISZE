@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from datetime import date, datetime
 from pathlib import Path
 
@@ -32,7 +33,39 @@ DB_LABEL = {
     "GR": "Greece",
 }
 
-# Digits in series code → nominal GVW tonnes (ISZJ class, not plated weight).
+# Series -> nominal GVW in tonnes, from the ONE canonical map
+# (`03_analytics/Isuzu/prism/data/series_to_band.csv`, read through `modules/vehicle_bands.py`).
+#
+# Until 2026-09-23 this was a hand-typed dictionary here, and it was one of four places that each
+# held their own series -> weight answer. The chassis number is still NOT a tonnage: an FRR90 is
+# an 11–12 t truck and an FSR90 is 13.5 t, but reading "90" as 9.0 t made both look like
+# 9-tonners and made the 3,238-truck register look like 26,689 t when it is really ~19,545 t.
+# Where a range is quoted (FRR 11–12 t) the lower bound is used so the figure is not overstated.
+#
+# A series with no weight in the map is left unmapped on purpose - the register records
+# `gvw_t_source = numeric_code` for it rather than inventing a weight.
+def _load_series_gvw() -> dict[str, float]:
+    """Read the canonical map. Loaded by file path so it works however this script is invoked."""
+    import importlib.util  # noqa: PLC0415
+
+    prism = HERE.parents[2] / "03_analytics" / "Isuzu" / "prism"
+    spec = importlib.util.spec_from_file_location(
+        "vehicle_bands", prism / "modules" / "vehicle_bands.py")
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["vehicle_bands"] = mod
+    spec.loader.exec_module(mod)
+
+    out: dict[str, float] = {}
+    for code in mod.load_map():
+        v = mod.gvw_t_for(code)
+        if v is not None:
+            out[code] = v
+    return out
+
+
+SERIES_GVW_T = _load_series_gvw()
+
+# Numeric suffix → nominal GVW. Kept ONLY to record what the code says, never to set gvw_t.
 GVW_FROM_CODE = {
     "75": 7.5,
     "85": 8.5,
@@ -74,6 +107,7 @@ def _parse_model(name: str) -> dict:
         "series": None,
         "gvw_code": None,
         "gvw_t": None,
+        "gvw_t_source": None,
         "hand_code": None,  # L≈LHD, U≈RHD (ISZJ convention on export names)
         "model_suffix": None,
         "wheelbase_code": None,
@@ -91,7 +125,14 @@ def _parse_model(name: str) -> dict:
     series, gvw, hand, suffix = m.group(1).upper(), m.group(2), m.group(3).upper(), m.group(4)
     out["series"] = series
     out["gvw_code"] = gvw
-    out["gvw_t"] = GVW_FROM_CODE.get(gvw)
+    # Tonnage comes from the series, not the number. Fall back to the numeric code only when the
+    # series is unknown, and say so, so a bad decode is visible instead of silent.
+    if series in SERIES_GVW_T:
+        out["gvw_t"] = SERIES_GVW_T[series]
+        out["gvw_t_source"] = "series"
+    else:
+        out["gvw_t"] = GVW_FROM_CODE.get(gvw)
+        out["gvw_t_source"] = "numeric_code" if out["gvw_t"] else None
     # Prefer single trailing L/U as hand; FRR90SL → hand SL kept as cab pack, last char if L/U
     if hand in {"L", "U"}:
         out["hand_code"] = hand
@@ -251,6 +292,7 @@ def build(asof: date = ASOF) -> pd.DataFrame:
         "series",
         "gvw_code",
         "gvw_t",
+        "gvw_t_source",
         "hand_code",
         "model_suffix",
         "wheelbase_code",

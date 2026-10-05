@@ -1,0 +1,195 @@
+[
+  {
+    "angle": "workstream_scan",
+    "ok": true,
+    "n_findings": 137,
+    "by_severity": {
+      "high": 10,
+      "medium": 126,
+      "info": 1
+    },
+    "sample": [
+      "high: receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its ",
+      "medium: artifact has a launcher but no receipt: BOOK_B_REVISION_REVIEW_20260819.html",
+      "medium: artifact has a launcher but no receipt: LEAKAGE_EXEC_SUMMARY_20260819.html"
+    ]
+  },
+  {
+    "angle": "numbers_tie_out",
+    "ok": true,
+    "n_findings": 0,
+    "by_severity": {},
+    "sample": []
+  },
+  {
+    "angle": "receipt_mtime_drift",
+    "ok": true,
+    "n_findings": 11,
+    "by_severity": {
+      "high": 8,
+      "medium": 3
+    },
+    "sample": [
+      "high: receipt does not cover its file: ISZE_OS_Hub changed 1404.2 min after the receipt was written",
+      "high: receipt does not cover its file: ISZE_OS_Console changed 1313.7 min after the receipt was written",
+      "medium: receipt has no artifact_mtime_ms: ISZE_Price_BP_Weighted_Compare.SHIP_RECEIPT.json"
+    ]
+  },
+  {
+    "angle": "locked_file_integrity",
+    "ok": true,
+    "n_findings": 1,
+    "by_severity": {
+      "high": 1
+    },
+    "sample": [
+      "high: LOCKED file was modified: 02_dashboards/pricing/ISZE_Pricing_Revision_AIM_Source.SHIP_RECEIPT.json ("
+    ]
+  },
+  {
+    "angle": "language_sweep",
+    "ok": true,
+    "n_findings": 110,
+    "by_severity": {
+      "medium": 110
+    },
+    "sample": [
+      "medium: banned label 'sell-out' appears in visible text; say 'sales to dealer' instead",
+      "medium: banned label 'sell-out' appears in visible text; say 'sales to dealer' instead",
+      "medium: banned label 'sell-out' appears in visible text; say 'sales to dealer' instead"
+    ]
+  },
+  {
+    "angle": "html_first_paint",
+    "ok": true,
+    "n_findings": 273,
+    "by_severity": {
+      "medium": 6,
+      "high": 267
+    },
+    "sample": [
+      "medium: ISZE_FY2026_YearEnd_Review.html calls fetch() with no embedded payload; file:// cannot fetch a sibli",
+      "medium: ISZE_Plan_Tracker_2030.html calls fetch() with no embedded payload; file:// cannot fetch a sibling J",
+      "medium: MASTER_DASHBOARD.html calls fetch() with no embedded payload; file:// cannot fetch a sibling JSON"
+    ]
+  },
+  {
+    "angle": "excel_formula_errors",
+    "ok": true,
+    "n_findings": 1,
+    "by_severity": {
+      "high": 1
+    },
+    "sample": [
+      "high: Price_increase_by_part_group_per_customer.xlsx sheet 'Checks' has a cached formula error: #VALUE!"
+    ]
+  },
+  {
+    "angle": "chart_form_quality",
+    "ok": true,
+    "n_findings": 22,
+    "by_severity": {
+      "medium": 7,
+      "low": 15
+    },
+    "sample": [
+      "medium: ISUZU_UIO_Dashboard_2026.html declares 10 charts but has no canvas element",
+      "medium: ISZE_FY2026_YearEnd_Review.html declares 6 charts but has no canvas element",
+      "low: ISZE_Plan_Tracker_2030.html uses one chart form (scatter) for all 4 charts; check the form matches e"
+    ]
+  },
+  {
+    "angle": "gaps_need_context",
+    "ok": true,
+    "n_findings": 27,
+    "by_severity": {
+      "medium": 27
+    },
+    "sample": [
+      "medium: unit count without euro, part family or fleet denominator: '92,585 units'",
+      "medium: unit count without euro, part family or fleet denominator: '42,000 \n       Units'",
+      "medium: unit count without euro, part family or fleet denominator: '510 units'"
+    ]
+  },
+  {
+    "angle": "coverage_honesty",
+    "ok": true,
+    "n_findings": 30,
+    "by_severity": {
+      "medium": 30
+    },
+    "sample": [
+      "medium: ISZE_OS_Hub.html carries AIM figures without disclosing: unpriced or immovable share, evidence-tier ",
+      "medium: MASTER_DASHBOARD.html carries AIM figures without disclosing: evidence-tier (T5) share",
+      "medium: ISZE_OS_Console.html carries AIM figures without disclosing: unpriced or immovable share, evidence-t"
+    ]
+  },
+  {
+    "angle": "entity_separation",
+    "ok": true,
+    "n_findings": 61,
+    "by_severity": {
+      "medium": 60,
+      "high": 1
+    },
+    "sample": [
+      "medium: IUK and ITUK appear together without stating they are separate",
+      "medium: IUK and ITUK appear together without stating they are separate",
+      "medium: IUK and ITUK appear together without stating they are separate"
+    ]
+  },
+  {
+    "angle": "cross_artifact_consistency",
+    "ok": true,
+    "n_findings": 3,
+    "by_severity": {
+      "info": 3
+    },
+    "sample": [
+      "info: published revision headline rate (5.9616) appears in 12 artifacts; confirm they mean the same basis ",
+      "info: filed revision step (1,652,140.71) appears in 8 artifacts; confirm they mean the same basis in each",
+      "info: in-scope billed euro (34,993,609.39) appears in 7 artifacts; confirm they mean the same basis in eac"
+    ]
+  },
+  {
+    "angle": "blank_pages",
+    "ok": true,
+    "n_findings": 19,
+    "by_severity": {
+      "medium": 19
+    },
+    "sample": [
+      "medium: 260629_3 Party Meeting English.pdf has 3 near-blank page(s): [2, 3, 6]",
+      "medium: 2026-07-27_Introduction_of_Best_Practice.pdf has 1 near-blank page(s): [9]",
+      "medium: 2026-07-27__Final_ISUZU_s_Aftersales_Activities_-_Maximize_Customer_Uptime_Lubricants_Business.pdf h"
+    ]
+  },
+  {
+    "angle": "memory_markdown_drift",
+    "ok": true,
+    "n_findings": 0,
+    "by_severity": {},
+    "sample": []
+  },
+  {
+    "angle": "orphan_artifact",
+    "ok": true,
+    "n_findings": 99,
+    "by_severity": {
+      "high": 97,
+      "medium": 2
+    },
+    "sample": [
+      "high: OPEN_UMIUTI_Logistics_Extended_Report.cmd points at a missing file: %~dp0UMIUTI_Logistics_Extended_R",
+      "high: OPEN_UMIUTI_Logistics_Final_Analysis.cmd points at a missing file: %~dp0UMIUTI_Logistics_Final_Analy",
+      "high: OPEN_BI_TWINS.cmd points at a missing file: %~dp0Warranty_Intelligence.html"
+    ]
+  },
+  {
+    "angle": "receipt_quality",
+    "ok": true,
+    "n_findings": 0,
+    "by_severity": {},
+    "sample": []
+  }
+]

@@ -1,0 +1,125 @@
+ISZE MEMORY REVIEW — Week 40, 2026
+Generated: 2026-09-28
+
+Scope note: lubricants and action-plan-fy* out of scope (standing instruction 2026-07-13).
+action-plan-fy2027.md present, not opened. This run covers the delta since W39 (2026-09-23).
+
+## Verifier
+| Check | Result | Evidence |
+|-------|--------|----------|
+| Brief written this run | PASS | 05_memory/briefs/memory_review_W40_2026.txt |
+| Stale files remaining | FAIL | 11 of 12 in-scope project files STALE by clock (unchanged from W39; isze-corporate-presentations-20260919.md still undated but <3wk old) |
+| Off-scope untouched | PASS | lubricants absent from projects/; action-plan-fy2027.md not opened or edited |
+| Applied log updated | PASS | 05_memory/briefs/memory_applied_log.md (1 new entry) |
+
+## Memory Health
+
+1. **Verify pipeline reconfirmed, unchanged.** `_verification_report.md` regenerated 2026-09-24T18:26:53Z:
+   still 164 pass / 1 warn / 0 fail (same DENMARK 2012/2013 historical UIO gap). No new fails since
+   W39. Synced into sales-analytics-pipeline.md (5th reconfirmation line).
+2. **New AIM data-quality finding not yet in memory.** `03_analytics/Isuzu/prism/docs/AIM_CLASSIFICATION_AUDIT_2026-09-17.md`
+   (file touched 2026-09-25, after W39's review) is a P0 finding: the `aim_l1` classification column mixes
+   two incompatible taxonomies — a "posture" scheme (13.6% of window euro) and a "system-named" scheme
+   (79.4% of window euro) — plus source-precedence is inverted (workbook owns the money, catalog owns the
+   label). This is a materially bigger caveat than what aftermarket-intelligence.md currently says about
+   93.5%/87% classification rates; it says nothing about the two-axis conflict being P0/unresolved by
+   decision. Not applied — rewriting the classification narrative is judgment, not sync. See Suggested Updates.
+3. **Classification release governance, new since W39.** DECISIONS.md 2026-09-24: the frozen 2026-09-20
+   classification release is the one Jerome approved (`RELEASES.json` updated `approved_by: Jerome`,
+   `approved_on: 2026-09-24`). A newer 2026-09-24 candidate (1,197 EXPORT.XLSX rows changed) stays
+   `NOT_RELEASED`, pending three white-paper re-tests. aftermarket-intelligence.md doesn't mention release
+   versioning at all — not a contradiction, just not yet captured.
+4. **UIO/tonnage decisions, new since W39, not folded into uio.md:**
+   - 2026-09-23 — NMR / NMR85 ruled onto the 5.5t rung (European N55 class); 5.5t rung stays published.
+   - 2026-09-24 — Malta and Cyprus 3.5t shares set to 0; FACTS.md and facts_anchor.yaml re-anchored.
+   Neither appears in uio.md. Both are FACTS-level tonnage/classification calls, not V20 grand-total
+   numbers — low urgency, but they're inputs to the same UIO backbone V20 status already tracks.
+5. **Competitiveness data-source risk, new since W39.** DECISIONS.md 2026-09-24: live scraping approved
+   for all six Phase-1 platforms, but the Eucon-sourced cross-reference build is being used **before**
+   legal has cleared the licence terms (`00_docs/EUCON_LICENCE_BRIEF_2026-09-24.md` — four open questions:
+   can downloaded data still be used, does it cover price monitoring, EU-only, deletion obligation). Eucon's
+   PartsPool contract itself ended 31 July 2026. competitiveness.md cites Eucon/Autodoc as a core input and
+   doesn't carry this licence-risk flag. Not applied (legal/strategic, Jerome's call).
+6. **ids-db-leverage-os.md v1.4 open decision — stronger evidence found, still not applied.**
+   `04_tools/ids_dealer_ranking/CHANGELOG.md`: "Full country pack v1.4 (2026-08-15) — all dealer sheets,
+   one network average... Live HTML restamped" across all 19 country packs, and "Applied in v1.4: FR/ES
+   red-marked out of averages; IT/CH all dealers in" (confirmed same day). This reads like both halves of
+   the file's own open question ("v1.4 compare: avg-exclude only, or also list/HTML rebuild?") already
+   happened on 2026-08-15 — six weeks ago. Left as Suggested Update again (W39 also flagged this) rather
+   than auto-closing a Dutch-language personal decision checklist on my own read of a changelog.
+7. **Monthly sales report — still no July/Aug/Sep PDF.** `01_data/04_sales/` still contains only
+   "(VP) Monthly report 2026-06.pdf" (unchanged file, mtime Jul 5). monthly-sales-report-fy2027.md's
+   open item ("update each month as new PDFs arrive") is now 3 months behind, unchanged from W39.
+8. **Automation drift (separate live-state audit, run 2026-09-28 06:00 UTC), for awareness only —
+   not a 05_memory/projects file, cross-referenced per Step 2.3:**
+   - HIGH, 3rd consecutive week: `ISZE_EQ_Hit_Session_20260919` still exits code 1.
+   - Banned-label count in shared pages rose 591 → 625 in the last 7 days (was already flagged W39).
+   - New: `ISZE_PriceLedger_Weekly` task is live on the scheduler but has no row in
+     `AUTOMATION_REGISTER.md`, and has never actually run yet.
+   - `AUTOMATION_REGISTER.md` itself now 34 days since last audit (was current as of ~2026-08-25).
+
+STALE (>3 weeks) — 11 of 12, same list as W39, no change in status:
+- pricing-basket-2026.md — 2026-06-29 (91d)
+- sales-analytics-pipeline.md — 2026-06-13 (107d) — content kept current via reconfirmations
+- monthly-sales-report-fy2027.md — 2026-07-05 (85d)
+- aftermarket-intelligence.md — 2026-07-02 (88d) — content gap now bigger (see Memory Health #2, #3)
+- gps-reconciliation.md — 2026-07-03 (87d)
+- pms-coverage.md — 2026-07-03 (87d)
+- competitiveness.md — 2026-07-27 (63d) — new Eucon licence-risk gap (see Memory Health #5)
+- imie_3party_2025_2026.md — 2026-07-30 (60d)
+- ids-db-leverage-os.md — 2026-08-11 (48d) — v1.4 evidence strengthened, still open
+- db-sales-review-mode-a.md — 2026-08-12 (47d)
+- uio.md — 2026-08-17 (42d) — two new tonnage decisions not folded in
+
+## Applied this run
+1. sales-analytics-pipeline.md — 5th verify reconfirmation: 2026-09-24T18:26:53Z run, still 164 pass /
+   1 warn / 0 fail, no change from the run already on file.
+Detail: memory_applied_log.md.
+
+## Open Items Still Unresolved
+- EQ-HIT PN→service mapping (pms-coverage.md) — and the underlying scheduled task still failing (exit 1,
+  3rd week running).
+- CY2025 full PMS basket gap revalidation (pms-coverage.md).
+- VKWRT load for SPA-adjusted AIM; other-DB sell-out for AIM FY2027 KPI (aftermarket-intelligence.md).
+- AIM classification P0 (two-axis `aim_l1` conflict, source-precedence inversion) — unresolved by decision
+  per the 17 Sep audit itself.
+- Eucon licence-terms clearance — scraping proceeding ahead of legal sign-off (competitiveness.md).
+- GPS v9 snapshot re-basing decision (gps-reconciliation.md).
+- MIDI contribution (uio.md) still estimate; V20 promotion decision still pending; two new tonnage
+  sub-decisions (NMR 5.5t rung, Malta/Cyprus 3.5t=0) not yet reflected.
+- ids-db-leverage-os.md open decisions list (§9) — v1.4 scope question likely moot (see Memory Health #6)
+  but not confirmed/closed.
+- Monthly sales report PDF — no new month landed since June 2026.
+- 07_deploy competitiveness copies re-deploy — not re-checked.
+- `ISZE_PriceLedger_Weekly` scheduler task undocumented in AUTOMATION_REGISTER.md (new this week).
+
+## Suggested Updates (Jerome)
+1. aftermarket-intelligence.md — fold in three 2026-09 developments: (a) AIM_CLASSIFICATION_AUDIT_2026-09-17
+   P0 finding (aim_l1 mixes two taxonomies, 79.4% of window euro on the wrong-for-purpose axis) — this
+   materially qualifies any 93.5%/87% classification-rate claim; (b) 2026-09-20 classification release
+   approved 2026-09-24, newer 2026-09-24 candidate NOT_RELEASED pending white-paper re-tests; (c) still
+   carries W39's item — Pricing Risk Map/Opportunity Engine retirement (08-18), two-axis classification
+   lock (09-17, now shown to be contested), AIM Universe v04 pricing (09-22).
+2. competitiveness.md — add the Eucon licence-risk flag (DECISIONS 2026-09-24): scraping is live on all
+   six Phase-1 platforms while legal has not cleared whether downloaded Eucon data can still be used at
+   all. Also still carries W39's Eucon-vs-PartsPool naming split.
+3. uio.md — add the two 2026-09-23/24 tonnage decisions (NMR/NMR85 → 5.5t rung; Malta/Cyprus 3.5t shares
+   → 0) to the FACTS-level notes, separate from the V20 grand-total rebuild status.
+4. ids-db-leverage-os.md — CHANGELOG.md evidence (v1.4 full country-pack rebuild + HTML restamp, all 19
+   packs, 2026-08-15) suggests the open "v1.4 compare: avg-exclude only or also list/HTML?" question in
+   §9 may already be answered by what shipped. Worth a 2-minute check to close it out rather than carry
+   it as open every week.
+5. pricing-basket-2026.md — fold in the 2026-08-11 DECISIONS batch (year-matched PR00 not quotable;
+   elasticity DB→DLR only; gross/SPA closed) — still not folded in since W39.
+6. isze-corporate-presentations-20260919.md — still has no frontmatter / last_validated line (W39 item,
+   unchanged).
+7. Global "Key confirmed data" memory (outside this file tree) still carries PMS 0.3%/€3.5M, AIM 93.5%,
+   UIO "v9", Source J 0.62/FX 163.7 as current — 10th week these have been flagged as stale; this review
+   cannot edit that store, only flag it again.
+8. Low: `Sales to Dealers_ITUK_CY2025.xlsx` still sitting in 05_memory/projects/ (not a memory file).
+
+## No action needed
+- glossary.md, pricing-basket-2026.md's 2026-09-23 sync block, sales-analytics-pipeline.md — all
+  internally consistent with current config.yaml / DECISIONS.md / verification report.
+- db-sales-review-mode-a.md, imie_3party_2025_2026.md — no new contradicting evidence found this week.
+- Verification report — green (0 fail), unchanged from W39.

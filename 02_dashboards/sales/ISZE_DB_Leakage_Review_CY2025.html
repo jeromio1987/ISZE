@@ -1,0 +1,779 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aftermarket opportunity diagnostics &mdash; CY2025</title>
+<style>
+:root{--navy:#15233c;--navy2:#1a2b4a;--paper:#f7f4ee;--ink:#222;--terra:#c0552d;
+--muted:#6b6256;--line:#e5e0d6;--blue:#2b4a78;--grey:#8b8578;--paper2:#f2ede2}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);
+font-family:-apple-system,"Segoe UI",system-ui,sans-serif;font-size:14px;line-height:1.5;overflow-x:hidden}
+h1,h2,h3{font-family:Georgia,'Times New Roman',serif;margin:0}
+.wrap{max-width:1280px;margin:0 auto;padding:0 18px 3rem}
+.hero{background:var(--navy);color:var(--paper);padding:2rem 0 1.6rem;border-bottom:4px solid var(--terra)}
+.hero .in{max-width:1280px;margin:0 auto;padding:0 18px}
+.hero .kick{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:#e8b48c}
+.hero h1{font-size:1.9rem;margin:.3rem 0 .45rem;line-height:1.15}
+.hero p{margin:0;color:#c9cedb;max-width:940px;font-size:.9rem}
+.hstats{display:flex;gap:2rem;flex-wrap:wrap;margin-top:1.1rem}
+.hstat .v{font-family:Georgia,serif;font-size:1.6rem;color:#fff;font-variant-numeric:tabular-nums}
+.hstat .l{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:#aeb9cf;max-width:210px}
+section{padding:1.7rem 0 .4rem;border-top:1px solid var(--line);margin-top:1.1rem}
+section:first-of-type{border-top:0}
+h2{font-size:1.32rem;color:var(--navy);margin-bottom:.25rem}
+.shead p{color:#454545;font-size:.89rem;margin:.25rem 0 .9rem;max-width:960px}
+.tgl{position:sticky;top:0;z-index:40;background:#fff;border:1px solid var(--line);
+border-radius:9px;padding:.6rem .85rem;display:flex;gap:1.3rem;flex-wrap:wrap;align-items:center;
+margin:.9rem 0 .5rem;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.tgl .grp{display:flex;align-items:center;gap:.35rem;flex-wrap:wrap}
+.tgl .gl{font-size:.64rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.tgl button{font:inherit;font-size:.79rem;padding:.24rem .65rem;border:1px solid var(--line);
+background:#fbf9f5;border-radius:6px;cursor:pointer;color:var(--ink)}
+.tgl button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tgl button:focus-visible{outline:2px solid var(--terra);outline-offset:1px}
+#avail{background:#fdf6f1;border:1px solid #e6bfa6;border-left:4px solid var(--terra);
+border-radius:8px;padding:.6rem .8rem;margin:.1rem 0 .9rem;font-size:.82rem;display:none}
+#avail.show{display:block}
+#avail ul{margin:.3rem 0 0;padding-left:1.1rem}
+table{width:100%;border-collapse:collapse;background:#fff;font-size:.82rem}
+th,td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid #f0ece4;
+font-variant-numeric:tabular-nums}
+th{background:var(--navy);color:var(--paper);font-weight:600;font-size:.68rem;
+text-transform:uppercase;letter-spacing:.03em;text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+tbody tr:hover{background:#fdf9f5}
+tr.tot td{font-weight:700;background:var(--paper2);border-top:2px solid var(--navy)}
+td.null{color:#a9a49a;font-style:italic;font-size:.76rem}
+.chip{display:inline-block;font-size:.6rem;padding:.03rem .32rem;border-radius:999px;
+border:1px solid #cbc4b4;color:var(--muted);margin-left:.28rem;vertical-align:middle;white-space:nowrap}
+.chip.terra{border-color:#dcae94;color:#8a3a17}
+.chip.blue{border-color:#a9bcd6;color:var(--blue)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px;-webkit-overflow-scrolling:touch}
+.note{background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);
+border-radius:8px;padding:.75rem .9rem;margin:.8rem 0;font-size:.83rem}
+.callout{background:#fdf6f1;border:1px solid #e6bfa6;border-left:4px solid var(--terra);
+border-radius:8px;padding:.75rem .9rem;margin:.8rem 0;font-size:.83rem}
+.callout b{font-family:Georgia,serif;color:#8a3a17}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem}
+.dbfocus{background:#fff;border:1px solid var(--line);border-radius:9px;padding:.9rem 1rem}
+.dbfocus h3{font-size:1.02rem;color:var(--navy);margin-bottom:.15rem}
+.dbfocus .tagline{font-size:.76rem;color:var(--terra);font-weight:700;margin-bottom:.45rem}
+.dbfocus ul{margin:.35rem 0 0;padding-left:1.05rem;font-size:.82rem}
+.dbfocus li{margin:.14rem 0}
+.small{font-size:.75rem;color:var(--muted)}
+.basis{display:flex;flex-wrap:wrap;gap:.45rem .9rem;margin:.85rem 0 0;font-size:.68rem;letter-spacing:.04em;text-transform:uppercase}
+.basis span{padding:.18rem .45rem;border:1px solid #4a5568;border-radius:4px;background:rgba(255,255,255,.06);color:#d0d7e4}
+.basis span b{color:#e8b48c;font-weight:600;margin-right:.28rem}
+.hero-note{margin:.75rem 0 0;padding:.55rem .65rem;border:1px solid #4a5568;border-radius:6px;background:rgba(255,255,255,.05);font-size:.82rem;color:#d8dee9}
+.early-caveat{margin:.9rem 0 0}
+.kpi{position:relative;cursor:help;border-bottom:1px dotted #9a958a}
+.tip{display:none;position:absolute;left:0;top:118%;z-index:60;width:320px;background:var(--navy);
+color:var(--paper);border-radius:7px;padding:.55rem .65rem;font-size:.73rem;line-height:1.4;
+box-shadow:0 6px 18px rgba(0,0,0,.28);text-align:left;font-weight:400;white-space:normal}
+.kpi:hover .tip,.kpi:focus .tip{display:block}
+td:last-child .tip{left:auto;right:0}
+.tip i{display:block;color:#e8b48c;font-style:normal;font-size:.63rem;text-transform:uppercase;
+letter-spacing:.05em;margin-bottom:.04rem}
+.tip .tr{display:block;margin-top:.3rem}
+.tip .tr.warn{color:#f0c9b5}
+.tip b{font-family:Georgia,serif;font-size:.78rem;display:block;margin-bottom:.15rem}
+/* charts */
+.chart{background:#fff;border:1px solid var(--line);border-radius:9px;padding:.9rem 1rem 1rem;position:relative}
+.chart h3{font-size:1rem;color:var(--navy);line-height:1.25}
+.chart .cq{font-size:.8rem;color:#454545;margin:.2rem 0 .7rem}
+.chart .unit{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.legend{display:flex;gap:.9rem;flex-wrap:wrap;margin:.35rem 0 .7rem;font-size:.74rem;color:#3c3c3c}
+.legend span i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:.28rem}
+.axis{display:grid;grid-template-columns:repeat(5,1fr);font-size:.65rem;color:var(--muted);
+border-bottom:1px solid var(--line);margin-bottom:.35rem;padding-bottom:.15rem}
+.axis span{text-align:left}
+.axis span:last-child{text-align:right}
+.rows{position:relative}
+.grid{position:absolute;inset:0;pointer-events:none}
+.grid i{position:absolute;top:0;bottom:0;width:1px;background:#f0ece4}
+.brow{position:relative;display:grid;grid-template-columns:132px minmax(70px,1fr) 74px;
+gap:.45rem;align-items:center;margin:.2rem 0;z-index:1}
+.brow .bl{font-size:.77rem;overflow-wrap:anywhere}
+.brow .bv{font-size:.75rem;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.track{height:14px;background:#efeade;border-radius:3px;display:flex;overflow:hidden}
+.track span{height:100%;display:block}
+.track.plain span{border-radius:3px}
+.gsg .brow{grid-template-columns:120px minmax(70px,1fr) 74px}
+@media(max-width:900px){
+.g2,.g3{grid-template-columns:1fr}
+.brow{grid-template-columns:104px minmax(50px,1fr) 66px}
+.gsg .brow{grid-template-columns:104px minmax(50px,1fr) 66px}
+.hero h1{font-size:1.5rem}
+.tip{width:min(300px,86vw)}
+td:last-child .tip{left:auto;right:0}
+}
+@media(max-width:460px){
+.brow{grid-template-columns:88px minmax(38px,1fr) 60px}
+.gsg .brow{grid-template-columns:88px minmax(38px,1fr) 60px}
+.brow .bl{font-size:.72rem}
+.brow .bv{font-size:.7rem}
+.axis{grid-template-columns:repeat(3,1fr)}
+.axis span:nth-child(4){display:none}
+table{font-size:.76rem}
+}
+</style></head><body>
+<div class="hero"><div class="in">
+<div class="kick">ISZE &middot; aftersales &middot; per distributor</div>
+<h1>Aftermarket opportunity diagnostics &mdash; CY2025</h1>
+<p>Where measured and modelled gaps appear in the aftermarket: four separate diagnostics,
+read per distributor with euro, service family and fleet context. Unit counts support the
+reading; they are never the headline finding. The period, direction and warranty controls
+below change every figure; each states the settings that produced it.</p>
+<p class="hero-note"><b>These diagnostics use different bases and are not additive.</b> Do not
+sum them into one network loss figure.</p>
+<div class="hstats">
+<div class="hstat"><div class="v" id="hero-nb">72.0%</div>
+<div class="l">Diagnostic 1 &middot; modelled unbought share</div></div>
+<div class="hstat"><div class="v" id="hero-cap">28.0%</div>
+<div class="l">Diagnostic 1 &middot; modelled capture rate</div></div>
+<div class="hstat"><div class="v" id="hero-billed">€32.38M</div>
+<div class="l">Observed &middot; parts billed, warranty included</div></div>
+<div class="hstat"><div class="v" id="hero-rep">€2.25M</div>
+<div class="l">Diagnostic 2 &middot; replenishment, 5 distributors</div></div>
+</div>
+<div class="basis">
+<span><b>Observed</b> Parts billed through 30 June 2026</span>
+<span><b>Modelled</b> Target spend / service demand where shown</span>
+<span><b>Fleet</b> Historical fleet basis only</span>
+<span><b>Sales to dealer</b> Five distributors only where used</span>
+</div>
+<p class="small" style="color:#aeb9cf;margin-top:.7rem">Supporting detail: the model expects
+1,013,286 service-part units across 14 filter, brake and clutch families on
+163,199 vehicles in service; 729,277 units were not bought in any form.
+Per-distributor euro gaps appear in the league table, not as one network total here.</p>
+</div></div>
+<div class="wrap">
+<div class="callout early-caveat"><b>Read these before the detail below.</b>
+<ul style="margin:.35rem 0 0;padding-left:1.15rem">
+<li><b>Distributor purchases are stocking decisions.</b> What we bill to a distributor is
+what they chose to buy, not proof that demand was lost.</li>
+<li><b>A modelled gap is not automatically bankable.</b> Target spend / service demand is a
+ceiling from intervals and fleet, not observed lost orders.</li>
+<li><b>The four diagnostics are non-additive.</b> Modelled demand gap, replenishment
+exceptions, competitive mix, and no usable price answer different questions &mdash; never sum
+them into one recovery number.</li>
+</ul></div>
+<div class="tgl">
+<div class="grp"><span class="gl">Period</span>
+<button class="on" data-t="period" data-v="cy">Calendar 2025</button>
+<button data-t="period" data-v="fy">Fiscal 2025 (Apr&ndash;Mar)</button></div>
+<div class="grp"><span class="gl">Direction</span>
+<button class="on" data-t="dir" data-v="db">ISZE &rarr; DB</button>
+<button data-t="dir" data-v="dealer">DB &rarr; dealer</button></div>
+<div class="grp"><span class="gl">Warranty</span>
+<button class="on" data-t="warr" data-v="inc">Included</button>
+<button data-t="warr" data-v="exc">Excluded</button></div>
+</div>
+<div id="avail"></div>
+<section><div class="shead">
+<h2>The distributor diagnostic league</h2>
+<p>One row per distributor, four separate diagnostics side by side &mdash; never summed.
+Diagnostic 1 is modelled target spend / service demand; Diagnostic 2 is replenishment (sales-to-dealer
+file, five distributors only); Diagnostic 3 is competitive-parts share; Diagnostic 4 is parts billed
+with no usable price. 22 distributors bill parts; 18 have a modelled fleet
+base, so the four CIS markets carry mix and price readings but no Diagnostic 1 gap. Euro leads
+every column where the basis allows it.</p>
+</div>
+<div class="chart" id="c1">
+<h3>Where does the modelled Diagnostic 1 gap sit, and in which service families?</h3>
+<div class="cq">Per-distributor modelled gap by service family (target spend minus parts bought).
+Every bar is euro. Unit counts are not shown; they are not the finding. Not one network total.</div>
+<div class="legend"><span><i style="background:#2b4a78"></i>Filters</span>
+<span><i style="background:#c0552d"></i>Brakes</span>
+<span><i style="background:#7a8fa8"></i>Clutch and bearings</span></div>
+<div class="axis" id="c1-axis"></div>
+<div class="rows" id="c1-rows"></div>
+</div>
+<div class="scroll" style="margin-top:.9rem"><table id="league"><thead><tr>
+<th>Distributor</th><th id="lg-demand">Diagnostic 1 gap</th><th>Unbought</th>
+<th>Fleet (UIO)</th><th>Weight class</th><th>Replenishment</th>
+<th>Competitive share</th><th>Exposed revenue</th><th>No usable price</th>
+<th id="lg-bill">Billed to distributor</th></tr></thead>
+<tbody id="league-tbody"></tbody>
+<tfoot id="league-foot"></tfoot></table></div>
+<p class="small">Competitive share is the share of the service-part euro going to Competitive parts
+(not a unit share). Exposed revenue is the high-risk share of net sales from the aftermarket
+exposure model. Fleet is the vehicles-in-service base the demand model divides into; the four CIS
+markets have no modelled fleet base, which is why their demand columns are blank rather than zero.</p>
+</section>
+<section><div class="shead">
+<h2>Diagnostic 2 &mdash; parts billed that never reached a dealer</h2>
+<p>The money splits into two problems that need opposite responses. Under-ordering means the parts
+<b>are</b> selling through to dealers and the distributor is simply not reordering enough. Genuine
+overstock means the parts are sitting still. Merging the two produces the wrong instruction.</p></div>
+<div class="chart" id="c2">
+<h3>Which distributors are under-ordering, and which are sitting on genuine overstock?</h3>
+<div class="cq">Value of exception lines at the distributor, calendar 2025. Five distributors have a
+sales-to-dealer file; the other thirteen cannot be measured this way.</div>
+<div class="legend"><span><i style="background:#2b4a78"></i>Under-ordering &mdash; selling through, reorder shortfall</span>
+<span><i style="background:#c0552d"></i>Genuine overstock &mdash; low or no sales to dealer</span></div>
+<div class="axis" id="c2-axis"></div>
+<div class="rows gsg" id="c2-rows"></div>
+</div>
+<div class="note"><b>Under-ordering is the bigger number:</b> €678k across
+470 part numbers is selling through to dealers faster than the distributor reorders.
+€1.57M is genuinely sitting as overstock. A further 377 part numbers show dealer
+demand with no billing at all &mdash; that is not stock, it is demand we never invoiced.</div>
+</section>
+<section><div class="shead">
+<h2>Diagnostic 3 &mdash; bought, but not from us</h2>
+<p>The aftermarket shows up as <b>mix</b>, not as lost revenue on exposed part numbers. Direct
+exposure is low everywhere &mdash; the worst market is NORWAY at
+2.1% of net sales. What actually moves is the share of the service-part euro
+that goes to Competitive parts rather than genuine.</p></div>
+<div class="chart" id="c3">
+<h3>Where have Competitive parts taken share of the service euro, and are we losing revenue on exposed part numbers?</h3>
+<div class="cq">Two different questions on one axis: what the distributor chooses to stock (share),
+and what the aftermarket takes on part numbers where an alternative exists (exposure).</div>
+<div class="legend"><span><i style="background:#2b4a78"></i>Competitive-parts share of the service euro</span>
+<span><i style="background:#c0552d"></i>Direct aftermarket exposure, % of net sales</span></div>
+<div class="axis" id="c3-axis"></div>
+<div class="rows gsg" id="c3-rows"></div>
+</div>
+<div class="callout"><b>The response follows the mix reading, not the exposure reading.</b>
+Because exposed revenue is 0.2% to 2.1% of net sales, the aftermarket is not
+currently taking revenue on part numbers where we list an alternative. It is shifting what the
+distributor chooses to stock &mdash; which is a pricing, availability and counter-positioning
+problem, not a lost-sale recovery problem.</div>
+</section>
+<section><div class="shead">
+<h2>Diagnostic 4 &mdash; parts we bill that have no usable price</h2>
+<p>31 part numbers worth €592k in CY2025 are either absent from the price
+list or present with no usable price. This is mainly a <b>lubricants</b> gap, not a parts one: one
+lubricant oil alone is 73.3% of the whole gap. The fix is a price-list
+entry, not a project.</p></div>
+<div class="chart" id="c4">
+<h3>Which part numbers sell without a usable price, and what are they worth?</h3>
+<div class="cq">Top ten part numbers by CY2025 billed value, with the remaining twenty-one grouped.</div>
+<div class="legend"><span><i style="background:#c0552d"></i>Lubricants</span>
+<span><i style="background:#2b4a78"></i>Parts</span></div>
+<div class="axis" id="c4-axis"></div>
+<div class="rows gsg" id="c4-rows"></div>
+</div>
+<div class="scroll" style="margin-top:.9rem"><table><thead><tr><th>#</th><th>Part number</th>
+<th>Description</th><th>CY2025 value</th><th>Cause</th><th>Billed to</th></tr></thead><tbody>
+<tr><td>1</td><td>550047337</td>
+<td style="text-align:left">Rim R4L15W40 CK4_3*5L</td>
+<td class="kpi">€434k<span class="tip"><b>No usable price, CY2025</b><span class="tr"><i>Formula</i>billed value of the part number in CY2025 where the price file carries no usable price</span><span class="tr"><i>Snapshot &amp; source</i>no_pr00_gap_cy2025_ranked.csv (price check 2026-08-11), CY2025 value from sales_fact.parquet</span><span class="tr"><i>Settings that produced this figure</i>Period CY2025 (Jan&ndash;Dec) &middot; Direction ISZE &rarr; DB &middot; Warranty included</span><span class="tr warn"><i>Not included</i>Only 31 part numbers remain after the August 2026 SAP price pull return closed 220. Shipments billed through a pricing path outside the standard selling-price route.</span></span></td>
+<td class="small" style="text-align:left">absent from pr00</td>
+<td class="small" style="text-align:left">Israel</td></tr>
+<tr><td>2</td><td>550047252</td>
+<td style="text-align:left">Rim R4 L 15W40 CJ4_1*209L</td>
+<td class="kpi">€76k<span class="tip"><b>No usable price, CY2025</b><span class="tr"><i>Formula</i>billed value of the part number in CY2025 where the price file carries no usable price</span><span class="tr"><i>Snapshot &amp; source</i>no_pr00_gap_cy2025_ranked.csv (price check 2026-08-11), CY2025 value from sales_fact.parquet</span><span class="tr"><i>Settings that produced this figure</i>Period CY2025 (Jan&ndash;Dec) &middot; Direction ISZE &rarr; DB &middot; Warranty included</span><span class="tr warn"><i>Not included</i>Only 31 part numbers remain after the August 2026 SAP price pull return closed 220. Shipments billed through a pricing path outside the standard selling-price route.</span></span></td>
+<td class="small" style="text-align:left">absent from pr00</td>
+<td class="small" style="text-align:left">Israel</td></tr>
+<tr><td>3</td><td>7552825890</td>
+<td style="text-align:left">CAB ASM; SERVICE,WO/ELEC</td>
+<td class="kpi">€23k<span class="tip"><b>No usable price, CY2025</b><span class="tr"><i>Formula</i>billed value of the part number in CY2025 where the price file carries no usable price</span><span class="tr"><i>Snapshot &amp; source</i>no_pr00_gap_cy2025_ranked.csv (price check 2026-08-11), CY2025 value from sales_fact.parquet</span><span class="tr"><i>Settings that produced this figure</i>Period CY2025 (Jan&ndash;Dec) &middot; Direction ISZE &rarr; DB &middot; Warranty included</span><span class="tr warn"><i>Not included</i>Only 31 part numbers remain after the August 2026 SAP price pull return closed 220. Shipments billed through a pricing path outside the standard selling-price route.</span></span></td>
+<td class="small" style="text-align:left">on list no usable price</td>
+<td class="small" style="text-align:left">Israel and Greece</td></tr>
+<tr><td>4</td><td>550071985</td>
+<td style="text-align:left">RimR7AX5W30_1*209L_A246</td>
+<td class="kpi">€9k<span class="tip"><b>No usable price, CY2025</b><span class="tr"><i>Formula</i>billed value of the part number in CY2025 where the price file carries no usable price</span><span class="tr"><i>Snapshot &amp; source</i>no_pr00_gap_cy2025_ranked.csv (price check 2026-08-11), CY2025 value from sales_fact.parquet</span><span class="tr"><i>Settings that produced this figure</i>Period CY2025 (Jan&ndash;Dec) &middot; Direction ISZE &rarr; DB &middot; Warranty included</span><span class="tr warn"><i>Not included</i>Only 31 part numbers remain after the August 2026 SAP price pull return closed 220. Shipments billed through a pricing path outside the standard selling-price route.</span></span></td>
+<td class="small" style="text-align:left">absent from pr00</td>
+<td class="small" style="text-align:left">Israel</td></tr>
+<tr><td>5</td><td>7552824860</td>
+<td style="text-align:left">CAB ASM; SERVICE,WO/ELEC</td>
+<td class="kpi">€8k<span class="tip"><b>No usable price, CY2025</b><span class="tr"><i>Formula</i>billed value of the part number in CY2025 where the price file carries no usable price</span><span class="tr"><i>Snapshot &amp; source</i>no_pr00_gap_cy2025_ranked.csv (price check 2026-08-11), CY2025 value from sales_fact.parquet</span><span class="tr"><i>Settings that produced this figure</i>Period CY2025 (Jan&ndash;Dec) &middot; Direction ISZE &rarr; DB &middot; Warranty included</span><span class="tr warn"><i>Not included</i>Only 31 part numbers remain after the August 2026 SAP price pull return closed 220. Shipments billed through a pricing path outside the standard selling-price route.</span></span></td>
+<td class="small" style="text-align:left">on list no usable price</td>
+<td class="small" style="text-align:left">Israel and Greece</td></tr>
+<tr><td>6</td><td>8972733050</td>
+<td style="text-align:left">STEERING UNIT</td>
+<td class="kpi">€5k<span class="tip"><b>No usable price, CY2025</b><span class="tr"><i>Formula</i>billed value of the part number in CY2025 where the price file carries no usable price</span><span class="tr"><i>Snapshot &amp; source</i>no_pr00_gap_cy2025_ranked.csv (price check 2026-08-11), CY2025 value from sales_fact.parquet</span><span class="tr"><i>Settings that produced this figure</i>Period CY2025 (Jan&ndash;Dec) &middot; Direction ISZE &rarr; DB &middot; Warranty included</span><span class="tr warn"><i>Not included</i>Only 31 part numbers remain after the August 2026 SAP price pull return closed 220. Shipments billed through a pricing path outside the standard selling-price route.</span></span></td>
+<td class="small" style="text-align:left">on list no usable price</td>
+<td class="small" style="text-align:left">Israel and Greece</td></tr>
+<tr><td>7</td><td>8976745030</td>
+<td style="text-align:left">TRANSMISSION ASM; MANUAL</td>
+<td class="kpi">€4k<span class="tip"><b>No usable price, CY2025</b><span class="tr"><i>Formula</i>billed value of the part number in CY2025 where the price file carries no usable price</span><span class="tr"><i>Snapshot &amp; source</i>no_pr00_gap_cy2025_ranked.csv (price check 2026-08-11), CY2025 value from sales_fact.parquet</span><span class="tr"><i>Settings that produced this figure</i>Period CY2025 (Jan&ndash;Dec) &middot; Direction ISZE &rarr; DB &middot; Warranty included</span><span class="tr warn"><i>Not included</i>Only 31 part numbers remain after the August 2026 SAP price pull return closed 220. Shipments billed through a pricing path outside the standard selling-price route.</span></span></td>
+<td class="small" style="text-align:left">on list no usable price</td>
+<td class="small" style="text-align:left">Israel and Greece</td></tr>
+<tr><td>8</td><td>7552221258</td>
+<td style="text-align:left">PUMP ASM; OIL</td>
+<td class="kpi">€3k<span class="tip"><b>No usable price, CY2025</b><span class="tr"><i>Formula</i>billed value of the part number in CY2025 where the price file carries no usable price</span><span class="tr"><i>Snapshot &amp; source</i>no_pr00_gap_cy2025_ranked.csv (price check 2026-08-11), CY2025 value from sales_fact.parquet</span><span class="tr"><i>Settings that produced this figure</i>Period CY2025 (Jan&ndash;Dec) &middot; Direction ISZE &rarr; DB &middot; Warranty included</span><span class="tr warn"><i>Not included</i>Only 31 part numbers remain after the August 2026 SAP price pull return closed 220. Shipments billed through a pricing path outside the standard selling-price route.</span></span></td>
+<td class="small" style="text-align:left">on list no usable price</td>
+<td class="small" style="text-align:left">Israel and Greece</td></tr>
+</tbody></table></div>
+<p class="small">Attribution: the seven lubricant part numbers bill to Israel (Universal Motors
+Israel); the service cabs and the remaining parts bill mainly to Israel, with Greece for one
+back-door handle. Calendar 2025 only &mdash; this file carries no period tag.</p>
+</section>
+<section><div class="shead"><h2>Three distributors that carry the story</h2>
+<p>One is the largest Diagnostic 1 gap and partly a measurement artefact. One is the worst rate on a
+large book. One is above 100% and is not a gap at all. ITUK uses a separate external standard
+below &mdash; do not blend with IUK or UMI.</p></div>
+<div class="g3">
+<div class="dbfocus"><h3>IUK &mdash; the largest Diagnostic 1 gap, and part of it is our own measurement</h3>
+<div class="tagline">€5.80M &middot; 82.7% unbought</div>
+<ul><li>47,783 light commercial vehicles in service, no trucks</li>
+<li>€5.80M across the filter, brake and clutch families in CY2025</li>
+<li><b>This number is inflated by our own assumption.</b> The model applies a flat
+20,000 km/yr while IUK's measured N35 Grafter fleet averages
+<b>14,494 km/yr</b>. At measured distance the gap is €3.87M &mdash; a
+33.3% smaller gap, with capture of 23.9%.
+The 17.3% capture reading at flat 20,000 km/yr is outdated for IUK and
+should not headline a visit.</li></ul></div>
+<div class="dbfocus"><h3>Germany &mdash; the worst rate on a large book</h3>
+<div class="tagline">€1.87M &middot; 86.1% unbought</div>
+<ul><li>13,780 vehicles in service, mixed light and truck class</li>
+<li>Second largest Diagnostic 1 gap and the worst rate of any large book</li>
+<li>Competitive-parts share 26.4%, so this is not a substitution story &mdash; the parts are simply
+not being bought from us or from anyone else we can see</li>
+<li>The market's own measured distance would settle it the way Israel's 51,680 was settled</li></ul></div>
+<div class="dbfocus"><h3>Ireland &mdash; above 100%, and not a gap</h3>
+<div class="tagline">-0.0% unbought &mdash; i.e. more bought than expected</div>
+<ul><li>The only distributor above 100% of modelled expected demand</li>
+<li>Either a genuinely exceptional market or a denominator set too low</li>
+<li>Both readings are possible and they need opposite responses, so Ireland is
+<b>unresolved</b> and should not be quoted as either a strength or a weakness</li>
+<li>Its dealer-side reading is &mdash;
+of expected demand reached dealers, which is the highest capture in the network</li></ul></div>
+</div>
+<div class="note"><b>ITUK external standard (IML schedule basis):</b> 22,389 trucks in service;
+35.1% oil-filter cover; €2.04M modelled gap across five service categories. Use these
+figures when ITUK appears externally &mdash; not the IUK N35 fleet base or Israel UMI numbers.</div>
+<div class="chart" id="c5" style="margin-top:.9rem">
+<h3>How much of IUK's Diagnostic 1 gap is a measurement artefact?</h3>
+<div class="cq">The same fleet, the same actual sales, two distances. The distance assumption, not
+the market, moves the number.</div>
+<div class="axis" id="c5-axis"></div>
+<div class="rows gsg" id="c5-rows"></div>
+<p class="small" id="c5-note"></p>
+</div>
+<div class="chart" id="c6" style="margin-top:.9rem">
+<h3>Which service families carry the modelled Diagnostic 1 gap?</h3>
+<div class="cq">All eighteen distributors with a fleet model, calendar 2025. Per-family euro gap and
+capture rate &mdash; not one network total. A large family with a small rate stands out from a
+large family nearly covered.</div>
+<div class="axis" id="c6-axis"></div>
+<div class="rows gsg" id="c6-rows"></div>
+</div>
+</section>
+<section><div class="shead"><h2>What to do first</h2>
+<p>Five items, each tied to a distributor and to a number on this page.</p></div>
+<div class="note"><ol style="margin:.2rem 0;padding-left:1.2rem">
+<li><b>IUK</b> &mdash; re-baseline the distance before the visit: at the measured
+14,494 km/yr the gap is €3.87M, not €5.80M.
+Acting on the uncorrected number buys the wrong conversation.</li>
+<li><b>Germany</b> &mdash; commission the market's own annual distance the way Israel's 51,680 was
+confirmed, then re-read 86.1% unbought on 13,780 vehicles.</li>
+<li><b>IUK and UTI</b> &mdash; split €1.42M:
+the under-ordering portion needs a reorder conversation, the overstock portion a stop-order instruction.</li>
+<li><b>UMI</b> &mdash; one lubricant price-list entry closes €434k of the
+€592k no-usable-price gap; lubricants together are 88.7% of it.</li>
+<li><b>Ireland</b> &mdash; resolve the above-100% reading before it is quoted either way.</li>
+</ol></div></section>
+<section><div class="shead"><h2>What this page does not claim</h2></div>
+<div class="note"><ul style="margin:.2rem 0;padding-left:1.2rem">
+<li><b>The demand side is modelled.</b> The service-demand model applies one flat
+20,000 km/yr annual distance and is being corrected per weight class using measured
+values (IUK 14,494, Israel 51,680, N35/N75/F-series provisional). Per-distributor
+<i>direction</i> is solid; absolute levels move when that lands, and IUK's moves most.</li>
+<li><b>The fiscal-year leg is derived, not published.</b> The capture file on disk carries calendar
+years only. Fiscal 2025 (April 2025 &ndash; March 2026) is produced by applying the fiscal-to-calendar
+ratio of PMS-tagged billing lines, per distributor and per family, to the published calendar actuals.
+The expected-demand model itself has no period dimension, so expected demand is the same annual
+figure in both periods. Treat the fiscal leg as a directional recut.</li>
+<li><b>The replenishment figure is a five-distributor number, not a network one.</b> Only five
+distributors have a sales-to-dealer file. Under fiscal 2025 it drops to four, because the bridge file
+has no dealer-sales evidence for Greece before August 2025.</li>
+<li><b>Every modelled figure is marked modelled.</b> Diagnostic 1 gaps are per-distributor ceilings
+from service intervals and fleet counts, not observed lost orders and not one additive network
+total.</li>
+<li><b>Warranty parts cannot be split by service family on this page.</b> The warranty claim extract
+matches the service-family part-number registry on only seven part numbers (EUR 1,174 of 2025
+claims), so the warranty-excluded view corrects the billing leg exactly per distributor but cannot
+re-cut the demand gap by family. The effect on Diagnostic 1 is small.</li>
+<li><b>Competitive-parts share is measured on the service-part euro</b> and excludes part numbers
+where no alternative is listed, which is why it reads far higher than the exposure column.</li>
+<li><b>No forward fleet figure appears.</b> The 2026&ndash;2030 vehicles-in-service projection is
+overstated pending correction, so nothing on this page depends on it.</li>
+</ul></div></section>
+<p class="small" style="margin-top:1.4rem;padding-top:.8rem;border-top:1px solid var(--line)">
+Sources: pms_capture_by_db_year.csv &middot; replenishment_exceptions_cy2025.csv &middot;
+replenishment_bridge.parquet &middot; mix_genuine_bvp_pms.csv &middot; aim_exposure_by_db_year.csv
+&middot; no_pr00_gap_cy2025_ranked.csv &middot; dealer_sellout_gps_2025.csv &middot;
+dealer_sellout_long_*.csv &middot; gps_spu_by_distributor.csv &middot; sales_fact.parquet &middot;
+distributor_dimension.csv &middot; uio_by_model_bucket.csv &middot; n35 mileages all.xlsx &middot;
+EU_Mileage_by_country_IMG_2020-11_to_2026-06.xlsx. Snapshot 16 September 2026.</p>
+</div>
+<script>
+var DATA = {"meta": {"snapshot": "16 September 2026", "built": "2026-09-19", "cy": ["2025-01-01", "2025-12-31"], "fy": ["2025-04-01", "2026-03-31"], "km_model": 20000.0, "n_dbs": 22, "n_fleet_dbs": 18, "anchor": "CY2025"}, "nw": {"exp": 1013286.0, "act": 284009.0, "gap": 18769008.0, "nb": 72.0, "notbought": 729277.0, "uio": 163199.0, "rep_cy": 2247884.0, "rep_cy_dbs": 5, "rep_fy": 0.0, "rep_fy_dbs": 0, "pull_cy": 678464.0, "pull_pn_cy": 470, "pull_pn_rows": 500, "over_cy": 1569418.0, "rep_rows_cy": 1934, "billed_cy": 32381313.0, "billed_fy": 33546583.0, "warr": 4719992.0, "warr_pct": 14.6, "dealer_cy": 441184.0, "dealer_dbs": 1, "np": 591916.0, "np_pns": 31, "np_lube": 524734.0, "np_lube_pct": 88.7, "np_top": 433820.0, "np_top_pct": 73.3, "expo_max": 2.1, "expo_max_db": "NORWAY", "mix_worst": "KAZAKHSTAN", "mix_worst_v": 90.8, "spu": 198.0, "iuk_de": 7668642.0, "iuk_de_pct": 40.9}, "dbs": [{"db": "IUK", "scope": "LCV", "region": "UK", "uio": 47783.0, "n75": 0.0, "lcv": 47783.0, "wc": "light commercial", "imit": null, "km": "14,494", "demand": {"cy": {"gap": 5802175.0, "exp": 312979.0, "act": 54155.0, "nb": 82.7, "cap": 17.3}, "fy": {"gap": 5979292.0, "exp": 312979.0, "act": 43360.0, "nb": 86.1, "cap": 13.9}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 288133.0, "cap": 28.8, "fy_gap": 299548.0, "act_qty": 6197.0, "exp_qty": 23892.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 470253.0, "cap": 18.4, "fy_gap": 502453.0, "act_qty": 6120.0, "exp_qty": 47783.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 806882.0, "cap": 24.1, "fy_gap": 858687.0, "act_qty": 3668.0, "exp_qty": 19113.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 469224.0, "cap": 43.5, "fy_gap": 469224.0, "act_qty": 5193.0, "exp_qty": 11946.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 694105.0, "cap": 5.6, "fy_gap": 716143.0, "act_qty": 617.0, "exp_qty": 23892.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 4778.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 1338473.0, "cap": 4.5, "fy_gap": 1347854.0, "act_qty": 365.0, "exp_qty": 9557.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 373081.0, "cap": 0.2, "fy_gap": 373249.0, "act_qty": 12.0, "exp_qty": 7167.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 565154.0, "cap": 6.5, "fy_gap": 571795.0, "act_qty": 513.0, "exp_qty": 9557.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 485078.0, "cap": 16.0, "fy_gap": 510591.0, "act_qty": 5530.0, "exp_qty": 47783.0}, {"label": "Oil Filter", "group": "Filters", "gap": 139983.0, "cap": 37.7, "fy_gap": 156143.0, "act_qty": 14600.0, "exp_qty": 47783.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 13565.0, "cap": 3.9, "fy_gap": 13595.0, "act_qty": 177.0, "exp_qty": 4778.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 158245.0, "cap": 6.2, "fy_gap": 160010.0, "act_qty": 369.0, "exp_qty": 7167.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 47783.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": {"total": 576861.0, "pull": 132674.0, "over_low": 258166.0, "over_none": 186020.0, "nobill": 0.0, "pns": 400, "rows": 400}, "fy": null}, "mix": {"cy": 23.0, "fy": 25.3}, "expo": {"pct": 1.8, "eur": 108749.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 6131920.0, "cy_exc": 5077525.0, "fy_inc": 5951968.0, "fy_exc": 4897573.0, "warr": 1054395.0}}, {"db": "GERMANY", "scope": "MIXED", "region": "WEST", "uio": 13780.0, "n75": 732.0, "lcv": 13048.0, "wc": "truck + light", "imit": 17819.0, "km": null, "demand": {"cy": {"gap": 1866467.0, "exp": 88077.0, "act": 12259.0, "nb": 86.1, "cap": 13.9}, "fy": {"gap": 1840476.0, "exp": 88077.0, "act": 14409.0, "nb": 83.6, "cap": 16.4}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 91602.0, "cap": 28.0, "fy_gap": 89398.0, "act_qty": 2003.0, "exp_qty": 6747.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 179154.0, "cap": 12.3, "fy_gap": 175309.0, "act_qty": 1913.0, "exp_qty": 13494.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 214960.0, "cap": 38.6, "fy_gap": 213982.0, "act_qty": 2116.0, "exp_qty": 5442.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 108513.0, "cap": 53.1, "fy_gap": 108513.0, "act_qty": 1792.0, "exp_qty": 3374.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 242487.0, "cap": 3.5, "fy_gap": 243078.0, "act_qty": 222.0, "exp_qty": 6747.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 1350.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 321800.0, "cap": 3.1, "fy_gap": 315741.0, "act_qty": 134.0, "exp_qty": 2699.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 103605.0, "cap": 2.9, "fy_gap": 103394.0, "act_qty": 62.0, "exp_qty": 2024.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 168979.0, "cap": 3.7, "fy_gap": 169075.0, "act_qty": 98.0, "exp_qty": 2699.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 153340.0, "cap": 16.3, "fy_gap": 146405.0, "act_qty": 2716.0, "exp_qty": 13494.0}, {"label": "Oil Filter", "group": "Filters", "gap": 60725.0, "cap": 15.0, "fy_gap": 54277.0, "act_qty": 3246.0, "exp_qty": 13494.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 4009.0, "cap": 2.6, "fy_gap": 4009.0, "act_qty": 35.0, "exp_qty": 1350.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 47849.0, "cap": 3.5, "fy_gap": 47849.0, "act_qty": 70.0, "exp_qty": 2024.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 169445.0, "cap": 0.0, "fy_gap": 169445.0, "act_qty": 2.0, "exp_qty": 13137.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 26.4, "fy": 22.2}, "expo": {"pct": 1.6, "eur": 39350.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 2535932.0, "cy_exc": 2276257.0, "fy_inc": 2702246.0, "fy_exc": 2442571.0, "warr": 259675.0}}, {"db": "ITUK", "scope": "CV", "region": "UK", "uio": 23068.0, "n75": 23068.0, "lcv": 0.0, "wc": "truck class", "imit": null, "km": null, "demand": {"cy": {"gap": 1827083.0, "exp": 97766.0, "act": 49814.0, "nb": 49.0, "cap": 51.0}, "fy": {"gap": 1671667.0, "exp": 97766.0, "act": 55438.0, "nb": 43.3, "cap": 56.7}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 88610.0, "cap": 63.8, "fy_gap": 69872.0, "act_qty": 6176.0, "exp_qty": 8643.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 17286.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 311991.0, "cap": 49.2, "fy_gap": 208917.0, "act_qty": 4564.0, "exp_qty": 6914.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 0.0, "cap": 133.6, "fy_gap": 0.0, "act_qty": 5772.0, "exp_qty": 4321.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 325637.0, "cap": 8.1, "fy_gap": 314429.0, "act_qty": 778.0, "exp_qty": 6914.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 236538.0, "cap": 0.1, "fy_gap": 236538.0, "act_qty": 2.0, "exp_qty": 1729.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 285260.0, "cap": 9.3, "fy_gap": 275886.0, "act_qty": 424.0, "exp_qty": 3457.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 168870.0, "cap": 21.6, "fy_gap": 166364.0, "act_qty": 591.0, "exp_qty": 2593.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 253290.0, "cap": 9.1, "fy_gap": 250590.0, "act_qty": 349.0, "exp_qty": 3457.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 0.0, "cap": 106.1, "fy_gap": 0.0, "act_qty": 21495.0, "exp_qty": 17286.0}, {"label": "Oil Filter", "group": "Filters", "gap": 26031.0, "cap": 78.7, "fy_gap": 25851.0, "act_qty": 13625.0, "exp_qty": 17286.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 1729.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 56826.0, "cap": 4.2, "fy_gap": 56455.0, "act_qty": 124.0, "exp_qty": 2593.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 74029.0, "cap": 37.1, "fy_gap": 66765.0, "act_qty": 1539.0, "exp_qty": 3559.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": {"total": 661286.0, "pull": 320600.0, "over_low": 298897.0, "over_none": 41789.0, "nobill": 0.0, "pns": 400, "rows": 400}, "fy": null}, "mix": {"cy": 15.3, "fy": 13.6}, "expo": {"pct": 0.2, "eur": 9893.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 5564544.0, "cy_exc": 5190118.0, "fy_inc": 6810869.0, "fy_exc": 6436443.0, "warr": 374426.0}}, {"db": "UMI", "scope": "LCV", "region": "ISRAEL", "uio": 18542.0, "n75": 0.0, "lcv": 18542.0, "wc": "light commercial", "imit": 34443.0, "km": null, "demand": {"cy": {"gap": 1760114.0, "exp": 121450.0, "act": 25916.0, "nb": 78.7, "cap": 21.3}, "fy": {"gap": 1798023.0, "exp": 121450.0, "act": 19857.0, "nb": 83.7, "cap": 16.3}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 81695.0, "cap": 23.0, "fy_gap": 85022.0, "act_qty": 1837.0, "exp_qty": 9271.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 246608.0, "cap": 0.7, "fy_gap": 246608.0, "act_qty": 130.0, "exp_qty": 18542.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 332399.0, "cap": 8.7, "fy_gap": 327961.0, "act_qty": 738.0, "exp_qty": 7417.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 216996.0, "cap": 12.0, "fy_gap": 216996.0, "act_qty": 555.0, "exp_qty": 4636.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 224773.0, "cap": 13.8, "fy_gap": 244065.0, "act_qty": 592.0, "exp_qty": 9271.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 1854.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 274157.0, "cap": 3.9, "fy_gap": 267511.0, "act_qty": 230.0, "exp_qty": 3708.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 71806.0, "cap": 1.5, "fy_gap": 71492.0, "act_qty": 54.0, "exp_qty": 2781.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 166247.0, "cap": 4.7, "fy_gap": 168232.0, "act_qty": 131.0, "exp_qty": 3708.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 96457.0, "cap": 26.4, "fy_gap": 103401.0, "act_qty": 3920.0, "exp_qty": 18542.0}, {"label": "Oil Filter", "group": "Filters", "gap": 11141.0, "cap": 85.2, "fy_gap": 28118.0, "act_qty": 11599.0, "exp_qty": 18542.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 1854.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 37835.0, "cap": 4.5, "fy_gap": 38619.0, "act_qty": 70.0, "exp_qty": 2781.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 18542.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 81.6, "fy": 88.6}, "expo": {"pct": 0.9, "eur": 24726.0}, "np": {"eur": 502598.0, "pns": 9}, "bill": {"cy_inc": 3319344.0, "cy_exc": 1528324.0, "fy_inc": 3000479.0, "fy_exc": 1209459.0, "warr": 1791020.0}}, {"db": "UTI", "scope": "CV", "region": "ISRAEL", "uio": 10336.0, "n75": 10336.0, "lcv": 0.0, "wc": "truck class", "imit": null, "km": "51,680", "demand": {"cy": {"gap": 1759103.0, "exp": 75582.0, "act": 42573.0, "nb": 43.7, "cap": 56.3}, "fy": {"gap": 1795238.0, "exp": 75582.0, "act": 37432.0, "nb": 50.5, "cap": 49.5}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 0.0, "cap": 131.5, "fy_gap": 0.0, "act_qty": 8522.0, "exp_qty": 6460.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 12920.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 456181.0, "cap": 7.0, "fy_gap": 446964.0, "act_qty": 576.0, "exp_qty": 6460.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 215916.0, "cap": 9.3, "fy_gap": 215916.0, "act_qty": 300.0, "exp_qty": 3230.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 77282.0, "cap": 30.9, "fy_gap": 77282.0, "act_qty": 1996.0, "exp_qty": 6460.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 388140.0, "cap": 1.8, "fy_gap": 388140.0, "act_qty": 23.0, "exp_qty": 1292.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 166849.0, "cap": 1.3, "fy_gap": 165905.0, "act_qty": 47.0, "exp_qty": 2584.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 165826.0, "cap": 32.6, "fy_gap": 188400.0, "act_qty": 454.0, "exp_qty": 1938.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 251091.0, "cap": 1.4, "fy_gap": 249212.0, "act_qty": 55.0, "exp_qty": 2584.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 0.0, "cap": 144.9, "fy_gap": 0.0, "act_qty": 15849.0, "exp_qty": 12920.0}, {"label": "Oil Filter", "group": "Filters", "gap": 12595.0, "cap": 91.3, "fy_gap": 38196.0, "act_qty": 9527.0, "exp_qty": 12920.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 1292.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 1938.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 25222.0, "cap": 3.2, "fy_gap": 25222.0, "act_qty": 82.0, "exp_qty": 2584.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": {"total": 841989.0, "pull": 157983.0, "over_low": 382712.0, "over_none": 301294.0, "nobill": 0.0, "pns": 374, "rows": 374}, "fy": null}, "mix": {"cy": 86.5, "fy": 83.2}, "expo": {"pct": 0.5, "eur": 18015.0}, "np": {"eur": 64294.0, "pns": 21}, "bill": {"cy_inc": 3331512.0, "cy_exc": 3075544.0, "fy_inc": 3208540.0, "fy_exc": 2952572.0, "warr": 255968.0}}, {"db": "BELGIUM", "scope": "MIXED", "region": "WEST", "uio": 9593.0, "n75": 113.0, "lcv": 9480.0, "wc": "truck + light", "imit": 22842.0, "km": null, "demand": {"cy": {"gap": 1390128.0, "exp": 62708.0, "act": 16207.0, "nb": 74.2, "cap": 25.8}, "fy": {"gap": 1374521.0, "exp": 62708.0, "act": 17280.0, "nb": 72.4, "cap": 27.6}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 43266.0, "cap": 51.7, "fy_gap": 37807.0, "act_qty": 2768.0, "exp_qty": 4792.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 122143.0, "cap": 23.1, "fy_gap": 116660.0, "act_qty": 2542.0, "exp_qty": 9585.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 202799.0, "cap": 25.6, "fy_gap": 200331.0, "act_qty": 1020.0, "exp_qty": 3844.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 86223.0, "cap": 46.4, "fy_gap": 86223.0, "act_qty": 1113.0, "exp_qty": 2396.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 346326.0, "cap": 6.7, "fy_gap": 344530.0, "act_qty": 345.0, "exp_qty": 4792.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 958.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 160670.0, "cap": 8.8, "fy_gap": 163393.0, "act_qty": 138.0, "exp_qty": 1917.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 64440.0, "cap": 9.9, "fy_gap": 64040.0, "act_qty": 150.0, "exp_qty": 1438.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 151903.0, "cap": 7.7, "fy_gap": 152005.0, "act_qty": 147.0, "exp_qty": 1917.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 53171.0, "cap": 26.0, "fy_gap": 51020.0, "act_qty": 2782.0, "exp_qty": 9585.0}, {"label": "Oil Filter", "group": "Filters", "gap": 19138.0, "cap": 62.3, "fy_gap": 18405.0, "act_qty": 6110.0, "exp_qty": 9585.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 2881.0, "cap": 1.5, "fy_gap": 2908.0, "act_qty": 5.0, "exp_qty": 958.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 18403.0, "cap": 6.4, "fy_gap": 18434.0, "act_qty": 90.0, "exp_qty": 1438.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 118765.0, "cap": 0.7, "fy_gap": 118765.0, "act_qty": 69.0, "exp_qty": 9501.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 41.3, "fy": 42.2}, "expo": {"pct": 1.2, "eur": 25745.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 2109332.0, "cy_exc": 2034655.0, "fy_inc": 2177912.0, "fy_exc": 2103235.0, "warr": 74677.0}}, {"db": "SWEDEN", "scope": "LCV", "region": "NORDICS", "uio": 8443.0, "n75": 0.0, "lcv": 8443.0, "wc": "light commercial", "imit": null, "km": null, "demand": {"cy": {"gap": 1032358.0, "exp": 55302.0, "act": 13298.0, "nb": 76.0, "cap": 24.0}, "fy": {"gap": 1023442.0, "exp": 55302.0, "act": 13516.0, "nb": 75.6, "cap": 24.4}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 44699.0, "cap": 40.5, "fy_gap": 39500.0, "act_qty": 2003.0, "exp_qty": 4222.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 69914.0, "cap": 43.8, "fy_gap": 74773.0, "act_qty": 3364.0, "exp_qty": 8443.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 179111.0, "cap": 25.0, "fy_gap": 171340.0, "act_qty": 953.0, "exp_qty": 3377.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 75313.0, "cap": 50.1, "fy_gap": 75313.0, "act_qty": 1058.0, "exp_qty": 2111.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 155668.0, "cap": 1.8, "fy_gap": 156400.0, "act_qty": 56.0, "exp_qty": 4222.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 844.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 245918.0, "cap": 0.2, "fy_gap": 245918.0, "act_qty": 4.0, "exp_qty": 1689.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 1266.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 117571.0, "cap": 0.2, "fy_gap": 117640.0, "act_qty": 2.0, "exp_qty": 1689.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 89864.0, "cap": 21.2, "fy_gap": 88608.0, "act_qty": 1886.0, "exp_qty": 8443.0}, {"label": "Oil Filter", "group": "Filters", "gap": 21588.0, "cap": 48.7, "fy_gap": 21214.0, "act_qty": 4189.0, "exp_qty": 8443.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 844.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 32711.0, "cap": 0.2, "fy_gap": 32737.0, "act_qty": 2.0, "exp_qty": 1266.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 8443.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 11.6, "fy": 12.1}, "expo": {"pct": 0.8, "eur": 10725.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 1278462.0, "cy_exc": 1088844.0, "fy_inc": 1414314.0, "fy_exc": 1224696.0, "warr": 189618.0}}, {"db": "PORTUGAL", "scope": "MIXED", "region": "SOUTH", "uio": 7208.0, "n75": 2475.0, "lcv": 4733.0, "wc": "truck + light", "imit": 22742.0, "km": null, "demand": {"cy": {"gap": 897422.0, "exp": 42985.0, "act": 12827.0, "nb": 70.2, "cap": 29.8}, "fy": {"gap": 915051.0, "exp": 42985.0, "act": 12334.0, "nb": 71.3, "cap": 28.7}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 30431.0, "cap": 56.4, "fy_gap": 22585.0, "act_qty": 2291.0, "exp_qty": 3388.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 56779.0, "cap": 21.5, "fy_gap": 60909.0, "act_qty": 1069.0, "exp_qty": 6776.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 72681.0, "cap": 55.3, "fy_gap": 86734.0, "act_qty": 1359.0, "exp_qty": 2915.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 64277.0, "cap": 45.7, "fy_gap": 64277.0, "act_qty": 774.0, "exp_qty": 1694.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 141219.0, "cap": 10.5, "fy_gap": 140718.0, "act_qty": 366.0, "exp_qty": 3388.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 146642.0, "cap": 0.9, "fy_gap": 146642.0, "act_qty": 6.0, "exp_qty": 678.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 113011.0, "cap": 15.7, "fy_gap": 118280.0, "act_qty": 160.0, "exp_qty": 1355.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 48279.0, "cap": 30.4, "fy_gap": 49454.0, "act_qty": 292.0, "exp_qty": 1016.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 101432.0, "cap": 15.1, "fy_gap": 103397.0, "act_qty": 183.0, "exp_qty": 1355.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 33844.0, "cap": 39.8, "fy_gap": 30018.0, "act_qty": 3159.0, "exp_qty": 6776.0}, {"label": "Oil Filter", "group": "Filters", "gap": 18082.0, "cap": 46.3, "fy_gap": 21042.0, "act_qty": 2539.0, "exp_qty": 6776.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 2030.0, "cap": 1.8, "fy_gap": 2039.0, "act_qty": 9.0, "exp_qty": 678.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 15138.0, "cap": 7.5, "fy_gap": 15380.0, "act_qty": 61.0, "exp_qty": 1016.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 53576.0, "cap": 1.3, "fy_gap": 53576.0, "act_qty": 67.0, "exp_qty": 5173.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 58.1, "fy": 59.5}, "expo": {"pct": 0.7, "eur": 11743.0}, "np": {"eur": 0.0, "pns": 2}, "bill": {"cy_inc": 1709794.0, "cy_exc": 1579206.0, "fy_inc": 1833525.0, "fy_exc": 1702937.0, "warr": 130588.0}}, {"db": "NORWAY", "scope": "LCV", "region": "NORDICS", "uio": 7929.0, "n75": 0.0, "lcv": 7929.0, "wc": "light commercial", "imit": 21375.0, "km": null, "demand": {"cy": {"gap": 612667.0, "exp": 51935.0, "act": 13956.0, "nb": 73.1, "cap": 26.9}, "fy": {"gap": 612732.0, "exp": 51935.0, "act": 14074.0, "nb": 72.9, "cap": 27.1}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 33641.0, "cap": 55.8, "fy_gap": 32247.0, "act_qty": 2285.0, "exp_qty": 3964.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 96259.0, "cap": 30.9, "fy_gap": 102408.0, "act_qty": 2100.0, "exp_qty": 7929.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 132181.0, "cap": 43.7, "fy_gap": 130424.0, "act_qty": 1411.0, "exp_qty": 3172.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 23108.0, "cap": 81.8, "fy_gap": 23108.0, "act_qty": 1622.0, "exp_qty": 1982.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 140920.0, "cap": 4.6, "fy_gap": 139805.0, "act_qty": 214.0, "exp_qty": 3964.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 793.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 1586.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 1189.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 95860.0, "cap": 0.1, "fy_gap": 95787.0, "act_qty": 3.0, "exp_qty": 1586.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 38047.0, "cap": 29.1, "fy_gap": 37911.0, "act_qty": 2325.0, "exp_qty": 7929.0}, {"label": "Oil Filter", "group": "Filters", "gap": 20780.0, "cap": 47.8, "fy_gap": 19174.0, "act_qty": 4110.0, "exp_qty": 7929.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 2317.0, "cap": 0.3, "fy_gap": 2314.0, "act_qty": 3.0, "exp_qty": 793.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 29553.0, "cap": 0.2, "fy_gap": 29553.0, "act_qty": 2.0, "exp_qty": 1189.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 7929.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 12.6, "fy": 13.0}, "expo": {"pct": 2.1, "eur": 29580.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 1416552.0, "cy_exc": 1125840.0, "fy_inc": 1600737.0, "fy_exc": 1310025.0, "warr": 290712.0}}, {"db": "HUNGARY", "scope": "LCV", "region": "EAST", "uio": 3734.0, "n75": 0.0, "lcv": 3734.0, "wc": "light commercial", "imit": 26334.0, "km": null, "demand": {"cy": {"gap": 488268.0, "exp": 24458.0, "act": 4675.0, "nb": 80.9, "cap": 19.1}, "fy": {"gap": 487970.0, "exp": 24458.0, "act": 4999.0, "nb": 79.6, "cap": 20.4}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 19691.0, "cap": 45.8, "fy_gap": 17342.0, "act_qty": 977.0, "exp_qty": 1867.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 47997.0, "cap": 22.3, "fy_gap": 47567.0, "act_qty": 858.0, "exp_qty": 3734.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 97351.0, "cap": 15.6, "fy_gap": 101019.0, "act_qty": 185.0, "exp_qty": 1494.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 45677.0, "cap": 36.1, "fy_gap": 45677.0, "act_qty": 337.0, "exp_qty": 934.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 71225.0, "cap": 0.5, "fy_gap": 71340.0, "act_qty": 6.0, "exp_qty": 1867.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 373.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 110423.0, "cap": 0.9, "fy_gap": 110074.0, "act_qty": 9.0, "exp_qty": 747.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 560.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 55714.0, "cap": 1.2, "fy_gap": 55884.0, "act_qty": 7.0, "exp_qty": 747.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 21247.0, "cap": 18.8, "fy_gap": 21156.0, "act_qty": 716.0, "exp_qty": 3734.0}, {"label": "Oil Filter", "group": "Filters", "gap": 10089.0, "cap": 45.0, "fy_gap": 9023.0, "act_qty": 1898.0, "exp_qty": 3734.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 373.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 8856.0, "cap": 1.4, "fy_gap": 8888.0, "act_qty": 6.0, "exp_qty": 560.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 3734.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 29.3, "fy": 28.6}, "expo": {"pct": 2.1, "eur": 7043.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 330031.0, "cy_exc": 252597.0, "fy_inc": 349469.0, "fy_exc": 272035.0, "warr": 77434.0}}, {"db": "GREECE", "scope": "MIXED", "region": "SOUTH", "uio": 3742.0, "n75": 37.0, "lcv": 3705.0, "wc": "truck + light", "imit": 20328.0, "km": null, "demand": {"cy": {"gap": 414168.0, "exp": 24376.0, "act": 9824.0, "nb": 59.7, "cap": 40.3}, "fy": {"gap": 432156.0, "exp": 24376.0, "act": 8670.0, "nb": 64.4, "cap": 35.6}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 2327.0, "cap": 92.1, "fy_gap": 4650.0, "act_qty": 1566.0, "exp_qty": 1862.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 47063.0, "cap": 23.7, "fy_gap": 47941.0, "act_qty": 829.0, "exp_qty": 3724.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 68720.0, "cap": 31.0, "fy_gap": 76488.0, "act_qty": 347.0, "exp_qty": 1491.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 42381.0, "cap": 36.4, "fy_gap": 42381.0, "act_qty": 339.0, "exp_qty": 931.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 68479.0, "cap": 8.7, "fy_gap": 68221.0, "act_qty": 168.0, "exp_qty": 1862.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 372.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 73661.0, "cap": 5.0, "fy_gap": 74060.0, "act_qty": 33.0, "exp_qty": 745.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 22805.0, "cap": 14.5, "fy_gap": 24525.0, "act_qty": 45.0, "exp_qty": 558.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 62078.0, "cap": 4.8, "fy_gap": 61962.0, "act_qty": 37.0, "exp_qty": 745.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 10857.0, "cap": 66.5, "fy_gap": 13557.0, "act_qty": 2166.0, "exp_qty": 3724.0}, {"label": "Oil Filter", "group": "Filters", "gap": 541.0, "cap": 97.2, "fy_gap": 3062.0, "act_qty": 3127.0, "exp_qty": 3724.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 1162.0, "cap": 1.3, "fy_gap": 1165.0, "act_qty": 4.0, "exp_qty": 372.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 14093.0, "cap": 2.0, "fy_gap": 14144.0, "act_qty": 9.0, "exp_qty": 558.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 3709.0}], "dealer": {"cy": {"gap": 535677.0, "act": 4240.0, "exp": 24376.0, "cap": 17.4, "nb": 82.6, "months": 12, "proj": false, "eur": 441184.0, "fam": [{"label": "Air Filter", "got": 441.0, "exp_qty": 1862.0, "gap": 22365.0, "cap": 23.7}, {"label": "Blower Unit Filter", "got": 0.0, "exp_qty": 3724.0, "gap": 61671.0, "cap": 0.0}, {"label": "Brake Pad", "got": 0.0, "exp_qty": 1491.0, "gap": 99665.0, "cap": 0.0}, {"label": "Brake Rotor", "got": 0.0, "exp_qty": 931.0, "gap": 66655.0, "cap": 0.0}, {"label": "Brake Shoe", "got": 0.0, "exp_qty": 1862.0, "gap": 75005.0, "cap": 0.0}, {"label": "Clutch Booster", "got": 0.0, "exp_qty": 372.0, "gap": 0.0, "cap": 0.0}, {"label": "Clutch Disc", "got": 3.0, "exp_qty": 745.0, "gap": 77200.0, "cap": 0.4}, {"label": "Clutch Kit", "got": 0.0, "exp_qty": 558.0, "gap": 26674.0, "cap": 0.0}, {"label": "Clutch Pressure Plate", "got": 8.0, "exp_qty": 745.0, "gap": 64531.0, "cap": 1.1}, {"label": "Fuel Filter", "got": 1600.0, "exp_qty": 3724.0, "gap": 18481.0, "cap": 43.0}, {"label": "Oil Filter", "got": 2188.0, "exp_qty": 3724.0, "gap": 7875.0, "cap": 58.8}, {"label": "Pilot Bearing", "got": 0.0, "exp_qty": 372.0, "gap": 1178.0, "cap": 0.0}, {"label": "Release Bearing", "got": 0.0, "exp_qty": 558.0, "gap": 14376.0, "cap": 0.0}, {"label": "Urea (AdBlue) Filter", "got": 0.0, "exp_qty": 3709.0, "gap": 0.0, "cap": 0.0}]}, "fy": {"gap": 534317.0, "act": 4352.0, "exp": 24376.0, "cap": 17.9, "nb": 82.1, "months": 9, "proj": true, "eur": 77493.0, "fam": [{"label": "Air Filter", "got": 476.0, "exp_qty": 1862.0, "gap": 21814.0, "cap": 25.6}, {"label": "Blower Unit Filter", "got": 0.0, "exp_qty": 3724.0, "gap": 61671.0, "cap": 0.0}, {"label": "Brake Pad", "got": 0.0, "exp_qty": 1491.0, "gap": 99665.0, "cap": 0.0}, {"label": "Brake Rotor", "got": 0.0, "exp_qty": 931.0, "gap": 66655.0, "cap": 0.0}, {"label": "Brake Shoe", "got": 0.0, "exp_qty": 1862.0, "gap": 75005.0, "cap": 0.0}, {"label": "Clutch Booster", "got": 0.0, "exp_qty": 372.0, "gap": 0.0, "cap": 0.0}, {"label": "Clutch Disc", "got": 4.0, "exp_qty": 745.0, "gap": 77096.0, "cap": 0.5}, {"label": "Clutch Kit", "got": 0.0, "exp_qty": 558.0, "gap": 26674.0, "cap": 0.0}, {"label": "Clutch Pressure Plate", "got": 11.0, "exp_qty": 745.0, "gap": 64297.0, "cap": 1.4}, {"label": "Fuel Filter", "got": 1627.0, "exp_qty": 3724.0, "gap": 18249.0, "cap": 43.7}, {"label": "Oil Filter", "got": 2235.0, "exp_qty": 3724.0, "gap": 7636.0, "cap": 60.0}, {"label": "Pilot Bearing", "got": 0.0, "exp_qty": 372.0, "gap": 1178.0, "cap": 0.0}, {"label": "Release Bearing", "got": 0.0, "exp_qty": 558.0, "gap": 14376.0, "cap": 0.0}, {"label": "Urea (AdBlue) Filter", "got": 0.0, "exp_qty": 3709.0, "gap": 0.0, "cap": 0.0}]}}, "rep": {"cy": {"total": 64828.0, "pull": 25264.0, "over_low": 9929.0, "over_none": 29635.0, "nobill": 0.0, "pns": 360, "rows": 360}, "fy": null}, "mix": {"cy": 43.3, "fy": 42.9}, "expo": {"pct": 0.6, "eur": 3308.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 520304.0, "cy_exc": 464145.0, "fy_inc": 471586.0, "fy_exc": 415427.0, "warr": 56159.0}}, {"db": "CYPRUS", "scope": "MIXED", "region": "SOUTH", "uio": 2308.0, "n75": 203.0, "lcv": 2105.0, "wc": "truck + light", "imit": 18581.0, "km": null, "demand": {"cy": {"gap": 231901.0, "exp": 14413.0, "act": 7244.0, "nb": 49.7, "cap": 50.3}, "fy": {"gap": 235350.0, "exp": 14413.0, "act": 6581.0, "nb": 54.3, "cap": 45.7}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 0.0, "cap": 143.0, "fy_gap": 0.0, "act_qty": 1284.0, "exp_qty": 1106.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 23654.0, "cap": 35.0, "fy_gap": 23654.0, "act_qty": 775.0, "exp_qty": 2212.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 20678.0, "cap": 62.0, "fy_gap": 23076.0, "act_qty": 516.0, "exp_qty": 895.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 18419.0, "cap": 54.2, "fy_gap": 18419.0, "act_qty": 300.0, "exp_qty": 553.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 36618.0, "cap": 14.0, "fy_gap": 36099.0, "act_qty": 168.0, "exp_qty": 1106.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 23096.0, "cap": 0.5, "fy_gap": 23096.0, "act_qty": 1.0, "exp_qty": 221.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 36949.0, "cap": 7.5, "fy_gap": 36538.0, "act_qty": 38.0, "exp_qty": 442.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 7661.0, "cap": 42.2, "fy_gap": 7265.0, "act_qty": 150.0, "exp_qty": 332.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 27446.0, "cap": 11.5, "fy_gap": 27199.0, "act_qty": 55.0, "exp_qty": 442.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 6235.0, "cap": 70.2, "fy_gap": 7454.0, "act_qty": 1423.0, "exp_qty": 2212.0}, {"label": "Oil Filter", "group": "Filters", "gap": 1111.0, "cap": 91.0, "fy_gap": 2334.0, "act_qty": 1794.0, "exp_qty": 2212.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 650.0, "cap": 3.6, "fy_gap": 659.0, "act_qty": 5.0, "exp_qty": 221.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 8293.0, "cap": 8.7, "fy_gap": 8466.0, "act_qty": 23.0, "exp_qty": 332.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 21092.0, "cap": 2.4, "fy_gap": 21092.0, "act_qty": 51.0, "exp_qty": 2126.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 53.7, "fy": 52.6}, "expo": {"pct": 0.4, "eur": 1798.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 428443.0, "cy_exc": 400402.0, "fy_inc": 412224.0, "fy_exc": 384183.0, "warr": 28041.0}}, {"db": "FINLAND", "scope": "LCV", "region": "NORDICS", "uio": 1204.0, "n75": 0.0, "lcv": 1204.0, "wc": "light commercial", "imit": 24811.0, "km": null, "demand": {"cy": {"gap": 149717.0, "exp": 7886.0, "act": 2283.0, "nb": 71.1, "cap": 28.9}, "fy": {"gap": 152277.0, "exp": 7886.0, "act": 2214.0, "nb": 71.9, "cap": 28.1}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 5149.0, "cap": 59.1, "fy_gap": 4919.0, "act_qty": 367.0, "exp_qty": 602.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 12681.0, "cap": 42.8, "fy_gap": 13491.0, "act_qty": 471.0, "exp_qty": 1204.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 28776.0, "cap": 18.7, "fy_gap": 30916.0, "act_qty": 61.0, "exp_qty": 482.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 13157.0, "cap": 42.5, "fy_gap": 13157.0, "act_qty": 128.0, "exp_qty": 301.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 20059.0, "cap": 3.7, "fy_gap": 20059.0, "act_qty": 22.0, "exp_qty": 602.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 120.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 34714.0, "cap": 1.2, "fy_gap": 34714.0, "act_qty": 3.0, "exp_qty": 241.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 181.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 16517.0, "cap": 1.7, "fy_gap": 16587.0, "act_qty": 3.0, "exp_qty": 241.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 12666.0, "cap": 18.2, "fy_gap": 12177.0, "act_qty": 257.0, "exp_qty": 1204.0}, {"label": "Oil Filter", "group": "Filters", "gap": 1426.0, "cap": 78.2, "fy_gap": 1660.0, "act_qty": 899.0, "exp_qty": 1204.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 120.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 4572.0, "cap": 2.2, "fy_gap": 4598.0, "act_qty": 3.0, "exp_qty": 181.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 1204.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 8.7, "fy": 6.1}, "expo": {"pct": 1.3, "eur": 3635.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 277921.0, "cy_exc": 229245.0, "fy_inc": 328901.0, "fy_exc": 280225.0, "warr": 48676.0}}, {"db": "ROMANIA", "scope": "LCV", "region": "EAST", "uio": 1071.0, "n75": 0.0, "lcv": 1071.0, "wc": "light commercial", "imit": 24726.0, "km": null, "demand": {"cy": {"gap": 128352.0, "exp": 7015.0, "act": 2571.0, "nb": 63.4, "cap": 36.6}, "fy": {"gap": 131131.0, "exp": 7015.0, "act": 2450.0, "nb": 65.1, "cap": 34.9}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 0.0, "cap": 137.1, "fy_gap": 0.0, "act_qty": 648.0, "exp_qty": 536.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 8569.0, "cap": 53.2, "fy_gap": 7885.0, "act_qty": 610.0, "exp_qty": 1071.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 25721.0, "cap": 27.1, "fy_gap": 29541.0, "act_qty": 70.0, "exp_qty": 428.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 17762.0, "cap": 20.5, "fy_gap": 17762.0, "act_qty": 55.0, "exp_qty": 268.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 11213.0, "cap": 8.4, "fy_gap": 10699.0, "act_qty": 68.0, "exp_qty": 536.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 107.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 24220.0, "cap": 7.9, "fy_gap": 24012.0, "act_qty": 19.0, "exp_qty": 214.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 3353.0, "cap": 3.1, "fy_gap": 3353.0, "act_qty": 5.0, "exp_qty": 161.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 14791.0, "cap": 6.1, "fy_gap": 14865.0, "act_qty": 12.0, "exp_qty": 214.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 5419.0, "cap": 33.6, "fy_gap": 5504.0, "act_qty": 349.0, "exp_qty": 1071.0}, {"label": "Oil Filter", "group": "Filters", "gap": 2326.0, "cap": 57.3, "fy_gap": 2534.0, "act_qty": 573.0, "exp_qty": 1071.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 333.0, "cap": 0.9, "fy_gap": 333.0, "act_qty": 1.0, "exp_qty": 107.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 3412.0, "cap": 6.2, "fy_gap": 3412.0, "act_qty": 10.0, "exp_qty": 161.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 11232.0, "cap": 2.9, "fy_gap": 11232.0, "act_qty": 31.0, "exp_qty": 1071.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 17.4, "fy": 17.1}, "expo": {"pct": 0.8, "eur": 1419.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 175218.0, "cy_exc": 155841.0, "fy_inc": 189589.0, "fy_exc": 170212.0, "warr": 19377.0}}, {"db": "MALTA", "scope": "MIXED", "region": "SOUTH", "uio": 1040.0, "n75": 243.0, "lcv": 797.0, "wc": "truck + light", "imit": 11749.0, "km": null, "demand": {"cy": {"gap": 127826.0, "exp": 6193.0, "act": 1984.0, "nb": 68.0, "cap": 32.0}, "fy": {"gap": 125255.0, "exp": 6193.0, "act": 1960.0, "nb": 68.4, "cap": 31.6}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 3864.0, "cap": 62.9, "fy_gap": 5210.0, "act_qty": 241.0, "exp_qty": 482.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 14240.0, "cap": 23.7, "fy_gap": 14821.0, "act_qty": 198.0, "exp_qty": 963.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 23166.0, "cap": 26.1, "fy_gap": 18252.0, "act_qty": 168.0, "exp_qty": 402.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 12013.0, "cap": 32.4, "fy_gap": 12013.0, "act_qty": 78.0, "exp_qty": 241.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 13944.0, "cap": 8.7, "fy_gap": 14354.0, "act_qty": 29.0, "exp_qty": 482.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 96.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 25532.0, "cap": 1.6, "fy_gap": 25532.0, "act_qty": 3.0, "exp_qty": 193.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 6670.0, "cap": 7.6, "fy_gap": 6670.0, "act_qty": 11.0, "exp_qty": 144.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 7401.0, "cap": 7.3, "fy_gap": 7401.0, "act_qty": 14.0, "exp_qty": 193.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 7858.0, "cap": 37.5, "fy_gap": 8130.0, "act_qty": 340.0, "exp_qty": 963.0}, {"label": "Oil Filter", "group": "Filters", "gap": 833.0, "cap": 86.3, "fy_gap": 594.0, "act_qty": 869.0, "exp_qty": 963.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 96.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 3638.0, "cap": 2.8, "fy_gap": 3612.0, "act_qty": 5.0, "exp_qty": 144.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 8668.0, "cap": 0.5, "fy_gap": 8668.0, "act_qty": 4.0, "exp_qty": 830.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 1.1, "fy": 3.5}, "expo": {"pct": 1.5, "eur": 2991.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 206502.0, "cy_exc": 188283.0, "fy_inc": 203622.0, "fy_exc": 185403.0, "warr": 18219.0}}, {"db": "IRELAND", "scope": "MIXED", "region": "WEST", "uio": 2161.0, "n75": 823.0, "lcv": 1338.0, "wc": "truck + light", "imit": 27998.0, "km": null, "demand": {"cy": {"gap": 127414.0, "exp": 11932.0, "act": 11938.0, "nb": -0.0, "cap": 100.0}, "fy": {"gap": 131726.0, "exp": 11932.0, "act": 10678.0, "nb": 10.5, "cap": 89.5}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 0.0, "cap": 194.7, "fy_gap": 0.0, "act_qty": 1629.0, "exp_qty": 939.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 25430.0, "cap": 10.9, "fy_gap": 25445.0, "act_qty": 204.0, "exp_qty": 1878.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 10986.0, "cap": 81.2, "fy_gap": 13759.0, "act_qty": 616.0, "exp_qty": 805.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 0.0, "cap": 212.4, "fy_gap": 0.0, "act_qty": 997.0, "exp_qty": 469.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 22521.0, "cap": 28.3, "fy_gap": 22422.0, "act_qty": 269.0, "exp_qty": 939.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 188.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 14736.0, "cap": 51.1, "fy_gap": 16269.0, "act_qty": 173.0, "exp_qty": 376.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 0.0, "cap": 106.5, "fy_gap": 0.0, "act_qty": 287.0, "exp_qty": 282.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 13792.0, "cap": 54.9, "fy_gap": 13792.0, "act_qty": 206.0, "exp_qty": 376.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 0.0, "cap": 199.6, "fy_gap": 0.0, "act_qty": 3238.0, "exp_qty": 1878.0}, {"label": "Oil Filter", "group": "Filters", "gap": 0.0, "cap": 179.1, "fy_gap": 0.0, "act_qty": 2888.0, "exp_qty": 1878.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 542.0, "cap": 5.3, "fy_gap": 554.0, "act_qty": 6.0, "exp_qty": 188.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 6574.0, "cap": 9.6, "fy_gap": 6651.0, "act_qty": 24.0, "exp_qty": 282.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 32834.0, "cap": 9.7, "fy_gap": 32834.0, "act_qty": 142.0, "exp_qty": 1457.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": {"total": 102920.0, "pull": 41943.0, "over_low": 42523.0, "over_none": 18453.0, "nobill": 0.0, "pns": 400, "rows": 400}, "fy": null}, "mix": {"cy": 26.0, "fy": 25.3}, "expo": {"pct": 1.1, "eur": 12652.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 1187459.0, "cy_exc": 1152602.0, "fy_inc": 1141538.0, "fy_exc": 1106681.0, "warr": 34857.0}}, {"db": "DENMARK", "scope": "LCV", "region": "NORDICS", "uio": 851.0, "n75": 1.0, "lcv": 850.0, "wc": "truck + light", "imit": 22444.0, "km": null, "demand": {"cy": {"gap": 107027.0, "exp": 5570.0, "act": 1681.0, "nb": 69.8, "cap": 30.2}, "fy": {"gap": 105992.0, "exp": 5570.0, "act": 1656.0, "nb": 70.3, "cap": 29.7}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 5035.0, "cap": 54.6, "fy_gap": 4592.0, "act_qty": 249.0, "exp_qty": 425.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 9351.0, "cap": 22.8, "fy_gap": 10348.0, "act_qty": 124.0, "exp_qty": 850.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 16451.0, "cap": 35.9, "fy_gap": 14531.0, "act_qty": 147.0, "exp_qty": 340.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 0.0, "cap": 106.8, "fy_gap": 0.0, "act_qty": 227.0, "exp_qty": 213.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 12328.0, "cap": 7.1, "fy_gap": 12562.0, "act_qty": 22.0, "exp_qty": 425.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 85.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 27181.0, "cap": 3.5, "fy_gap": 27181.0, "act_qty": 6.0, "exp_qty": 170.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 262.0, "cap": 2.4, "fy_gap": 262.0, "act_qty": 3.0, "exp_qty": 128.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 14026.0, "cap": 4.7, "fy_gap": 14142.0, "act_qty": 7.0, "exp_qty": 170.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 8830.0, "cap": 25.0, "fy_gap": 8941.0, "act_qty": 205.0, "exp_qty": 850.0}, {"label": "Oil Filter", "group": "Filters", "gap": 3396.0, "cap": 49.5, "fy_gap": 3238.0, "act_qty": 441.0, "exp_qty": 850.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 85.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 3519.0, "cap": 3.1, "fy_gap": 3548.0, "act_qty": 3.0, "exp_qty": 128.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 6648.0, "cap": 26.0, "fy_gap": 6648.0, "act_qty": 221.0, "exp_qty": 850.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 12.8, "fy": 13.7}, "expo": {"pct": 0.9, "eur": 1371.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 148221.0, "cy_exc": 139106.0, "fy_inc": 179723.0, "fy_exc": 170608.0, "warr": 9115.0}}, {"db": "ICELAND", "scope": "LCV", "region": "NORDICS", "uio": 406.0, "n75": 0.0, "lcv": 406.0, "wc": "light commercial", "imit": 20836.0, "km": null, "demand": {"cy": {"gap": 46819.0, "exp": 2659.0, "act": 804.0, "nb": 69.8, "cap": 30.2}, "fy": {"gap": 46107.0, "exp": 2659.0, "act": 766.0, "nb": 71.2, "cap": 28.8}}, "fam": [{"label": "Air Filter", "group": "Filters", "gap": 1218.0, "cap": 70.9, "fy_gap": 1425.0, "act_qty": 134.0, "exp_qty": 203.0}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 4596.0, "cap": 33.0, "fy_gap": 4967.0, "act_qty": 112.0, "exp_qty": 406.0}, {"label": "Brake Pad", "group": "Brakes", "gap": 9796.0, "cap": 22.2, "fy_gap": 8616.0, "act_qty": 51.0, "exp_qty": 162.0}, {"label": "Brake Rotor", "group": "Brakes", "gap": 1583.0, "cap": 72.9, "fy_gap": 1583.0, "act_qty": 74.0, "exp_qty": 102.0}, {"label": "Brake Shoe", "group": "Brakes", "gap": 3562.0, "cap": 12.8, "fy_gap": 3300.0, "act_qty": 39.0, "exp_qty": 203.0}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 41.0}, {"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 12232.0, "cap": 2.5, "fy_gap": 12232.0, "act_qty": 2.0, "exp_qty": 81.0}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 61.0}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 7545.0, "cap": 2.5, "fy_gap": 7545.0, "act_qty": 2.0, "exp_qty": 81.0}, {"label": "Fuel Filter", "group": "Filters", "gap": 3989.0, "cap": 23.6, "fy_gap": 3938.0, "act_qty": 100.0, "exp_qty": 406.0}, {"label": "Oil Filter", "group": "Filters", "gap": 639.0, "cap": 70.7, "fy_gap": 843.0, "act_qty": 249.0, "exp_qty": 406.0}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 120.0, "cap": 2.5, "fy_gap": 120.0, "act_qty": 1.0, "exp_qty": 41.0}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 1539.0, "cap": 3.3, "fy_gap": 1539.0, "act_qty": 2.0, "exp_qty": 61.0}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 0.0, "cap": 0.0, "fy_gap": 0.0, "act_qty": 0.0, "exp_qty": 406.0}], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 3.0, "fy": 9.2}, "expo": {"pct": 0.5, "eur": 435.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 85282.0, "cy_exc": 78247.0, "fy_inc": 89959.0, "fy_exc": 82924.0, "warr": 7035.0}}, {"db": "ARMENIA", "scope": null, "region": "CIS", "uio": null, "n75": null, "lcv": null, "wc": "no fleet model", "imit": null, "km": null, "demand": {"cy": null, "fy": null}, "fam": [], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 59.1, "fy": 60.0}, "expo": {"pct": 0.1, "eur": 424.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 274583.0, "cy_exc": null, "fy_inc": 264786.0, "fy_exc": null, "warr": null}}, {"db": "KAZAKHSTAN", "scope": null, "region": "CIS", "uio": null, "n75": null, "lcv": null, "wc": "no fleet model", "imit": null, "km": null, "demand": {"cy": null, "fy": null}, "fam": [], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 90.8, "fy": 91.3}, "expo": {"pct": 0.3, "eur": 552.0}, "np": {"eur": 2689.0, "pns": 1}, "bill": {"cy_inc": 161949.0, "cy_exc": null, "fy_inc": 165452.0, "fy_exc": null, "warr": null}}, {"db": "PALESTINE", "scope": null, "region": "MIDDLE_EAST", "uio": null, "n75": null, "lcv": null, "wc": "no fleet model", "imit": null, "km": null, "demand": {"cy": null, "fy": null}, "fam": [], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 83.8, "fy": 92.2}, "expo": {"pct": 0.0, "eur": 0.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 27336.0, "cy_exc": null, "fy_inc": 42100.0, "fy_exc": null, "warr": null}}, {"db": "UKRAINE", "scope": null, "region": "CIS", "uio": null, "n75": null, "lcv": null, "wc": "no fleet model", "imit": null, "km": null, "demand": {"cy": null, "fy": null}, "fam": [], "dealer": {"cy": null, "fy": null}, "rep": {"cy": null, "fy": null}, "mix": {"cy": 46.8, "fy": 43.5}, "expo": {"pct": 0.2, "eur": 2257.0}, "np": {"eur": 0.0, "pns": 0}, "bill": {"cy_inc": 1160672.0, "cy_exc": null, "fy_inc": 1007044.0, "fy_exc": null, "warr": null}}], "noprice": [{"rank": 1, "pn": "550047337", "desc": "Rim R4L15W40 CK4_3*5L", "eur": 433820.0, "reason": "absent from pr00", "lube": true}, {"rank": 2, "pn": "550047252", "desc": "Rim R4 L 15W40 CJ4_1*209L", "eur": 75636.0, "reason": "absent from pr00", "lube": true}, {"rank": 3, "pn": "7552825890", "desc": "CAB ASM; SERVICE,WO/ELEC", "eur": 23111.0, "reason": "on list no usable price", "lube": false}, {"rank": 4, "pn": "550071985", "desc": "RimR7AX5W30_1*209L_A246", "eur": 9004.0, "reason": "absent from pr00", "lube": true}, {"rank": 5, "pn": "7552824860", "desc": "CAB ASM; SERVICE,WO/ELEC", "eur": 8184.0, "reason": "on list no usable price", "lube": false}, {"rank": 6, "pn": "8972733050", "desc": "STEERING UNIT", "eur": 4635.0, "reason": "on list no usable price", "lube": false}, {"rank": 7, "pn": "8976745030", "desc": "TRANSMISSION ASM; MANUAL", "eur": 4308.0, "reason": "on list no usable price", "lube": false}, {"rank": 8, "pn": "7552221258", "desc": "PUMP ASM; OIL", "eur": 3328.0, "reason": "on list no usable price", "lube": false}, {"rank": 9, "pn": "7475009365", "desc": "CAMERA ASM", "eur": 3184.0, "reason": "on list no usable price", "lube": false}, {"rank": 10, "pn": "8979371773", "desc": "LID; FRT OUTER", "eur": 2924.0, "reason": "absent from pr00", "lube": false}, {"rank": 11, "pn": "550070445", "desc": "Rim R4L 15W40 CK4_1*20L JC_A246", "eur": 2880.0, "reason": "absent from pr00", "lube": true}, {"rank": 12, "pn": "7552337880", "desc": "TRANSFER ASM", "eur": 2689.0, "reason": "on list no usable price", "lube": false}, {"rank": 13, "pn": "1867240510", "desc": "SWITCH&HARN;PUSH,24V", "eur": 2257.0, "reason": "absent from pr00", "lube": false}, {"rank": 14, "pn": "7552172230", "desc": "HYDRAULIC UNIT; ANTI LOCK BRK", "eur": 2181.0, "reason": "on list no usable price", "lube": false}, {"rank": 15, "pn": "8978325590", "desc": "PUMP ASM; DEF,DCM SPLY", "eur": 1837.0, "reason": "on list no usable price", "lube": false}, {"rank": 16, "pn": "550070643", "desc": "RimulaR6LM10W40CK-4_1*20L JC_A246", "eur": 1496.0, "reason": "absent from pr00", "lube": true}, {"rank": 17, "pn": "7552458070", "desc": "LID; FRT INNER", "eur": 1432.0, "reason": "absent from pr00", "lube": false}, {"rank": 18, "pn": "550070645", "desc": "RimR6LMEPlus5W30CK4_1*20L JC_A246", "eur": 1260.0, "reason": "absent from pr00", "lube": true}, {"rank": 19, "pn": "5867131240", "desc": "1DIN SWITCH;STORAGE BOX", "eur": 1253.0, "reason": "absent from pr00", "lube": false}, {"rank": 20, "pn": "8978221083", "desc": "CONVERTER", "eur": 1127.0, "reason": "on list no usable price", "lube": false}, {"rank": 21, "pn": "8976826621", "desc": "CLUTCH ASM", "eur": 990.0, "reason": "on list no usable price", "lube": false}, {"rank": 22, "pn": "8978769020", "desc": "CONTROLLER; ABS", "eur": 891.0, "reason": "on list no usable price", "lube": false}, {"rank": 23, "pn": "7552313610", "desc": "SENSOR; DISTANCE", "eur": 855.0, "reason": "on list no usable price", "lube": false}, {"rank": 24, "pn": "8972733041", "desc": "STEERING UNIT", "eur": 842.0, "reason": "on list no usable price", "lube": false}, {"rank": 25, "pn": "550065935", "desc": "Tellus S2 MX 68_1*20L JC_A246", "eur": 638.0, "reason": "absent from pr00", "lube": true}, {"rank": 26, "pn": "1826254050", "desc": "HARNESS", "eur": 610.0, "reason": "absent from pr00", "lube": false}, {"rank": 27, "pn": "8979363282", "desc": "PANEL; COWL UPR", "eur": 182.0, "reason": "absent from pr00", "lube": false}, {"rank": 28, "pn": "5867636330", "desc": "TAIL GATE ASSIST SET", "eur": 152.0, "reason": "absent from pr00", "lube": false}, {"rank": 29, "pn": "1867240221", "desc": "HARNESS KIT;F145", "eur": 100.0, "reason": "absent from pr00", "lube": false}, {"rank": 30, "pn": "1867240222", "desc": "HARNESS KIT;F145", "eur": 64.0, "reason": "absent from pr00", "lube": false}, {"rank": 31, "pn": "8971855290", "desc": "HANDLE; OUTSIDE,BACK DOOR", "eur": 46.0, "reason": "on list no usable price", "lube": false}], "groups": ["Filters", "Brakes", "Clutch & bearings"]};
+var IUK_ADJ = {"scale": 0.725, "exp": 226816.0, "act": 54155.0, "gap": 3870617.0, "cap": 23.9, "nb": 76.1, "gap_now": 5802175.0, "cap_now": 17.3, "cut": 0.333, "km": 14494.0, "km_model": 20000.0};
+var KM = {"IUK": {"km": 14494.0, "label": "14,494", "src": "N35 Grafter odometer intervals", "note": "9,006 mi median, 18,277 odometer intervals, 5,421 vehicles, 2018-2026"}, "UTI": {"km": 51680.0, "label": "51,680", "src": "CV warranty odometer", "note": "already applied in the model as a 1.25 services/yr override"}, "N35": {"km": 12165.0, "label": "12,165", "src": "CV warranty odometer", "note": "PROVISIONAL, all-market"}, "N75": {"km": 35217.0, "label": "35,217", "src": "CV warranty odometer", "note": "PROVISIONAL, all-market"}, "F": {"km": 45630.0, "label": "45,630", "src": "CV warranty odometer", "note": "PROVISIONAL, all-market"}};
+var FAMNET = [{"label": "Clutch Disc", "group": "Clutch & bearings", "gap": 3265785.0, "cap": 5.3, "exp": 31760.0, "act": 1697.0, "avg_sp": 108.63}, {"label": "Brake Pad", "group": "Brakes", "gap": 3010831.0, "cap": 28.3, "exp": 65155.0, "act": 18408.0, "avg_sp": 64.41}, {"label": "Brake Shoe", "group": "Brakes", "gap": 2608366.0, "cap": 9.1, "exp": 77672.0, "act": 7097.0, "avg_sp": 36.96}, {"label": "Clutch Pressure Plate", "group": "Clutch & bearings", "gap": 2090835.0, "cap": 6.1, "exp": 31760.0, "act": 1943.0, "avg_sp": 70.12}, {"label": "Blower Unit Filter", "group": "Filters", "gap": 1434691.0, "cap": 15.6, "exp": 158800.0, "act": 24725.0, "avg_sp": 10.7}, {"label": "Brake Rotor", "group": "Brakes", "gap": 1410562.0, "cap": 52.2, "exp": 39700.0, "act": 20714.0, "avg_sp": 74.29}, {"label": "Clutch Kit", "group": "Clutch & bearings", "gap": 1036659.0, "cap": 9.7, "exp": 23820.0, "act": 2299.0, "avg_sp": 48.17}, {"label": "Fuel Filter", "group": "Filters", "gap": 1026902.0, "cap": 44.6, "exp": 158800.0, "act": 70829.0, "avg_sp": 11.67}, {"label": "Clutch Booster", "group": "Clutch & bearings", "gap": 794416.0, "cap": 0.2, "exp": 15880.0, "act": 32.0, "avg_sp": 50.13}, {"label": "Air Filter", "group": "Filters", "gap": 739361.0, "cap": 51.6, "exp": 79400.0, "act": 40948.0, "avg_sp": 19.23}, {"label": "Urea (AdBlue) Filter", "group": "Filters", "gap": 521511.0, "cap": 1.5, "exp": 132039.0, "act": 1988.0, "avg_sp": 4.01}, {"label": "Release Bearing", "group": "Clutch & bearings", "gap": 451056.0, "cap": 4.3, "exp": 23820.0, "act": 1019.0, "avg_sp": 19.78}, {"label": "Oil Filter", "group": "Filters", "gap": 350424.0, "cap": 58.0, "exp": 158800.0, "act": 92035.0, "avg_sp": 5.25}, {"label": "Pilot Bearing", "group": "Clutch & bearings", "gap": 27610.0, "cap": 1.7, "exp": 15880.0, "act": 275.0, "avg_sp": 1.77}];
+var ST = {period:'cy', dir:'db', warr:'inc'};
+var NPLIST = DATA.noprice;
+var LOADED = false;
+</script>
+<script>
+function eur(v){ if(v===null||v===undefined||v===''||isNaN(v)) return '\u2014';
+  v=+v; var a=Math.abs(v);
+  if(a>=1e6) return '\u20AC'+(v/1e6).toFixed(2)+'M';
+  if(a>=1e3) return '\u20AC'+Math.round(v/1e3)+'k';
+  return '\u20AC'+Math.round(v); }
+function eur2(v){ if(v===null||v===undefined||isNaN(v)) return '\u2014';
+  v=+v; var a=Math.abs(v);
+  if(a>=1e6) return '\u20AC'+(v/1e6).toFixed(2)+'M';
+  if(a>=1e3) return '\u20AC'+(v/1e3).toFixed(0)+'k';
+  return '\u20AC'+Math.round(v); }
+function num(v){ return (v===null||v===undefined||isNaN(v))?'\u2014':Math.round(v).toLocaleString('en-GB'); }
+function one(v,s){ return (v===null||v===undefined||isNaN(v))?'\u2014':(+v).toFixed(1)+(s||''); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function cfg(){ return 'Period '+(ST.period==='cy'?'CY2025 (Jan\u2013Dec)':'FY2025 (Apr\u2013Mar)')
+  +' \u00b7 Direction '+(ST.dir==='db'?'ISZE \u2192 DB':'DB \u2192 dealer')
+  +' \u00b7 Warranty '+(ST.warr==='inc'?'included':'excluded'); }
+function tip(t,f,s,e){ return '<span class="tip"><b>'+t+'</b><span class="tr"><i>Formula</i>'+f
+  +'</span><span class="tr"><i>Snapshot &amp; source</i>'+s
+  +'</span><span class="tr"><i>Settings that produced this figure</i>'+cfg()
+  +'</span><span class="tr warn"><i>Not included</i>'+e+'</span></span>'; }
+function g(id){ return document.getElementById(id); }
+var $ = g;
+
+// ---------- period/direction aware getters ----------
+function demand(r){ if(!r) return null; return r.demand[ST.period]; }
+function dealerLeg(r){ if(!r||!r.dealer) return null; return r.dealer[ST.period]; }
+function repOf(r){ if(!r||!r.rep) return null; return r.rep[ST.period]; }
+function mixOf(r){ if(!r) return null; return r.mix[ST.period]; }
+function billOf(r){
+  if(!r) return null;
+  var k = ST.period+'_'+(ST.warr==='inc'?'inc':'exc');
+  var v = r.bill[k];
+  return (v===null||v===undefined)?null:v;
+}
+function billNote(r){
+  if(!r) return '';
+  var k = ST.period+'_'+(ST.warr==='inc'?'inc':'exc');
+  if(r.bill[k]===null||r.bill[k]===undefined){
+    if(ST.warr==='exc') return 'no warranty data for this market \u2014 unavailable, not zero';
+    return 'no billing extract for this market in this period';
+  }
+  return '';
+}
+// the gap column is demand-side when direction is ISZE->DB, dealer-side otherwise
+function gapOf(r){
+  if(ST.dir==='db'){ var d=demand(r); return d?d.gap:null; }
+  var t=dealerLeg(r); return t?t.gap:null;
+}
+function gapReason(r){
+  if(gapOf(r)!==null) return '';
+  if(ST.dir==='dealer'){
+    if(!r.dealer||!r.dealer.cy) return 'no sales-to-dealer file for this distributor';
+    if(ST.period==='fy'&&!r.dealer.fy) return 'dealer file covers only 8 of 11 fiscal months \u2014 excluded, not annualised';
+    return 'no sales-to-dealer file for this distributor';
+  }
+  return 'not in the modelled fleet base (bills parts but has no vehicles-in-service model)';
+}
+function unboughtOf(r){
+  if(ST.dir==='db'){ var d=demand(r); return d?d.nb:null; }
+  var t=dealerLeg(r); return t?t.nb:null;
+}
+function capOf(r){
+  if(ST.dir==='db'){ var d=demand(r); return d?d.cap:null; }
+  var t=dealerLeg(r); return t?t.cap:null;
+}
+
+// ---------- charts ----------
+var GROUPC={ 'Filters':'#2b4a78','Brakes':'#c0552d','Clutch & bearings':'#7a8fa8' };
+function chart1(){
+  var rows=DATA.dbs.filter(function(r){ return demand(r)&&demand(r).gap>0; })
+    .sort(function(a,b){ return demand(b).gap-demand(a).gap; });
+  if(!rows.length){ g('c1-rows').innerHTML='<p class="small">No demand gap under these settings.</p>'; return; }
+  var mx=demand(rows[0]).gap;
+  var ticks=''; for(var i=0;i<=4;i++){ ticks+='<span>'+eur2(mx*i/4)+'</span>'; }
+  g('c1-axis').innerHTML=ticks;
+  var grid=''; for(var i=0;i<=4;i++){ grid+='<i style="left:'+(i*25)+'%"></i>'; }
+  var out='<div class="grid">'+grid+'</div>';
+  rows.forEach(function(r){
+    var d=demand(r), fams=r.fam.slice().sort(function(a,b){ return (b.gap||0)-(a.gap||0); });
+    var segs='';
+    DATA.groups.forEach(function(gr){
+      var v=0;
+      fams.forEach(function(f){ if(f.group===gr){ v+=Math.max(0,(ST.period==='fy'?(f.fy_gap||0):(f.gap||0))); } });
+      if(v>0){ segs+='<span style="width:'+(v/mx*100)+'%;background:'+GROUPC[gr]+'"></span>'; }
+    });
+    out+='<div class="brow"><div class="bl">'+esc(r.db)+'</div>'
+      +'<div class="track">'+segs+'</div>'
+      +'<div class="bv kpi">'+eur2(d.gap)+tip('Diagnostic 1 gap, '+esc(r.db),
+        'expected service demand minus quantity bought (genuine or Competitive), valued at the observed average selling price per service family',
+        'pms_capture_by_db_year.csv, modelled; fleet '+num(r.uio)+' vehicles in service, '+esc(r.wc)
+          + (ST.period==='fy'?'. Fiscal leg derived from the fiscal-to-calendar ratio of service-part billing lines, per distributor and per family':'')
+          + (r.db==='IUK'?'. IUK expects '+num(d.exp)+' service-part units against '+num(d.act)+' bought at the flat 20,000 km/yr model distance; the measured distance is 14,494 km/yr':'')
+          + (r.db==='IRELAND'?'. Ireland exceeds 100% of modelled expected demand, which is unresolved, not a strength':''),
+        'Service families with no agreed interval are outside the model, so this layer is narrower than the parts catalogue. The ceiling itself is modelled, not observed lost orders. Under fiscal the expected-demand ceiling is unchanged because the model has no period dimension.')
+      +'</div></div>';
+  });
+  g('c1-rows').innerHTML=out;
+}
+function chart2(){
+  var rows=DATA.dbs.filter(function(r){ return repOf(r)&&repOf(r).total>0; })
+    .sort(function(a,b){ return repOf(b).total-repOf(a).total; });
+  if(!rows.length){ g('c2-rows').innerHTML='<p class="small">No distributor-level replenishment evidence under these settings.</p>'; return; }
+  var mx=0; rows.forEach(function(r){ mx=Math.max(mx,repOf(r).pull||0,repOf(r).over_low||0,repOf(r).over_none||0); });
+  var t=''; for(var i=0;i<=4;i++){ t+='<span>'+eur2(mx*i/4)+'</span>'; } g('c2-axis').innerHTML=t;
+  var grid=''; for(var i=0;i<=4;i++){ grid+='<i style="left:'+(i*25)+'%"></i>'; }
+  var out='<div class="grid">'+grid+'</div>';
+  rows.forEach(function(r){
+    var rp=repOf(r), over=(rp.over_low||0)+(rp.over_none||0);
+    out+='<div class="brow"><div class="bl">'+esc(r.db)+'</div>'
+      +'<div><div class="track plain" title=""><span style="width:'+((rp.pull||0)/mx*100)+'%;background:#2b4a78"></span></div>'
+      +'<div class="track plain" style="margin-top:3px"><span style="width:'+(over/mx*100)+'%;background:#c0552d"></span></div></div>'
+      +'<div class="bv kpi">'+eur2(rp.total)+tip('Replenishment exceptions, '+esc(r.db),
+        'value of exception part numbers billed to the distributor that did not show up proportionally in sales to its dealers, at billed value',
+        'replenishment_exceptions_cy2025.csv (calendar 2025) and replenishment_bridge.parquet for fiscal; ranking capped at the top 100 part numbers per signal',
+        'Thirteen of eighteen distributors have no sales-to-dealer file and cannot be measured. Under-ordering and overstock are different problems and are not added into one instruction.')
+      +'</div></div>';
+  });
+  g('c2-rows').innerHTML=out;
+}
+function chart3(){
+  var rows=DATA.dbs.filter(function(r){ return mixOf(r)!==null&&r.expo; })
+    .sort(function(a,b){ return mixOf(b)-mixOf(a); });
+  var mx=Math.max.apply(null,rows.map(function(r){ return mixOf(r); }));
+  var t=''; for(var i=0;i<=4;i++){ t+='<span>'+(Math.round(mx*i/4*10)/10)+'%</span>'; } g('c3-axis').innerHTML=t;
+  var grid=''; for(var i=0;i<=4;i++){ grid+='<i style="left:'+(i*25)+'%"></i>'; }
+  var out='<div class="grid">'+grid+'</div>';
+  rows.forEach(function(r){
+    var sh=mixOf(r), ex=r.expo.pct;
+    out+='<div class="brow"><div class="bl">'+esc(r.db)+'</div>'
+      +'<div><div class="track plain"><span style="width:'+(sh/mx*100)+'%;background:#2b4a78"></span></div>'
+      +'<div class="track plain" style="margin-top:3px"><span style="width:'+(ex/mx*100)+'%;background:#c0552d;min-width:2px"></span></div></div>'
+      +'<div class="bv kpi">'+one(sh,'%')+tip('Competitive-parts share, '+esc(r.db),
+        'Competitive-parts euro divided by total service-part euro (genuine plus Competitive), service families only',
+        'mix_genuine_bvp_pms.csv, calendar 2025, snapshot '+DATA.meta.snapshot,
+        'Part numbers where no alternative is listed, so this is not the whole parts book. Fiscal leg is a period recut. Exposed revenue is '+eur(r.expo.eur)+' of net sales, '+one(ex,'%')+'.')
+      +'</div></div>';
+  });
+  g('c3-rows').innerHTML=out;
+}
+function chart4(){
+  var top=NPLIST.slice(0,10), rest=NPLIST.slice(10);
+  var mx=top[0].eur, rows=top.slice();
+  var restv=0; rest.forEach(function(x){ restv+=x.eur; });
+  if(restv>0) rows=rows.concat([{rank:0,pn:'Other '+(rest.length)+' part numbers',desc:'',eur:restv,lube:false,other:true}]);
+  var t=''; for(var i=0;i<=4;i++){ t+='<span>'+eur2(mx*i/4)+'</span>'; } g('c4-axis').innerHTML=t;
+  var grid=''; for(var i=0;i<=4;i++){ grid+='<i style="left:'+(i*25)+'%"></i>'; }
+  var out='<div class="grid">'+grid+'</div>';
+  rows.forEach(function(x){
+    var lb=x.other?esc(x.pn):(esc(x.pn)+' <span class="small">'+esc((x.desc||'').slice(0,22))+'</span>');
+    out+='<div class="brow"><div class="bl">'+lb+'</div>'
+      +'<div class="track plain"><span style="width:'+(x.eur/mx*100)+'%;background:'+(x.lube?'#c0552d':'#2b4a78')+'"></span></div>'
+      +'<div class="bv kpi">'+eur2(x.eur)+tip('No usable price, '+(x.other?'grouped remainder':esc(x.pn)),
+        'billed value in CY2025 where the price file carries no usable price. '+(x.other?'Sum of '+rest.length+' part numbers below the top ten.':'Cause: '+esc(x.desc?x.desc:'')+'.'),
+        'no_pr00_gap_cy2025_ranked.csv (price check 2026-08-11, value from sales_fact.parquet CY2025)',
+        'Part numbers closed by the August 2026 SAP price pull return are not in this list. Billed value is not the same as lost margin.')
+      +'</div></div>';
+  });
+  g('c4-rows').innerHTML=out;
+}
+function chart5(){
+  var now=IUK_ADJ.gap_now, adj=IUK_ADJ.gap;
+  var mx=Math.max(now,adj);
+  var t=''; for(var i=0;i<=4;i++){ t+='<span>'+eur2(mx*i/4)+'</span>'; } g('c5-axis').innerHTML=t;
+  var rows=[['Model distance '+num(IUK_ADJ.km_model)+' km/yr',now,'#2b4a78',
+             'IUK, the model as it stands, '+num(IUK_ADJ.km_model)+' km/yr flat assumption'],
+            ['Measured distance '+num(IUK_ADJ.km)+' km/yr',adj,'#c0552d',
+             'IUK, re-baselined to the measured N35 Grafter distance']];
+  var out='';
+  rows.forEach(function(r){
+    out+='<div class="brow"><div class="bl">'+esc(r[0])+'</div>'
+      +'<div class="track plain"><span style="width:'+(r[1]/mx*100)+'%;background:'+r[2]+'"></span></div>'
+      +'<div class="bv kpi">'+eur2(r[1])+tip(esc(r[3]),
+        'expected demand scaled by measured distance divided by model distance ('+IUK_ADJ.scale.toFixed(3)+'), minus actual bought, at the observed average selling price per family',
+        'n35 mileages all.xlsx, median of odometer deltas between readings over elapsed time, 18,277 intervals on 5,421 vehicles 2018-2026',
+        'Derived from odometer deltas, not the workbook annual mileage column, which divides by a shrinking vehicle age. N35 Grafter only, so the correction is applied to IUK as a whole.')
+      +'</div></div>';
+  });
+  g('c5-rows').innerHTML=out;
+  g('c5-note').innerHTML='At '+num(IUK_ADJ.km_model)+' km/yr the flat model reads '
+    +one(IUK_ADJ.cap_now,'%')+' capture (outdated for IUK \u2014 do not headline a visit). At the measured '
+    +num(IUK_ADJ.km)+' km/yr it reads '+one(IUK_ADJ.cap,'%')+' and the gap falls from '
+    +eur2(IUK_ADJ.gap_now)+' to '+eur2(IUK_ADJ.gap)
+    +' \u2014 '+(IUK_ADJ.cut*100).toFixed(0)+'% of the flat-model gap was our own distance assumption. '
+    +'Israel is the one market already corrected inside the model, at 51,680 km/yr.';
+}
+function chart6(){
+  var rows=FAMNET.slice().sort(function(a,b){ return (b.gap||0)-(a.gap||0); });
+  var mx=rows[0].gap;
+  var t=''; for(var i=0;i<=4;i++){ t+='<span>'+eur2(mx*i/4)+'</span>'; } g('c6-axis').innerHTML=t;
+  var grid=''; for(var i=0;i<=4;i++){ grid+='<i style="left:'+(i*25)+'%"></i>'; }
+  var out='<div class="grid">'+grid+'</div>';
+  rows.forEach(function(f){
+    out+='<div class="brow"><div class="bl">'+esc(f.label)+'</div>'
+      +'<div class="track plain"><span style="width:'+(f.gap/mx*100)+'%;background:'+(GROUPC[f.group]||'#8b8578')+'"></span></div>'
+      +'<div class="bv kpi">'+eur2(f.gap)+tip('Diagnostic 1 gap, '+esc(f.label),
+        'expected demand minus bought, at the observed average selling price for this family',
+        'pms_capture_by_db_year.csv, 18 distributors, calendar 2025; snapshot '+DATA.meta.snapshot,
+        'This family bought '+one(f.cap,'%')+' of expected demand ('+num(f.act)+' of '+num(f.exp)+' units \u2014 units shown only because the family is named). Modelled, not observed lost orders.')
+      +'</div></div>';
+  });
+  g('c6-rows').innerHTML=out;
+}
+
+// ---------- league table ----------
+function renderLeague(){
+  var tb=g('league-tbody'), out='';
+  var mx=0;
+  DATA.dbs.forEach(function(x){ var v=gapOf(x); if(v!==null&&v>mx) mx=v; });
+  DATA.dbs.forEach(function(r){
+    var gv=gapOf(r), nb=unboughtOf(r), bv=billOf(r);
+    var pct=(gv!==null&&mx)?Math.min(100,gv/mx*100):0;
+    var chips='';
+    if(nb!==null&&nb<0) chips+='<span class="chip terra">above 100% \u2014 unresolved</span>';
+    if(r.db==='IUK') chips+='<span class="chip">mileage-inflated</span>';
+    if(!r.demand.cy) chips+='<span class="chip blue">no fleet model</span>';
+    out+='<tr><td><b>'+esc(r.db)+'</b>'+chips+'</td>';
+    if(gv===null){
+      out+='<td class="null">'+esc(gapReason(r))+'</td><td class="null">'+esc(gapReason(r))+'</td>';
+    } else {
+      out+='<td class="kpi">'+eur2(gv)+tip((ST.dir==='db'?'Diagnostic 1 gap, ':'Diagnostic 1 gap at the dealer, ')+esc(r.db),
+        ST.dir==='db'
+          ? 'expected service demand minus quantity the distributor bought from ISZE, valued at the observed average selling price per service family'
+          : 'expected service demand minus quantity the distributor sold on to its dealers, valued at the observed average selling price per service family',
+        (ST.dir==='db' ? 'pms_capture_by_db_year.csv, modelled' : 'monthly sales-to-dealer file for this distributor')
+          + ', fleet '+num(r.uio)+' vehicles in service'
+          + (ST.dir==='dealer'&&r.dealer&&r.dealer[ST.period]&&r.dealer[ST.period].proj
+             ? '; only '+r.dealer[ST.period].months+' of 12 fiscal months are on file, so the observed run-rate is scaled to twelve and the figure is derived' : ''),
+        ST.dir==='db'
+          ? 'Service families with no agreed service interval. A modelled ceiling, not observed lost orders. Fiscal leg is a derived recut.'
+          : 'Excludes anything the dealer bought elsewhere. Only six of the twenty-two distributors have this file, so the twelve largest blank cells are structural, not zero.')
+        +'</td>'
+        +'<td class="kpi">'+one(nb,'%')+tip('Not bought, share of expected demand, '+esc(r.db),
+          'one minus captured quantity divided by expected quantity',
+          'same source as the value column',
+          'A negative figure means more was bought than the model expected \u2014 an unresolved reading, not a strength. Ireland reads 102.7% in calendar 2025.')
+        +'</td>';
+    }
+    out+='<td>'+num(r.uio)+'</td><td class="small" style="text-align:left">'+esc(r.wc)
+      +(r.n75?('<br><span class="small">'+num(r.n75)+' truck class / '+num(r.lcv||0)+' light</span>'):'')
+      +(r.imit?('<br><span class="small">measured '+num(r.imit)+' km/yr</span>'):'')
+      +'</td>';
+    var rp=repOf(r);
+    out+='<td class="kpi">'+(rp?eur2(rp.total):'<span class="null">no sales-to-dealer file</span>')
+      +(rp?tip('Replenishment exceptions, '+esc(r.db),
+        'value of exception part numbers at billed value, capped at the top 100 part numbers per signal',
+        ST.period==='cy'?'replenishment_exceptions_cy2025.csv':'replenishment_bridge.parquet, fiscal months Apr 2025 \u2013 Mar 2026',
+        'Only five distributors have a sales-to-dealer file, and under fiscal only four. Not a network figure.'):'')
+      +'</td>';
+    var mv=mixOf(r);
+    out+='<td class="kpi">'+(mv===null?'<span class="null">not measured</span>':one(mv,'%'))
+      +(mv===null?'':tip('Competitive-parts share, '+esc(r.db),
+        'Competitive-parts euro divided by total service-part euro, service families only',
+        'mix_genuine_bvp_pms.csv, calendar 2025'+(ST.period==='fy'?' with a period recut from tagged billing':''),
+        'Part numbers with no listed alternative, so this is not the whole parts book.'))
+      +'</td>';
+    out+='<td class="kpi">'+(r.expo?one(r.expo.pct,'%'):'\u2014')
+      +(r.expo?tip('Direct aftermarket exposure, '+esc(r.db),
+        'high-risk revenue divided by net sales',
+        'aim_exposure_by_db_year.csv, calendar 2025; '+eur(r.expo.eur)+' of net sales',
+        'Only part numbers with a matched alternative. A narrow slice, which is why it reads low everywhere.'):'')
+      +'</td>';
+    out+='<td class="kpi">'+(r.np&&r.np.eur?eur2(r.np.eur):'\u2014')
+      +(r.np&&r.np.eur?tip('No usable price, '+esc(r.db),
+        'CY2025 billed value of part numbers the price file cannot price',
+        'no_pr00_gap_cy2025_ranked.csv with CY2025 value from sales_fact.parquet',
+        'Calendar 2025 only \u2014 this file carries no period tag, so it does not move with the period control.'):'')
+      +'</td>';
+    out+='<td class="kpi">'+(bv===null?'<span class="null">'+esc(billNote(r))+'</span>':eur2(bv))
+      +(bv===null?'':tip((ST.dir==='db'?'Billed to ':'Sales to dealer from ')+esc(r.db),
+        ST.dir==='db'
+          ? 'net parts sales to this distributor, less warranty parts where warranty is excluded'
+          : 'value the distributor invoiced on to its dealers',
+        ST.dir==='db' ? 'gps_spu_by_distributor.csv (calendar 2025) and sales_fact.parquet (fiscal window); warranty split from the same GPS file'
+                      : 'dealer_sellout_gps_2025.csv, calendar 2025 only'
+                      + (r.dealer&&r.dealer[ST.period]&&r.dealer[ST.period].proj?'; fiscal value derived at the distributor\u2019s own euro per unit':''),
+        ST.warr==='exc'
+          ? 'Warranty parts, which are '+(r.bill.warr?eur(r.bill.warr):'n/a')+' at this distributor. Credit notes are already netted out.'
+          : 'Nothing excluded. Credit notes are already netted out.'))
+      +'</td></tr>';
+  });
+  tb.innerHTML=out;
+  var nwd={gap:0,exp:0,act:0,bill:0,bill_n:0,rep:0,rep_dbs:0,mix_max:null,gv_max:0};
+  DATA.dbs.forEach(function(r){
+    var v=gapOf(r);
+    if(v!==null){ nwd.gap+=v; nwd.exp+=(demand(r)?demand(r).exp:0); nwd.act+=(demand(r)?demand(r).act:0); }
+    var b=billOf(r); if(b!==null){ nwd.bill+=b; nwd.bill_n++; }
+    var rp=repOf(r); if(rp){ nwd.rep+=rp.total; nwd.rep_dbs++; }
+    var mv=mixOf(r); if(mv!==null&&(nwd.mix_max===null||mv>nwd.mix_max)) nwd.mix_max=mv;
+    if(r.expo&&r.expo.pct>nwd.gv_max) nwd.gv_max=r.expo.pct;
+  });
+  var nbn=(ST.dir==='db'&&nwd.exp>0)?one((nwd.exp-nwd.act)/nwd.exp*100,'%'):'\u2014';
+  var f='<tr class="tot"><td>Network \u00b7 '+DATA.dbs.length+' distributors</td>'
+    +'<td class="small" style="text-align:left">Per distributor only \u2014 not summed</td><td>'+nbn+'</td>'
+    +'<td>'+num(DATA.nw.uio)+'</td><td class="small" style="text-align:left">light and truck class, mixed</td>'
+    +'<td>'+(nwd.rep?eur2(nwd.rep)+' <span class="small">('+nwd.rep_dbs+' DBs)</span>':'\u2014')+'</td>'
+    +'<td>'+(nwd.mix_max===null?'\u2014':'max '+one(nwd.mix_max,'%'))+'</td>'
+    +'<td>'+one(nwd.gv_max,'%')+' max</td>'
+    +'<td>'+eur2(DATA.nw.np)+'</td><td>'+(nwd.bill?eur2(nwd.bill):'\u2014')+'</td></tr>';
+  g('league-foot').innerHTML=f;
+  g('lg-demand').textContent = ST.dir==='db'?'Diagnostic 1 gap':'Diagnostic 1 gap at dealer';
+  g('lg-bill').textContent = ST.dir==='db'?'Billed to distributor':'Sales to dealer';
+}
+
+// ---------- availability + hero ----------
+function renderAvail(){
+  var items=[];
+  if(ST.dir==='dealer'){
+    items.push('<b>Sixteen of the twenty-two distributors have no sales-to-dealer file</b>, so their value columns are blank with the reason, never a zero and never a copy of the other direction. Six have one: IUK, UTI, ITUK, Ireland, Greece and Portugal.');
+    var proj=[];
+    DATA.dbs.forEach(function(r){ var t=r.dealer&&r.dealer[ST.period];
+      if(t&&t.proj) proj.push(r.db+' ('+t.months+' of 11 fiscal months on file)'); });
+    if(ST.period==='fy'&&proj.length) items.push('<b>Two dealer files do not cover the fiscal window:</b> '+proj.join(' and ')+'. Their value is the observed run-rate scaled to the window, marked derived, not counted. Greece is absent altogether under fiscal because its file starts in August 2025.');
+  }
+  if(ST.period==='fy'){
+    items.push('<b>Fiscal 2025 is April 2025 to March 2026. No source covers 2026-03</b>, so a complete fiscal window is the eleven months April 2025 to February 2026. March 2026 is in neither the calendar nor the fiscal cut on this page.');
+    items.push('<b>The demand gap under fiscal is a derived recut.</b> The demand-capture file on disk carries calendar years only, so the fiscal-to-calendar ratio of service-part billing lines, per distributor and per family, is applied to the published calendar actuals. The expected-demand model has no period dimension, so the ceiling is the same annual figure in both periods &mdash; only the bought quantity moves.');
+    items.push('<b>The no-usable-price column stays on calendar 2025</b> under fiscal, because that file carries no period tag.');
+    items.push('<b>Greece has no replenishment figure under fiscal</b>, and UTI\'s fiscal replenishment covers ten of the eleven months. Greece is excluded rather than annualised; UTI is shown because it is ten of eleven.');
+  }
+  if(ST.warr==='exc') items.push('<b>Warranty is priced out of the billing column</b> ('+eur2(DATA.nw.warr)+' network-wide, '+one(DATA.nw.warr_pct,'%')+' of parts billed in CY2025). The four CIS markets \u2014 Ukraine, Armenia, Kazakhstan and Palestine \u2014 have no warranty data and show <i>unavailable, not zero</i>. Other figures do not move with this control: the demand gap covers parts that were never bought, so warranty claims against parts that were bought cannot be netted out of it. The warranty claim extract matches the service-family registry on only seven part numbers, which is why.');
+  var el=g('avail');
+  if(!items.length){ el.className=''; el.innerHTML=''; return; }
+  el.className='show';
+  el.innerHTML='<b>What these settings cannot show.</b><ul><li>'+items.join('</li><li>')+'</li></ul>';
+}
+function renderHero(){
+  var billed=0, n=0, nwarr=0;
+  DATA.dbs.forEach(function(r){ var b=billOf(r); if(b!==null){ billed+=b; n++; } else if(ST.warr==='exc') nwarr++; });
+  g('hero-billed').textContent = eur2(billed);
+  g('hero-billed').nextElementSibling.textContent = ST.dir==='dealer'
+    ? 'Observed \u00b7 sales to dealer, '+DATA.nw.dealer_dbs+' distributors'
+    : 'Observed \u00b7 parts billed, '+(ST.warr==='inc'?'warranty included':'warranty excluded')+', '+n+' of '+DATA.dbs.length+' distributors';
+  if(ST.dir==='db'&&ST.period==='cy'){
+    g('hero-nb').textContent=one(DATA.nw.nb,'%');
+    g('hero-nb').nextElementSibling.textContent='Diagnostic 1 \u00b7 modelled unbought share';
+  } else {
+    var nbSum=0, nbN=0;
+    DATA.dbs.forEach(function(r){ var u=unboughtOf(r); if(u!==null){ nbSum+=u; nbN++; } });
+    g('hero-nb').textContent=nbN?one(nbSum/nbN,'%'):'\u2014';
+    g('hero-nb').nextElementSibling.textContent=ST.dir==='dealer'
+      ? 'Diagnostic 1 \u00b7 average unbought at dealer'
+      : 'Diagnostic 1 \u00b7 modelled unbought share (derived recut)';
+  }
+  var cap=0, cn=0;
+  DATA.dbs.forEach(function(r){ var c=capOf(r); if(c!==null){ cap+=c; cn++; } });
+  $('hero-cap').textContent = cn ? one(cap/cn,'%') : '\u2014';
+  $('hero-cap').nextElementSibling.textContent = ST.dir==='dealer'
+    ? 'Diagnostic 1 \u00b7 average capture reached dealers'+ (cn<22?' \u2014 '+cn+' of '+DATA.dbs.length+' distributors':'')
+    : 'Diagnostic 1 \u00b7 modelled capture rate'+ (cn<22?' \u2014 '+cn+' of '+DATA.dbs.length+' distributors':'');
+  var rp=0, dn=0; DATA.dbs.forEach(function(r){ var x=repOf(r); if(x){ rp+=x.total; dn++; } });
+  g('hero-rep').textContent = eur2(rp);
+  g('hero-rep').nextElementSibling.textContent = dn?('Diagnostic 2 \u00b7 replenishment, '+dn+' distributors'):'Diagnostic 2 \u00b7 no replenishment evidence under these settings';
+}
+function renderAll(){ renderAvail(); renderHero(); renderLeague(); chart1(); chart2(); chart3(); chart4(); chart5(); chart6(); }
+document.querySelectorAll('.tgl button').forEach(function(b){
+  b.addEventListener('click', function(){
+    var t=b.getAttribute('data-t'), v=b.getAttribute('data-v');
+    document.querySelectorAll('.tgl button[data-t="'+t+'"]').forEach(function(o){ o.classList.remove('on'); o.setAttribute('aria-pressed','false'); });
+    b.classList.add('on'); b.setAttribute('aria-pressed','true');
+    ST[t]=v; renderAll();
+  });
+});
+document.querySelectorAll('.tgl button').forEach(function(b){ b.setAttribute('aria-pressed', b.classList.contains('on')?'true':'false'); });
+renderAll();
+</script></body></html>

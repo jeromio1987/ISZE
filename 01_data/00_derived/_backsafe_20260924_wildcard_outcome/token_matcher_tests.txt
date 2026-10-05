@@ -1,0 +1,55 @@
+﻿builder WILDCARD_RE : ^[A-Z]{1,4}\d{0,3}\*[A-Z]{0,4}$
+reader  prefix re   : ^[A-Z]{1,4}\d{0,3}\*$
+reader  infix  re   : ^[A-Z]{1,4}\d{0,3}\*[A-Z]{0,4}$
+
+tokens that MUST be recognised as a wildcard:
+  TF*      builder=True  reader=True  OK
+  F*       builder=True  reader=True  OK
+  N*       builder=True  reader=True  OK
+  NQ*      builder=True  reader=True  OK
+  N*R      builder=True  reader=True  OK
+  N*S      builder=True  reader=True  OK
+  F*R      builder=True  reader=True  OK
+  C*Z      builder=True  reader=True  OK
+  FV*      builder=True  reader=True  OK
+  FRR*     builder=True  reader=True  OK
+
+tokens that MUST stay silent (no wildcard), and must reach the code lookup:
+  NNR      builder_wildcard=False reader_wildcard=False band=7.5t_N50_N62_N75     OK
+  NPR      builder_wildcard=False reader_wildcard=False band=7.5t_N50_N62_N75     OK
+  NHR      builder_wildcard=False reader_wildcard=False band=unresolved           OK
+  NKR      builder_wildcard=False reader_wildcard=False band=3.5t_N35             OK
+  FRR      builder_wildcard=False reader_wildcard=False band=F_series_MD_heavy    OK
+  TFR      builder_wildcard=False reader_wildcard=False band=LCV_D-Max            OK
+  TFS      builder_wildcard=False reader_wildcard=False band=LCV_D-Max            OK
+  NLR      builder_wildcard=False reader_wildcard=False band=3.5t_N35             OK
+  NMR      builder_wildcard=False reader_wildcard=False band=5.5t_N50_N55         OK
+  NMR85    builder_wildcard=False reader_wildcard=False band=5.5t_N50_N55         OK
+  NQR      builder_wildcard=False reader_wildcard=False band=7.5t_N50_N62_N75     OK
+  FXZ      builder_wildcard=False reader_wildcard=False band=F_series_MD_heavy    OK
+  UCS      builder_wildcard=False reader_wildcard=False band=LCV_D-Max            OK
+  RT       builder_wildcard=False reader_wildcard=False band=unresolved           OK
+  RG       builder_wildcard=False reader_wildcard=False band=unresolved           OK
+  S        builder_wildcard=False reader_wildcard=False band=unresolved           OK
+  D        builder_wildcard=False reader_wildcard=False band=unresolved           OK
+  R        builder_wildcard=False reader_wildcard=False band=unresolved           OK
+  X2       builder_wildcard=False reader_wildcard=False band=unresolved           OK
+
+the builder's splitter, on real evidence strings:
+  'FV* | N*R'                        codes=[]  wildcards=['FV*', 'N*R']
+  'N*R | NPS'                        codes=['NPS']  wildcards=['N*R']
+  'CY* | N*R'                        codes=[]  wildcards=['CY*', 'N*R']
+  'TF* (4X2) | TF* (4X4)'            codes=[]  wildcards=['TF*', 'TF*']
+  'FR*'                              codes=[]  wildcards=['FR*']
+  'F* | TF*'                         codes=[]  wildcards=['F*', 'TF*']
+  'N*R | N* | EX*'                   codes=[]  wildcards=['N*R', 'N*', 'EX*']
+  'NKRÒÇüNMR,NLR'                      codes=['NKR', 'NMR', 'NLR']  wildcards=[]
+  '2016 NNR/NPR-LHD EURO6 EUROPE'    codes=['NNR', 'NPR']  wildcards=[]
+
+a wildcard may never carry a band:
+  assert_no_wildcard_bands() passed - no asterisk-bearing code in the map has a band
+
+pending_ruling members (NMR was ruled on 2026-09-23):
+   []
+
+FAILURES: 0

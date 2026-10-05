@@ -1,0 +1,24 @@
+{
+  "built": "2026-09-17T21:49:28",
+  "distributor": "ITUK",
+  "basis": {
+    "quantity": "ITUK dealer sell-out, CY2023 (network_pn) vs CY2025 (dealer_pn rolled to network)",
+    "price": "IE40 PR00 list EUR, 2023-12-31 vs 2025-12-31 vintage",
+    "note": "Both sides measured. No fitted demand curve and no proxy."
+  },
+  "panel": {
+    "part_numbers_total": 3662,
+    "arc_elasticity_median": 0.0,
+    "arc_elasticity_weighted": -0.6891220384271812,
+    "qty_2023": 409464.0,
+    "qty_2025": 401582.0,
+    "median_price_change_pct": 3.266331658291466,
+    "share_elastic_lt_minus1_pct": 41.343528126706715
+  },
+  "caveats": [
+    "Two periods only. A single difference cannot separate price response from parc, mix, model change, promotion or competitive entry. This is a cross-section of observed outcomes, not an estimated demand curve.",
+    "The 2025 quantity file is dealer grain and has been rolled to network; the 2023 file is already network grain. Level differences between the two files are possible.",
+    "Cars are not in scope here: this is ITUK CV only.",
+    "A part number with rising volume and rising price contributes a positive elasticity, which is why the distribution is not expected to be centred on the truth."
+  ]
+}

@@ -1,29 +1,39 @@
 {
-  "as_of": "2026-08-25T17:21:01Z",
+  "as_of": "2026-09-24T06:00:26Z",
   "generator": "scripts/build_metrics_snapshot.py",
   "metrics": {
     "sales_fact.rows": {
-      "value": 514037,
+      "value": 538346,
       "source": "sales_fact.parquet",
       "note": ""
     },
     "sales_fact.raw_total_eur": {
-      "value": 117536189.0,
+      "value": 123327056.0,
       "source": "sales_fact.parquet",
       "note": "includes internal/excluded codes"
     },
     "sales.gps_facing_all_lines_eur": {
-      "value": 113641005.0,
+      "value": 119222616.0,
       "source": "load_prism_sales after distributor exclusion, ex-credit-notes/returns",
       "note": ""
     },
     "sales.parts_base_eur": {
-      "value": 112089307.0,
+      "value": 117600501.0,
       "source": "GPS-facing, parts only (line_kind=part), ex-credit-notes/returns",
       "note": "the parts base"
     },
+    "sales.parts_base_data_through": {
+      "value": "2026-08-31",
+      "source": "max billing_date in sales_fact",
+      "note": "billing horizon behind the parts base"
+    },
+    "sales.parts_base_through_prior_quarter_eur": {
+      "value": 112089307.0,
+      "source": "GPS-facing, parts only, cut at the prior quarter end",
+      "note": "same method, data through 2026-06-30 \u2014 bridge companion to sales.parts_base_eur"
+    },
     "ituk.oil_filter.2023.genuine.capture_uncapped_pct": {
-      "value": 73.8,
+      "value": 49.8,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
@@ -38,7 +48,7 @@
       "note": ""
     },
     "ituk.oil_filter.2023.bvp.capture_uncapped_pct": {
-      "value": 80.6,
+      "value": 54.5,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
@@ -53,7 +63,7 @@
       "note": ""
     },
     "ituk.oil_filter.2023.total.capture_uncapped_pct": {
-      "value": 154.4,
+      "value": 104.3,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
@@ -68,7 +78,7 @@
       "note": ""
     },
     "ituk.oil_filter.2024.genuine.capture_uncapped_pct": {
-      "value": 62.1,
+      "value": 42.0,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
@@ -83,7 +93,7 @@
       "note": ""
     },
     "ituk.oil_filter.2024.bvp.capture_uncapped_pct": {
-      "value": 21.3,
+      "value": 14.4,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
@@ -98,7 +108,7 @@
       "note": ""
     },
     "ituk.oil_filter.2024.total.capture_uncapped_pct": {
-      "value": 83.5,
+      "value": 56.4,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
@@ -113,7 +123,7 @@
       "note": ""
     },
     "ituk.oil_filter.2025.genuine.capture_uncapped_pct": {
-      "value": 87.6,
+      "value": 59.2,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
@@ -128,7 +138,7 @@
       "note": ""
     },
     "ituk.oil_filter.2025.bvp.capture_uncapped_pct": {
-      "value": 28.8,
+      "value": 19.5,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
@@ -143,7 +153,7 @@
       "note": ""
     },
     "ituk.oil_filter.2025.total.capture_uncapped_pct": {
-      "value": 116.4,
+      "value": 78.7,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
@@ -158,59 +168,59 @@
       "note": ""
     },
     "ituk.oil_filter.2026.genuine.capture_uncapped_pct": {
-      "value": 19.3,
+      "value": 33.8,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
     "ituk.oil_filter.2026.genuine.actual_qty": {
-      "value": 2250,
+      "value": 5847,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
     "ituk.oil_filter.2026.genuine.revenue_eur": {
-      "value": 16061.0,
+      "value": 43460.0,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
     "ituk.oil_filter.2026.bvp.capture_uncapped_pct": {
-      "value": 9.2,
+      "value": 12.7,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
     "ituk.oil_filter.2026.bvp.actual_qty": {
-      "value": 1072,
+      "value": 2194,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
     "ituk.oil_filter.2026.bvp.revenue_eur": {
-      "value": 10559.0,
+      "value": 21294.0,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
     "ituk.oil_filter.2026.total.capture_uncapped_pct": {
-      "value": 28.4,
+      "value": 46.5,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
     "ituk.oil_filter.2026.total.actual_qty": {
-      "value": 3322,
+      "value": 8041,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
     "ituk.oil_filter.2026.total.revenue_eur": {
-      "value": 26620.0,
+      "value": 64754.0,
       "source": "pms_capture_by_db_year.csv",
       "note": ""
     },
     "ituk.oil_filter.uio_units": {
       "value": 23068,
       "source": "pms_capture_by_db_year.csv",
-      "note": "DVLA Mar 2026 override, constant across years"
+      "note": "model_bucket_split: cv_std 22,190.9 + f_series 877.0"
     },
     "ituk.oil_filter.expected_qty": {
-      "value": 11680.2,
+      "value": 17285.6,
       "source": "pms_capture_by_db_year.csv",
-      "note": "22389 x 0.5 svc/yr x 70%"
+      "note": "23068 bucket UIO; cv_std at 0.5 x (1 + N35 share) svc/yr (N35 on the 20,000 km interval), F-series 0.667; 100% addressable"
     },
     "mix.ITUK.genuine_share_eur_pct_2025": {
       "value": 97.3,
@@ -223,7 +233,7 @@
       "note": "overall parts mix, EUR basis"
     },
     "waterfall.network.wallet_eur_2025": {
-      "value": 60217570.0,
+      "value": 54420472.0,
       "source": "wallet_waterfall.csv",
       "note": "GPS max-spend ceiling"
     },
@@ -233,7 +243,7 @@
       "note": ""
     },
     "waterfall.network.gps_pct_2025": {
-      "value": 51.1,
+      "value": 56.5,
       "source": "wallet_waterfall.csv",
       "note": ""
     },
@@ -243,9 +253,9 @@
       "note": "age-flat wallet, UIO v17 projection"
     },
     "defection.active_alerts": {
-      "value": 25,
+      "value": 29,
       "source": "defection_alerts.csv",
-      "note": "data horizon 2026-03"
+      "note": "data horizon 2026-08"
     },
     "leakage.ituk.benchmark_gap_eur": {
       "value": 79118.0,
@@ -253,7 +263,7 @@
       "note": "relative benchmark vs network-median dealer mix"
     },
     "verify.pass": {
-      "value": 116,
+      "value": 163,
       "source": "_verification_report.json",
       "note": ""
     },
@@ -263,7 +273,7 @@
       "note": ""
     },
     "verify.generated": {
-      "value": "2026-08-25T17:19:54Z",
+      "value": "2026-09-24T05:58:51Z",
       "source": "_verification_report.json",
       "note": ""
     }

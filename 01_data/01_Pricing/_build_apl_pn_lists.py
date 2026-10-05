@@ -1,7 +1,7 @@
 """
 Build canonical APL / P700 / RG21 PN lists for forecast-weighted ambition (Book B).
 
-Mode B · 2026-08-12 · no inventing · Shell/lube flagged out of Book B seeds.
+internal · 2026-08-12 · no inventing · Shell/lube flagged out of Book B seeds.
 Does not send mail, ship packs, or run alloc.
 """
 from __future__ import annotations

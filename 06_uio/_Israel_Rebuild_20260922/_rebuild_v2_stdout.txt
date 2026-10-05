@@ -1,0 +1,96 @@
+﻿per-class anchor k = gov(2026) / flow-conv(2026):
+  6.5-7.5 t    1.5276
+  7.6-10 t     1.2773
+  10.1-12 t    1.256
+  12.1-16 t    n/a (no flow)
+
+level adjustment by year (gov total / flow-shaped total):
+  2020: 1.0041   [government]
+  2021: 0.9799   [interpolated]
+  2022: 0.9557   [government]
+  2023: 0.9379   [interpolated]
+  2024: 0.9201   [government]
+  2025: 0.9354   [government]
+  2026: 1.0000   [government]
+
+==========================================================================================================================
+REBUILT ISRAEL PARC BY MINISTRY WEIGHT CLASS  (government-anchored, whole trucks)
+==========================================================================================================================
+  year   6.5-7.5 t    7.6-10 t   10.1-12 t   12.1-16 t  rebuilt total  gov total    delta  source
+  2008       2,072          24           6          23          2,125          ÔÇö        ÔÇö  flow shape (no government anchor before 2020)
+  2009       2,403          60          24          23          2,510          ÔÇö        ÔÇö  flow shape (no government anchor before 2020)
+  2010       2,929         128          58          23          3,138          ÔÇö        ÔÇö  flow shape (no government anchor before 2020)
+  2011       3,376         171          96          23          3,666          ÔÇö        ÔÇö  flow shape (no government anchor before 2020)
+  2012       3,833         221         162          23          4,239          ÔÇö        ÔÇö  flow shape (no government anchor before 2020)
+  2013       4,401         269         266         228          5,164          ÔÇö        ÔÇö  flow shape (no government anchor before 2020)
+  2014       5,059         357         389         228          6,032          ÔÇö        ÔÇö  flow shape (no government anchor before 2020)
+  2015       5,691         413         434         228          6,766          ÔÇö        ÔÇö  flow shape (no government anchor before 2020)
+  2016       6,446         592         624         228          7,890          ÔÇö        ÔÇö  flow shape (no government anchor before 2020)
+  2017       7,236         838         852         228          9,155          ÔÇö        ÔÇö  flow shape (no government anchor before 2020)
+  2018       7,749       1,047       1,098         228         10,121          ÔÇö        ÔÇö  flow shape (no government anchor before 2020)
+  2019       8,109       1,326       1,321         228         10,983          ÔÇö        ÔÇö  flow shape (no government anchor before 2020)
+  2020       8,266       1,514       1,506         228         11,514     11,514       -0  government
+  2021       8,453       1,720       1,691         222         12,087          ÔÇö        ÔÇö  government-interpolated
+  2022       8,566       1,887       1,887         217         12,557     12,557       +0  government
+  2023       8,617       2,114       2,167         213         13,111          ÔÇö        ÔÇö  government-interpolated
+  2024       8,501       2,215       2,398         209         13,323     13,323       +0  government
+  2025       8,636       2,415       2,618         212         13,881     13,881       +0  government
+  2026       8,610       2,485       2,697         227         14,019     14,019       +0  government
+  2027       7,960       2,378       2,584         227         13,148          ÔÇö        ÔÇö  flow shape carried forward (no government data)
+  2028       7,276       2,252       2,453         227         12,208          ÔÇö        ÔÇö  flow shape carried forward (no government data)
+  2029       6,572       2,107       2,303         227         11,209          ÔÇö        ÔÇö  flow shape carried forward (no government data)
+  2030       5,851       1,942       2,130         227         10,151          ÔÇö        ÔÇö  flow shape carried forward (no government data)
+
+==========================================================================================================================
+AT 30.06.2026 ÔÇö government vs our workbook vs rebuilt
+==========================================================================================================================
+class            gov   share  avg age  ours 2026F  gap gov-ours   rebuilt
+6.5-7.5 t      8,610   61.4%      9.4       6,101        +2,509     8,610
+7.6-10 t       2,485   17.7%      6.2       2,215          +270     2,485
+10.1-12 t      2,697   19.2%      5.9       2,444          +253     2,697
+12.1-16 t        227    1.6%      5.6           0          +227       227
+TOTAL         14,019  100.0%               10,760        +3,259    14,019
+
+==========================================================================================================================
+GAP DECOMPOSITION at 30.06.2026  (our total 10,760 vs government 14,019 = -3,259)
+==========================================================================================================================
+block                                                                        gov     ours      gap % of 3,259  basis
+12.1-16 t class has no row in our model at all                               227        0     +227       7.0%  measured ÔÇö a whole class is missing
+7.6-10 t under-counted (our 10 t column against the ministry's band)       2,485    2,215     +270       8.3%  measured, accrual cause
+10.1-12 t under-counted (our 11+12 t columns against the ministry's band)   2,697    2,444     +253       7.8%  measured, accrual cause
+6.5-7.5 t under-counted (our whole LD row)                                 8,610    6,101   +2,509      77.0%  measured, accrual cause
+sum                                                                                         +3,259     100.0%
+
+==========================================================================================================================
+OLD TAIL ÔÇö vehicles first registered 1999-2010, still on the road at 30.06.2026
+==========================================================================================================================
+  UTI flow registrations 1999-2010 (all bands) : 2,105
+  our IML Emerging curve retains at 2026       : 193
+  ministry: still on the road                  : 1,680  (12% of 14,019)
+  implied survival of the recorded block       : 79.8%   vs our curve's 9.2%
+  shortfall our curve creates on that tail     : +1,487
+
+  HARD CEILING ÔÇö the best any survival curve could do on the recorded flow:
+    every unit UTI ever recorded 1994-2025, all bands, still alive : 13,686
+    ministry parc at 30.06.2026                                    : 14,019
+    unreachable                                                      : +333
+
+  floor scenarios on the recorded flow alone (never enough on its own):
+    floor=0.5   from age 15: fleet   10,356   1999-2010 block    743   (ministry 1,680)
+    floor=0.8   from age 15: fleet   10,917   1999-2010 block  1,189   (ministry 1,680)
+    floor=0.9   from age 15: fleet   11,104   1999-2010 block  1,337   (ministry 1,680)
+    floor=0.95  from age 15: fleet   11,198   1999-2010 block  1,412   (ministry 1,680)
+    floor=1.0   from age 15: fleet   11,291   1999-2010 block  1,486   (ministry 1,680)
+    floor=1.0   from age 16: fleet   11,022   1999-2010 block  1,486   (ministry 1,680)
+    floor=1.0   from age 19: fleet    9,984   1999-2010 block    448   (ministry 1,680)
+
+==========================================================================================================================
+VALIDATION ÔÇö implied average age per class from the rebuilt parc vs the ministry's own
+==========================================================================================================================
+class         our implied avg age  ministry states  market avg
+6.5-7.5 t                     7.3              9.4         9.8
+7.6-10 t                      5.6              6.2        10.7
+10.1-12 t                     5.4              5.9         7.3
+12.1-16 t   n/a (no cohort detail)              5.6         9.1
+
+wrote: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_Israel_Rebuild_20260922\rebuild_outputs

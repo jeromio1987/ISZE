@@ -1,0 +1,68 @@
+==============================================================================
+A. WHICH AXIS DOES THE QUEUE WANT?
+  master real aim_l1 vocabulary (top 40):
+      Accident & Body                    4177
+      Electrical                         2567
+      Chassis Frame                      2417
+      Transmission                       1388
+      Cabin Interior                     1149
+      Wheels Hub                         1002
+      Intake Exhaust Emission             970
+      Engine                              929
+      Fuel System                         920
+      Brakes                              712
+      Suspension                          683
+      Maintenance Service                 568
+      Cooling                             557
+      Steering                            479
+      Driveline Axle                      472
+      Clutch                              253
+      Lubrication                         242
+      Fluids Chemicals                    137
+      Tools Equipment                     106
+      Literature Marketing                 40
+      Logistics Packaging                  25
+
+  master aim_l1 values that are POSTURE words vs SYSTEM words
+      posture rows : 0
+      system  rows : 19,793
+  master known rows joined to price flat: 19,793
+
+==============================================================================
+B. INDEPENDENT CONTROL: rows whose family came from the EPC / figure-key route
+  pr00_catalog starts-with   rows=     0  distinct L1=  0
+  aim_workbook only          rows=15,997  distinct L1= 21
+  eq_session touched         rows=   388  distinct L1= 15
+  gap_auto touched           rows= 2,808  distinct L1= 21
+
+  --- basis: pr00_catalog (EPC route)  n=0 ---
+      HS code     : keys=    0  keys->1L1=    0  keys->many=    0  median top_share=nan  part-level accuracy=nan
+      description : keys=    0  keys->1L1=    0  keys->many=    0  median top_share=nan  part-level accuracy=nan
+      figure key  : keys=    0  keys->1L1=    0  keys->many=    0  median top_share=nan  part-level accuracy=nan
+  --- basis: aim_workbook (desc route)  n=19,793 ---
+      HS code     : keys=  194  keys->1L1=   79  keys->many=  115  median top_share=0.896  part-level accuracy=0.6276
+      description : keys=4,028  keys->1L1=3,973  keys->many=   55  median top_share=1.000  part-level accuracy=0.9965
+      figure key  : keys=4,170  keys->1L1=4,112  keys->many=   58  median top_share=1.000  part-level accuracy=0.9944
+
+==============================================================================
+C. THE QUEUE'S OWN 7 ALREADY-KNOWN PARTS + the 40 highest-value unknowns
+  description purity measured on the EPC basis: nan over 0 rows, keys=0, keys->many=0
+  HS purity on the whole master basis: keys=194, keys->many=115
+
+  EPC-basis descriptions that are CONTESTED (0):
+  queue rows whose description is one of those contested ones: 0
+
+==============================================================================
+D. FIGURE-KEY TRAP REPRODUCTION (the audit's two named cases)
+  fig_key 220-001 on master: 38 known parts, 1 L1s
+      Literature Marketing               38
+      e.g. 7551912400  TRANSMISSION ASM; MANUAL               -> Literature Marketing > Manuals > Manual
+      e.g. 7552788640  TRANSMISSION ASM; MANUAL               -> Literature Marketing > Manuals > Manual
+      e.g. 8973739190  TRANSMISSION ASM; MANUAL               -> Literature Marketing > Manuals > Manual
+      e.g. 8974818730  TRANSMISSION ASM; MANUAL               -> Literature Marketing > Manuals > Manual
+  fig_key 011-001 on master: 12 known parts, 1 L1s
+      Engine                             12
+      e.g. 8971147136  HEAD ASM; CYL                          -> Engine > Cylinder Head > Head Cover
+      e.g. 8972787480  HEAD ASM; CYL                          -> Engine > Cylinder Head > Head Cover
+      e.g. 8973583662  HEAD ASM; CYL                          -> Engine > Cylinder Head > Head Cover
+      e.g. 8973583682  HEAD ASM; CYL                          -> Engine > Cylinder Head > Head Cover

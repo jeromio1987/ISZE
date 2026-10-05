@@ -1,0 +1,14 @@
+Build ISZE_DB_Leakage_Review_CY2025.html
+
+Per-distributor leakage review. Four leaks, one row per distributor.
+Three viewer toggles: period (CY2025 / FY2025 Apr-Mar), direction (ISZE->DB /
+DB->dealer), warranty (included / excluded).
+
+House rule isze-gaps-need-context.mdc: euro LEADS, units support. Every gap
+carries service family + fleet denominator. A unit count is never a finding.
+
+Anchor: CY2025 published demand capture (pms_capture_by_db_year.csv) for the
+18-DB fleet base. The FY leg and the DB->dealer leg are derived and labelled.
+No chart library, no CDN, no external request.
+
+Run:  python 02_dashboards\_build\build_db_leakage_review.py

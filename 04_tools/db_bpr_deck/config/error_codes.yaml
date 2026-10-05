@@ -1,0 +1,92 @@
+# ISZE BPR deck generator - error codes
+#
+# Every code is read by the tool (to build the message and the GPT paste block)
+# and by TROUBLESHOOTING.md (the same wording, for a person). One code, one cause.
+#
+# prefix   what it means
+#   E1xx   an input file is missing, stale, or not trusted yet
+#   E2xx   an input file is there but its shape changed
+#   E3xx   the inputs are fine but a number cannot be computed
+#   E4xx   a slide block cannot be filled for this distributor
+#   E5xx   the deck itself failed to build
+#   E6xx   the deck built but a check on it failed
+
+E101:
+  title: "Distributor not known"
+  means: "The distributor key you gave is not in the settings file, so the tool does not know which files belong to them."
+  fix: "Open 04_tools/db_bpr_deck/config/distributors.yaml and check the spelling of the key, or pick one from the list the tool prints."
+
+E102:
+  title: "Input file is missing"
+  means: "A file this slide needs is not where the settings say it should be."
+  fix: "Check the path in the message. If the file is new, put it in 01_data/90_INBOX and tell the tool where it is. Do not rename files that are already being read."
+
+E103:
+  title: "Input file is stale"
+  means: "The file exists but its data stops earlier than the period you asked for."
+  fix: "Ask the distributor or Bart for the newer file, drop it in the same folder, and run again. Or choose an earlier period so the deck matches the data."
+
+E104:
+  title: "Numbers are not verified yet"
+  means: "The safety check on the shared numbers (01_data/00_derived/_verification_report.json) is not green."
+  fix: "Do not present the deck. Run the pipeline verify first, then build the deck."
+
+E201:
+  title: "Sheet not found in the workbook"
+  means: "The Excel file opened, but it no longer has the tab we read."
+  fix: "Open the file and check the tab still exists with the same name. If it was renamed, say so and the reader will be updated once."
+
+E202:
+  title: "Expected block or column not found"
+  means: "The file has the right tab but the layout moved, so the tool cannot tell which numbers are which."
+  fix: "Do not edit the file to fix it. Send the error code to GPT with this file's name; the reader gets one small update and then works again."
+
+E203:
+  title: "Distributor row not found in the file"
+  means: "The file is fine, but this distributor has no row in it."
+  fix: "That distributor does not report this KPI. Turn that block off for them, or check the name in the settings file."
+
+E204:
+  title: "Month columns are not what we expect"
+  means: "The month headings in the file changed (a renamed or extra month column)."
+  fix: "Send the code to GPT with the file name. Nothing is wrong with the numbers, only with reading which month is which."
+
+E301:
+  title: "Number cannot be computed"
+  means: "A share or ratio would divide by zero, or there are no rows left after filtering."
+  fix: "Usually means the window you chose has no data for this distributor. Pick a wider or earlier period."
+
+E302:
+  title: "No billing rows for this distributor"
+  means: "The sales file has nothing for this distributor in the window you asked for."
+  fix: "Check the period, and check the sold-to codes in the settings file still match SAP."
+
+E401:
+  title: "Block not available for this distributor"
+  means: "The data behind this slide does not exist for this distributor, so the slide cannot be built."
+  fix: "Leave the block off. The tool prints which blocks can be built before it starts."
+
+E402:
+  title: "Block needs a source this distributor does not have"
+  means: "For example the bought-against-sold slide needs a sales-to-dealer file, and only seven distributors send one."
+  fix: "Leave the block off for this distributor, or ask them for the file."
+
+E501:
+  title: "Deck build failed"
+  means: "Something in the slide code failed while writing the PowerPoint file."
+  fix: "Send the code and the lines above it to GPT. The deck on disk is untouched; this run wrote nothing."
+
+E502:
+  title: "Deck could not be saved"
+  means: "The output folder was locked or the file was open in PowerPoint."
+  fix: "Close the deck in PowerPoint and run again. Never run the tool while the file it is writing is open."
+
+E601:
+  title: "Slide check failed"
+  means: "A slide came out blank or missing its table rows."
+  fix: "Send the code to GPT with the slide number. Do not present the deck until this passes."
+
+E602:
+  title: "Visual check failed"
+  means: "The slides were exported to images and one of them is empty or unreadable."
+  fix: "Send the code to GPT. Check that PowerPoint is installed and no deck is open."

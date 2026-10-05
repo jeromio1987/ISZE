@@ -349,6 +349,7 @@ def expected_by_category_bucketed(distributor_code: str, cfg: dict) -> dict | No
     from modules.pms_capture_config import (
         CONSUMABLE_FACTOR,
         WEAR_FACTOR,
+        UREA_FILTER_F_SERIES,
         BUCKET_SERVICES_PER_YEAR,
         BUCKET_SERVICES_PER_YEAR_OVERRIDES,
         LCV_BUCKET_FACTOR_OVERRIDES,
@@ -376,10 +377,30 @@ def expected_by_category_bucketed(distributor_code: str, cfg: dict) -> dict | No
     factor_overrides = cfg.get("factor_overrides") or {}
     all_factors = {**CONSUMABLE_FACTOR, **WEAR_FACTOR}
     expected: dict = {}
-    for cat, fac in all_factors.items():
-        fac = factor_overrides.get(cat, fac)
+
+    # AdBlue filter only, added 2026-09-19. René Paul's GIDSS schedule gives the filter at 200,000 km
+    # on the N-series (N_MY24 p4, NPR75 / 4HK1) and 80,000 km on the F-series 4HK1-TCH (F_MY24 p1),
+    # so the share of a service visit that is an AdBlue filter is 40,000/200,000 = 0.20 on the
+    # truck-class bucket and 30,000/80,000 = 0.375 on the F bucket. One scalar cannot hold two rates,
+    # and the two classes differ by 1.875x, so the split belongs here where the buckets are known.
+    # The LCV bucket is unchanged: no sourced AdBlue interval exists for the D-Max.
+    def _expected_qty(cat: str, bcv: float, bf: float, bl: float) -> float:
+        if cat == "urea_filter":
+            cv_rate = factor_overrides.get("urea_filter", 0.2)
+            f_rate = factor_overrides.get("urea_filter", UREA_FILTER_F_SERIES)
+            return bcv * cv_rate + bf * f_rate + bl * 1.0
+        fac = factor_overrides.get(cat, all_factors.get(cat, 1.0))
         fac_lcv = LCV_BUCKET_FACTOR_OVERRIDES.get(cat, fac)
-        expected[cat] = {"qty": base_cv * fac + base_f * fac + base_l * fac_lcv}
+        return bcv * fac + bf * fac + bl * fac_lcv
+
+    # REVERTED 2026-09-18. A band-interval rewrite of this loop was tried and rolled back the same
+    # evening: it changed expected demand in 12 of 18 markets at once, moved ITUK's oil-filter
+    # denominator 11,680 -> 17,762 and inverted a published headline (65.9% -> 77%, where 65.9% is
+    # the correct IML v7 figure), and drove Greece to 1,156% capture on a nine-vehicle fleet. See
+    # 00_docs/PMS_INTERVAL_FIX_SCOPE.md for what a correct fix has to hold. The AdBlue change above
+    # is scoped to one category and re-bases no mileage assumption.
+    for cat, fac in all_factors.items():
+        expected[cat] = {"qty": _expected_qty(cat, base_cv, base_f, base_l)}
     return expected
 
 

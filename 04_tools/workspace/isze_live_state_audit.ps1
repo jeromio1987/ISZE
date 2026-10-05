@@ -338,6 +338,49 @@ if ($openMatch.Success) {
   }
 }
 
+# --- Check 8: banned wording in recent shared pages ------------------------
+# CM17 in the 18 Sep error register. The checker was written on 16 Sep and called
+# from nowhere, so the same wording corrections came back on the 18th and 19th.
+# This is the weekly-audit call. Severity is MEDIUM on purpose: the audit's HIGH
+# findings are what make it exit 2, and a published page that still carries a
+# banned label is a rebuild job, not a stopped pipeline. It shows up as a named
+# row in the Monday brief instead.
+$languageScript = Join-Path $IszeRoot '04_tools\workspace\check_spoken_labels.ps1'
+if (Test-Path $languageScript) {
+  $languagePages = Join-Path $IszeRoot '02_dashboards'
+  # Seven days keeps this to the pages touched since the last Monday, which is
+  # what a weekly report can act on. Data\ is the deploy mirror copy of the same
+  # pages and would double every count.
+  $previousPreference = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  $languageOut = & powershell -NoProfile -ExecutionPolicy Bypass -File $languageScript `
+    -Path $languagePages -Glob '*.html' -ChangedWithinDays 7 -SkipDirs 'Data'
+  $ErrorActionPreference = $previousPreference
+
+  $countLine = @($languageOut | Where-Object { $_ -match '^\s*Violations\s+:\s+(\d+)' } | Select-Object -Last 1)
+  $languageViolations = 0
+  if ($countLine.Count -gt 0 -and $countLine[0] -match '(\d+)') { $languageViolations = [int]$Matches[1] }
+
+  if ($languageViolations -gt 0) {
+    $named = @()
+    foreach ($ln in $languageOut) {
+      if ($ln -match '^(?:VIOLATION|ADVISORY)') {
+        $fm = [regex]::Match($ln, '([^\\]+\.html):(\d+)')
+        if ($fm.Success) { $named += ("{0}:{1}" -f $fm.Groups[1].Value, $fm.Groups[2].Value) }
+      }
+    }
+    $named = @($named | Sort-Object -Unique)
+    $shown = if ($named.Count -gt 6) { ($named[0..5] -join ', ') + " (+$($named.Count - 6) more)" } else { $named -join ', ' }
+    Add-Finding 'MEDIUM' 'language' `
+      ("{0} banned label(s) in shared pages changed in the last 7 days" -f $languageViolations) `
+      ("Rebuild the pages naming the forbidden words. Worst: {0}" -f $shown)
+  }
+} else {
+  Add-Finding 'MEDIUM' 'language' `
+    ("Language checker not found at {0}" -f $languageScript) `
+    ("Restore check_spoken_labels.ps1; without it CM17 has no weekly row.")
+}
+
 # --- Render ----------------------------------------------------------------
 $order = @{ 'HIGH' = 0; 'MEDIUM' = 1; 'LOW' = 2 }
 $sorted = @($Findings | Sort-Object { $order[$_.severity] }, area)

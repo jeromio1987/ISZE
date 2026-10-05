@@ -1,0 +1,1500 @@
+{
+  "generated_at": "2026-09-22T17:23:26Z",
+  "data_root": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data",
+  "summary": {
+    "pass": 164,
+    "warn": 1,
+    "fail": 0,
+    "ok": true
+  },
+  "checks": [
+    {
+      "id": "raw.raw/sales/CY2023-2024.XLSX",
+      "status": "pass",
+      "message": "Found raw/sales/CY2023-2024.XLSX",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\raw\\sales\\CY2023-2024.XLSX"
+      }
+    },
+    {
+      "id": "raw.raw/sales/CY2024-2025.XLSX",
+      "status": "pass",
+      "message": "Found raw/sales/CY2024-2025.XLSX",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\raw\\sales\\CY2024-2025.XLSX"
+      }
+    },
+    {
+      "id": "raw.raw/sales/sales_2026tillApril.XLSX",
+      "status": "pass",
+      "message": "Found raw/sales/sales_2026tillApril.XLSX",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\raw\\sales\\sales_2026tillApril.XLSX"
+      }
+    },
+    {
+      "id": "raw.raw/reference/BVP PARTS CATALOG.xlsx",
+      "status": "pass",
+      "message": "Found raw/reference/BVP PARTS CATALOG.xlsx",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\raw\\reference\\BVP PARTS CATALOG.xlsx"
+      }
+    },
+    {
+      "id": "derived.sales_fact.parquet",
+      "status": "pass",
+      "message": "Found sales_fact.parquet",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\sales_fact.parquet"
+      }
+    },
+    {
+      "id": "derived.bvp_pn_dimension.csv",
+      "status": "pass",
+      "message": "Found bvp_pn_dimension.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\bvp_pn_dimension.csv"
+      }
+    },
+    {
+      "id": "derived.genuine_bvp_crossref.csv",
+      "status": "pass",
+      "message": "Found genuine_bvp_crossref.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\genuine_bvp_crossref.csv"
+      }
+    },
+    {
+      "id": "derived.sales_with_crossref.parquet",
+      "status": "pass",
+      "message": "Found sales_with_crossref.parquet",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\sales_with_crossref.parquet"
+      }
+    },
+    {
+      "id": "derived.substitution_by_pair_year.csv",
+      "status": "pass",
+      "message": "Found substitution_by_pair_year.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\substitution_by_pair_year.csv"
+      }
+    },
+    {
+      "id": "derived.substitution_by_db_year.csv",
+      "status": "pass",
+      "message": "Found substitution_by_db_year.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\substitution_by_db_year.csv"
+      }
+    },
+    {
+      "id": "derived.pms_capture_by_db_year.csv",
+      "status": "pass",
+      "message": "Found pms_capture_by_db_year.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\pms_capture_by_db_year.csv"
+      }
+    },
+    {
+      "id": "derived.mix_genuine_bvp_by_family.csv",
+      "status": "pass",
+      "message": "Found mix_genuine_bvp_by_family.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\mix_genuine_bvp_by_family.csv"
+      }
+    },
+    {
+      "id": "derived.mix_genuine_bvp_pms.csv",
+      "status": "pass",
+      "message": "Found mix_genuine_bvp_pms.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\mix_genuine_bvp_pms.csv"
+      }
+    },
+    {
+      "id": "derived.db_benchmark_mix.csv",
+      "status": "pass",
+      "message": "Found db_benchmark_mix.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\db_benchmark_mix.csv"
+      }
+    },
+    {
+      "id": "derived.gps_spu_by_distributor.csv",
+      "status": "pass",
+      "message": "Found gps_spu_by_distributor.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_spu_by_distributor.csv"
+      }
+    },
+    {
+      "id": "derived.pms_summary_by_db.csv",
+      "status": "pass",
+      "message": "Found pms_summary_by_db.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\pms_summary_by_db.csv"
+      }
+    },
+    {
+      "id": "derived.gps_spu_by_family.csv",
+      "status": "pass",
+      "message": "Found gps_spu_by_family.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_spu_by_family.csv"
+      }
+    },
+    {
+      "id": "derived.gps_spu_pms.csv",
+      "status": "pass",
+      "message": "Found gps_spu_pms.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_spu_pms.csv"
+      }
+    },
+    {
+      "id": "derived.aim_exposure_by_db_year.csv",
+      "status": "pass",
+      "message": "Found aim_exposure_by_db_year.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_exposure_by_db_year.csv"
+      }
+    },
+    {
+      "id": "derived.aim_bvp_family_risk.csv",
+      "status": "pass",
+      "message": "Found aim_bvp_family_risk.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_bvp_family_risk.csv"
+      }
+    },
+    {
+      "id": "derived.pms_opportunity_matrix.csv",
+      "status": "pass",
+      "message": "Found pms_opportunity_matrix.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\pms_opportunity_matrix.csv"
+      }
+    },
+    {
+      "id": "derived.network_percentile.csv",
+      "status": "pass",
+      "message": "Found network_percentile.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\network_percentile.csv"
+      }
+    },
+    {
+      "id": "derived.vor_airfreight_risk.csv",
+      "status": "pass",
+      "message": "Found vor_airfreight_risk.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\vor_airfreight_risk.csv"
+      }
+    },
+    {
+      "id": "derived.vor_seasonality.csv",
+      "status": "pass",
+      "message": "Found vor_seasonality.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\vor_seasonality.csv"
+      }
+    },
+    {
+      "id": "derived.vor_profile.csv",
+      "status": "pass",
+      "message": "Found vor_profile.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\vor_profile.csv"
+      }
+    },
+    {
+      "id": "derived.capture_trajectory.csv",
+      "status": "pass",
+      "message": "Found capture_trajectory.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\capture_trajectory.csv"
+      }
+    },
+    {
+      "id": "derived.part_lifecycle.csv",
+      "status": "pass",
+      "message": "Found part_lifecycle.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\part_lifecycle.csv"
+      }
+    },
+    {
+      "id": "derived.revenue_concentration.csv",
+      "status": "pass",
+      "message": "Found revenue_concentration.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\revenue_concentration.csv"
+      }
+    },
+    {
+      "id": "derived.revenue_waterfall.csv",
+      "status": "pass",
+      "message": "Found revenue_waterfall.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\revenue_waterfall.csv"
+      }
+    },
+    {
+      "id": "derived.price_premium.csv",
+      "status": "pass",
+      "message": "Found price_premium.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\price_premium.csv"
+      }
+    },
+    {
+      "id": "derived.basket_correlation.csv",
+      "status": "pass",
+      "message": "Found basket_correlation.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\basket_correlation.csv"
+      }
+    },
+    {
+      "id": "derived.substitution_timeline.csv",
+      "status": "pass",
+      "message": "Found substitution_timeline.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\substitution_timeline.csv"
+      }
+    },
+    {
+      "id": "derived.capture_recovery_model.csv",
+      "status": "pass",
+      "message": "Found capture_recovery_model.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\capture_recovery_model.csv"
+      }
+    },
+    {
+      "id": "derived.bvp_addressable_basket.csv",
+      "status": "pass",
+      "message": "Found bvp_addressable_basket.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\bvp_addressable_basket.csv"
+      }
+    },
+    {
+      "id": "derived.ituk_pms_pn_audit.csv",
+      "status": "pass",
+      "message": "Found ituk_pms_pn_audit.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\ituk_pms_pn_audit.csv"
+      }
+    },
+    {
+      "id": "derived.parts_catalog_dimension.csv",
+      "status": "pass",
+      "message": "Found parts_catalog_dimension.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\parts_catalog_dimension.csv"
+      }
+    },
+    {
+      "id": "derived.sales_by_db_fig_key_year.csv",
+      "status": "pass",
+      "message": "Found sales_by_db_fig_key_year.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\sales_by_db_fig_key_year.csv"
+      }
+    },
+    {
+      "id": "derived.aim_gps_matrix.csv",
+      "status": "pass",
+      "message": "Found aim_gps_matrix.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_gps_matrix.csv"
+      }
+    },
+    {
+      "id": "derived.lost_sales_model.csv",
+      "status": "pass",
+      "message": "Found lost_sales_model.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_model.csv"
+      }
+    },
+    {
+      "id": "derived.lost_sales_market.csv",
+      "status": "pass",
+      "message": "Found lost_sales_market.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_market.csv"
+      }
+    },
+    {
+      "id": "derived.lost_sales_competitor_pn.csv",
+      "status": "pass",
+      "message": "Found lost_sales_competitor_pn.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_competitor_pn.csv"
+      }
+    },
+    {
+      "id": "derived.lost_sales_competitor_coverage.csv",
+      "status": "pass",
+      "message": "Found lost_sales_competitor_coverage.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_competitor_coverage.csv"
+      }
+    },
+    {
+      "id": "config.data_status",
+      "status": "pass",
+      "message": "Core data_status OK",
+      "detail": {
+        "status": {
+          "mapping": true,
+          "uio": true,
+          "sales_parquet": true,
+          "sales_csv_derived": false,
+          "sales_legacy": true,
+          "raw_cy2025": true,
+          "raw_cy2023_24": true,
+          "bvp_dimension": true,
+          "bvp_pms_capture": true,
+          "bvp_mix_family": true,
+          "bvp_mix_subgroup": true,
+          "bvp_mix_group": true,
+          "bvp_mix_pms": true,
+          "bvp_benchmark": true,
+          "bvp_benchmark_subgroup": true,
+          "bvp_gps_db": true,
+          "bvp_aim_exposure": true
+        }
+      }
+    },
+    {
+      "id": "config.bvp_catalog",
+      "status": "pass",
+      "message": "BVP catalog at BVP PARTS CATALOG.xlsx",
+      "detail": {}
+    },
+    {
+      "id": "uio.canonical",
+      "status": "pass",
+      "message": "UIO resolves to canonical ISUZU_UIO_Overview_2026.xlsx",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\ISUZU_UIO_Overview_2026.xlsx"
+      }
+    },
+    {
+      "id": "uio.stale_copies",
+      "status": "pass",
+      "message": "No stale v16/v17/v18 UIO copies in fallback paths",
+      "detail": {
+        "stale": []
+      }
+    },
+    {
+      "id": "uio_year.rows",
+      "status": "pass",
+      "message": "Fleet by year 1,279 rows",
+      "detail": {
+        "rows": 1279
+      }
+    },
+    {
+      "id": "uio_year.schema",
+      "status": "pass",
+      "message": "Schema OK",
+      "detail": {}
+    },
+    {
+      "id": "uio_year.reconcile_2025",
+      "status": "pass",
+      "message": "2025 column reproduces the derived fleet split, worst delta 0.0154 vehicles",
+      "detail": {
+        "worst_delta": 0.0154,
+        "rows": 18,
+        "worst_market": "ITUK"
+      }
+    },
+    {
+      "id": "uio_year.actual_years_complete",
+      "status": "pass",
+      "message": "No gaps inside the actual range from 2023 onward across 18 markets",
+      "detail": {
+        "markets": 18,
+        "blocking": []
+      }
+    },
+    {
+      "id": "uio_year.historical_gaps",
+      "status": "warn",
+      "message": "Named hole(s) in the workbook's older years, left unfilled: ['DENMARK 2012', 'DENMARK 2013']",
+      "detail": {
+        "historical": [
+          "DENMARK 2012",
+          "DENMARK 2013"
+        ]
+      }
+    },
+    {
+      "id": "uio_year.no_negative_actuals",
+      "status": "pass",
+      "message": "No negative fleet counts in the actual range",
+      "detail": {}
+    },
+    {
+      "id": "uio_year.is_actual",
+      "status": "pass",
+      "message": "is_actual agrees with the year on every row",
+      "detail": {}
+    },
+    {
+      "id": "uio_year.is_estimate",
+      "status": "pass",
+      "message": "is_estimate agrees with the year on every row",
+      "detail": {}
+    },
+    {
+      "id": "uio_year.is_forecast",
+      "status": "pass",
+      "message": "is_forecast agrees with the year on every row",
+      "detail": {}
+    },
+    {
+      "id": "uio_year.basis_values",
+      "status": "pass",
+      "message": "basis values ['actual', 'estimate', 'forecast']",
+      "detail": {}
+    },
+    {
+      "id": "uio_year.defect_notes",
+      "status": "pass",
+      "message": "The LD-label note is carried on the LD rows rather than dropped",
+      "detail": {
+        "rows_with_note": 443
+      }
+    },
+    {
+      "id": "sales_fact.row_count",
+      "status": "pass",
+      "message": "Row count 538,346 (expected ~538,346, \u0394 0.00%)",
+      "detail": {
+        "actual": 538346,
+        "expected": 538346
+      }
+    },
+    {
+      "id": "sales_fact.schema",
+      "status": "pass",
+      "message": "Schema OK",
+      "detail": {}
+    },
+    {
+      "id": "sales_fact.years",
+      "status": "pass",
+      "message": "Years present: [2023, 2024, 2025, 2026]",
+      "detail": {
+        "years": [
+          2023,
+          2024,
+          2025,
+          2026
+        ]
+      }
+    },
+    {
+      "id": "sales_fact.saty",
+      "status": "pass",
+      "message": "SaTy populated on 93.2% of rows (min 92.0%)",
+      "detail": {
+        "non_null_pct": 93.2140296389311
+      }
+    },
+    {
+      "id": "sales_fact.fig_key",
+      "status": "pass",
+      "message": "fig_key populated on 99.0% of rows (min 90.0%)",
+      "detail": {
+        "non_null_pct": 98.96460640554588
+      }
+    },
+    {
+      "id": "sales_fact.unmapped",
+      "status": "pass",
+      "message": "UNMAPPED 0 (0.00%) after distributor map",
+      "detail": {
+        "unmapped": 0,
+        "max_pct": 1.0
+      }
+    },
+    {
+      "id": "p0.rows",
+      "status": "pass",
+      "message": "Dimension 919 PNs",
+      "detail": {
+        "rows": 919
+      }
+    },
+    {
+      "id": "p0.pms_flagged",
+      "status": "pass",
+      "message": "PMS-flagged 496",
+      "detail": {
+        "pms": 496
+      }
+    },
+    {
+      "id": "p0.line_type",
+      "status": "pass",
+      "message": "line_type values OK",
+      "detail": {}
+    },
+    {
+      "id": "p0b.rows",
+      "status": "pass",
+      "message": "Crossref 544 pairs",
+      "detail": {
+        "rows": 544
+      }
+    },
+    {
+      "id": "p0b.pair_source",
+      "status": "pass",
+      "message": "pair_source OK",
+      "detail": {}
+    },
+    {
+      "id": "p0b.catalog_pairs",
+      "status": "pass",
+      "message": "Catalog-derived pairs 517",
+      "detail": {
+        "catalog_pairs": 517
+      }
+    },
+    {
+      "id": "p0b.unique_pairs",
+      "status": "pass",
+      "message": "Duplicate (genuine,bvp) keys: 0",
+      "detail": {}
+    },
+    {
+      "id": "bvp_addr.rows",
+      "status": "pass",
+      "message": "Addressable basket 2,342 rows",
+      "detail": {
+        "rows": 2342
+      }
+    },
+    {
+      "id": "bvp_addr.schema",
+      "status": "pass",
+      "message": "Schema OK",
+      "detail": {}
+    },
+    {
+      "id": "bvp_addr.distributors",
+      "status": "pass",
+      "message": "22 distributors (min 20)",
+      "detail": {
+        "distributors": 22
+      }
+    },
+    {
+      "id": "bvp_addr.subgroups",
+      "status": "pass",
+      "message": "29 product subgroups (min 22)",
+      "detail": {
+        "subgroups": 29
+      }
+    },
+    {
+      "id": "bvp_addr.ituk_penetration",
+      "status": "pass",
+      "message": "ITUK BVP penetration 75/135 (56%)",
+      "detail": {
+        "selling": 75,
+        "addressable": 135
+      }
+    },
+    {
+      "id": "p1.rows",
+      "status": "pass",
+      "message": "PMS capture 3,024 rows",
+      "detail": {
+        "rows": 3024
+      }
+    },
+    {
+      "id": "p1.schema",
+      "status": "pass",
+      "message": "Schema OK",
+      "detail": {}
+    },
+    {
+      "id": "p1.line_type",
+      "status": "pass",
+      "message": "line_type OK",
+      "detail": {}
+    },
+    {
+      "id": "p1.capture_cap",
+      "status": "pass",
+      "message": "All total capture_rate \u2264 10.0",
+      "detail": {
+        "sample": []
+      }
+    },
+    {
+      "id": "p1.ituk.uio",
+      "status": "pass",
+      "message": "ITUK uio_units [np.int64(23068)] (expected 23068)",
+      "detail": {
+        "expected": 23068,
+        "override": {
+          "uio_units": 22389,
+          "uio_source": "ituk_dvla_2026",
+          "note": "DVLA registration car park; replaces V13 CV UIO for expected-demand sizing"
+        }
+      }
+    },
+    {
+      "id": "p1.ituk.oil_filter.2024",
+      "status": "pass",
+      "message": "ITUK oil_filter 2024 capture 56.4% (band 52%\u201361%)",
+      "detail": {
+        "capture_rate": 0.5641
+      }
+    },
+    {
+      "id": "p1.ituk.oil_filter.2025",
+      "status": "pass",
+      "message": "ITUK oil_filter 2025 capture 78.7% (band 74%\u201384%)",
+      "detail": {
+        "capture_rate": 0.7867
+      }
+    },
+    {
+      "id": "p1.distributor_count",
+      "status": "pass",
+      "message": "PMS capture 18 distributors @ complete 2025 (min 18)",
+      "detail": {
+        "distributors": 18,
+        "year": 2025
+      }
+    },
+    {
+      "id": "pms.summary.rows",
+      "status": "pass",
+      "message": "pms_summary_by_db 18 distributors (min 18)",
+      "detail": {
+        "rows": 18
+      }
+    },
+    {
+      "id": "pms.summary.complete_year",
+      "status": "pass",
+      "message": "pms_summary_by_db year [2025] == complete 2025",
+      "detail": {
+        "years": [
+          2025
+        ],
+        "complete_year": 2025
+      }
+    },
+    {
+      "id": "pms.summary.not_partial",
+      "status": "pass",
+      "message": "pms_summary_by_db is a complete billing year",
+      "detail": {}
+    },
+    {
+      "id": "pms.summary.schema",
+      "status": "pass",
+      "message": "PMS summary schema OK",
+      "detail": {}
+    },
+    {
+      "id": "gps.warranty.schema",
+      "status": "pass",
+      "message": "GPS warranty columns OK",
+      "detail": {}
+    },
+    {
+      "id": "gps.warranty.coverage",
+      "status": "pass",
+      "message": "CY2025 warranty on 18 DBs (min 17)",
+      "detail": {
+        "distributors": 18
+      }
+    },
+    {
+      "id": "gps.warranty.sales_bounds",
+      "status": "pass",
+      "message": "ex-warranty sales \u2264 total",
+      "detail": {}
+    },
+    {
+      "id": "contract3.rows",
+      "status": "pass",
+      "message": "PMS opportunity matrix 1,008 rows",
+      "detail": {
+        "rows": 1008
+      }
+    },
+    {
+      "id": "contract3.schema",
+      "status": "pass",
+      "message": "Schema OK",
+      "detail": {}
+    },
+    {
+      "id": "contract3.capture_cap",
+      "status": "pass",
+      "message": "All capture_rate_total \u2264 10.0",
+      "detail": {}
+    },
+    {
+      "id": "contract3.tam_eur",
+      "status": "pass",
+      "message": "tam_eur \u2265 1.0 where avg_sp_eur > 0",
+      "detail": {}
+    },
+    {
+      "id": "contract10.rows",
+      "status": "pass",
+      "message": "Network percentile 408 rows",
+      "detail": {
+        "rows": 408
+      }
+    },
+    {
+      "id": "contract10.schema",
+      "status": "pass",
+      "message": "Schema OK",
+      "detail": {}
+    },
+    {
+      "id": "contract10.metrics",
+      "status": "pass",
+      "message": "All metrics present",
+      "detail": {
+        "metrics": [
+          "aim_risk",
+          "bvp_mix",
+          "genuine_capture",
+          "gps_spu",
+          "total_capture"
+        ]
+      }
+    },
+    {
+      "id": "contract10.percentile_range",
+      "status": "pass",
+      "message": "percentile_rank in [0, 100] (actual 0.0\u2013100.0)",
+      "detail": {}
+    },
+    {
+      "id": "contract16.rows",
+      "status": "pass",
+      "message": "ITUK PMS PN audit 302 rows",
+      "detail": {
+        "rows": 302
+      }
+    },
+    {
+      "id": "contract16.schema",
+      "status": "pass",
+      "message": "Schema OK",
+      "detail": {}
+    },
+    {
+      "id": "contract16.distributor",
+      "status": "pass",
+      "message": "All rows ITUK",
+      "detail": {}
+    },
+    {
+      "id": "contract16.oil_filter.2023",
+      "status": "pass",
+      "message": "ITUK oil_filter 2023: 11 PNs (min 3)",
+      "detail": {
+        "pns": 11
+      }
+    },
+    {
+      "id": "contract16.oil_filter.2024",
+      "status": "pass",
+      "message": "ITUK oil_filter 2024: 10 PNs (min 3)",
+      "detail": {
+        "pns": 10
+      }
+    },
+    {
+      "id": "contract16.oil_filter.2025",
+      "status": "pass",
+      "message": "ITUK oil_filter 2025: 7 PNs (min 3)",
+      "detail": {
+        "pns": 7
+      }
+    },
+    {
+      "id": "contract16.oil_filter.2026",
+      "status": "pass",
+      "message": "ITUK oil_filter 2026: 10 PNs (min 3)",
+      "detail": {
+        "pns": 10
+      }
+    },
+    {
+      "id": "figkey.catalog.rows",
+      "status": "pass",
+      "message": "parts_catalog_dimension 164,969 rows",
+      "detail": {
+        "rows": 164969
+      }
+    },
+    {
+      "id": "figkey.catalog.coverage",
+      "status": "pass",
+      "message": "PNs with fig_key: 161,191 (97.7%, min 95%)",
+      "detail": {}
+    },
+    {
+      "id": "figkey.catalog.registry_fig",
+      "status": "pass",
+      "message": "Registry PNs with fig_key: 65 (min 35)",
+      "detail": {}
+    },
+    {
+      "id": "figkey.sales.rows",
+      "status": "pass",
+      "message": "sales_by_db_fig_key_year 82,295 rows",
+      "detail": {
+        "rows": 82295
+      }
+    },
+    {
+      "id": "figkey.sales.mapped",
+      "status": "pass",
+      "message": "Mapped fig_key rows: 81795 (min 10)",
+      "detail": {}
+    },
+    {
+      "id": "aim_gps.rows",
+      "status": "pass",
+      "message": "AIM\u00d7GPS matrix 88 rows",
+      "detail": {}
+    },
+    {
+      "id": "aim_gps.quadrants",
+      "status": "pass",
+      "message": "Quadrant values OK",
+      "detail": {}
+    },
+    {
+      "id": "contract.vor_airfreight_risk",
+      "status": "pass",
+      "message": "vor_airfreight_risk 508 rows",
+      "detail": {
+        "rows": 508
+      }
+    },
+    {
+      "id": "contract.vor_seasonality",
+      "status": "pass",
+      "message": "vor_seasonality 3,523 rows",
+      "detail": {
+        "rows": 3523
+      }
+    },
+    {
+      "id": "contract.vor_profile",
+      "status": "pass",
+      "message": "vor_profile 250 rows",
+      "detail": {
+        "rows": 250
+      }
+    },
+    {
+      "id": "contract.capture_trajectory",
+      "status": "pass",
+      "message": "capture_trajectory 1,454 rows",
+      "detail": {
+        "rows": 1454
+      }
+    },
+    {
+      "id": "contract.part_lifecycle",
+      "status": "pass",
+      "message": "part_lifecycle 515 rows",
+      "detail": {
+        "rows": 515
+      }
+    },
+    {
+      "id": "contract.revenue_concentration",
+      "status": "pass",
+      "message": "revenue_concentration 260 rows",
+      "detail": {
+        "rows": 260
+      }
+    },
+    {
+      "id": "contract.revenue_waterfall",
+      "status": "pass",
+      "message": "revenue_waterfall 228 rows",
+      "detail": {
+        "rows": 228
+      }
+    },
+    {
+      "id": "contract.price_premium",
+      "status": "pass",
+      "message": "price_premium 457 rows",
+      "detail": {
+        "rows": 457
+      }
+    },
+    {
+      "id": "contract.basket_correlation",
+      "status": "pass",
+      "message": "basket_correlation 2,500 rows",
+      "detail": {
+        "rows": 2500
+      }
+    },
+    {
+      "id": "contract.substitution_timeline",
+      "status": "pass",
+      "message": "substitution_timeline 508 rows",
+      "detail": {
+        "rows": 508
+      }
+    },
+    {
+      "id": "contract.capture_recovery_model",
+      "status": "pass",
+      "message": "capture_recovery_model 252 rows",
+      "detail": {
+        "rows": 252
+      }
+    },
+    {
+      "id": "contract.lost_sales_model",
+      "status": "pass",
+      "message": "lost_sales_model 4,111 rows",
+      "detail": {
+        "rows": 4111
+      }
+    },
+    {
+      "id": "contract.lost_sales_market",
+      "status": "pass",
+      "message": "lost_sales_market 54 rows",
+      "detail": {
+        "rows": 54
+      }
+    },
+    {
+      "id": "contract.lost_sales_competitor_coverage",
+      "status": "pass",
+      "message": "lost_sales_competitor_coverage 2 rows",
+      "detail": {
+        "rows": 2
+      }
+    },
+    {
+      "id": "contract.lost_sales_pn_action",
+      "status": "pass",
+      "message": "lost_sales_pn_action 78 rows",
+      "detail": {
+        "rows": 78
+      }
+    },
+    {
+      "id": "contract.distributor_geo",
+      "status": "pass",
+      "message": "distributor_geo 22 rows",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\03_analytics\\Isuzu\\prism\\data\\distributor_geo.csv"
+      }
+    },
+    {
+      "id": "lost_sales.billed_ties_to_parts_base",
+      "status": "pass",
+      "message": "billed EUR 117,600,501.42 ties the parts base to the cent at the 2026-08-31 cut-off (verification_fixtures.yaml)",
+      "detail": {
+        "delta_eur": 0.0,
+        "cutoff": "2026-08-31"
+      }
+    },
+    {
+      "id": "lost_sales.model_is_current",
+      "status": "pass",
+      "message": "the model covers the whole billing horizon (2026-08-31)",
+      "detail": {
+        "model_cutoff": "2026-08-31"
+      }
+    },
+    {
+      "id": "lost_sales.price_split_blanks_the_part_year",
+      "status": "pass",
+      "message": "0 part-year rows carry a full-year price split",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales.price_split_closes",
+      "status": "pass",
+      "message": "max residual EUR 0.01 over 2,069 rows",
+      "detail": {
+        "max_residual_eur": 0.01
+      }
+    },
+    {
+      "id": "lost_sales.mix_term_is_not_degenerate",
+      "status": "pass",
+      "message": "63.6% of split rows carry a non-zero mix effect",
+      "detail": {
+        "mix_nonzero_share": 0.6356
+      }
+    },
+    {
+      "id": "lost_sales.distributors",
+      "status": "pass",
+      "message": "22 distributors",
+      "detail": {
+        "distributors": 22
+      }
+    },
+    {
+      "id": "lost_sales.years",
+      "status": "pass",
+      "message": "years present [2023, 2024, 2025, 2026]",
+      "detail": {
+        "years": [
+          2023,
+          2024,
+          2025,
+          2026
+        ]
+      }
+    },
+    {
+      "id": "lost_sales.pms_category_coverage_bounded",
+      "status": "pass",
+      "message": "service-axis coverage 20.81% of billed euro",
+      "detail": {
+        "coverage_pct": 20.81
+      }
+    },
+    {
+      "id": "lost_sales.ceiling_rows_are_labelled",
+      "status": "pass",
+      "message": "0 rows carry a ceiling without the market-level label",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales.gap_types_present",
+      "status": "pass",
+      "message": "gap types present ['catalog_gap', 'substitution', 'under_service']",
+      "detail": {
+        "gap_types": [
+          "catalog_gap",
+          "substitution",
+          "under_service"
+        ]
+      }
+    },
+    {
+      "id": "lost_sales.down_trade_verdicts_documented",
+      "status": "pass",
+      "message": "verdicts ['bvp_share_up_volume_held', 'bvp_share_up_volume_lost', 'no_bvp_in_market', 'pre_bvp_entry', 'stable']",
+      "detail": {
+        "verdicts": [
+          "bvp_share_up_volume_held",
+          "bvp_share_up_volume_lost",
+          "no_bvp_in_market",
+          "pre_bvp_entry",
+          "stable"
+        ]
+      }
+    },
+    {
+      "id": "lost_sales.partial_year_momentum_is_like_for_like",
+      "status": "pass",
+      "message": "0 part-year rows are not on a same-months basis",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales_competitor.sources_named",
+      "status": "pass",
+      "message": "sources ['KS trade (GBP to EUR)', 'multi-brand bridge']",
+      "detail": {
+        "sources": [
+          "KS trade (GBP to EUR)",
+          "multi-brand bridge"
+        ]
+      }
+    },
+    {
+      "id": "lost_sales_competitor.median_index_bounded",
+      "status": "pass",
+      "message": "median index range 1.61\u20132.52",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales_competitor.coverage_is_partial",
+      "status": "pass",
+      "message": "largest source covers 7.95% of billed euro (must read as partial, not whole)",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales_pn_action.levers_documented",
+      "status": "pass",
+      "message": "levers ['below_margin_floor', 'insufficient_pricing_data', 'landed_cost_not_price', 'price_or_incentive_actionable']",
+      "detail": {
+        "levers": [
+          "below_margin_floor",
+          "insufficient_pricing_data",
+          "landed_cost_not_price",
+          "price_or_incentive_actionable"
+        ]
+      }
+    },
+    {
+      "id": "lost_sales_pn_action.actionable_rows_have_cost_and_price",
+      "status": "pass",
+      "message": "20 actionable rows, 0 of them missing cost or competitor price",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales_pn_action.landed_cost_verdict_matches_the_numbers",
+      "status": "pass",
+      "message": "0 rows call it a landed-cost problem without the competitor below cost",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales_pn_action.actionable_rows_have_a_floor_price",
+      "status": "pass",
+      "message": "20 actionable rows, 20 with a positive dealer price at the floor",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales_pn_action.actionable_set_is_not_empty",
+      "status": "pass",
+      "message": "20 part numbers are actionable on price or incentive, 24 need a landed-cost answer",
+      "detail": {}
+    },
+    {
+      "id": "action_ledger.artefacts",
+      "status": "pass",
+      "message": "P8 artefacts present",
+      "detail": {
+        "missing": []
+      }
+    },
+    {
+      "id": "action_ledger.nonempty",
+      "status": "pass",
+      "message": "ledger rows=23763",
+      "detail": {
+        "n": 23763
+      }
+    },
+    {
+      "id": "action_ledger.lineage",
+      "status": "pass",
+      "message": "monetary rows with full lineage: 3859",
+      "detail": {
+        "monetary": 3859
+      }
+    },
+    {
+      "id": "action_ledger.rejects",
+      "status": "pass",
+      "message": "rejects.csv rows=0 has_reason=True",
+      "detail": {
+        "n": 0
+      }
+    },
+    {
+      "id": "action_ledger.language",
+      "status": "pass",
+      "message": "co-movement wording only",
+      "detail": {
+        "hits": []
+      }
+    },
+    {
+      "id": "action_ledger.html",
+      "status": "pass",
+      "message": "dashboard HTML at ISZE_Action_Ledger.html",
+      "detail": {}
+    },
+    {
+      "id": "prism.bvp_bundle",
+      "status": "pass",
+      "message": "BVP dashboard bundle ready",
+      "detail": {
+        "pms_rows": 1512,
+        "mix_subgroup": 1575,
+        "mix_pms": 1575
+      }
+    },
+    {
+      "id": "freshness.no_stale_derived",
+      "status": "pass",
+      "message": "28 declared input(s) checked; every derived file is at least as new as its input",
+      "detail": {}
+    },
+    {
+      "id": "schema.gps_spu_by_distributor.csv",
+      "status": "pass",
+      "message": "gps_spu_by_distributor.csv: all 10 declared column(s) present (21 in the file); 11 new column(s) reported, not a defect",
+      "detail": {
+        "added": [
+          "country",
+          "region",
+          "warranty_parts_eur",
+          "sales_ex_warranty_eur",
+          "spend_per_unit_ex_warranty_eur",
+          "uio_proxy",
+          "uio_source",
+          "traffic_light",
+          "warranty_data_gap",
+          "gps_capture_ex_warranty_vs_max",
+          "traffic_light_v9_ex_warranty"
+        ]
+      }
+    },
+    {
+      "id": "schema.lost_sales_model.csv",
+      "status": "pass",
+      "message": "lost_sales_model.csv: all 18 declared column(s) present (86 in the file); 68 new column(s) reported, not a defect",
+      "detail": {
+        "added": [
+          "aim_l1",
+          "family_7",
+          "billed_qty",
+          "distinct_pns",
+          "genuine_eur",
+          "bvp_eur",
+          "genuine_qty",
+          "bvp_qty",
+          "asp_eur",
+          "bvp_share_units",
+          "mix_tagged_share_eur",
+          "pms_expected_qty",
+          "pms_actual_qty",
+          "pms_actual_rev_eur",
+          "pms_capture_rate",
+          "pms_avg_sp_eur",
+          "pms_gap_eur_modelled",
+          "scope",
+          "gap_units_if_below_expected",
+          "gap_type_year",
+          "gap_type_bvp_share",
+          "avg_sp_genuine_eur",
+          "avg_sp_bvp_eur",
+          "uio_units",
+          "captured_total_eur",
+          "uncaptured_eur",
+          "gps_pct",
+          "bvp_share_of_captured_pct",
+          "assumption_note",
+          "is_partial_year_ceiling",
+          "gps_pct_whole",
+          "realisation_pct_avg",
+          "actionable_gap_eur",
+          "unrecoverable_at_90pct_cover_eur",
+          "price_adjuster",
+          "spend_per_unit_eur",
+          "max_spend_eur",
+          "gps_source_year_verified",
+          "capture_slope_pp_per_year",
+          "capture_trend_r2",
+          "capture_declining",
+          "billed_base_eur",
+          "billed_end_eur",
+          "yoy_eur",
+          "yoy_pct",
+          "basis_x",
+          "revenue_base_eur",
+          "qty_base",
+          "qty_end",
+          "residual_eur",
+          "year_from",
+          "basis_y",
+          "delta_total_eur_h1",
+          "delta_volume_eur_h1",
+          "delta_price_eur_h1",
+          "delta_mix_eur_h1",
+          "revenue_base_eur_h1",
+          "qty_base_h1",
+          "qty_end_h1",
+          "residual_eur_h1",
+          "year_from_h1",
+          "bvp_unit_share_latest",
+          "bvp_share_change_pp",
+          "total_units_first_bvp_year",
+          "total_units_latest_year",
+          "bvp_first_billing_year",
+          "verdict_basis",
+          "gap_type_applies_to_year"
+        ]
+      }
+    },
+    {
+      "id": "schema.nseries_tonnage_evolution.csv",
+      "status": "pass",
+      "message": "nseries_tonnage_evolution.csv: all 11 declared column(s) present (24 in the file); 13 new column(s) reported, not a defect",
+      "detail": {
+        "added": [
+          "period_label",
+          "months_in_period",
+          "period_is_complete",
+          "band_label",
+          "distinct_pns",
+          "prev_period",
+          "prev_period_label",
+          "prev_billed_eur",
+          "prev_units",
+          "delta_eur",
+          "delta_pct",
+          "delta_units",
+          "delta_units_pct"
+        ]
+      }
+    },
+    {
+      "id": "schema.epc_decode_nseries_banded.csv",
+      "status": "pass",
+      "message": "epc_decode_nseries_banded.csv: all 9 declared column(s) present (26 in the file); 17 new column(s) reported, not a defect",
+      "detail": {
+        "added": [
+          "family",
+          "family_resolution",
+          "pms_category",
+          "series_from_epc",
+          "series_from_crossref",
+          "registry_model_band",
+          "in_epc_decode",
+          "band_count",
+          "eur_all_years",
+          "units_all_years",
+          "months_with_billing",
+          "eur_2023",
+          "units_2023",
+          "eur_2024",
+          "units_2024",
+          "units_2025",
+          "units_2026"
+        ]
+      }
+    },
+    {
+      "id": "schema.pms_capture_by_db_year.csv",
+      "status": "pass",
+      "message": "pms_capture_by_db_year.csv: all 10 declared column(s) present (16 in the file); 6 new column(s) reported, not a defect",
+      "detail": {
+        "added": [
+          "category_label",
+          "uio_proxy_used",
+          "uio_source",
+          "actual_rev_eur",
+          "avg_sp_eur",
+          "scope"
+        ]
+      }
+    },
+    {
+      "id": "schema.metrics_snapshot.json",
+      "status": "pass",
+      "message": "metrics_snapshot.json: all 11 declared column(s) present (55 in the file); 44 new column(s) reported, not a defect",
+      "detail": {
+        "added": [
+          "sales_fact.raw_total_eur",
+          "sales.gps_facing_all_lines_eur",
+          "sales.parts_base_through_prior_quarter_eur",
+          "ituk.oil_filter.2023.genuine.capture_uncapped_pct",
+          "ituk.oil_filter.2023.genuine.actual_qty",
+          "ituk.oil_filter.2023.genuine.revenue_eur",
+          "ituk.oil_filter.2023.bvp.capture_uncapped_pct",
+          "ituk.oil_filter.2023.bvp.actual_qty",
+          "ituk.oil_filter.2023.bvp.revenue_eur",
+          "ituk.oil_filter.2023.total.capture_uncapped_pct",
+          "ituk.oil_filter.2023.total.actual_qty",
+          "ituk.oil_filter.2023.total.revenue_eur",
+          "ituk.oil_filter.2024.genuine.capture_uncapped_pct",
+          "ituk.oil_filter.2024.genuine.actual_qty",
+          "ituk.oil_filter.2024.genuine.revenue_eur",
+          "ituk.oil_filter.2024.bvp.capture_uncapped_pct",
+          "ituk.oil_filter.2024.bvp.actual_qty",
+          "ituk.oil_filter.2024.bvp.revenue_eur",
+          "ituk.oil_filter.2024.total.capture_uncapped_pct",
+          "ituk.oil_filter.2024.total.actual_qty",
+          "ituk.oil_filter.2024.total.revenue_eur",
+          "ituk.oil_filter.2025.genuine.capture_uncapped_pct",
+          "ituk.oil_filter.2025.genuine.actual_qty",
+          "ituk.oil_filter.2025.genuine.revenue_eur",
+          "ituk.oil_filter.2025.bvp.capture_uncapped_pct",
+          "ituk.oil_filter.2025.bvp.actual_qty",
+          "ituk.oil_filter.2025.bvp.revenue_eur",
+          "ituk.oil_filter.2025.total.capture_uncapped_pct",
+          "ituk.oil_filter.2025.total.actual_qty",
+          "ituk.oil_filter.2025.total.revenue_eur",
+          "ituk.oil_filter.2026.genuine.capture_uncapped_pct",
+          "ituk.oil_filter.2026.genuine.actual_qty",
+          "ituk.oil_filter.2026.genuine.revenue_eur",
+          "ituk.oil_filter.2026.bvp.capture_uncapped_pct",
+          "ituk.oil_filter.2026.bvp.actual_qty",
+          "ituk.oil_filter.2026.bvp.revenue_eur",
+          "ituk.oil_filter.2026.total.capture_uncapped_pct",
+          "ituk.oil_filter.2026.total.actual_qty",
+          "ituk.oil_filter.2026.total.revenue_eur",
+          "mix.ITUK.genuine_share_eur_pct_2025",
+          "mix.UTI.genuine_share_eur_pct_2025",
+          "runway.network.wallet_eur_2030",
+          "defection.active_alerts",
+          "leakage.ituk.benchmark_gap_eur"
+        ]
+      }
+    },
+    {
+      "id": "schema.network_percentile.csv",
+      "status": "pass",
+      "message": "network_percentile.csv: all 8 declared column(s) present (8 in the file)",
+      "detail": {
+        "added": []
+      }
+    },
+    {
+      "id": "schema.bvp_pn_dimension.csv",
+      "status": "pass",
+      "message": "bvp_pn_dimension.csv: all 3 declared column(s) present (16 in the file); 13 new column(s) reported, not a defect",
+      "detail": {
+        "added": [
+          "product_family",
+          "product_subgroup",
+          "sheet_source",
+          "in_bvp_catalog",
+          "pms_category",
+          "category_label",
+          "product_group",
+          "dashboard_scope",
+          "product_group_label",
+          "subgroup_label",
+          "filter_part_role",
+          "pms_capture_eligible",
+          "mix_subgroup"
+        ]
+      }
+    },
+    {
+      "id": "schema.no_column_lost_vs_git_head",
+      "status": "pass",
+      "message": "no declared file has lost a column against its committed version",
+      "detail": {}
+    }
+  ]
+}

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Service parts by vehicle type — demand, sales and the year before</title>
+<style>
+:root{--navy:#15233c;--terra:#c0552d;--paper:#f7f4ee;--ink:#222;--rule:#d8d2c6;--muted:#6b6257;
+      --amber:#b7791f;--green:#2f6b45;--red:#a33;--pale:#eef3f9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+     font:15px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+h1,h2,h3,h4{font-family:Georgia,'Times New Roman',serif;color:var(--navy);margin:0}
+header{background:var(--navy);color:var(--paper);padding:24px 32px 20px}
+header h1{color:var(--paper);font-size:24px;line-height:1.25}
+header p{margin:8px 0 0;color:#cfd6e2;max-width:1080px;font-size:13.5px}
+.wrap{max-width:1440px;margin:0 auto;padding:0 32px 72px}
+section{margin:30px 0 0}
+h2{font-size:19px;margin-bottom:4px}
+.q{display:block;font-family:inherit;font-weight:400;color:var(--terra);font-size:13px;margin-top:3px}
+.card{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:16px 18px;margin-top:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:1060px){.grid2,.grid3{grid-template-columns:1fr}}
+.controls{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:14px 18px;margin-top:16px;
+          display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;position:sticky;top:0;z-index:20;
+          box-shadow:0 2px 6px rgba(21,35,60,.07)}
+.ctl{display:flex;flex-direction:column;gap:5px}
+.ctl label{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+select{padding:7px 10px;border:1px solid var(--rule);border-radius:4px;background:#fff;color:var(--ink);
+       font-size:13.5px;font-family:inherit}
+select[multiple]{min-width:230px;height:132px;padding:4px}
+select[multiple] option{padding:3px 6px;border-radius:3px}
+select[multiple] option:checked{background:var(--navy);color:var(--paper)}
+.quick{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.seg button{border:0;border-right:1px solid var(--rule);border-radius:0;padding:6px 10px;background:#fff}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--navy);color:var(--paper)}
+button{font:inherit;font-size:12px;padding:5px 10px;border:1px solid var(--rule);background:#fff;
+       color:var(--navy);border-radius:4px;cursor:pointer}
+button:hover{background:var(--pale)}
+button.pri{background:var(--navy);color:var(--paper);border-color:var(--navy)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px;max-width:420px}
+.chip{background:var(--pale);border:1px solid var(--rule);border-radius:11px;padding:2px 9px;font-size:11.5px;
+      color:var(--navy);white-space:nowrap}
+.chip b{font-weight:700}
+.chip.all{background:#fdf3e0;border-color:#e5cd9a}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:13px;margin-top:16px}
+.kpi{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:13px 15px;border-top:3px solid var(--navy)}
+.kpi .v{font-family:Georgia,serif;font-size:23px;color:var(--navy);line-height:1.15}
+.kpi .l{font-size:11.5px;color:var(--muted);margin-top:3px}
+.kpi .s{font-size:11.5px;color:var(--terra);margin-top:2px}
+.kpi.warn{border-top-color:var(--amber)}
+.kpi.bad{border-top-color:var(--terra)}
+.kpi.good{border-top-color:var(--green)}
+.chartbox{position:relative;height:360px}
+.chartbox.short{height:290px}
+.chartbox.xs{height:225px}
+.note{font-size:12.5px;color:#4a443b;background:var(--pale);border-left:3px solid var(--navy);
+      padding:10px 13px;margin:13px 0 0;border-radius:0 4px 4px 0}
+.note.amber{background:#fdf6e6;border-left-color:var(--amber)}
+.note.red{background:#fbf0ef;border-left-color:var(--red)}
+.note b{color:var(--navy)}
+.key{font-size:12.5px;color:#4a443b;margin-top:10px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.key i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.key .ln{display:inline-block;width:15px;height:0;border-top:2px dashed var(--terra);margin-right:5px;vertical-align:3px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+th{background:var(--navy);color:var(--paper);text-align:left;padding:8px 9px;font-weight:600;
+   font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+td{padding:7px 9px;border-bottom:1px solid var(--rule);vertical-align:top}
+tbody tr:nth-child(even){background:#faf8f4}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--pale)}
+tr.sel td{background:#fdf3e0}
+.up{color:var(--green);font-weight:600}
+.down{color:var(--terra);font-weight:600}
+.flat{color:var(--muted)}
+#tip{position:fixed;z-index:99;background:var(--navy);color:var(--paper);padding:9px 12px;border-radius:4px;
+     font-size:12.5px;max-width:340px;line-height:1.45;pointer-events:none;opacity:0;transition:opacity .1s;
+     border-left:3px solid var(--terra)}
+#tip b{color:#ffd9c4}
+.ftab{width:100%;border-collapse:collapse;font-size:13.5px}
+.ftab td{padding:9px 10px;border-bottom:1px solid var(--rule)}
+.ftab tr.hdr td{background:var(--navy);color:var(--paper);font-weight:600;font-size:11px;
+                text-transform:uppercase;letter-spacing:.04em}
+.ftab tr.row{cursor:pointer}
+.ftab tr.row:hover td{background:var(--pale)}
+.ftab tr.row.on td{background:#fdf3e0}
+.ftab td.lbl{font-weight:600;color:var(--navy)}
+.bread{font-size:13px;color:var(--muted);margin:14px 0 0}
+.bread a{color:var(--terra);cursor:pointer;text-decoration:none;font-weight:600}
+.bread a:hover{text-decoration:underline}
+.smgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+@media(max-width:900px){.smgrid{grid-template-columns:repeat(2,1fr)}}
+.sm{border:1px solid var(--rule);border-radius:5px;padding:10px 11px;background:#fff}
+.sm .t{font-size:12px;font-weight:700;color:var(--navy);line-height:1.25}
+.sm .v{font-size:11.5px;color:var(--muted);margin-top:2px}
+.sm .d{font-size:12.5px;margin-top:5px;font-weight:600}
+.sm .b{display:flex;align-items:flex-end;gap:3px;height:64px;margin-top:6px}
+.sm .b div{flex:1;border-radius:2px 2px 0 0;min-height:1px}
+.bandgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px}
+@media(max-width:1060px){.bandgrid{grid-template-columns:1fr}}
+.bandcard{border:1px solid var(--rule);border-radius:6px;padding:13px 14px;background:#fff}
+.bandcard h4{font-size:16px;margin:0 0 2px}
+.bandcard .sub{font-size:12px;color:var(--muted)}
+.bandcard .big{font-family:Georgia,serif;font-size:26px;color:var(--navy);margin-top:8px;line-height:1.1}
+.bandcard .big.up{color:var(--green)}
+.bandcard .big.down{color:var(--terra)}
+.bandcard .why{font-size:12.5px;margin-top:8px;color:#4a443b}
+.bandcard .why b{color:var(--navy)}
+.tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;
+     background:var(--pale);border:1px solid var(--rule);border-radius:3px;padding:1px 6px;
+     color:var(--navy);font-weight:700;margin-left:6px;vertical-align:2px}
+.tag.warn{background:#fdf6e6;border-color:#e5cd9a;color:var(--amber)}
+.tag.overlap{background:#f3eef9;border-color:#cbbde3;color:#5b3d8a}
+ul.tight{margin:8px 0 0;padding-left:18px;font-size:12.5px;color:#4a443b}
+ul.tight li{margin:3px 0}
+footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--rule);font-size:12.5px;color:var(--muted)}
+</style></head>
+.small{font-size:12.5px;color:var(--muted)}
+</style></head>
+<body>
+<div id="tip"></div>
+<header>
+  <h1>Service parts by vehicle type — how much was sold, and against the same period a year earlier</h1>
+  <p>Which vehicle type our service business is growing on and which is quietly shrinking. Choose one
+  customer or several, choose a vehicle type, and click any bar to open the level beneath it. Every
+  level compares this period with the same period a year earlier in euro, in units and as a
+  percentage, side by side. Parts that fit more than one vehicle type stay pooled and are never
+  spread across types; click the pooled bar to see the part numbers inside it.
+  Snapshot <b>2026-09-19</b>.</p>
+</header>
+<div id="jserr" style="display:none;margin:16px 32px 0"></div>
+<div class="wrap">
+
+  <div class="controls">
+    <div class="ctl">
+      <label for="selCust">Customer — hold Ctrl to pick several</label>
+      <select id="selCust" multiple size="8"></select>
+      <div class="quick">
+        <button id="btnAll" class="pri">All 18 markets</button>
+        <button id="btnNone">Clear</button>
+        <button id="btnItuk">ITUK only</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <label for="selFam">Vehicle type</label>
+      <select id="selFam"></select>
+    </div>
+    <div class="ctl">
+      <label for="selClock">Period</label>
+      <select id="selClock"></select>
+      <div class="small" id="clockNote" style="max-width:300px"></div>
+    </div>
+    <div class="ctl">
+      <label>Measure</label>
+      <div class="seg" id="segMetric">
+        <button data-m="abs" class="on">Billed euro</button>
+        <button data-m="pv">Euro per vehicle</button>
+        <button data-m="units">Units</button>
+      </div>
+      <div class="small" id="metricNote" style="max-width:320px"></div>
+    </div>
+    <div class="ctl">
+      <label for="selFleet">Fleet denominator</label>
+      <select id="selFleet"></select>
+      <div class="small" id="fleetNote" style="max-width:340px"></div>
+    </div>
+    <div class="ctl" style="min-width:300px">
+      <label>Selected</label>
+      <div class="chips" id="chips"></div>
+    </div>
+  </div>
+
+  <div id="laneNotice"></div>
+  <div class="kpis" id="kpis"></div>
+
+  <section>
+    <h2>Is the service business by vehicle type growing or shrinking?
+      <span class="q">Billed euro and units this period against the same period a year earlier, by
+      vehicle type</span></h2>
+    <div class="card">
+      <div class="chartbox"><canvas id="c_funnel"></canvas></div>
+      <div class="key" id="k_funnel"></div>
+      <p class="note" id="n_funnel"></p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15px">The same move, vehicle type by vehicle type
+        <span class="q">One panel per type, euro a year, all panels on the same scale</span></h3>
+      <div class="smgrid" id="sm_grid"></div>
+      <div class="key" id="k_sm"></div>
+    </div>
+  </section>
+
+  <section id="sec_normal">
+    <h2>Does that euro hold up once the fleet behind it is on the page?
+      <span class="q">The same billing, per vehicle in service — the rate that is comparable
+      between years when the number of vehicles moves</span></h2>
+    <div class="card">
+      <div class="chartbox short"><canvas id="c_norm"></canvas></div>
+      <div class="key" id="k_norm"></div>
+      <p class="note" id="n_norm"></p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15px">The fleet behind each of those years, and where it comes from
+        <span class="q">Every denominator the chart above divides by, with its own vintage stated
+        rather than assumed</span></h3>
+      <div id="t_norm"></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15px">This year's rate against the target spend per vehicle
+        <span class="q">What we billed for each vehicle in service, beside the rate our own target
+        says that vehicle is worth</span></h3>
+      <div class="chartbox short"><canvas id="c_target"></canvas></div>
+      <div class="key" id="k_target"></div>
+      <p class="note" id="n_target"></p>
+    </div>
+  </section>
+
+  <section id="sec_industry">
+    <h2>How do we look against the industry?
+      <span class="q">What a benchmark would have to contain to be usable, and what is on disk
+      instead</span></h2>
+    <div class="card"><div id="t_industry"></div></div>
+  </section>
+
+  <section id="sec_bands">
+    <h2>Inside the N-series truck: 3.5 t, 5.5 t and 7.5 t — growing or shrinking?
+      <span class="q" id="bands_q">Billed euro and units for each weight band, this period against
+      the same period a year earlier</span></h2>
+    <p class="small" id="bands_intro"></p>
+    <div class="bandgrid" id="band_cards"></div>
+    <div class="card">
+      <div class="chartbox short"><canvas id="c_band"></canvas></div>
+      <div class="key" id="k_band"></div>
+      <p class="note" id="n_band"></p>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="font-size:15px">The move, band by band
+          <span class="q">One panel per band and for the shared parts, euro a year, one shared
+          scale</span></h3>
+        <div class="smgrid" id="sm_bands"></div>
+        <div class="key" id="k_smbands"></div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px">Which series carries each band, and on whose word
+          <span class="q">The sourced series-to-weight evidence, one row per series</span></h3>
+        <div id="t_bandev"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15px">How much of each band is exclusive, and how much is shared
+        <span class="q">What decides whether a band can carry a trend of its own</span></h3>
+      <div id="t_bandsplit"></div>
+      <p class="note" id="n_bandsplit"></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Drill down — click any bar to open the level beneath it
+      <span class="q">Service family, then the part numbers inside it, always against the year
+      before</span></h2>
+    <div class="card">
+      <div class="bread" id="bread"></div>
+      <div class="chartbox short" id="box_drill"><canvas id="c_drill"></canvas></div>
+      <div class="key" id="k_drill"></div>
+      <p class="note" id="n_drill"></p>
+      <div id="t_pn"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What the fix changed — the same years, before and after
+      <span class="q">The shipped page's own numbers beside the corrected ones, so the size of the
+      defect is visible rather than asserted</span></h2>
+    <div class="card">
+      <div class="chartbox short"><canvas id="c_before"></canvas></div>
+      <div class="key" id="k_before"></div>
+      <p class="note" id="n_before"></p>
+      <div id="t_before"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What share of the service book sits in each vehicle type, and on how many vehicles?
+      <span class="q">Every euro below carries the fleet it was billed against</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="font-size:15px">Share of the service-part euro, this period</h3>
+        <div class="chartbox short"><canvas id="c_mix"></canvas></div>
+        <div class="key" id="k_mix"></div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px">Vehicles in service, by vehicle type</h3>
+        <div class="chartbox short"><canvas id="c_fleet"></canvas></div>
+        <div class="key" id="k_fleet"></div>
+        <p class="note" id="n_fleet"></p>
+      </div>
+    </div>
+    <div class="card"><div id="t_fam"></div></div>
+  </section>
+
+  <section>
+    <h2>What can this page not show, and why?
+      <span class="q">Each limit named, with the size of the business it affects</span></h2>
+    <div class="card"><div id="t_limits"></div></div>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>/* [STRIPPED 196 KB] */</script>
+<script id="pmfd-data" type="application/json">/* [STRIPPED 907 KB] */</script>
+<script>/* [STRIPPED 120 KB] */</script>
+</body></html>

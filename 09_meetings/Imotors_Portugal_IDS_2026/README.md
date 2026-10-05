@@ -1,6 +1,6 @@
 # IDS 2026 — Portugal pack (Imotors)
 
-Meeting pack for Imotors / Portugal. **Mode A** (external language).
+Meeting pack for Imotors / Portugal. **shared** (external language).
 
 ## Contents
 
@@ -21,7 +21,7 @@ Meeting pack for Imotors / Portugal. **Mode A** (external language).
 
 - Dealers: **16**
 - Approx place on map: 16 · without place token: 0
-- Map base layer: Leaflet CDN + OpenStreetMap/CARTO tiles (needs internet when opening the HTML).
+- Map base layer: **the street map is stored inside the HTML**, so it opens with no internet. Live street tiles are used when the network allows them.
 - Pins: approximate city centres from dealer names and the public Isuzu Portugal dealer directory — not surveyed street addresses.
 
 ## Network average

@@ -1,38 +1,47 @@
 #!/usr/bin/env python3
-"""Verify Aftermarket BI Command Center HTML after build — SSR checks."""
+"""Verify Aftermarket BI suite index HTML after build — retirement + link checks."""
 
 from __future__ import annotations
 
-import re
 import sys
 from pathlib import Path
 
 ISZE = Path(__file__).resolve().parents[2]
 HTML = ISZE / "02_dashboards" / "sales" / "ISZE_Aftermarket_BI_Command_Center.html"
 
-REQUIRED_PANELS = ["panel-network", "panel-db", "panel-pricing"]
-MIN_BAR_ROWS = 20
-MIN_NETWORK_ROWS = 50
-MAX_MB = 3.5
+REQUIRED_LINKS = (
+    "ISZE_Lost_Sales_Model.html",
+    "ISZE_PMS_Family_Evolution_v2.html",
+    "ISZE_PMS_Tonnage_Evolution.html",
+    "ISZE_DB_DLR_Replenishment_CY2025.html",
+    "ISZE_DB_Leakage_Review_CY2025.html",
+)
 
-# Genius SSR markers (must paint without JS)
-GENIUS_MARKERS = [
-    ("ssr-waterfall", "wf-step"),
-    ("heatmap", 'class="hot"'),
-    ("ssr-sparkline", "spark-strip"),
-    ("ssr-money-cards", "money-card"),
-    ("ssr-scatter", "ssr-scatter"),
-    ("ssr-radar", "ssr-radar"),
-    ("radar-toggle", "radar-toggle"),
-    ("bullet-chart", "bullet-track"),
-    ("treemap-wrap", "treemap-cell"),
-    ("ssr-leaderboard", "leaderboard"),
-    ("ituk-dealer-top10", "ITUK dealer top 10"),
-    ("so-what", "so-what"),
-    ("section-nav", "section-nav"),
-    ("ssr-donut", "ssr-donut"),
-    ("ssr-db-compare", "ssr-db-compare"),
-]
+RETIREMENT_MARKERS = (
+    "retirement-notice",
+    "Retired as a single mega-dashboard",
+    "Command center retired",
+)
+
+BASIS_MARKERS = (
+    "basis-strip",
+    "Non-additive",
+    "five distributors",
+)
+
+FORBIDDEN = (
+    "ssr-radar",
+    "radar-toggle",
+    "Roughly half the register",
+    "GREECE leakage column is blank",
+    "Monday pricing calls",
+    "sell-through",
+    'id="panel-network"',
+    'id="networkTbl"',
+    "DB comparison radar",
+)
+
+MAX_KB = 512
 
 
 def main() -> int:
@@ -41,78 +50,76 @@ def main() -> int:
         return 1
 
     html = HTML.read_text(encoding="utf-8")
-    size_mb = len(html) / 1024 / 1024
-    print(f"HTML size: {size_mb:.2f} MB")
-    if size_mb > MAX_MB:
-        print(f"WARN: HTML exceeds {MAX_MB} MB target")
+    size_kb = len(html) / 1024
+    print(f"HTML size: {size_kb:.1f} KB")
+    if size_kb > MAX_KB:
+        print(f"WARN: HTML exceeds {MAX_KB} KB — expected thin suite index")
 
     fails = 0
 
-    hero_block = html.split('<nav class="tabs"')[0]
-    if "€" not in hero_block:
-        print("FAIL: hero section has no € — KPIs not baked at build time")
+    title_ok = "suite map" in html.lower() or "command center retired" in html.lower()
+    if not title_ok:
+        print("FAIL: title does not state suite map / retired command center")
         fails += 1
     else:
-        print("OK: hero contains € in static HTML")
+        print("OK: title / retirement wording")
 
-    bar_rows = html.count('class="bar-row"')
-    svg_charts = html.count("ssr-svg")
-    bar_count = bar_rows + svg_charts
-    print(f"SSR elements: {bar_rows} bar-rows + {svg_charts} svg = {bar_count}")
-    if bar_count < MIN_BAR_ROWS:
-        print(f"FAIL: expected >={MIN_BAR_ROWS} bar-row/svg elements, got {bar_count}")
-        fails += 1
-
-    for name, needle in GENIUS_MARKERS:
-        if needle not in html:
-            print(f"FAIL: missing genius SSR marker {name} ({needle})")
+    for marker in RETIREMENT_MARKERS:
+        if marker not in html:
+            print(f"FAIL: missing retirement marker ({marker})")
             fails += 1
         else:
-            print(f"OK: {name}")
+            print(f"OK: retirement — {marker}")
 
-    net_m = re.search(r'id="networkTbl".*?<tbody>(.*?)</tbody>', html, re.DOTALL)
-    if net_m:
-        tr_count = net_m.group(1).count("<tr")
-        print(f"networkTbl static rows: {tr_count}")
-        if tr_count < MIN_NETWORK_ROWS:
-            print(f"FAIL: network table needs >={MIN_NETWORK_ROWS} rows, got {tr_count}")
+    for marker in BASIS_MARKERS:
+        if marker not in html:
+            print(f"FAIL: missing basis strip marker ({marker})")
             fails += 1
-    else:
-        print("FAIL: networkTbl tbody not found")
-        fails += 1
+        else:
+            print(f"OK: basis — {marker}")
 
-    drill_m = re.search(r'id="tbl".*?<tbody>(.*?)</tbody>', html, re.DOTALL)
-    if drill_m:
-        drill_tr = drill_m.group(1).count("<tr")
-        print(f"drill tbl static rows: {drill_tr}")
-        if drill_tr < 100:
-            print(f"WARN: drill table only {drill_tr} rows (expected ~500)")
-    else:
-        print("FAIL: drill tbl tbody not found")
-        fails += 1
-
-    if 'id="panel-network" class="panel active"' not in html:
-        print("FAIL: panel-network not active on load")
-        fails += 1
-
-    for pid in REQUIRED_PANELS:
-        if f'id="{pid}"' not in html:
-            print(f"FAIL: missing {pid}")
+    for href in REQUIRED_LINKS:
+        if f'href="{href}"' not in html:
+            print(f"FAIL: missing suite link {href}")
             fails += 1
+        else:
+            print(f"OK: link {href}")
 
-    let_sort = len(re.findall(r"\blet sortKey\b", html))
-    if let_sort > 1:
-        print(f"FAIL: duplicate let sortKey ({let_sort}x) — script will not parse")
+    suite_cards = html.count('class="suite-card suite-link"')
+    if suite_cards < len(REQUIRED_LINKS):
+        print(f"FAIL: expected {len(REQUIRED_LINKS)} suite cards, got {suite_cards}")
         fails += 1
+    else:
+        print(f"OK: {suite_cards} suite cards")
 
-    if '<script type="application/json" id="payload">' in html:
-        print("WARN: legacy JSON payload still embedded (optional)")
+    for needle in FORBIDDEN:
+        if needle in html:
+            print(f"FAIL: forbidden legacy content present ({needle})")
+            fails += 1
+        else:
+            print(f"OK: absent — {needle}")
+
+    if 'class="bar-row"' in html or "ssr-radar" in html:
+        print("FAIL: legacy SSR chart content still present")
+        fails += 1
+    else:
+        print("OK: no legacy bar-row / radar SSR")
+
+    cmd = HTML.parent / "OPEN_Aftermarket_BI_Command_Center.cmd"
+    if not cmd.is_file():
+        print(f"FAIL: missing launcher {cmd.name}")
+        fails += 1
+    elif "ISZE_Aftermarket_BI_Command_Center.html" not in cmd.read_text(encoding="utf-8"):
+        print("FAIL: launcher does not point at command center HTML")
+        fails += 1
+    else:
+        print(f"OK: launcher {cmd.name}")
 
     if fails:
         print(f"\n{fails} hard failure(s)")
         return 1
 
-    print("\nOK — SSR smoke checks passed")
+    print("\nOK — suite index checks passed")
     return 0
 
 

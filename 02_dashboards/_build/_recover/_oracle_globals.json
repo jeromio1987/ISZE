@@ -1,0 +1,1543 @@
+{
+ "NETWORK": {
+  "__type__": "dict",
+  "repr": "{'exp': 1013285.8999999999, 'act': 284009.0, 'gap': 18769007.89, 'uio': 163199.0, 'nb': 71.97148405992819, 'notbought': 729276.8999999999}"
+ },
+ "demand": {
+  "__type__": "DataFrame",
+  "shape": [
+   18,
+   8
+  ],
+  "columns": [
+   "distributor_code",
+   "exp",
+   "act",
+   "gap",
+   "rev",
+   "uio",
+   "nb",
+   "avg_sp"
+  ],
+  "head": [
+   {
+    "distributor_code": "BELGIUM",
+    "exp": 62707.799999999996,
+    "act": 16207.0,
+    "gap": 1390128.27,
+    "rev": 340177.86,
+    "uio": 9593,
+    "nb": 74.15473035252393,
+    "avg_sp": 29.89471729518632
+   },
+   {
+    "distributor_code": "CYPRUS",
+    "exp": 14413.1,
+    "act": 7244.0,
+    "gap": 231900.64,
+    "rev": 138183.24,
+    "uio": 2308,
+    "nb": 49.74016693147206,
+    "avg_sp": 32.3472458188615
+   },
+   {
+    "distributor_code": "DENMARK",
+    "exp": 5570.2,
+    "act": 1681.0,
+    "gap": 107026.66,
+    "rev": 47102.54,
+    "uio": 851,
+    "nb": 69.82155039316362,
+    "avg_sp": 27.51893962768693
+   },
+   {
+    "distributor_code": "FINLAND",
+    "exp": 7886.2,
+    "act": 2283.0,
+    "gap": 149716.55,
+    "rev": 42802.369999999995,
+    "uio": 1204,
+    "nb": 71.0506961527732,
+    "avg_sp": 26.719829740148484
+   },
+   {
+    "distributor_code": "GERMANY",
+    "exp": 88076.7,
+    "act": 12259.0,
+    "gap": 1866467.22,
+    "rev": 390119.44999999995,
+    "uio": 13780,
+    "nb": 86.08144946393314,
+    "avg_sp": 24.61782960970855
+   },
+   {
+    "distributor_code": "GREECE",
+    "exp": 24376.1,
+    "act": 9824.0,
+    "gap": 414168.4,
+    "rev": 154619.53,
+    "uio": 3742,
+    "nb": 59.698229002998836,
+    "avg_sp": 28.461074346657874
+   }
+  ]
+ },
+ "fam": {
+  "__type__": "DataFrame",
+  "shape": [
+   252,
+   8
+  ],
+  "columns": [
+   "distributor_code",
+   "category_label",
+   "fam_group",
+   "exp",
+   "act",
+   "gap",
+   "cap",
+   "avg_sp"
+  ],
+  "head": [
+   {
+    "distributor_code": "BELGIUM",
+    "category_label": "Air Filter",
+    "fam_group": "Filters",
+    "exp": 4792.5,
+    "act": 2476.0,
+    "gap": 43266.03,
+    "cap": 51.7,
+    "avg_sp": 18.67732786531405
+   },
+   {
+    "distributor_code": "BELGIUM",
+    "category_label": "Blower Unit Filter",
+    "fam_group": "Filters",
+    "exp": 9584.9,
+    "act": 2211.0,
+    "gap": 122142.74,
+    "cap": 23.1,
+    "avg_sp": 16.564198049878627
+   },
+   {
+    "distributor_code": "BELGIUM",
+    "category_label": "Brake Pad",
+    "fam_group": "Brakes",
+    "exp": 3844.5,
+    "act": 985.0,
+    "gap": 202799.25,
+    "cap": 25.6,
+    "avg_sp": 70.92122748732295
+   },
+   {
+    "distributor_code": "BELGIUM",
+    "category_label": "Brake Rotor",
+    "fam_group": "Brakes",
+    "exp": 2396.2,
+    "act": 1113.0,
+    "gap": 86223.15,
+    "cap": 46.4,
+    "avg_sp": 67.19385130922694
+   },
+   {
+    "distributor_code": "BELGIUM",
+    "category_label": "Brake Shoe",
+    "fam_group": "Brakes",
+    "exp": 4792.5,
+    "act": 322.0,
+    "gap": 346326.0,
+    "cap": 6.7,
+    "avg_sp": 77.46918689184655
+   },
+   {
+    "distributor_code": "BELGIUM",
+    "category_label": "Clutch Booster",
+    "fam_group": "Clutch & bearings",
+    "exp": 958.5,
+    "act": 0.0,
+    "gap": 0.0,
+    "cap": 0.0,
+    "avg_sp": 0.0
+   }
+  ]
+ },
+ "FAMNET": {
+  "__type__": "DataFrame",
+  "shape": [
+   14,
+   7
+  ],
+  "columns": [
+   "category_label",
+   "fam_group",
+   "exp",
+   "act",
+   "gap",
+   "cap",
+   "avg_sp"
+  ],
+  "head": [
+   {
+    "category_label": "Clutch Disc",
+    "fam_group": "Clutch & bearings",
+    "exp": 31760.0,
+    "act": 1697.0,
+    "gap": 3265784.7600000002,
+    "cap": 5.3,
+    "avg_sp": 108.63136613112465
+   },
+   {
+    "category_label": "Brake Pad",
+    "fam_group": "Brakes",
+    "exp": 65154.700000000004,
+    "act": 18408.0,
+    "gap": 3010831.19,
+    "cap": 28.3,
+    "avg_sp": 64.40735260456887
+   },
+   {
+    "category_label": "Brake Shoe",
+    "fam_group": "Brakes",
+    "exp": 77671.6,
+    "act": 7097.0,
+    "gap": 2608365.68,
+    "cap": 9.1,
+    "avg_sp": 36.95898637753526
+   },
+   {
+    "category_label": "Clutch Pressure Plate",
+    "fam_group": "Clutch & bearings",
+    "exp": 31760.0,
+    "act": 1943.0,
+    "gap": 2090834.9900000002,
+    "cap": 6.1,
+    "avg_sp": 70.12224536338331
+   },
+   {
+    "category_label": "Blower Unit Filter",
+    "fam_group": "Filters",
+    "exp": 158800.1,
+    "act": 24725.0,
+    "gap": 1434690.67,
+    "cap": 15.6,
+    "avg_sp": 10.700649635913006
+   },
+   {
+    "category_label": "Brake Rotor",
+    "fam_group": "Brakes",
+    "exp": 39700.0,
+    "act": 20714.0,
+    "gap": 1410562.03,
+    "cap": 52.2,
+    "avg_sp": 74.29485041609607
+   }
+  ]
+ },
+ "bill_fy_all": {
+  "__type__": "Series",
+  "len": 22,
+  "name": "net_sales_value",
+  "head": {
+   "ARMENIA": 264785.8,
+   "BELGIUM": 2177912.48,
+   "CYPRUS": 412223.75,
+   "DENMARK": 179723.21,
+   "FINLAND": 328900.8,
+   "GERMANY": 2702246.08,
+   "GREECE": 471585.68,
+   "HUNGARY": 349468.62,
+   "ICELAND": 89959.3,
+   "IRELAND": 1141538.34,
+   "ITUK": 6810868.9,
+   "IUK": 5951967.76
+  }
+ },
+ "g25": {
+  "__type__": "DataFrame",
+  "shape": [
+   22,
+   20
+  ],
+  "columns": [
+   "year",
+   "country",
+   "region",
+   "total_sales_eur",
+   "warranty_parts_eur",
+   "sales_ex_warranty_eur",
+   "uio_units",
+   "spend_per_unit_eur",
+   "spend_per_unit_ex_warranty_eur",
+   "uio_proxy",
+   "uio_source",
+   "traffic_light",
+   "warranty_data_gap",
+   "max_spend_eur",
+   "gps_capture_vs_max",
+   "traffic_light_v9",
+   "gps_capture_ex_warranty_vs_max",
+   "traffic_light_v9_ex_warranty",
+   "period_basis",
+   "coverage_note"
+  ],
+  "head": [
+   {
+    "year": 2025,
+    "country": "Ireland",
+    "region": "UK/IE",
+    "total_sales_eur": 1187458.62,
+    "warranty_parts_eur": 34857.0,
+    "sales_ex_warranty_eur": 1152601.62,
+    "uio_units": 3056.0,
+    "spend_per_unit_eur": 388.57,
+    "spend_per_unit_ex_warranty_eur": 377.16,
+    "uio_proxy": false,
+    "uio_source": "v18_actual",
+    "traffic_light": "green",
+    "warranty_data_gap": false,
+    "max_spend_eur": 1391176.0,
+    "gps_capture_vs_max": 0.8536,
+    "traffic_light_v9": "green",
+    "gps_capture_ex_warranty_vs_max": 0.8285,
+    "traffic_light_v9_ex_warranty": "amber",
+    "period_basis": "full_year",
+    "coverage_note": "FULL YEAR - calendar year complete."
+   },
+   {
+    "year": 2025,
+    "country": "Israel",
+    "region": "MENA",
+    "total_sales_eur": 3331511.94,
+    "warranty_parts_eur": 255967.77,
+    "sales_ex_warranty_eur": 3075544.17,
+    "uio_units": 10336.0,
+    "spend_per_unit_eur": 322.32,
+    "spend_per_unit_ex_warranty_eur": 297.56,
+    "uio_proxy": false,
+    "uio_source": "v18_actual",
+    "traffic_light": "green",
+    "warranty_data_gap": false,
+    "max_spend_eur": 8271300.0,
+    "gps_capture_vs_max": 0.4028,
+    "traffic_light_v9": "red",
+    "gps_capture_ex_warranty_vs_max": 0.3718,
+    "traffic_light_v9_ex_warranty": "red",
+    "period_basis": "full_year",
+    "coverage_note": "FULL YEAR - calendar year complete."
+   },
+   {
+    "year": 2025,
+    "country": "United Kingdom",
+    "region": "UK/IE",
+    "total_sales_eur": 5564543.92,
+    "warranty_parts_eur": 374426.05,
+    "sales_ex_warranty_eur": 5190117.87,
+    "uio_units": 22389.0,
+    "spend_per_unit_eur": 248.54,
+    "spend_per_unit_ex_warranty_eur": 231.82,
+    "uio_proxy": false,
+    "uio_source": "ituk_dvla_2026",
+    "traffic_light": "green",
+    "warranty_data_gap": false,
+    "max_spend_eur": 11835911.0,
+    "gps_capture_vs_max": 0.4701,
+    "traffic_light_v9": "red",
+    "gps_capture_ex_warranty_vs_max": 0.4385,
+    "traffic_light_v9_ex_warranty": "red",
+    "period_basis": "full_year",
+    "coverage_note": "FULL YEAR - calendar year complete."
+   },
+   {
+    "year": 2025,
+    "country": "Portugal",
+    "region": "Iberia",
+    "total_sales_eur": 1709793.99,
+    "warranty_parts_eur": 130588.0,
+    "sales_ex_warranty_eur": 1579205.99,
+    "uio_units": 8176.0,
+    "spend_per_unit_eur": 209.12,
+    "spend_per_unit_ex_warranty_eur": 193.15,
+    "uio_proxy": false,
+    "uio_source": "v18_actual",
+    "traffic_light": "green",
+    "warranty_data_gap": false,
+    "max_spend_eur": 3494069.0,
+    "gps_capture_vs_max": 0.4893,
+    "traffic_light_v9": "red",
+    "gps_capture_ex_warranty_vs_max": 0.452,
+    "traffic_light_v9_ex_warranty": "red",
+    "period_basis": "full_year",
+    "coverage_note": "FULL YEAR - calendar year complete."
+   },
+   {
+    "year": 2025,
+    "country": "Finland",
+    "region": "Nordics",
+    "total_sales_eur": 277920.61,
+    "warranty_parts_eur": 48676.0,
+    "sales_ex_warranty_eur": 229244.61,
+    "uio_units": 1204.0,
+    "spend_per_unit_eur": 230.83,
+    "spend_per_unit_ex_warranty_eur": 190.4,
+    "uio_proxy": false,
+    "uio_source": "v18_actual",
+    "traffic_light": "green",
+    "warranty_data_gap": false,
+    "max_spend_eur": 301000.0,
+    "gps_capture_vs_max": 0.9233,
+    "traffic_light_v9": "green",
+    "gps_capture_ex_warranty_vs_max": 0.7616,
+    "traffic_light_v9_ex_warranty": "amber",
+    "period_basis": "full_year",
+    "coverage_note": "FULL YEAR - calendar year complete."
+   },
+   {
+    "year": 2025,
+    "country": "Belgium",
+    "region": "Benelux",
+    "total_sales_eur": 2109331.62,
+    "warranty_parts_eur": 74677.0,
+    "sales_ex_warranty_eur": 2034654.62,
+    "uio_units": 9594.0,
+    "spend_per_unit_eur": 219.86,
+    "spend_per_unit_ex_warranty_eur": 212.08,
+    "uio_proxy": false,
+    "uio_source": "v18_actual",
+    "traffic_light": "green",
+    "warranty_data_gap": false,
+    "max_spend_eur": 2454394.0,
+    "gps_capture_vs_max": 0.8594,
+    "traffic_light_v9": "green",
+    "gps_capture_ex_warranty_vs_max": 0.829,
+    "traffic_light_v9_ex_warranty": "amber",
+    "period_basis": "full_year",
+    "coverage_note": "FULL YEAR - calendar year complete."
+   }
+  ]
+ },
+ "sf": {
+  "__type__": "DataFrame",
+  "shape": [
+   513757,
+   14
+  ],
+  "columns": [
+   "billing_date",
+   "sold_to_sap",
+   "sold_to",
+   "part_number",
+   "description",
+   "billed_qty",
+   "net_sales_value",
+   "saty",
+   "year",
+   "material",
+   "fig_key",
+   "fig_key_source",
+   "db",
+   "ym"
+  ],
+  "head": [
+   {
+    "billing_date": "Timestamp('2023-07-05 00:00:00')",
+    "sold_to_sap": 2575.0,
+    "sold_to": "2194.0",
+    "part_number": "8971884550",
+    "description": "SHOE ASM; BRAKE,RR",
+    "billed_qty": 37.0,
+    "net_sales_value": 1907.35,
+    "saty": "SOR",
+    "year": 2023,
+    "material": "8971884550",
+    "fig_key": "305-124",
+    "fig_key_source": "catalog",
+    "db": "ITUK",
+    "ym": "2023-07"
+   },
+   {
+    "billing_date": "Timestamp('2023-07-05 00:00:00')",
+    "sold_to_sap": 2575.0,
+    "sold_to": "2194.0",
+    "part_number": "8980703310",
+    "description": "CAP; RR BUMPER",
+    "billed_qty": 50.0,
+    "net_sales_value": 171.0,
+    "saty": "SOR",
+    "year": 2023,
+    "material": "8980703310",
+    "fig_key": "690-011",
+    "fig_key_source": "catalog",
+    "db": "ITUK",
+    "ym": "2023-07"
+   },
+   {
+    "billing_date": "Timestamp('2023-07-05 00:00:00')",
+    "sold_to_sap": 2575.0,
+    "sold_to": "2194.0",
+    "part_number": "8975816512",
+    "description": "CLIP; RAD GRILLE",
+    "billed_qty": 57.0,
+    "net_sales_value": 46.74,
+    "saty": "SOR",
+    "year": 2023,
+    "material": "8975816512",
+    "fig_key": "603-011",
+    "fig_key_source": "catalog",
+    "db": "ITUK",
+    "ym": "2023-07"
+   },
+   {
+    "billing_date": "Timestamp('2023-07-05 00:00:00')",
+    "sold_to_sap": 2575.0,
+    "sold_to": "2194.0",
+    "part_number": "1221160400",
+    "description": "GASKET; EXH PIPE",
+    "billed_qty": 42.0,
+    "net_sales_value": 369.6,
+    "saty": "SOR",
+    "year": 2023,
+    "material": "1221160400",
+    "fig_key": "150-084",
+    "fig_key_source": "catalog",
+    "db": "ITUK",
+    "ym": "2023-07"
+   },
+   {
+    "billing_date": "Timestamp('2023-07-05 00:00:00')",
+    "sold_to_sap": 2575.0,
+    "sold_to": "2194.0",
+    "part_number": "9091304080",
+    "description": "NUT; SUPPORT BELT",
+    "billed_qty": 60.0,
+    "net_sales_value": 41.4,
+    "saty": "SOR",
+    "year": 2023,
+    "material": "9091304080",
+    "fig_key": "140-042",
+    "fig_key_source": "catalog",
+    "db": "ITUK",
+    "ym": "2023-07"
+   },
+   {
+    "billing_date": "Timestamp('2023-07-05 00:00:00')",
+    "sold_to_sap": 2575.0,
+    "sold_to": "2194.0",
+    "part_number": "811240220",
+    "description": "PIN; SPLIT,ROD END",
+    "billed_qty": 32.0,
+    "net_sales_value": 13.76,
+    "saty": "SOR",
+    "year": 2023,
+    "material": "811240220",
+    "fig_key": "410-080",
+    "fig_key_source": "catalog",
+    "db": "ITUK",
+    "ym": "2023-07"
+   }
+  ]
+ },
+ "ddim": {
+  "__type__": "DataFrame",
+  "shape": [
+   32,
+   12
+  ],
+  "columns": [
+   "sold_to_sap",
+   "payer_code",
+   "distributor_code",
+   "gps_db_label",
+   "customer_name",
+   "scope",
+   "region",
+   "network_role",
+   "in_pms_source",
+   "fy2026_net_sales_eur",
+   "non_parts_eur",
+   "note"
+  ],
+  "head": [
+   {
+    "sold_to_sap": 2575,
+    "payer_code": 2194,
+    "distributor_code": "ITUK",
+    "gps_db_label": "ITUK",
+    "customer_name": "ISUZU TRUCK (UK) LIMITED",
+    "scope": "CV",
+    "region": "UK",
+    "network_role": "network_db",
+    "in_pms_source": "yes",
+    "fy2026_net_sales_eur": 6957525,
+    "non_parts_eur": 0,
+    "note": NaN
+   },
+   {
+    "sold_to_sap": 2574,
+    "payer_code": 89,
+    "distributor_code": "IUK",
+    "gps_db_label": "IUK",
+    "customer_name": NaN,
+    "scope": "LCV",
+    "region": "UK",
+    "network_role": "network_db",
+    "in_pms_source": "yes",
+    "fy2026_net_sales_eur": 6048309,
+    "non_parts_eur": 0,
+    "note": NaN
+   },
+   {
+    "sold_to_sap": 1799,
+    "payer_code": 1797,
+    "distributor_code": "UTI",
+    "gps_db_label": "UTI",
+    "customer_name": "UNIVERSAL TRUCKS ISRAEL LTD",
+    "scope": "CV",
+    "region": "ISRAEL",
+    "network_role": "network_db",
+    "in_pms_source": "yes",
+    "fy2026_net_sales_eur": 3242540,
+    "non_parts_eur": 0,
+    "note": "Israel: payer 1797 covers both entities; split is at sold_to_sap level"
+   },
+   {
+    "sold_to_sap": 1797,
+    "payer_code": 1797,
+    "distributor_code": "UMI",
+    "gps_db_label": "UMI",
+    "customer_name": "UNIVERSAL MOTORS ISRAEL LTD",
+    "scope": "LCV",
+    "region": "ISRAEL",
+    "network_role": "network_db",
+    "in_pms_source": "yes",
+    "fy2026_net_sales_eur": 3079678,
+    "non_parts_eur": 0,
+    "note": "Israel: payer 1797 covers both entities; split is at sold_to_sap level"
+   },
+   {
+    "sold_to_sap": 90,
+    "payer_code": 90,
+    "distributor_code": "BELGIUM",
+    "gps_db_label": "IBX",
+    "customer_name": NaN,
+    "scope": "MIXED",
+    "region": "WEST",
+    "network_role": "network_db",
+    "in_pms_source": "yes",
+    "fy2026_net_sales_eur": 2203112,
+    "non_parts_eur": 0,
+    "note": NaN
+   },
+   {
+    "sold_to_sap": 2516,
+    "payer_code": 93,
+    "distributor_code": "GERMANY",
+    "gps_db_label": "ISD",
+    "customer_name": NaN,
+    "scope": "MIXED",
+    "region": "WEST",
+    "network_role": "network_db",
+    "in_pms_source": "yes",
+    "fy2026_net_sales_eur": 1848131,
+    "non_parts_eur": 0,
+    "note": NaN
+   }
+  ]
+ },
+ "rep": {
+  "__type__": "DataFrame",
+  "shape": [
+   1934,
+   9
+  ],
+  "columns": [
+   "distributor_code",
+   "part_number",
+   "bill_qty",
+   "bill_eur",
+   "sellout_qty",
+   "sell_through_ratio",
+   "pipeline_signal",
+   "year",
+   "rank_key"
+  ],
+  "head": [
+   {
+    "distributor_code": "GREECE",
+    "part_number": 5876150022,
+    "bill_qty": 69.0,
+    "bill_eur": 871.15,
+    "sellout_qty": 299.0,
+    "sell_through_ratio": 4.333333333333333,
+    "pipeline_signal": "leakage_high_sellthrough",
+    "year": 2025,
+    "rank_key": 299.0
+   },
+   {
+    "distributor_code": "GREECE",
+    "part_number": 8980236910,
+    "bill_qty": 110.0,
+    "bill_eur": 72.2,
+    "sellout_qty": 150.0,
+    "sell_through_ratio": 1.3636363636363635,
+    "pipeline_signal": "leakage_high_sellthrough",
+    "year": 2025,
+    "rank_key": 150.0
+   },
+   {
+    "distributor_code": "GREECE",
+    "part_number": 8981019830,
+    "bill_qty": 84.0,
+    "bill_eur": 81.62,
+    "sellout_qty": 113.0,
+    "sell_through_ratio": 1.3452380952380951,
+    "pipeline_signal": "leakage_high_sellthrough",
+    "year": 2025,
+    "rank_key": 113.0
+   },
+   {
+    "distributor_code": "GREECE",
+    "part_number": 8941583280,
+    "bill_qty": 75.0,
+    "bill_eur": 61.7,
+    "sellout_qty": 104.0,
+    "sell_through_ratio": 1.3866666666666667,
+    "pipeline_signal": "leakage_high_sellthrough",
+    "year": 2025,
+    "rank_key": 104.0
+   },
+   {
+    "distributor_code": "GREECE",
+    "part_number": 8973599420,
+    "bill_qty": 60.0,
+    "bill_eur": 17.4,
+    "sellout_qty": 96.0,
+    "sell_through_ratio": 1.6,
+    "pipeline_signal": "leakage_high_sellthrough",
+    "year": 2025,
+    "rank_key": 96.0
+   },
+   {
+    "distributor_code": "GREECE",
+    "part_number": 8980236760,
+    "bill_qty": 60.0,
+    "bill_eur": 38.9,
+    "sellout_qty": 90.0,
+    "sell_through_ratio": 1.5,
+    "pipeline_signal": "leakage_high_sellthrough",
+    "year": 2025,
+    "rank_key": 90.0
+   }
+  ]
+ },
+ "bridge": {
+  "__type__": "DataFrame",
+  "shape": [
+   84826,
+   10
+  ],
+  "columns": [
+   "distributor_code",
+   "part_number",
+   "year_month",
+   "bill_qty",
+   "bill_eur",
+   "sellout_qty",
+   "grain",
+   "dealer_name",
+   "sell_through_ratio",
+   "pipeline_signal"
+  ],
+  "head": [
+   {
+    "distributor_code": "ITUK",
+    "part_number": "0018553000",
+    "year_month": "2025-01",
+    "bill_qty": 2.0,
+    "bill_eur": 82.38,
+    "sellout_qty": 2.0,
+    "grain": "network_pn",
+    "dealer_name": "",
+    "sell_through_ratio": 1.0,
+    "pipeline_signal": "balanced"
+   },
+   {
+    "distributor_code": "ITUK",
+    "part_number": "0018553000",
+    "year_month": "2025-03",
+    "bill_qty": 1.0,
+    "bill_eur": 41.77,
+    "sellout_qty": 1.0,
+    "grain": "network_pn",
+    "dealer_name": "",
+    "sell_through_ratio": 1.0,
+    "pipeline_signal": "balanced"
+   },
+   {
+    "distributor_code": "ITUK",
+    "part_number": "0018553000",
+    "year_month": "2025-06",
+    "bill_qty": 2.0,
+    "bill_eur": 83.54,
+    "sellout_qty": 1.0,
+    "grain": "network_pn",
+    "dealer_name": "",
+    "sell_through_ratio": 0.5,
+    "pipeline_signal": "overstock_low_sellthrough"
+   },
+   {
+    "distributor_code": "ITUK",
+    "part_number": "0018553000",
+    "year_month": "2025-07",
+    "bill_qty": 1.0,
+    "bill_eur": 39.04,
+    "sellout_qty": 1.0,
+    "grain": "network_pn",
+    "dealer_name": "",
+    "sell_through_ratio": 1.0,
+    "pipeline_signal": "balanced"
+   },
+   {
+    "distributor_code": "ITUK",
+    "part_number": "0018553000",
+    "year_month": "2025-08",
+    "bill_qty": 1.0,
+    "bill_eur": 39.04,
+    "sellout_qty": 0.0,
+    "grain": "network_pn",
+    "dealer_name": "",
+    "sell_through_ratio": 0.0,
+    "pipeline_signal": "overstock_no_sellout"
+   },
+   {
+    "distributor_code": "ITUK",
+    "part_number": "0018553000",
+    "year_month": "2025-12",
+    "bill_qty": 1.0,
+    "bill_eur": 39.04,
+    "sellout_qty": 2.0,
+    "grain": "network_pn",
+    "dealer_name": "",
+    "sell_through_ratio": 2.0,
+    "pipeline_signal": "leakage_high_sellthrough"
+   }
+  ]
+ },
+ "signals": {
+  "__type__": "tuple",
+  "repr": "('leakage_high_sellthrough', 'overstock_low_sellthrough', 'overstock_no_sellout')"
+ },
+ "mix": {
+  "__type__": "DataFrame",
+  "shape": [
+   1504,
+   24
+  ],
+  "columns": [
+   "year",
+   "distributor_code",
+   "product_group",
+   "product_subgroup",
+   "bvp_qty",
+   "genuine_qty",
+   "bvp_eur",
+   "genuine_eur",
+   "bvp_share_units",
+   "bvp_share_eur",
+   "total_qty",
+   "total_eur",
+   "product_group_label",
+   "prior_year",
+   "bvp_share_units_prior",
+   "bvp_share_eur_prior",
+   "total_qty_prior",
+   "genuine_qty_prior",
+   "bvp_share_units_yoy_pp",
+   "bvp_share_eur_yoy_pp",
+   "total_qty_yoy_pct",
+   "genuine_qty_yoy_pct",
+   "substitution_flag",
+   "product_family"
+  ],
+  "head": [
+   {
+    "year": 2024,
+    "distributor_code": "ARMENIA",
+    "product_group": "brakes",
+    "product_subgroup": "brake_lining",
+    "bvp_qty": 4.0,
+    "genuine_qty": 0.0,
+    "bvp_eur": 235.8,
+    "genuine_eur": 0.0,
+    "bvp_share_units": 1.0,
+    "bvp_share_eur": 1.0,
+    "total_qty": 4.0,
+    "total_eur": 235.8,
+    "product_group_label": "Brakes",
+    "prior_year": NaN,
+    "bvp_share_units_prior": NaN,
+    "bvp_share_eur_prior": NaN,
+    "total_qty_prior": NaN,
+    "genuine_qty_prior": NaN,
+    "bvp_share_units_yoy_pp": NaN,
+    "bvp_share_eur_yoy_pp": NaN,
+    "total_qty_yoy_pct": NaN,
+    "genuine_qty_yoy_pct": NaN,
+    "substitution_flag": false,
+    "product_family": "brakes"
+   },
+   {
+    "year": 2023,
+    "distributor_code": "ARMENIA",
+    "product_group": "brakes",
+    "product_subgroup": "brake_pad",
+    "bvp_qty": 3.0,
+    "genuine_qty": 10.0,
+    "bvp_eur": 81.17999999999999,
+    "genuine_eur": 1281.8,
+    "bvp_share_units": 0.2307692307692307,
+    "bvp_share_eur": 0.0595606685351215,
+    "total_qty": 13.0,
+    "total_eur": 1362.98,
+    "product_group_label": "Brakes",
+    "prior_year": NaN,
+    "bvp_share_units_prior": NaN,
+    "bvp_share_eur_prior": NaN,
+    "total_qty_prior": NaN,
+    "genuine_qty_prior": NaN,
+    "bvp_share_units_yoy_pp": NaN,
+    "bvp_share_eur_yoy_pp": NaN,
+    "total_qty_yoy_pct": NaN,
+    "genuine_qty_yoy_pct": NaN,
+    "substitution_flag": false,
+    "product_family": "brakes"
+   },
+   {
+    "year": 2024,
+    "distributor_code": "ARMENIA",
+    "product_group": "brakes",
+    "product_subgroup": "brake_pad",
+    "bvp_qty": 20.0,
+    "genuine_qty": 5.0,
+    "bvp_eur": 1769.0,
+    "genuine_eur": 640.9,
+    "bvp_share_units": 0.8,
+    "bvp_share_eur": 0.7340553549939831,
+    "total_qty": 25.0,
+    "total_eur": 2409.9,
+    "product_group_label": "Brakes",
+    "prior_year": 2023.0,
+    "bvp_share_units_prior": 0.2307692307692307,
+    "bvp_share_eur_prior": 0.0595606685351215,
+    "total_qty_prior": 13.0,
+    "genuine_qty_prior": 10.0,
+    "bvp_share_units_yoy_pp": 56.92307692307692,
+    "bvp_share_eur_yoy_pp": 67.44946864588616,
+    "total_qty_yoy_pct": 92.3076923076923,
+    "genuine_qty_yoy_pct": -50.0,
+    "substitution_flag": false,
+    "product_family": "brakes"
+   },
+   {
+    "year": 2025,
+    "distributor_code": "ARMENIA",
+    "product_group": "brakes",
+    "product_subgroup": "brake_pad",
+    "bvp_qty": 39.0,
+    "genuine_qty": 2.0,
+    "bvp_eur": 2789.09,
+    "genuine_eur": 262.98,
+    "bvp_share_units": 0.951219512195122,
+    "bvp_share_eur": 0.913835528018689,
+    "total_qty": 41.0,
+    "total_eur": 3052.07,
+    "product_group_label": "Brakes",
+    "prior_year": 2024.0,
+    "bvp_share_units_prior": 0.8,
+    "bvp_share_eur_prior": 0.7340553549939831,
+    "total_qty_prior": 25.0,
+    "genuine_qty_prior": 5.0,
+    "bvp_share_units_yoy_pp": 15.121951219512187,
+    "bvp_share_eur_yoy_pp": 17.978017302470583,
+    "total_qty_yoy_pct": 64.0,
+    "genuine_qty_yoy_pct": NaN,
+    "substitution_flag": false,
+    "product_family": "brakes"
+   },
+   {
+    "year": 2026,
+    "distributor_code": "ARMENIA",
+    "product_group": "brakes",
+    "product_subgroup": "brake_pad",
+    "bvp_qty": 20.0,
+    "genuine_qty": 0.0,
+    "bvp_eur": 1423.0,
+    "genuine_eur": 0.0,
+    "bvp_share_units": 1.0,
+    "bvp_share_eur": 1.0,
+    "total_qty": 20.0,
+    "total_eur": 1423.0,
+    "product_group_label": "Brakes",
+    "prior_year": 2025.0,
+    "bvp_share_units_prior": 0.951219512195122,
+    "bvp_share_eur_prior": 0.913835528018689,
+    "total_qty_prior": 41.0,
+    "genuine_qty_prior": 2.0,
+    "bvp_share_units_yoy_pp": 4.878048780487809,
+    "bvp_share_eur_yoy_pp": 8.616447198131105,
+    "total_qty_yoy_pct": -51.21951219512195,
+    "genuine_qty_yoy_pct": NaN,
+    "substitution_flag": false,
+    "product_family": "brakes"
+   },
+   {
+    "year": 2024,
+    "distributor_code": "ARMENIA",
+    "product_group": "brakes",
+    "product_subgroup": "brake_rotor",
+    "bvp_qty": 4.0,
+    "genuine_qty": 0.0,
+    "bvp_eur": 517.8,
+    "genuine_eur": 0.0,
+    "bvp_share_units": 1.0,
+    "bvp_share_eur": 1.0,
+    "total_qty": 4.0,
+    "total_eur": 517.8,
+    "product_group_label": "Brakes",
+    "prior_year": NaN,
+    "bvp_share_units_prior": NaN,
+    "bvp_share_eur_prior": NaN,
+    "total_qty_prior": NaN,
+    "genuine_qty_prior": NaN,
+    "bvp_share_units_yoy_pp": NaN,
+    "bvp_share_eur_yoy_pp": NaN,
+    "total_qty_yoy_pct": NaN,
+    "genuine_qty_yoy_pct": NaN,
+    "substitution_flag": false,
+    "product_family": "brakes"
+   }
+  ]
+ },
+ "m25": {
+  "__type__": "DataFrame",
+  "shape": [
+   22,
+   3
+  ],
+  "columns": [
+   "bvp",
+   "gen",
+   "share"
+  ],
+  "head": [
+   {
+    "bvp": 63999.990000000005,
+    "gen": 44289.840000000004,
+    "share": 59.100646847446335
+   },
+   {
+    "bvp": 92085.95,
+    "gen": 130909.04000000001,
+    "share": 41.29507573241892
+   },
+   {
+    "bvp": 56574.51,
+    "gen": 48809.01,
+    "share": 53.684399610109814
+   },
+   {
+    "bvp": 3290.78,
+    "gen": 22497.23,
+    "share": 12.760891592643251
+   },
+   {
+    "bvp": 2616.54,
+    "gen": 27329.67,
+    "share": 8.737466277034724
+   },
+   {
+    "bvp": 52841.369999999995,
+    "gen": 146967.67,
+    "share": 26.445935579291103
+   }
+  ]
+ },
+ "aim": {
+  "__type__": "DataFrame",
+  "shape": [
+   88,
+   8
+  ],
+  "columns": [
+   "year",
+   "distributor_code",
+   "net_sales_eur",
+   "aim_matched_rev_eur",
+   "aim_match_rate_rev",
+   "high_risk_rev_eur",
+   "high_risk_rev_pct",
+   "strategic_rev_eur"
+  ],
+  "head": [
+   {
+    "year": 2023,
+    "distributor_code": "ARMENIA",
+    "net_sales_eur": 276921.22,
+    "aim_matched_rev_eur": 274565.68,
+    "aim_match_rate_rev": 0.9915,
+    "high_risk_rev_eur": 1501.26,
+    "high_risk_rev_pct": 0.0055,
+    "strategic_rev_eur": 71034.21
+   },
+   {
+    "year": 2023,
+    "distributor_code": "BELGIUM",
+    "net_sales_eur": 1766676.86,
+    "aim_matched_rev_eur": 1747264.78,
+    "aim_match_rate_rev": 0.989,
+    "high_risk_rev_eur": 29154.6,
+    "high_risk_rev_pct": 0.0167,
+    "strategic_rev_eur": 493663.47
+   },
+   {
+    "year": 2023,
+    "distributor_code": "CYPRUS",
+    "net_sales_eur": 292935.98,
+    "aim_matched_rev_eur": 287292.1,
+    "aim_match_rate_rev": 0.9807,
+    "high_risk_rev_eur": 1830.94,
+    "high_risk_rev_pct": 0.0064,
+    "strategic_rev_eur": 87883.89
+   },
+   {
+    "year": 2023,
+    "distributor_code": "DENMARK",
+    "net_sales_eur": 125002.67,
+    "aim_matched_rev_eur": 108556.75,
+    "aim_match_rate_rev": 0.8684,
+    "high_risk_rev_eur": 1723.79,
+    "high_risk_rev_pct": 0.0159,
+    "strategic_rev_eur": 36179.04
+   },
+   {
+    "year": 2023,
+    "distributor_code": "FINLAND",
+    "net_sales_eur": 257749.19,
+    "aim_matched_rev_eur": 212605.75,
+    "aim_match_rate_rev": 0.8249,
+    "high_risk_rev_eur": 6165.56,
+    "high_risk_rev_pct": 0.029,
+    "strategic_rev_eur": 46863.92
+   },
+   {
+    "year": 2023,
+    "distributor_code": "GERMANY",
+    "net_sales_eur": 2057965.97,
+    "aim_matched_rev_eur": 2025755.39,
+    "aim_match_rate_rev": 0.9843,
+    "high_risk_rev_eur": 69844.79,
+    "high_risk_rev_pct": 0.0345,
+    "strategic_rev_eur": 533050.43
+   }
+  ]
+ },
+ "a25": {
+  "__type__": "DataFrame",
+  "shape": [
+   22,
+   7
+  ],
+  "columns": [
+   "year",
+   "net_sales_eur",
+   "aim_matched_rev_eur",
+   "aim_match_rate_rev",
+   "high_risk_rev_eur",
+   "high_risk_rev_pct",
+   "strategic_rev_eur"
+  ],
+  "head": [
+   {
+    "year": 2025,
+    "net_sales_eur": 274583.25,
+    "aim_matched_rev_eur": 274583.25,
+    "aim_match_rate_rev": 1.0,
+    "high_risk_rev_eur": 423.93,
+    "high_risk_rev_pct": 0.0015,
+    "strategic_rev_eur": 112056.68
+   },
+   {
+    "year": 2025,
+    "net_sales_eur": 2143951.9,
+    "aim_matched_rev_eur": 2118589.87,
+    "aim_match_rate_rev": 0.9882,
+    "high_risk_rev_eur": 25744.61,
+    "high_risk_rev_pct": 0.0122,
+    "strategic_rev_eur": 538572.06
+   },
+   {
+    "year": 2025,
+    "net_sales_eur": 429512.03,
+    "aim_matched_rev_eur": 429512.03,
+    "aim_match_rate_rev": 1.0,
+    "high_risk_rev_eur": 1797.69,
+    "high_risk_rev_pct": 0.0042,
+    "strategic_rev_eur": 163349.15
+   },
+   {
+    "year": 2025,
+    "net_sales_eur": 170239.79,
+    "aim_matched_rev_eur": 150218.49,
+    "aim_match_rate_rev": 0.8824,
+    "high_risk_rev_eur": 1371.34,
+    "high_risk_rev_pct": 0.0091,
+    "strategic_rev_eur": 60961.06
+   },
+   {
+    "year": 2025,
+    "net_sales_eur": 333914.22,
+    "aim_matched_rev_eur": 285912.53,
+    "aim_match_rate_rev": 0.8562,
+    "high_risk_rev_eur": 3634.95,
+    "high_risk_rev_pct": 0.0127,
+    "strategic_rev_eur": 66481.08
+   },
+   {
+    "year": 2025,
+    "net_sales_eur": 2577765.9,
+    "aim_matched_rev_eur": 2545639.58,
+    "aim_match_rate_rev": 0.9875,
+    "high_risk_rev_eur": 39349.84,
+    "high_risk_rev_pct": 0.0155,
+    "strategic_rev_eur": 595501.45
+   }
+  ]
+ },
+ "npr": {
+  "__type__": "DataFrame",
+  "shape": [
+   31,
+   13
+  ],
+  "columns": [
+   "rank",
+   "part_number",
+   "description",
+   "cy2025_eur",
+   "share_of_gap",
+   "share_of_cy2025_parts",
+   "billed_qty",
+   "n_lines",
+   "gap_reason",
+   "pr00_sp_eur_max",
+   "flag",
+   "park_reason",
+   "is_lube"
+  ],
+  "head": [
+   {
+    "rank": 1,
+    "part_number": "550047337",
+    "description": "Rim R4L15W40 CK4_3*5L",
+    "cy2025_eur": 433820.16,
+    "share_of_gap": 0.087539,
+    "share_of_cy2025_parts": 0.013204,
+    "billed_qty": 9168.0,
+    "n_lines": 166,
+    "gap_reason": "absent_from_pr00",
+    "pr00_sp_eur_max": NaN,
+    "flag": "UMI_SHELL_LUBE_PARKED",
+    "park_reason": "UMI Shell/lube \u2014 business off for now (Jerome 2026-08-12); keep flagged",
+    "is_lube": true
+   },
+   {
+    "rank": 2,
+    "part_number": "550047252",
+    "description": "Rim R4 L 15W40 CJ4_1*209L",
+    "cy2025_eur": 75636.08,
+    "share_of_gap": 0.015262,
+    "share_of_cy2025_parts": 0.002302,
+    "billed_qty": 136.0,
+    "n_lines": 16,
+    "gap_reason": "absent_from_pr00",
+    "pr00_sp_eur_max": NaN,
+    "flag": "UMI_SHELL_LUBE_PARKED",
+    "park_reason": "UMI Shell/lube \u2014 business off for now (Jerome 2026-08-12); keep flagged",
+    "is_lube": true
+   },
+   {
+    "rank": 3,
+    "part_number": "7552825890",
+    "description": "CAB ASM; SERVICE,WO/ELEC",
+    "cy2025_eur": 23110.72,
+    "share_of_gap": 0.004663,
+    "share_of_cy2025_parts": 0.000703,
+    "billed_qty": 4.0,
+    "n_lines": 1,
+    "gap_reason": "on_list_no_usable_price",
+    "pr00_sp_eur_max": NaN,
+    "flag": "NO_PR00_IN_SAP",
+    "park_reason": "No PR00 in SAP; billed ZPR1 (UMI/UTI/CBC); keep flagged \u2014 not PR00 path",
+    "is_lube": false
+   },
+   {
+    "rank": 4,
+    "part_number": "550071985",
+    "description": "RimR7AX5W30_1*209L_A246",
+    "cy2025_eur": 9003.72,
+    "share_of_gap": 0.001817,
+    "share_of_cy2025_parts": 0.000274,
+    "billed_qty": 12.0,
+    "n_lines": 1,
+    "gap_reason": "absent_from_pr00",
+    "pr00_sp_eur_max": NaN,
+    "flag": "UMI_SHELL_LUBE_PARKED",
+    "park_reason": "UMI Shell/lube \u2014 business off for now (Jerome 2026-08-12); keep flagged",
+    "is_lube": true
+   },
+   {
+    "rank": 5,
+    "part_number": "7552824860",
+    "description": "CAB ASM; SERVICE,WO/ELEC",
+    "cy2025_eur": 8183.58,
+    "share_of_gap": 0.001651,
+    "share_of_cy2025_parts": 0.000249,
+    "billed_qty": 2.0,
+    "n_lines": 1,
+    "gap_reason": "on_list_no_usable_price",
+    "pr00_sp_eur_max": NaN,
+    "flag": "NO_PR00_IN_SAP",
+    "park_reason": "No PR00 in SAP; billed ZPR1 (UMI/UTI/CBC); keep flagged \u2014 not PR00 path",
+    "is_lube": false
+   },
+   {
+    "rank": 6,
+    "part_number": "8972733050",
+    "description": "STEERING UNIT",
+    "cy2025_eur": 4635.22,
+    "share_of_gap": 0.000935,
+    "share_of_cy2025_parts": 0.000141,
+    "billed_qty": 5.0,
+    "n_lines": 5,
+    "gap_reason": "on_list_no_usable_price",
+    "pr00_sp_eur_max": NaN,
+    "flag": "NO_PR00_IN_SAP",
+    "park_reason": "No PR00 in SAP; billed ZPR1 (UMI/UTI/CBC); keep flagged \u2014 not PR00 path",
+    "is_lube": false
+   }
+  ]
+ },
+ "NPR_TOTAL": {
+  "__type__": "float",
+  "repr": "591916.3999999999"
+ },
+ "LUBE_EUR": {
+  "__type__": "float",
+  "repr": "524734.36"
+ },
+ "buckets": {
+  "__type__": "DataFrame",
+  "shape": [
+   18,
+   4
+  ],
+  "columns": [
+   "cv_std_uio",
+   "f_series_uio",
+   "lcv_uio",
+   "source_year"
+  ],
+  "head": [
+   {
+    "cv_std_uio": 113.0,
+    "f_series_uio": 0.0,
+    "lcv_uio": 9480.0,
+    "source_year": "2025E"
+   },
+   {
+    "cv_std_uio": 203.0,
+    "f_series_uio": 0.0,
+    "lcv_uio": 2105.0,
+    "source_year": "2025E"
+   },
+   {
+    "cv_std_uio": 1.0,
+    "f_series_uio": 0.0,
+    "lcv_uio": 850.0,
+    "source_year": "2025E"
+   },
+   {
+    "cv_std_uio": 0.0,
+    "f_series_uio": 0.0,
+    "lcv_uio": 1204.0,
+    "source_year": "2025E"
+   },
+   {
+    "cv_std_uio": 732.0,
+    "f_series_uio": 0.0,
+    "lcv_uio": 13048.0,
+    "source_year": "2025E"
+   },
+   {
+    "cv_std_uio": 37.0,
+    "f_series_uio": 0.0,
+    "lcv_uio": 3705.0,
+    "source_year": "2025E"
+   }
+  ]
+ },
+ "NETDBS": {
+  "__type__": "list",
+  "repr": "['ARMENIA', 'BELGIUM', 'CYPRUS', 'DENMARK', 'FINLAND', 'GERMANY', 'GREECE', 'HUNGARY', 'ICELAND', 'IRELAND', 'ITUK', 'IUK', 'KAZAKHSTAN', 'MALTA', 'NORWAY', 'PALESTINE', 'PORTUGAL', 'ROMANIA', 'SWEDEN', 'UKRAINE', 'UMI', 'UTI']"
+ },
+ "DEALER_FY_MONTHS": {
+  "__type__": "dict",
+  "repr": "{'IUK': 3, 'ITUK': 3, 'IRELAND': 3, 'GREECE': 9, 'PORTUGAL': 3, 'UTI': 3, 'ROMANIA': 3}"
+ },
+ "dealer_eur_cy": {
+  "__type__": "Series",
+  "len": 6,
+  "name": "total_eur",
+  "head": {
+   "GREECE": 441184.01,
+   "IRELAND": 1033937.595,
+   "ITUK": 5506143.0200000005,
+   "IUK": 5816372.922499999,
+   "PORTUGAL": 1439188.105,
+   "UTI": 2143892.25
+  }
+ },
+ "dealer_qty": {
+  "__type__": "dict",
+  "repr": "{'IUK': {'fy': {'Air Filter': 1430.0, 'Clutch Disc': 23.0, 'Clutch Pressure Plate': 45.0, 'Fuel Filter': 1841.0, 'Oil Filter': 4615.0, 'other': 55818.0}, 'fy_total': 63772.0, 'fy_months': 3}, 'ITUK': {'fy': {'Air Filter': 1009.0, 'Brake Pad': 1129.0, 'Brake Shoe': 20.0, 'Clutch Disc': 55.0, 'Clutch Pressure Plate': 72.0, 'Fuel Filter': 4163.0, 'Oil Filter': 2820.0, 'Urea (AdBlue) Filter': 203.0, 'other': 52575.0}, 'fy_total': 62046.0, 'fy_months': 3}, 'IRELAND': {'fy': {'Air Filter': 257.0, 'Brake Pad': 66.0, 'Brake Shoe': 4.0, 'Clutch Disc': 41.0, 'Clutch Pressure Plate': 42.0, 'Fuel Filter': 552.0, 'Oil Filter': 548.0, 'Urea (AdBlue) Filter': 2.0, 'other': 9299.0}, 'fy_total': 10811.0, 'fy_months': 3}, 'GREECE': {'cy': {'Air Filter': 441.0, 'Clutch Disc': 3.0, 'Clutch Pressure Plate': 8.0, 'Fuel Filter': 1600.0, 'Oil Filter': 2188.0, 'other': 20537.0}, 'cy_total': 24777.0, 'cy_months': 12, 'fy': {'Air Filter': 357.0, 'Clutch Disc': 3.0, 'Clutch Pressure Plate': 8.0, 'Fuel Filter': 1220.0, 'Oil Filter': 1676.0, 'other': 15159.0}, 'fy_total': 18423.0, 'fy_months': 9}, 'PORTUGAL': {'fy': {'Air Filter': 283.0, 'Brake Pad': 94.0, 'Clutch Disc': 16.0, 'Clutch Pressure Plate': 21.0, 'Fuel Filter': 482.0, 'Oil Filter': 727.0, 'Urea (AdBlue) Filter': 2.0, 'other': 13869.0}, 'fy_total': 15494.0, 'fy_months': 3}, 'UTI': {'fy': {'Air Filter': 48.0, 'Brake Pad': 153.0, 'Clutch Disc': 6.0, 'Clutch Pressure Plate': 6.0, 'Fuel Filter': 144.0, 'Oil Filter': 1213.0, 'other': 23173.0}, 'fy_total': 24743.0, 'fy_months': 3}, 'ROMANIA': {'fy': {'Air Filter': 94.0, 'Clutch Disc': 2.0, 'Fuel Filter': 79.0, 'Oil Filter': 126.0, 'other': 895.0}, 'fy_total': 1196.0, 'fy_months': 3}}"
+ },
+ "dealer_files": {
+  "__type__": "dict",
+  "repr": "{'IUK': ['dealer_sellout_long_IUK_CY2026YTD.csv'], 'ITUK': ['dealer_sellout_long_ITUK_CY2026YTD.csv'], 'IRELAND': ['dealer_sellout_long_IRELAND_CY2026YTD.csv'], 'GREECE': ['dealer_sellout_long_GREECE_CY2025.csv'], 'PORTUGAL': ['dealer_sellout_long_PORTUGAL_CY2026YTD.csv'], 'UTI': ['dealer_sellout_long_UTI_CY2026YTD.csv'], 'ROMANIA': ['dealer_sellout_long_ROMANIA_CY2026YTD.csv']}"
+ },
+ "dbs": {
+  "__type__": "list",
+  "repr": "[{'db': 'IUK', 'scope': 'LCV', 'region': 'UK', 'uio': 47783.0, 'n75': 0.0, 'lcv': 47783.0, 'wc': 'light commercial', 'imit': None, 'km': '14,494', 'demand': {'cy': {'gap': 5802175.0, 'exp': 312979.0, 'act': 54155.0, 'nb': 82.7, 'cap': 17.3}, 'fy': {'gap': 5979292.0, 'exp': 312979.0, 'act': 43360.0, 'nb': 86.1, 'cap': 13.9}}, 'fam': [{'label': 'Air Filter', 'group': 'Filters', 'gap': 288133.0, 'cap': 28.8, 'fy_gap': 299548.0, 'act_qty': 6197.0, 'exp_qty': 23892.0}, {'label': 'Blower Unit Filter', 'group': 'Filters', 'gap': 470253.0, 'cap': 18.4, 'fy_gap': 502453.0, 'act_qty': 6120.0, 'exp_qty': 47783.0}, {'label': 'Brake Pad', 'group': 'Brakes', 'gap': 806882.0, 'cap': 24.1, 'fy_gap': 858687.0, 'act_qty': 3668.0, 'exp_qty': 19113.0}, {'label': 'Brake Rotor', 'group': 'Brakes', 'gap': 469224.0, 'cap': 43.5, 'fy_gap': 469224.0, 'act_qty': 5193.0, 'exp_qty': 11946.0}, {'label': 'Brake Shoe', 'group': 'Brakes', 'gap': 694105.0, 'cap': 5.6, 'fy_gap': 716143.0, 'act_qty': 617.0, 'exp_qty': 23892.0}, {'label': 'Clutch Booster', 'group': 'Clutch & bearings', 'gap': 0.0, 'cap': 0.0, 'fy_gap': 0.0, 'act_qty': 0.0, 'exp_qty': 4778.0}, {'label': 'Clutch Disc', 'group': 'Clutch & bearings', 'gap': 1338473.0, 'cap': 4.5, 'fy_gap': 1347854.0, 'act_qty': 365.0, 'exp_qty': 9557.0}, {'label': 'Clutch Kit', 'group': 'Clutch & bearings', 'gap': 373081.0, 'cap': 0.2, 'fy_gap': 373249.0, 'act_qty': 12.0, 'exp_qty': 7167.0}, {'label': 'Clutch Pressure Plate', 'group': 'Clutch & bearings', 'gap': 565154.0, 'cap': 6.5, 'fy_gap': 571795.0, 'act_qty': 513.0, 'exp_qty': 9557.0}, {'label': 'Fuel Filter', 'group': 'Filters', 'gap': 485078.0, 'cap': 16.0, 'fy_gap': 510591.0, 'act_qty': 5530.0, 'exp_qty': 47783.0}, {'label': 'Oil Filter', 'group': 'Filters', 'gap': 139983.0, 'cap': 37.7, 'fy_gap': 156143.0, 'act_qty': 14600.0, 'exp_qty': 47783.0}, {'label': 'Pilot Bearing', 'group': 'Clutch & bearings', 'gap': 13565.0, 'cap': 3.9, 'fy_gap': 13595.0, 'act_qty': 177.0, 'exp_qty': 4778.0}, {'label': 'Release Bearing', 'group': 'Clutch & bearings', 'gap': 158245.0, 'cap': 6.2, 'fy_gap': 160010.0, 'act_qty': 369.0, 'exp_qty': 7167.0}, {'label': 'Urea (AdBlue) Filter', 'group': 'Filters', 'gap': 0.0, 'cap': 0.0, 'fy_gap': 0.0, 'act_qty': 0.0, 'exp_qty': 47783.0}], 'dealer': {'cy': None, 'fy': None}, 'rep': {'cy': {'total': 576861.0, 'pull': 132674.0, 'over_low': 258166.0, 'over_none': 186020.0, 'nobill': 0.0, 'pns': 400, 'rows': 400}, 'fy': None}, 'mix': {'cy': 23.0, 'fy': 25.3}, 'expo': {'pct': 1.8, 'eur': 108749.0}, 'np': {'eur': 0.0, 'pns': 0}, 'bill': {'cy_inc': 6131920.0, 'cy_exc': 5077525.0, 'fy_inc': 5951968.0, 'fy_exc': 4897573.0, 'warr': 1054395.0}}, {'db': 'GERMANY', 'scope': 'MIXED', 'region': 'WEST', 'uio': 13780.0, 'n75': 732.0, 'lcv': 13048.0, 'wc': 'truck + light', 'imit': 17819.0, 'km': None, 'demand': {'cy': {'gap': 1866467.0, 'exp': 88077.0, 'act': 12259.0, 'nb': 86.1, 'cap': 13.9}, 'fy': {'gap': 1840476.0, 'exp': 88077.0, 'act': 14409.0, 'nb': 83.6, 'cap': 16.4}}, 'fam': [{'label': 'Air Filter', 'group': 'Filters', 'gap': 91602.0, 'cap': 28.0, 'fy_gap': 89398.0, 'act_qty': 2003.0, 'exp_qty': 6747.0}, {'label': 'Blower Unit Filter', 'group': 'Filters', 'gap': 179154.0, 'cap': 12.3, 'fy_gap': 175309.0, 'act_qty': 1913.0, 'exp_qty': 13494.0}, {'label': 'Brake Pad', 'group': 'Brakes', 'gap': 214960.0, 'cap': 38.6, 'fy_gap': 213982.0, 'act_qty': 2116.0, 'exp_qty': 5442.0}, {'label': 'Brake Rotor', 'group': 'Brakes', 'gap': 108513.0, 'cap': 53.1, 'fy_gap': 108513.0, 'act_qty': 1792.0, 'exp_qty': 3374.0}, {'label': 'Brake Shoe', 'group': 'Brakes', 'gap': 242487.0, 'cap': 3.5, 'fy_gap': 243078.0, 'act_qty': 222.0, 'exp_qty': 6747.0}, {'label': 'Clutch Booster', 'group': 'Clutch & bearings', 'gap': 0.0, 'cap': 0.0, 'fy_gap': 0.0, 'act_qty': 0.0, 'exp_qty': 1350.0}, {'label': 'Clutch Disc', 'group': 'Clutch & bearings', 'gap': 321800.0, 'cap': 3.1, 'fy_gap': 315741.0, 'act_qty': 134.0, 'exp_qty': 2699.0}, {'label': 'Clutch Kit', 'group': 'Clutch & bearings"
+ },
+ "IUK_ADJ": {
+  "__type__": "dict",
+  "repr": "{'scale': 0.725, 'exp': 226816.0, 'act': 54155.0, 'gap': 3870617.0, 'cap': 23.9, 'nb': 76.1, 'gap_now': 5802175.0, 'cap_now': 17.3, 'cut': 0.333, 'km': 14494.0, 'km_model': 20000.0}"
+ },
+ "NPLIST": {
+  "__type__": "list",
+  "repr": "[{'rank': 1, 'pn': '550047337', 'desc': 'Rim R4L15W40 CK4_3*5L', 'eur': 433820.0, 'reason': 'absent from pr00', 'lube': True}, {'rank': 2, 'pn': '550047252', 'desc': 'Rim R4 L 15W40 CJ4_1*209L', 'eur': 75636.0, 'reason': 'absent from pr00', 'lube': True}, {'rank': 3, 'pn': '7552825890', 'desc': 'CAB ASM; SERVICE,WO/ELEC', 'eur': 23111.0, 'reason': 'on list no usable price', 'lube': False}, {'rank': 4, 'pn': '550071985', 'desc': 'RimR7AX5W30_1*209L_A246', 'eur': 9004.0, 'reason': 'absent from pr00', 'lube': True}, {'rank': 5, 'pn': '7552824860', 'desc': 'CAB ASM; SERVICE,WO/ELEC', 'eur': 8184.0, 'reason': 'on list no usable price', 'lube': False}, {'rank': 6, 'pn': '8972733050', 'desc': 'STEERING UNIT', 'eur': 4635.0, 'reason': 'on list no usable price', 'lube': False}, {'rank': 7, 'pn': '8976745030', 'desc': 'TRANSMISSION ASM; MANUAL', 'eur': 4308.0, 'reason': 'on list no usable price', 'lube': False}, {'rank': 8, 'pn': '7552221258', 'desc': 'PUMP ASM; OIL', 'eur': 3328.0, 'reason': 'on list no usable price', 'lube': False}, {'rank': 9, 'pn': '7475009365', 'desc': 'CAMERA ASM', 'eur': 3184.0, 'reason': 'on list no usable price', 'lube': False}, {'rank': 10, 'pn': '8979371773', 'desc': 'LID; FRT OUTER', 'eur': 2924.0, 'reason': 'absent from pr00', 'lube': False}, {'rank': 11, 'pn': '550070445', 'desc': 'Rim R4L 15W40 CK4_1*20L JC_A246', 'eur': 2880.0, 'reason': 'absent from pr00', 'lube': True}, {'rank': 12, 'pn': '7552337880', 'desc': 'TRANSFER ASM', 'eur': 2689.0, 'reason': 'on list no usable price', 'lube': False}, {'rank': 13, 'pn': '1867240510', 'desc': 'SWITCH&HARN;PUSH,24V', 'eur': 2257.0, 'reason': 'absent from pr00', 'lube': False}, {'rank': 14, 'pn': '7552172230', 'desc': 'HYDRAULIC UNIT; ANTI LOCK BRK', 'eur': 2181.0, 'reason': 'on list no usable price', 'lube': False}, {'rank': 15, 'pn': '8978325590', 'desc': 'PUMP ASM; DEF,DCM SPLY', 'eur': 1837.0, 'reason': 'on list no usable price', 'lube': False}, {'rank': 16, 'pn': '550070643', 'desc': 'RimulaR6LM10W40CK-4_1*20L JC_A246', 'eur': 1496.0, 'reason': 'absent from pr00', 'lube': True}, {'rank': 17, 'pn': '7552458070', 'desc': 'LID; FRT INNER', 'eur': 1432.0, 'reason': 'absent from pr00', 'lube': False}, {'rank': 18, 'pn': '550070645', 'desc': 'RimR6LMEPlus5W30CK4_1*20L JC_A246', 'eur': 1260.0, 'reason': 'absent from pr00', 'lube': True}, {'rank': 19, 'pn': '5867131240', 'desc': '1DIN SWITCH;STORAGE BOX', 'eur': 1253.0, 'reason': 'absent from pr00', 'lube': False}, {'rank': 20, 'pn': '8978221083', 'desc': 'CONVERTER', 'eur': 1127.0, 'reason': 'on list no usable price', 'lube': False}, {'rank': 21, 'pn': '8976826621', 'desc': 'CLUTCH ASM', 'eur': 990.0, 'reason': 'on list no usable price', 'lube': False}, {'rank': 22, 'pn': '8978769020', 'desc': 'CONTROLLER; ABS', 'eur': 891.0, 'reason': 'on list no usable price', 'lube': False}, {'rank': 23, 'pn': '7552313610', 'desc': 'SENSOR; DISTANCE', 'eur': 855.0, 'reason': 'on list no usable price', 'lube': False}, {'rank': 24, 'pn': '8972733041', 'desc': 'STEERING UNIT', 'eur': 842.0, 'reason': 'on list no usable price', 'lube': False}, {'rank': 25, 'pn': '550065935', 'desc': 'Tellus S2 MX 68_1*20L JC_A246', 'eur': 638.0, 'reason': 'absent from pr00', 'lube': True}, {'rank': 26, 'pn': '1826254050', 'desc': 'HARNESS', 'eur': 610.0, 'reason': 'absent from pr00', 'lube': False}, {'rank': 27, 'pn': '8979363282', 'desc': 'PANEL; COWL UPR', 'eur': 182.0, 'reason': 'absent from pr00', 'lube': False}, {'rank': 28, 'pn': '5867636330', 'desc': 'TAIL GATE ASSIST SET', 'eur': 152.0, 'reason': 'absent from pr00', 'lube': False}, {'rank': 29, 'pn': '1867240221', 'desc': 'HARNESS KIT;F145', 'eur': 100.0, 'reason': 'absent from pr00', 'lube': False}, {'rank': 30, 'pn': '1867240222', 'desc': 'HARNESS KIT;F145', 'eur': 64.0, 'reason': 'absent from pr00', 'lube': False}, {'rank': 31, 'pn': '8971855290', 'desc': 'HANDLE; OUTSIDE,BACK DOOR', 'eur': 46.0, 'reason': 'on list no usable price', 'lube': False}]"
+ },
+ "npr_sorted": {
+  "__type__": "DataFrame",
+  "shape": [
+   31,
+   13
+  ],
+  "columns": [
+   "rank",
+   "part_number",
+   "description",
+   "cy2025_eur",
+   "share_of_gap",
+   "share_of_cy2025_parts",
+   "billed_qty",
+   "n_lines",
+   "gap_reason",
+   "pr00_sp_eur_max",
+   "flag",
+   "park_reason",
+   "is_lube"
+  ],
+  "head": [
+   {
+    "rank": 1,
+    "part_number": "550047337",
+    "description": "Rim R4L15W40 CK4_3*5L",
+    "cy2025_eur": 433820.16,
+    "share_of_gap": 0.087539,
+    "share_of_cy2025_parts": 0.013204,
+    "billed_qty": 9168.0,
+    "n_lines": 166,
+    "gap_reason": "absent_from_pr00",
+    "pr00_sp_eur_max": NaN,
+    "flag": "UMI_SHELL_LUBE_PARKED",
+    "park_reason": "UMI Shell/lube \u2014 business off for now (Jerome 2026-08-12); keep flagged",
+    "is_lube": true
+   },
+   {
+    "rank": 2,
+    "part_number": "550047252",
+    "description": "Rim R4 L 15W40 CJ4_1*209L",
+    "cy2025_eur": 75636.08,
+    "share_of_gap": 0.015262,
+    "share_of_cy2025_parts": 0.002302,
+    "billed_qty": 136.0,
+    "n_lines": 16,
+    "gap_reason": "absent_from_pr00",
+    "pr00_sp_eur_max": NaN,
+    "flag": "UMI_SHELL_LUBE_PARKED",
+    "park_reason": "UMI Shell/lube \u2014 business off for now (Jerome 2026-08-12); keep flagged",
+    "is_lube": true
+   },
+   {
+    "rank": 3,
+    "part_number": "7552825890",
+    "description": "CAB ASM; SERVICE,WO/ELEC",
+    "cy2025_eur": 23110.72,
+    "share_of_gap": 0.004663,
+    "share_of_cy2025_parts": 0.000703,
+    "billed_qty": 4.0,
+    "n_lines": 1,
+    "gap_reason": "on_list_no_usable_price",
+    "pr00_sp_eur_max": NaN,
+    "flag": "NO_PR00_IN_SAP",
+    "park_reason": "No PR00 in SAP; billed ZPR1 (UMI/UTI/CBC); keep flagged \u2014 not PR00 path",
+    "is_lube": false
+   },
+   {
+    "rank": 4,
+    "part_number": "550071985",
+    "description": "RimR7AX5W30_1*209L_A246",
+    "cy2025_eur": 9003.72,
+    "share_of_gap": 0.001817,
+    "share_of_cy2025_parts": 0.000274,
+    "billed_qty": 12.0,
+    "n_lines": 1,
+    "gap_reason": "absent_from_pr00",
+    "pr00_sp_eur_max": NaN,
+    "flag": "UMI_SHELL_LUBE_PARKED",
+    "park_reason": "UMI Shell/lube \u2014 business off for now (Jerome 2026-08-12); keep flagged",
+    "is_lube": true
+   },
+   {
+    "rank": 5,
+    "part_number": "7552824860",
+    "description": "CAB ASM; SERVICE,WO/ELEC",
+    "cy2025_eur": 8183.58,
+    "share_of_gap": 0.001651,
+    "share_of_cy2025_parts": 0.000249,
+    "billed_qty": 2.0,
+    "n_lines": 1,
+    "gap_reason": "on_list_no_usable_price",
+    "pr00_sp_eur_max": NaN,
+    "flag": "NO_PR00_IN_SAP",
+    "park_reason": "No PR00 in SAP; billed ZPR1 (UMI/UTI/CBC); keep flagged \u2014 not PR00 path",
+    "is_lube": false
+   },
+   {
+    "rank": 6,
+    "part_number": "8972733050",
+    "description": "STEERING UNIT",
+    "cy2025_eur": 4635.22,
+    "share_of_gap": 0.000935,
+    "share_of_cy2025_parts": 0.000141,
+    "billed_qty": 5.0,
+    "n_lines": 5,
+    "gap_reason": "on_list_no_usable_price",
+    "pr00_sp_eur_max": NaN,
+    "flag": "NO_PR00_IN_SAP",
+    "park_reason": "No PR00 in SAP; billed ZPR1 (UMI/UTI/CBC); keep flagged \u2014 not PR00 path",
+    "is_lube": false
+   }
+  ]
+ }
+}

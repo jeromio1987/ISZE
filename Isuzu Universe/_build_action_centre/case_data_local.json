@@ -1,0 +1,784 @@
+{
+  "schema_version": 1,
+  "app_version": "1.0-local",
+  "created_at": "2026-09-24",
+  "title": "ISUZU UNIVERSE | Internal Action Centre (local sources)",
+  "scope": "Internal ISZE review. No production authentication or distributor sharing. INTERNAL ONLY.",
+  "source_policy": "Metrics are calculated directly from local workstation source files under 01_data. Where a primary source could not fully verify a paper-reported figure (AC-05), both figures are shown with the gap stated, not resolved. No owner, due date, dealer fleet, causal price effect, tender value or intervention result is invented.",
+  "sources": [
+    {
+      "id": "requested_mix",
+      "name": "pms_genuine_bvp_vs_price_2024_2025.csv",
+      "role": "Requested Genuine/BVP source",
+      "available": true,
+      "note": "Local workstation file. Full calendar 2024 and 2025, one row per distributor and product subgroup.",
+      "period": "Calendar 2024 and 2025",
+      "snapshot_date": "2026-09-24",
+      "sha256": "45324a243058fc0571ffcc8f246efd401fde5ec58382fe70d62d64d506c5d843",
+      "requested_workstation_source": true
+    },
+    {
+      "id": "requested_service",
+      "name": "pms_capture_by_db_year.csv",
+      "role": "Requested calculation source",
+      "available": true,
+      "note": "Local workstation file. Measured purchasing against a modelled expected-units figure, by distributor/year/category/line type.",
+      "period": "Calendar 2023-2025",
+      "snapshot_date": "2026-09-24",
+      "sha256": "d49a3558c335030ce5319e04e52adc43e4393a7e7451a8f88e3dcc6342502bd0",
+      "requested_workstation_source": true
+    },
+    {
+      "id": "requested_spend",
+      "name": "gps_spu_by_distributor.csv",
+      "role": "Requested fleet comparison source",
+      "available": true,
+      "note": "Local workstation file. Parts billed and fleet-in-service basis, by distributor and year.",
+      "period": "Calendar 2023-2025",
+      "snapshot_date": "2026-09-24",
+      "sha256": "fd61c1d5c40970cadf07c1cf304ed7d7cc87c4cb88f507b355b8758709ac506a",
+      "requested_workstation_source": true
+    },
+    {
+      "id": "requested_concession_family",
+      "name": "pms_campaign_suspect_by_family_2024_2025.csv",
+      "role": "Required concession source (ISZE-wide, by family)",
+      "available": true,
+      "note": "Local workstation file. Share of billed value at least 20%/30% under the reference price, by product family and year, all distributors combined.",
+      "period": "Calendar 2024 and 2025",
+      "snapshot_date": "2026-09-24",
+      "sha256": "9873e543aecb2ff2b38f0ad2139ea7d11d004619370b3c72aec64a3780099d91",
+      "requested_workstation_source": true
+    },
+    {
+      "id": "requested_concession_db_family",
+      "name": "pms_campaign_suspect_by_db_family_2024_2025.csv",
+      "role": "Required concession source (by distributor and family)",
+      "available": true,
+      "note": "Local workstation file. Same concession measure, split by distributor and product family.",
+      "period": "Calendar 2024 and 2025",
+      "snapshot_date": "2026-09-24",
+      "sha256": "0cfe256f73ec95d5b0b29daab09293a6ecea5287fb02e2b9896ca691f90fec19",
+      "requested_workstation_source": true
+    },
+    {
+      "id": "requested_tender",
+      "name": "tender_data.json",
+      "role": "Required current tender feed",
+      "available": true,
+      "note": "Local workstation file. Public-tender monitoring feed with precomputed stats.",
+      "period": "Snapshot dated in file",
+      "snapshot_date": "2026-09-24",
+      "sha256": "610a58e4634af99a8ddbe35e45b2afc40e229fa63fc9cad2390a83fba768e13c",
+      "requested_workstation_source": true
+    },
+    {
+      "id": "paper",
+      "name": "ISUZU_UNIVERSE_WHITE_PAPER_FINAL_v2_2026-09-23.pdf",
+      "role": "Secondary document only",
+      "available": true,
+      "note": "Pages 21-22 give the paper-reported programme total and the 22 September 2026 tender snapshot. Used only for cross-check, not as the calculation source.",
+      "period": "Programme: June 2023-March 2026; tender snapshot: 22 September 2026",
+      "snapshot_date": "2026-09-23",
+      "sha256": "de57054202c4cce508c5ae721a840a9f579e82c57c3726cc5cd7f72f9274c938",
+      "requested_workstation_source": false
+    },
+    {
+      "id": "credit_ledger_search",
+      "name": "order_headers_from_Order_Detail.csv + cy2023_2024.csv + cy2026_q1.csv",
+      "role": "Primary billing search for programme credits (targeted)",
+      "available": true,
+      "note": "Local billing extracts searched for rows tagged DLOD / dlod in the purchase-order or PO-reference field. Line-level billing itself is not reproduced here; only the matched credit-memo rows are used, aggregated.",
+      "period": "Search window: files covering 2023-2026 in 00_derived",
+      "snapshot_date": "2026-09-24",
+      "sha256": "e2e57f0b737656ef32205ab80e5da7e3f6660639bd7763bb6eace0132e8ecde8",
+      "requested_workstation_source": false
+    },
+    {
+      "id": "ids_dealer_network",
+      "name": "ids_dealer_network_cleaned_2026-09-20.csv",
+      "role": "IDS Dealer Standards network listing (context only)",
+      "available": true,
+      "note": "Dealer count context only; not a sales-to-dealer or fleet denominator.",
+      "period": "As of 20 September 2026",
+      "snapshot_date": "2026-09-20",
+      "sha256": "b825e7fc9e7eb5f920e569fe1e41f61b163d1fc21bfc37f1124b9b1cc6884a2c",
+      "requested_workstation_source": false
+    },
+    {
+      "id": "classification",
+      "name": "Validated part-to-family membership",
+      "role": "Required classification check",
+      "available": false,
+      "note": "A new parts classification release is being published now; the release is not yet frozen. Family concession rates for front brake pads and blower filters are withheld from this build until the classification is frozen, even though the concession source file itself has rows for both families.",
+      "period": null,
+      "snapshot_date": null,
+      "sha256": null,
+      "requested_workstation_source": false
+    }
+  ],
+  "cases": [
+    {
+      "id": "AC-01",
+      "title": "Brake pads",
+      "market": "ITUK | UK trucks",
+      "case_type": "Commercial signal",
+      "evidence": "measured",
+      "readiness": "Review now",
+      "period": "Full calendar 2025 vs 2024",
+      "initial_owner": null,
+      "initial_due_date": null,
+      "initial_outcome": null,
+      "initial_status": "Not started",
+      "commercial_clearance": false,
+      "headline": {
+        "label": "Change in parts billed",
+        "value": -45023.33,
+        "format": "eur_signed",
+        "basis": "ISZE to Isuzu Truck UK; brake-pad subgroup",
+        "kind": "measured"
+      },
+      "summary": "Unit purchasing fell faster than billed value. Start with a distributor review, not a claim about dealer losses.",
+      "context_line": "44 dealers in the IDS UK CV (trucks) network, 20 Sept 2026 | not a sales-to-dealer denominator",
+      "basis_label": "Measured purchasing | local source file",
+      "metrics": [
+        {
+          "label": "Parts billed, 2024",
+          "value": 347389.58,
+          "format": "eur",
+          "basis": "Calendar 2024",
+          "kind": "measured"
+        },
+        {
+          "label": "Parts billed, 2025",
+          "value": 302366.25,
+          "format": "eur",
+          "basis": "Calendar 2025",
+          "kind": "measured"
+        },
+        {
+          "label": "Value change",
+          "value": -12.96047221681203,
+          "format": "pct_signed",
+          "basis": "2025 against 2024",
+          "kind": "measured"
+        },
+        {
+          "label": "Unit change",
+          "value": -25.427444103463394,
+          "format": "pct_signed",
+          "basis": "2025 against 2024",
+          "kind": "measured"
+        }
+      ],
+      "chart": {
+        "type": "comparison",
+        "series": [
+          {
+            "label": "2024",
+            "value": 347389.58
+          },
+          {
+            "label": "2025",
+            "value": 302366.25
+          }
+        ],
+        "title": "Parts billed to Isuzu Truck UK",
+        "format": "eur",
+        "caption": "Full calendar years; brake-pad subgroup. Not sales to end customers."
+      },
+      "facts": [
+        "4,562 units in 2024 and 3,402 in 2025.",
+        "The IDS Dealer Standards network lists 44 dealers under UK CV (trucks) as of 20 September 2026. This is a ranking-programme listing, not a sales-to-dealer purchasing count.",
+        "Relevant fleet by dealer and validated brake-pad applicability are not supplied. No dealer service-demand rate is calculated."
+      ],
+      "interpretation": "The subgroup has a measured purchasing decline. A lower share of brake pads in a dealer's own 2025 parts purchases would be a mix signal, not proof of lost maintenance business.",
+      "limitation": "No dealer-year comparison, causal price effect or dealer performance ranking is established here. No sales-to-dealer file was located locally to cross-check dealer-level demand.",
+      "next_action": "Review the distributor decline with ITUK. Then compare dealer-level brake-pad share once a sales-to-dealer extract is available.",
+      "checks": [
+        "Confirm the brake-pad subgroup membership before any product-specific intervention.",
+        "Keep dealer network listings separate from distributor purchasing change.",
+        "Treat mix differences as questions, not service-demand gaps."
+      ],
+      "references": [
+        {
+          "source_id": "requested_mix",
+          "rows": [
+            270
+          ],
+          "selection": "ITUK; product_subgroup=brake_pad",
+          "method": "Change = 2025 total_eur_2025 minus total_eur_2024. Percentage change = (2025/2024 - 1) x 100."
+        },
+        {
+          "source_id": "ids_dealer_network",
+          "rows": [],
+          "selection": "ids_tab=UK CV",
+          "method": "Count of rows with ids_tab = 'UK CV'."
+        }
+      ],
+      "raw_facts": {
+        "value_2024": 347389.58,
+        "value_2025": 302366.25,
+        "units_2024": 4562.0,
+        "units_2025": 3402.0,
+        "uk_cv_ids_dealers": 44
+      }
+    },
+    {
+      "id": "AC-02",
+      "title": "Oil filters",
+      "market": "Germany | ISD",
+      "case_type": "Data and model validation",
+      "evidence": "partial",
+      "readiness": "Validate basis",
+      "period": "Calendar 2025",
+      "initial_owner": null,
+      "initial_due_date": null,
+      "initial_outcome": null,
+      "initial_status": "Not started",
+      "commercial_clearance": false,
+      "headline": {
+        "label": "Of modelled service need supplied",
+        "value": 15.03575530771796,
+        "format": "pct",
+        "basis": "Measured units divided by modelled expected units",
+        "kind": "modelled"
+      },
+      "summary": "Check the fleet denominator before using this as a distributor performance example.",
+      "context_line": "10,746 EUR parts billed | 13,780 modelled vehicles (service model)",
+      "basis_label": "Modelled expectation + measured purchasing | local source file",
+      "metrics": [
+        {
+          "label": "Parts billed",
+          "value": 10746.16,
+          "format": "eur",
+          "basis": "Germany oil filters; calendar 2025",
+          "kind": "measured"
+        },
+        {
+          "label": "Service-model fleet",
+          "value": 13780.0,
+          "format": "integer",
+          "basis": "Service model; 2025",
+          "kind": "modelled"
+        },
+        {
+          "label": "Separate spend-model fleet",
+          "value": 12855.0,
+          "format": "integer",
+          "basis": "Fleet basis used for spend-per-unit; 2025",
+          "kind": "modelled"
+        },
+        {
+          "label": "Modelled value difference",
+          "value": 60724.65,
+          "format": "eur",
+          "basis": "Source-reported service gap; not recoverable sales",
+          "kind": "modelled"
+        }
+      ],
+      "chart": {
+        "type": "coverage",
+        "value": 15.03575530771796,
+        "title": "Purchasing against modelled oil-filter need",
+        "caption": "Calendar 2025. The unfilled share is a model difference, not proven competitor sales."
+      },
+      "facts": [
+        "Measured oil-filter units: 2,029; modelled expected units: 13,494.5.",
+        "The service-model fleet and expected units are used exactly as supplied. The spend-model fleet is shown separately, not blended.",
+        "The two fleet bases disagree by 925 vehicles for the same market and year; the reason is not established here."
+      ],
+      "interpretation": "Purchasing is below the selected model expectation. Fleet-basis disagreement needs checking before assigning a commercial cause.",
+      "limitation": "No German dealer attribution, end-customer demand or alternate supplier is measured. The modelled value difference is not an expected sales gain.",
+      "next_action": "Reconcile why the service-model and spend-model fleet counts differ, then request sales-to-dealer information for the same scope.",
+      "checks": [
+        "Document why the two fleet bases differ before quoting either as definitive.",
+        "Request dealer-level purchases only after agreeing the comparison scope.",
+        "Out-of-range service percentages stay withheld, not capped."
+      ],
+      "references": [
+        {
+          "source_id": "requested_service",
+          "rows": [
+            1684
+          ],
+          "selection": "GERMANY; year=2025; pms_category=oil_filter; line_type=total",
+          "method": "Displayed percentage = actual_qty / expected_qty x 100. Rates outside 0-100 are withheld, never capped."
+        },
+        {
+          "source_id": "requested_spend",
+          "rows": [
+            55
+          ],
+          "selection": "GERMANY; year=2025",
+          "method": "Fleet basis comparison only; not used in the service-demand coverage figure."
+        }
+      ],
+      "raw_facts": {
+        "actual_units": 2029.0,
+        "expected_units": 13494.5,
+        "service_fleet": 13780.0,
+        "spend_fleet": 12855.0,
+        "actual_revenue": 10746.16,
+        "source_revenue_gap": 60724.65,
+        "source_gap_quotable": true
+      }
+    },
+    {
+      "id": "AC-03",
+      "title": "Air filters",
+      "market": "IUK | UK light commercial",
+      "case_type": "Avoid premature price action",
+      "evidence": "measured",
+      "readiness": "Review now",
+      "period": "Full calendar 2025 vs 2024",
+      "initial_owner": null,
+      "initial_due_date": null,
+      "initial_outcome": null,
+      "initial_status": "Not started",
+      "commercial_clearance": false,
+      "headline": {
+        "label": "Parts billed in 2025",
+        "value": 106007.31,
+        "format": "eur",
+        "basis": "Genuine + BVP; local source file",
+        "kind": "measured"
+      },
+      "summary": "BVP enters the scope in 2025. Separate the mix change from any pricing conclusion.",
+      "context_line": "47,783 vehicles in the 2025 fleet-basis file | not a dealer fleet denominator",
+      "basis_label": "Measured purchasing mix | local source file",
+      "metrics": [
+        {
+          "label": "Parts billed, 2024",
+          "value": 74730.38,
+          "format": "eur",
+          "basis": "Full calendar year",
+          "kind": "measured"
+        },
+        {
+          "label": "BVP entry, 2025",
+          "value": 16618.6,
+          "format": "eur",
+          "basis": "BVP = Best Value Parts; zero in this 2024 scope",
+          "kind": "measured"
+        },
+        {
+          "label": "Total value change",
+          "value": 41.853032193868145,
+          "format": "pct_signed",
+          "basis": "2025 against 2024",
+          "kind": "measured"
+        },
+        {
+          "label": "Total unit change",
+          "value": 49.070171088519714,
+          "format": "pct_signed",
+          "basis": "2025 against 2024",
+          "kind": "measured"
+        }
+      ],
+      "chart": {
+        "type": "stacked",
+        "series": [
+          {
+            "label": "2024",
+            "genuine": 74730.38,
+            "bvp": 0.0
+          },
+          {
+            "label": "2025",
+            "genuine": 89388.71,
+            "bvp": 16618.6
+          }
+        ],
+        "title": "Genuine and BVP, IUK air filters",
+        "format": "eur",
+        "caption": "ISZE to IUK; full calendar years. BVP = Best Value Parts."
+      },
+      "facts": [
+        "Genuine parts billed rise within the scope; BVP adds a separate new contribution. BVP accounts for 53.1% of the increase in billed value.",
+        "4,033 units in 2024 and 6,012 in 2025.",
+        "Market fleet context: 47,783 vehicles in the 2025 fleet-basis file. This is not a dealer fleet denominator."
+      ],
+      "interpretation": "No immediate price action is indicated by this purchasing evidence alone. The BVP entry is part of the observed growth, not evidence of a price-response relationship.",
+      "limitation": "Distributor-level concession share for this scope is reported separately in AC-04's family view, not blended here. No competitor retail price is compared with a dealer reference price.",
+      "next_action": "Review the Genuine/BVP change on this scope. Cross-check against the family-level concession share before any price recommendation.",
+      "checks": [
+        "Keep Genuine and BVP visible on the same scope.",
+        "Do not blend the product-mix and concession totals.",
+        "Any later competitor comparison needs matched tax, channel, pack and applicability."
+      ],
+      "references": [
+        {
+          "source_id": "requested_mix",
+          "rows": [
+            337
+          ],
+          "selection": "IUK; product_subgroup=air_filter",
+          "method": "Total = genuine_eur + bvp_eur. BVP contribution to growth = change in BVP euro / change in total euro."
+        },
+        {
+          "source_id": "requested_spend",
+          "rows": [
+            62
+          ],
+          "selection": "IUK; year=2025",
+          "method": "Market fleet context only."
+        }
+      ],
+      "raw_facts": {
+        "value_2024": 74730.38,
+        "value_2025": 106007.31,
+        "genuine_2024": 74730.38,
+        "genuine_2025": 89388.71,
+        "bvp_2024": 0.0,
+        "bvp_2025": 16618.6,
+        "units_2024": 4033.0,
+        "units_2025": 6012.0
+      }
+    },
+    {
+      "id": "AC-04",
+      "title": "Front brake pads / blower filters",
+      "market": "ISZE | family review",
+      "case_type": "Classification not yet frozen",
+      "evidence": "missing",
+      "readiness": "Hold family rates",
+      "period": "Full calendar 2024 and 2025",
+      "initial_owner": null,
+      "initial_due_date": null,
+      "initial_outcome": null,
+      "initial_status": "Not started",
+      "commercial_clearance": false,
+      "headline": {
+        "label": "Concession review",
+        "value": null,
+        "format": "text",
+        "basis": "Classification release not yet frozen",
+        "kind": "measured"
+      },
+      "headline_text": "Withheld until the classification release is frozen",
+      "summary": "A new parts classification release is being published now. Family concession rates are withheld until it is frozen, the same as any other unvalidated category.",
+      "basis_label": "Concession source available | rates withheld, classification not frozen",
+      "metrics": [],
+      "chart": null,
+      "facts": [
+        "A new classification release for parts is being published now; the existing front-brake-pad and blower-filter membership is not frozen.",
+        "The concession source file has rows for these two families, but no rate is displayed while the classification it depends on can still change.",
+        "The reviewer previously reported a tagging defect elsewhere in the classification. This is a further reason to hold the rates, not a reason to publish a provisional figure."
+      ],
+      "interpretation": "This is a validation task, not a finding that pricing is too high or that support is unjustified.",
+      "limitation": "Family concession rates for 'front brake pads' and 'blower filter' cannot be treated as final while the classification release they depend on is not frozen. No rate is shown, here or in any export, until it is.",
+      "next_action": "Wait for the classification release to freeze, validate part membership against it, then request the concession rates be recomputed and reviewed.",
+      "checks": [
+        "Confirm the classification release has been frozen before requesting these rates again.",
+        "Record the frozen release version once available.",
+        "Keep front brake pads separate from the broader brake-pad group (AC-01 uses 'brake_pad', not 'brake_pad_front')."
+      ],
+      "references": [
+        {
+          "source_id": "requested_concession_family",
+          "rows": [],
+          "selection": "pms_category in (brake_pad_front, blower_filter); years 2024 and 2025; ISZE-wide",
+          "method": "Source rows exist; rate withheld pending a frozen classification release."
+        },
+        {
+          "source_id": "requested_concession_db_family",
+          "rows": [],
+          "selection": "pms_category in (brake_pad_front, blower_filter); year=2025; by distributor",
+          "method": "Source rows exist; rate withheld pending a frozen classification release."
+        },
+        {
+          "source_id": "classification",
+          "rows": [],
+          "selection": "Front brake pads and blower filters",
+          "method": "Classification release not frozen; no rate computed or shown from this build."
+        }
+      ],
+      "raw_facts": {}
+    },
+    {
+      "id": "AC-05",
+      "title": "Don't Lose the Deal",
+      "market": "ITUK | programme review",
+      "case_type": "Missing programme evidence",
+      "evidence": "partial",
+      "readiness": "Reconcile ledger",
+      "period": "Credits found for 2023 (booked 2024), 2025 and 2026",
+      "initial_owner": null,
+      "initial_due_date": null,
+      "initial_outcome": null,
+      "initial_status": "Not started",
+      "commercial_clearance": false,
+      "headline": {
+        "label": "Credits found in a targeted billing search",
+        "value": 65304.37,
+        "format": "eur",
+        "basis": "3 credit memos tagged DLOD/dlod, local billing extracts; paper reports 90,000 EUR",
+        "kind": "measured"
+      },
+      "summary": "A targeted search of local billing extracts finds 65,304.37 EUR in DLOD-tagged credits, 24,695.63 EUR short of the paper's 90,000 EUR. Neither figure is a full case register.",
+      "basis_label": "Partially verified against primary billing | case register still missing",
+      "metrics": [
+        {
+          "label": "Found in billing search (3 credit memos)",
+          "value": 65304.37,
+          "format": "eur",
+          "basis": "Search of order-header and billing extracts for PO/reference containing DLOD",
+          "kind": "measured"
+        },
+        {
+          "label": "Paper-reported total",
+          "value": 90000,
+          "format": "eur",
+          "basis": "White paper, page 21",
+          "kind": "reported"
+        },
+        {
+          "label": "Unreconciled gap",
+          "value": 24695.63,
+          "format": "eur_signed",
+          "basis": "Paper total minus billing-search total",
+          "kind": "measured"
+        }
+      ],
+      "chart": {
+        "type": "comparison",
+        "series": [
+          {
+            "label": "Found in billing search",
+            "value": 65304.37
+          },
+          {
+            "label": "Paper-reported total",
+            "value": 90000
+          }
+        ],
+        "title": "Don't Lose the Deal credits: billing search vs paper",
+        "format": "eur",
+        "caption": "Billing search covers cy2023_2024.csv, cy2026_q1.csv and order_headers_from_Order_Detail.csv in 01_data/00_derived. No case register was found for any of the three credits."
+      },
+      "facts": [
+        "2024-01-03: 5,304.37 EUR \u2014 REBATE, PO ref 'DLOD 2023 Q3+Q4'; Sold-to 2194 Isuzu Truck (UK) Ltd (source: cy2023_2024.csv).",
+        "2025-02-14: 30,000.00 EUR \u2014 CR, PO ref 'DLOD'; Sold-to 2194 Isuzu Truck (UK) Ltd (source: order_headers_from_Order_Detail.csv / cy2025 (order header)).",
+        "2026-03-30: 30,000.00 EUR \u2014 CR REBATE, PO ref 'dlod'; Sold-to 2575 Isuzu Truck (UK) Ltd (source: order_headers_from_Order_Detail.csv + cy2026_q1.csv).",
+        "The billing search covers three files (cy2023_2024.csv, cy2026_q1.csv, order_headers_from_Order_Detail.csv) in 01_data/00_derived; it is not a certified complete search of every billing year.",
+        "The gap to the paper's 90,000 EUR (24,695.63 EUR) is unresolved: it may be earlier 2023 credits not tagged 'DLOD' in these files, a different labelling, or a scope difference."
+      ],
+      "interpretation": "The billing search corroborates part of the paper's total with primary evidence, but does not reconcile it. No supported case, dealer, part or outcome record was found for any of the three credits.",
+      "limitation": "This is a targeted text search on a purchase-order/reference field, not a full programme credit ledger or case register. The 2023 Q3+Q4 credit is a single combined line; it cannot be split into the paper's implied quarterly cadence.",
+      "next_action": "Ask Isuzu Truck UK to reconcile the gap, confirm whether earlier 2023 credits carry a different label, and supply the case register (part, dealer, competitor evidence, support granted, outcome) for all credits.",
+      "checks": [
+        "Do not treat the billing-search total as the full programme total.",
+        "Reconcile all credits to a ledger before treating either total as verified.",
+        "Collect part, dealer, dated competitor evidence, support granted and outcome for each credit."
+      ],
+      "references": [
+        {
+          "source_id": "credit_ledger_search",
+          "rows": [],
+          "selection": "PO/reference field contains 'DLOD' (case-insensitive), files covering 2023-2026",
+          "method": "Text search for DLOD/dlod in the purchase-order-number / PO-reference column; matched rows aggregated by date and amount."
+        },
+        {
+          "source_id": "paper",
+          "rows": [],
+          "selection": "Page 21, section 6.4",
+          "method": "Extract the reported amount from the document text."
+        }
+      ],
+      "raw_facts": {
+        "billing_search_total_eur": 65304.37,
+        "paper_reported_credit_eur": 90000,
+        "gap_eur": 24695.63,
+        "credit_memos_found": [
+          {
+            "file": "cy2023_2024.csv",
+            "date": "2024-01-03",
+            "eur": 5304.37,
+            "note": "REBATE, PO ref 'DLOD 2023 Q3+Q4'; Sold-to 2194 Isuzu Truck (UK) Ltd"
+          },
+          {
+            "file": "order_headers_from_Order_Detail.csv / cy2025 (order header)",
+            "date": "2025-02-14",
+            "eur": 30000.0,
+            "note": "CR, PO ref 'DLOD'; Sold-to 2194 Isuzu Truck (UK) Ltd"
+          },
+          {
+            "file": "order_headers_from_Order_Detail.csv + cy2026_q1.csv",
+            "date": "2026-03-30",
+            "eur": 30000.0,
+            "note": "CR REBATE, PO ref 'dlod'; Sold-to 2575 Isuzu Truck (UK) Ltd"
+          }
+        ],
+        "verified_case_count": null
+      }
+    },
+    {
+      "id": "AC-06",
+      "title": "Tender deadlines and outcomes",
+      "market": "ISZE | tender review",
+      "case_type": "Time-sensitive source refresh",
+      "evidence": "measured",
+      "readiness": "Refresh regularly",
+      "period": "Snapshot generated 2026-09-22T17:24:26.467020Z",
+      "initial_owner": null,
+      "initial_due_date": null,
+      "initial_outcome": null,
+      "initial_status": "Not started",
+      "commercial_clearance": false,
+      "headline": {
+        "label": "Distinct opportunities in the current local feed",
+        "value": 619,
+        "format": "integer",
+        "basis": "tender_data.json, generated 2026-09-22T17:24:26.467020Z",
+        "kind": "measured"
+      },
+      "summary": "Computed directly from the local tender feed. The feed is dated; confirm it has been refreshed before assigning opportunities today.",
+      "basis_label": "Local feed | file generated 2026-09-22T17:24:26.467020Z",
+      "metrics": [
+        {
+          "label": "Due within 14 days (as of the feed's own generation date)",
+          "value": 45,
+          "format": "integer",
+          "basis": "tender_data.json, generated 2026-09-22T17:24:26.467020Z",
+          "kind": "measured"
+        },
+        {
+          "label": "Distinct opportunities",
+          "value": 619,
+          "format": "integer",
+          "basis": "tender_data.json, generated 2026-09-22T17:24:26.467020Z",
+          "kind": "measured"
+        },
+        {
+          "label": "With an aftersales signal",
+          "value": 286,
+          "format": "integer",
+          "basis": "tender_data.json, generated 2026-09-22T17:24:26.467020Z",
+          "kind": "measured"
+        },
+        {
+          "label": "In the action queue",
+          "value": 199,
+          "format": "integer",
+          "basis": "tender_data.json, generated 2026-09-22T17:24:26.467020Z",
+          "kind": "measured"
+        },
+        {
+          "label": "Outcomes recorded",
+          "value": 0,
+          "format": "integer",
+          "basis": "tender_data.json, generated 2026-09-22T17:24:26.467020Z",
+          "kind": "measured"
+        }
+      ],
+      "chart": {
+        "type": "comparison",
+        "series": [
+          {
+            "label": "Public notices",
+            "value": 689
+          },
+          {
+            "label": "Opportunities",
+            "value": 619
+          },
+          {
+            "label": "Aftersales signal",
+            "value": 286
+          },
+          {
+            "label": "Action queue",
+            "value": 199
+          }
+        ],
+        "title": "Tender funnel, local feed",
+        "format": "integer",
+        "caption": "tender_data.json, generated 2026-09-22T17:24:26.467020Z. Not re-derived against today's date."
+      },
+      "facts": [
+        "Local file tender_data.json was generated 2026-09-22T17:24:26.467020Z; this build ran on 2026-09-24, so the feed is a few days old, not a live query.",
+        "'Due within 14 days' is the count as computed inside the feed at its own generation time; it has not been recalculated against today's review date in this build.",
+        "0 outcomes are recorded in the feed; win rate is reported as 'insufficient data' (minimum sample for a rate: 20)."
+      ],
+      "interpretation": "The local feed is available and matches the white paper's page-22 snapshot exactly, confirming both draw from the same underlying refresh. Refresh again before allocating today's effort if more than a few days have passed.",
+      "limitation": "No fleet make, truck count, tender value or maintenance-part demand is inferred beyond what the feed stores. The 14-day countdown is not recomputed against the current date in this build.",
+      "next_action": "Re-run the tender feed refresh if it is more than a few days old, recompute deadlines against today's date, assign relevant opportunities, and record won, lost or declined outcomes as they close.",
+      "checks": [
+        "Confirm the feed's generation date before quoting a deadline count as current.",
+        "Check aftersales relevance without assuming Isuzu fleet make.",
+        "Record owner, pursuit decision and closure outcome separately."
+      ],
+      "references": [
+        {
+          "source_id": "requested_tender",
+          "rows": [],
+          "selection": "meta.stats, meta.outcomes_summary",
+          "method": "Read directly from tender_data.json, generated 2026-09-22T17:24:26.467020Z. No values recomputed or refreshed."
+        }
+      ],
+      "raw_facts": {
+        "feed_generated_at": "2026-09-22T17:24:26.467020Z",
+        "stats": {
+          "raw_notices": 689,
+          "opportunities": 619,
+          "attack": 2,
+          "selective": 204,
+          "action_queue": 199,
+          "due_14d": 45,
+          "missing_deadline_opportunities": 491,
+          "missing_value_opportunities": 588,
+          "missing_deadline_notices": 549,
+          "missing_value_notices": 656,
+          "duplicate_families": 45,
+          "low_evidence": 11,
+          "aftersales_tagged": 286,
+          "lifecycle_known": 189,
+          "lifecycle_unknown": 430
+        },
+        "outcomes_summary": {
+          "recorded": 0,
+          "by_status": {},
+          "decided": 0,
+          "won": 0,
+          "lost": 0,
+          "closed_sample": 0,
+          "min_sample_for_win_rate": 20,
+          "win_rate_pct": null,
+          "win_rate_display": "insufficient data"
+        },
+        "build_date": "2026-09-24"
+      }
+    }
+  ],
+  "validation": {
+    "status": "Calculation checks passed against local source files; two limitations remain open (AC-04 concession rates withheld pending a frozen classification release, AC-05 ledger gap)",
+    "computed_case_ids": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-06"
+    ],
+    "secondary_or_missing_case_ids": [
+      "AC-04",
+      "AC-05"
+    ],
+    "checks": [
+      "Six cases, all initially unassigned and undated.",
+      "All monetary and percentage headlines derived from local source rows named in each case's references.",
+      "Genuine plus BVP reconciles to total on both selected mix rows (AC-01, AC-03).",
+      "Full calendar 2024 and 2025 used throughout; no partial-2026 growth comparisons.",
+      "ITUK and IUK remain separate; no cross-distributor dealer view.",
+      "Germany service rate uses its own expected units; fleet bases (service-model vs spend-model) are not blended.",
+      "Out-of-range service percentages are withheld, not capped.",
+      "No dealer coverage, dealer year-on-year attribution or price causality inferred.",
+      "AC-04: family concession rates (front brake pads, blower filters) withheld on orchestrator instruction because the parts classification release is not frozen; no rate appears in the page, the sources register or the export JSON.",
+      "AC-05: billing-search total is not promoted to a verified programme total; the gap to the paper figure is stated, not resolved.",
+      "AC-06: computed directly from tender_data.json; 14-day countdown not recomputed against today's date.",
+      "Portugal clutch case excluded from all cases and charts.",
+      "No raw billing lines, full price list or source PDF reproduced in the output; only selected/aggregated rows."
+    ],
+    "pdf_extraction_errors": []
+  }
+}

@@ -1,0 +1,1 @@
+@start "" "%~dp0ITUK_DEALER_SCORECARD_MOCK_2026-09.html"

@@ -5,7 +5,7 @@ canonical_metrics: 04_tools/ids_dealer_ranking/CHANGELOG.md
 last_validated: 2026-08-11
 ---
 
-# DB leverage OS — Mode B one-pager
+# DB leverage OS — internal one-pager
 
 **Status:** v0.4 rollup is the working primary artefact (2026-08-11). Proposal discipline blijft: geen mail, geen silent overwrite, packs alleen op expliciete rebuild/ship.  
 **Anchors:** Feedback Sheet **v0.4** · scan `ids_correlation_scan_2026-08-10.md` · Baumann FR/ES in `CHANGELOG.md`.
@@ -50,7 +50,7 @@ IDS opent de deur. De OS houdt de deur open tot acties dicht zijn.
 |-----|-----|
 | `…_Feedback_Sheet_v0.1/` … `v0.3/` | **Onaangeraakt** — historie |
 | **`…_Feedback_Sheet_v0.4/`** | Hit list · incomplete lane · DB next steps · Pull scaffold · dealer annexes |
-| Compare / country packs **v1.3** | Live Mode A — **niet aanraken** zonder rebuild/ship-OK |
+| Compare / country packs **v1.3** | Live shared — **niet aanraken** zonder rebuild/ship-OK |
 | Future compare **v1.4** | Pending: Baumann avg-exclude locked; list/HTML-drop = Jerome-besluit |
 
 Generator: `04_tools/ids_dealer_ranking/build_db_feedback_sheet.py` (`VERSION = v0.4`).
@@ -85,7 +85,7 @@ DB planning (rollup: hit list + DB actions + Pull blanks)
 1. Draft only, never Send.  
 2. Geen silent version overwrite.  
 3. Rebuild/ship alleen op expliciete woorden.  
-4. Mode A buiten de deur; Mode B hier.  
+4. shared buiten de deur; internal hier.  
 5. UTI ≠ UMI · UK CV ≠ UK LCV.  
 6. Baumann FR/ES: reds uit *averages*; IT/CH all-in; pilotmarkten all-in.  
 7. Geen fake “IDS→€”.

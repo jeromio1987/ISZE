@@ -14,7 +14,15 @@ consumable_factor:
   oil_filter: 1.0
   fuel_filter: 1.0
   air_filter: 0.5   # PROVISIONAL (air element ~every 2nd service vs oil every service) — confirm with IML; added 2026-07-02 (was 1.0 flat — integrity flag C)
-  urea_filter: 1.0
+  urea_filter: 0.2   # AdBlue filter. Was 1.0 — one per service visit, the same rate as an oil
+                    # filter — and that is wrong by five times. René Paul's GIDSS schedules give the
+                    # filter at 200,000 km on the N-series (N_MY24 p4, NPR75 / 4HK1, row "AdBlue
+                    # filter", the line above "PM sensor") and 80,000 km on the F-series 4HK1-TCH
+                    # (F_MY24 p1, "AdBlue filter (4HK1-TCH engine model)"). It is the filter element,
+                    # not the tank. One N75 visit covers 40,000 km, so 40,000/200,000 = 0.20.
+                    # This scalar reaches the legacy single-scope path; the bucketed path in
+                    # modules/pms_engine.py splits N-series from F-series (0.20 / 0.375) because the
+                    # two intervals differ by 1.875x and one number cannot hold both.
   blower_filter: 1.0   # Jerome 2026-07-26 — same as oil/fuel/urea (not 100k cabin / 0.25 placeholder). ITUK pilot lane unchanged.
 
 wear_factor:
