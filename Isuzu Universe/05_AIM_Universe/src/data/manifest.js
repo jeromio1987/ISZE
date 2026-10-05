@@ -950,6 +950,235 @@
     })[0] || null;
   }
 
+  /* ------------------------------------------------------ join controls -- */
+
+  /* The join controls DATA-07 asks for, on top of the identity rules above.
+
+     A source join can go wrong in three ways and each is checked here rather
+     than trusted:
+       - a classification mapping that names one source key twice multiplies a
+         quantity, because the row is matched once per mapping entry;
+       - a classification that is genuinely shared by more than one class is
+         not additive, so its value belongs to the two classes together and not
+         to each of them;
+       - a row that does not join at all disappears from the total.
+
+     The definitions reused are this module's own: a source key is distributor,
+     purchasing account and part number together, exactly as entityKey and
+     sourceEntityId build it, because a part number alone identifies nothing. */
+
+  function round2(v) {
+    return v === null || v === undefined || !Number.isFinite(v) ? null : Math.round(v * 100) / 100;
+  }
+
+  function toNumberOrZero(v) {
+    var n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  /* The key a classification mapping is joined on: the source entity (as
+     entityKey builds it) plus the original part reference. */
+  function classificationJoinKey(row) {
+    return entityKey(row) + SEP + (row.part_number || '(part not stated)');
+  }
+
+  /* The key a permitted join scope is matched on: distributor and purchasing
+     account, the first two of the three separate fields. */
+  function scopeJoinKey(row) {
+    row = row || {};
+    return [row.distributor || '(distributor not stated)',
+      row.purchasing_account || '(account not stated)'].join(SEP);
+  }
+
+  /* A mapping entry that carries a class code but no part number is reused as
+     the default for every row of that source key: a class the whole account is
+     on. An entry that does name a part applies to that part only. */
+  function classMappingsFor(mappings) {
+    var byAccount = {}, byPart = {};
+    (mappings || []).forEach(function (m) {
+      if (isBlank(m) || isBlank(m.class_code)) return;
+      if (isBlank(m.part_number)) {
+        byAccount[scopeJoinKey(m)] = byAccount[scopeJoinKey(m)] || [];
+        byAccount[scopeJoinKey(m)].push(m.class_code);
+      } else {
+        var k = classificationJoinKey(m);
+        byPart[k] = byPart[k] || [];
+        byPart[k].push(m.class_code);
+      }
+    });
+    return function (row) {
+      var direct = byPart[classificationJoinKey(row)];
+      if (direct && direct.length) return direct.slice();
+      var account = byAccount[scopeJoinKey(row)];
+      return account ? account.slice() : [];
+    };
+  }
+
+  /* The before/after control around a classification join. Each row is placed
+     in exactly one bucket: the one class it maps to, or the explicit shared
+     bucket when the mapping names more than one class for it. The unit and the
+     euro are accounted for once, whatever the mapping says. */
+  function reconcileClassTotals(rows, mappings, opts) {
+    opts = opts || {};
+    var list = rows || [];
+    var classesFor = classMappingsFor(mappings);
+    var classTotals = {}, classOrder = [];
+    var shared = { visible: true, rows: 0, quantity: 0, euro: 0,
+      statement: 'A row whose mapping names more than one class is shared, not added to each ' +
+        'class. Nothing is lost and nothing is doubled: the row is reported here and in no ' +
+        'single-class total.' };
+    var sharedMappings = [];
+    var unclassified = { visible: true, rows: 0, quantity: 0, euro: 0,
+      statement: 'Rows with no classification mapping are retained here rather than dropped.' };
+    var unmatched = { visible: true, rows: 0, quantity: 0, euro: 0,
+      statement: 'Rows that matched no classification mapping stay visible with their size.' };
+    var quantityTotal = 0, euroTotal = 0, accountedQuantity = 0, accountedEuro = 0;
+
+    list.forEach(function (r) {
+      r = r || {};
+      var qty = toNumberOrZero(r.quantity);
+      var euro = toNumberOrZero(r.euro);
+      quantityTotal += qty;
+      euroTotal += euro;
+      var codes = classesFor(r);
+      /* A mapping, when one exists for this row, is the classification. A row
+         with no mapping keeps the class it arrived with rather than being
+         treated as unclassified, and only a row with neither is unclassified. */
+      if (!codes.length && !isBlank(r.class_code)) codes = [r.class_code];
+      var distinct = [];
+      codes.forEach(function (c) { if (distinct.indexOf(c) < 0) distinct.push(c); });
+
+      if (distinct.length > 1) {
+        shared.rows += 1;
+        shared.quantity += qty;
+        shared.euro += euro;
+        sharedMappings.push({ key: classificationJoinKey(r),
+          entity_label: entityLabel(r), part_number: r.part_number || null,
+          classes: distinct.slice(), rows: 1, quantity: qty, euro: euro });
+        accountedQuantity += qty;
+        accountedEuro += euro;
+        return;
+      }
+
+      var code = distinct.length === 1 ? distinct[0] : '(no class)';
+      if (distinct.length === 0) {
+        unclassified.rows += 1;
+        unclassified.quantity += qty;
+        unclassified.euro += euro;
+      }
+      if (distinct.length === 0) {
+        /* Retained and visible, but it is not a class total: it is counted in
+           the unclassified bucket alone. */
+        accountedQuantity += qty;
+        accountedEuro += euro;
+        return;
+      }
+      if (!classTotals[code]) {
+        classTotals[code] = { class_code: code, rows: 0, quantity: 0, euro: 0 };
+        classOrder.push(code);
+      }
+      classTotals[code].rows += 1;
+      classTotals[code].quantity += qty;
+      classTotals[code].euro += euro;
+      accountedQuantity += qty;
+      accountedEuro += euro;
+    });
+
+    var classList = classOrder.map(function (k) { return classTotals[k]; })
+      .sort(function (a, b) { return String(a.class_code).localeCompare(String(b.class_code)); });
+    var sumClassQty = classList.reduce(function (s, c) { return s + c.quantity; }, 0);
+    var sumClassEuro = classList.reduce(function (s, c) { return s + c.euro; }, 0);
+
+    /* The control: every unit and every euro is in exactly one bucket. */
+    var ok = Math.abs((sumClassQty + shared.quantity + unclassified.quantity) - quantityTotal) < 1e-9
+      && Math.abs((sumClassEuro + shared.euro + unclassified.euro) - euroTotal) < 1e-9
+      && Math.abs(accountedQuantity - quantityTotal) < 1e-9;
+
+    return {
+      rows_in: list.length,
+      quantity_total: round2(quantityTotal),
+      euro_total: round2(euroTotal),
+      class_totals: classList,
+      sum_of_class_totals_quantity: round2(sumClassQty),
+      sum_of_class_totals_euro: round2(sumClassEuro),
+      shared: shared,
+      shared_mappings: sharedMappings,
+      unclassified: unclassified,
+      unmatched: unmatched,
+      any_shared: shared.rows > 0,
+      multi_class_statement: shared.rows
+        ? shared.rows + ' row(s) are mapped to more than one class. A shared row is not additive: '
+          + 'its value is joint to those classes, so it is held once here and never added into a '
+          + 'single class total.'
+        : 'No row is mapped to more than one class, so every class total is additive.',
+      ok: ok,
+      statement: 'Of ' + list.length + ' row(s), ' + classList.length + ' class total(s), '
+        + shared.rows + ' shared and ' + unclassified.rows + ' unclassified. A quantity or euro '
+        + 'leaving the mapping does not leave the total: it is reported in the shared or the '
+        + 'unclassified bucket instead.'
+    };
+  }
+
+  /* The before/after control around a permitted-scope join. Matched plus
+     unmatched reconciles to the same totals the source carried, and the
+     unmatched remainder is named by entity rather than dropped. */
+  function reconcileScope(rows, permitted) {
+    var list = rows || [];
+    var allowed = {};
+    (permitted || []).forEach(function (p) { if (p) allowed[scopeJoinKey(p)] = true; });
+    var matched = { rows: 0, quantity: 0, euro: 0 };
+    var unmatched = { visible: true, rows: 0, quantity: 0, euro: 0 };
+    var byEntity = {}, order = [];
+    var quantityTotal = 0, euroTotal = 0;
+
+    list.forEach(function (r) {
+      r = r || {};
+      var qty = toNumberOrZero(r.quantity);
+      var euro = toNumberOrZero(r.euro);
+      quantityTotal += qty;
+      euroTotal += euro;
+      var key = scopeJoinKey(r);
+      if (allowed[key]) {
+        matched.rows += 1;
+        matched.quantity += qty;
+        matched.euro += euro;
+        return;
+      }
+      unmatched.rows += 1;
+      unmatched.quantity += qty;
+      unmatched.euro += euro;
+      var ekey = entityKey(r);
+      if (!byEntity[ekey]) {
+        byEntity[ekey] = { entity_id: sourceEntityId(r), entity_label: entityLabel(r),
+          rows: 0, quantity: 0, euro: 0 };
+        order.push(ekey);
+      }
+      byEntity[ekey].rows += 1;
+      byEntity[ekey].quantity += qty;
+      byEntity[ekey].euro += euro;
+    });
+
+    var unmatchedByEntity = order.map(function (k) { return byEntity[k]; });
+    var ok = Math.abs((matched.rows + unmatched.rows) - list.length) < 1e-9
+      && Math.abs((matched.quantity + unmatched.quantity) - quantityTotal) < 1e-9
+      && Math.abs((matched.euro + unmatched.euro) - euroTotal) < 1e-9;
+
+    return {
+      rows_in: list.length,
+      quantity_total: round2(quantityTotal),
+      euro_total: round2(euroTotal),
+      matched: { rows: matched.rows, quantity: round2(matched.quantity), euro: round2(matched.euro) },
+      unmatched: { visible: true, rows: unmatched.rows,
+        quantity: round2(unmatched.quantity), euro: round2(unmatched.euro) },
+      unmatched_by_entity: unmatchedByEntity,
+      permitted_scopes: Object.keys(allowed).length,
+      ok: ok,
+      statement: 'Matched ' + matched.rows + ' row(s) and ' + unmatched.rows + ' unmatched. The '
+        + 'unmatched remainder is kept visible with its size, so it reconciles to the same source '
+        + 'scope the rows came from.'
+    };
+  }
+
   /* A conservation check for the manifest itself: every declared input is
      accounted for, and no record silently disappeared in the merge. */
   function conservation(manifest) {
@@ -997,6 +1226,10 @@
     combineEntities: combineEntities,
     canMerge: canMerge,
     splitAccount: splitAccount,
+    reconcileClassTotals: reconcileClassTotals,
+    reconcileScope: reconcileScope,
+    classificationJoinKey: classificationJoinKey,
+    scopeJoinKey: scopeJoinKey,
     addRecords: addRecords,
     dealersOf: dealersOf,
     knownEntities: knownEntities,
