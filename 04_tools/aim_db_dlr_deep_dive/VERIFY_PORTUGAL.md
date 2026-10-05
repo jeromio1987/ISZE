@@ -1,6 +1,6 @@
 # Verification - PORTUGAL
 
-Built 2026-10-02T13:11:34+00:00. 17 of 17 gating checks pass.
+Built 2026-10-04T05:46:14+00:00. 17 of 17 gating checks pass.
 
 ## All checks
 
@@ -22,9 +22,9 @@ Built 2026-10-02T13:11:34+00:00. 17 of 17 gating checks pass.
 | last-12-month window: both-stage coverage per distributor | reported, not a gate | PORTUGAL 9/12 | PASS | months of the last twelve that carry billing AND sales to dealer |
 | longest contiguous both-stage run, per distributor | reported, not a gate | PORTUGAL 15 months ending 2026-03 | PASS | contiguity is measured, not inferred; the breaks are the months whose billing rows all carry a blank document type |
 | distributors that can carry a 12-versus-12 comparison at all | reported, not a gate | none | PASS | ITUK is the only one whose unbroken both-stage run reaches 24 months; everybody else is withheld, with no shorter fallback offered |
-| billed: units not classified in AIM | None | 2.68 | reported | reported, not a gate |
+| billed: units not classified in AIM | None | 2.65 | reported | reported, not a gate |
 | billed: units with no price on the list | None | 0.03 | reported | reported, not a gate |
-| sold: units not classified in AIM | None | 6.28 | reported | reported, not a gate |
+| sold: units not classified in AIM | None | 6.26 | reported | reported, not a gate |
 | sold: units with no price on the list | None | 4.16 | reported | reported, not a gate |
 | PMS cover above 100% carries a warning in the page | every instance flagged | None | PASS | the page marks every percentage above 100% with a warning and a reason |
 | HTML file size | under 15 MB for run 2 | 1.74 | PASS | MB, self-contained: data and Chart.js inline, no treemap plugin since that chart was removed, no server and no internet needed |
@@ -160,20 +160,21 @@ Built 2026-10-02T13:11:34+00:00. 17 of 17 gating checks pass.
 
 ```json
 {
-  "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\AIM_Master_PN_Categories_Figkey_release_2026-10-02-chassis-frame.csv",
+  "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\AIM_Master_PN_Categories_Figkey_release_2026-10-04.csv",
   "release": {
-    "release_id": "2026-10-02-chassis-frame",
-    "path": "aim_pn_classification_release_2026-10-02-chassis-frame.csv",
-    "sha256": "9bb86a9b4d89c5954cd6dd15fdc977db44e66cddaa15e3e70bd0285e3bf3e65b",
+    "release_id": "2026-10-04",
+    "path": "aim_pn_classification_release_2026-10-04.csv",
+    "sha256": "8aad884f49db1a49ab86faca571942d912196ce08f7734f38d5a04f035e18896",
     "status": "APPROVED",
-    "rows": 164919,
+    "rows": 164943,
     "rows_note": "data rows, header excluded (same as 2026-10-02)",
-    "source": "release 2026-10-02 (aim_pn_classification_release_2026-10-02.csv, sha256 0ac91379...) + next_release_proposal_2026-10-02.csv (42 parts) + body filing (cab mounting members on Chassis Frame) + 2 wrong-in-both fixes",
-    "recommendation": "APPROVAL_SUMMARY_2026-10-02-candidate.md; Jerome decisions 2026-10-02 (cab mounting members to Chassis Frame; 4 to-check parts as proposed)",
-    "notes": "Cut 2026-10-02 by claude-opus: the 2026-10-02-candidate with Jerome's decision (1) applied (142 cab mounting member rows differ, AIM columns only). Change log aim_pn_classification_release_2026-10-02-chassis-frame.changes.csv; body list aim_pn_classification_release_2026-10-02-chassis-frame.body_filing.csv. Release id: the candidate entry's sha256 is its identity and its file is never overwritten, so a new id in the date + hyphen suffix form; no version label. PCV kits 8981065790 / 8980023462: check against the parts catalogue (EPC).",
+    "base_release": "2026-10-02-chassis-frame",
+    "source": "release 2026-10-02-chassis-frame (aim_pn_classification_release_2026-10-02-chassis-frame.csv, sha256 9bb86a9b...) + 24 High-confidence missing billed parts + engine gasket sets, EVRV valves, antennas and DEF injectors on AIM labels + camera parts on the catalogue tree",
+    "recommendation": "APPROVAL_SUMMARY_2026-10-04.md; Jerome decisions 2026-10-04; MISSING_BILLED_REVIEW.md",
+    "notes": "Cut 2026-10-04 by claude from the approved 2026-10-02-chassis-frame. Change log aim_pn_classification_release_2026-10-04.changes.csv. One new AIM label: Intake Exhaust Emission > DEF System > DEF Injector (Jerome approved). Release id: 2026-10-04 not taken, date alone.",
     "approved_by": "Jerome",
-    "approved_on": "2026-10-02",
-    "approved_note": "Jerome approved in chat on 2026-10-02 ('all yes' on APPROVAL_SUMMARY_2026-10-02-candidate.md): cab mounting members to AIM Chassis Frame > Crossmember & Brackets > Bracket (catalogue Body structure); the 4 to-check parts as proposed, PCV kits 8981065790 / 8980023462 to be checked against the parts catalogue (EPC). sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-02-chassis-frame.gate.json): 18 checks pass, release_approved PENDING, 0 fail. Supersedes 2026-10-02 in the same edit; replaces the unapproved 2026-10-02-candidate."
+    "approved_on": "2026-10-04",
+    "approved_note": "Jerome approved in chat on 2026-10-04 (answer 'approve' to APPROVAL_SUMMARY_2026-10-04.md): 24 high-confidence billed parts added; engine gasket sets to Engine > Gasket & Sealing > Gasket; EVRV valves to EGR Component; antennas to Audio > Radio; rear cameras on the catalogue tree only; DEF injectors to the new AIM label Intake Exhaust Emission > DEF System > DEF Injector. Includes the parts whose description is only in the Japanese parts-code file (111 parts, EUR 60). sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-04.gate.json): 18 checks pass, release_approved PENDING, 0 fail. Supersedes 2026-10-02-chassis-frame in the same edit. Approval covers the release file only; AIM pages, the page-input export and deploy copies were not changed by it."
   }
 }
 ```

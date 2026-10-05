@@ -1,0 +1,233 @@
+{
+  "checks": {
+    "base file sha256 = 9bb86a9b... (approved, unchanged)": {
+      "ok": true,
+      "detail": "9bb86a9b4d89c5954cd6dd15fdc977db44e66cddaa15e3e70bd0285e3bf3e65b"
+    },
+    "register entry sha256 = file sha256": {
+      "ok": true,
+      "detail": "8aad884f49db1a49ab86faca571942d912196ce08f7734f38d5a04f035e18896"
+    },
+    "meta sha256 = file sha256": {
+      "ok": true,
+      "detail": ""
+    },
+    "gate report sha256 = file sha256": {
+      "ok": true,
+      "detail": ""
+    },
+    "register status PENDING_APPROVAL (not approved)": {
+      "ok": true,
+      "detail": ""
+    },
+    "only one entry is APPROVED and it is the base": {
+      "ok": true,
+      "detail": ""
+    },
+    "earlier register entries identical to git HEAD": {
+      "ok": true,
+      "detail": "5 entries"
+    },
+    "row count in register = file rows": {
+      "ok": true,
+      "detail": ""
+    },
+    "gate verdict PENDING_APPROVAL, 0 failed": {
+      "ok": true,
+      "detail": "passed 18 failed 0 pending ['release_approved']"
+    },
+    "same columns as base": {
+      "ok": true,
+      "detail": ""
+    },
+    "rows added = 24, none removed": {
+      "ok": true,
+      "detail": "rows 164919 -> 164943"
+    },
+    "parts that differ = parts in the change log (existing rows)": {
+      "ok": true,
+      "detail": "397 existing + 24 added = 421"
+    },
+    "every logged cell: before = base, after = new file": {
+      "ok": true,
+      "detail": "1276 cells; bad []"
+    },
+    "every differing cell is logged (no unlogged change)": {
+      "ok": true,
+      "detail": "1276 cells"
+    },
+    "untouched rows identical to base": {
+      "ok": true,
+      "detail": "164522 rows"
+    },
+    "untouched rows byte-identical (raw CSV lines)": {
+      "ok": true,
+      "detail": "164524 lines"
+    },
+    "raw bytes: all other lines identical and in the same order": {
+      "ok": true,
+      "detail": "164524 lines"
+    },
+    "1  24 High parts added with the file's labels, 10-digit keys": {
+      "ok": true,
+      "detail": "EUR 24,789.31"
+    },
+    "1  Medium / Low / 8974923852 not in the release": {
+      "ok": true,
+      "detail": ""
+    },
+    "2  engine gasket sets now Engine > Gasket & Sealing > Gasket; catalogue unchanged": {
+      "ok": true,
+      "detail": "209 changed; 5978 engine sets with no AIM family left; 17 TRANS OVERHAUL sets unchanged on Transmission > Bearings & Seals > Gasket"
+    },
+    "3  EVRV valves now EGR Component; catalogue unchanged": {
+      "ok": true,
+      "detail": "10 parts, EUR 31,855.82"
+    },
+    "4  antennas now Electrical > Audio > Radio (other existing labels kept); catalogue unchanged": {
+      "ok": true,
+      "detail": "95 antenna-list parts; kept with their own label: ['8980763330', '8981335712']"
+    },
+    "5  camera parts on Other engine now Other electrical (catalogue only); HARNESS; CAMERA and AEBS targets not moved": {
+      "ok": true,
+      "detail": "81 moved, EUR 78,132.39; 2 HARNESS; CAMERA stay; 2 AEBS targets stay"
+    },
+    "6  5 DEF injector parts on the new label DEF Injector; catalogue stays Injectors > Injector": {
+      "ok": true,
+      "detail": "5 parts, EUR 191,495.90 (3 injector assemblies EUR 191,363.70)"
+    },
+    "6  DEF Injector is the only new AIM label": {
+      "ok": true,
+      "detail": "{'Intake Exhaust Emission > DEF System > DEF Injector'}"
+    },
+    "catalogue tree: no new group or type (27 / 177)": {
+      "ok": true,
+      "detail": ""
+    },
+    "catalogue triples all exist in the base": {
+      "ok": true,
+      "detail": ""
+    },
+    "7  PCV kits, skid plates, rear modulator unchanged": {
+      "ok": true,
+      "detail": ""
+    },
+    "7  their siblings unchanged": {
+      "ok": true,
+      "detail": "40 sibling parts"
+    }
+  },
+  "parts_changed_existing": 397,
+  "columns_changed": {
+    "catalog_l2": 81,
+    "catalog_l3": 81,
+    "aim_source": 316,
+    "aim_l1_fixed": 294,
+    "aim_l2_fixed": 316,
+    "aim_l3_fixed": 107,
+    "catalog_changed_vs_master": 81
+  },
+  "added_eur": 24789.31,
+  "gasket_eur": 54374.5,
+  "groups": {
+    "D1_missing_billed_added": {
+      "parts": 24,
+      "eur": 24789.31
+    },
+    "D2_engine_gasket_sets": {
+      "parts": 209,
+      "eur": 54374.5,
+      "moves": [
+        {
+          "move": "Transmission > Bearings & Seals > Gasket  ->  Engine > Gasket & Sealing > Gasket",
+          "parts": 209,
+          "eur": 54374.5
+        }
+      ]
+    },
+    "D3_evrv_valves": {
+      "parts": 10,
+      "eur": 31855.82,
+      "moves": [
+        {
+          "move": "Steering > Control & Sensors > Valve  ->  Intake Exhaust Emission > EGR > EGR Component",
+          "parts": 7,
+          "eur": 31855.82
+        },
+        {
+          "move": " >  >   ->  Intake Exhaust Emission > EGR > EGR Component",
+          "parts": 2,
+          "eur": 0.0
+        },
+        {
+          "move": "Intake Exhaust Emission > Emission Control > Catalyst  ->  Intake Exhaust Emission > EGR > EGR Component",
+          "parts": 1,
+          "eur": 0.0
+        }
+      ]
+    },
+    "D4_antennas": {
+      "parts": 92,
+      "eur": 23502.84,
+      "moves": [
+        {
+          "move": "Electrical > Instruments > Instrument Cluster  ->  Electrical > Audio > Radio",
+          "parts": 21,
+          "eur": 23502.84
+        },
+        {
+          "move": " >  >   ->  Electrical > Audio > Radio",
+          "parts": 55,
+          "eur": 0.0
+        },
+        {
+          "move": "Unknown > Unknown > Unknown  ->  Electrical > Audio > Radio",
+          "parts": 16,
+          "eur": 0.0
+        }
+      ]
+    },
+    "D5_cameras_catalogue": {
+      "parts": 81,
+      "eur": 78132.39,
+      "moves": [
+        {
+          "move": "Repair parts > Engine parts > Other engine  ->  Repair parts > Electrical sensors > Other electrical",
+          "parts": 81,
+          "eur": 78132.39
+        }
+      ]
+    },
+    "D6_def_injectors": {
+      "parts": 5,
+      "eur": 191495.9,
+      "moves": [
+        {
+          "move": "Fuel System > Fuel Control > Injector  ->  Intake Exhaust Emission > DEF System > DEF Injector",
+          "parts": 5,
+          "eur": 191495.9
+        }
+      ]
+    }
+  },
+  "total_parts_changed": 421,
+  "total_eur": 404150.76,
+  "l12m_total_sales_fact_eur": 35212239.65,
+  "antenna_by_kind": {
+    "antenna": {
+      "parts": 82,
+      "eur": 23052.77,
+      "japanese_file_only": 52
+    },
+    "gps": {
+      "parts": 7,
+      "eur": 356.78,
+      "japanese_file_only": 2
+    },
+    "keyless": {
+      "parts": 3,
+      "eur": 93.29,
+      "japanese_file_only": 1
+    }
+  }
+}

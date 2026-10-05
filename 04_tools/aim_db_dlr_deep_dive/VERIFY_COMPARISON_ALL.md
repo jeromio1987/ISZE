@@ -1,6 +1,6 @@
 # Verification - AIM comparison, ALL
 
-Built 2026-10-02T13:12:16+00:00. 61 of 61 checks pass.
+Built 2026-10-04T05:46:55+00:00. 61 of 61 checks pass.
 
 ## All checks
 
@@ -48,9 +48,9 @@ Built 2026-10-02T13:12:16+00:00. 61 of 61 checks pass.
 | units reconcile to the sales-to-dealer rows: ITUK 2025-01..2025-12 | 224587.0 | 224587.0 | PASS | on the page 223,717.0 units + 870.0 units dropped by the scope rule (non-part lines and lubricants) = 224,587.0 source units |
 | units reconcile to the sales-to-dealer rows: IUK 2025-01..2025-12 | 248638.0 | 248638.0 | PASS | on the page 248,242.0 units + 396.0 units dropped by the scope rule (non-part lines and lubricants) = 248,638.0 source units. IUK reports part of its sales to dealer in half units; they are kept as reported rather than rounded, so the figures still sum to the source |
 | units reconcile to the sales-to-dealer rows: PORTUGAL 2025-01..2025-12 | 51363.0 | 51363.0 | PASS | on the page 50,750.0 units + 613.0 units dropped by the scope rule (non-part lines and lubricants) = 51,363.0 source units |
-| sales to dealer, period A: units not classified in AIM | reported, not a gate | 4.12% of 320,786 units | PASS | reported, not a gate |
+| sales to dealer, period A: units not classified in AIM | reported, not a gate | 4.11% of 320,786 units | PASS | reported, not a gate |
 | sales to dealer, period A: units with no price on the list | reported, not a gate | 1.59% of 320,786 units | PASS | reported, not a gate |
-| sales to dealer, period B: units not classified in AIM | reported, not a gate | 2.12% of 336,574 units | PASS | reported, not a gate |
+| sales to dealer, period B: units not classified in AIM | reported, not a gate | 2.11% of 336,574 units | PASS | reported, not a gate |
 | sales to dealer, period B: units with no price on the list | reported, not a gate | 1.11% of 336,574 units | PASS | reported, not a gate |
 | the growth and decline euro sums back to the movement between the two period totals | 757313.53 | 757313.52 | PASS | 2,411,643.49 up and -1,654,329.97 down across 20,048 priced part numbers. The right-hand figure is the difference between the two period totals read straight from the periods, so nothing is lost between the two ranked lists. The tolerance is five cents, which is the rounding the page carries at this size |
 | the drill conserves the euro: AIM level 1 group against its level 2 groups | 0.0 | 0.0 | PASS | opening a bar must not lose or double count any euro; the largest gap found across all groups is 0.0000 euro (in group 0) |
@@ -1075,20 +1075,21 @@ Built 2026-10-02T13:12:16+00:00. 61 of 61 checks pass.
 
 ```json
 {
-  "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\AIM_Master_PN_Categories_Figkey_release_2026-10-02-chassis-frame.csv",
+  "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\AIM_Master_PN_Categories_Figkey_release_2026-10-04.csv",
   "release": {
-    "release_id": "2026-10-02-chassis-frame",
-    "path": "aim_pn_classification_release_2026-10-02-chassis-frame.csv",
-    "sha256": "9bb86a9b4d89c5954cd6dd15fdc977db44e66cddaa15e3e70bd0285e3bf3e65b",
+    "release_id": "2026-10-04",
+    "path": "aim_pn_classification_release_2026-10-04.csv",
+    "sha256": "8aad884f49db1a49ab86faca571942d912196ce08f7734f38d5a04f035e18896",
     "status": "APPROVED",
-    "rows": 164919,
+    "rows": 164943,
     "rows_note": "data rows, header excluded (same as 2026-10-02)",
-    "source": "release 2026-10-02 (aim_pn_classification_release_2026-10-02.csv, sha256 0ac91379...) + next_release_proposal_2026-10-02.csv (42 parts) + body filing (cab mounting members on Chassis Frame) + 2 wrong-in-both fixes",
-    "recommendation": "APPROVAL_SUMMARY_2026-10-02-candidate.md; Jerome decisions 2026-10-02 (cab mounting members to Chassis Frame; 4 to-check parts as proposed)",
-    "notes": "Cut 2026-10-02 by claude-opus: the 2026-10-02-candidate with Jerome's decision (1) applied (142 cab mounting member rows differ, AIM columns only). Change log aim_pn_classification_release_2026-10-02-chassis-frame.changes.csv; body list aim_pn_classification_release_2026-10-02-chassis-frame.body_filing.csv. Release id: the candidate entry's sha256 is its identity and its file is never overwritten, so a new id in the date + hyphen suffix form; no version label. PCV kits 8981065790 / 8980023462: check against the parts catalogue (EPC).",
+    "base_release": "2026-10-02-chassis-frame",
+    "source": "release 2026-10-02-chassis-frame (aim_pn_classification_release_2026-10-02-chassis-frame.csv, sha256 9bb86a9b...) + 24 High-confidence missing billed parts + engine gasket sets, EVRV valves, antennas and DEF injectors on AIM labels + camera parts on the catalogue tree",
+    "recommendation": "APPROVAL_SUMMARY_2026-10-04.md; Jerome decisions 2026-10-04; MISSING_BILLED_REVIEW.md",
+    "notes": "Cut 2026-10-04 by claude from the approved 2026-10-02-chassis-frame. Change log aim_pn_classification_release_2026-10-04.changes.csv. One new AIM label: Intake Exhaust Emission > DEF System > DEF Injector (Jerome approved). Release id: 2026-10-04 not taken, date alone.",
     "approved_by": "Jerome",
-    "approved_on": "2026-10-02",
-    "approved_note": "Jerome approved in chat on 2026-10-02 ('all yes' on APPROVAL_SUMMARY_2026-10-02-candidate.md): cab mounting members to AIM Chassis Frame > Crossmember & Brackets > Bracket (catalogue Body structure); the 4 to-check parts as proposed, PCV kits 8981065790 / 8980023462 to be checked against the parts catalogue (EPC). sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-02-chassis-frame.gate.json): 18 checks pass, release_approved PENDING, 0 fail. Supersedes 2026-10-02 in the same edit; replaces the unapproved 2026-10-02-candidate."
+    "approved_on": "2026-10-04",
+    "approved_note": "Jerome approved in chat on 2026-10-04 (answer 'approve' to APPROVAL_SUMMARY_2026-10-04.md): 24 high-confidence billed parts added; engine gasket sets to Engine > Gasket & Sealing > Gasket; EVRV valves to EGR Component; antennas to Audio > Radio; rear cameras on the catalogue tree only; DEF injectors to the new AIM label Intake Exhaust Emission > DEF System > DEF Injector. Includes the parts whose description is only in the Japanese parts-code file (111 parts, EUR 60). sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-04.gate.json): 18 checks pass, release_approved PENDING, 0 fail. Supersedes 2026-10-02-chassis-frame in the same edit. Approval covers the release file only; AIM pages, the page-input export and deploy copies were not changed by it."
   }
 }
 ```
