@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-05T19:43:37Z",
+  "written_at": "2026-10-05T20:00:46Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 33,
-    "not started": 60,
+    "technically verified": 34,
+    "not started": 59,
     "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 36,
+  "overlay_applied": 37,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -613,8 +613,12 @@
       "existing_finding": "F01, F09",
       "can_start_after": "BASE-03",
       "integrate_after": "UX-01, FIN-07, FIN-08",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/ux_02_alternative.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/scenario.js:127 (the selected alternative no longer writes its own proposed price into the form) -> UX-02 E1: selecting an alternative populates the manual form with its exact inputs and both results fails; restored -> passes",
+        "mutation src/ui/app.js:1181 (changing objective re-selects the top ranked alternative) -> UX-02 E2: changing objective does not erase edits or select a different scenario automatically fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
