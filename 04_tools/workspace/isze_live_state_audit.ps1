@@ -92,6 +92,7 @@ try {
           Action     = ($_.'Task To Run').Trim()
           LastResult = ($_.'Last Result').Trim()
           NextRun    = ($_.'Next Run Time').Trim()
+          State      = ($_.'Scheduled Task State').Trim()
         }
       }
   )
@@ -182,6 +183,13 @@ foreach ($row in ($liveStateSection -split "`n")) {
 # false HIGH alarms and hides real failures. States are LOW/informational.
 foreach ($t in $liveTasks) {
   if (-not (Test-InScope $t.Name)) { continue }
+  $regRow = @($liveStateSection -split "`n" | Where-Object { $_ -match ('^\|\s*`' + [regex]::Escape($t.Name) + '`\s*\|') }) | Select-Object -First 1
+  $regState = if ($regRow) { (($regRow.Trim().Trim('|')) -split '\|')[1].Trim() } else { '' }
+  if ($t.State -eq 'Disabled') {
+    if ($regState -ne 'Disabled') { Add-Finding 'MEDIUM' 'register' ("{0} is disabled but its register row says '{1}'" -f $t.Name, $regState) 'Update the register row, or re-enable the task.' }
+    continue
+  }
+  if ($regState -eq 'Disabled') { Add-Finding 'MEDIUM' 'register' ("{0} is enabled but its register row says Disabled" -f $t.Name) 'Disable the task, or correct the register row.' }
   $code = $t.LastResult
   if ($code -eq '0' -or -not $code) { continue }
   if ($code -eq '267009') {
@@ -209,7 +217,7 @@ foreach ($t in $liveTasks) {
 $registeredSkills = @{}
 foreach ($row in ($RegisterText -split "`n")) {
   if ($row -notmatch '^\|\s*`') { continue }
-  $mm = [regex]::Match($row, '^\|\s*`([^`]+)`\s*\|\s*(Active|Superseded|Retired)\b')
+  $mm = [regex]::Match($row, '^\|\s*`([^`]+)`\s*\|\s*(Active|Paused|Superseded|Retired)\b')
   if (-not $mm.Success) { continue }
   $registeredSkills[$mm.Groups[1].Value.Trim()] = $mm.Groups[2].Value.Trim()
 }
@@ -232,7 +240,7 @@ if (Test-Path $SkillRoot) {
       Add-Finding 'LOW' 'skills' `
         ("Job folder {0} exists but is not in the register" -f $dir) `
         ("Add a row, or delete the folder.")
-    } elseif ($registeredSkills[$dir] -ne 'Active') {
+    } elseif ($registeredSkills[$dir] -notin @('Active', 'Paused')) {
       Add-Finding 'LOW' 'skills' `
         ("Job folder {0} still on disk while the register marks it {1}" -f $dir, $registeredSkills[$dir]) `
         ("Delete the folder so it cannot be scheduled by accident.")
