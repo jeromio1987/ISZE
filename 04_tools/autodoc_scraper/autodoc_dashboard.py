@@ -201,6 +201,9 @@ def load_all(price_floor: float = 3.0) -> pd.DataFrame:
         if "Status" in df.columns:
             df = df.rename(columns={"Status": f"{key}_status"})
             keep += [f"{key}_status"]
+        if "scrape_error" in df.columns:
+            df = df.rename(columns={"scrape_error": f"{key}_scrape_error"})
+            keep += [f"{key}_scrape_error"]
         # Preserve AD_UK ResultCount + AllPrices for scoring (range coverage, price consistency)
         if key == "AD_UK":
             for extra in ("Autodoc_ResultCount", "Autodoc_AllPrices_GBP"):

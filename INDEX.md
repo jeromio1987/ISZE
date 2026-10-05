@@ -75,9 +75,11 @@ Everything else lives in numbered folders below.
 | **Exec aftersales paper (shared HTML)** | `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html` + `OPEN_ISZE_Exec_Aftersales_Paper.cmd` · brief `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md` · retro `00_docs/REVIEW_EXEC_AFTERSALES_PAPER_20260915.md` · gate `02_dashboards/_build/verify_exec_aftersales_paper.py` |
 | **Parts pricing policy paper (consolidated 2 Oct 2026)** | `02_dashboards/pricing/ISZE_Pricing_Policy_Paper_2026-10-02.html` + `.pdf` + `OPEN_ISZE_Pricing_Policy_Paper_2026-10-02.cmd` · builder `02_dashboards/pricing/_build/build_pricing_policy_paper_20261002.py` · older papers/decks archived in `01_data/92_archive/pricing_papers_superseded_2026-10-02/` |
 | **IAM shop vs billed (PN scatter)** | `02_dashboards/pricing/ISZE_IAM_Price_vs_Billed_PN.html` + `OPEN_ISZE_IAM_Price_vs_Billed_PN.cmd` |
+| **Decision pack (one sitting)** | `00_docs/DECISION_PACK_20260914.md` — recommended ticks; nothing gated is applied until Jerome answers |
 | Versioned filenames | `00_docs/CANONICAL.md` |
 | **Excel pre-delivery check** | `00_docs/EXCEL_PRE_DELIVERY_CHECK.md` |
 | Headline metrics | `01_data/00_derived/metrics_snapshot.json` + `FACTS.md` |
+| **Critical BI / which KPI to quote** | `00_docs/ISZE_BI_FRAMEWORK.md` — FY first, euros first; formulas stay in the metric dictionary |
 | Workspace root | `$env:ISZE_ROOT` (see `paths.yaml`) |
 | PRISM | `03_analytics/Isuzu/prism/run_prism.ps1` (**8503**, MD-safe) · `run_prism_internal.ps1` (extra tabs) |
 | Human onboarding | `00_docs/HUMAN_ONBOARDING.md` |

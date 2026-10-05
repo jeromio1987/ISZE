@@ -115,6 +115,54 @@
 ### Added (2026-09-14) — Exec aftersales paper prompt (brief only)
 - Paste-ready brief `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md`: 10–20 page shared HTML + evidence-backed SWOT. Phase 0 questions live in the prompt **with locked defaults** so overnight/autonomous can run without pinging Jerome. HTML only after a later session’s current message says rebuild/ship. Wired from `ROUTING.yaml` task `exec_sales_paper`, `MAP_REGISTRY.yaml` `roadmap_specs`, `INDEX.md`, `REFERENCE.md`.
 - Not a new programme item. Does not start the paper. No KPI or dashboard change.
+### Added (2026-08-27) — Lubricant-SKU audit + two workspace guards
+- **Lubricant audit** `01_data/91_build/audit_lubricant_skus.py` → `lubricant_sku_audit.json` + `.meta.json` + `lubricant_sku_audit_uncovered.csv` + note `LUBRICANT_SKU_AUDIT_20260827.md`. Closes the standing "wider lubricant-SKU audit still advisable" note on integrity **flag B** (open since 2026-05-28).
+  - The GPS exclusion keys on part-number prefix `55004*`/`55007*` (Shell Rimula). Description-based sweep finds **15 further fluid SKUs / €400,159** it cannot see — the **BESCO / ISUZU ATF** genuine-fluid family. Largest: `1884058030` BESCO CLEAN SUPER 200L €189,804.
+  - **The Israel assumption breaks:** these sit on **13 distributors**, and the largest exposure is **ARMENIA €189,804**, ahead of UMI €67,013 and ITUK €58,454.
+  - **PMS capture is clean** — 0 of the 15 are in `parts_catalog_dimension`, so only the GPS parts base is affected. No GPS figure computed or restated; extending the rule is a pipeline change and a decision.
+- **Found on the way — the GPS-auditor skill's "known inconsistency" is stale.** It states CY2025 carries no transport/lubricants/CR while 2023–24 do, and instructs agents to caveat multi-year GPS trends with "CY2024 overstated by ~€1.4M". On the current parquet all four years carry these items (CY2025: lubricants €524,096, transport €343,187, CR/RE €509,348). The asymmetry was real in June 2026; the parquet has been rebuilt since. Applying that caveat today misstates the trend in the opposite direction.
+- **Also found:** `sold_to` carries two representations of the same distributor (numeric `1797.0` and `UNIVERSAL MOTORS ISRAEL LTD`), which splits any group-by on that column. Join on `sold_to_sap` via `distributor_dimension.csv`.
+
+### Added (2026-08-27) — Workspace map verifier
+- **`04_tools/workspace/verify_workspace_maps.py`** — checks that every path in `ROUTING.yaml` and `MAP_REGISTRY.yaml` resolves, that relative links in the bootstrap + roadmap docs resolve, and that every Tier 0 `01_data/` ignore rule has a `02_dashboards/Data/` mirror rule. Exits non-zero, so it can gate CI. Gitignored-and-absent paths are reported as INFO, not failure — they are real on the workspace and expected missing in a clone.
+- **First run found two dead routes:** `memory_topic` mapped `lubricants` → `05_memory/projects/lubricants.md` and `action_fy2026` → `action-plan-fy2026.md`; neither file exists anywhere, including the archive. `lubricants` now points at `aftermarket-intelligence.md` (where the content actually lives); the FY2026 entry is dropped — it retired with the fiscal year. `REFERENCE.md` corrected to match.
+- Now green: 107 routing paths, 49 registry paths, 68 links, 6 mirror rules.
+
+### Added (2026-08-27) — Derived sidecar drift check
+- **`01_data/91_build/verify_derived_meta.py`** — re-tests the headline numbers `00_derived/*.meta.json` sidecars claim against their partner data files (10 declared checks over supersession, PR00 gap, lubricant and fig-key artefacts). Exits non-zero on drift; verified with a negative test.
+- **Checks are declared, never guessed.** Sidecars legitimately mix current measurements with historical context — `no_pr00_gap_cy2025_ranked` carries both `remaining_pn` (31, the CSV) and `pn_count` (251, the original 2026-08-01 measurement) — so a checker that assumed every count describes the partner file would fire on the second and be wrong.
+
+### Added (2026-08-27) — Fig-key vs PR00 audit; two roadmap facts corrected
+- **New audit** `01_data/91_build/audit_fig_key_vs_pr00.py` (read-only) → `00_derived/fig_key_pr00_audit.json` + `fig_key_pr00_audit.meta.json` + `fig_key_pr00_disagreements.csv` (1,618 rows) + note `FIG_KEY_PR00_AUDIT_20260827.md`. Findings JSON carries **no timestamp** — re-running is byte-identical unless a number moved, so a diff there is signal; the run time lives in the `.meta.json` sidecar per the `00_derived` convention.
+- **Finding 1:** 1,841 of 3,778 blank `fig_key` in `parts_catalog_dimension` are fillable from the SAP `fig_no`/`key_no` already on disk — coverage **97.71% → 98.83%** on a rebuild, no new data needed.
+- **Finding 2:** where both carry a figure, they agree on 98.99%; **1,618 PNs disagree**, supersession ruled out explicitly (1 of 1,619 explained), 1,565 of them on rows the catalogue says it took *from* PR00. Vintage, not corruption — the dimension predates `Price_file_PR00_IE40_20260810.xlsx`, and `gps_v2_fig_key.md` already requires a re-run when a new IE40 lands. `sales_fact.fig_key` joins from this dimension, so the stale figure propagates.
+- **No rebuild performed** — that needs `build_pr00_classification.py` + `build_fig_key_dimension.py` + `run_pipeline_and_verify.ps1` on the workspace.
+- **Roadmap corrected (2026-08-26 reorganisation was wrong on two points):**
+  - Tender P0 said "8/29 countries live, wire ES + IT + DE". Per `_source_health.json` (20 sources OK) and `_COUNTRY_TENDER_PORTALS_MAP.md`, it is **16/29 LIVE**; IT PNCP and DE oeffentlichevergabe were already wired 2026-08-25. The real P0 is **ES PLACSP egress** — fetcher written, `CODE_READY`, blocked by WAF on the runner. The 8/29 figure came from `_OPEN_BACKLOG_ARRANGED.md`, a snapshot from earlier the same day.
+  - Fig-key item said "bulk PN→fig key from SAP IE40 PR00 column" as an open build. The column exists at 99.7%; it is a rebuild, now sized as above.
+### Added (2026-09-14) — Critical BI framework; leftover no-list recut to FY
+- `00_docs/ISZE_BI_FRAMEWORK.md` — which KPI to quote: FY first, euros first, official Power BI then GPS then mix then list reach / %GM. Sales-to-dealer pieces are not a KPI.
+- Leftover billed with no list recut to **FY2026 (1 Apr 2025 – 31 Mar 2026): €67,318.49 / 21 parts**. Calendar-2025 €67,182.04 / 24 parts is do not quote. No piece columns. Shell `5500*` still parked.
+- GPS/PBI FY number is March close year; billing `fiscal_year` integer is April start year (`modules/fiscal.py`).
+
+### Added (2026-09-14) — Catalogue honesty + scraper V2 (gated productize not applied)
+- Fig-key: filled **158** empty `fig_key` on existing `pr00_classification.csv` from IE40 parquet; catalog rebuild **161,325 / 164,969**. `fig_key_pn_overrides.csv` header only (EPC JSON is edition/family; Snap-on blocks bulk BVP).
+- EPC validator: `--epc` optional; missing export → `pn_supersession_epc_validation.meta.json` **`BLOCKED_NO_EPC_EXPORT`**. Never MATCH. IE40 `newest_pn` labelled **`INTERNAL_IE40_CHECK`** (925/925 agrees). Map CSV not rewritten.
+- Residual 24 PN / €67,182.04 ZPR1-path listed from `no_pr00_gap_remaining_zpr1_check_20260812.csv`. `5500*` Shell lubricants parked.
+- Scraper V2: tender `relevance_score_1to5` + Relevance Score export (no drop); `scrape_error` on KS/Mekonomen/category crawlers; RSS sanitize/recover; UK FaT Retry-After; Lidl `a10051271` 404 / search URL live.
+- Gated productize (P4 4.10 / G1 / Mode A leakage / Book B alloc): **stopped, not applied**.
+
+### Added (2026-09-14) — Decision pack (ticks not applied)
+- [`00_docs/DECISION_PACK_20260914.md`](00_docs/DECISION_PACK_20260914.md) — one sitting for B5/P4, list-to-pocket Mode A, G1, Book B, LLM, sell-out files. Recommended defaults written; **not applied**.
+- Hub §2 and `DECISIONS.md` point at the pack. Gated productize waits on ticks.
+
+### Changed (2026-09-14) — ES PLACSP national feed LIVE this runner
+- Atom syndication HTTP 200 (~772 KB, not WAF). Keyword matches **2** / Isuzu-gated **0** in the rolling Atom window. Health `Spain PLACSP` = OK. National LIVE **17/29**.
+- Hub §1 item 4 and `roadmaps/scrapers.md` were stale (“wire ES/IT/DE”, “8/29”). IT/DE were already LIVE 2026-08-25.
+- No `tender_data.json` publish. Next DARK portals need login/recaptcha/ministry-500 — no new key ask.
+- `action_ledger_decisions.csv`: **5 TRIAGED** rows from top-15 € (not ACTIONED; owner blank). `REVIEW` is not a legal ledger state.
+- Crosswalk: `01_data/00_derived/monday_pn_opportunity_crosswalk_20260914.csv` (40/40 Monday PNs). Command Center HTML not rebuilt.
+- Rebuilt Mode B `02_dashboards/ops/ISZE_Action_Ledger.html` (verify OK, 22 bars). Outcomes still 0.
 
 ### Changed (2026-08-26) — Roadmap reorganised: one queue, one closed list
 - **`00_docs/ISZE_ROADMAP.md` rewritten.** The old "Build now" table mixed ~15 shipped/closed items with ~8 open ones and carried multi-paragraph rationale inside table cells. Now six sections: **1 Open queue** (14 items, each with the single thing that unblocks it), **2 Waiting on Jerome** (13 decisions, sourced from the Aftermarket BI Tier B list + AI-sales gates), **3 Live now**, **4 Shipped** (dated one-liners), **5 Closed — do not reopen**, **6 Domain roadmaps**. Rationale stays in `DECISIONS.md`; the hub is a queue, not an archive.

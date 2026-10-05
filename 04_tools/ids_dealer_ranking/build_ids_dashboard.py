@@ -22,6 +22,24 @@ from ids_report_extract import build_dashboard_payload
 
 _TEMPLATE = Path(__file__).resolve().parent / "ids_dashboard_template.html"
 _DASH_MIRROR = ISZE_ROOT / "02_dashboards" / "ids" / "IDS_2026_dealer_compare.html"
+_LEAFLET_CSS = ISZE_ROOT / "02_dashboards" / "_ui" / "leaflet.css"
+_LEAFLET_JS = ISZE_ROOT / "02_dashboards" / "_ui" / "leaflet.js"
+
+
+def _read_ui_asset(path: Path) -> str:
+    if not path.is_file():
+        raise FileNotFoundError(f"Required dashboard asset missing: {path}")
+    return path.read_text(encoding="utf-8")
+
+
+def leaflet_css_block() -> str:
+    css = _read_ui_asset(_LEAFLET_CSS).replace("</style", "<\\/style")
+    return f'<style id="ids-leaflet-css">\n{css}\n</style>'
+
+
+def leaflet_js_block() -> str:
+    js = _read_ui_asset(_LEAFLET_JS).replace("</script", "<\\/script")
+    return f'<script id="ids-leaflet-js">\n{js}\n</script>'
 
 
 def render_html(payload: dict, *, built_at: str) -> str:
@@ -30,6 +48,8 @@ def render_html(payload: dict, *, built_at: str) -> str:
     return (
         template.replace("__BUILT_AT__", built_at)
         .replace("__DATA_JSON__", blob)
+        .replace("__LEAFLET_CSS_BLOCK__", leaflet_css_block())
+        .replace("__LEAFLET_JS_BLOCK__", leaflet_js_block())
     )
 
 

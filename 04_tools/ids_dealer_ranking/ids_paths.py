@@ -9,10 +9,15 @@ _WORKSPACE = Path(__file__).resolve().parents[1] / "workspace"
 if str(_WORKSPACE) not in sys.path:
     sys.path.insert(0, str(_WORKSPACE))
 
-from isze_paths import INBOX_DIR, ISZE_ROOT  # noqa: E402
+from isze_paths import DATA_ROOT as WORKSPACE_DATA_ROOT, INBOX_DIR, ISZE_ROOT  # noqa: E402
 
 REPO = ISZE_ROOT
-DATA_ROOT = INBOX_DIR / "IDS_2026"
+_CANONICAL_DATA_ROOT = WORKSPACE_DATA_ROOT / "08_Distributor" / "IDS_2026"
+_INBOX_DATA_ROOT = INBOX_DIR / "IDS_2026"
+
+# IDS moved out of the inbox on 2026-08-25. Keep the inbox fallback for older
+# local workspaces, but build from the sorted distributor folder when present.
+DATA_ROOT = _CANONICAL_DATA_ROOT if _CANONICAL_DATA_ROOT.is_dir() else _INBOX_DATA_ROOT
 RANKINGS_DIR = DATA_ROOT / "rankings"
 IDS_REPORTS_DIR = DATA_ROOT / "reports"
 IDS_RESULT_REPORTS_DIR = IDS_REPORTS_DIR / "evaluation_result"

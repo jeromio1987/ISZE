@@ -43,7 +43,7 @@ CSV_FIELDS = [
     "Search_Query", "Search_URL",
     "Result_Count", "Min_Price_GBP",
     "Brands",
-    "Scraped_At", "Status", "Notes",
+    "Scraped_At", "Status", "Notes", "scrape_error",
 ]
 
 # Vehicle models to search against
@@ -236,6 +236,7 @@ def run(delay_min: float, delay_max: float, headless: bool) -> None:
                 "Scraped_At":   ts,
                 "Status":       "error",
                 "Notes":        "",
+                "scrape_error": "",
             }
 
             try:
@@ -256,18 +257,21 @@ def run(delay_min: float, delay_max: float, headless: bool) -> None:
                     out["Min_Price_GBP"] = f"{min(parsed['prices']):.2f}"
                 out["Brands"] = "|".join(parsed["brands"][:10])
                 out["Status"] = "ok" if parsed["result_count"] > 0 else "no_results"
+                out["scrape_error"] = ""
 
                 print(f"count={parsed['result_count']}  min_GBP={out['Min_Price_GBP'] or '-'}")
 
             except PwTimeout:
                 out["Status"] = "timeout"
                 out["Notes"]  = "Page load timeout"
+                out["scrape_error"] = "timeout"
                 errors += 1
                 print("timeout")
 
             except Exception as exc:
                 out["Status"] = "error"
                 out["Notes"]  = str(exc)[:120]
+                out["scrape_error"] = str(exc)[:240]
                 errors += 1
                 print(f"ERROR: {str(exc)[:60]}")
 

@@ -18,7 +18,8 @@ KS_RESULTS = ISZE_ROOT / "04_tools" / "autodoc_scraper" / "ks_results.csv"
 KS_RAW_DIR = ISZE_ROOT / "01_data" / "01_Pricing" / "_raw"
 SIM_PARQUET = DERIVED / "pricing_sim_pr00_l12m.parquet"
 
-# Jerome pricing language — reference sell-out = PR00 × 1.785
+# Chat / UI: sales to dealer and %GM. Code field names stay.
+# STREET_FACTOR is a markup gross-up (list × 1.40 × 1.275). Do not brief Jerome in this factor.
 STREET_FACTOR = 1.785
 GBP_EUR = 1.17  # diagnostic only; label in meta
 
@@ -233,10 +234,12 @@ def load_uti_sellout_monthly() -> pd.DataFrame:
 def load_sellout_network_monthly(db: str, year: int = YEAR) -> pd.DataFrame:
     if db == "ITUK":
         net, _ = load_ituk_sellout_monthly(year)
-        return net
-    if db == "UTI":
+        if not net.empty:
+            return net
+    elif db == "UTI":
         out = load_uti_sellout_monthly()
-        return out if not out.empty else _empty_sell_network_monthly(db)
+        if not out.empty:
+            return out
     out = load_sellout_long_monthly(db, year)
     return out if not out.empty else _empty_sell_network_monthly(db)
 
@@ -254,14 +257,16 @@ def load_sellout_network_annual(db: str, year: int = YEAR) -> pd.DataFrame:
     if db == "ITUK":
         raw = load_ituk_dealer_sales(year)
         if raw.empty:
-            return pd.DataFrame()
-        g = aggregate_pn(raw, "qty_year").rename(columns={"qty": "sellout_qty"})
+            g = load_sellout_long_pn(db, year, DERIVED_DIR).rename(columns={"qty_year": "sellout_qty"})
+        else:
+            g = aggregate_pn(raw, "qty_year").rename(columns={"qty": "sellout_qty"})
     elif db == "UTI":
         path = RAW_DEALER / "UTI" / "UTIPartSales_2025-12_YTD.xlsx"
         uti, _ = load_uti_part_sales(path if path.exists() else None)
         if uti.empty:
-            return pd.DataFrame()
-        g = uti.groupby("part_number", as_index=False)["qty_ytd"].sum().rename(columns={"qty_ytd": "sellout_qty"})
+            g = load_sellout_long_pn(db, year, DERIVED_DIR).rename(columns={"qty_year": "sellout_qty"})
+        else:
+            g = uti.groupby("part_number", as_index=False)["qty_ytd"].sum().rename(columns={"qty_ytd": "sellout_qty"})
     else:
         g = load_sellout_long_pn(db, year, DERIVED_DIR).rename(columns={"qty_year": "sellout_qty"})
     if g.empty:
@@ -284,6 +289,11 @@ def load_billing_annual(dbs: tuple[str, ...] = NETWORK_DBS, year: int = YEAR) ->
 
 
 def classify_pipeline(bill_qty: float, sellout_qty: float) -> str:
+    """Warehouse timing, not lost sales.
+
+    Sales to dealer above our bill = destock (they already had pieces).
+    Sales to dealer below our bill = restock. Code names stay for existing files.
+    """
     if bill_qty <= 0 and sellout_qty > 0:
         return "leakage_no_bill"
     if sellout_qty <= 0 and bill_qty > 0:

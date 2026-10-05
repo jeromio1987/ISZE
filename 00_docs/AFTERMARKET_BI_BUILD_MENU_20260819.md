@@ -1,5 +1,7 @@
 # Aftermarket BI — build menu (internal · 2026-08-19)
 
+**KPI filter (2026-09-14):** [`ISZE_BI_FRAMEWORK.md`](ISZE_BI_FRAMEWORK.md) is which numbers to quote (FY first, euros first). This file is the **build list**, not the KPI stack.
+
 **Pipeline:** green `_verification_report.json` (108/0) · safe to build on derived.  
 **Commercial stack:** `01_data/01_Pricing/DB_DLR_COMMERCIAL_STACK.md`  
 **Book B:** `01_data/01_Pricing/BOOK_B_CONCLUSIONS_20260819.md` · **no alloc** unless explicit.

@@ -72,6 +72,16 @@ def check_pbi_align(profile: dict, fails: list[str]) -> None:
     if not months or not sales or len(months) != len(sales):
         fails.append("pbi.months / pbi.sales missing or length mismatch")
         return
+    # Incomplete cut (budget/prior missing) → official slide is skipped.
+    # Do not hard-fail SAP vs a partial screenshot.
+    pbi_complete = bool(
+        pbi.get("budget")
+        and pbi.get("prev_year")
+        and all(v is not None for k in ("sales", "budget", "prev_year") for v in pbi.get(k, []))
+        and len(pbi["sales"]) == len(pbi["months"]) == len(pbi["budget"]) == len(pbi["prev_year"])
+    )
+    if not pbi_complete:
+        return
     try:
         df = C.load_sales(profile)
     except Exception as e:
