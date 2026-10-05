@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-05T20:15:09Z",
+  "written_at": "2026-10-05T20:23:30Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 36,
-    "not started": 57,
+    "technically verified": 37,
+    "not started": 56,
     "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 39,
+  "overlay_applied": 40,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -387,8 +387,12 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "DATA-01",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/data_02_entities.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/manifest.js:159 (the entity identifier leaves out the country) -> DATA-02 E1: cross-country and shared-name fixtures cannot silently merge distinct entities fails; restored -> passes",
+        "mutation src/data/manifest.js:216 (a site link with no source counts toward a split) -> DATA-02 E2: an account covering several sites stays combined until a genuine split is supported, and national plus included dealer records are not added fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
