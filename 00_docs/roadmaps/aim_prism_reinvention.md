@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-08-26
 **Hub:** [`ISZE_ROADMAP.md`](../ISZE_ROADMAP.md)  
-**Prompts:** [`AIM_PRISM_REINVENTION_PROMPTS.md`](../AIM_PRISM_REINVENTION_PROMPTS.md)  
+**Prompts:** [`AIM_PRISM_REINVENTION_PROMPTS.md`](../../90_archive/00_docs_2026-10-05/AIM_PRISM_REINVENTION_PROMPTS.md)  
 **Decisions:** `DECISIONS.md` 2026-08-18 (Prompt 1 null · Prompt 2 surface + hazard null · capture-trajectory fix)
 
 **Status:** both research prompts are answered. This file is the working programme. Do not invent a new 0–100.
