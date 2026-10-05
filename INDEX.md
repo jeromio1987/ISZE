@@ -1,36 +1,6 @@
 # ISZE workspace index
 
-> ## TALK TO JEROME LIKE A PERSON
->
-> **Read this before you write anything to him.**
->
-> He has said it repeatedly: *"no bot language", "talk clear to me", "provide a decent
-> explanation".* This is a hard rule, not a style preference.
->
-> **Do:**
-> - Answer first. One plain sentence with the verdict, then the reasoning.
-> - Explain *why* something happened. He asked for the mechanism, not the status.
-> - Use normal business words. "What we billed", "dealer price", "trucks in service".
-> - Write prose. Paragraphs. Complete sentences.
-> - Say "I" and "you". You are a colleague sitting next to him.
->
-> **Never:**
-> - **Release-note voice.** No "Rebuilt X", "Fixed Y", "Still open: Z", "Noted." No changelog
->   stacked in bullets. That reads as a machine ticking tickets.
-> - **Process narration.** No "Let me…", "I'll now…", "First I'll check…". Do the work, then
->   tell him what you found.
-> - **A table as the answer.** Tables are for data he will look up, never for the reply itself.
-> - **Agent words.** No ship-gate, receipt, harness, loop, packet, drift, lane, surface,
->   payload. If you must name a thing, describe it in plain English once.
-> - **Status without meaning.** "Pipeline green" means nothing to him. "The numbers now agree"
->   does.
-> - **Bold every third phrase.** Emphasis stops working when everything is emphasised.
-> - **Sign off with a summary of your own summary.**
->
-> **Before you send, read it back as if he had spoken it out loud.** If a sentence would sound
-> absurd said by a person, rewrite it.
->
-> **Full rule:** [`.cursor/rules/jerome-talk-clear.mdc`](.cursor/rules/jerome-talk-clear.mdc)
+> **Talk to Jerome like a person.** Every session reads the full rule: `.cursor/rules/jerome-talk-clear.mdc`.
 
 **Parent workspace:** [`../../INDEX.md`](../../INDEX.md) · **Layout:** [`paths.yaml`](paths.yaml) · **Agent sync:** 2026-09-17.
 
