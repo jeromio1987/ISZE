@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-05T21:49:33Z",
+  "written_at": "2026-10-05T21:59:21Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,14 +12,23 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 42,
-    "not started": 51,
+    "technically verified": 43,
+    "not started": 50,
     "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 45,
+  "overlay_applied": 46,
   "overlay_unknown_ids": [],
   "open_findings": [
+    {
+      "id": "UX07-NARROW-SHELL",
+      "severity": "medium",
+      "title": "UX-07's narrow-screen requirement cannot be met from src/ui/app.js alone",
+      "finding": "UX-07 evidence 2 needs the agreed small-screen layout to keep prices, units, scope and limitations readable with no hidden essential controls. The only small-screen rules for this component are the two @media(max-width:800px) blocks in reference/ISZE_AIM_Pricing_Decisions_v03_FROZEN.html (lines 6 and 13), which tools/build.py reads as the retained shell. src/ui/app.js contains no @media query (0 occurrences), and UX-07 may change only src/ui/app.js. The frozen reference was not edited.",
+      "impact": "UX-07 stays not verified: evidence 1 (keyboard) is largely met in app.js, but evidence 2 (the painted narrow layout) cannot be met or measured without the shell stylesheet. Wave 3b records technically verified 43 (not 44), with UX-07 blocked and UX-08 finished in the same PR.",
+      "handling": "Give UX-07 access to the shell, or move the small-screen rules out of the frozen reference into a maintained shell template that tools/build.py assembles (as it already assembles the src/ modules). Then add a headless-Chrome narrow-width test in the ACCEPT-02 pattern.",
+      "owner": "integration owner (tools/build.py and the shell template)"
+    },
     {
       "id": "F08-IDENTITY",
       "severity": "medium",
@@ -723,8 +732,12 @@
       "existing_finding": "F01, F12",
       "can_start_after": "BASE-03",
       "integrate_after": "UX-02, UX-03, SAFE-04",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/ux_08_one_decision.test.mjs -> 2 pass, 0 fail",
+        "mutation src/ui/app.js:1256 (the known U4 defect returns: an empty next-update date is sent as '' instead of null, so the second save of a case with no due date is refused) -> UX-08 E1: select, edit, save, export, restart and reopen preserves the same decision fails (a case with no next-update date could not be saved a second time: next_update_due must be YYYY-MM-DD or null); restored -> passes",
+        "mutation src/data/cases.js:448 (the migration stops naming the versions the older record lacks: VERSION_FIELDS.filter(...) -> []) -> UX-08 E2: older local notes migrate with an explicit legacy basis, and no field is invented fails (the migration does not name which versions are missing); restored -> passes"
+      ],
       "blockers": []
     },
     {
