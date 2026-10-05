@@ -140,6 +140,26 @@ function fieldIssues(){
   };
 }
 
+/* UX-04. A sensitivity view over the SAME one engine. Each row is one engine
+   call with its own stated inputs; a point whose profit is suppressed by a
+   missing cost prints the reason in place of a figure rather than a zero. The
+   numeric table is always rendered, so the chart is never the only carrier. */
+function sensitivityView(){
+  const sens=store.sensitivity(state.caseId);
+  const row=p=>`<tr data-sens="${esc(p.label)}" data-profit-state="${esc(p.profit_state)}"><td>${esc(p.label)}</td>`
+    +`<td class="n">${p.price_after===null?'-':eur(p.price_after,2)}</td>`
+    +`<td class="n">${p.quantity_after===null?'unchanged':num(p.quantity_after,0)}</td>`
+    +`<td class="n ${p.revenue_change===null?'':color(p.revenue_change)}">${p.ok&&p.revenue_change!==null?signedEUR(p.revenue_change):'-'}</td>`
+    +`<td class="n ${p.gp_change===null?'':color(p.gp_change)}">${p.gp_change!==null?signedEUR(p.gp_change):(p.profit_state==='suppressed'?'Not calculated':'<span class="small">'+esc(p.error||'not calculated')+'</span>')}</td></tr>`;
+  const table=(title,rows,note)=>`<div class="panel"><h3>${esc(title)}</h3><p class="small">${esc(note)}</p><div class="tablewrap"><table><thead><tr><th>Point</th><th class="n">Proposed price</th><th class="n">Total quantity</th><th class="n">Revenue change</th><th class="n">Gross-profit change</th></tr></thead><tbody>${rows.map(row).join('')}</tbody></table></div></div>`;
+  const base=sens.baseline;
+  return `<div class="inputsnote"><b>${esc(sens.no_forecast)}</b> Engine entry point: ${esc(sens.engine_entry_point)}.</div>
+  ${sens.profit_suppressed?unavailableBlock({title:'Gross profit is not plotted for these points',reason:esc(sens.statement),required:'the parts purchase cost for '+esc(current().pn)+' per the declared supplier purchase-cost calculation, or a manually entered cost labelled as an assumption',scope:'sensitivity view'}):''}
+  <div class="panel"><h3>Unchanged offer</h3><div class="evidence-line"><span>Revenue change at the unchanged offer</span><b>${signedEUR(base.revenue_change)}</b></div><div class="evidence-line"><span>Gross-profit change at the unchanged offer</span><b>${base.gp_change!==null?signedEUR(base.gp_change):'Not calculated (no cost applied)'}</b></div></div>
+  ${table('Sensitivity to the proposed price',sens.price_points,'The proposed price moves in stated steps and the volume basis is unchanged. Each row is the engine\'s own result for that price, not a trend line.')}
+  ${table('Sensitivity to the assumed quantity',sens.volume_points,'The quantity moves in stated steps and the price is unchanged. The model does not predict volume; these are stated test assumptions.')}`;
+}
+
 
 /* ===========================================================================
    Ported from the retired second view layer (src/ui/views.js and render.js).
@@ -930,8 +950,7 @@ function objectives(c){
     <p class="small">${esc(c.counter||'')}</p></div>`;
 }
 function economicsResults(){
-  const c=current(),r=caseResult(),s=scenario();
-  const gp=(r.gp_change===null);
+  const c=current(),r=caseResult(),s=scenario();  const gp=(r.gp_change===null);
   const stress=[r.scope==='all'?[-10,0,10,25,50]:[0,10,25,50,100]].flat();
   const stressRows=stress.map(v=>{
     const rr=E.calculate({price_before:s.price_before,price_after:s.price_after,
@@ -984,7 +1003,7 @@ function economics(c){
   <p class="small" id="scenario-version">Scenario version ${s.version}. Every change updates this one record, which is what the ranking, the save and the exports read.</p>
   <div class="panel" data-trace="${esc(trace.fingerprint)}"><div class="eyebrow">What this result rests on</div><p class="small">${esc(trace.statement)}</p>${TRACE_INPUTS.map(k=>`<div class="evidence-line"><span>${esc(TRACE_LABELS[k]||k)}</span><b class="small" data-input="${esc(k)}">${esc(trace.inputs[k]===null||trace.inputs[k]===undefined?'not stated':String(trace.inputs[k]))}</b></div>`).join('')}<p class="small" data-commitment="${trace.commitment.is_commitment?'commitment':'manual'}">${esc(trace.commitment.statement)}</p></div>
   <div class="panel ${fi.ok?'':'warn'}" data-field-issues="${esc(JSON.stringify(fi.fields.map(f=>({field:f.field,state:f.state}))))}"><div class="eyebrow">What is wrong with a field, if anything</div><p class="small">${esc(fi.statement)}</p>${fi.fields.map(f=>`<div class="evidence-line"><span>${esc(f.field)}</span><b class="small" data-state="${esc(f.state)}" data-field="${esc(f.field)}">${esc(f.text)}</b></div>`).join('')}</div>
-  </div><div id="economic-results">${economicsResults()}</div></div>`;
+  </div><div id="economic-results">${economicsResults()}${sensitivityView()}</div></div>`;
 }
 function candidateState(){
   const all=D.candidateScreen||[];
@@ -1531,6 +1550,10 @@ window.AIMPricing={data:D,engine:E,export:X,candidates:C,cases:repo,contracts:CT
      verdict, both read from the one working record. */
   assumptions:()=>assumptionTrace(),
   fieldIssues:()=>fieldIssues(),
+  sensitivity:()=>store.sensitivity(state.caseId),
+  /* Test-only: make the tabs reachable when the shell's own tab bar is not
+     rendered by the harness. It sets the one state field the router reads. */
+  setView:v=>{state.view=v;},
   selectAlternative:id=>store.selectAlternative(state.caseId,id),
   consistency:()=>store.consistency(state.caseId),
   setScenario:patch=>store.set(state.caseId,patch)};

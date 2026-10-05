@@ -246,15 +246,134 @@
           : 'No value has been edited since selection.' };
     }
 
+    /* UX-04. A small sensitivity grid, computed by the SAME engine entry point
+       as every other result (engine.calculate). Each plotted point is one call,
+       and each call states its own inputs, so a point can be matched to the
+       calculation that produced it rather than being read off a chart.
+
+       Two directions are shown, and neither invents a forecast:
+         - price sensitivity: the proposed price is moved in stated steps
+           around the working record, with the volume basis unchanged;
+         - volume sensitivity: the proposed quantity is moved in stated steps,
+           with the price unchanged.
+       Where no verified parts cost is applied, the engine returns no gross
+       profit for a point. That is preserved as null - the profit series is
+       suppressed for the point and the revenue series remains usable - rather
+       than being drawn as zero. */
+    function sensitivity(caseId, opts) {
+      opts = opts || {};
+      var s = get(caseId);
+      var c = caseById(caseId);
+      var alt = (c.alternatives || []).filter(function (a) {
+        return a.alternative_id === s.selected_alternative_id;
+      })[0];
+      var kind = alt ? alt.kind : null;
+      var base = {
+        quantity_before: s.quantity_before,
+        scope: s.scope,
+        support_eur: s.support_eur,
+        cost_eur: s.cost_eur,
+        cost_basis_id: s.cost_basis_id,
+        quantity_label: s.quantity_label,
+        pack_size: s.pack_size,
+        evidence_period: s.evidence_period,
+        offer_effective_date: s.offer_effective_date,
+        kind: kind
+      };
+
+      function point(label, overrides) {
+        var input = {};
+        Object.keys(base).forEach(function (k) { input[k] = base[k]; });
+        Object.keys(overrides || {}).forEach(function (k) { input[k] = overrides[k]; });
+        var r = engine.calculate(input);
+        return {
+          label: label,
+          price_after: input.price_after === undefined ? null : input.price_after,
+          quantity_after: input.quantity_after === undefined ? null : input.quantity_after,
+          input: input,
+          ok: r.ok,
+          revenue_change: r.ok ? r.revenue_change : null,
+          revenue_after: r.ok ? r.revenue_after : null,
+          gp_change: (r.ok && r.gp_change !== null) ? r.gp_change : null,
+          profit_state: r.ok ? (r.gp_change === null ? 'suppressed' : 'calculated') : 'not_calculated',
+          profit_reason: (r.ok && r.gp_change === null)
+            ? 'No parts purchase cost is applied to this scenario, so profit-based output is '
+              + 'suppressed for this point. A missing cost is not a cost of zero.'
+            : (r.ok ? null : r.error),
+          error: r.ok ? null : r.error
+        };
+      }
+
+      /* Price steps as percentages of the current proposed price: -10%..+10%. */
+      var priceSteps = opts.price_steps ||
+        [-10, -5, -2.5, 0, 2.5, 5, 10];
+      var pricePoints = priceSteps.map(function (pctStep) {
+        var price = engine.round2(s.price_after * (1 + pctStep / 100));
+        return point(signedPct(pctStep) + ' price', {
+          price_before: s.price_before, price_after: price,
+          quantity_after: s.quantity_after
+        });
+      });
+
+      /* Volume steps as percentages of the stated total quantity. When no new
+         quantity is stated the base quantity is used, so the steps move around
+         the quantity the record actually holds. */
+      var qtyBase = (s.quantity_after === null || s.quantity_after === undefined)
+        ? s.quantity_before : s.quantity_after;
+      var volumeSteps = opts.volume_steps ||
+        (s.scope === 'all' ? [-10, -5, 0, 5, 10] : [0, 10, 25, 50, 100]);
+      var volumePoints = volumeSteps.map(function (pctStep) {
+        var qty = s.scope === 'incremental'
+          ? engine.round2(s.quantity_before * (1 + pctStep / 100))
+          : engine.round2(qtyBase * (1 + pctStep / 100));
+        return point(signedPct(pctStep) + ' volume', {
+          price_before: s.price_before, price_after: s.price_after,
+          quantity_after: ((s.scope === 'incremental' && pctStep === 0) ? null : qty)
+        });
+      });
+
+      var baselinePoint = point('unchanged offer', {
+        price_before: s.price_before, price_after: s.price_before,
+        quantity_after: s.quantity_before
+      });
+
+      var profitSuppressed = pricePoints.concat(volumePoints).some(function (p) {
+        return p.profit_state === 'suppressed';
+      });
+      var missingCost = s.cost_eur === null || s.cost_eur === undefined;
+
+      return {
+        case_id: caseId,
+        engine_entry_point: 'engine.calculate',
+        price_points: pricePoints,
+        volume_points: volumePoints,
+        baseline: baselinePoint,
+        profit_suppressed: profitSuppressed,
+        missing_cost: missingCost,
+        no_forecast: 'Each point is the arithmetic of the inputs it states. No elasticity, no '
+          + 'confidence band and no best-price prediction is computed or implied.',
+        statement: profitSuppressed
+          ? 'No parts purchase cost is applied, so the profit series is suppressed on every point '
+            + 'and the revenue series remains usable. The reason is stated on each suppressed point.'
+          : 'Every point states its own inputs and was produced by the one calculation engine.'
+      };
+    }
+
     function onChange(fn) { listeners.push(fn); }
 
     return {
       defaults: defaults, get: get, set: set, calculate: calculate,
-      selectAlternative: selectAlternative, consistency: consistency,
-      alternativeEdits: alternativeEdits,
+      selectAlternative: selectAlternative, consistency: consistency, alternativeEdits: alternativeEdits,
+      sensitivity: sensitivity,
       onChange: onChange, caseById: caseById,
       _all: function () { return byCase; }
     };
+  }
+
+  /* A short, signed percentage label for a step. */
+  function signedPct(v) {
+    var n = Math.round(v * 100) / 100;
+    return (n > 0 ? '+' : '') + String(n) + '%';
   }
 
   /* UX-01. One working context per view: distributor, purchasing account or
