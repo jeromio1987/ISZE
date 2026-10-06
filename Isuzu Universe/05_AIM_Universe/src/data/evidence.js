@@ -763,6 +763,170 @@
   }
 
 
+  /* -------------------------------------------------------- RANGE-05 / RANGE-06 -- */
+
+  function rangeMigrationBenefit(caseObject, opts) {
+    opts = opts || {};
+    var mig = opts.migration || null;
+    if (!mig && caseObject && opts.engine && typeof opts.engine.rankAlternatives === 'function') {
+      if (opts.payload && typeof opts.engine.setPayload === 'function') {
+        opts.engine.setPayload(opts.payload);
+      }
+      var ranked = opts.engine.rankAlternatives(caseObject);
+      var row = (ranked.ranked || []).find(function (x) {
+        return x.alternative && x.alternative.kind === 'migration';
+      });
+      if (!row) {
+        return {
+          benefit_state: 'unknown',
+          benefit_eur: null,
+          counterpart_invented: false,
+          is_hypothetical: false,
+          eligible_commercial_recommendation: false,
+          statement: 'No migration alternative is held. Benefit is unknown; no zero saving and no '
+            + 'imagined counterpart are generated. This is not a single-product no-change result.'
+        };
+      }
+      var unresolved = row.result.migration_status === 'unresolved' || row.result.ok === false;
+      if (unresolved) {
+        return {
+          benefit_state: 'unknown',
+          benefit_eur: null,
+          counterpart_invented: false,
+          is_hypothetical: false,
+          eligible_commercial_recommendation: false,
+          migration_status: 'unresolved',
+          case_id: caseObject.id || null,
+          statement: 'IMOTORS-OIL-style migration stays financially unresolved when the counterpart, '
+            + 'prices, costs or transferred quantity are missing. Benefit is unknown, not zero, and '
+            + 'not a single-product no-change result. No counterpart is invented.'
+        };
+      }
+      return {
+        benefit_state: 'modelled',
+        benefit_eur: row.result.gp_change,
+        counterpart_invented: false,
+        is_hypothetical: false,
+        eligible_commercial_recommendation: true,
+        migration_status: 'modelled',
+        case_id: caseObject.id || null,
+        statement: 'Migration benefit is modelled from two-product inputs. It is not new business.'
+      };
+    }
+
+    mig = mig || {};
+    var from = mig.from || null;
+    var to = mig.to || null;
+    var qty = toNumberOrNull(mig.quantity_transferred);
+    var fromP = from ? toNumberOrNull(from.price_eur) : null;
+    var fromC = from ? toNumberOrNull(from.cost_eur) : null;
+    var toP = to ? toNumberOrNull(to.price_eur) : null;
+    var toC = to ? toNumberOrNull(to.cost_eur) : null;
+    var complete = !!(from && to && qty !== null && qty > 0
+      && fromP !== null && fromC !== null && toP !== null && toC !== null);
+
+    if (!complete) {
+      return {
+        benefit_state: 'unknown',
+        benefit_eur: null,
+        counterpart_invented: false,
+        is_hypothetical: !!mig.is_hypothetical,
+        eligible_commercial_recommendation: false,
+        statement: 'Unknown benefit: counterpart, prices, costs or transferred quantity required for '
+          + 'the claim is missing. No zero saving and no imagined counterpart are generated.'
+      };
+    }
+
+    var benefit = round2(qty * ((toP - toC) - (fromP - fromC)));
+    if (mig.is_hypothetical) {
+      return {
+        benefit_state: 'hypothetical',
+        benefit_eur: benefit,
+        counterpart_invented: false,
+        is_hypothetical: true,
+        eligible_commercial_recommendation: false,
+        statement: 'Hypothetical sensitivity exercise with synthetic inputs. Benefit '
+          + benefit + ' EUR is illustrative only and is not an eligible commercial recommendation.'
+      };
+    }
+    return {
+      benefit_state: 'modelled',
+      benefit_eur: benefit,
+      counterpart_invented: false,
+      is_hypothetical: false,
+      eligible_commercial_recommendation: true,
+      statement: 'Modelled migration benefit from two-product inputs. Not new business.'
+    };
+  }
+
+  function rangePriceDirection(input) {
+    input = input || {};
+    var p0 = toNumberOrNull(input.price_before_eur);
+    var p1 = toNumberOrNull(input.price_after_eur);
+    var cost = toNumberOrNull(input.cost_eur);
+    var q0 = toNumberOrNull(input.quantity_before);
+    var q1 = toNumberOrNull(input.quantity_after);
+    var underpricedEvidence = !!input.evidence_supports_underpriced;
+
+    if (p0 === null || p1 === null || cost === null || q0 === null || q1 === null) {
+      return {
+        direction: 'unresolved',
+        labelled_underpriced: false,
+        price_action_count: 0,
+        unit_profit_before_eur: null,
+        unit_profit_after_eur: null,
+        total_profit_before_eur: null,
+        total_profit_after_eur: null,
+        tolerable_quantity_loss_units: null,
+        required_extra_volume_units: null,
+        statement: 'Price direction is unresolved until price, cost and quantity inputs are supplied. '
+          + 'No part is labelled underpriced without evidence.'
+      };
+    }
+
+    var direction = p1 > p0 ? 'price_up' : (p1 < p0 ? 'price_down' : 'unchanged');
+    var unitBefore = round2(p0 - cost);
+    var unitAfter = round2(p1 - cost);
+    var totalBefore = round2(q0 * unitBefore);
+    var totalAfter = round2(q1 * unitAfter);
+
+    /* Tolerable quantity loss at the new price before total profit falls below baseline. */
+    var tolerableLoss = null;
+    if (unitAfter > 0) {
+      var minQtyForProfit = totalBefore / unitAfter;
+      tolerableLoss = round2(Math.max(0, q0 - minQtyForProfit));
+    }
+    /* Required extra volume at a price-down (or any lower unit profit) to hold total profit. */
+    var requiredExtra = null;
+    if (unitAfter > 0) {
+      var needQty = totalBefore / unitAfter;
+      requiredExtra = round2(Math.max(0, needQty - q0));
+    }
+
+    var actions = [];
+    if (direction === 'price_up') actions.push('investigate_price_up');
+    if (direction === 'price_down') actions.push('investigate_price_down');
+
+    return {
+      direction: direction,
+      labelled_underpriced: underpricedEvidence === true,
+      price_action_count: actions.length,
+      candidate_actions: actions,
+      unit_profit_before_eur: unitBefore,
+      unit_profit_after_eur: unitAfter,
+      total_profit_before_eur: totalBefore,
+      total_profit_after_eur: totalAfter,
+      tolerable_quantity_loss_units: tolerableLoss,
+      required_extra_volume_units: requiredExtra,
+      statement: underpricedEvidence
+        ? ('Comparable evidence supports an underpriced reading. Direction: ' + direction
+          + '. Tolerable quantity loss / required extra volume are arithmetic thresholds, not forecasts.')
+        : ('No evidence supports labelling this part underpriced. Direction: ' + direction
+          + '. Unit profit before/after and total profit under the stated quantity are shown as arithmetic. '
+          + 'Five price actions are not forced.')
+    };
+  }
+
   /* -------------------------------------------------------- RANGE-04 transfer -- */
 
   function rangeTransferSplit(input) {
@@ -2646,6 +2810,8 @@
     exactRangeComparison: exactRangeComparison,
     rangeBasket: rangeBasket,
     rangeTransferSplit: rangeTransferSplit,
+    rangeMigrationBenefit: rangeMigrationBenefit,
+    rangePriceDirection: rangePriceDirection,
     withdrawRangeRelationship: withdrawRangeRelationship,
     rangeWithdrawalImpact: rangeWithdrawalImpact,
     canReuseApplicationApproval: canReuseApplicationApproval,
