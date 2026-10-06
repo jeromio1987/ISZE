@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T13:08:06Z",
+  "written_at": "2026-10-06T13:13:30Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 52,
-    "not started": 42,
+    "technically verified": 53,
+    "not started": 41,
     "implemented": 2
   },
   "total_tasks": 96,
-  "overlay_applied": 54,
+  "overlay_applied": 55,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1117,8 +1117,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "RANGE-01, CASE-06",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/range_08_withdrawal.test.mjs -> 2 pass, 0 fail (RANGE-08 E1, E2). tests/run_all.ps1 prints RANGE-08 2/0/2.",
+        "Sufficiency before code: 8 relationship records on real payload; none withdrawn (0). Catalogue pairing / supersession present on IMOTORS-CABIN (1), ITUK-TURBO (3), ITUK-DISCS (2), IMOTORS-OIL (2); ITUK-PADS 0. No live withdrawn pairing to exercise. Fixture range_08_withdrawal.json covers withdrawal, saved evidence, affected-case flagging and reuse block. No data invented for a green.",
+        "mutation src/data/evidence.js:657 (saved_evidence snapshot skipped) -> RANGE-08 E1 fails (rc 1); restored -> rc 0.",
+        "mutation src/data/evidence.js:813 (canReuseApplicationApproval allowed true for withdrawn) -> RANGE-08 E2 fails (rc 1); restored -> rc 0."
+      ],
       "blockers": []
     },
     {

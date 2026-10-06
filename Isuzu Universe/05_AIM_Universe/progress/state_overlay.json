@@ -1,7 +1,7 @@
 {
   "_note": "Evidence-backed state for the tasks that have landed. Merged by tools/build_progress.py. A state here must name the command that showed it. The integration owner writes this file; workers do not.",
   "_written_by": "integration owner",
-  "_written_at": "2026-10-06T05:59:27Z",
+  "_written_at": "2026-10-06T13:13:30Z",
   "_authority": "A state of technically verified means a named command was run and its output read. It does not mean human accepted, and it confers no business, technical, privacy or spending authority.",
   "_acceptance_run": {
     "command": "powershell -ExecutionPolicy Bypass -File tests/run_all.ps1",
@@ -414,6 +414,15 @@
         "Sufficiency: no real case carries parts.genuine and parts.bvp together for an exact approved pair. Fixture range_02_exact_pair.json covers the exact state; real cases render counterpart unresolved. No data invented for a green.",
         "mutation src/data/evidence.js:761 (exact branch disabled) -> RANGE-02 E1 fails (rc 1); restored -> rc 0.",
         "mutation src/data/evidence.js:750 (cost shown regardless of audience) -> RANGE-02 E2 fails (rc 1); restored -> rc 0."
+      ]
+    },
+    "RANGE-08": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/range_08_withdrawal.test.mjs -> 2 pass, 0 fail (RANGE-08 E1, E2). tests/run_all.ps1 prints RANGE-08 2/0/2.",
+        "Sufficiency before code: 8 relationship records on real payload; none withdrawn (0). Catalogue pairing / supersession present on IMOTORS-CABIN (1), ITUK-TURBO (3), ITUK-DISCS (2), IMOTORS-OIL (2); ITUK-PADS 0. No live withdrawn pairing to exercise. Fixture range_08_withdrawal.json covers withdrawal, saved evidence, affected-case flagging and reuse block. No data invented for a green.",
+        "mutation src/data/evidence.js:657 (saved_evidence snapshot skipped) -> RANGE-08 E1 fails (rc 1); restored -> rc 0.",
+        "mutation src/data/evidence.js:813 (canReuseApplicationApproval allowed true for withdrawn) -> RANGE-08 E2 fails (rc 1); restored -> rc 0."
       ]
     }
   },
