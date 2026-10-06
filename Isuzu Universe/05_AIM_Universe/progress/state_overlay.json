@@ -406,6 +406,15 @@
         "mutation src/data/evidence.js:708 (candidate authority forced to approved_pairing) -> RANGE-01 E2 fails (rc 1); restored -> rc 0.",
         "mutation src/data/evidence.js:640 (listForPair returns only first row) -> RANGE-01 E3 fails (rc 1); restored -> rc 0."
       ]
+    },
+    "RANGE-02": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/range_02_comparison.test.mjs -> 2 pass, 0 fail (RANGE-02 E1, E2). tests/run_all.ps1 prints RANGE-02 2/0/2.",
+        "Sufficiency: no real case carries parts.genuine and parts.bvp together for an exact approved pair. Fixture range_02_exact_pair.json covers the exact state; real cases render counterpart unresolved. No data invented for a green.",
+        "mutation src/data/evidence.js:761 (exact branch disabled) -> RANGE-02 E1 fails (rc 1); restored -> rc 0.",
+        "mutation src/data/evidence.js:750 (cost shown regardless of audience) -> RANGE-02 E2 fails (rc 1); restored -> rc 0."
+      ]
     }
   },
   "closed_findings": [
