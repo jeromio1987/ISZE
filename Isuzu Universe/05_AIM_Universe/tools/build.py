@@ -58,6 +58,7 @@ MODULES = [
     ("src/data/export.js", "recipient-specific exports, identity and permission"),
     ("src/data/identity.js", "approved and development-only identity resolution"),
     ("src/data/attachments.js", "case attachment upload storage and access"),
+    ("src/data/access_lifecycle.js", "role changes, departure and record-use decisions"),
     ("src/case/schema.js", "case lifecycle and valid transitions"),
     ("src/case/store.js", "durable case repository, file and browser adapters"),
     ("src/engine/engine.js", "calculation (one entry point)"),

@@ -425,6 +425,19 @@ if ($run01 -match "fail\s+0" -and $run01 -match "pass\s+2") {
 
 
 
+
+# SAFE-07 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "SAFE-07 - role changes, departure and record-use decisions"
+$safe07 = & node --test (Join-Path $PSScriptRoot "safe_07_access_lifecycle.test.mjs") 2>&1 | Out-String
+Write-Host $safe07
+if ($safe07 -match "fail\s+0" -and $safe07 -match "pass\s+2") {
+    Write-Host "SAFE-07 2/0/2"
+} else {
+    Write-Host "SAFE-07 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
 # SAFE-06 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "SAFE-06 - protect attachments throughout upload, storage and access"
