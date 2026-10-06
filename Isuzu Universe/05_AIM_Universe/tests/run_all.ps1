@@ -226,6 +226,18 @@ if ($marketX -match "fail\s+0" -and $marketX -match "pass\s+2") {
     $global:REVIEW_UNIT_FAIL = $true
 }
 
+# MARKET-03 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "MARKET-03 - packs and kit contents only when supported"
+$marketX = & node --test (Join-Path $PSScriptRoot "market_03_packs.test.mjs") 2>&1 | Out-String
+Write-Host $marketX
+if ($marketX -match "fail\s+0" -and $marketX -match "pass\s+2") {
+    Write-Host "MARKET-03 2/0/2"
+} else {
+    Write-Host "MARKET-03 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
 # MARKET-07 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "MARKET-07 - comparable-price panel with clear exclusions"

@@ -397,6 +397,50 @@
   }
 
 
+  /* ----- MARKET-03: packs only when contents are known ----- */
+
+  function packCompareView(args) {
+    args = args || {};
+    var panel = args.panel || {};
+    var packOffer = args.pack_offer || {};
+    var pieceOffer = args.piece_offer || {};
+    var packRow = null;
+    var pieceRow = null;
+    (panel.eligible_offers || []).concat(panel.ineligible_offers || []).forEach(function (r) {
+      if (r.observation_id === packOffer.observation_id) packRow = r;
+      if (r.observation_id === pieceOffer.observation_id) pieceRow = r;
+    });
+    var packUnit = packRow && packRow.comparable_value ? packRow.comparable_value.value : null;
+    var pieceUnit = pieceRow && pieceRow.comparable_value ? pieceRow.comparable_value.value : null;
+    var eq = !!(packOffer.pack && packOffer.pack.contents_equivalent === true);
+    return {
+      equivalence_accepted: eq,
+      pack_unit_price: packUnit,
+      piece_unit_price: pieceUnit,
+      comparable: eq && packUnit !== null && pieceUnit !== null && packUnit === pieceUnit,
+      panel: panel
+    };
+  }
+
+  function packUnknownView(args) {
+    args = args || {};
+    var panel = args.panel || {};
+    var offer = args.offer || {};
+    var row = null;
+    (panel.eligible_offers || []).concat(panel.ineligible_offers || []).forEach(function (r) {
+      if (r.observation_id === offer.observation_id) row = r;
+    });
+    var derived = row && row.comparable_value ? row.comparable_value.value : null;
+    var original = row && row.raw ? row.raw.amount : offer.amount;
+    return {
+      derived_unit_price: derived,
+      original_amount: original,
+      original_amount_retained: original !== null && original !== undefined,
+      panel: panel
+    };
+  }
+
+
   var API = {
     RECORD_FIELDS: RECORD_FIELDS,
     buildRecord: buildRecord,
@@ -407,7 +451,9 @@
     savedComparisonView: savedComparisonView,
     conflictVisibilityView: conflictVisibilityView,
     productMatchGate: productMatchGate,
-    matchTraceView: matchTraceView
+    matchTraceView: matchTraceView,
+    packCompareView: packCompareView,
+    packUnknownView: packUnknownView
   };
 
   root.AIMMarketObservation = API;
