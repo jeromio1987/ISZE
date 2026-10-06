@@ -198,9 +198,12 @@
       ]
     },
     "MARKET-08": {
-      "state": "implemented",
+      "state": "technically verified",
       "evidence": [
-        "The panel reads the exclusion codes and requests the smallest missing item as a draft ask, rather than asking for everything."
+        "node --test tests/market_08_request.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/comparable.js:1074 (requestIsClean always clean) -> MARKET-08 E1 fails; restored -> passes",
+        "mutation src/data/comparable.js:1227 (still_available forced empty) -> MARKET-08 E2 fails; restored -> passes",
+        "Draft asks stay draft_only and unsent. MARKET-DATA-GAP remains open; no competitor prices invented."
       ]
     },
     "CASE-01": {
