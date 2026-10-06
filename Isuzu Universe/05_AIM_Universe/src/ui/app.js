@@ -428,6 +428,19 @@ function contributorsPanel(c){
    references on their own lines, prints the residual even when it is zero, and
    says so in plain words. It never says "price increase" and never shows a factor. */
 
+
+function exactRangeComparisonPanel(c){
+  const Ev = (typeof AIMEvidence!=='undefined') ? AIMEvidence : null;
+  if(!Ev || typeof Ev.exactRangeComparison!=='function') return '';
+  const view = Ev.exactRangeComparison(c, {audience:'internal'});
+  if(!view) return '';
+  if(view.state==='counterpart_unresolved'){
+    return `<div class="panel" data-range-exact-comparison="1" data-range-exact-state="counterpart_unresolved"><h3>Exact Genuine / Best Value comparison</h3><p class="small">${esc(view.statement)}</p><p class="small">Reference held: ${esc(view.reference_a||'none')}.</p></div>`;
+  }
+  const row = (side, title) => !side ? '' : `<tr><th scope="row">${esc(title)}</th><td data-label="${esc(view.labels.reference_price)}">${esc(String(side.reference_price_eur))}</td><td data-label="${esc(view.labels.actual_price)}">${esc(String(side.actual_price_eur))}</td><td data-label="${esc(view.labels.application_status)}">${esc(side.application_status)}</td><td data-label="Cost (internal)">${side.cost_eur===null||side.cost_eur===undefined?'not shown':esc(String(side.cost_eur))}</td></tr>`;
+  return `<div class="panel" data-range-exact-comparison="1" data-range-exact-state="exact"><h3>Exact Genuine / Best Value comparison</h3><p class="small">${esc(view.statement)}</p><table><thead><tr><th>Side</th><th>${esc(view.labels.reference_price)}</th><th>${esc(view.labels.actual_price)}</th><th>${esc(view.labels.application_status)}</th><th>Cost (internal)</th></tr></thead><tbody>${row(view.side_a, view.reference_a)}${row(view.side_b, view.reference_b)}</tbody></table><p class="small">${esc(view.cost_statement)}</p></div>`;
+}
+
 function rangeRelationshipsPanel(c){
   const Ev = (typeof AIMEvidence!=='undefined') ? AIMEvidence : null;
   if(!Ev || typeof Ev.relationships!=='function' || typeof Ev.rangeCommercialRole!=='function') return '';
@@ -874,7 +887,7 @@ function marketView(c){
 function decision(c){
  const cmp=c.comparisons[state.compare];
  return `<div class="compare-row"><div><span class="eyebrow">Measured record</span><div class="small">${sourceButton()} &middot; no forecast or lost-sales attribution</div></div><select id="comparison" aria-label="Comparison period"><option value="half" ${state.compare==='half'?'selected':''}>January-June 2026 vs 2025</option><option value="annual" ${state.compare==='annual'?'selected':''}>Calendar 2025 vs 2024</option></select></div>
- ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${contributorsPanel(c)}${rangeRelationshipsPanel(c)}${priceQuantityMixPanel(c)}${purchasingActivityPanel(c)}${nextActionPlanPanel(c)}${targetBox(c)}
+ ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${contributorsPanel(c)}${rangeRelationshipsPanel(c)}${exactRangeComparisonPanel(c)}${priceQuantityMixPanel(c)}${purchasingActivityPanel(c)}${nextActionPlanPanel(c)}${targetBox(c)}
  <div class="grid2">${chart(c,state.billingMetric,state.billingMetric==='billingEUR'?'What ISZE billed':'What ISZE supplied')}${onwardHeld(c)?chart(c,'onwardQuantity','What the distributor supplied to dealers'):onwardMissing()}</div>
  <div class="grid2"><div class="panel"><span class="badge fact">Evidence supporting review</span><p style="margin-top:12px">${esc(c.reason)}</p></div><div class="panel warn"><span class="badge review">Evidence against a simple price story</span><p style="margin-top:12px">${esc(c.counter)}</p></div></div>
  <div class="grid2">${chart(c,'price','Observed ISZE unit price',true)}<div class="panel"><div class="eyebrow">Reconcile the euro change</div><h3>${signedEUR(cmp.revenueDelta)} in recorded billing</h3><div class="evidence-line"><span>Quantity effect, at prior price</span><b class="${color(cmp.volumeEffect)}">${signedEUR(cmp.volumeEffect)}</b></div><div class="evidence-line"><span>Effective price / terms effect</span><b class="${color(cmp.effectivePriceEffect)}">${signedEUR(cmp.effectivePriceEffect)}</b></div><div class="ruleline small">Exact identity: (new quantity &minus; old quantity) &times; old price + new quantity &times; (new price &minus; old price). The second term includes mix of order conditions. It is not causal price elasticity or a measured price-list effect.</div><div class="scopebox"><b>${num(c.fleet)} ${c.market==='ITUK'?'trucks':'vehicles'} &middot; 2025 market reference</b><br>${esc(c.application)} No part-level demand gap or dealer rate is computed.</div></div></div>

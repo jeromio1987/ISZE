@@ -722,6 +722,76 @@
     };
   }
 
+
+  /* -------------------------------------------------------- RANGE-02 view -- */
+
+  function exactRangeComparison(caseObject, opts) {
+    caseObject = caseObject || {};
+    opts = opts || {};
+    var audience = opts.audience === 'external' ? 'external' : 'internal';
+    var labels = {
+      reference_price: 'Reference price',
+      actual_price: 'Actual price',
+      application_status: 'Application status'
+    };
+    var parts = caseObject.parts || {};
+    var genuine = parts.genuine || null;
+    var bvp = parts.bvp || null;
+    var rels = ((caseObject.packEvidence || {}).relationships) || [];
+    var approvedPair = null;
+    rels.forEach(function (r) {
+      var cls = classifyRelationship(r);
+      var fit = fitmentStatus(r);
+      if (cls.kind === 'catalogue_pairing' && fit.approved === true) approvedPair = r;
+    });
+
+    function side(src, fallbackPn) {
+      src = src || {};
+      var cost = audience === 'internal' && src.cost_eur !== undefined && src.cost_eur !== null
+        ? src.cost_eur : null;
+      return {
+        reference: src.pn || fallbackPn || null,
+        reference_price_eur: src.reference_price_eur !== undefined ? src.reference_price_eur : null,
+        actual_price_eur: src.actual_price_eur !== undefined ? src.actual_price_eur : null,
+        application_status: src.application_status || 'unresolved',
+        cost_eur: cost
+      };
+    }
+
+    if (genuine && bvp && genuine.pn && bvp.pn && String(genuine.pn) !== String(bvp.pn)) {
+      return {
+        state: 'exact',
+        reference_a: String(genuine.pn),
+        reference_b: String(bvp.pn),
+        side_a: side(genuine, genuine.pn),
+        side_b: side(bvp, bvp.pn),
+        labels: labels,
+        relationship_authority: approvedPair ? 'approved pairing' : 'pairing not approved on the held relationship',
+        cost_statement: audience === 'internal'
+          ? 'Cost is shown in the internal view only.'
+          : 'Cost is not shown outside the internal view.',
+        statement: 'Exact comparison of two distinct references: ' + genuine.pn + ' and ' + bvp.pn
+          + '. Reference price, actual price and application status are labelled separately.'
+      };
+    }
+
+    var only = genuine || bvp || { pn: caseObject.pn || null };
+    return {
+      state: 'counterpart_unresolved',
+      reference_a: only.pn ? String(only.pn) : (caseObject.pn || null),
+      reference_b: null,
+      side_a: side(only, caseObject.pn || null),
+      side_b: null,
+      labels: labels,
+      relationship_authority: 'counterpart unresolved',
+      cost_statement: audience === 'internal'
+        ? 'Cost is shown in the internal view only.'
+        : 'Cost is not shown outside the internal view.',
+      statement: 'Counterpart unresolved: the comparison does not invent a second reference. '
+        + 'Only ' + (only.pn || caseObject.pn || 'the held reference') + ' is named.'
+    };
+  }
+
   function relationshipSummary(payload) {
     var rows = relationships(payload);
     var byKind = {}, byFitment = {};
@@ -2315,6 +2385,7 @@
     interchangeablePairStatus: interchangeablePairStatus,
     rangeCommercialRole: rangeCommercialRole,
     RANGE_RELATIONSHIP_TYPES: RANGE_RELATIONSHIP_TYPES,
+    exactRangeComparison: exactRangeComparison,
     partReference: partReference,
     makeRelationshipLedger: makeRelationshipLedger,
     makeStageState: makeStageState,
