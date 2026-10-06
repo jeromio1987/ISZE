@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T19:12:59Z",
+  "written_at": "2026-10-06T19:13:08Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 73,
-    "not started": 23
+    "technically verified": 74,
+    "not started": 22
   },
   "total_tasks": 96,
-  "overlay_applied": 73,
+  "overlay_applied": 74,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1266,8 +1266,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "CASE-02, CASE-03, UX-01",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/connect_05_availability_question.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/availability_question.js currentStockAvailability (historical purchase shown as current stock) -> CONNECT-05 E1 fails; restored -> passes",
+        "mutation src/data/availability_question.js recordAvailabilityResponse (unconfirmed kept as confirmed_commitment without estimate label) -> CONNECT-05 E2 fails; restored -> passes",
+        "Synthetic fixtures only. Dated availability question carries part, application, quantity, required date and distributor route. Historical purchase cannot display as current stock. Unconfirmed response is labelled estimate and retains next-update obligation. Meanings stay separate: estimated_date, confirmed_commitment, allocated, dispatched, delivered. Nothing is sent."
+      ],
       "blockers": []
     },
     {

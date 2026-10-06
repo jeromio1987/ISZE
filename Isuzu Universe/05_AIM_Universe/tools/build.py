@@ -1,4 +1,4 @@
-"""
+﻿"""
 Build the internal AIM pricing-decisions HTML (BASE-04, BASE-07).
 
 The generated v03 file was both the source and the product, so a fix could only
@@ -68,6 +68,7 @@ MODULES = [
     ("src/data/prism_context.js", "read-only PRISM context at measured level"),
     ("src/data/vehicle_bands.js", "series_to_band.csv band_for (no second dictionary)"),
     ("src/data/service_demand_bounds.js", "service-demand and shared-applicability boundaries"),
+    ("src/data/availability_question.js", "dated availability question and response"),
     ("src/data/candidates.js", "candidate workbench"),
     ("src/data/cases.js", "case facade over src/case/*"),
     ("src/data/scenario.js", "one shared scenario"),
@@ -120,6 +121,7 @@ PUBLISHED_BY = {
     "src/data/prism_context.js": "AIMPrismContext",
     "src/data/vehicle_bands.js": "AIMVehicleBands",
     "src/data/service_demand_bounds.js": "AIMServiceDemandBounds",
+    "src/data/availability_question.js": "AIMAvailabilityQuestion",
     "src/data/export.js": "AIMExport",
     "src/data/candidates.js": "AIMCandidates",
     "src/data/cases.js": "AIMCases",
