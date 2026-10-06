@@ -699,9 +699,9 @@
     "RUN-04": {
       "state": "technically verified",
       "evidence": [
-        "node --test tests/run_04_config_secrets.test.mjs -> 2 pass, 0 fail",
-        "mutation src/data/config_secrets.js scanPackage (always clean) -> RUN-04 E1 fails; restored -> passes",
-        "mutation src/data/config_secrets.js startExternalService (missing config starts live with permissive defaults) -> RUN-04 E2 fails; restored -> passes",
+        "node --test tests/run_04_config_separation.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/config_separation.js scanPackage (always clean) -> RUN-04 E1 fails; restored -> passes",
+        "mutation src/data/config_separation.js startExternalService (missing config starts live with permissive defaults) -> RUN-04 E2 fails; restored -> passes",
         "No real secrets created or read. Package and diagnostic log scanners refuse credential-shaped values and private data table markers. Missing identity/storage configuration fail-closes and cannot start a seemingly live external service with permissive defaults. Development mode stays labelled non-live."
       ]
     }
