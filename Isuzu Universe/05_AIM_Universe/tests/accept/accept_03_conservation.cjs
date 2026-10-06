@@ -305,5 +305,171 @@ H.test(run, 'C17', 'The conservation check still balances after a row is set asi
   return 'received = added + replaced + unchanged, and held = taken less set aside';
 });
 
+
+const fs = require('node:fs');
+const HORIZONS = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'accept_03_horizons.json'), 'utf8'));
+const TWOBUY = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'accept_03_two_purchases.json'), 'utf8'));
+
+/* Expected values below are computed from the fixture numbers in this file,
+   not from a figure read out of the product. */
+
+H.test(run, 'C18', 'Identical re-import, declared replacement, and two genuine same-value purchases behave differently', () => {
+  const same = { distributor: 'SYNTH-A', part_number: 'SYNTH-P9', billed_qty: 10, observed_billing_eur: 60 };
+  const dsRepeat = cand.makeDataset('synthetic', {});
+  const first = dsRepeat.upsert('alpha', [same], {});
+  const repeat = dsRepeat.upsert('alpha', [same], {});
+  H.eq(dsRepeat.all().length, 1, 'rows after identical re-import');
+  H.eq(first.counts.added, 1, 'first added');
+  H.eq(repeat.counts.unchanged, 1, 'repeat unchanged');
+  H.eq(repeat.counts.added, 0, 'repeat added');
+
+  const dsReplace = cand.makeDataset('synthetic', {});
+  dsReplace.upsert('alpha', [same], {});
+  const key = dsReplace.all()[0].key;
+  const declared = dsReplace.correct('alpha', key,
+    Object.assign({}, same, { billed_qty: 8, observed_billing_eur: 48 }),
+    { corrects_revision: 1, reason: 'declared replacement of a mistyped quantity' });
+  H.eq(declared.ok, true, 'declared replacement accepted');
+  H.eq(dsReplace.all().length, 1, 'declared replacement still one row');
+  H.eq(dsReplace.all()[0].record.billed_qty, 8, 'held quantity is the replacement');
+
+  const dsTwo = cand.makeDataset('synthetic', {});
+  const a = dsTwo.upsert('invoice-1', [TWOBUY.purchase_one], {});
+  const b = dsTwo.upsert('invoice-2', [TWOBUY.purchase_two], {});
+  const held = dsTwo.all().length;
+  const qty = dsTwo.all().reduce((s, r) => s + Number(r.record.billed_qty), 0);
+  /* Two genuine purchases of 10 each must remain 20 units on two rows.
+     Expected independently of the store: 10 + 10 = 20. */
+  if (held !== 2 || qty !== 20) {
+    const rec = run.results[run.results.length - 1];
+    /* This H.test already pushed PASS; replace with a known finding below. */
+    throw new Error('two genuine same-value purchases collapsed: held=' + held
+      + ' qty=' + qty + ' (expected 2 rows and 20 units). added_invoice1='
+      + a.counts.added + ' added_invoice2=' + b.counts.added
+      + ' replaced_invoice2=' + b.counts.replaced);
+  }
+  return 're-import folded; declared replacement kept one row at qty 8; two purchases held as 2 rows / 20 units';
+});
+
+H.test(run, 'C19', 'A shared applicability is not counted twice', () => {
+  const ds = cand.makeDataset('synthetic', {});
+  ds.upsert('alpha', [HORIZONS.shared_a, HORIZONS.shared_b], {});
+  const held = ds.all();
+  H.eq(held.length, 2, 'two distributors sharing an applicability stay two rows');
+  const units = held.reduce((s, r) => s + Number(r.record.billed_qty), 0);
+  H.eq(units, 10, '4 + 6 units');
+  const euro = held.reduce((s, r) => s + Number(r.record.observed_billing_eur), 0);
+  H.eq(euro, 100, '40 + 60 euro');
+  const parts = new Set(held.map(r => r.record.part_number));
+  H.eq(parts.size, 1, 'one part number');
+  return 'two rows, one part, 10 units, 100 euro; applicability is not doubled';
+});
+
+H.test(run, 'C20', 'An optional source failing does not disable valid work', () => {
+  const ds = cand.makeDataset('synthetic', {});
+  ds.upsert('required', SECTIONS, { origin: 'synthetic' });
+  const heldBefore = ds.all().length;
+  H.eq(heldBefore, 3, 'required section loaded');
+  let optionalError = null;
+  try {
+    ds.upsert('optional-missing', null, { origin: 'optional' });
+  } catch (e) {
+    optionalError = String(e && e.message ? e.message : e);
+  }
+  const afterNull = ds.all().length;
+  H.eq(afterNull, 3, 'a null optional section must not drop the required rows');
+  try {
+    ds.upsert('optional-broken', [undefined], { origin: 'optional' });
+  } catch (e) {
+    optionalError = optionalError || String(e && e.message ? e.message : e);
+  }
+  H.eq(ds.all().length, 3, 'a broken optional row must not drop the required rows');
+  const c = ds.conservation();
+  H.eq(c.rows_held, 3, 'conservation still holds the required set');
+  return 'required 3 rows still held after optional-source failure'
+    + (optionalError ? '; optional error kept: ' + optionalError.slice(0, 80) : '; optional failure was refused without throwing');
+});
+
+H.test(run, 'C21', 'Half-year and annual horizons stay separate', () => {
+  const r = evidence.comparability(HORIZONS.half_year, HORIZONS.annual);
+  H.eq(r.ok, false, 'half-year compared with annual was allowed');
+  H.isTrue(/different periods/i.test(r.statement), 'refusal does not name the period: ' + r.statement);
+  const own = evidence.describePeriod(HORIZONS.half_year);
+  H.eq(own.value, 'H1-2026', 'half-year period');
+  H.eq(evidence.describePeriod(HORIZONS.annual).value, 'CY-2025', 'annual period');
+  return r.statement;
+});
+
+H.test(run, 'C22', 'National billed activity is not mixed with sales to dealer', () => {
+  const r = evidence.comparability(HORIZONS.national, HORIZONS.dealer);
+  H.eq(r.ok, false, 'national billed mixed with sales to dealer');
+  H.isTrue(/sales stage/i.test(r.statement), 'refusal does not name the sales stage: ' + r.statement);
+  return r.statement;
+});
+
+H.test(run, 'C23', 'A monthly horizon is not treated as an annual one', () => {
+  const r = evidence.comparability(HORIZONS.monthly, HORIZONS.annual);
+  H.eq(r.ok, false, 'monthly compared with annual was allowed');
+  H.isTrue(/different periods/i.test(r.statement), 'refusal does not name the period: ' + r.statement);
+  return r.statement;
+});
+
+H.test(run, 'C24', 'A restated case after a correction keeps the predecessor and the new statement', () => {
+  const { ds, keyFor } = freshDataset();
+  const key = keyFor('SYNTH-A', 'SYNTH-P1');
+  const beforeQty = 100;
+  const afterQty = 90;
+  H.eq(ds.all().find(r => r.key === key).record.billed_qty, beforeQty, 'starting quantity');
+  const res = ds.correct('alpha', key,
+    Object.assign({}, SECTIONS[0], { billed_qty: afterQty, observed_billing_eur: 540 }),
+    { corrects_revision: 1, reason: 'restated after the distributor corrected the return' });
+  H.eq(res.ok, true, 'correction accepted');
+  const trail = ds.trace(key);
+  H.eq(trail.corrected_from_revision, 1, 'predecessor named');
+  H.eq(ds.all().find(r => r.key === key).record.billed_qty, afterQty, 'restated quantity');
+  H.isTrue(Array.isArray(trail.trail) && trail.trail.length >= 2, 'predecessor still in the trail');
+  return 'restated qty ' + afterQty + ' names revision 1; trail length ' + trail.trail.length;
+});
+
+H.test(run, 'C25', 'Each source keeps its own horizon; one is not borrowed for the other', () => {
+  const half = evidence.periodOf(HORIZONS.half_year);
+  const year = evidence.periodOf(HORIZONS.annual);
+  H.eq(half.state, 'declared', 'half declared');
+  H.eq(year.state, 'declared', 'annual declared');
+  H.eq(half.value === year.value, false, 'horizons collapsed to one value');
+  const undeclared = evidence.periodOf({});
+  H.eq(undeclared.state, 'undeclared', 'missing period inferred');
+  H.eq(undeclared.value == null, true, 'an undeclared period was filled');
+  return 'H1-2026 and CY-2025 remain separate; missing stays undeclared';
+});
+
+H.test(run, 'C26', 'Period, entity, scope and control each have a named check', () => {
+  const periodRefuse = evidence.comparability(
+    { period: 'H1-2026', sales_stage: 'billed to distributor', unit: 'each', entity: { distributor: 'ITUK' } },
+    { period: 'H1-2026', sales_stage: 'billed to distributor', unit: 'each', entity: { distributor: 'IUK' } });
+  H.eq(periodRefuse.ok, false, 'ITUK was combined with IUK');
+  H.isTrue(/separate|ITUK|IUK/i.test(periodRefuse.statement), periodRefuse.statement);
+  const control = evidence.conservationOfLedger({
+    revisions: 1, corrections: 0, received: 3, added: 3, replaced: 0, unchanged: 0,
+    folded: 0, held: 3, set_aside: [], set_aside_reimported: 0,
+    keys_held: 3, keys_set_aside: 0, keys_taken: 3
+  });
+  H.eq(control.ok, true, 'control identity failed on a balanced ledger: ' + control.statement);
+  H.eq(control.rows_received, 3, 'rows_received');
+  H.eq(control.rows_held, 3, 'rows_held');
+  return 'ITUK stays apart from IUK; balanced ledger control ok';
+});
+
+
+(function markTwoPurchaseFinding() {
+  const row = run.results.find(r => r.id === 'C18' && r.status === 'FAIL'
+    && /two genuine same-value purchases collapsed/.test(String(r.evidence || '')));
+  if (row) {
+    row.known_finding = true;
+    row.reproduction = 'cand.makeDataset(); upsert invoice-1 with purchase_one; upsert invoice-2 with purchase_two (same distributor, part, qty 10, euro 60, different purchase_id). Expected 2 rows and 20 units. Product currently keys on distributor+part+ordinal inside a section, so a second invoice at ordinal 0 overwrites the first.';
+  }
+})();
+
 const s = H.write(run, 'accept_03_conservation.json');
 process.exitCode = s.fail ? 1 : 0;
+

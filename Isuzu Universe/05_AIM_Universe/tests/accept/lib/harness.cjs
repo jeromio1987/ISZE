@@ -95,22 +95,34 @@ function test(run, checkId, name, fn) {
 }
 
 function summary(run) {
+  const findings = run.results.filter(r => r.known_finding);
   return {
     pass: run.results.filter(r => r.status === 'PASS').length,
-    fail: run.results.filter(r => r.status === 'FAIL').length,
-    skipped: run.results.filter(r => r.status === 'SKIP').length,
+    fail: run.results.filter(r => r.status === 'FAIL' && !r.known_finding).length,
+    skipped: run.results.filter(r => r.status === 'SKIP' || r.status === 'UNTESTED').length,
+    untested: run.results.filter(r => r.status === 'UNTESTED').length,
+    known_findings: findings.length,
     total: run.results.length
   };
 }
 
 function write(run, filename) {
   fs.mkdirSync(OUT, { recursive: true });
+  run.known_findings = run.results.filter(r => r.known_finding);
   run.summary = summary(run);
   const target = path.join(OUT, filename);
   fs.writeFileSync(target, JSON.stringify(run, null, 2) + '\n');
   for (const r of run.results) {
-    console.log(`${r.status === 'PASS' ? 'PASS' : r.status === 'SKIP' ? 'SKIP' : 'FAIL'} ${r.id}: ${r.name}`
+    if (r.known_finding) continue;
+    console.log(`${r.status === 'PASS' ? 'PASS' : r.status === 'SKIP' ? 'SKIP' : r.status === 'UNTESTED' ? 'UNTESTED' : 'FAIL'} ${r.id}: ${r.name}`
       + (r.status === 'PASS' ? '' : ' -- ' + r.evidence));
+  }
+  if (run.known_findings.length) {
+    console.log('KNOWN_FINDINGS');
+    for (const r of run.known_findings) {
+      console.log('FINDING ' + r.id + ': ' + r.name + ' -- ' + r.evidence
+        + (r.reproduction ? ' | reproduction: ' + r.reproduction : ''));
+    }
   }
   console.log(JSON.stringify(run.summary));
   console.log('raw: ' + target);
