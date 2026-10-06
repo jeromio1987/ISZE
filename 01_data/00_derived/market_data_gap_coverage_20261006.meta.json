@@ -1,0 +1,186 @@
+{
+  "built_at": "2026-10-06T18:58:18.182326+00:00",
+  "builder": "01_data/91_build/build_market_data_gap_coverage_20261006.py",
+  "node_runner": "01_data/91_build/run_u19_ledger_through_evidence.mjs",
+  "evidence_modules": [
+    "Isuzu Universe/05_AIM_Universe/src/data/market_observation.js",
+    "Isuzu Universe/05_AIM_Universe/src/data/comparable.js"
+  ],
+  "family_classification_file": "01_data/00_derived/epc_decode_worklist.csv",
+  "euros_file": "01_data/00_derived/gps_spu_pms.csv",
+  "ledger_path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\price_observations.parquet",
+  "ledger_sha256": "1bb9fd7b8bd904d7f883639298831d4cba8eb1600d10c1eaf2d644f6af74fa3c",
+  "ledger_meta_sha256": "67791e15b87bb836e504140b2567c88bd9e24839b9bf8258706e86123a5b5649",
+  "family_file_sha256": "e1ce21938b66a8c5bd7515bf50ac62249b913c7b7ae7e818f67f6611988af9c5",
+  "focus_families": [
+    "brake_pad",
+    "oil_filter"
+  ],
+  "focus_pn_count": 123,
+  "focus_ledger_rows": 65,
+  "coverage_rows": 15,
+  "empty_pn_rows": 231,
+  "sufficiency": {
+    "UK": {
+      "distributor": "ITUK",
+      "label": "UK (ITUK)",
+      "focus_rows": 38,
+      "focus_pns_with_rows": 10,
+      "status": "insufficient",
+      "min_usable": 50,
+      "by_loader_price_type_family": [
+        {
+          "loader": "eucon_survey_2023",
+          "price_type": "survey_list",
+          "pms_category": "brake_pad",
+          "rows": 3
+        },
+        {
+          "loader": "eucon_survey_2023",
+          "price_type": "survey_list",
+          "pms_category": "oil_filter",
+          "rows": 3
+        },
+        {
+          "loader": "eucon_survey_2023",
+          "price_type": "survey_workshop",
+          "pms_category": "brake_pad",
+          "rows": 3
+        },
+        {
+          "loader": "eucon_survey_2023",
+          "price_type": "survey_workshop",
+          "pms_category": "oil_filter",
+          "rows": 3
+        },
+        {
+          "loader": "ks",
+          "price_type": "aftermarket_retail",
+          "pms_category": "brake_pad",
+          "rows": 2
+        },
+        {
+          "loader": "ks",
+          "price_type": "aftermarket_retail",
+          "pms_category": "oil_filter",
+          "rows": 10
+        },
+        {
+          "loader": "ks",
+          "price_type": "genuine_grey",
+          "pms_category": "brake_pad",
+          "rows": 2
+        },
+        {
+          "loader": "ks",
+          "price_type": "genuine_grey",
+          "pms_category": "oil_filter",
+          "rows": 8
+        },
+        {
+          "loader": "ks_am",
+          "price_type": "aftermarket_trade",
+          "pms_category": "brake_pad",
+          "rows": 1
+        },
+        {
+          "loader": "ks_am",
+          "price_type": "aftermarket_trade",
+          "pms_category": "oil_filter",
+          "rows": 1
+        },
+        {
+          "loader": "ks_gen",
+          "price_type": "genuine_grey",
+          "pms_category": "brake_pad",
+          "rows": 1
+        },
+        {
+          "loader": "ks_gen",
+          "price_type": "genuine_grey",
+          "pms_category": "oil_filter",
+          "rows": 1
+        }
+      ]
+    },
+    "PT": {
+      "distributor": "PORTUGAL",
+      "label": "Portugal (I-Motors)",
+      "focus_rows": 27,
+      "focus_pns_with_rows": 5,
+      "status": "insufficient",
+      "min_usable": 50,
+      "by_loader_price_type_family": [
+        {
+          "loader": "eucon_online_2025",
+          "price_type": "aftermarket_rrp",
+          "pms_category": "brake_pad",
+          "rows": 13
+        },
+        {
+          "loader": "eucon_online_2025",
+          "price_type": "aftermarket_rrp",
+          "pms_category": "oil_filter",
+          "rows": 14
+        }
+      ]
+    }
+  },
+  "eligible_offers_by_market": {
+    "UK": 0,
+    "PT": 0
+  },
+  "exclusion_totals_by_market": {
+    "PT:DELIVERY_BASIS_NOT_STATED": 27,
+    "PT:PACK_CONTENTS_UNKNOWN": 13,
+    "PT:PRODUCT_MATCH_UNRESOLVED": 27,
+    "PT:TAX_BASIS_NOT_STATED": 27,
+    "UK:DELIVERY_BASIS_NOT_STATED": 38,
+    "UK:PACK_CONTENTS_UNKNOWN": 16,
+    "UK:PRODUCT_MATCH_UNRESOLVED": 22
+  },
+  "euros_2025_billed_line_type_all": [
+    {
+      "year": 2025,
+      "distributor_code": "ITUK",
+      "pms_category": "oil_filter",
+      "net_sales_eur": 85096.07,
+      "uio_units": 22389,
+      "spu_eur": 3.8
+    },
+    {
+      "year": 2025,
+      "distributor_code": "ITUK",
+      "pms_category": "brake_pad",
+      "net_sales_eur": 302366.25,
+      "uio_units": 22389,
+      "spu_eur": 13.51
+    },
+    {
+      "year": 2025,
+      "distributor_code": "PORTUGAL",
+      "pms_category": "oil_filter",
+      "net_sales_eur": 10980.5,
+      "uio_units": 7208,
+      "spu_eur": 1.52
+    },
+    {
+      "year": 2025,
+      "distributor_code": "PORTUGAL",
+      "pms_category": "brake_pad",
+      "net_sales_eur": 66114.04,
+      "uio_units": 7208,
+      "spu_eur": 9.17
+    }
+  ],
+  "eucon_rule": "Eucon-sourced rows stay local; never sent to DeepSeek or any service outside the EU",
+  "mapping_rules": {
+    "match": "exact_oem -> basis exact_part_number (product id only); crossref/category_only -> unresolved candidate; never status accepted",
+    "pack": "pack contents always null from ledger (kit/set words set amount_scope=per_pack only; contents never inferred)",
+    "level": "all competitor ledger rows -> public_advertised_retail; price_type kept in stage JSON under _ledger",
+    "delivery": "delivery_included null (ledger has no field)",
+    "tax": "vat excl->excluded (+vat_rate 0 percent); unknown/blank->null"
+  },
+  "worktree": "C:\\Users\\jerom\\Desktop\\claude\\_worktrees\\ISZE_u19b",
+  "start_commit": "f2fe03e969db8f32f563ef1b5f625fdcd670051f"
+}
