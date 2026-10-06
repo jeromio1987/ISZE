@@ -4,7 +4,7 @@
 'use strict';
 (function(root){
 const D=JSON.parse(document.getElementById('case-data').textContent);
-const E=AIMEngine, X=AIMExport, C=AIMCandidates, K=AIMCases, CT=AIMContracts, M=AIMComparable;
+const E=AIMEngine, X=AIMExport, C=AIMCandidates, K=AIMCases, CT=AIMContracts, M=AIMComparable, Ev=(typeof AIMEvidence!=='undefined'?AIMEvidence:null);
 const store=AIMScenario.makeScenarioStore(D,E);
 const repo=K.makeRepository({
   forceMemory: !(function(){try{root.localStorage.setItem('__t','1');root.localStorage.removeItem('__t');return true;}catch(e){return false;}})()
@@ -402,6 +402,24 @@ function termsTable(c){
  for(const [label,obj] of [['2024 full year',c.annual['2024']],['2025 full year',c.annual['2025']],['2026 Jan-Jun',c.half['2026']]])for(const r of (obj?obj.orderTypes:[])||[])rows+=`<tr><td>${label}</td><td>${esc(r.type)}</td><td class="n">${num(r.quantity)}</td><td class="n">${eur(r.price,2)}</td></tr>`;
  return `<details><summary>Separate order terms from a price-list change</summary><p>All prices below are measured effective billing averages within the recorded order type. PRD is the source order-type code; its contractual conditions are not reconstructed. A blank 2026 type is not assumed to be SOR.</p><div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Period</th><th>Recorded type</th><th class="n">Units</th><th class="n">EUR / unit</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
 }
+
+function contributorsPanel(c){
+  if(!Ev||!Ev.movementContributors)return '';
+  const rec=Ev.movementContributors(c,state.compare);
+  if(!rec||!rec.movement)return '';
+  const rows=(rec.contributors||[]).map(r=>`<tr><td class="pn">${esc(r.pn)}</td><td class="small">${esc(r.status||'')}</td><td class="n">${num(r.quantity_delta,0)}</td><td class="n">${r.eur_stated?eur(r.eur_delta):'<span class="danger-line">euro not stated</span>'}</td><td class="small">${esc(r.period_label||'')}</td></tr>`).join('');
+  const rem=rec.remainder;
+  return `<div class="panel" data-contributors-compare="${esc(state.compare)}"><div class="eyebrow">Purchasing movement contributors</div>
+  <h3>${esc(rec.label||'Selected comparison')}</h3>
+  <p class="small">${esc(rec.statement)}</p>
+  <div class="evidence-line"><span>Selected movement</span><b>${num(rec.movement.quantity,0)} units &middot; ${signedEUR(rec.movement.eur)}</b></div>
+  <div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Original reference</th><th>Source status</th><th class="n">Quantity change</th><th class="n">Euro change</th><th>Period</th></tr></thead><tbody>
+  ${rows||'<tr><td colspan="5">No related reference matches this comparison period. The remainder below is the whole selected movement on the case part.</td></tr>'}
+  <tr><td class="pn">${esc(rem.pn)}</td><td class="small">${esc(rem.status||'Case part remainder')}</td><td class="n">${num(rem.quantity_delta,0)}</td><td class="n">${eur(rem.eur_delta)}</td><td class="small">${esc(rem.period_label||'')}</td></tr>
+  </tbody></table></div>
+  <p class="small">${esc(rem.statement||'')}</p>
+  <p class="small">Genuine / BVP lines stay as the source states them. A descriptive change is not a claim about missing dealer sales.</p></div>`;
+}
 function relatedTable(c){
  const e=c.packEvidence,p=c.parts||{};
  const rows=(e.relationships||[]).map(r=>`<tr><td class="pn">${esc(r.part_number_a)}</td><td class="pn">${esc(r.part_number_b)}</td><td>${esc(r.relationship_type)}</td><td>${esc(r.validation_status)}<br><span class="small">${esc(r.source_document)} &middot; ${esc(r.pointer)}</span></td></tr>`).join('');
@@ -757,7 +775,7 @@ function marketView(c){
 function decision(c){
  const cmp=c.comparisons[state.compare];
  return `<div class="compare-row"><div><span class="eyebrow">Measured record</span><div class="small">${sourceButton()} &middot; no forecast or lost-sales attribution</div></div><select id="comparison" aria-label="Comparison period"><option value="half" ${state.compare==='half'?'selected':''}>January-June 2026 vs 2025</option><option value="annual" ${state.compare==='annual'?'selected':''}>Calendar 2025 vs 2024</option></select></div>
- ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${targetBox(c)}
+ ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${contributorsPanel(c)}${targetBox(c)}
  <div class="grid2">${chart(c,state.billingMetric,state.billingMetric==='billingEUR'?'What ISZE billed':'What ISZE supplied')}${onwardHeld(c)?chart(c,'onwardQuantity','What the distributor supplied to dealers'):onwardMissing()}</div>
  <div class="grid2"><div class="panel"><span class="badge fact">Evidence supporting review</span><p style="margin-top:12px">${esc(c.reason)}</p></div><div class="panel warn"><span class="badge review">Evidence against a simple price story</span><p style="margin-top:12px">${esc(c.counter)}</p></div></div>
  <div class="grid2">${chart(c,'price','Observed ISZE unit price',true)}<div class="panel"><div class="eyebrow">Reconcile the euro change</div><h3>${signedEUR(cmp.revenueDelta)} in recorded billing</h3><div class="evidence-line"><span>Quantity effect, at prior price</span><b class="${color(cmp.volumeEffect)}">${signedEUR(cmp.volumeEffect)}</b></div><div class="evidence-line"><span>Effective price / terms effect</span><b class="${color(cmp.effectivePriceEffect)}">${signedEUR(cmp.effectivePriceEffect)}</b></div><div class="ruleline small">Exact identity: (new quantity &minus; old quantity) &times; old price + new quantity &times; (new price &minus; old price). The second term includes mix of order conditions. It is not causal price elasticity or a measured price-list effect.</div><div class="scopebox"><b>${num(c.fleet)} ${c.market==='ITUK'?'trucks':'vehicles'} &middot; 2025 market reference</b><br>${esc(c.application)} No part-level demand gap or dealer rate is computed.</div></div></div>

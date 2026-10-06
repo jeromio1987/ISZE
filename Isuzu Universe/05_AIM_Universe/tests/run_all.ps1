@@ -47,6 +47,19 @@ if ($review03 -match "fail\s+0" -and $review03 -match "pass\s+2") {
     $global:REVIEW_UNIT_FAIL = $true
 }
 
+# REVIEW-04 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "REVIEW-04 - parts behind a purchasing movement"
+$review04 = & node --test (Join-Path $PSScriptRoot "review_04_contributors.test.mjs") 2>&1 | Out-String
+Write-Host $review04
+if ($review04 -match "fail\s+0" -and $review04 -match "pass\s+2") {
+    Write-Host "REVIEW-04 2/0/2"
+} else {
+    Write-Host "REVIEW-04 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
+
 & $impl @PSBoundParameters
 if ($global:REVIEW_UNIT_FAIL) { exit 1 }
 exit $LASTEXITCODE
