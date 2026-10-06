@@ -214,6 +214,19 @@ if ($market08 -match "fail\s+0" -and $market08 -match "pass\s+2") {
     $global:REVIEW_UNIT_FAIL = $true
 }
 
+
+# ACCEPT-01 independent verification (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "ACCEPT-01 - independently verify the corrected financial engine"
+$accept01 = & node --test (Join-Path $PSScriptRoot "accept_01_independent.test.mjs") 2>&1 | Out-String
+Write-Host $accept01
+if ($accept01 -match "fail\s+0" -and $accept01 -match "pass\s+2") {
+    Write-Host "ACCEPT-01-INDEPENDENT 2/0/2"
+} else {
+    Write-Host "ACCEPT-01-INDEPENDENT FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
 & $impl @PSBoundParameters
 if ($global:REVIEW_UNIT_FAIL) { exit 1 }
 exit $LASTEXITCODE
