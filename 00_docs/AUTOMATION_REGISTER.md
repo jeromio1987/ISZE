@@ -79,11 +79,11 @@ Each `SKILL.md` states `**Model tier: …**` under the frontmatter. Prefer Haiku
 
 | Live task name | State | Cadence | Batch / script | Produces | Notes |
 |---|---|---|---|---|---|
-| `ISZE Tender Monitor` | Ready | Mon 07:30 | `run_tender_monitor.bat` | `01_data/14_dashboards/tender_data.json` | Last result 0 (2026-10-06) |
-| `ISZE_PMS_IAM_Refresh` | Ready | Mon 07:00 | `run_refresh_scheduled.bat` | KS and TMC prices, drift history, executive dashboards | Mekonomen, Auto365, Tranzparts retired 24 Sep. Last result 0 (2026-10-06) |
-| `ISZE_LiveStateAudit_Weekly` | Ready | Mon 08:00 | `run_live_state_audit.cmd` | `05_memory/briefs/automation_drift_*.md` | Last result 0 (2026-10-06) |
-| `ISZE_PriceLedger_Weekly` | Ready | Mon 09:00 | `04_tools/delegation/run_price_ledger_hidden.pyw` | price-observation ledger for the parts price dashboard | Windowless pythonw launcher so the scheduler gets the real exit code. Last result 0 (2026-10-06) |
-| `ISZE_CursorWeekDigest_Weekly` | Ready | Sun 20:00 | `run_cursor_week_digest.cmd` | Claude/Cursor scorecard `05_memory/briefs/scorecard_*.md` | Name kept; runs the scorecard since brief E1. Last result 0 (2026-10-06) |
+| `ISZE Tender Monitor` | Ready | Mon 07:30 | `run_tender_monitor.bat` | `01_data/14_dashboards/tender_data.json` | Last run 2026-10-05 07:30, result 0 |
+| `ISZE_PMS_IAM_Refresh` | Ready | Mon 07:00 | `run_refresh_scheduled.bat` | KS and TMC prices, drift history, executive dashboards | Mekonomen, Auto365, Tranzparts retired 24 Sep. Last run 2026-10-05 07:00, result 0 |
+| `ISZE_LiveStateAudit_Weekly` | Ready | Mon 08:00 | `run_live_state_audit.cmd` | `05_memory/briefs/automation_drift_*.md` | Last run 2026-10-05 08:00, result 0 |
+| `ISZE_PriceLedger_Weekly` | Ready | Mon 09:00 | `04_tools/delegation/run_price_ledger_hidden.pyw` | price-observation ledger for the parts price dashboard | Windowless pythonw launcher so the scheduler gets the real exit code. Last run 2026-10-06 05:55, result 0 (outside the Mon 09:00 slot, so likely a manual run; Task Scheduler history is off, so the Mon 5 Oct run is unverified) |
+| `ISZE_CursorWeekDigest_Weekly` | Ready | Sun 20:00 | `run_cursor_week_digest.cmd` | Claude/Cursor scorecard `05_memory/briefs/scorecard_*.md` | Name kept; runs the scorecard since brief E1. Last run 2026-10-04 20:00, result 0 |
 | `ISZE_DiscountScanner_Weekly` | Ready | Thu 07:00 | `run_discount_scraper.bat` | `04_tools/discount-scanner/deals_dashboard.html` | Personal, outside the audit. |
 | `ISZE_DelegatorWatch_20min` | Disabled | - | `run_overnight_orchestrator.cmd` | nothing | Off since 18 Sep; queue archived 5 Oct. |
 | `ISZE_EQ_Hit_Session_20260919` | Disabled | - | `run_eq_hit_session_20260919.ps1` | nothing | One-off of 19 Sep, exited 1. |
