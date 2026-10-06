@@ -1,7 +1,7 @@
 {
   "_note": "Evidence-backed state for the tasks that have landed. Merged by tools/build_progress.py. A state here must name the command that showed it. The integration owner writes this file; workers do not.",
-  "_written_by": "cursor-u23-run-02",
-  "_written_at": "2026-10-06T20:03:41Z",
+  "_written_by": "cursor-u23-run-03",
+  "_written_at": "2026-10-06T20:04:21Z",
   "_authority": "A state of technically verified means a named command was run and its output read. It does not mean human accepted, and it confers no business, technical, privacy or spending authority.",
   "_acceptance_run": {
     "command": "powershell -ExecutionPolicy Bypass -File tests/run_all.ps1",
@@ -685,6 +685,15 @@
         "mutation src/case/app_connection.js saveScenario (engine_version stamped +99) -> RUN-02 E1 fails; restored -> passes",
         "mutation src/case/app_connection.js acceptConsequentialRecord (client profit tamper check disabled) -> RUN-02 E2 fails; restored -> passes",
         "Synthetic only. UI bridge uses makeCaseService saveRecord/reopen with loading/error/retry. Canonical snapshot in scenario+result+review.engine_version. Consequential accept recomputes via AIMEngine.calculate; tampered client profit/result is refused."
+      ]
+    },
+    "RUN-03": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/run_03_refresh_jobs.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/refresh_jobs.js runJob (lock check disabled) -> RUN-03 E1 fails; restored -> passes",
+        "mutation src/data/refresh_jobs.js runJob (interrupt overwrites last accepted and unrelated evidence dates) -> RUN-03 E2 fails; restored -> passes",
+        "Synthetic disposable refresh jobs only. Locks prevent duplicate simultaneous accepts. Interrupted jobs retain last accepted source and record failure; unrelated evidence dates unchanged. No scheduled-job registry or Windows tasks touched."
       ]
     }
   },
