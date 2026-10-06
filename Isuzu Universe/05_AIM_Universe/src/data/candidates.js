@@ -458,15 +458,16 @@
     var setAside = [];
     var keysEverTaken = {};
 
-    function keyOf(r, ordinal) {
-      if (opts.key_of) return opts.key_of(r, ordinal);
-      /* The natural key is distributor plus the original part reference plus the
-         position of the row inside its declared source section. Two rows can
-         legitimately share a distributor and a part number - an unpriced line
-         beside a priced one - and neither may overwrite the other. The position
-         inside the section is stable, so a repeated import of the same section
-         reproduces the same keys. */
-      return [r.distributor, r.part_number, ordinal].join(SEP);
+    function keyOf(r, ordinal, sourceSection) {
+      if (opts.key_of) return opts.key_of(r, ordinal, sourceSection);
+      /* The natural key is the declared source section, distributor, original
+         part reference, and position of the row inside that section. Two rows
+         can legitimately share a distributor and a part number - an unpriced
+         line beside a priced one, or the same part on two different invoices -
+         and neither may overwrite the other. The section name scopes the key,
+         so a repeated import of the same section reproduces the same keys
+         while a second invoice section keeps its own rows. */
+      return [sourceSection, r.distributor, r.part_number, ordinal].join(SEP);
     }
 
     function upsert(sourceSection, incoming, meta) {
@@ -476,7 +477,7 @@
         at: meta.at || null, operation: 'upsert',
         counts: { received: incoming.length, added: 0, replaced: 0, set_aside: 0, unchanged: 0 } };
       incoming.forEach(function (r, ordinal) {
-        var k = keyOf(r, ordinal);
+        var k = keyOf(r, ordinal, sourceSection);
         keysEverTaken[k] = true;
         var record = { key: k, source_section: sourceSection, revision: rev.revision,
           origin: meta.origin || null, accepted_at: meta.at || null, restricted: meta.restricted === true,
