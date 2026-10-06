@@ -418,6 +418,18 @@ if ($connect07 -match "fail\s+0" -and $connect07 -match "pass\s+2") {
 }
 
 
+
+# CONNECT-08 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "CONNECT-08 - enable each service only when it returns supported work"
+$connect08 = & node --test (Join-Path $PSScriptRoot "connect_08_service_capability.test.mjs") 2>&1 | Out-String
+Write-Host $connect08
+if ($connect08 -match "fail\s+0" -and $connect08 -match "pass\s+2") {
+    Write-Host "CONNECT-08 2/0/2"
+} else {
+    Write-Host "CONNECT-08 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
 # RUN-01 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "RUN-01 - shared local case backend"

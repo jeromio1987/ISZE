@@ -1,7 +1,7 @@
 {
   "_note": "Evidence-backed state for the tasks that have landed. Merged by tools/build_progress.py. A state here must name the command that showed it. The integration owner writes this file; workers do not.",
-  "_written_by": "cursor-u23-connect-06",
-  "_written_at": "2026-10-06T19:58:14Z",
+  "_written_by": "cursor-u23-connect-08",
+  "_written_at": "2026-10-06T19:59:47Z",
   "_authority": "A state of technically verified means a named command was run and its output read. It does not mean human accepted, and it confers no business, technical, privacy or spending authority.",
   "_acceptance_run": {
     "command": "powershell -ExecutionPolicy Bypass -File tests/run_all.ps1",
@@ -667,6 +667,15 @@
         "mutation src/data/stock_snapshot.js acceptStockSnapshot (unknown reserved defaulted to 0) -> CONNECT-06 E1 fails; restored -> passes",
         "mutation src/data/stock_snapshot.js declineStockContribution (closes unrelated commercial/application requests) -> CONNECT-06 E2 fails; restored -> passes",
         "Synthetic stock snapshot only. Unknown reserved never becomes available via default zero. Declining stock contribution leaves unrelated commercial and application requests open. Missing snapshot leaves narrower review usable. No real stock file."
+      ]
+    },
+    "CONNECT-08": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/connect_08_service_capability.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/service_capability.js runPricingCaseJourney (missing optional breaks journey) -> CONNECT-08 E1 fails; restored -> passes",
+        "mutation src/data/service_capability.js describeEnabled (test adapter not labelled development-only) -> CONNECT-08 E2 fails; restored -> passes",
+        "Synthetic capability registry only. Levels: unavailable, source-limited, internally usable, approved participant-facing. Services enable only with supported work. Missing IDS/fleet/stock/tender does not break pricing/case journey. Enabled services state source and response route; test adapters are development-only. No connected-badge as completed integration."
       ]
     }
   },
