@@ -1,0 +1,1116 @@
+{
+  "meta": {
+    "note": "Invented REVIEW-06 fixtures only. Never a restricted payload extract.",
+    "rule_hint": "Covered months = recorded or no recorded line. Outside supplied period and absent months never create a lapsed flag."
+  },
+  "cases": [
+    {
+      "id": "REVIEW06-OUTSIDE",
+      "pn": "SYN-OUT-001",
+      "customer": "Synthetic Distributor",
+      "name": "Outside-period must not lapse",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "PT",
+      "country": "Portugal",
+      "defaultCompare": "half",
+      "actionType": "Review",
+      "action": "Review",
+      "verdict": "Synthetic",
+      "reason": "Synthetic",
+      "next": "Synthetic",
+      "recommendation": "Synthetic",
+      "counter": "Synthetic",
+      "application": "Synthetic",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": null,
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 60,
+            "eur": 600.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 60,
+            "eur": 600.0
+          },
+          "revenueDelta": 0.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 60,
+            "eur": 600.0
+          },
+          "revenueDelta": -400.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 11,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 11,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 12,
+          "billingEUR": 200.0,
+          "price": 10.0,
+          "onwardQuantity": 12,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 13,
+          "billingEUR": 300.0,
+          "price": 10.0,
+          "onwardQuantity": 13,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 14,
+          "billingEUR": 400.0,
+          "price": 10.0,
+          "onwardQuantity": 14,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 15,
+          "billingEUR": 500.0,
+          "price": 10.0,
+          "onwardQuantity": 15,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 16,
+          "billingEUR": 600.0,
+          "price": 10.0,
+          "onwardQuantity": 16,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-07",
+          "year": 2025,
+          "month": 7,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2025-08",
+          "year": 2025,
+          "month": 8,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2025-09",
+          "year": 2025,
+          "month": 9,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2025-10",
+          "year": 2025,
+          "month": 10,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2025-11",
+          "year": 2025,
+          "month": 11,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2025-12",
+          "year": 2025,
+          "month": 12,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": false,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "REVIEW06-OUTSIDE",
+        "packDate": "2026-10-06"
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": []
+    },
+    {
+      "id": "REVIEW06-GAP",
+      "pn": "SYN-GAP-001",
+      "customer": "Synthetic Distributor",
+      "name": "Covered gap is intermittent; outside still not lapsed",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "PT",
+      "country": "Portugal",
+      "defaultCompare": "half",
+      "actionType": "Review",
+      "action": "Review",
+      "verdict": "Synthetic",
+      "reason": "Synthetic",
+      "next": "Synthetic",
+      "recommendation": "Synthetic",
+      "counter": "Synthetic",
+      "application": "Synthetic",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": null,
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 60,
+            "eur": 600.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 60,
+            "eur": 600.0
+          },
+          "revenueDelta": 0.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 60,
+            "eur": 600.0
+          },
+          "revenueDelta": -400.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 5,
+          "billingEUR": 50.0,
+          "price": 10.0,
+          "onwardQuantity": 5,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 5,
+          "billingEUR": 50.0,
+          "price": 10.0,
+          "onwardQuantity": 5,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 5,
+          "billingEUR": 50.0,
+          "price": 10.0,
+          "onwardQuantity": 5,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 5,
+          "billingEUR": 50.0,
+          "price": 10.0,
+          "onwardQuantity": 5,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "no recorded line",
+          "onwardState": "no recorded line"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 4,
+          "billingEUR": 40.0,
+          "price": 10.0,
+          "onwardQuantity": 4,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-07",
+          "year": 2025,
+          "month": 7,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2025-08",
+          "year": 2025,
+          "month": 8,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2025-09",
+          "year": 2025,
+          "month": 9,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2025-10",
+          "year": 2025,
+          "month": 10,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2025-11",
+          "year": 2025,
+          "month": 11,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2025-12",
+          "year": 2025,
+          "month": 12,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": false,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "REVIEW06-GAP",
+        "packDate": "2026-10-06"
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": []
+    },
+    {
+      "id": "REVIEW06-SUPER",
+      "pn": "SYN-OLD-001",
+      "customer": "Synthetic Distributor",
+      "name": "Supersession transfer case",
+      "category": "Brake",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Review",
+      "action": "Review supersession",
+      "verdict": "Synthetic",
+      "reason": "Synthetic",
+      "next": "Synthetic",
+      "recommendation": "Synthetic",
+      "counter": "Synthetic",
+      "application": "Synthetic",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": null,
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 120,
+            "eur": 1200.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 0,
+            "eur": 0.0
+          },
+          "revenueDelta": -1200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 120,
+            "eur": 1200.0
+          },
+          "revenueDelta": -800.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 20,
+          "billingEUR": 200.0,
+          "price": 10.0,
+          "onwardQuantity": 20,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 20,
+          "billingEUR": 200.0,
+          "price": 10.0,
+          "onwardQuantity": 20,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 20,
+          "billingEUR": 200.0,
+          "price": 10.0,
+          "onwardQuantity": 20,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 20,
+          "billingEUR": 200.0,
+          "price": 10.0,
+          "onwardQuantity": 20,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 20,
+          "billingEUR": 200.0,
+          "price": 10.0,
+          "onwardQuantity": 20,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 20,
+          "billingEUR": 200.0,
+          "price": 10.0,
+          "onwardQuantity": 20,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2026-01",
+          "year": 2026,
+          "month": 1,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "no recorded line",
+          "onwardState": "no recorded line"
+        },
+        {
+          "period": "2026-02",
+          "year": 2026,
+          "month": 2,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "no recorded line",
+          "onwardState": "no recorded line"
+        },
+        {
+          "period": "2026-03",
+          "year": 2026,
+          "month": 3,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "no recorded line",
+          "onwardState": "no recorded line"
+        },
+        {
+          "period": "2026-04",
+          "year": 2026,
+          "month": 4,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "no recorded line",
+          "onwardState": "no recorded line"
+        },
+        {
+          "period": "2026-05",
+          "year": 2026,
+          "month": 5,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "no recorded line",
+          "onwardState": "no recorded line"
+        },
+        {
+          "period": "2026-06",
+          "year": 2026,
+          "month": 6,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "no recorded line",
+          "onwardState": "no recorded line"
+        },
+        {
+          "period": "2026-07",
+          "year": 2026,
+          "month": 7,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2026-08",
+          "year": 2026,
+          "month": 8,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2026-09",
+          "year": 2026,
+          "month": 9,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2026-10",
+          "year": 2026,
+          "month": 10,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2026-11",
+          "year": 2026,
+          "month": 11,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2026-12",
+          "year": 2026,
+          "month": 12,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        }
+      ],
+      "relatedEvidence": [
+        {
+          "pn": "SYN-NEW-002",
+          "status": "Declared newest number; supersession candidate",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 0,
+            "eur": 0.0,
+            "price": null,
+            "salesToDealer": 0,
+            "onwardPositive": 0,
+            "onwardNegative": 0,
+            "billingLines": 0,
+            "excludedLines": 0,
+            "excludedQuantity": 0,
+            "excludedEUR": 0,
+            "orderTypes": []
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 118,
+            "eur": 1180.0,
+            "price": 10.0,
+            "salesToDealer": 118,
+            "onwardPositive": 118,
+            "onwardNegative": 0,
+            "billingLines": 6,
+            "excludedLines": 0,
+            "excludedQuantity": 0,
+            "excludedEUR": 0,
+            "orderTypes": []
+          }
+        }
+      ],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": false,
+        "relationships": [
+          {
+            "relationship_record_id": "R06-1",
+            "part_number_a": "SYN-OLD-001",
+            "part_number_b": "SYN-NEW-002",
+            "relationship_type": "declared newest number in the current price file",
+            "direction": "part_number -> newest_pn",
+            "source_type": "price file newest-part-number column",
+            "source_document": "synthetic_newest.csv",
+            "application_vehicle": "",
+            "application_engine": "",
+            "country_of_origin": "",
+            "technical_fitment_approved": false,
+            "validation_status": "declared",
+            "source_reference": "synthetic",
+            "description": "SYN-OLD-001 points to SYN-NEW-002",
+            "note": "Supersession / newest-number change; not a proven lost and new pair.",
+            "pointer": "synthetic"
+          }
+        ],
+        "parts": [],
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "REVIEW06-SUPER",
+        "packDate": "2026-10-06"
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": []
+    },
+    {
+      "id": "REVIEW06-COMBINED",
+      "pn": "SYN-ACCT-A",
+      "customer": "Synthetic Distributor",
+      "name": "Combined account change",
+      "category": "Brake",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Review",
+      "action": "Review supersession",
+      "verdict": "Synthetic",
+      "reason": "Synthetic",
+      "next": "Synthetic",
+      "recommendation": "Synthetic",
+      "counter": "Synthetic",
+      "application": "Synthetic",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": null,
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 120,
+            "eur": 1200.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 0,
+            "eur": 0.0
+          },
+          "revenueDelta": -1200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 120,
+            "eur": 1200.0
+          },
+          "revenueDelta": -800.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 20,
+          "billingEUR": 200.0,
+          "price": 10.0,
+          "onwardQuantity": 20,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 20,
+          "billingEUR": 200.0,
+          "price": 10.0,
+          "onwardQuantity": 20,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 20,
+          "billingEUR": 200.0,
+          "price": 10.0,
+          "onwardQuantity": 20,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 20,
+          "billingEUR": 200.0,
+          "price": 10.0,
+          "onwardQuantity": 20,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 20,
+          "billingEUR": 200.0,
+          "price": 10.0,
+          "onwardQuantity": 20,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 20,
+          "billingEUR": 200.0,
+          "price": 10.0,
+          "onwardQuantity": 20,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2026-01",
+          "year": 2026,
+          "month": 1,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "no recorded line",
+          "onwardState": "no recorded line"
+        },
+        {
+          "period": "2026-02",
+          "year": 2026,
+          "month": 2,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "no recorded line",
+          "onwardState": "no recorded line"
+        },
+        {
+          "period": "2026-03",
+          "year": 2026,
+          "month": 3,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "no recorded line",
+          "onwardState": "no recorded line"
+        },
+        {
+          "period": "2026-04",
+          "year": 2026,
+          "month": 4,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "no recorded line",
+          "onwardState": "no recorded line"
+        },
+        {
+          "period": "2026-05",
+          "year": 2026,
+          "month": 5,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "no recorded line",
+          "onwardState": "no recorded line"
+        },
+        {
+          "period": "2026-06",
+          "year": 2026,
+          "month": 6,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "no recorded line",
+          "onwardState": "no recorded line"
+        },
+        {
+          "period": "2026-07",
+          "year": 2026,
+          "month": 7,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2026-08",
+          "year": 2026,
+          "month": 8,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2026-09",
+          "year": 2026,
+          "month": 9,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2026-10",
+          "year": 2026,
+          "month": 10,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2026-11",
+          "year": 2026,
+          "month": 11,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        },
+        {
+          "period": "2026-12",
+          "year": 2026,
+          "month": 12,
+          "billingQuantity": null,
+          "billingEUR": null,
+          "price": null,
+          "onwardQuantity": null,
+          "billingState": "outside supplied period",
+          "onwardState": "outside supplied period"
+        }
+      ],
+      "relatedEvidence": [
+        {
+          "pn": "SYN-ACCT-B",
+          "status": "Combined-account successor; seller account merged",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 0,
+            "eur": 0.0,
+            "price": null,
+            "salesToDealer": 0,
+            "onwardPositive": 0,
+            "onwardNegative": 0,
+            "billingLines": 0,
+            "excludedLines": 0,
+            "excludedQuantity": 0,
+            "excludedEUR": 0,
+            "orderTypes": []
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 115,
+            "eur": 1150.0,
+            "price": 10.0,
+            "salesToDealer": 115,
+            "onwardPositive": 115,
+            "onwardNegative": 0,
+            "billingLines": 6,
+            "excludedLines": 0,
+            "excludedQuantity": 0,
+            "excludedEUR": 0,
+            "orderTypes": []
+          }
+        }
+      ],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": false,
+        "relationships": [
+          {
+            "relationship_record_id": "R06-2",
+            "part_number_a": "SYN-ACCT-A",
+            "part_number_b": "SYN-ACCT-B",
+            "relationship_type": "combined-account change (seller accounts merged)",
+            "direction": "account_a -> account_b",
+            "source_type": "account map",
+            "source_document": "synthetic_accounts.csv",
+            "application_vehicle": "",
+            "application_engine": "",
+            "country_of_origin": "",
+            "technical_fitment_approved": false,
+            "validation_status": "declared",
+            "source_reference": "synthetic",
+            "description": "Account A combined into Account B",
+            "note": "Combined-account change; not a proven lost and new pair.",
+            "pointer": "synthetic"
+          }
+        ],
+        "parts": [],
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "REVIEW06-COMBINED",
+        "packDate": "2026-10-06"
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": []
+    }
+  ]
+}

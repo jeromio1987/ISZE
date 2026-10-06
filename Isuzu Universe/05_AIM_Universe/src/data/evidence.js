@@ -379,6 +379,14 @@
       statement: 'A newest-number column names the newest available number for ordering. It is not '
         + 'technical approval and it is not a fitment decision.'
     },
+    combined_account: {
+      kind: 'combined_account',
+      label: 'Combined-account change',
+      means: 'purchasing moved because seller accounts were combined or remapped',
+      implies_fitment_approval: false,
+      statement: 'A combined-account change explains a drop on one account number and a rise on another. '
+        + 'It is not a proven lost and new pair.'
+    },
     unknown: {
       kind: 'unknown',
       label: 'Unclassified relationship',
@@ -403,6 +411,7 @@
     else if (text.indexOf('supersession') >= 0) kind = 'supersession';
     else if (text.indexOf('replacement') >= 0) kind = 'replacement';
     else if (text.indexOf('newest') >= 0) kind = 'declared_newest_number';
+    else if (text.indexOf('combined-account') >= 0 || text.indexOf('combined account') >= 0) kind = 'combined_account';
     return { kind: kind, raw_type: raw.relationship_type || null, classified: kind !== 'unknown' };
   }
 
@@ -1500,6 +1509,408 @@
     };
   }
 
+
+  /* ------------------------------------------------------------ purchasing activity -- */
+
+  /* Stated rule (plain words, returned on every call):
+     Covered months are those whose billingState is "recorded" or "no recorded line".
+     Months marked "outside supplied period", and months absent from the series, are not
+     covered: they are marked missing and never produce a lapsed flag. Descriptive flags
+     only — no rating, no score, no 0-100.
+     Regular: recorded activity in every covered month (or with gaps shorter than three).
+     Intermittent: recorded months mixed with covered no-recorded-line gaps, not a clean
+     terminal lapse of three or more covered months.
+     New: the first recorded month appears after three or more covered no-recorded-line
+     months at the start of the covered window.
+     Lapsed: at least one earlier recorded month, then three or more consecutive covered
+     no-recorded-line months at the end of the covered window. Outside / absent months
+     never count toward that terminal run.
+     A supersession, declared newest-number, or combined-account relationship that explains
+     a drop on the case part and a rise on a related part is surfaced as an explanation;
+     it does not become a false lost/new pair. */
+
+  var PURCHASING_RULE =
+    'Covered months are those with billingState "recorded" or "no recorded line". '
+    + 'Months marked "outside supplied period", and months absent from the series, are '
+    + 'marked missing and never produce a lapsed flag. Regular means recorded activity '
+    + 'across the covered window without a terminal covered gap of three or more months. '
+    + 'Intermittent means recorded months mixed with covered gaps that are not a clean '
+    + 'terminal lapse. New means the first recorded month follows three or more covered '
+    + 'no-recorded-line months at the start. Lapsed means earlier recorded activity then '
+    + 'three or more consecutive covered no-recorded-line months at the end of the covered '
+    + 'window. Flags are descriptive only: no rating and no score. '
+    + 'Supersession, newest-number and combined-account changes are explanations, not a '
+    + 'false lost/new pair.';
+
+  function purchasingActivity(caseObject) {
+    caseObject = caseObject || {};
+    var series = Array.isArray(caseObject.series) ? caseObject.series.slice() : [];
+    series.sort(function (a, b) {
+      return String(a.period || '').localeCompare(String(b.period || ''));
+    });
+
+    var months = [];
+    var number_changes = [];
+    var prevCoveredQty = null;
+    var coveredStates = [];
+
+    for (var i = 0; i < series.length; i++) {
+      var row = series[i] || {};
+      var state = row.billingState || null;
+      var covered = state === 'recorded' || state === 'no recorded line';
+      var missing = !covered; /* outside supplied period, unknown, or absent-from-coverage */
+      var qty = row.billingQuantity;
+      var qtyNum = (qty === null || qty === undefined || qty === '') ? null : Number(qty);
+      var flag = null;
+      if (covered && state === 'no recorded line') flag = 'no_purchase_in_covered_month';
+      if (covered && state === 'recorded') flag = 'recorded';
+      if (!covered && state === 'outside supplied period') flag = 'outside_supplied_period';
+      /* Never attach 'lapsed' to a non-covered month. */
+      months.push({
+        period: row.period || null,
+        billingState: state,
+        covered: covered,
+        missing: missing,
+        quantity: qtyNum,
+        flag: flag
+      });
+      if (covered) {
+        coveredStates.push(state);
+        if (prevCoveredQty !== null && qtyNum !== null && qtyNum !== prevCoveredQty) {
+          number_changes.push({
+            period: row.period,
+            from: prevCoveredQty,
+            to: qtyNum,
+            statement: 'Quantity changed from ' + prevCoveredQty + ' to ' + qtyNum
+              + ' in covered month ' + row.period + '.'
+          });
+        }
+        if (qtyNum !== null) prevCoveredQty = qtyNum;
+        else if (state === 'no recorded line') prevCoveredQty = 0;
+      }
+    }
+
+    /* Pattern from covered months only. */
+    var pattern = null;
+    var flags = [];
+    if (coveredStates.length) {
+      var firstRec = -1;
+      var lastRec = -1;
+      for (var c = 0; c < coveredStates.length; c++) {
+        if (coveredStates[c] === 'recorded') {
+          if (firstRec < 0) firstRec = c;
+          lastRec = c;
+        }
+      }
+      var leadingGaps = firstRec < 0 ? coveredStates.length : firstRec;
+      var trailingGaps = 0;
+      if (lastRec >= 0) {
+        for (var t = coveredStates.length - 1; t > lastRec; t--) {
+          if (coveredStates[t] === 'no recorded line') trailingGaps++;
+          else break;
+        }
+      }
+      var gapInside = false;
+      if (firstRec >= 0) {
+        for (var g = firstRec; g <= lastRec; g++) {
+          if (coveredStates[g] === 'no recorded line') { gapInside = true; break; }
+        }
+      }
+
+      if (firstRec < 0) {
+        pattern = null;
+        flags.push('no_recorded_activity_in_covered_window');
+      } else if (leadingGaps >= 3 && trailingGaps < 3) {
+        pattern = 'new';
+        flags.push('new');
+      } else if (trailingGaps >= 3) {
+        pattern = 'lapsed';
+        flags.push('lapsed');
+      } else if (gapInside) {
+        pattern = 'intermittent';
+        flags.push('intermittent');
+      } else {
+        pattern = 'regular';
+        flags.push('regular');
+      }
+    }
+
+    /* Relationship explanations: supersession / newest / combined-account. */
+    var explanations = [];
+    var rels = (caseObject.packEvidence && caseObject.packEvidence.relationships) || [];
+    var related = caseObject.relatedEvidence || [];
+    var false_pair_avoided = false;
+
+    for (var r = 0; r < rels.length; r++) {
+      var raw = rels[r] || {};
+      var cls = classifyRelationship(raw);
+      var text = String(raw.relationship_type || '').toLowerCase();
+      var isTransfer = cls.kind === 'supersession'
+        || cls.kind === 'declared_newest_number'
+        || cls.kind === 'combined_account'
+        || text.indexOf('combined-account') >= 0
+        || text.indexOf('combined account') >= 0
+        || text.indexOf('newest') >= 0
+        || text.indexOf('supersession') >= 0;
+      if (!isTransfer) continue;
+
+      var relatedPn = raw.part_number_b || raw.part_number_a || null;
+      if (relatedPn && relatedPn === caseObject.pn) {
+        relatedPn = raw.part_number_a === caseObject.pn ? raw.part_number_b : raw.part_number_a;
+      }
+      var relatedRow = null;
+      for (var re = 0; re < related.length; re++) {
+        if (related[re] && related[re].pn === relatedPn) { relatedRow = related[re]; break; }
+      }
+      var priorQ = relatedRow && relatedRow.prior ? Number(relatedRow.prior.quantity || 0) : 0;
+      var currQ = relatedRow && relatedRow.current ? Number(relatedRow.current.quantity || 0) : 0;
+      var ownHalf = caseObject.comparisons && caseObject.comparisons.half;
+      var ownDrop = false;
+      if (ownHalf && ownHalf.prior && ownHalf.current) {
+        ownDrop = Number(ownHalf.current.quantity) < Number(ownHalf.prior.quantity);
+      }
+      var relatedRise = currQ > priorQ;
+
+      var kindLabel = cls.kind === 'combined_account' ? 'combined-account change'
+        : (cls.kind === 'declared_newest_number' || text.indexOf('newest') >= 0)
+          ? 'declared newest-number / supersession'
+          : (cls.kind === 'supersession' ? 'supersession' : cls.kind);
+
+      if (text.indexOf('combined') >= 0) kindLabel = 'combined-account change';
+
+      var statement = 'A ' + kindLabel + ' links ' + (caseObject.pn || 'the case part')
+        + ' to ' + (relatedPn || 'a related part reference') + '. ';
+      if (ownDrop && relatedRise) {
+        statement += 'The case part quantity fell while the related reference rose in the same '
+          + 'comparison window. That movement is explained by the relationship; it is not a '
+          + 'false lost/new pair.';
+        false_pair_avoided = true;
+        /* Strip lost/new/lapsed flags that would form a false pair. */
+        flags = flags.filter(function (f) {
+          return f !== 'lost' && f !== 'new' && f !== 'lapsed';
+        });
+        if (pattern === 'lapsed' || pattern === 'new') pattern = 'intermittent';
+        flags.push('relationship_explained_transfer');
+      } else {
+        statement += 'The relationship is held as an explanation alongside the covered monthly activity.';
+        false_pair_avoided = true;
+      }
+
+      explanations.push({
+        kind: kindLabel,
+        related_pn: relatedPn,
+        relationship_type: raw.relationship_type || null,
+        statement: statement
+      });
+    }
+
+    if (explanations.length && !false_pair_avoided) false_pair_avoided = true;
+
+    return {
+      rule: PURCHASING_RULE,
+      pattern: pattern,
+      flags: flags,
+      months: months,
+      number_changes: number_changes,
+      explanations: explanations,
+      false_pair_avoided: false_pair_avoided,
+      rating: null,
+      score: null
+    };
+  }
+
+
+  /* ------------------------------------------------------------ next action plan -- */
+
+  /* Routes a review question to the appropriate next action. Descriptive only.
+     Routes: price_assessment, bvp_application_check, supply_timing_check,
+     evidence_request, justified_no_action, purchasing_review.
+     A supply explanation never produces a discount route. An unresolved price
+     comparison still permits a scoped application or purchasing review.
+     Competing explanations and unknown are retained. A family decline without
+     linked evidence never becomes a precise reason. */
+
+  function nextActionPlan(caseObject) {
+    caseObject = caseObject || {};
+    var explanations = Array.isArray(caseObject.reviewExplanations)
+      ? caseObject.reviewExplanations.slice()
+      : [];
+    var routes = [];
+    var competing = [];
+    var unknown = [];
+    var seen = {};
+
+    function addRoute(id, label, why, kind) {
+      if (seen[id]) return;
+      seen[id] = true;
+      routes.push({ id: id, label: label, why: why, kind: kind || id });
+    }
+
+    for (var i = 0; i < explanations.length; i++) {
+      var ex = explanations[i] || {};
+      var kind = String(ex.kind || '').toLowerCase();
+      var status = String(ex.status || '').toLowerCase();
+      var statement = ex.statement || '';
+      var linked = Array.isArray(ex.linked_evidence) ? ex.linked_evidence : [];
+
+      if (status === 'competing') {
+        competing.push({ kind: kind, statement: statement, linked_evidence: linked });
+      }
+      if (status === 'unknown' || kind === 'unknown') {
+        unknown.push({ kind: kind || 'unknown', statement: statement, linked_evidence: linked });
+      }
+
+      if (kind === 'supply' || kind === 'timing' || kind === 'supply_timing') {
+        addRoute(
+          'supply_timing_check',
+          'Supply / timing check',
+          'Relevant because a supply or timing explanation is held: ' + statement,
+          'supply_timing_check'
+        );
+        /* Never a discount from supply. */
+        continue;
+      }
+
+      if (kind === 'price_comparison' || kind === 'price') {
+        addRoute(
+          'price_assessment',
+          'Price assessment',
+          'Relevant because the price comparison is ' + (status || 'open') + ': ' + statement,
+          'price_assessment'
+        );
+        if (status === 'unresolved') {
+          addRoute(
+            'purchasing_review',
+            'Scoped purchasing review',
+            'Relevant because an unresolved price comparison still permits a scoped purchasing review while the price source is settled.',
+            'purchasing_review'
+          );
+        }
+        continue;
+      }
+
+      if (kind === 'application' || kind === 'bvp' || kind === 'bvp_application') {
+        addRoute(
+          'bvp_application_check',
+          'BVP / application check',
+          'Relevant because an application or BVP question is held: ' + statement,
+          'bvp_application_check'
+        );
+        continue;
+      }
+
+      if (kind === 'evidence_request' || (status === 'unknown' && linked.length === 0)) {
+        addRoute(
+          'evidence_request',
+          'Evidence request',
+          'Relevant because required evidence is not held: ' + (statement || 'unnamed gap'),
+          'evidence_request'
+        );
+        continue;
+      }
+
+      if (kind === 'justified_no_action' || kind === 'no_action') {
+        addRoute(
+          'justified_no_action',
+          'Justified no action',
+          'Relevant because the held explanation does not justify a commercial change: ' + statement,
+          'justified_no_action'
+        );
+        continue;
+      }
+    }
+
+    /* Unresolved list conflict on the pack also opens price assessment + scoped review. */
+    var pe = caseObject.packEvidence || {};
+    if (pe.listConflict) {
+      addRoute(
+        'price_assessment',
+        'Price assessment',
+        'Relevant because the pack records a list conflict; the applicable customer net price is not settled.',
+        'price_assessment'
+      );
+      addRoute(
+        'purchasing_review',
+        'Scoped purchasing review',
+        'Relevant because an unresolved price comparison still permits a scoped purchasing review.',
+        'purchasing_review'
+      );
+    }
+
+    /* Catalogue pairing / BVP without fitment approval -> application check. */
+    var rels = pe.relationships || [];
+    for (var r = 0; r < rels.length; r++) {
+      var cls = classifyRelationship(rels[r] || {});
+      var fit = fitmentStatus(rels[r] || {});
+      if (cls.kind === 'catalogue_pairing' || cls.kind === 'declared_newest_number' || cls.kind === 'supersession') {
+        if (!fit || fit.approved !== true) {
+          addRoute(
+            'bvp_application_check',
+            'BVP / application check',
+            'Relevant because a ' + cls.kind.replace(/_/g, ' ')
+              + ' is held without stated fitment approval.',
+            'bvp_application_check'
+          );
+        }
+      }
+    }
+
+    if (!routes.length) {
+      addRoute(
+        'evidence_request',
+        'Evidence request',
+        'Relevant because no explained next action is held on this case.',
+        'evidence_request'
+      );
+    }
+
+    /* Family decline: precise reason only with linked evidence. */
+    var precise_family_decline = null;
+    var fd = caseObject.familyDecline;
+    if (fd && fd.precise_reason) {
+      var fdLinked = Array.isArray(fd.linked_evidence) ? fd.linked_evidence : [];
+      if (fdLinked.length > 0) {
+        precise_family_decline = {
+          reason: fd.precise_reason,
+          linked_evidence: fdLinked
+        };
+      } else {
+        unknown.push({
+          kind: 'family_decline',
+          statement: 'A precise family decline reason was offered without linked evidence and is not accepted.',
+          linked_evidence: []
+        });
+        addRoute(
+          'evidence_request',
+          'Evidence request',
+          'Relevant because a family-level decline was asserted without linked evidence.',
+          'evidence_request'
+        );
+      }
+    }
+
+    /* Hard rule: supply explanation never yields a discount route. */
+    var hasSupply = explanations.some(function (e) {
+      var k = String((e && e.kind) || '').toLowerCase();
+      return k === 'supply' || k === 'timing' || k === 'supply_timing';
+    });
+    if (hasSupply) {
+      routes = routes.filter(function (r) {
+        return r.id !== 'discount' && r.id !== 'automatic_discount'
+          && !/\bdiscount\b/i.test(r.label || '')
+          && !/\bdiscount\b/i.test(r.why || '');
+      });
+    }
+
+    return {
+      routes: routes,
+      competing_explanations: competing,
+      unknown: unknown,
+      precise_family_decline: precise_family_decline,
+      statement: 'Next actions are routed from the held explanations. Competing explanations and unknown are kept. A supply explanation never produces a discount.'
+    };
+  }
+
   var API = {
     reference: reference,
     describePeriod: describePeriod,
@@ -1532,6 +1943,8 @@
     observationConflicts: observationConflicts,
     inventory: inventory,
     movementContributors: movementContributors,
+    purchasingActivity: purchasingActivity,
+    nextActionPlan: nextActionPlan,
     periodMatchesComparison: periodMatchesComparison,
     SEP: SEP
   };
