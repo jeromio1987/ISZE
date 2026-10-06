@@ -214,6 +214,18 @@ if ($market06 -match "fail\s+0" -and $market06 -match "pass\s+2") {
     $global:REVIEW_UNIT_FAIL = $true
 }
 
+# MARKET-02 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "MARKET-02 - product equivalence separate from lexical similarity"
+$marketX = & node --test (Join-Path $PSScriptRoot "market_02_equivalence.test.mjs") 2>&1 | Out-String
+Write-Host $marketX
+if ($marketX -match "fail\s+0" -and $marketX -match "pass\s+2") {
+    Write-Host "MARKET-02 2/0/2"
+} else {
+    Write-Host "MARKET-02 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
 # MARKET-07 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "MARKET-07 - comparable-price panel with clear exclusions"

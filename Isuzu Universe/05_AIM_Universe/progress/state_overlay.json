@@ -1,7 +1,7 @@
 {
   "_note": "Evidence-backed state for the tasks that have landed. Merged by tools/build_progress.py. A state here must name the command that showed it. The integration owner writes this file; workers do not.",
-  "_written_by": "cursor U15 MARKET-06",
-  "_written_at": "2026-10-06T17:54:40Z",
+  "_written_by": "cursor U15 MARKET-02",
+  "_written_at": "2026-10-06T18:07:25Z",
   "_authority": "A state of technically verified means a named command was run and its output read. It does not mean human accepted, and it confers no business, technical, privacy or spending authority.",
   "_acceptance_run": {
     "command": "powershell -ExecutionPolicy Bypass -File tests/run_all.ps1",
@@ -520,6 +520,15 @@
         "node --test tests/market_06_conflicts.test.mjs -> 2 pass, 0 fail",
         "mutation src/data/market_observation.js:302 (savedComparisonView forces newer_rewrote_saved true) -> MARKET-06 E1 fails; restored -> passes",
         "mutation src/data/market_observation.js:332 (conflictVisibilityView forces autoChose true) -> MARKET-06 E2 fails; restored -> passes",
+        "Synthetic fixtures only. MARKET-DATA-GAP remains open; no competitor prices invented; no scraping."
+      ]
+    },
+    "MARKET-02": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/market_02_equivalence.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/market_observation.js:368 (productMatchGate always accepts) -> MARKET-02 E1 fails; restored -> passes",
+        "mutation src/data/market_observation.js:393 (matchTraceView drops excluded_ids) -> MARKET-02 E2 fails; restored -> passes",
         "Synthetic fixtures only. MARKET-DATA-GAP remains open; no competitor prices invented; no scraping."
       ]
     }

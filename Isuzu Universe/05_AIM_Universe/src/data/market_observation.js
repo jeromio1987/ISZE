@@ -343,6 +343,60 @@
     };
   }
 
+  /* ----- MARKET-02: product match separate from lexical similarity ----- */
+
+  function productMatchGate(offer) {
+    offer = offer || {};
+    var match = offer.match || {};
+    var status = (match.status || '').toLowerCase();
+    var pack = offer.pack || {};
+    var reasons = [];
+
+    if (pack && pack.contents_equivalent === false) {
+      reasons.push('KIT_CONTENTS_NOT_EQUIVALENT');
+    }
+    if (pack && pack.declared_complete_kit === false) {
+      reasons.push('INCOMPLETE_KIT');
+    }
+    if (status === 'unresolved' || status === '') {
+      reasons.push('PRODUCT_MATCH_UNRESOLVED');
+    }
+    if (status === 'rejected') {
+      reasons.push('PRODUCT_MATCH_REJECTED');
+    }
+
+    var accepted = (status === 'accepted')
+      && reasons.indexOf('KIT_CONTENTS_NOT_EQUIVALENT') < 0
+      && reasons.indexOf('INCOMPLETE_KIT') < 0
+      && reasons.indexOf('PRODUCT_MATCH_UNRESOLVED') < 0
+      && reasons.indexOf('PRODUCT_MATCH_REJECTED') < 0;
+
+    return {
+      accepted_price_comparison: accepted,
+      match_status: status || 'unresolved',
+      reason_codes: reasons,
+      traceable: true,
+      statement: accepted
+        ? 'Product match is accepted on a named basis.'
+        : 'Product match is not accepted for a price comparison; the observation stays traceable.'
+    };
+  }
+
+  function matchTraceView(args) {
+    args = args || {};
+    var panel = args.panel || {};
+    var eligible = (panel.eligible_offers || []).map(function (r) { return r.observation_id; });
+    var ineligible = (panel.ineligible_offers || []);
+    var excluded = ineligible.map(function (r) { return r.observation_id; });
+    return {
+      eligible_ids: eligible,
+      excluded_ids: excluded,
+      traceable_ids: eligible.concat(excluded),
+      panel: panel
+    };
+  }
+
+
   var API = {
     RECORD_FIELDS: RECORD_FIELDS,
     buildRecord: buildRecord,
@@ -351,7 +405,9 @@
     attachToSavedCase: attachToSavedCase,
     toPanelOffer: toPanelOffer,
     savedComparisonView: savedComparisonView,
-    conflictVisibilityView: conflictVisibilityView
+    conflictVisibilityView: conflictVisibilityView,
+    productMatchGate: productMatchGate,
+    matchTraceView: matchTraceView
   };
 
   root.AIMMarketObservation = API;

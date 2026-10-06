@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T17:54:40Z",
+  "written_at": "2026-10-06T18:07:25Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 65,
-    "not started": 31
+    "technically verified": 66,
+    "not started": 30
   },
   "total_tasks": 96,
-  "overlay_applied": 65,
+  "overlay_applied": 66,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -924,8 +924,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "MARKET-01, DATA-03",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/market_02_equivalence.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/market_observation.js:368 (productMatchGate always accepts) -> MARKET-02 E1 fails; restored -> passes",
+        "mutation src/data/market_observation.js:393 (matchTraceView drops excluded_ids) -> MARKET-02 E2 fails; restored -> passes",
+        "Synthetic fixtures only. MARKET-DATA-GAP remains open; no competitor prices invented; no scraping."
+      ],
       "blockers": []
     },
     {
