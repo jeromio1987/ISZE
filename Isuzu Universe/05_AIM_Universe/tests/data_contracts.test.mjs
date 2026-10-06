@@ -783,7 +783,8 @@ test('DATA-06 a correction on a candidate row replaces its declared predecessor'
   const ds = candidates.makeDataset('candidate set');
   ds.upsert('screen-2026-09', [{ distributor: 'TESTUK', part_number: 'SYNTH-PN-A',
     billed_qty: 2000, observed_billing_eur: 200000.0 }], { restricted: true });
-  const key = ['TESTUK', 'SYNTH-PN-A', 0].join(SEP);
+  /* Key is scoped to the source section (C18); take it from the held row. */
+  const key = ds.all()[0].key;
   const r = ds.correct('correction-2026-10', key,
     { distributor: 'TESTUK', part_number: 'SYNTH-PN-A', billed_qty: 2500,
       observed_billing_eur: 215000 },

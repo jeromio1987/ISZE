@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T13:28:37Z",
+  "written_at": "2026-10-06T15:11:13Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,9 +12,9 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 57,
+    "technically verified": 58,
     "not started": 37,
-    "implemented": 2
+    "implemented": 1
   },
   "total_tasks": 96,
   "overlay_applied": 59,
@@ -985,9 +985,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "MARKET-02, MARKET-03, MARKET-04, MARKET-05, MARKET-06, FIN-08",
-      "state": "implemented",
+      "state": "technically verified",
       "evidence": [
-        "src/data/comparable.js is assembled and the price-position view draws it without recomputing anything. On the authorised payload the eligible set is empty on all five cases and renders as an explicit unavailable state naming the reason per row, not a blank panel. ux_market 12/0. NOT verified end to end, because no commercial comparison is possible from the current data."
+        "node --test tests/market_07_panel.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/comparable.js:948 (raw_input_unmodified forced false) -> MARKET-07 E1 fails; restored -> passes",
+        "mutation src/data/comparable.js:968 (price_action_certified forced true) -> MARKET-07 E2 fails; restored -> passes",
+        "Authorised payload still has an empty eligible set on all five cases (MARKET-DATA-GAP remains open). Fixtures prove the two required evidence items; no competitor prices were invented.",
+        "C18 follow-up: tests/data_contracts.test.mjs DATA-06 correction key now reads ds.all()[0].key so it matches section-scoped makeDataset keys."
       ],
       "blockers": []
     },
