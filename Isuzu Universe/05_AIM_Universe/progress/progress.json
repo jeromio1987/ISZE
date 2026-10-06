@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T18:52:01Z",
+  "written_at": "2026-10-06T19:12:59Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -1197,7 +1197,8 @@
         "mutation src/data/ids_evidence.js:39 (scopedQuestionId returns only the local question code) -> CONNECT-01 E1 fails; restored -> passes",
         "mutation src/data/ids_evidence.js:152+171 (UTI forced into the 2026 IDS population and a distributor_audit_scores entry invented) -> CONNECT-01 E2 fails; restored -> passes",
         "Synthetic dealers and a synthetic IDS sheet only. Validated identity shows evidence; unvalidated shows 'identity not validated' with no answers; UMI and UTI are never merged; an unknown identity stays unknown and does not borrow the previous row. Real IDS workbooks were not read.",
-        "F08-IDENTITY: this task narrows the dealer/IDS identity half (validated identities gate IDS answers; UMI/UTI stay apart). It does not close F08-IDENTITY: approved identity provider, tenant policy, revocation and server-side enforcement remain open under the integration owner."
+        "F08-IDENTITY: this task narrows the dealer/IDS identity half (validated identities gate IDS answers; UMI/UTI stay apart). It does not close F08-IDENTITY: approved identity provider, tenant policy, revocation and server-side enforcement remain open under the integration owner.",
+        "UI wiring 2026-10-06: src/ui/app.js idsEvidencePanel on the decision view uses AIMIdsEvidence.renderSideBySide; node --test tests/connect_01_ui_ids_evidence.test.mjs -> 4 pass, 0 fail; mutations break the panel hook / identity / UTI leak / prior-case reuse per test then restore. Does not close F08-IDENTITY."
       ],
       "blockers": []
     },

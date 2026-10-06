@@ -4,7 +4,7 @@
 'use strict';
 (function(root){
 const D=JSON.parse(document.getElementById('case-data').textContent);
-const E=AIMEngine, X=AIMExport, C=AIMCandidates, K=AIMCases, CT=AIMContracts, M=AIMComparable, Ev=(typeof AIMEvidence!=='undefined'?AIMEvidence:null);
+const E=AIMEngine, X=AIMExport, C=AIMCandidates, K=AIMCases, CT=AIMContracts, M=AIMComparable, Ev=(typeof AIMEvidence!=='undefined'?AIMEvidence:null), Ids=(typeof AIMIdsEvidence!=='undefined'?AIMIdsEvidence:null);
 const store=AIMScenario.makeScenarioStore(D,E);
 const repo=K.makeRepository({
   forceMemory: !(function(){try{root.localStorage.setItem('__t','1');root.localStorage.removeItem('__t');return true;}catch(e){return false;}})()
@@ -943,10 +943,20 @@ function marketView(c){
  ${relatedTable(c)}`;
 }
 
+
+/* CONNECT-01 UI: paint IDS evidence from AIMIdsEvidence for the open case.
+   The module decides what is shown. This view does not recompute answers,
+   does not blend distributors, and does not keep the previous case's panel. */
+function idsEvidencePanel(c){
+  if(!Ids||typeof Ids.readIdsEvidence!=='function'||typeof Ids.renderSideBySide!=='function')return '';
+  if(!c||!Object.prototype.hasOwnProperty.call(c,'ids_identity'))return '';
+  const view=Ids.readIdsEvidence(c.ids_identity,D.ids_sheet||null);
+  return Ids.renderSideBySide([view]);
+}
 function decision(c){
  const cmp=c.comparisons[state.compare];
  return `<div class="compare-row"><div><span class="eyebrow">Measured record</span><div class="small">${sourceButton()} &middot; no forecast or lost-sales attribution</div></div><select id="comparison" aria-label="Comparison period"><option value="half" ${state.compare==='half'?'selected':''}>January-June 2026 vs 2025</option><option value="annual" ${state.compare==='annual'?'selected':''}>Calendar 2025 vs 2024</option></select></div>
- ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${contributorsPanel(c)}${rangeRelationshipsPanel(c)}${rangeWithdrawalPanel(c)}${rangeBasketPanel(c)}${rangeTransferPanel(c)}${rangeMigrationBenefitPanel(c)}${rangePriceDirectionPanel(c)}${exactRangeComparisonPanel(c)}${priceQuantityMixPanel(c)}${purchasingActivityPanel(c)}${nextActionPlanPanel(c)}${targetBox(c)}
+ ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${contributorsPanel(c)}${rangeRelationshipsPanel(c)}${rangeWithdrawalPanel(c)}${rangeBasketPanel(c)}${rangeTransferPanel(c)}${rangeMigrationBenefitPanel(c)}${rangePriceDirectionPanel(c)}${exactRangeComparisonPanel(c)}${priceQuantityMixPanel(c)}${purchasingActivityPanel(c)}${nextActionPlanPanel(c)}${idsEvidencePanel(c)}${targetBox(c)}
  <div class="grid2">${chart(c,state.billingMetric,state.billingMetric==='billingEUR'?'What ISZE billed':'What ISZE supplied')}${onwardHeld(c)?chart(c,'onwardQuantity','What the distributor supplied to dealers'):onwardMissing()}</div>
  <div class="grid2"><div class="panel"><span class="badge fact">Evidence supporting review</span><p style="margin-top:12px">${esc(c.reason)}</p></div><div class="panel warn"><span class="badge review">Evidence against a simple price story</span><p style="margin-top:12px">${esc(c.counter)}</p></div></div>
  <div class="grid2">${chart(c,'price','Observed ISZE unit price',true)}<div class="panel"><div class="eyebrow">Reconcile the euro change</div><h3>${signedEUR(cmp.revenueDelta)} in recorded billing</h3><div class="evidence-line"><span>Quantity effect, at prior price</span><b class="${color(cmp.volumeEffect)}">${signedEUR(cmp.volumeEffect)}</b></div><div class="evidence-line"><span>Effective price / terms effect</span><b class="${color(cmp.effectivePriceEffect)}">${signedEUR(cmp.effectivePriceEffect)}</b></div><div class="ruleline small">Exact identity: (new quantity &minus; old quantity) &times; old price + new quantity &times; (new price &minus; old price). The second term includes mix of order conditions. It is not causal price elasticity or a measured price-list effect.</div><div class="scopebox"><b>${num(c.fleet)} ${c.market==='ITUK'?'trucks':'vehicles'} &middot; 2025 market reference</b><br>${esc(c.application)} No part-level demand gap or dealer rate is computed.</div></div></div>
