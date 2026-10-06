@@ -308,6 +308,20 @@ if ($connect01 -match "fail\s+0" -and $connect01 -match "pass\s+2") {
     Write-Host "CONNECT-01 2/0/2"
 } else {
     Write-Host "CONNECT-01 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
+# CONNECT-01 UI unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "CONNECT-01 UI - IDS evidence panel in the product case view"
+$connect01ui = & node --test (Join-Path $PSScriptRoot "connect_01_ui_ids_evidence.test.mjs") 2>&1 | Out-String
+Write-Host $connect01ui
+if ($connect01ui -match "fail\s+0" -and $connect01ui -match "pass\s+4") {
+    Write-Host "CONNECT-01 UI 4/0/4"
+} else {
+    Write-Host "CONNECT-01 UI FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
 
 # ACCEPT-03 independent verification (node). Existing accept rows are untouched below.
 Write-Host ""
