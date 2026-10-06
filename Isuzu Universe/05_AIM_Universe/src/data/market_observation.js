@@ -441,6 +441,56 @@
   }
 
 
+  /* ----- MARKET-04: currency / tax / delivery adjustments auditable ----- */
+
+  function adjustmentAuditView(args) {
+    args = args || {};
+    var panel = args.panel || {};
+    var offer = args.offer || {};
+    var row = null;
+    (panel.eligible_offers || []).concat(panel.ineligible_offers || []).forEach(function (r) {
+      if (r.observation_id === offer.observation_id) row = r;
+    });
+    var adj = row && row.adjustment ? row.adjustment : { steps: [], value: null, ok: false };
+    var steps = (adj.steps || []).map(function (s) {
+      return {
+        kind: s.step || s.kind || null,
+        from: s.from,
+        to: s.to,
+        rule: s.rule || null,
+        input_date: offer.fx_date || null
+      };
+    });
+    return {
+      original: {
+        amount: offer.amount,
+        currency: offer.currency
+      },
+      steps: steps,
+      converted_value: adj.value,
+      reproducible: !!(adj.ok && steps.length && offer.amount != null),
+      retained_original: offer.amount !== null && offer.amount !== undefined,
+      panel: panel
+    };
+  }
+
+  function unknownAdjustmentView(args) {
+    args = args || {};
+    var panel = args.panel || {};
+    var unknown = args.unknown || {};
+    var row = null;
+    (panel.eligible_offers || []).concat(panel.ineligible_offers || []).forEach(function (r) {
+      if (r.observation_id === unknown.observation_id) row = r;
+    });
+    var codes = row && row.reasons ? row.reasons.map(function (r) { return r.code; }) : [];
+    return {
+      assumed_equal: false,
+      unknown_codes: codes,
+      panel: panel
+    };
+  }
+
+
   var API = {
     RECORD_FIELDS: RECORD_FIELDS,
     buildRecord: buildRecord,
@@ -453,7 +503,9 @@
     productMatchGate: productMatchGate,
     matchTraceView: matchTraceView,
     packCompareView: packCompareView,
-    packUnknownView: packUnknownView
+    packUnknownView: packUnknownView,
+    adjustmentAuditView: adjustmentAuditView,
+    unknownAdjustmentView: unknownAdjustmentView
   };
 
   root.AIMMarketObservation = API;
