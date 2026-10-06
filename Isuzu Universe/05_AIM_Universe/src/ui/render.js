@@ -300,11 +300,12 @@
           var h = views.helpers(engine);
           /* A case with no recorded comparison still gets a card. It shows that
              the comparison is absent rather than breaking the whole paint. */
-          var m = (x.comparisons || {})[x.defaultCompare] || null;
+          var cmpKey = (x.comparisons || {})[state.compare] ? state.compare : x.defaultCompare;
+          var m = (x.comparisons || {})[cmpKey] || null;
           return '<button class="case-card' + (c && c.id === x.id ? ' active' : '') + '" data-case="' + views.esc(x.id)
             + '" aria-pressed="' + (c && c.id === x.id) + '">'
             + '<div class="card-meta"><span>' + views.esc(x.customer) + '</span><span>'
-            + (x.defaultCompare === 'annual' ? 'Full year' : 'Matched half year') + '</span></div>'
+            + (cmpKey === 'annual' ? 'Full year' : 'Matched half year') + '</span></div>'
             + '<div class="case-name">' + views.esc(x.name) + '</div>'
             + '<div class="pn">' + views.esc(x.pn) + '</div>'
             + '<div class="case-amount ' + (m ? h.color(m.revenueDelta) : '') + '">'
