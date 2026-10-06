@@ -249,6 +249,19 @@ if ($accept03 -match "fail\s+0" -and $accept03 -match "pass\s+2") {
     $global:REVIEW_UNIT_FAIL = $true
 }
 
+
+# SAFE-05 independent verification (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "SAFE-05 - test actual exported bytes and download paths"
+$safe05 = & node --test (Join-Path $PSScriptRoot "safe_05_independent.test.mjs") 2>&1 | Out-String
+Write-Host $safe05
+if ($safe05 -match "fail\s+0" -and $safe05 -match "pass\s+2") {
+    Write-Host "SAFE-05-INDEPENDENT 2/0/2"
+} else {
+    Write-Host "SAFE-05-INDEPENDENT FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
 & $impl @PSBoundParameters
 if ($global:REVIEW_UNIT_FAIL) { exit 1 }
 exit $LASTEXITCODE
