@@ -17,12 +17,17 @@ REM  Nothing here fetches from the web. Step 3 reads pages already on disk; fetc
 REM  them is a separate, deliberate action that goes through check_scrape_consent.py.
 REM
 REM  Log: 04_tools\delegation\_logs\ledger_YYYY-MM-DD.log
+REM
+REM  The scheduled task starts this through run_price_ledger_hidden.pyw (pythonw.exe), not
+REM  directly: a visible console window, once closed, kills step 3 with exit 0xC000013A.
 REM ===========================================================================
 setlocal
 set SCRIPT_DIR=%~dp0
 set ROOT=%SCRIPT_DIR%..\..
 set PYTHON=C:\Python314\python.exe
 if not exist "%PYTHON%" set PYTHON=python
+REM Unbuffered so step 3 progress lines hit the log while 3,000+ pages parse.
+set PYTHONUNBUFFERED=1
 
 set LOG_DIR=%SCRIPT_DIR%_logs
 if not exist "%LOG_DIR%" mkdir "%LOG_DIR%"
@@ -39,32 +44,32 @@ set FAILED=0
 
 echo. >> "%LOG_FILE%"
 echo --- 1/6 refresh tiers (billed value) --- >> "%LOG_FILE%"
-"%PYTHON%" "%SCRIPT_DIR%build_refresh_tiers.py" >> "%LOG_FILE%" 2>&1
+"%PYTHON%" -u "%SCRIPT_DIR%build_refresh_tiers.py" >> "%LOG_FILE%" 2>&1
 if errorlevel 1 set FAILED=1
 
 echo. >> "%LOG_FILE%"
 echo --- 2/6 price-list triggers --- >> "%LOG_FILE%"
-"%PYTHON%" "%SCRIPT_DIR%price_list_triggers.py" >> "%LOG_FILE%" 2>&1
+"%PYTHON%" -u "%SCRIPT_DIR%price_list_triggers.py" >> "%LOG_FILE%" 2>&1
 if errorlevel 1 set FAILED=1
 
 echo. >> "%LOG_FILE%"
 echo --- 3/6 scraped prices from the saved pages (no fetch) --- >> "%LOG_FILE%"
-"%PYTHON%" "%ROOT%\04_tools\price_ledger\build_scraped_observations.py" --emit >> "%LOG_FILE%" 2>&1
+"%PYTHON%" -u "%ROOT%\04_tools\price_ledger\build_scraped_observations.py" --emit >> "%LOG_FILE%" 2>&1
 if errorlevel 1 set FAILED=1
 
 echo. >> "%LOG_FILE%"
 echo --- 4/6 price-observation ledger --- >> "%LOG_FILE%"
-"%PYTHON%" "%ROOT%\04_tools\price_ledger\build_price_ledger.py" >> "%LOG_FILE%" 2>&1
+"%PYTHON%" -u "%ROOT%\04_tools\price_ledger\build_price_ledger.py" >> "%LOG_FILE%" 2>&1
 if errorlevel 1 set FAILED=1
 
 echo. >> "%LOG_FILE%"
 echo --- 5/6 verbatim check: prices must be printed on their source pages --- >> "%LOG_FILE%"
-"%PYTHON%" "%ROOT%\04_tools\price_ledger\verify_scraped_observations.py" >> "%LOG_FILE%" 2>&1
+"%PYTHON%" -u "%ROOT%\04_tools\price_ledger\verify_scraped_observations.py" >> "%LOG_FILE%" 2>&1
 if errorlevel 1 set FAILED=1
 
 echo. >> "%LOG_FILE%"
 echo --- 6/6 parser selftest (saved pages, no fetch) --- >> "%LOG_FILE%"
-"%PYTHON%" "%SCRIPT_DIR%parsers\price_parsers.py" --selftest >> "%LOG_FILE%" 2>&1
+"%PYTHON%" -u "%SCRIPT_DIR%parsers\price_parsers.py" --selftest >> "%LOG_FILE%" 2>&1
 if errorlevel 1 set FAILED=1
 
 echo. >> "%LOG_FILE%"
