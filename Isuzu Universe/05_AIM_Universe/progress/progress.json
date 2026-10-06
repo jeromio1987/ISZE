@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T17:36:54Z",
+  "written_at": "2026-10-06T17:39:10Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 61,
-    "not started": 35
+    "technically verified": 62,
+    "not started": 34
   },
   "total_tasks": 96,
-  "overlay_applied": 61,
+  "overlay_applied": 62,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1514,8 +1514,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "DATA-08",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/accept_03_independent.test.mjs -> 2 pass, 0 fail (ACCEPT-03 E1, E2). Independent fixtures (H1-2027/CY-2026/2027-03; share 3+5 units / 27+45 EUR; qty 7/49 EUR). Expected counts computed in the test file, not borrowed from accept_03_conservation.cjs.",
+        "mutation src/data/evidence.js comparability ok forced true -> ACCEPT-03 E1 fails (rc 1); restored -> passes.",
+        "mutation src/data/candidates.js keyOf drops sourceSection -> ACCEPT-03 E2 fails (rc 1, two invoices collapse); restored -> passes.",
+        "tests/run_all.ps1 prints ACCEPT-03-INDEPENDENT 2/0/2."
+      ],
       "blockers": []
     },
     {
