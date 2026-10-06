@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T05:59:27Z",
+  "written_at": "2026-10-06T06:11:31Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 48,
+    "technically verified": 49,
     "implemented": 3,
-    "not started": 45
+    "not started": 44
   },
   "total_tasks": 96,
-  "overlay_applied": 51,
+  "overlay_applied": 52,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -611,8 +611,12 @@
       "existing_finding": "F10",
       "can_start_after": "BASE-03",
       "integrate_after": "REVIEW-01, REVIEW-04, REVIEW-07, CASE-01",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/review_08_new_review.test.mjs -> 2 pass, 0 fail",
+        "mutation src/ui/app.js:1718 (promoteCandidateToCase returns evidence_period_state/label 'declared' and HTML labels 'declared') -> REVIEW-08 E1 fails; restored -> passes",
+        "mutation src/ui/app.js:1183 (incomplete narrower panel injects FLEET/APP/COMP/COST markers from ITUK-PADS) -> REVIEW-08 E2 fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
