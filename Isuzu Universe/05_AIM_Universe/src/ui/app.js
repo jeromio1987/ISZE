@@ -151,7 +151,7 @@ function sensitivityView(){
     +`<td class="n">${p.quantity_after===null?'unchanged':num(p.quantity_after,0)}</td>`
     +`<td class="n ${p.revenue_change===null?'':color(p.revenue_change)}">${p.ok&&p.revenue_change!==null?signedEUR(p.revenue_change):'-'}</td>`
     +`<td class="n ${p.gp_change===null?'':color(p.gp_change)}">${p.gp_change!==null?signedEUR(p.gp_change):(p.profit_state==='suppressed'?'Not calculated':'<span class="small">'+esc(p.error||'not calculated')+'</span>')}</td></tr>`;
-  const table=(title,rows,note)=>`<div class="panel"><h3>${esc(title)}</h3><p class="small">${esc(note)}</p><div class="tablewrap"><table><thead><tr><th>Point</th><th class="n">Proposed price</th><th class="n">Total quantity</th><th class="n">Revenue change</th><th class="n">Gross-profit change</th></tr></thead><tbody>${rows.map(row).join('')}</tbody></table></div></div>`;
+  const table=(title,rows,note)=>`<div class="panel"><h3>${esc(title)}</h3><p class="small">${esc(note)}</p><div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Point</th><th class="n">Proposed price</th><th class="n">Total quantity</th><th class="n">Revenue change</th><th class="n">Gross-profit change</th></tr></thead><tbody>${rows.map(row).join('')}</tbody></table></div></div>`;
   const base=sens.baseline;
   return `<div class="inputsnote"><b>${esc(sens.no_forecast)}</b> Engine entry point: ${esc(sens.engine_entry_point)}.</div>
   ${sens.profit_suppressed?unavailableBlock({title:'Gross profit is not plotted for these points',reason:esc(sens.statement),required:'the parts purchase cost for '+esc(current().pn)+' per the declared supplier purchase-cost calculation, or a manually entered cost labelled as an assumption',scope:'sensitivity view'}):''}
@@ -193,7 +193,7 @@ function unavailableBlock(u){
   return `<div class="panel unavailable" role="status" aria-live="polite" data-unavailable="${esc(u.scope||'')}" style="${UNAVAILABLE_STYLE}">
   <div class="eyebrow" style="color:#96620d;font-size:10px;font-weight:750;letter-spacing:1.5px;text-transform:uppercase;margin:0 0 6px">Unavailable</div>
   <h3 style="color:#7d5209;font-size:16px;margin:0 0 9px;line-height:1.3">${esc(u.title)}</h3>
-  <p class="small" style="font-size:11px;color:#5f7183;margin:0 0 12px">${esc(u.reason)}</p>
+  <p class="small" style="color:#5f7183;margin:0 0 12px">${esc(u.reason)}</p>
   ${u.required?`<div class="evidence-line" style="display:flex;align-items:baseline;justify-content:space-between;gap:15px;margin:7px 0;font-size:12px"><span>What is required</span><b style="font-size:15px;color:#102b43">${esc(u.required)}</b></div>`:''}
   ${u.scope?`<div class="evidence-line" style="display:flex;align-items:baseline;justify-content:space-between;gap:15px;margin:7px 0;font-size:12px"><span>Scope</span><b style="font-size:15px;color:#102b43">${esc(u.scope)}</b></div>`:''}</div>`;
 }
@@ -400,23 +400,23 @@ function targetBox(c){
 function termsTable(c){
  let rows='';
  for(const [label,obj] of [['2024 full year',c.annual['2024']],['2025 full year',c.annual['2025']],['2026 Jan-Jun',c.half['2026']]])for(const r of (obj?obj.orderTypes:[])||[])rows+=`<tr><td>${label}</td><td>${esc(r.type)}</td><td class="n">${num(r.quantity)}</td><td class="n">${eur(r.price,2)}</td></tr>`;
- return `<details><summary>Separate order terms from a price-list change</summary><p>All prices below are measured effective billing averages within the recorded order type. PRD is the source order-type code; its contractual conditions are not reconstructed. A blank 2026 type is not assumed to be SOR.</p><div class="tablewrap"><table><thead><tr><th>Period</th><th>Recorded type</th><th class="n">Units</th><th class="n">EUR / unit</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
+ return `<details><summary>Separate order terms from a price-list change</summary><p>All prices below are measured effective billing averages within the recorded order type. PRD is the source order-type code; its contractual conditions are not reconstructed. A blank 2026 type is not assumed to be SOR.</p><div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Period</th><th>Recorded type</th><th class="n">Units</th><th class="n">EUR / unit</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
 }
 function relatedTable(c){
  const e=c.packEvidence,p=c.parts||{};
  const rows=(e.relationships||[]).map(r=>`<tr><td class="pn">${esc(r.part_number_a)}</td><td class="pn">${esc(r.part_number_b)}</td><td>${esc(r.relationship_type)}</td><td>${esc(r.validation_status)}<br><span class="small">${esc(r.source_document)} &middot; ${esc(r.pointer)}</span></td></tr>`).join('');
- return `<details><summary>Documented Genuine / BVP, replacements and application</summary><p>${esc(c.bvp)}</p>${rows?`<div class="tablewrap"><table><thead><tr><th>From number</th><th>To number</th><th>Recorded relationship</th><th>What is established</th></tr></thead><tbody>${rows}</tbody></table></div>`:'<p class="small">No non-self relationship for this exact part is included in the exported table. This does not prove that no alternative exists elsewhere.</p>'}<p><b>Part classification:</b> ${esc(p.aim_l1||'')} / ${esc(p.aim_l2||'')} / ${esc(p.aim_l3||'')}.<br><span class="small">${esc(p.aim_release||'')}; ${esc(p.classification_approved||'')}.</span></p><p><b>Part relationships are records, not approval to fit a part to a vehicle.</b></p><p>${esc(c.application)}</p><p class="small">Relationship records and the source description remain distinct from approval to fit a part to a vehicle. No market fleet is split between parts or dealers.</p></details>`;
+ return `<details><summary>Documented Genuine / BVP, replacements and application</summary><p>${esc(c.bvp)}</p>${rows?`<div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>From number</th><th>To number</th><th>Recorded relationship</th><th>What is established</th></tr></thead><tbody>${rows}</tbody></table></div>`:'<p class="small">No non-self relationship for this exact part is included in the exported table. This does not prove that no alternative exists elsewhere.</p>'}<p><b>Part classification:</b> ${esc(p.aim_l1||'')} / ${esc(p.aim_l2||'')} / ${esc(p.aim_l3||'')}.<br><span class="small">${esc(p.aim_release||'')}; ${esc(p.classification_approved||'')}.</span></p><p><b>Part relationships are records, not approval to fit a part to a vehicle.</b></p><p>${esc(c.application)}</p><p class="small">Relationship records and the source description remain distinct from approval to fit a part to a vehicle. No market fleet is split between parts or dealers.</p></details>`;
 }
 function safeLink(url,label){return /^https?:\/\//i.test(url||'')?`<a class="sourcelink" target="_blank" rel="noopener noreferrer" href="${esc(url)}">${esc(label||'Source page')} &nearr;</a>`:`<span class="small">${esc(url||'No direct product URL in export')}</span>`;}
 function snapshotPanel(c){
  const e=c.packEvidence;
  const points=(e.snapshots||[]).map(r=>({label:r.list_version.replace('snapshot ','') ,price:eur(r.amount,2)}));
  points.push({label:'2026 recorded list',price:(e.recordedListCandidates||[]).map(v=>eur(v,2)).join(' / ')});
- return `<div class="panel"><div class="eyebrow">Price levels kept separate</div><h3>List snapshots are not the prices invoiced to this customer.</h3><div class="snapshot-grid">${points.map((p,i)=>`<div class="snapshot ${i===3&&e.listConflict?'snapshot-conflict':''}"><span>${esc(p.label)}</span><strong>${p.price}</strong><small>EUR per supplied price unit; tax excluded</small></div>`).join('')}</div><p><b>${listSummary(c)}.</b> The last column is a source record, not confirmation of the net price available today.</p><p class="small">H1 2026 observed billing average: <b>${eur(c.half['2026'].price,2)}</b> per ${esc(c.unit)}. A dated list movement and a weighted billing movement are not interchangeable. No list snapshot is applied backwards to reprice historic sales.</p><details><summary>Every recorded price source and validity field</summary><div class="tablewrap"><table><thead><tr><th>Observation</th><th>EUR / price unit</th><th>Recorded validity</th><th>Source and trace</th></tr></thead><tbody>${(e.prices||[]).map(r=>`<tr><td>${esc(r.list_version)}<br><span class="small">${esc(r.observation_type)}</span></td><td class="n">${eur(r.amount,2)}</td><td>${esc(r.valid_from)} &rarr; ${esc(r.valid_to)}</td><td>${esc(r.source_reference)}<br><span class="small">${esc(r.pointer)}</span></td></tr>`).join('')}</tbody></table></div><p class="small">Open-ended and overlapping fields are carried as source values, not interpreted as an authoritative continuous price history. Duplicate sources do not become independent prices.</p></details></div>`;
+ return `<div class="panel"><div class="eyebrow">Price levels kept separate</div><h3>List snapshots are not the prices invoiced to this customer.</h3><div class="snapshot-grid">${points.map((p,i)=>`<div class="snapshot ${i===3&&e.listConflict?'snapshot-conflict':''}"><span>${esc(p.label)}</span><strong>${p.price}</strong><small>EUR per supplied price unit; tax excluded</small></div>`).join('')}</div><p><b>${listSummary(c)}.</b> The last column is a source record, not confirmation of the net price available today.</p><p class="small">H1 2026 observed billing average: <b>${eur(c.half['2026'].price,2)}</b> per ${esc(c.unit)}. A dated list movement and a weighted billing movement are not interchangeable. No list snapshot is applied backwards to reprice historic sales.</p><details><summary>Every recorded price source and validity field</summary><div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Observation</th><th>EUR / price unit</th><th>Recorded validity</th><th>Source and trace</th></tr></thead><tbody>${(e.prices||[]).map(r=>`<tr><td>${esc(r.list_version)}<br><span class="small">${esc(r.observation_type)}</span></td><td class="n">${eur(r.amount,2)}</td><td>${esc(r.valid_from)} &rarr; ${esc(r.valid_to)}</td><td>${esc(r.source_reference)}<br><span class="small">${esc(r.pointer)}</span></td></tr>`).join('')}</tbody></table></div><p class="small">Open-ended and overlapping fields are carried as source values, not interpreted as an authoritative continuous price history. Duplicate sources do not become independent prices.</p></details></div>`;
 }
 function archiveOfferTable(offers){
  if(!offers.length)return '<p>No priced exact-number competitor records are included in this export. Earlier web evidence is retained separately below.</p>';
- return `<div class="tablewrap"><table class="offers-table"><thead><tr><th>Seller / manufacturer part</th><th>Advertised amount</th><th>Tax / contents</th><th>Use and provenance</th></tr></thead><tbody>${offers.map(o=>`<tr><td><b>${esc(o.brand||'Not supplied')}</b><br><span class="pn">${esc(o.manufacturer_part_number||'Not supplied')}</span><br>${esc(o.seller)}</td><td class="n">${o.price_original?`${esc(o.currency_original)} ${num(Number(o.price_original),2)}`:'No usable price'}<br><span class="small">${esc(o.observation_date)}</span>${o.currency_original==='GBP'&&o.normalised_price_eur&&o.vat_included_excluded==='VAT included (UK 20%)'?`<br><span class="small">Recorded conversion: EUR ${num(Number(o.normalised_price_eur),2)} ex VAT<br>Historical 1.17 EUR/GBP; not current FX</span>`:''}</td><td>${esc(o.vat_included_excluded)}<br><span class="small">${esc(o.pack_quantity)}; ${esc(o.kit_contents)}<br>Delivery charges: ${esc(o.mandatory_delivery_or_other_charges)}</span></td><td><b>${esc(o.use)}</b><br><span class="small">${esc(o.match_reason)}<br>${esc(o.historical_label)}<br>${esc(o.pointer)}</span><br>${safeLink(o.source_url,'Recorded source')}</td></tr>`).join('')}</tbody></table></div>`;
+ return `<div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table class="offers-table"><thead><tr><th>Seller / manufacturer part</th><th>Advertised amount</th><th>Tax / contents</th><th>Use and provenance</th></tr></thead><tbody>${offers.map(o=>`<tr><td><b>${esc(o.brand||'Not supplied')}</b><br><span class="pn">${esc(o.manufacturer_part_number||'Not supplied')}</span><br>${esc(o.seller)}</td><td class="n">${o.price_original?`${esc(o.currency_original)} ${num(Number(o.price_original),2)}`:'No usable price'}<br><span class="small">${esc(o.observation_date)}</span>${o.currency_original==='GBP'&&o.normalised_price_eur&&o.vat_included_excluded==='VAT included (UK 20%)'?`<br><span class="small">Recorded conversion: EUR ${num(Number(o.normalised_price_eur),2)} ex VAT<br>Historical 1.17 EUR/GBP; not current FX</span>`:''}</td><td>${esc(o.vat_included_excluded)}<br><span class="small">${esc(o.pack_quantity)}; ${esc(o.kit_contents)}<br>Delivery charges: ${esc(o.mandatory_delivery_or_other_charges)}</span></td><td><b>${esc(o.use)}</b><br><span class="small">${esc(o.match_reason)}<br>${esc(o.historical_label)}<br>${esc(o.pointer)}</span><br>${safeLink(o.source_url,'Recorded source')}</td></tr>`).join('')}</tbody></table></div>`;
 }
 /* ===========================================================================
    MARKET-07 / MARKET-08 on a screen (view developer).
@@ -571,7 +571,7 @@ function marketReasonGroups(rows){
    numbers in the row, so each carries its own explanation on hover. */
 function marketOfferTable(rows,kindLabel){
   if(!rows||!rows.length)return '';
-  return `<div class="tablewrap"><table><thead><tr><th>Observation</th><th>Price level and seller</th><th class="n">Quoted</th><th>Kind of evidence</th><th>Adjustment, step by step</th><th>Match</th><th>Date and recorded basis</th><th>Where this row stands</th></tr></thead><tbody>
+  return `<div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Observation</th><th>Price level and seller</th><th class="n">Quoted</th><th>Kind of evidence</th><th>Adjustment, step by step</th><th>Match</th><th>Date and recorded basis</th><th>Where this row stands</th></tr></thead><tbody>
   ${rows.map(r=>{
     const a=r.adjustment||{};
     const steps=(a.steps||[]).length
@@ -608,7 +608,7 @@ function marketRecordedRows(c){
     scope:'candidate screen, this exact reference'});
   const shown=rows.slice(0,50);
   const withoutBilling=rows.filter(r=>!Number.isFinite(Number(r.observed_billing_eur))).length;
-  return `<div class="tablewrap"><table><thead><tr><th>Account</th><th class="n">Billed qty</th><th class="n">Billed</th><th class="n">Unit price</th><th class="n">List</th><th class="n">Parts purchase cost</th><th>Selection reason</th><th>Unresolved on the row</th></tr></thead><tbody>
+  return `<div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Account</th><th class="n">Billed qty</th><th class="n">Billed</th><th class="n">Unit price</th><th class="n">List</th><th class="n">Parts purchase cost</th><th>Selection reason</th><th>Unresolved on the row</th></tr></thead><tbody>
   ${shown.map(r=>`<tr><td>${esc(r.distributor)}</td><td class="n">${num(r.billed_qty,0)}</td><td class="n">${eur(r.observed_billing_eur)}</td><td class="n">${r.observed_unit_price===null?'-':eur(r.observed_unit_price,2)}</td><td class="n">${r.list_eur===null?'-':eur(r.list_eur,2)}</td><td class="n">${r.verified_cost_eur_oct26===null?'<span class="danger-line">not held</span>':eur(r.verified_cost_eur_oct26,4)}</td><td class="small">${esc(r.selection_reasons)}</td><td class="small">${esc(r.unresolved_inputs||'-')}</td></tr>`).join('')}
   </tbody></table></div>
   <p class="small">${num(rows.length,0)} screened row(s) carry this exact reference; ${num(shown.length,0)} shown.${withoutBilling?' '+num(withoutBilling,0)+' of them carry no billing value and are excluded from any total rather than counted as zero.':''} A row is a customer-part record, not a part: the same reference can appear on several. These counts and the unresolved notes are copied from the screen that owns that rule; they are not re-derived here.</p>`;
@@ -691,7 +691,7 @@ function marketView(c){
 
  <div class="panel"><h3>Every price level present, and the base level each one is refused against</h3>
   <p class="small">${esc((p.candidate_bases&&p.candidate_bases.statement)||'')} A comparison has to name a like-for-like level or a supported bridge. A level that is not on the basis is shown and is not put into one figure with it.</p>
-  <div class="tablewrap"><table><thead><tr><th>Price level</th><th>What it is, and what may not be read from it</th><th>Declared</th></tr></thead><tbody>
+  <div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Price level</th><th>What it is, and what may not be read from it</th><th>Declared</th></tr></thead><tbody>
   ${(levels.length?levels:['']).map(l=>{
     const info=M.levelInfo(l);
     return `<tr><td><b>${esc(info.label)}</b><div class="small">${esc(info.what_it_is||'the meaning of this level is not declared')}</div></td>
@@ -709,7 +709,7 @@ function marketView(c){
  <div class="grid2">
   <div class="panel"><span class="eyebrow">Evidence kind one &middot; our own records</span><h3>What we bought and sold on this part</h3>
    <div class="evidence-line"><span>Declared evidence kind</span><b class="small">${esc(movement.evidence_kind||'')}</b></div>
-   ${movement.available?`<div class="tablewrap"><table><thead><tr><th>Recorded period</th><th class="n">Quantity</th><th class="n">Realised unit price</th></tr></thead><tbody>
+   ${movement.available?`<div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Recorded period</th><th class="n">Quantity</th><th class="n">Realised unit price</th></tr></thead><tbody>
    ${(movement.periods||[]).map(x=>`<tr><td>${esc(x.label||'not stated')}</td><td class="n">${num(x.quantity,0)}</td><td class="n">${x.unit_price===null?'<span class="small">not stated</span>':tip(eur(x.unit_price,2),'Recorded billing divided by recorded quantity for that period and that part, copied from the movement the case already carries. It is a realised average on our own terms, not a list price and not a price observed from another seller.')}</td></tr>`).join('')}
    </tbody></table></div>`
    :unavailableBlock({title:'No recorded movement of our own volumes and realised prices for this case',
@@ -800,7 +800,7 @@ function flagChips(r){
 function resultStateTable(r,c){
   if(!r.ok)return `<div class="panel warn error-msg"><b>This scenario was not calculated.</b><br>${esc(r.error)}</div>`;
   const gp=(r.gp_change===null);
-  return `<div class="tablewrap"><table>
+  return `<div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table>
   <thead><tr><th>Measure</th><th class="n">Unchanged offer</th><th class="n">Proposed offer</th><th class="n">Change</th></tr></thead>
   <tbody>
   <tr><td>Applicable net price, EUR/${esc(c.unit)}</td><td class="n">${eur(r.price_before,2)}</td><td class="n">${eur(r.price_after,2)}</td><td class="n ${color(r.price_after-r.price_before)}">${pct(100*(r.price_after/r.price_before-1))}</td></tr>
@@ -831,7 +831,7 @@ function breakEvens(r){
   const chg=v=>(v===null||v===undefined||!Number.isFinite(v))?'-':pct(100*(v/Math.max(r.quantity_before,1)-1));
   return `<div class="panel"><h3>${rising?'The volume floor each measure allows':(cut?'The quantity each measure requires':'The volume each measure needs')}</h3>
   <p class="small"><b>${inc?'Incremental-only pricing.':'All-volume pricing.'}</b> ${inc?'Existing units keep the current price, so they already hold their revenue and their gross profit. Only additional units are tested against the support.':'The proposed price applies to every eligible unit, so the existing volume is repriced as well.'}${rising?' <b>Because this is a price rise, the two figures below are floors, not targets: volume may fall as far as the lower of them before a measure drops below the unchanged offer.</b>':''}</p>
-  <div class="tablewrap"><table>
+  <div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table>
   <thead><tr><th>Test</th><th class="n">${rising?'Lowest total quantity that still holds':'Required total quantity'}</th><th class="n">Change from the unchanged offer</th></tr></thead>
   <tbody>
   <tr><td>Hold revenue</td><td class="n">${num(r.qty_preserve_revenue,0)}</td><td class="n">${chg(r.qty_preserve_revenue)}</td></tr>
@@ -899,7 +899,7 @@ function objectives(c){
   ${migUnresolved.length?`<div class="panel warn"><span class="badge review">Product migration is not priced here</span>${migUnresolved.map(m=>`<p class="small"><b>${esc(m.alternative.name)}</b> - ${esc(m.result.error)}</p>`).join('')}</div>`:''}
   <div class="panel"><h3>Ranked under ${esc(rk.objective_label)}</h3>
     <p class="small">Same customer, same period, same eligible quantity and same product population for every row. Volume assumptions and evidence limitations stay visible.</p>
-    <div class="tablewrap"><table><thead><tr><th>Rank</th><th>Alternative</th><th class="n">Price</th><th class="n">Revenue change</th><th class="n">Gross-profit change</th><th class="n">Offer margin</th><th>Volume basis</th><th>Flags</th></tr></thead><tbody>
+    <div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Rank</th><th>Alternative</th><th class="n">Price</th><th class="n">Revenue change</th><th class="n">Gross-profit change</th><th class="n">Offer margin</th><th>Volume basis</th><th>Flags</th></tr></thead><tbody>
     ${rows.map(row=>`<tr${row.x.alternative.alternative_id===s.selected_alternative_id?' class="selected-row"':''}>
       <td class="n">${row.i+1}</td>
       <td><b>${esc(row.x.alternative.name)}</b><div class="small">${esc(row.x.alternative.eligibility)}</div>${row.x.alternative.evidence?`<div class="small">${esc(row.x.alternative.evidence)}</div>`:''}<div style="margin-top:6px"><button class="linkbutton" data-select="${esc(row.x.alternative.alternative_id)}">Select &rarr;</button></div></td>
@@ -930,7 +930,7 @@ function objectives(c){
     const cut=r.price_after<r.price_before;
     return `<div class="panel"><h3>${rising?'The volume floor the top-ranked option allows':(cut?'The quantity the top-ranked option requires':'The volume the top-ranked option needs')}</h3>
     <p class="small"><b>${esc(top.alternative.name)}</b> &middot; <b>${inc?'Incremental-only pricing.':'All-volume pricing.'}</b> ${inc?'Existing units keep the current price, so they already hold their revenue and their gross profit. Only additional units are tested against the support.':'The proposed price applies to every eligible unit, so the existing volume is repriced as well.'}${rising?' <b>Because this is a price rise, the two figures below are floors, not targets: volume may fall as far as the lower of them before a measure drops below the unchanged offer.</b>':''}</p>
-    <div class="tablewrap"><table><thead><tr><th>Test</th><th class="n">${rising?'Lowest total quantity that still holds':'Required total quantity'}</th><th class="n">Change from the unchanged offer</th></tr></thead><tbody>
+    <div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Test</th><th class="n">${rising?'Lowest total quantity that still holds':'Required total quantity'}</th><th class="n">Change from the unchanged offer</th></tr></thead><tbody>
     <tr><td>Hold revenue</td><td class="n">${num(r.qty_preserve_revenue,0)}</td><td class="n">${chg(r.qty_preserve_revenue)}</td></tr>
     <tr><td>Hold gross profit</td><td class="n">${r.qty_preserve_gp===null?(r.gp_change===null?'Cost required':'<span class="danger-line">Not attainable at this price</span>'):num(r.qty_preserve_gp,0)}</td><td class="n">${r.qty_preserve_gp===null?'Not calculated':chg(r.qty_preserve_gp)}</td></tr>
     <tr><td>Exceed revenue (smallest orderable quantity)</td><td class="n">${r.extra_qty_to_exceed_revenue===null?'-':num(r.quantity_before+r.extra_qty_to_exceed_revenue,0)}</td><td class="n">${r.extra_qty_to_exceed_revenue===null?'-':num(r.extra_qty_to_exceed_revenue,0)+' more units'}</td></tr>
@@ -963,7 +963,7 @@ function economicsResults(){
   ${gp?unavailableBlock({title:'Gross profit and gross margin are not calculated for this case',reason:(c.packEvidence.costRecordPresent?'A parts purchase cost is held for this part, but no cost is applied to this scenario yet, so gross profit and gross margin are not stated. Apply the basis or enter the cost and the figures follow. A missing cost is not zero.':'No parts purchase cost is held or entered for this exact part, so gross profit and gross margin cannot be stated. A missing cost is not zero.')+' Revenue and the revenue break-even still are. The figures are not estimated and no cost is defaulted.',required:'the parts purchase cost for '+c.pn+' per the declared supplier purchase-cost calculation, or a manually entered cost labelled as an assumption',scope:'this scenario'}):''}
   ${breakEvens(r)}
   ${!gp?`<div class="panel"><div class="evidence-line"><span>Offer gross margin before</span><b>${num(r.margin_before_pct,1)}%</b></div><div class="evidence-line"><span>Offer gross margin after</span><b>${num(r.margin_after_pct,1)}%</b></div><div class="evidence-line"><span>Unit margin on the proposed price</span><b>${num(r.margin_unit_after_pct,1)}%</b></div>${r.margin_unit_after_pct<=0?'<p class="error-msg">Proposed net price does not exceed the entered unit cost. Do not release this price.</p>':''}</div>`:''}
-  <div class="panel"><h3>Stress the volume assumption</h3><div class="tablewrap"><table><thead><tr><th>Assumed volume change</th><th class="n">Revenue change</th><th class="n">Gross-profit change</th></tr></thead><tbody>${stressRows}</tbody></table></div><p class="small ruleline">The model does not predict volume. The change must come from a commitment or a stated test assumption. It does not multiply a modelled market gap by an invented recovery rate.</p></div>
+  <div class="panel"><h3>Stress the volume assumption</h3><div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Assumed volume change</th><th class="n">Revenue change</th><th class="n">Gross-profit change</th></tr></thead><tbody>${stressRows}</tbody></table></div><p class="small ruleline">The model does not predict volume. The change must come from a commitment or a stated test assumption. It does not multiply a modelled market gap by an invented recovery rate.</p></div>
   <div class="panel dark"><h3>Read this before a pricing decision</h3><p>${esc(c.recommendation)}</p><p class="small">Effective rounded price change: ${pct(r.ok?100*(r.price_after/r.price_before-1):null)}. The base covers the recorded period; it is not annualised. The default cohort is all historical units. Change the eligibility scope before treating a targeted offer as a blanket discount.</p></div>`;
 }
 /* UX-02. The price test names the ranked option it started from and the values
@@ -1048,7 +1048,7 @@ function candidatesView(){
       <div class="rowactions"><button class="button" id="c-clear">Clear search and filters</button></div>
     </div>
     <p class="small">${num(pg.total,0)} of ${num(cov.rows_total,0)} rows match. ${pg.total===0?'No rows match the current search.':'Showing rows '+num(pg.first_row,0)+' to '+num(pg.last_row,0)+' of '+num(pg.total,0)+'.'} Every permitted row is reachable by search and paging, not only the first page.</p>
-    <div class="tablewrap"><table><thead><tr><th>Customer</th><th>${th('part_number','Part')}</th><th>Description</th><th class="n">${th('billed_qty','Billed qty')}</th><th class="n">${th('observed_billing_eur','Observed billing')}</th><th class="n">Observed unit price</th><th class="n">${th('list_eur','List')}</th><th class="n">${th('verified_cost_eur_oct26','Verified cost')}</th><th>Selection reason</th><th>Unresolved</th><th>Competitor</th><th>Review</th></tr></thead><tbody>
+    <div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Customer</th><th>${th('part_number','Part')}</th><th>Description</th><th class="n">${th('billed_qty','Billed qty')}</th><th class="n">${th('observed_billing_eur','Observed billing')}</th><th class="n">Observed unit price</th><th class="n">${th('list_eur','List')}</th><th class="n">${th('verified_cost_eur_oct26','Verified cost')}</th><th>Selection reason</th><th>Unresolved</th><th>Competitor</th><th>Review</th></tr></thead><tbody>
     ${pg.rows.length?pg.rows.map(r=>`<tr><td>${esc(r.distributor)}</td><td class="pn">${esc(r.part_number)}</td><td class="small">${esc(r.description||'')}</td>
       <td class="n">${num(r.billed_qty,0)}</td><td class="n">${eur(r.observed_billing_eur)}</td>
       <td class="n">${r.observed_unit_price===null?'-':eur(r.observed_unit_price,2)}</td>
@@ -1104,7 +1104,7 @@ function caseView(){
   ${worked?`<div class="panel good"><h3>This part is one of the worked cases</h3><p class="small">Open case ${esc(worked.id)} to test price and gross profit against its recorded evidence. The case carries the same exact part reference ${esc(worked.pn)}.</p><button class="button primary" data-open-case="${esc(worked.id)}">Open case ${esc(worked.id)}</button></div>`
    :`<div class="panel warn"><h3>No case record exists for this exact part yet</h3><p class="small">A screened row is a candidate for review. It is not a case, and nothing on this screen creates one. The row carries recorded billing and a list value and, where held, a parts purchase cost.</p>${blockers&&blockers.length?`<div class="ruleline"><b>What would have to exist before this could become a case</b>${blockers.map(b=>`<div class="evidence-line"><span>${esc(b.code||'Required')}</span><b class="small">${esc(b.text||'')}</b></div>`).join('')}</div>`:'<p class="small">The row does not state the current customer net price, the applicable cost basis and effective date, or a stated alternative to test. None of those three is inferred from the screened row, because the row shows what was billed, not what was offered.</p>'}</div>`}
   <div class="panel"><h3>The screened rows for this exact part</h3>
-  <div class="tablewrap"><table><thead><tr><th>Account</th><th class="n">Billed qty</th><th class="n">Observed billing</th><th class="n">Observed unit price</th><th class="n">List</th><th class="n">Parts purchase cost</th><th>Selection reason</th><th>Unresolved</th></tr></thead><tbody>
+  <div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Account</th><th class="n">Billed qty</th><th class="n">Observed billing</th><th class="n">Observed unit price</th><th class="n">List</th><th class="n">Parts purchase cost</th><th>Selection reason</th><th>Unresolved</th></tr></thead><tbody>
   ${rows.slice(0,50).map(r=>`<tr><td>${esc(r.distributor)}</td><td class="n">${num(r.billed_qty,0)}</td><td class="n">${eur(r.observed_billing_eur)}</td><td class="n">${r.observed_unit_price===null?'-':eur(r.observed_unit_price,2)}</td><td class="n">${r.list_eur===null?'-':eur(r.list_eur,2)}</td><td class="n">${r.verified_cost_eur_oct26===null?'<span class="danger-line">not held</span>':eur(r.verified_cost_eur_oct26,4)}</td><td class="small">${esc(r.selection_reasons)}</td><td class="small">${esc(r.unresolved_inputs||'-')}</td></tr>`).join('')}
   </tbody></table></div>
   ${rows.length>50?`<p class="small">Showing the first 50 rows held for this part of ${num(rows.length,0)}.</p>`:''}</div>
@@ -1143,7 +1143,7 @@ function actionView(){
     <div class="evidence-line"><span>Gross-profit change</span><b class="${color(r.gp_change)}">${r.ok&&r.gp_change!==null?signedEUR(r.gp_change):'Cost required'}</b></div>
   </div>
   <div class="panel warn"><h3>Approval checks are still outstanding</h3><p class="small">The accepted records do not clear these approval checks. A saved revision does not approve a price, apply a discount or submit a case to another system.</p><div class="checks">${E.assess?E.assess(c).blockers.map(b=>`<div class="small">&square; ${esc(b)}</div>`).join(''):''}</div></div>
-  <div class="panel"><h3>Revision history</h3>${hist.length?`<div class="tablewrap"><table><thead><tr><th>Rev</th><th>Recorded</th><th>State</th><th>Supersedes</th><th>Note</th></tr></thead><tbody>${hist.map(h=>`<tr><td class="n">${h.revision}</td><td class="small">${esc(h.recorded_at)}</td><td>${esc(h.state)}</td><td class="n">${h.supersedes===null?'-':h.supersedes}</td><td class="small">${esc(h.note||'')}</td></tr>`).join('')}</tbody></table></div><button class="button" id="reopen-prev">Reopen the previous revision into the scenario</button>`:'<p class="small">No revision yet. Save one to start the history.</p>'}</div>
+  <div class="panel"><h3>Revision history</h3>${hist.length?`<div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Rev</th><th>Recorded</th><th>State</th><th>Supersedes</th><th>Note</th></tr></thead><tbody>${hist.map(h=>`<tr><td class="n">${h.revision}</td><td class="small">${esc(h.recorded_at)}</td><td>${esc(h.state)}</td><td class="n">${h.supersedes===null?'-':h.supersedes}</td><td class="small">${esc(h.note||'')}</td></tr>`).join('')}</tbody></table></div><button class="button" id="reopen-prev">Reopen the previous revision into the scenario</button>`:'<p class="small">No revision yet. Save one to start the history.</p>'}</div>
   </div></div>`;
 }
 function render(){
@@ -1222,6 +1222,23 @@ function render(){
   }
   $('#error-detail')?.addEventListener('click',()=>{const d=$('#error-detail-body');if(d)d.style.display=d.style.display==='none'?'block':'none';});
   $('#reload-view')?.addEventListener('click',()=>render());
+  /* UX-07. A table wider than its column scrolls sideways inside its own
+     wrapper. That wrapper is reachable by tab and named, so a keyboard reader
+     can move it; a scroll box the keyboard cannot reach is a hidden control
+     under another name. Where the view provides a heading or a summary that owns
+     the table, the label says which table it is, not only that it scrolls. */
+  $$('.tablewrap').forEach(w=>{
+    if(w.scrollWidth<=w.clientWidth)return;
+    if((w.getAttribute('aria-label')||'')!=='Scrollable table'){
+      /* closest() and parentElement are read defensively: the module suites run
+         this file in a stub document whose elements have neither, and a helper
+         that throws there would take every view down with it. */
+      const owner=(typeof w.closest==='function'?w.closest('.panel,.grid2,.grid3,.split,details'):null)||w.parentElement||null;
+      const head=owner&&(owner.querySelector('h3,summary,h2,h4')||owner.querySelector('.eyebrow'));
+      const text=head&&String(head.textContent||'').replace(/\s+/g,' ').trim();
+      if(text)w.setAttribute('aria-label','Scrollable table: '+text.slice(0,90));
+    }
+  });
   bind();
 }
 function viewErrorPanel(view,err){

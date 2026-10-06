@@ -11,6 +11,12 @@ src/ onto the retained visual shell and writes the internal artifact.
 
 The shell is taken from the frozen v03 reference: this build never edits the
 original artifact, and it never writes into the restricted payload.
+
+The narrow-layout rules (UX-07) live in a maintained stylesheet, src/shell/
+shell_narrow.css, which this build assembles into one <style id="shell-narrow">
+block immediately before </head> and after the frozen styles. A file nobody may
+edit cannot carry a rule that still has to change, so those rules are kept here
+instead and a missing file stops the build rather than shipping without them.
 """
 import argparse
 import hashlib
@@ -26,6 +32,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 REFERENCE = os.path.join(ROOT, "reference",
                          "ISZE_AIM_Pricing_Decisions_v03_FROZEN.html")
+# UX-07. The maintained small-screen stylesheet. It is assembled after the frozen
+# styles so a rule of equal specificity in it wins; only the narrow layout lives
+# there, and the frozen reference remains the visual starting point.
+SHELL_NARROW = os.path.join(ROOT, "src", "shell", "shell_narrow.css")
 DIST = os.path.join(ROOT, "dist")
 
 # The version of THIS assembled component. The payload carries its own revision
@@ -214,6 +224,15 @@ def build(payload_path):
     shell_html = read(REFERENCE)
     head, body = extract_shell(shell_html)
 
+    # UX-07. Refuse to build without the narrow stylesheet, the way a missing
+    # module is refused: a build that silently ships the frozen narrow rules
+    # again is the defect this file exists to remove.
+    if not os.path.exists(SHELL_NARROW):
+        raise SystemExit(
+            "The maintained narrow-shell stylesheet is missing:\n  " + SHELL_NARROW
+            + "\nIt holds the UX-07 small-screen rules; restore it and run again.")
+    shell_narrow_css = read(SHELL_NARROW)
+
     # Hash the exact bytes opened, not a re-serialization that hides changes in
     # the source file. Preserve the legacy serialized digest under its old key.
     with open(payload_path, "rb") as fh:
@@ -245,7 +264,14 @@ def build(payload_path):
     body = body.replace("Decision component 0.2", "Decision component " + COMPONENT_VERSION)
     body = body.replace("Decision component 0.1", "Decision component " + COMPONENT_VERSION)
 
-    parts = [head, "</head>", body]
+    # The narrow shell goes in AFTER the frozen styles, which `head` already
+    # carries, and immediately before </head>.
+    parts = [head,
+             '<style id="shell-narrow">',
+             shell_narrow_css,
+             "</style>",
+             "</head>",
+             body]
     parts.append('<script id="case-data" type="application/json">')
     parts.append(payload_html_text)
     parts.append("</script>")
@@ -360,6 +386,7 @@ def build(payload_path):
         "payload_is_synthetic": is_synthetic,
         "shell_source": os.path.relpath(REFERENCE, ROOT),
         "shell_sha256": sha256(REFERENCE),
+        "shell_narrow_sha256": sha256(SHELL_NARROW),
         "modules": [rel for rel, _ in MODULES],
         "banned_label_findings": findings,
     }

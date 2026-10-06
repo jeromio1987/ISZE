@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-05T21:59:21Z",
+  "written_at": "2026-10-05T23:16:01Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,23 +12,14 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 43,
-    "not started": 50,
+    "technically verified": 44,
+    "not started": 49,
     "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 46,
+  "overlay_applied": 47,
   "overlay_unknown_ids": [],
   "open_findings": [
-    {
-      "id": "UX07-NARROW-SHELL",
-      "severity": "medium",
-      "title": "UX-07's narrow-screen requirement cannot be met from src/ui/app.js alone",
-      "finding": "UX-07 evidence 2 needs the agreed small-screen layout to keep prices, units, scope and limitations readable with no hidden essential controls. The only small-screen rules for this component are the two @media(max-width:800px) blocks in reference/ISZE_AIM_Pricing_Decisions_v03_FROZEN.html (lines 6 and 13), which tools/build.py reads as the retained shell. src/ui/app.js contains no @media query (0 occurrences), and UX-07 may change only src/ui/app.js. The frozen reference was not edited.",
-      "impact": "UX-07 stays not verified: evidence 1 (keyboard) is largely met in app.js, but evidence 2 (the painted narrow layout) cannot be met or measured without the shell stylesheet. Wave 3b records technically verified 43 (not 44), with UX-07 blocked and UX-08 finished in the same PR.",
-      "handling": "Give UX-07 access to the shell, or move the small-screen rules out of the frozen reference into a maintained shell template that tools/build.py assembles (as it already assembles the src/ modules). Then add a headless-Chrome narrow-width test in the ACCEPT-02 pattern.",
-      "owner": "integration owner (tools/build.py and the shell template)"
-    },
     {
       "id": "F08-IDENTITY",
       "severity": "medium",
@@ -719,8 +710,16 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "UX-03, UX-05, UX-06",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/ux_07_keyboard_small.test.mjs -> 2 pass, 0 fail; the painted measurement it reads, tests/accept/ux_07_narrow.py, -> 344 pass, 0 fail (a 90, b 90, c 90, d 60, e1 14)",
+        "the same test file against the pre-change sources rebuilt from origin/main: UX-07 E1 passes (the keyboard pattern was already in src/ui/app.js) and UX-07 E2 fails, so E2 is the evidence this task adds",
+        "mutation src/shell/shell_narrow.css:60 (the header action loses its own label again: font-size:11px -> font-size:0) -> UX-07 E2 fails and check (b) reports 60 failures, all of them the export button at 390; restored -> 2 pass",
+        "mutation src/ui/app.js:154 (the table wrapper loses its tabindex, 17 occurrences) -> UX-07 E1 fails (a table wrapper is not in the tab order); restored -> 2 pass",
+        "mutation tools/build.py:270 (the build skips the shell-narrow injection) -> UX-07 E2 fails (the artifact carries no shell-narrow block); restored -> 2 pass",
+        "mutation src/shell/shell_narrow.css:56 (overflow:visible;min-width:900px added to the panel rule) -> check (a) fails, 60 page-width failures at 390 and 768; restored -> 344 pass",
+        "the frozen v03 reference is byte-for-byte unchanged at 7494CEA1955BE820D0082EEF15473610945663FBEFC7A06D7969C15822423E14 before and after the work, and tests/accept/run_all.ps1 reports its checksum line green"
+      ],
       "blockers": []
     },
     {

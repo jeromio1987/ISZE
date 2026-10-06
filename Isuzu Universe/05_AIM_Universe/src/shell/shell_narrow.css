@@ -1,0 +1,104 @@
+/*
+   UX-07. The maintained small-screen rules for the assembled artifact.
+
+   tools/build.py reads this file and writes it into one <style id="shell-narrow">
+   block immediately before </head>, after the frozen v03 styles. A rule of equal
+   specificity here therefore overrides the frozen one. The frozen reference is
+   never edited, moved or renamed: it stays the visual starting point, and this
+   file corrects only what the narrow layout gets wrong.
+
+   What the measurement found before this file existed
+   (tests/accept/ux_07_narrow.py, artifact sha256 0bfb43f5..., five cases x six
+   tabs at 390, 768 and 1440, before any change):
+
+     a  65 of 90 page-width checks failed: the case list, the tab bar and most
+        tables scroll sideways. The case list and the tab bar are navigation, and
+        a sideways gesture is not a keyboard reachable one.
+     b  90 of 90 failed: those two scroll boxes carry no tabindex, the header's
+        action button prints at font-size:0 and takes its label from a :before
+        pseudo-element, and the source-basis buttons paint 17 to 21 px tall.
+     c  20 of 90 failed: at 390 px the scope strip computes to 10 px and the
+        unit, scope and limitation text to 11 px, and one case's ticket price
+        reads a five-figure amount on an 89 px line inside a 113 px card, so the
+        amount is cut off.
+     d  60 of 60 passed: nothing was hidden for small screens. No rule below may
+        change that.
+
+   These rules change layout only. No colour, no type family, no wording and no
+   figure changes, and no fact is hidden to make a check pass: the narrow page
+   must carry every price, unit, scope and limitation the wide page carries.
+*/
+
+/* ---------------------------------------------------------------------------
+   A sideways scroll box must be reachable from the keyboard and must say what
+   it is. The tabindex and the accessible name are applied in src/ui/app.js, on
+   the wrapper rather than on the table, so the thing that scrolls is the thing
+   that is focusable.
+   ------------------------------------------------------------------------- */
+.tablewrap{scrollbar-width:thin}
+.tablewrap:focus-visible{outline:3px solid #56b3ca;outline-offset:3px}
+
+/* ---------------------------------------------------------------------------
+   Navigation reflows instead of scrolling. The tab bar and the case list are the
+   two ways into the work, so neither may sit behind a sideways gesture at the
+   agreed phone width.
+   ------------------------------------------------------------------------- */
+@media(max-width:800px){
+  #tabs{overflow:visible;flex-wrap:wrap;padding:0 6px}
+  #tabs .tab{flex:1 1 auto;padding:12px 8px;white-space:normal}
+  #case-list{display:grid;grid-template-columns:minmax(0,1fr);overflow:visible;padding-bottom:0}
+  #case-list .case-card{flex:none;width:100%}
+}
+
+/* ---------------------------------------------------------------------------
+   The header action keeps a label of its own and a target that follows it. The
+   frozen narrow rule sets font-size:0 and supplies the word "Export" from a
+   :before pseudo-element, so the control carries no text of its own and its box
+   does not follow its label.
+   ------------------------------------------------------------------------- */
+@media(max-width:800px){
+  .head-right .button{font-size:11px;padding:8px 11px;min-height:34px}
+  .head-right .button:before{content:none}
+}
+
+/* A source-basis button is a control a reader has to be able to hit, at every
+   width. The frozen sheet gives it no height of its own. */
+.sourcesbutton{font-size:12px;min-height:24px;display:inline-flex;align-items:center;text-align:left}
+
+/* ---------------------------------------------------------------------------
+   The type floor. On the agreed small-screen layout the four categories UX-07
+   names may not fall below 12 px. The frozen sheet drops the scope strip to
+   10 px and the unit and limitation text to 11 px.
+   ------------------------------------------------------------------------- */
+@media(max-width:1150px){
+  #scope-strip{font-size:12px}
+  .scopebox{font-size:12px}
+  /* The paragraph-level text: the explanatory sentence under a figure, the
+     limitation statement, the source-basis note. This is the text UX-07 names as
+     scope and limitations, and it is the text the frozen sheet leaves at 11 px. */
+  #content p.small,
+  #content .ruleline,
+  #content .inputsnote,
+  /* the unavailable block prints its colours inline, so its size is set here:
+     an inline size cannot be corrected by any stylesheet */
+  .panel.unavailable p.small,
+  /* the unit and currency line printed under a headline figure */
+  .resultbig + .small,
+  .snapshot small{font-size:12px}
+}
+
+/* ---------------------------------------------------------------------------
+   A recorded price is the figure the reader came for, so it may not be cut off
+   inside its own card. The cards reflow before the amount does.
+   ------------------------------------------------------------------------- */
+.snapshot strong{white-space:nowrap}
+@media(max-width:800px){
+  .snapshot-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .snapshot{padding:13px 9px}
+  .snapshot strong{font-size:18px}
+  /* One card carries two recorded amounts, beside each other as they were
+     recorded. A pair that long cannot fit a phone-width card on one line, so it
+     wraps rather than being cut: both amounts stay whole and both stay read,
+     which is the point of showing the conflict at all. */
+  .snapshot-conflict strong{white-space:normal}
+}
