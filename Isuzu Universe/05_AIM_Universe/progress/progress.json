@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T15:13:10Z",
+  "written_at": "2026-10-06T17:32:31Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 59,
-    "not started": 37
+    "technically verified": 60,
+    "not started": 36
   },
   "total_tasks": 96,
-  "overlay_applied": 59,
+  "overlay_applied": 60,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1477,8 +1477,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "BASE-05, FIN-08, RANGE-05",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/accept_01_independent.test.mjs -> 2 pass, 0 fail (ACCEPT-01 E1, E2). Independent arithmetic only (margin via sales*0.65 / SP=cost/0.65); engine helpers not used for expected values. R27 remains explicitly failing/unaccepted on authorised payload (no period field).",
+        "mutation src/engine/engine.js first margin_after_pct assignment (gp_after+500) -> ACCEPT-01 E1 fails (rc 1); restored -> passes (rc 0).",
+        "mutation src/engine/engine.js first margin_after_pct assignment forced to unit margin (1-cost/p1) -> ACCEPT-01 E2 fails (rc 1); restored -> passes (rc 0).",
+        "Existing accept/accept_01_engine.cjs still reports 46/1/47 (R27 fail kept, not weakened). tests/run_all.ps1 prints ACCEPT-01-INDEPENDENT 2/0/2."
+      ],
       "blockers": []
     },
     {
