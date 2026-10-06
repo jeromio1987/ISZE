@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T08:33:55Z",
+  "written_at": "2026-10-06T12:29:28Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 50,
-    "not started": 44,
+    "technically verified": 51,
+    "not started": 43,
     "implemented": 2
   },
   "total_tasks": 96,
-  "overlay_applied": 52,
+  "overlay_applied": 53,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1015,8 +1015,14 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "DATA-03",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/range_01_relationships.test.mjs -> 3 pass, 0 fail (RANGE-01 E1, E2, E3). tests/run_all.ps1 prints RANGE-01 3/0/3.",
+        "Sufficiency before code: ITUK-PADS 0 relationships; IMOTORS-CABIN 1 catalogue pairing (fitment not verified); ITUK-TURBO 3 declared newest number (not EPC-validated); ITUK-DISCS 2 declared newest number; IMOTORS-OIL 1 catalogue pairing + 1 supersession (neither fitment-approved). No case holds an approved Genuine/BVP pair with approved fitment. Fixtures cover the approved pairing and dual-type cases. No data invented for a green.",
+        "mutation src/data/evidence.js:669 (supersession returns interchangeable true) -> RANGE-01 E1 fails (rc 1); restored -> rc 0.",
+        "mutation src/data/evidence.js:708 (candidate authority forced to approved_pairing) -> RANGE-01 E2 fails (rc 1); restored -> rc 0.",
+        "mutation src/data/evidence.js:640 (listForPair returns only first row) -> RANGE-01 E3 fails (rc 1); restored -> rc 0."
+      ],
       "blockers": []
     },
     {
