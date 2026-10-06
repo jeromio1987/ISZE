@@ -763,6 +763,68 @@
   }
 
 
+  /* -------------------------------------------------------- RANGE-04 transfer -- */
+
+  function rangeTransferSplit(input) {
+    input = input || {};
+    var from = input.from_line || {};
+    var to = input.to_line || {};
+    var transferred = toNumberOrNull(input.transferred_units);
+    var newUnits = toNumberOrNull(input.new_units);
+    if (transferred === null) transferred = 0;
+    if (newUnits === null) newUnits = 0;
+    if (transferred < 0) transferred = 0;
+    if (newUnits < 0) newUnits = 0;
+
+    var fromPrice = toNumberOrNull(from.price_eur);
+    var fromCost = toNumberOrNull(from.cost_eur);
+    var toPrice = toNumberOrNull(to.price_eur);
+    var toCost = toNumberOrNull(to.cost_eur);
+
+    var transferRevenue = (toPrice !== null) ? round2(transferred * toPrice) : null;
+    var newGrossRevenue = (toPrice !== null) ? round2(newUnits * toPrice) : null;
+
+    var displaced = null;
+    if (fromPrice !== null && fromCost !== null) {
+      displaced = round2(transferred * (fromPrice - fromCost));
+    }
+    var transferGain = null;
+    if (toPrice !== null && toCost !== null) {
+      transferGain = round2(transferred * (toPrice - toCost));
+    }
+    var newGain = null;
+    if (toPrice !== null && toCost !== null) {
+      newGain = round2(newUnits * (toPrice - toCost));
+    }
+
+    var net = null;
+    if (displaced !== null && transferGain !== null && newGain !== null) {
+      /* Displaced contribution is deducted exactly once. */
+      net = round2(transferGain + newGain - displaced);
+    }
+
+    return {
+      transferred_units: transferred,
+      new_units: newUnits,
+      transfer_revenue_eur: transferRevenue,
+      new_gross_revenue_eur: newGrossRevenue,
+      displaced_contribution_eur: displaced,
+      displaced_deduction_count: 1,
+      transfer_contribution_eur: transferGain,
+      new_contribution_eur: newGain,
+      net_contribution_change_eur: net,
+      from_reference: from.original_reference || null,
+      to_reference: to.original_reference || null,
+      statement: newUnits === 0
+        ? ('Pure one-for-one transfer of ' + transferred + ' unit(s): not counted as new units '
+          + 'and not as new gross revenue equal to the receiving line\'s full sales. '
+          + 'Transfer revenue is labelled separately. Displaced contribution is deducted once.')
+        : ('Transferred units (' + transferred + ') stay apart from independently assumed new units ('
+          + newUnits + '). New gross revenue uses only the new units. Displaced contribution '
+          + 'from the original offer is deducted once in the baseline-versus-proposal basket.')
+    };
+  }
+
   /* -------------------------------------------------------- RANGE-03 basket -- */
 
   function rangeBasket(lines) {
@@ -2583,6 +2645,7 @@
     RANGE_RELATIONSHIP_TYPES: RANGE_RELATIONSHIP_TYPES,
     exactRangeComparison: exactRangeComparison,
     rangeBasket: rangeBasket,
+    rangeTransferSplit: rangeTransferSplit,
     withdrawRangeRelationship: withdrawRangeRelationship,
     rangeWithdrawalImpact: rangeWithdrawalImpact,
     canReuseApplicationApproval: canReuseApplicationApproval,
