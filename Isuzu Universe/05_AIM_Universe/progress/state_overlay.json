@@ -1,7 +1,7 @@
 {
   "_note": "Evidence-backed state for the tasks that have landed. Merged by tools/build_progress.py. A state here must name the command that showed it. The integration owner writes this file; workers do not.",
   "_written_by": "cursor U18 CONNECT-04",
-  "_written_at": "2026-10-06T18:36:33Z",
+  "_written_at": "2026-10-06T18:52:01Z",
   "_authority": "A state of technically verified means a named command was run and its output read. It does not mean human accepted, and it confers no business, technical, privacy or spending authority.",
   "_acceptance_run": {
     "command": "powershell -ExecutionPolicy Bypass -File tests/run_all.ps1",
@@ -585,6 +585,15 @@
         "mutation src/data/service_demand_bounds.js selectServiceBasis (external returns average of internal+external) -> CONNECT-04 E1 fails; restored -> passes",
         "mutation src/data/service_demand_bounds.js bandServiceCover (repeated_market_over_band_expectation returns a cover ratio) -> CONNECT-04 E2 fails; restored -> passes",
         "Synthetic fixtures only. Switching internal/external changes the labelled method and does not average them. No band-level service cover from dividing repeated market purchasing by a band expectation. Shared parts stay pooled. Restricted euro aggregates stay out of external views. Series codes become bands only through bandFor on series_to_band.csv."
+      ]
+    },
+    "RUN-01": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/run_01_shared_backend.test.mjs -> 2 pass, 0 fail",
+        "mutation src/case/server/migrate.js applyMigrations (skip db.exec(sql)) -> RUN-01 E1 fails; restored -> passes",
+        "mutation src/case/server/server.js (inject function calculate) -> RUN-01 E2 fails; restored -> passes",
+        "Jerome approved BUILD minimal 2026-10-06: node:sqlite + node:http on 127.0.0.1 wrapping makeCaseService via SQLite adapter under src/case/server/. Synthetic disposable DB only. schema.js + store.js remain the case contract; AIMEngine.calculate remains the only pricing entry point."
       ]
     }
   },

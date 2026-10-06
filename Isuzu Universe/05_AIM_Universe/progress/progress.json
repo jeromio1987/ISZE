@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T18:36:33Z",
+  "written_at": "2026-10-06T18:52:01Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 72,
-    "not started": 24
+    "technically verified": 73,
+    "not started": 23
   },
   "total_tasks": 96,
-  "overlay_applied": 72,
+  "overlay_applied": 73,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1430,8 +1430,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "BASE-04",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/run_01_shared_backend.test.mjs -> 2 pass, 0 fail",
+        "mutation src/case/server/migrate.js applyMigrations (skip db.exec(sql)) -> RUN-01 E1 fails; restored -> passes",
+        "mutation src/case/server/server.js (inject function calculate) -> RUN-01 E2 fails; restored -> passes",
+        "Jerome approved BUILD minimal 2026-10-06: node:sqlite + node:http on 127.0.0.1 wrapping makeCaseService via SQLite adapter under src/case/server/. Synthetic disposable DB only. schema.js + store.js remain the case contract; AIMEngine.calculate remains the only pricing entry point."
+      ],
       "blockers": []
     },
     {
