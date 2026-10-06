@@ -250,6 +250,18 @@ if ($marketX -match "fail\s+0" -and $marketX -match "pass\s+2") {
     $global:REVIEW_UNIT_FAIL = $true
 }
 
+# MARKET-05 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "MARKET-05 - keep different commercial price levels separate"
+$marketX = & node --test (Join-Path $PSScriptRoot "market_05_levels.test.mjs") 2>&1 | Out-String
+Write-Host $marketX
+if ($marketX -match "fail\s+0" -and $marketX -match "pass\s+2") {
+    Write-Host "MARKET-05 2/0/2"
+} else {
+    Write-Host "MARKET-05 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
 # MARKET-07 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "MARKET-07 - comparable-price panel with clear exclusions"
