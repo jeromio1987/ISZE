@@ -2,7 +2,7 @@
 
 **Job implementations:** `C:\Users\jerom\Documents\Claude\Scheduled\<job-name>\SKILL.md`  
 **This file:** Canonical in-repo index (migrated from `00_docs/agent/NOTES.md`)  
-**Last audited:** 2026-10-06 (brief F3)
+**Last audited:** 2026-10-06 (brief F4)
 **Path contract:** `$env:ISZE_ROOT` + [`paths.yaml`](../paths.yaml) · preflight policy: audit-export `scheduled-path-fix-report.md`
 
 ### Model routing (2026-07-24)
@@ -79,11 +79,11 @@ Each `SKILL.md` states `**Model tier: …**` under the frontmatter. Prefer Haiku
 
 | Live task name | State | Cadence | Batch / script | Produces | Notes |
 |---|---|---|---|---|---|
-| `ISZE Tender Monitor` | Ready | Mon 07:30 | `run_tender_monitor.bat` | `01_data/14_dashboards/tender_data.json` | Last run 2026-10-05 07:30, result 0 |
-| `ISZE_PMS_IAM_Refresh` | Ready | Mon 07:00 | `run_refresh_scheduled.bat` | KS and TMC prices, drift history, executive dashboards | Mekonomen, Auto365, Tranzparts retired 24 Sep. Last run 2026-10-05 07:00, result 0 |
-| `ISZE_LiveStateAudit_Weekly` | Ready | Mon 08:00 | `run_live_state_audit.cmd` | `05_memory/briefs/automation_drift_*.md` | Last run 2026-10-05 08:00, result 0 |
+| `ISZE Tender Monitor` | Ready | Mon 07:30 | `04_tools/delegation/run_hidden.pyw` (runs `run_tender_monitor.bat`) | `01_data/14_dashboards/tender_data.json` | Last run 2026-10-05 07:30, result 0. Windowless since 2026-10-06 (brief F4). |
+| `ISZE_PMS_IAM_Refresh` | Ready | Mon 07:00 | `04_tools/delegation/run_hidden.pyw` (runs `run_refresh_scheduled.bat`) | KS and TMC prices, drift history, executive dashboards | Mekonomen, Auto365, Tranzparts retired 24 Sep. Last run 2026-10-05 07:00, result 0. Windowless since 2026-10-06 (brief F4). |
+| `ISZE_LiveStateAudit_Weekly` | Ready | Mon 08:00 | `04_tools/delegation/run_hidden.pyw` (runs `run_live_state_audit.cmd`) | `05_memory/briefs/automation_drift_*.md` | Last run 2026-10-05 08:00, result 0. Windowless since 2026-10-06 (brief F4). |
 | `ISZE_PriceLedger_Weekly` | Ready | Mon 09:00 | `04_tools/delegation/run_price_ledger_hidden.pyw` | price-observation ledger for the parts price dashboard | Windowless pythonw launcher so the scheduler gets the real exit code. Failed every Monday from 28 Sep to 5 Oct (exit 0xC000013A, console window closed); fixed by this launcher. First good run 2026-10-06 05:55, result 0 (manual re-run; output rebuilt 06:11) |
-| `ISZE_CursorWeekDigest_Weekly` | Ready | Sun 20:00 | `run_cursor_week_digest.cmd` | Claude/Cursor scorecard `05_memory/briefs/scorecard_*.md` | Name kept; runs the scorecard since brief E1. Last run 2026-10-04 20:00, result 0 |
+| `ISZE_CursorWeekDigest_Weekly` | Ready | Sun 20:00 | `04_tools/delegation/run_hidden.pyw` (runs `run_cursor_week_digest.cmd`) | Claude/Cursor scorecard `05_memory/briefs/scorecard_*.md` | Name kept; runs the scorecard since brief E1. Last run 2026-10-04 20:00, result 0. Windowless since 2026-10-06 (brief F4). |
 | `ISZE_DiscountScanner_Weekly` | Ready | Thu 07:00 | `run_discount_scraper.bat` | `04_tools/discount-scanner/deals_dashboard.html` | Personal, outside the audit. |
 | `ISZE_DelegatorWatch_20min` | Disabled | - | `run_overnight_orchestrator.cmd` | nothing | Off since 18 Sep; queue archived 5 Oct. |
 | `ISZE_EQ_Hit_Session_20260919` | Disabled | - | `run_eq_hit_session_20260919.ps1` | nothing | One-off of 19 Sep, exited 1. |
