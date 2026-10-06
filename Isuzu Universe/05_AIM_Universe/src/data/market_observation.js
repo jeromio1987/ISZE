@@ -491,6 +491,51 @@
   }
 
 
+  /* ----- MARKET-05: commercial price levels stay separate ----- */
+
+  function levelBridgeView(args) {
+    args = args || {};
+    var without = args.panel_without_bridge || {};
+    var withB = args.panel_with_bridge || {};
+    var excluded = (without.ineligible_offers || []).map(function (r) { return r.observation_id; });
+    var indexAllowedWithout = !!(without.price_positioning && without.price_positioning.index_allowed);
+    var indexAllowedWith = (withB.ineligible_offers || []).length === 0;
+    return {
+      direct_index_allowed_without_bridge: indexAllowedWithout,
+      direct_index_allowed_with_bridge: indexAllowedWith,
+      excluded_without_bridge: excluded,
+      panel_without_bridge: without,
+      panel_with_bridge: withB
+    };
+  }
+
+  function referenceValuationView(args) {
+    args = args || {};
+    var comparableApi = null;
+    try {
+      if (typeof require === 'function') {
+        comparableApi = require('./comparable.js');
+      }
+    } catch (e) { comparableApi = null; }
+    if (!comparableApi && root.AIMComparable) comparableApi = root.AIMComparable;
+
+    var asRevenue = comparableApi
+      ? comparableApi.assertLevelUse('reference_dealer', 'dealer_revenue')
+      : { ok: false, statement: 'comparable module unavailable' };
+    var asMargin = comparableApi
+      ? comparableApi.assertLevelUse('reference_dealer', 'dealer_margin')
+      : { ok: false, statement: 'comparable module unavailable' };
+
+    return {
+      shown_as_actual_revenue: !!(asRevenue && asRevenue.ok),
+      shown_as_dealer_margin: !!(asMargin && asMargin.ok),
+      forbidden_labels: ['actual downstream revenue', 'dealer margin earned'],
+      display_labels: ['reference dealer price', 'comparison convention'],
+      statement: (asRevenue && asRevenue.statement) || '',
+      panel: args.panel || null
+    };
+  }
+
   var API = {
     RECORD_FIELDS: RECORD_FIELDS,
     buildRecord: buildRecord,
@@ -505,7 +550,9 @@
     packCompareView: packCompareView,
     packUnknownView: packUnknownView,
     adjustmentAuditView: adjustmentAuditView,
-    unknownAdjustmentView: unknownAdjustmentView
+    unknownAdjustmentView: unknownAdjustmentView,
+    levelBridgeView: levelBridgeView,
+    referenceValuationView: referenceValuationView
   };
 
   root.AIMMarketObservation = API;
