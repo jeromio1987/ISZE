@@ -271,13 +271,87 @@
     };
   }
 
+  /* ----- MARKET-06: outdated / conflicting observations stay visible ----- */
+
+  function savedComparisonView(args) {
+    args = args || {};
+    var panel = args.panel || {};
+    var savedIn = args.saved || null;
+    var list = panel.saved_comparisons || [];
+    var saved = null;
+    if (savedIn && savedIn.comparison_id) {
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].comparison_id === savedIn.comparison_id) { saved = list[i]; break; }
+      }
+    }
+    if (!saved && list.length) saved = list[0];
+    if (!saved && savedIn) {
+      saved = {
+        comparison_id: savedIn.comparison_id || null,
+        observation_ids: savedIn.observation_ids || [],
+        value: savedIn.value,
+        basis: savedIn.basis || null,
+        saved_at: savedIn.saved_at || null,
+        rewritten: false,
+        superseded_by_observation_ids: [],
+        statement: 'No panel saved-comparison row was returned.'
+      };
+    }
+    return {
+      saved: saved,
+      newer_rewrote_saved: !!(saved && saved.rewritten),
+      panel: panel
+    };
+  }
+
+  function conflictVisibilityView(args) {
+    args = args || {};
+    var panel = args.panel || {};
+    var rows = (panel.eligible_offers || []).concat(panel.ineligible_offers || []);
+    var visible = [];
+    var dates = {};
+    var sources = {};
+    rows.forEach(function (r) {
+      if (!r) return;
+      if (r.visible === false) return;
+      visible.push(r.observation_id);
+      var raw = r.raw || {};
+      dates[r.observation_id] = raw.retrieved || null;
+      sources[r.observation_id] = raw.source_reference || null;
+    });
+
+    var amounts = [];
+    (panel.eligible_offers || []).forEach(function (r) {
+      if (r && r.raw && typeof r.raw.amount === 'number') {
+        amounts.push({ id: r.observation_id, amount: r.raw.amount });
+      }
+    });
+    amounts.sort(function (a, b) { return a.amount - b.amount; });
+    var cheapestId = amounts.length ? amounts[0].id : null;
+    var selected = panel.selected_observation_id || panel.decision_observation_id || null;
+    var autoChose = !!(selected && cheapestId && selected === cheapestId);
+
+    return {
+      visible_observation_ids: visible,
+      dates: dates,
+      sources: sources,
+      cheapest_observation_id: cheapestId,
+      cheapest_auto_selected: autoChose,
+      auto_chose_cheapest: autoChose,
+      offers_shown_individually: !!(panel.aggregation && panel.aggregation.offers_shown_individually),
+      panel: panel
+    };
+  }
+
   var API = {
     RECORD_FIELDS: RECORD_FIELDS,
     buildRecord: buildRecord,
     buildRecords: buildRecords,
     retainThroughReview: retainThroughReview,
     attachToSavedCase: attachToSavedCase,
-    toPanelOffer: toPanelOffer
+    toPanelOffer: toPanelOffer,
+    savedComparisonView: savedComparisonView,
+    conflictVisibilityView: conflictVisibilityView
   };
 
   root.AIMMarketObservation = API;
