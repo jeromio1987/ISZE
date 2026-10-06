@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T13:20:53Z",
+  "written_at": "2026-10-06T13:28:37Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 55,
-    "not started": 39,
+    "technically verified": 57,
+    "not started": 37,
     "implemented": 2
   },
   "total_tasks": 96,
-  "overlay_applied": 57,
+  "overlay_applied": 59,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1089,8 +1089,12 @@
       "existing_finding": "F07",
       "can_start_after": "BASE-03",
       "integrate_after": "FIN-08, RANGE-01",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/range_05_unresolved.test.mjs -> 2 pass, 0 fail (RANGE-05 E1, E2). tests/run_all.ps1 prints RANGE-05 2/0/2.",
+        "Sufficiency: IMOTORS-OIL holds a migration alternative; engine already returns migration_status unresolved with null revenue/gp change when two-product inputs are missing. rangeMigrationBenefit exposes benefit unknown (not 0). Fixture covers unsupported vs labelled hypothetical. No data invented for a green.",
+        "mutation src/data/evidence.js:794 (unresolved benefit_eur forced to 0) -> RANGE-05 E1 fails (rc 1); restored -> rc 0."
+      ],
       "blockers": []
     },
     {
@@ -1102,8 +1106,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "FIN-05, FIN-08, MARKET-07, RANGE-03",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/range_06_price_direction.test.mjs -> 2 pass, 0 fail (RANGE-06 E1, E2). tests/run_all.ps1 prints RANGE-06 2/0/2.",
+        "Sufficiency: no case holds packEvidence.price_direction on the real payload (0). Real cases render price-direction unavailable. Fixture range_06_price_direction.json covers unit-profit-up/total-profit-down and no underpriced label without evidence. MARKET-07 remains implemented (Jerome waiver for U10). No data invented for a green.",
+        "mutation src/data/evidence.js:891 (totalAfter uses q0 not q1) -> RANGE-06 E1 fails (rc 1); restored -> rc 0.",
+        "mutation src/data/evidence.js:912 (labelled_underpriced forced true) -> RANGE-06 E2 fails (rc 1); restored -> rc 0."
+      ],
       "blockers": []
     },
     {
