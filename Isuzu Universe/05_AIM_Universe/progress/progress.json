@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T05:55:20Z",
+  "written_at": "2026-10-06T05:59:27Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 47,
+    "technically verified": 48,
     "implemented": 3,
-    "not started": 46
+    "not started": 45
   },
   "total_tasks": 96,
-  "overlay_applied": 50,
+  "overlay_applied": 51,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -594,8 +594,12 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "REVIEW-04, FIN-08",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/review_07_next_action.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/evidence.js:1770 (force discount route on supply) + :1898 (disable supply discount filter) -> REVIEW-07 E1 fails; restored -> passes",
+        "mutation src/data/evidence.js:1782 (block purchasing_review / bvp_application_check routes) -> REVIEW-07 E2 fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
