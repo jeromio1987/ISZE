@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-05T23:16:01Z",
+  "written_at": "2026-10-06T05:29:58Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 44,
-    "not started": 49,
+    "technically verified": 45,
+    "not started": 48,
     "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 47,
+  "overlay_applied": 48,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -528,8 +528,12 @@
       "existing_finding": "F01, F04",
       "can_start_after": "BASE-03",
       "integrate_after": "DATA-04, UX-01",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/review_03_comparison.test.mjs -> 2 pass, 0 fail",
+        "mutation src/ui/app.js:1351 (observedComparison reads comparisons.half instead of state.compare) -> REVIEW-03 E1 fails; restored -> passes",
+        "mutation src/ui/app.js:1361 (exportReviewText dumps Object.values(c.comparisons) instead of the selected comparison) -> REVIEW-03 E2 fails; restored -> passes"
+      ],
       "blockers": []
     },
     {

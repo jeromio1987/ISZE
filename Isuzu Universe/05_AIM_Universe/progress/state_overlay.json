@@ -44,6 +44,14 @@
      "DATA-04": { "state": "technically verified", "evidence": ["VAT unit. The shared rule divided by 1 + rate/100 while the payload stores a fraction. On a UK tax-inclusive observation it yielded EUR 89.90 against a correct EUR 75.07, 19.8% too high. The unit is now declared on the row and required by the rule; a bare 0.2 is refused. Four checks added."] },
     "REVIEW-01": { "state": "technically verified", "evidence": ["Candidate search and paging reach the whole permitted set rather than the first 300 rows, with a route from a row into its own part review."] },
     "REVIEW-02": { "state": "technically verified", "evidence": ["Row counts reported separately from distinct part numbers: 10543 rows, 7798 distinct parts, 15 costed rows covering 8 distinct parts against a source sentence claiming 15."] },
+  "REVIEW-03": {
+    "state": "technically verified",
+    "evidence": [
+      "node --test tests/review_03_comparison.test.mjs -> 2 pass, 0 fail",
+      "mutation src/ui/app.js:1351 (observedComparison reads comparisons.half instead of state.compare) -> REVIEW-03 E1 fails; restored -> passes",
+      "mutation src/ui/app.js:1361 (exportReviewText dumps Object.values(c.comparisons) instead of the selected comparison) -> REVIEW-03 E2 fails; restored -> passes"
+    ]
+  },
     "REVIEW-05": { "state": "implemented", "evidence": ["The 'case' view key was missing from TAB_LABELS so the part-review tab rendered its raw key instead of a label. Now 'Part review', confirmed present in the assembled artifact. Recorded here rather than under a new id: the fix has no task of its own in the plan, and inventing one would inflate the count. (An earlier revision of this overlay used a made-up id 'KX-01' and tools/build_progress.py correctly refused it.)"] },
     "MARKET-07": { "state": "implemented", "evidence": ["src/data/comparable.js is assembled and the price-position view draws it without recomputing anything. On the authorised payload the eligible set is empty on all five cases and renders as an explicit unavailable state naming the reason per row, not a blank panel. ux_market 12/0. NOT verified end to end, because no commercial comparison is possible from the current data."] },
     "MARKET-08": { "state": "implemented", "evidence": ["The panel reads the exclusion codes and requests the smallest missing item as a draft ask, rather than asking for everything."] },
