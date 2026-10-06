@@ -227,6 +227,18 @@ if ($accept01 -match "fail\s+0" -and $accept01 -match "pass\s+2") {
     $global:REVIEW_UNIT_FAIL = $true
 }
 
+# CONNECT-01 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "CONNECT-01 - IDS evidence through validated identities"
+$connect01 = & node --test (Join-Path $PSScriptRoot "connect_01_ids_identities.test.mjs") 2>&1 | Out-String
+Write-Host $connect01
+if ($connect01 -match "fail\s+0" -and $connect01 -match "pass\s+2") {
+    Write-Host "CONNECT-01 2/0/2"
+} else {
+    Write-Host "CONNECT-01 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
 & $impl @PSBoundParameters
 if ($global:REVIEW_UNIT_FAIL) { exit 1 }
 exit $LASTEXITCODE
