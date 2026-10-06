@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T19:26:04Z",
+  "written_at": "2026-10-06T19:37:28Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 75,
-    "not started": 21
+    "technically verified": 76,
+    "not started": 20
   },
   "total_tasks": 96,
-  "overlay_applied": 75,
+  "overlay_applied": 76,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1328,8 +1328,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "RUN-01",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/safe_01_identity.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/identity.js resolveStartupIdentity (shared missing-config check disabled) -> SAFE-01 E1 fails; restored -> passes",
+        "mutation src/data/identity.js establishIdentity (client organisation used as tenant) -> SAFE-01 E2 fails; restored -> passes",
+        "Development-only identity is loud-labelled and refused in INTERNAL builds and shared-mode startup. Shared-mode also refuses missing approved identity configuration. Identity tenant comes from provider claims only; client organisation fields are ignored. Real IdP wiring not done (needs IT)."
+      ],
       "blockers": []
     },
     {

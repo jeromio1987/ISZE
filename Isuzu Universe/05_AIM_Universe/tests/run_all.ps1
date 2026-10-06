@@ -1,4 +1,4 @@
-﻿<#
+<#
     The one entry point for the AIM Universe verification suite.
 
     The checks live in tests\accept\ because that folder holds everything the
@@ -421,6 +421,19 @@ if ($run01 -match "fail\s+0" -and $run01 -match "pass\s+2") {
 
 
 
+
+
+# SAFE-01 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "SAFE-01 - approved identity with development-only mode"
+$safe01 = & node --test (Join-Path $PSScriptRoot "safe_01_identity.test.mjs") 2>&1 | Out-String
+Write-Host $safe01
+if ($safe01 -match "fail\s+0" -and $safe01 -match "pass\s+2") {
+    Write-Host "SAFE-01 2/0/2"
+} else {
+    Write-Host "SAFE-01 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
 
 # SAFE-05 independent verification (node). Existing accept rows are untouched below.
 Write-Host ""

@@ -1,4 +1,4 @@
-﻿"""
+"""
 Build the internal AIM pricing-decisions HTML (BASE-04, BASE-07).
 
 The generated v03 file was both the source and the product, so a fix could only
@@ -56,6 +56,7 @@ COMPONENT_VERSION = "0.4"
 MODULES = [
     ("src/data/contracts.js", "shared records"),
     ("src/data/export.js", "recipient-specific exports, identity and permission"),
+    ("src/data/identity.js", "approved and development-only identity resolution"),
     ("src/case/schema.js", "case lifecycle and valid transitions"),
     ("src/case/store.js", "durable case repository, file and browser adapters"),
     ("src/engine/engine.js", "calculation (one entry point)"),
