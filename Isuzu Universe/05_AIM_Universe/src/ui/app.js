@@ -427,6 +427,27 @@ function contributorsPanel(c){
    mix, so this block separates the three effects, lists new and discontinued
    references on their own lines, prints the residual even when it is zero, and
    says so in plain words. It never says "price increase" and never shows a factor. */
+
+function rangeRelationshipsPanel(c){
+  const Ev = (typeof AIMEvidence!=='undefined') ? AIMEvidence : null;
+  if(!Ev || typeof Ev.relationships!=='function' || typeof Ev.rangeCommercialRole!=='function') return '';
+  const rows = (Ev.relationships({cases:[c]})||[]);
+  if(!rows.length){
+    return `<div class="panel" data-range-relationships="1" data-range-rel-count="0"><h3>Part relationships</h3><p class="small">No typed pairing, supersession or fitment relationship is held for this case. Absence of a pair is not proof that no Best Value alternative exists.</p></div>`;
+  }
+  const lis = rows.map(r=>{
+    const role = Ev.rangeCommercialRole({
+      type: r.relationship_type==='catalogue_pairing' ? 'pairing'
+        : (r.relationship_type==='supersession' ? 'supersession'
+        : (r.fitment_approved===true ? 'fitment' : r.relationship_type)),
+      authority: r.fitment_approved===true ? 'approved' : 'candidate'
+    }, {price_present:false, cost_present:false});
+    const typeLabel = r.relationship_label || r.relationship_type || 'unclassified';
+    return `<li data-rel-type="${esc(r.relationship_type||'')}" data-rel-role="${esc(role.role)}"><strong>${esc(typeLabel)}</strong>: ${esc(r.part_number_a||'')} ↔ ${esc(r.part_number_b||'')}. Authority: ${esc(role.role)}. ${esc(role.statement)} Source: ${esc(r.source_type||'not stated')}.</li>`;
+  }).join('');
+  return `<div class="panel" data-range-relationships="1" data-range-rel-count="${rows.length}"><h3>Part relationships</h3><p class="small">Pairing, supersession and fitment are listed as separate typed relationships. A successor is not an interchangeable Genuine/BVP pair. Margin figures, where shown elsewhere, stay as margin.</p><ul>${lis}</ul></div>`;
+}
+
 function priceQuantityMixPanel(c){
   if(!Ev||!Ev.priceQuantityMix)return '';
   const rec=Ev.priceQuantityMix(c,state.compare);
@@ -853,7 +874,7 @@ function marketView(c){
 function decision(c){
  const cmp=c.comparisons[state.compare];
  return `<div class="compare-row"><div><span class="eyebrow">Measured record</span><div class="small">${sourceButton()} &middot; no forecast or lost-sales attribution</div></div><select id="comparison" aria-label="Comparison period"><option value="half" ${state.compare==='half'?'selected':''}>January-June 2026 vs 2025</option><option value="annual" ${state.compare==='annual'?'selected':''}>Calendar 2025 vs 2024</option></select></div>
- ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${contributorsPanel(c)}${priceQuantityMixPanel(c)}${purchasingActivityPanel(c)}${nextActionPlanPanel(c)}${targetBox(c)}
+ ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${contributorsPanel(c)}${rangeRelationshipsPanel(c)}${priceQuantityMixPanel(c)}${purchasingActivityPanel(c)}${nextActionPlanPanel(c)}${targetBox(c)}
  <div class="grid2">${chart(c,state.billingMetric,state.billingMetric==='billingEUR'?'What ISZE billed':'What ISZE supplied')}${onwardHeld(c)?chart(c,'onwardQuantity','What the distributor supplied to dealers'):onwardMissing()}</div>
  <div class="grid2"><div class="panel"><span class="badge fact">Evidence supporting review</span><p style="margin-top:12px">${esc(c.reason)}</p></div><div class="panel warn"><span class="badge review">Evidence against a simple price story</span><p style="margin-top:12px">${esc(c.counter)}</p></div></div>
  <div class="grid2">${chart(c,'price','Observed ISZE unit price',true)}<div class="panel"><div class="eyebrow">Reconcile the euro change</div><h3>${signedEUR(cmp.revenueDelta)} in recorded billing</h3><div class="evidence-line"><span>Quantity effect, at prior price</span><b class="${color(cmp.volumeEffect)}">${signedEUR(cmp.volumeEffect)}</b></div><div class="evidence-line"><span>Effective price / terms effect</span><b class="${color(cmp.effectivePriceEffect)}">${signedEUR(cmp.effectivePriceEffect)}</b></div><div class="ruleline small">Exact identity: (new quantity &minus; old quantity) &times; old price + new quantity &times; (new price &minus; old price). The second term includes mix of order conditions. It is not causal price elasticity or a measured price-list effect.</div><div class="scopebox"><b>${num(c.fleet)} ${c.market==='ITUK'?'trucks':'vehicles'} &middot; 2025 market reference</b><br>${esc(c.application)} No part-level demand gap or dealer rate is computed.</div></div></div>

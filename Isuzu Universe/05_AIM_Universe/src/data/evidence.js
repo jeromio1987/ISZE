@@ -580,6 +580,148 @@
     return out;
   }
 
+
+  /* -------------------------------------------------------- RANGE-01 ledger -- */
+
+  /* Pairing, supersession and fitment are three different typed relationships.
+     A successor or supersession is never treated as an interchangeable Genuine/BVP
+     pair. Price and cost present do not approve a candidate. Two types on the same
+     pair stay two records. */
+  var RANGE_RELATIONSHIP_TYPES = ['pairing', 'supersession', 'fitment'];
+
+  function makeRangeRelationshipLedger() {
+    var byId = {};
+    var rows = [];
+    var seq = 0;
+
+    function pairKey(a, b) {
+      var x = String(a || '');
+      var y = String(b || '');
+      return x <= y ? x + SEP + y : y + SEP + x;
+    }
+
+    function record(input) {
+      input = input || {};
+      if (RANGE_RELATIONSHIP_TYPES.indexOf(input.type) < 0) {
+        return { ok: false, error: 'A range relationship is one of '
+          + RANGE_RELATIONSHIP_TYPES.join(', ') + '; "' + input.type + '" is not recorded.' };
+      }
+      if (input.promoted_from === 'successor' || input.promoted_from === 'supersession') {
+        return { ok: false, error: 'A successor or supersession cannot be recorded as a pairing. '
+          + 'Record it as supersession, and keep pairing as its own typed relationship.' };
+      }
+      if (isBlank(input.part_a) || isBlank(input.part_b) || isBlank(input.source)) {
+        return { ok: false, error: 'A range relationship needs part_a, part_b and a stated source.' };
+      }
+      var authority = String(input.authority || 'candidate').toLowerCase();
+      if (authority !== 'approved' && authority !== 'candidate' && authority !== 'withdrawn') {
+        authority = 'candidate';
+      }
+      seq += 1;
+      var entry = {
+        relationship_id: 'RREL-' + seq,
+        type: input.type,
+        part_a: String(input.part_a),
+        part_b: String(input.part_b),
+        source: input.source,
+        source_version: input.source_version || null,
+        authority: authority,
+        conditions: input.conditions ? JSON.parse(JSON.stringify(input.conditions)) : {},
+        version: 1,
+        pair_key: pairKey(input.part_a, input.part_b)
+      };
+      rows.push(entry);
+      byId[entry.relationship_id] = entry;
+      return { ok: true, relationship: JSON.parse(JSON.stringify(entry)) };
+    }
+
+    function listForPair(a, b) {
+      var key = pairKey(a, b);
+      return rows.filter(function (r) { return r.pair_key === key; })
+        .map(function (r) { return JSON.parse(JSON.stringify(r)); });
+    }
+
+    function listAll() {
+      return rows.map(function (r) { return JSON.parse(JSON.stringify(r)); });
+    }
+
+    return {
+      record: record,
+      listForPair: listForPair,
+      listAll: listAll,
+      TYPES: RANGE_RELATIONSHIP_TYPES.slice()
+    };
+  }
+
+  function interchangeablePairStatus(relationship) {
+    relationship = relationship || {};
+    var type = relationship.type || relationship.relationship_type || null;
+    var authority = String(relationship.authority || '').toLowerCase();
+    if (type === 'pairing' && authority === 'approved') {
+      return {
+        interchangeable: true,
+        type: type,
+        authority: authority,
+        statement: 'Approved pairing: the two numbers may be treated as an interchangeable '
+          + 'Genuine/BVP pair for commercial review. Fitment remains a separate typed relationship.'
+      };
+    }
+    if (type === 'supersession' || type === 'successor') {
+      return {
+        interchangeable: false,
+        type: type,
+        authority: authority || null,
+        statement: 'A supersession or successor says one number replaced another. It is not an '
+          + 'interchangeable Genuine/BVP pairing.'
+      };
+    }
+    if (type === 'fitment') {
+      return {
+        interchangeable: false,
+        type: type,
+        authority: authority || null,
+        statement: 'Fitment is technical suitability. It is not a commercial Genuine/BVP pairing.'
+      };
+    }
+    return {
+      interchangeable: false,
+      type: type,
+      authority: authority || null,
+      statement: 'Not an interchangeable Genuine/BVP pair. Pairing requires type pairing and '
+        + 'approved authority.'
+    };
+  }
+
+  function rangeCommercialRole(relationship, opts) {
+    relationship = relationship || {};
+    opts = opts || {};
+    var pricePresent = !!opts.price_present;
+    var costPresent = !!opts.cost_present;
+    var authority = String(relationship.authority || 'candidate').toLowerCase();
+    var pair = interchangeablePairStatus(relationship);
+    var role = 'candidate';
+    if (authority === 'withdrawn') role = 'withdrawn';
+    else if (authority === 'approved' && relationship.type === 'pairing') role = 'approved_pairing';
+    else if (authority === 'approved') role = 'approved_' + String(relationship.type || 'relationship');
+    else role = 'candidate';
+    /* Price and cost never promote authority. */
+    if (authority !== 'approved') role = 'candidate';
+    return {
+      role: role,
+      interchangeable: pair.interchangeable && authority === 'approved',
+      authority: authority,
+      type: relationship.type || null,
+      price_present: pricePresent,
+      cost_present: costPresent,
+      statement: authority === 'approved'
+        ? ('Authority is approved for this ' + (relationship.type || 'relationship')
+          + '. Price and cost are reported beside it and do not change the authority.')
+        : ('Unapproved relationship stays a candidate even when price and cost are present. '
+          + 'Price present: ' + (pricePresent ? 'yes' : 'no') + '; cost present: '
+          + (costPresent ? 'yes' : 'no') + '.')
+    };
+  }
+
   function relationshipSummary(payload) {
     var rows = relationships(payload);
     var byKind = {}, byFitment = {};
@@ -2169,6 +2311,10 @@
     fitmentStatus: fitmentStatus,
     relationships: relationships,
     relationshipSummary: relationshipSummary,
+    makeRangeRelationshipLedger: makeRangeRelationshipLedger,
+    interchangeablePairStatus: interchangeablePairStatus,
+    rangeCommercialRole: rangeCommercialRole,
+    RANGE_RELATIONSHIP_TYPES: RANGE_RELATIONSHIP_TYPES,
     partReference: partReference,
     makeRelationshipLedger: makeRelationshipLedger,
     makeStageState: makeStageState,
