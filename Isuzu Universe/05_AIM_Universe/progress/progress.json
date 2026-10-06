@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T17:32:31Z",
+  "written_at": "2026-10-06T17:36:54Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 60,
-    "not started": 36
+    "technically verified": 61,
+    "not started": 35
   },
   "total_tasks": 96,
-  "overlay_applied": 60,
+  "overlay_applied": 61,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1161,8 +1161,14 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "DATA-02, DATA-03, DATA-04",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/connect_01_ids_identities.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/ids_evidence.js:39 (scopedQuestionId returns only the local question code) -> CONNECT-01 E1 fails; restored -> passes",
+        "mutation src/data/ids_evidence.js:152+171 (UTI forced into the 2026 IDS population and a distributor_audit_scores entry invented) -> CONNECT-01 E2 fails; restored -> passes",
+        "Synthetic dealers and a synthetic IDS sheet only. Validated identity shows evidence; unvalidated shows 'identity not validated' with no answers; UMI and UTI are never merged; an unknown identity stays unknown and does not borrow the previous row. Real IDS workbooks were not read.",
+        "F08-IDENTITY: this task narrows the dealer/IDS identity half (validated identities gate IDS answers; UMI/UTI stay apart). It does not close F08-IDENTITY: approved identity provider, tenant policy, revocation and server-side enforcement remain open under the integration owner."
+      ],
       "blockers": []
     },
     {
