@@ -420,6 +420,48 @@ function contributorsPanel(c){
   <p class="small">${esc(rem.statement||'')}</p>
   <p class="small">Genuine / BVP lines stay as the source states them. A descriptive change is not a claim about missing dealer sales.</p></div>`;
 }
+
+/* REVIEW-05. Price, quantity and mix beside the REVIEW-04 contributors.
+
+   The average unit revenue can rise while a customer simply bought a different
+   mix, so this block separates the three effects, lists new and discontinued
+   references on their own lines, prints the residual even when it is zero, and
+   says so in plain words. It never says "price increase" and never shows a factor. */
+function priceQuantityMixPanel(c){
+  if(!Ev||!Ev.priceQuantityMix)return '';
+  const rec=Ev.priceQuantityMix(c,state.compare);
+  if(!rec||!rec.available)return '';
+  const k=rec.components;
+  const money=v=>v===null?'<span class="small">unavailable</span>':signedEUR(v);
+  const cont=(rec.continuing||[]).map(r=>`<tr><td class="pn">${esc(r.pn)}</td><td class="small">${r.role==='own_part'?'case part':'compatible reference'}</td><td class="n">${num(r.prior_quantity,0)}</td><td class="n">${num(r.current_quantity,0)}</td><td class="n">${eur(r.prior_unit_revenue,2)}</td><td class="n">${eur(r.current_unit_revenue,2)}</td><td class="n">${signedEUR(r.unit_revenue_change)}</td><td class="n">${signedEUR(r.price_effect_eur)}</td></tr>`).join('');
+  const others=(list,tag)=>list.map(r=>`<tr><td class="pn">${esc(r.pn)}</td><td class="small">${esc(tag)}</td><td class="n">${num(r.quantity_delta,0)}</td><td class="n">${signedEUR(r.eur)}</td></tr>`).join('');
+  const notDec=(rec.not_decomposed||[]).map(r=>`<li>${esc(r.pn)} &middot; ${esc(r.reason)}</li>`).join('');
+  const row=(label,value,note)=>`<div class="evidence-line"><span>${label}</span><b>${value}</b></div>${note?`<p class="small">${esc(note)}</p>`:''}`;
+  return `<div class="panel" data-price-quantity-mix="1" data-pqm-compare="${esc(state.compare)}" data-pqm-observed="${k.residual_eur!==null?rec.observed_change_eur:''}">
+  <div class="eyebrow">Price, quantity and mix</div>
+  <h3>${esc(rec.label||'Selected comparison')}: how the euro change splits</h3>
+  <p class="small" data-pqm-rule="${esc(rec.label_rule)}">${esc(rec.label_rule)}</p>
+  <div class="evidence-line"><span>Observed euro change of the comparison</span><b>${signedEUR(rec.observed_change_eur)}</b></div>
+  ${row('Unit-revenue change of the continuing references (price effect)',money(k.price_eur))}
+  ${row('Quantity effect, at the prior average unit revenue',money(k.quantity_eur))}
+  ${row('Mix effect, from buying different references',money(k.mix_eur))}
+  ${row('New references',money(k.new_eur))}
+  ${row('Discontinued references',money(k.discontinued_eur))}
+  ${row('Returns',money(k.returns_eur))}
+  ${row('Residual, printed even when zero',money(k.residual_eur),k.residual_eur===null?'':'A non-zero residual is not explained by the supplied references. It is stated, not absorbed into price.')}
+  <p class="small" data-pqm-mix-state="1">${esc(rec.mix_state)}. ${esc(rec.statement||'')}</p>
+  <div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Compatible reference</th><th>Role</th><th class="n">Prior units</th><th class="n">Current units</th><th class="n">Prior EUR/unit</th><th class="n">Current EUR/unit</th><th class="n">Unit revenue change</th><th class="n">Price effect</th></tr></thead><tbody>
+  ${cont||'<tr><td colspan="8">No reference carries a quantity and an euro in both periods of this comparison, so nothing can be separated. Nothing is inferred.</td></tr>'}
+  </tbody></table></div>
+  <details><summary>New, discontinued and return lines, and what is not decomposed</summary>
+  <div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Reference</th><th>Line</th><th class="n">Quantity change</th><th class="n">Euro</th></tr></thead><tbody>
+  ${others(rec.new_references||[],'New reference')}${others(rec.discontinued_references||[],'Discontinued reference')}${others(rec.returns||[],'Return / negative line')}
+  ${((rec.new_references||[]).length+(rec.discontinued_references||[]).length+(rec.returns||[]).length)?'':'<tr><td colspan="4">No new, discontinued or return line is held for this comparison.</td></tr>'}
+  </tbody></table></div>
+  ${notDec?`<div class="eyebrow">Not decomposed</div><ul class="small" data-pqm-not-decomposed="1">${notDec}</ul>`:'<p class="small" data-pqm-not-decomposed="1">Every supplied reference carries a quantity and an euro in both periods.</p>'}
+  </details>
+  </div>`;
+}
 function purchasingActivityPanel(c){
   if(!Ev||!Ev.purchasingActivity)return '';
   const rec=Ev.purchasingActivity(c);
@@ -811,7 +853,7 @@ function marketView(c){
 function decision(c){
  const cmp=c.comparisons[state.compare];
  return `<div class="compare-row"><div><span class="eyebrow">Measured record</span><div class="small">${sourceButton()} &middot; no forecast or lost-sales attribution</div></div><select id="comparison" aria-label="Comparison period"><option value="half" ${state.compare==='half'?'selected':''}>January-June 2026 vs 2025</option><option value="annual" ${state.compare==='annual'?'selected':''}>Calendar 2025 vs 2024</option></select></div>
- ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${contributorsPanel(c)}${purchasingActivityPanel(c)}${nextActionPlanPanel(c)}${targetBox(c)}
+ ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${contributorsPanel(c)}${priceQuantityMixPanel(c)}${purchasingActivityPanel(c)}${nextActionPlanPanel(c)}${targetBox(c)}
  <div class="grid2">${chart(c,state.billingMetric,state.billingMetric==='billingEUR'?'What ISZE billed':'What ISZE supplied')}${onwardHeld(c)?chart(c,'onwardQuantity','What the distributor supplied to dealers'):onwardMissing()}</div>
  <div class="grid2"><div class="panel"><span class="badge fact">Evidence supporting review</span><p style="margin-top:12px">${esc(c.reason)}</p></div><div class="panel warn"><span class="badge review">Evidence against a simple price story</span><p style="margin-top:12px">${esc(c.counter)}</p></div></div>
  <div class="grid2">${chart(c,'price','Observed ISZE unit price',true)}<div class="panel"><div class="eyebrow">Reconcile the euro change</div><h3>${signedEUR(cmp.revenueDelta)} in recorded billing</h3><div class="evidence-line"><span>Quantity effect, at prior price</span><b class="${color(cmp.volumeEffect)}">${signedEUR(cmp.volumeEffect)}</b></div><div class="evidence-line"><span>Effective price / terms effect</span><b class="${color(cmp.effectivePriceEffect)}">${signedEUR(cmp.effectivePriceEffect)}</b></div><div class="ruleline small">Exact identity: (new quantity &minus; old quantity) &times; old price + new quantity &times; (new price &minus; old price). The second term includes mix of order conditions. It is not causal price elasticity or a measured price-list effect.</div><div class="scopebox"><b>${num(c.fleet)} ${c.market==='ITUK'?'trucks':'vehicles'} &middot; 2025 market reference</b><br>${esc(c.application)} No part-level demand gap or dealer rate is computed.</div></div></div>
@@ -1462,19 +1504,30 @@ function observedComparison(){
     current:{quantity:m.current.quantity,eur:m.current.eur,price:m.current.price,year:m.current.year,months:m.current.months},
     revenueDelta:m.revenueDelta,available:true};
 }
+/* REVIEW-05 export block. The exported review states the same comparison and the
+   same figures as the screen, in the data attributes as well as in the text. */
+function exportPriceQuantityMix(c){
+  if(!Ev||!Ev.priceQuantityMix)return '';
+  const rec=Ev.priceQuantityMix(c,state.compare);
+  if(!rec||!rec.available)return '';
+  const k=rec.components;
+  const cell=v=>v===null?'unavailable':signedEUR(v);
+  const attrs=(k.mix_eur===null?' data-export-pqm-mix="unavailable"':' data-export-pqm-mix="'+k.mix_eur+'"');
+  return `<tr data-export-pqm-compare="${esc(state.compare)}" data-export-pqm-observed="${rec.observed_change_eur}" data-export-pqm-price="${k.price_eur}" data-export-pqm-quantity="${k.quantity_eur}"${attrs} data-export-pqm-new="${k.new_eur}" data-export-pqm-discontinued="${k.discontinued_eur}" data-export-pqm-returns="${k.returns_eur}" data-export-pqm-residual="${k.residual_eur}"><td>Price effect (unit-revenue change)</td><td>${cell(k.price_eur)}</td><td>Quantity effect</td><td>${cell(k.quantity_eur)}</td><td>Mix effect</td><td>${cell(k.mix_eur)}</td></tr><tr><td>New references</td><td>${cell(k.new_eur)}</td><td>Discontinued references</td><td>${cell(k.discontinued_eur)}</td><td>Residual (printed even when zero)</td><td>${cell(k.residual_eur)}</td></tr><p class="small" data-export-pqm-rule="${esc(rec.label_rule)}">${esc(rec.label_rule)} ${esc(rec.mix_state)}.</p>`;
+}
 function exportReviewText(){
   const c=current(),s=scenario();
   const mSel=c.comparisons[state.compare];
   const evidence=`<tr data-export-compare="${esc(state.compare)}" data-export-label="${esc(mSel.label)}" data-export-prior-eur="${mSel.prior.eur}" data-export-current-eur="${mSel.current.eur}" data-export-revenue-delta="${mSel.revenueDelta}"><td>${esc(mSel.label)}</td><td>${eur(mSel.prior.eur,2)}</td><td>${eur(mSel.current.eur,2)}</td><td>${signedEUR(mSel.revenueDelta)}</td><td>${pct(mSel.onwardChangePct)}</td></tr>`;
   const rows=c.series.filter(x=>x.billingEUR!==null||x.onwardQuantity!==null).map(x=>`<tr><td>${esc(x.period)}</td><td>${num(x.billingQuantity)}</td><td>${eur(x.billingEUR,2)}</td><td>${eur(x.price,2)}</td><td>${num(x.onwardQuantity)}</td><td>${esc(x.billingState)} / ${esc(x.onwardState)}</td></tr>`).join('');
-  return `<!doctype html><html lang="en"><meta charset="utf-8"><title>${esc(c.customer)} - ${c.pn} - internal pricing review</title><body><p>ISZE INTERNAL ONLY | ${esc(D.meta.version)}</p><h1>${esc(c.customer)} - ${esc(c.name)}</h1><h2>Measured commercial evidence</h2><table>${evidence}</table><p>Evidence period ${esc(s.evidence_period||'not stated')}; offer effective date ${esc(s.offer_effective_date||'not set')}.</p><h2>Exact-part monthly aggregates</h2><table>${rows}</table></body></html>`;
+  return `<!doctype html><html lang="en"><meta charset="utf-8"><title>${esc(c.customer)} - ${c.pn} - internal pricing review</title><body><p>ISZE INTERNAL ONLY | ${esc(D.meta.version)}</p><h1>${esc(c.customer)} - ${esc(c.name)}</h1><h2>Measured commercial evidence</h2><table>${evidence}</table><h2>Price, quantity and mix</h2><table>${exportPriceQuantityMix(c)}</table><p>Evidence period ${esc(s.evidence_period||'not stated')}; offer effective date ${esc(s.offer_effective_date||'not set')}.</p><h2>Exact-part monthly aggregates</h2><table>${rows}</table></body></html>`;
 }
 function exportReview(){
   const c=current(),r=caseResult(),s=scenario();
   const mSel=c.comparisons[state.compare];
   const evidence=`<tr data-export-compare="${esc(state.compare)}" data-export-label="${esc(mSel.label)}" data-export-prior-eur="${mSel.prior.eur}" data-export-current-eur="${mSel.current.eur}" data-export-revenue-delta="${mSel.revenueDelta}"><td>${esc(mSel.label)}</td><td>${eur(mSel.prior.eur,2)}</td><td>${eur(mSel.current.eur,2)}</td><td>${signedEUR(mSel.revenueDelta)}</td><td>${pct(mSel.onwardChangePct)}</td></tr>`;
   const rows=c.series.filter(x=>x.billingEUR!==null||x.onwardQuantity!==null).map(x=>`<tr><td>${esc(x.period)}</td><td>${num(x.billingQuantity)}</td><td>${eur(x.billingEUR,2)}</td><td>${eur(x.price,2)}</td><td>${num(x.onwardQuantity)}</td><td>${esc(x.billingState)} / ${esc(x.onwardState)}</td></tr>`).join('');
-  const text=`<!doctype html><html lang="en"><meta charset="utf-8"><title>${esc(c.customer)} - ${c.pn} - internal pricing review</title><style>body{font:14px/1.5 Segoe UI,Arial,sans-serif;color:#15344b;max-width:1100px;margin:35px auto;padding:0 25px}h1{font-size:28px}h2{font-size:20px;margin-top:28px}table{border-collapse:collapse;width:100%;font-size:12px}th,td{padding:8px;border-bottom:1px solid #d8e1e8;text-align:left;vertical-align:top}th{background:#eff4f8}aside{background:#fff5e3;padding:15px}a{color:#226c98}footer,.small{font-size:11px;color:#53697a}pre{white-space:pre-wrap;font:inherit}.n{text-align:right}</style><body><p>ISZE INTERNAL ONLY | ${esc(D.meta.version)}</p><h1>${esc(c.customer)} - ${esc(c.name)}</h1><p><b>${c.pn} | ${esc(c.category)}</b></p><h2>${esc(c.action)}</h2><p>${esc(c.verdict)}</p><aside>No confirmed price-caused lost-sales amount and no current net-price approval. No supplier purchase cost and no ISZE margin are stated in a participant-facing brief. Manual inputs remain assumptions.</aside><h2>Measured commercial evidence</h2><table><tr><th>Comparison</th><th>Prior ISZE EUR</th><th>Later ISZE EUR</th><th>Change</th><th>Onward quantity change</th></tr>${evidence}</table><p>${esc(c.reason)}</p><h2>Counter-evidence</h2><p>${esc(c.counter)}</p><p>${esc(c.application)}</p>${snapshotPanel(c)}<h2>Scenario (not a forecast or approval)</h2>${r.ok?`<p>Eligible quantity ${num(r.quantity_before,0)} units at EUR ${num(r.price_before,2)}. Proposed net price ${eur(r.price_after,2)}; scope ${esc(r.scope)}; volume basis ${esc(r.quantity_label)}. Evidence period ${esc(r.evidence_period||'not stated')}; offer effective date ${esc(r.offer_effective_date||'not set')} on cost basis ${esc(r.cost_basis_id||'not set')}. Revenue change ${signedEUR(r.revenue_change)}. Gross-profit change: ${r.gp_change===null?'not calculated; no verified parts purchase cost':signedEUR(r.gp_change)}. Support ${eur(r.support_eur)}, counted once. Offer gross margin after ${r.margin_after_pct===null?'not calculated':num(r.margin_after_pct,1)+'%'}; unit margin on the proposed price ${r.margin_unit_after_pct===null?'-':num(r.margin_unit_after_pct,1)+'%'}.</p><p class="small">Profit bridge: ${signedEUR(r.bridge_revenue_change)} revenue &minus; ${eur(r.bridge_cost_change)} cost &minus; ${eur(r.bridge_support_eur)} support = ${signedEUR(r.gp_change)} ${r.bridge_reconciles?'(reconciles)':'(DOES NOT RECONCILE)'}.</p>`:`<p>${esc(r.error)}</p>`}<h2>Exact-part monthly aggregates</h2><p>Flows remain separate. An absent recorded line is not proof of zero customer demand.</p><table><tr><th>Month</th><th>ISZE units</th><th>ISZE EUR</th><th>Observed EUR/unit</th><th>Onward units</th><th>Recorded states</th></tr>${rows}</table><footer>Remains internal. Contains no participant-facing brief, no raw invoices and no full price list.</footer></body></html>`;
+  const text=`<!doctype html><html lang="en"><meta charset="utf-8"><title>${esc(c.customer)} - ${c.pn} - internal pricing review</title><style>body{font:14px/1.5 Segoe UI,Arial,sans-serif;color:#15344b;max-width:1100px;margin:35px auto;padding:0 25px}h1{font-size:28px}h2{font-size:20px;margin-top:28px}table{border-collapse:collapse;width:100%;font-size:12px}th,td{padding:8px;border-bottom:1px solid #d8e1e8;text-align:left;vertical-align:top}th{background:#eff4f8}aside{background:#fff5e3;padding:15px}a{color:#226c98}footer,.small{font-size:11px;color:#53697a}pre{white-space:pre-wrap;font:inherit}.n{text-align:right}</style><body><p>ISZE INTERNAL ONLY | ${esc(D.meta.version)}</p><h1>${esc(c.customer)} - ${esc(c.name)}</h1><p><b>${c.pn} | ${esc(c.category)}</b></p><h2>${esc(c.action)}</h2><p>${esc(c.verdict)}</p><aside>No confirmed price-caused lost-sales amount and no current net-price approval. No supplier purchase cost and no ISZE margin are stated in a participant-facing brief. Manual inputs remain assumptions.</aside><h2>Measured commercial evidence</h2><table><tr><th>Comparison</th><th>Prior ISZE EUR</th><th>Later ISZE EUR</th><th>Change</th><th>Onward quantity change</th></tr>${evidence}</table><h2>Price, quantity and mix</h2><table>${exportPriceQuantityMix(c)}</table><p>${esc(c.reason)}</p><h2>Counter-evidence</h2><p>${esc(c.counter)}</p><p>${esc(c.application)}</p>${snapshotPanel(c)}<h2>Scenario (not a forecast or approval)</h2>${r.ok?`<p>Eligible quantity ${num(r.quantity_before,0)} units at EUR ${num(r.price_before,2)}. Proposed net price ${eur(r.price_after,2)}; scope ${esc(r.scope)}; volume basis ${esc(r.quantity_label)}. Evidence period ${esc(r.evidence_period||'not stated')}; offer effective date ${esc(r.offer_effective_date||'not set')} on cost basis ${esc(r.cost_basis_id||'not set')}. Revenue change ${signedEUR(r.revenue_change)}. Gross-profit change: ${r.gp_change===null?'not calculated; no verified parts purchase cost':signedEUR(r.gp_change)}. Support ${eur(r.support_eur)}, counted once. Offer gross margin after ${r.margin_after_pct===null?'not calculated':num(r.margin_after_pct,1)+'%'}; unit margin on the proposed price ${r.margin_unit_after_pct===null?'-':num(r.margin_unit_after_pct,1)+'%'}.</p><p class="small">Profit bridge: ${signedEUR(r.bridge_revenue_change)} revenue &minus; ${eur(r.bridge_cost_change)} cost &minus; ${eur(r.bridge_support_eur)} support = ${signedEUR(r.gp_change)} ${r.bridge_reconciles?'(reconciles)':'(DOES NOT RECONCILE)'}.</p>`:`<p>${esc(r.error)}</p>`}<h2>Exact-part monthly aggregates</h2><p>Flows remain separate. An absent recorded line is not proof of zero customer demand.</p><table><tr><th>Month</th><th>ISZE units</th><th>ISZE EUR</th><th>Observed EUR/unit</th><th>Onward units</th><th>Recorded states</th></tr>${rows}</table><footer>Remains internal. Contains no participant-facing brief, no raw invoices and no full price list.</footer></body></html>`;
   download(`${c.customer.replaceAll(' ','_')}_${c.pn}_Pricing_Review.html`,text,'text/html');
   toast('Internal case review exported.');
 }
@@ -1824,6 +1877,12 @@ window.AIMPricing={data:D,engine:E,export:X,candidates:C,cases:repo,contracts:CT
   setScenario:patch=>store.set(state.caseId,patch),
   getObservedComparison:()=>observedComparison(),
   exportReviewText:()=>exportReviewText(),
+  /* REVIEW-05. The same decomposition the review panel draws, for the export and for tests. */
+  priceQuantityMix:(caseId,compare)=>{
+    const c=caseId?((D.cases||[]).find(x=>x.id===caseId)||null):current();
+    if(!c||!Ev||!Ev.priceQuantityMix)return null;
+    return Ev.priceQuantityMix(c,compare||state.compare);
+  },
   getNextActionPlan:(caseId)=>{
     const c=caseId?((D.cases||[]).find(x=>x.id===caseId)||null):current();
     if(!c||!Ev||!Ev.nextActionPlan)return null;
