@@ -4,7 +4,7 @@
 'use strict';
 (function(root){
 const D=JSON.parse(document.getElementById('case-data').textContent);
-const E=AIMEngine, X=AIMExport, C=AIMCandidates, K=AIMCases, CT=AIMContracts, M=AIMComparable;
+const E=AIMEngine, X=AIMExport, C=AIMCandidates, K=AIMCases, CT=AIMContracts, M=AIMComparable, Ev=(typeof AIMEvidence!=='undefined'?AIMEvidence:null);
 const store=AIMScenario.makeScenarioStore(D,E);
 const repo=K.makeRepository({
   forceMemory: !(function(){try{root.localStorage.setItem('__t','1');root.localStorage.removeItem('__t');return true;}catch(e){return false;}})()
@@ -402,6 +402,24 @@ function termsTable(c){
  for(const [label,obj] of [['2024 full year',c.annual['2024']],['2025 full year',c.annual['2025']],['2026 Jan-Jun',c.half['2026']]])for(const r of (obj?obj.orderTypes:[])||[])rows+=`<tr><td>${label}</td><td>${esc(r.type)}</td><td class="n">${num(r.quantity)}</td><td class="n">${eur(r.price,2)}</td></tr>`;
  return `<details><summary>Separate order terms from a price-list change</summary><p>All prices below are measured effective billing averages within the recorded order type. PRD is the source order-type code; its contractual conditions are not reconstructed. A blank 2026 type is not assumed to be SOR.</p><div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Period</th><th>Recorded type</th><th class="n">Units</th><th class="n">EUR / unit</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
 }
+
+function contributorsPanel(c){
+  if(!Ev||!Ev.movementContributors)return '';
+  const rec=Ev.movementContributors(c,state.compare);
+  if(!rec||!rec.movement)return '';
+  const rows=(rec.contributors||[]).map(r=>`<tr><td class="pn">${esc(r.pn)}</td><td class="small">${esc(r.status||'')}</td><td class="n">${num(r.quantity_delta,0)}</td><td class="n">${r.eur_stated?eur(r.eur_delta):'<span class="danger-line">euro not stated</span>'}</td><td class="small">${esc(r.period_label||'')}</td></tr>`).join('');
+  const rem=rec.remainder;
+  return `<div class="panel" data-contributors-compare="${esc(state.compare)}"><div class="eyebrow">Purchasing movement contributors</div>
+  <h3>${esc(rec.label||'Selected comparison')}</h3>
+  <p class="small">${esc(rec.statement)}</p>
+  <div class="evidence-line"><span>Selected movement</span><b>${num(rec.movement.quantity,0)} units &middot; ${signedEUR(rec.movement.eur)}</b></div>
+  <div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Original reference</th><th>Source status</th><th class="n">Quantity change</th><th class="n">Euro change</th><th>Period</th></tr></thead><tbody>
+  ${rows||'<tr><td colspan="5">No related reference matches this comparison period. The remainder below is the whole selected movement on the case part.</td></tr>'}
+  <tr><td class="pn">${esc(rem.pn)}</td><td class="small">${esc(rem.status||'Case part remainder')}</td><td class="n">${num(rem.quantity_delta,0)}</td><td class="n">${eur(rem.eur_delta)}</td><td class="small">${esc(rem.period_label||'')}</td></tr>
+  </tbody></table></div>
+  <p class="small">${esc(rem.statement||'')}</p>
+  <p class="small">Genuine / BVP lines stay as the source states them. A descriptive change is not a claim about missing dealer sales.</p></div>`;
+}
 function relatedTable(c){
  const e=c.packEvidence,p=c.parts||{};
  const rows=(e.relationships||[]).map(r=>`<tr><td class="pn">${esc(r.part_number_a)}</td><td class="pn">${esc(r.part_number_b)}</td><td>${esc(r.relationship_type)}</td><td>${esc(r.validation_status)}<br><span class="small">${esc(r.source_document)} &middot; ${esc(r.pointer)}</span></td></tr>`).join('');
@@ -520,7 +538,7 @@ function marketPanel(c){
     basis_level:'public_advertised_retail',basis_unit:c.unit,
     basis_named_by:'the admissibility rule stated on this screen',
     as_of:(D.meta&&D.meta.buildDate)||null,
-    own_movement:M.movementFromComparison((c.comparisons||{}).half)});
+    own_movement:M.movementFromComparison((c.comparisons||{})[state.compare]||null)});
   return {result,offers,observations};
 }
 
@@ -757,7 +775,7 @@ function marketView(c){
 function decision(c){
  const cmp=c.comparisons[state.compare];
  return `<div class="compare-row"><div><span class="eyebrow">Measured record</span><div class="small">${sourceButton()} &middot; no forecast or lost-sales attribution</div></div><select id="comparison" aria-label="Comparison period"><option value="half" ${state.compare==='half'?'selected':''}>January-June 2026 vs 2025</option><option value="annual" ${state.compare==='annual'?'selected':''}>Calendar 2025 vs 2024</option></select></div>
- ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${targetBox(c)}
+ ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${contributorsPanel(c)}${targetBox(c)}
  <div class="grid2">${chart(c,state.billingMetric,state.billingMetric==='billingEUR'?'What ISZE billed':'What ISZE supplied')}${onwardHeld(c)?chart(c,'onwardQuantity','What the distributor supplied to dealers'):onwardMissing()}</div>
  <div class="grid2"><div class="panel"><span class="badge fact">Evidence supporting review</span><p style="margin-top:12px">${esc(c.reason)}</p></div><div class="panel warn"><span class="badge review">Evidence against a simple price story</span><p style="margin-top:12px">${esc(c.counter)}</p></div></div>
  <div class="grid2">${chart(c,'price','Observed ISZE unit price',true)}<div class="panel"><div class="eyebrow">Reconcile the euro change</div><h3>${signedEUR(cmp.revenueDelta)} in recorded billing</h3><div class="evidence-line"><span>Quantity effect, at prior price</span><b class="${color(cmp.volumeEffect)}">${signedEUR(cmp.volumeEffect)}</b></div><div class="evidence-line"><span>Effective price / terms effect</span><b class="${color(cmp.effectivePriceEffect)}">${signedEUR(cmp.effectivePriceEffect)}</b></div><div class="ruleline small">Exact identity: (new quantity &minus; old quantity) &times; old price + new quantity &times; (new price &minus; old price). The second term includes mix of order conditions. It is not causal price elasticity or a measured price-list effect.</div><div class="scopebox"><b>${num(c.fleet)} ${c.market==='ITUK'?'trucks':'vehicles'} &middot; 2025 market reference</b><br>${esc(c.application)} No part-level demand gap or dealer rate is computed.</div></div></div>
@@ -1101,6 +1119,7 @@ function caseView(){
   <div class="evidence-line"><span>Accounts it was billed to</span><b class="small">${esc(Object.keys(accounts).map(k=>k+' ('+accounts[k]+' row(s))').join(', '))}</b></div>
   <div class="evidence-line"><span>Recorded billing across those rows</span><b>${eur(billing)}</b></div>
   ${withoutBilling?`<p class="small">${withoutBilling} of these rows carry no billing value. They are excluded from that total rather than counted as zero.</p>`:''}</div>
+  ${unavailableBlock({title:'Comparison period is unavailable',reason:'unavailable: the candidate records carry no period. No half-year or calendar comparison is inferred from similar-looking values.',required:'a reviewer-stated evidence period, labelled as stated by the reviewer, before a comparison can be shown',scope:'candidate part review'})}
   ${worked?`<div class="panel good"><h3>This part is one of the worked cases</h3><p class="small">Open case ${esc(worked.id)} to test price and gross profit against its recorded evidence. The case carries the same exact part reference ${esc(worked.pn)}.</p><button class="button primary" data-open-case="${esc(worked.id)}">Open case ${esc(worked.id)}</button></div>`
    :`<div class="panel warn"><h3>No case record exists for this exact part yet</h3><p class="small">A screened row is a candidate for review. It is not a case, and nothing on this screen creates one. The row carries recorded billing and a list value and, where held, a parts purchase cost.</p>${blockers&&blockers.length?`<div class="ruleline"><b>What would have to exist before this could become a case</b>${blockers.map(b=>`<div class="evidence-line"><span>${esc(b.code||'Required')}</span><b class="small">${esc(b.text||'')}</b></div>`).join('')}</div>`:'<p class="small">The row does not state the current customer net price, the applicable cost basis and effective date, or a stated alternative to test. None of those three is inferred from the screened row, because the row shows what was billed, not what was offered.</p>'}</div>`}
   <div class="panel"><h3>The screened rows for this exact part</h3>
@@ -1150,7 +1169,7 @@ function render(){
   const c=current();
   const ctx=context();
   $('#market').value=state.market;
-  $('#case-list').innerHTML=ordered.map(id=>D.cases.find(x=>x.id===id)).filter(Boolean).filter(x=>state.market==='all'||x.market===state.market).map(x=>{const m=x.comparisons[x.defaultCompare];return `<button class="case-card ${c.id===x.id?'active':''}" data-case="${x.id}" aria-pressed="${c.id===x.id}"><div class="card-meta"><span>${esc(x.customer)}</span><span>${x.defaultCompare==='annual'?'Full year':'Matched H1'}</span></div><div class="case-name">${esc(x.name)}</div><div class="pn">${x.pn}</div><div class="case-amount ${color(m.revenueDelta)}">${signedEUR(m.revenueDelta)}</div><div class="case-period">ISZE billing &middot; ${esc(m.label)}</div><div class="case-direction">${x.id==='IMOTORS-OIL'?'&nearr;':'&rarr;'} ${esc(x.actionType)}</div></button>`;}).join('');
+  $('#case-list').innerHTML=ordered.map(id=>D.cases.find(x=>x.id===id)).filter(Boolean).filter(x=>state.market==='all'||x.market===state.market).map(x=>{const cmpKey=(x.comparisons||{})[state.compare]?state.compare:x.defaultCompare;const m=x.comparisons[cmpKey];const periodLabel=cmpKey==='annual'?'Full year':'Matched H1';return `<button class="case-card ${c.id===x.id?'active':''}" data-case="${x.id}" aria-pressed="${c.id===x.id}"><div class="card-meta"><span>${esc(x.customer)}</span><span>${periodLabel}</span></div><div class="case-name">${esc(x.name)}</div><div class="pn">${x.pn}</div><div class="case-amount ${color(m.revenueDelta)}">${signedEUR(m.revenueDelta)}</div><div class="case-period">ISZE billing &middot; ${esc(m.label)}</div><div class="case-direction">${x.id==='IMOTORS-OIL'?'&nearr;':'&rarr;'} ${esc(x.actionType)}</div></button>`;}).join('');
   $('#case-header').innerHTML=`<div class="head-line"><div><div class="eyebrow">${esc(c.customer)} &middot; ${esc(c.category)} &middot; ${c.pn}</div><span class="badge ${c.id==='IMOTORS-OIL'?'hold':'review'}">${esc(c.actionType)}</span></div><div class="head-right"><button class="button secondary" id="export-review">Export case review</button></div></div><h2>${esc(c.action)}</h2><p>${esc(c.verdict)}</p>`;
   $('#scope-strip').innerHTML=`<div><span>Customer / scope</span>${esc(c.customer)} &middot; ${ctx.scope==='dealer'?`dealer scope, ${(ctx.dealer_selector||[]).length} dealer(s) listed${ctx.selected_dealer?' &middot; selected '+esc(ctx.selected_dealer):''}`:'distributor, not dealer'}</div><div><span>Selected comparison</span>${esc(c.comparisons[state.compare].label)}</div><div><span>Basis / reporting clocks</span>ISZE net EUR; separate onward quantities</div><div><span>Historical fleet context</span>${ctx.fleet_denominator?`${num(ctx.fleet_denominator.value)} market ${ctx.fleet_denominator.market==='ITUK'?'trucks':'vehicles'}, 2025 &middot; part fleet unknown`:'No fleet stated for this market'}</div>`;
   /* The status words in this strip are read from the payload and from the count
@@ -1346,9 +1365,26 @@ function exportBundle(){
     JSON.stringify(bundle,null,2),'application/json');
   toast('Recovery bundle written: '+Object.keys(bundle.cases).length+' case record(s).');
 }
+
+function observedComparison(){
+  const c=current(), m=(c.comparisons||{})[state.compare];
+  if(!m)return {compare:state.compare,label:null,prior:null,current:null,revenueDelta:null,available:false};
+  return {compare:state.compare,label:m.label,
+    prior:{quantity:m.prior.quantity,eur:m.prior.eur,price:m.prior.price,year:m.prior.year,months:m.prior.months},
+    current:{quantity:m.current.quantity,eur:m.current.eur,price:m.current.price,year:m.current.year,months:m.current.months},
+    revenueDelta:m.revenueDelta,available:true};
+}
+function exportReviewText(){
+  const c=current(),s=scenario();
+  const mSel=c.comparisons[state.compare];
+  const evidence=`<tr data-export-compare="${esc(state.compare)}" data-export-label="${esc(mSel.label)}" data-export-prior-eur="${mSel.prior.eur}" data-export-current-eur="${mSel.current.eur}" data-export-revenue-delta="${mSel.revenueDelta}"><td>${esc(mSel.label)}</td><td>${eur(mSel.prior.eur,2)}</td><td>${eur(mSel.current.eur,2)}</td><td>${signedEUR(mSel.revenueDelta)}</td><td>${pct(mSel.onwardChangePct)}</td></tr>`;
+  const rows=c.series.filter(x=>x.billingEUR!==null||x.onwardQuantity!==null).map(x=>`<tr><td>${esc(x.period)}</td><td>${num(x.billingQuantity)}</td><td>${eur(x.billingEUR,2)}</td><td>${eur(x.price,2)}</td><td>${num(x.onwardQuantity)}</td><td>${esc(x.billingState)} / ${esc(x.onwardState)}</td></tr>`).join('');
+  return `<!doctype html><html lang="en"><meta charset="utf-8"><title>${esc(c.customer)} - ${c.pn} - internal pricing review</title><body><p>ISZE INTERNAL ONLY | ${esc(D.meta.version)}</p><h1>${esc(c.customer)} - ${esc(c.name)}</h1><h2>Measured commercial evidence</h2><table>${evidence}</table><p>Evidence period ${esc(s.evidence_period||'not stated')}; offer effective date ${esc(s.offer_effective_date||'not set')}.</p><h2>Exact-part monthly aggregates</h2><table>${rows}</table></body></html>`;
+}
 function exportReview(){
   const c=current(),r=caseResult(),s=scenario();
-  const evidence=Object.values(c.comparisons).map(m=>`<tr><td>${esc(m.label)}</td><td>${eur(m.prior.eur,2)}</td><td>${eur(m.current.eur,2)}</td><td>${signedEUR(m.revenueDelta)}</td><td>${pct(m.onwardChangePct)}</td></tr>`).join('');
+  const mSel=c.comparisons[state.compare];
+  const evidence=`<tr data-export-compare="${esc(state.compare)}" data-export-label="${esc(mSel.label)}" data-export-prior-eur="${mSel.prior.eur}" data-export-current-eur="${mSel.current.eur}" data-export-revenue-delta="${mSel.revenueDelta}"><td>${esc(mSel.label)}</td><td>${eur(mSel.prior.eur,2)}</td><td>${eur(mSel.current.eur,2)}</td><td>${signedEUR(mSel.revenueDelta)}</td><td>${pct(mSel.onwardChangePct)}</td></tr>`;
   const rows=c.series.filter(x=>x.billingEUR!==null||x.onwardQuantity!==null).map(x=>`<tr><td>${esc(x.period)}</td><td>${num(x.billingQuantity)}</td><td>${eur(x.billingEUR,2)}</td><td>${eur(x.price,2)}</td><td>${num(x.onwardQuantity)}</td><td>${esc(x.billingState)} / ${esc(x.onwardState)}</td></tr>`).join('');
   const text=`<!doctype html><html lang="en"><meta charset="utf-8"><title>${esc(c.customer)} - ${c.pn} - internal pricing review</title><style>body{font:14px/1.5 Segoe UI,Arial,sans-serif;color:#15344b;max-width:1100px;margin:35px auto;padding:0 25px}h1{font-size:28px}h2{font-size:20px;margin-top:28px}table{border-collapse:collapse;width:100%;font-size:12px}th,td{padding:8px;border-bottom:1px solid #d8e1e8;text-align:left;vertical-align:top}th{background:#eff4f8}aside{background:#fff5e3;padding:15px}a{color:#226c98}footer,.small{font-size:11px;color:#53697a}pre{white-space:pre-wrap;font:inherit}.n{text-align:right}</style><body><p>ISZE INTERNAL ONLY | ${esc(D.meta.version)}</p><h1>${esc(c.customer)} - ${esc(c.name)}</h1><p><b>${c.pn} | ${esc(c.category)}</b></p><h2>${esc(c.action)}</h2><p>${esc(c.verdict)}</p><aside>No confirmed price-caused lost-sales amount and no current net-price approval. No supplier purchase cost and no ISZE margin are stated in a participant-facing brief. Manual inputs remain assumptions.</aside><h2>Measured commercial evidence</h2><table><tr><th>Comparison</th><th>Prior ISZE EUR</th><th>Later ISZE EUR</th><th>Change</th><th>Onward quantity change</th></tr>${evidence}</table><p>${esc(c.reason)}</p><h2>Counter-evidence</h2><p>${esc(c.counter)}</p><p>${esc(c.application)}</p>${snapshotPanel(c)}<h2>Scenario (not a forecast or approval)</h2>${r.ok?`<p>Eligible quantity ${num(r.quantity_before,0)} units at EUR ${num(r.price_before,2)}. Proposed net price ${eur(r.price_after,2)}; scope ${esc(r.scope)}; volume basis ${esc(r.quantity_label)}. Evidence period ${esc(r.evidence_period||'not stated')}; offer effective date ${esc(r.offer_effective_date||'not set')} on cost basis ${esc(r.cost_basis_id||'not set')}. Revenue change ${signedEUR(r.revenue_change)}. Gross-profit change: ${r.gp_change===null?'not calculated; no verified parts purchase cost':signedEUR(r.gp_change)}. Support ${eur(r.support_eur)}, counted once. Offer gross margin after ${r.margin_after_pct===null?'not calculated':num(r.margin_after_pct,1)+'%'}; unit margin on the proposed price ${r.margin_unit_after_pct===null?'-':num(r.margin_unit_after_pct,1)+'%'}.</p><p class="small">Profit bridge: ${signedEUR(r.bridge_revenue_change)} revenue &minus; ${eur(r.bridge_cost_change)} cost &minus; ${eur(r.bridge_support_eur)} support = ${signedEUR(r.gp_change)} ${r.bridge_reconciles?'(reconciles)':'(DOES NOT RECONCILE)'}.</p>`:`<p>${esc(r.error)}</p>`}<h2>Exact-part monthly aggregates</h2><p>Flows remain separate. An absent recorded line is not proof of zero customer demand.</p><table><tr><th>Month</th><th>ISZE units</th><th>ISZE EUR</th><th>Observed EUR/unit</th><th>Onward units</th><th>Recorded states</th></tr>${rows}</table><footer>Remains internal. Contains no participant-facing brief, no raw invoices and no full price list.</footer></body></html>`;
   download(`${c.customer.replaceAll(' ','_')}_${c.pn}_Pricing_Review.html`,text,'text/html');
@@ -1579,6 +1615,9 @@ window.AIMPricing={data:D,engine:E,export:X,candidates:C,cases:repo,contracts:CT
   setView:v=>{state.view=v;},
   selectAlternative:id=>store.selectAlternative(state.caseId,id),
   consistency:()=>store.consistency(state.caseId),
-  setScenario:patch=>store.set(state.caseId,patch)};
+  setScenario:patch=>store.set(state.caseId,patch),
+  getObservedComparison:()=>observedComparison(),
+  exportReviewText:()=>exportReviewText(),
+  currentMetadata:(c)=>currentMetadata(c||current())};
 })(typeof globalThis!=='undefined'?globalThis:this);
 </script>

@@ -1415,6 +1415,91 @@
     ];
   }
 
+
+  /* REVIEW-04. Original references behind a selected purchasing movement.
+     Related rows that match the selected comparison period are listed with the
+     quantity and euro the source carries. The remainder is the selected
+     movement minus those related deltas, attributed to the case part. A
+     quantity-only related row never invents a euro. Descriptive status text is
+     kept as the source states it; it is not labelled as missing dealer sales. */
+  function periodMatchesComparison(related, compareKey) {
+    var months = related && related.prior ? Number(related.prior.months) : null;
+    if (compareKey === 'half') return months === 6;
+    if (compareKey === 'annual') return months === 12;
+    return false;
+  }
+
+  function movementContributors(caseObject, compareKey) {
+    var cmp = caseObject && caseObject.comparisons ? caseObject.comparisons[compareKey] : null;
+    if (!cmp || !cmp.prior || !cmp.current) {
+      return {
+        ok: false,
+        compare: compareKey || null,
+        statement: 'No comparison is held for the selected period.',
+        movement: null,
+        contributors: [],
+        remainder: null
+      };
+    }
+    var moveQ = Number(cmp.current.quantity) - Number(cmp.prior.quantity);
+    var moveE = round2(Number(cmp.current.eur) - Number(cmp.prior.eur));
+    var contributors = [];
+    var related = caseObject.relatedEvidence || [];
+    for (var i = 0; i < related.length; i++) {
+      var r = related[i];
+      if (!periodMatchesComparison(r, compareKey)) continue;
+      var pq = r.prior && r.prior.quantity != null ? Number(r.prior.quantity) : 0;
+      var cq = r.current && r.current.quantity != null ? Number(r.current.quantity) : 0;
+      var priorEurHeld = r.prior && r.prior.eur !== null && r.prior.eur !== undefined;
+      var currentEurHeld = r.current && r.current.eur !== null && r.current.eur !== undefined;
+      var eurHeld = priorEurHeld && currentEurHeld;
+      var row = {
+        pn: r.pn,
+        role: 'related',
+        status: r.status || null,
+        quantity_delta: cq - pq,
+        eur_delta: eurHeld ? round2(Number(r.current.eur) - Number(r.prior.eur)) : null,
+        eur_stated: eurHeld,
+        period: compareKey,
+        period_label: cmp.label,
+        prior: { quantity: pq, eur: priorEurHeld ? Number(r.prior.eur) : null },
+        current: { quantity: cq, eur: currentEurHeld ? Number(r.current.eur) : null }
+      };
+      contributors.push(row);
+    }
+    var sumQ = 0;
+    var sumE = 0;
+    for (var j = 0; j < contributors.length; j++) {
+      sumQ += contributors[j].quantity_delta;
+      if (contributors[j].eur_stated) sumE += contributors[j].eur_delta;
+    }
+    var remainder = {
+      pn: caseObject.pn,
+      role: 'own_part',
+      status: caseObject.bvp || null,
+      quantity_delta: moveQ - sumQ,
+      eur_delta: round2(moveE - sumE),
+      period: compareKey,
+      period_label: cmp.label,
+      statement: 'Remainder of the selected movement after the related references listed above. '
+        + 'This is the case part share of the recorded purchasing movement. A descriptive status is not a claim about missing dealer sales.'
+    };
+    var quantityOk = (sumQ + remainder.quantity_delta) === moveQ;
+    var eurOk = round2(sumE + remainder.eur_delta) === moveE;
+    return {
+      ok: quantityOk && eurOk,
+      compare: compareKey,
+      label: cmp.label,
+      movement: { quantity: moveQ, eur: moveE, label: cmp.label },
+      contributors: contributors,
+      remainder: remainder,
+      statement: quantityOk && eurOk
+        ? 'Displayed contributors plus the stated remainder reproduce the selected movement.'
+        : 'Contributors and remainder do not reproduce the selected movement.',
+      forbidden_labels: ['missing dealer sales claim']
+    };
+  }
+
   var API = {
     reference: reference,
     describePeriod: describePeriod,
@@ -1446,6 +1531,8 @@
     statesNoValue: statesNoValue,
     observationConflicts: observationConflicts,
     inventory: inventory,
+    movementContributors: movementContributors,
+    periodMatchesComparison: periodMatchesComparison,
     SEP: SEP
   };
 
