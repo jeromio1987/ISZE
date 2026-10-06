@@ -1719,6 +1719,198 @@
     };
   }
 
+
+  /* ------------------------------------------------------------ next action plan -- */
+
+  /* Routes a review question to the appropriate next action. Descriptive only.
+     Routes: price_assessment, bvp_application_check, supply_timing_check,
+     evidence_request, justified_no_action, purchasing_review.
+     A supply explanation never produces a discount route. An unresolved price
+     comparison still permits a scoped application or purchasing review.
+     Competing explanations and unknown are retained. A family decline without
+     linked evidence never becomes a precise reason. */
+
+  function nextActionPlan(caseObject) {
+    caseObject = caseObject || {};
+    var explanations = Array.isArray(caseObject.reviewExplanations)
+      ? caseObject.reviewExplanations.slice()
+      : [];
+    var routes = [];
+    var competing = [];
+    var unknown = [];
+    var seen = {};
+
+    function addRoute(id, label, why, kind) {
+      if (seen[id]) return;
+      seen[id] = true;
+      routes.push({ id: id, label: label, why: why, kind: kind || id });
+    }
+
+    for (var i = 0; i < explanations.length; i++) {
+      var ex = explanations[i] || {};
+      var kind = String(ex.kind || '').toLowerCase();
+      var status = String(ex.status || '').toLowerCase();
+      var statement = ex.statement || '';
+      var linked = Array.isArray(ex.linked_evidence) ? ex.linked_evidence : [];
+
+      if (status === 'competing') {
+        competing.push({ kind: kind, statement: statement, linked_evidence: linked });
+      }
+      if (status === 'unknown' || kind === 'unknown') {
+        unknown.push({ kind: kind || 'unknown', statement: statement, linked_evidence: linked });
+      }
+
+      if (kind === 'supply' || kind === 'timing' || kind === 'supply_timing') {
+        addRoute(
+          'supply_timing_check',
+          'Supply / timing check',
+          'Relevant because a supply or timing explanation is held: ' + statement,
+          'supply_timing_check'
+        );
+        /* Never a discount from supply. */
+        continue;
+      }
+
+      if (kind === 'price_comparison' || kind === 'price') {
+        addRoute(
+          'price_assessment',
+          'Price assessment',
+          'Relevant because the price comparison is ' + (status || 'open') + ': ' + statement,
+          'price_assessment'
+        );
+        if (status === 'unresolved') {
+          addRoute(
+            'purchasing_review',
+            'Scoped purchasing review',
+            'Relevant because an unresolved price comparison still permits a scoped purchasing review while the price source is settled.',
+            'purchasing_review'
+          );
+        }
+        continue;
+      }
+
+      if (kind === 'application' || kind === 'bvp' || kind === 'bvp_application') {
+        addRoute(
+          'bvp_application_check',
+          'BVP / application check',
+          'Relevant because an application or BVP question is held: ' + statement,
+          'bvp_application_check'
+        );
+        continue;
+      }
+
+      if (kind === 'evidence_request' || (status === 'unknown' && linked.length === 0)) {
+        addRoute(
+          'evidence_request',
+          'Evidence request',
+          'Relevant because required evidence is not held: ' + (statement || 'unnamed gap'),
+          'evidence_request'
+        );
+        continue;
+      }
+
+      if (kind === 'justified_no_action' || kind === 'no_action') {
+        addRoute(
+          'justified_no_action',
+          'Justified no action',
+          'Relevant because the held explanation does not justify a commercial change: ' + statement,
+          'justified_no_action'
+        );
+        continue;
+      }
+    }
+
+    /* Unresolved list conflict on the pack also opens price assessment + scoped review. */
+    var pe = caseObject.packEvidence || {};
+    if (pe.listConflict) {
+      addRoute(
+        'price_assessment',
+        'Price assessment',
+        'Relevant because the pack records a list conflict; the applicable customer net price is not settled.',
+        'price_assessment'
+      );
+      addRoute(
+        'purchasing_review',
+        'Scoped purchasing review',
+        'Relevant because an unresolved price comparison still permits a scoped purchasing review.',
+        'purchasing_review'
+      );
+    }
+
+    /* Catalogue pairing / BVP without fitment approval -> application check. */
+    var rels = pe.relationships || [];
+    for (var r = 0; r < rels.length; r++) {
+      var cls = classifyRelationship(rels[r] || {});
+      var fit = fitmentStatus(rels[r] || {});
+      if (cls.kind === 'catalogue_pairing' || cls.kind === 'declared_newest_number' || cls.kind === 'supersession') {
+        if (!fit || fit.approved !== true) {
+          addRoute(
+            'bvp_application_check',
+            'BVP / application check',
+            'Relevant because a ' + cls.kind.replace(/_/g, ' ')
+              + ' is held without stated fitment approval.',
+            'bvp_application_check'
+          );
+        }
+      }
+    }
+
+    if (!routes.length) {
+      addRoute(
+        'evidence_request',
+        'Evidence request',
+        'Relevant because no explained next action is held on this case.',
+        'evidence_request'
+      );
+    }
+
+    /* Family decline: precise reason only with linked evidence. */
+    var precise_family_decline = null;
+    var fd = caseObject.familyDecline;
+    if (fd && fd.precise_reason) {
+      var fdLinked = Array.isArray(fd.linked_evidence) ? fd.linked_evidence : [];
+      if (fdLinked.length > 0) {
+        precise_family_decline = {
+          reason: fd.precise_reason,
+          linked_evidence: fdLinked
+        };
+      } else {
+        unknown.push({
+          kind: 'family_decline',
+          statement: 'A precise family decline reason was offered without linked evidence and is not accepted.',
+          linked_evidence: []
+        });
+        addRoute(
+          'evidence_request',
+          'Evidence request',
+          'Relevant because a family-level decline was asserted without linked evidence.',
+          'evidence_request'
+        );
+      }
+    }
+
+    /* Hard rule: supply explanation never yields a discount route. */
+    var hasSupply = explanations.some(function (e) {
+      var k = String((e && e.kind) || '').toLowerCase();
+      return k === 'supply' || k === 'timing' || k === 'supply_timing';
+    });
+    if (hasSupply) {
+      routes = routes.filter(function (r) {
+        return r.id !== 'discount' && r.id !== 'automatic_discount'
+          && !/\bdiscount\b/i.test(r.label || '')
+          && !/\bdiscount\b/i.test(r.why || '');
+      });
+    }
+
+    return {
+      routes: routes,
+      competing_explanations: competing,
+      unknown: unknown,
+      precise_family_decline: precise_family_decline,
+      statement: 'Next actions are routed from the held explanations. Competing explanations and unknown are kept. A supply explanation never produces a discount.'
+    };
+  }
+
   var API = {
     reference: reference,
     describePeriod: describePeriod,
@@ -1752,6 +1944,7 @@
     inventory: inventory,
     movementContributors: movementContributors,
     purchasingActivity: purchasingActivity,
+    nextActionPlan: nextActionPlan,
     periodMatchesComparison: periodMatchesComparison,
     SEP: SEP
   };

@@ -1,0 +1,2233 @@
+{
+  "meta": {
+    "note": "Invented REVIEW-07 fixtures only. Never a restricted payload extract.",
+    "case_ids_for_app": [
+      "ITUK-TURBO",
+      "ITUK-PADS",
+      "IMOTORS-CABIN",
+      "ITUK-DISCS",
+      "IMOTORS-OIL"
+    ]
+  },
+  "cases": [
+    {
+      "id": "REVIEW07-SUPPLY",
+      "pn": "SYN-SUP-001",
+      "customer": "Synthetic Distributor",
+      "name": "Supply timing case",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Supply and timing check",
+      "action": "Supply timing case",
+      "verdict": "Synthetic verdict",
+      "reason": "Synthetic reason",
+      "next": "Synthetic next",
+      "recommendation": "Check supply and timing before any commercial change.",
+      "counter": "Synthetic counter",
+      "application": "Synthetic application note",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": null,
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 80,
+            "eur": 800.0
+          },
+          "revenueDelta": -200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 180,
+            "eur": 1800.0
+          },
+          "revenueDelta": -200.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": false,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "REVIEW07-SUPPLY",
+        "packDate": "2026-10-06",
+        "supplierCostStatus": null
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": [],
+      "reviewExplanations": [
+        {
+          "kind": "supply",
+          "status": "known",
+          "statement": "Deliveries were delayed in the matched half year; replenishment timing explains the quantity dip.",
+          "linked_evidence": [
+            "series:2025-03",
+            "packEvidence.sourceIssues"
+          ]
+        },
+        {
+          "kind": "unknown",
+          "status": "unknown",
+          "statement": "Customer eligibility for any special term is unknown.",
+          "linked_evidence": []
+        }
+      ],
+      "familyDecline": null
+    },
+    {
+      "id": "REVIEW07-PRICE",
+      "pn": "SYN-PRC-001",
+      "customer": "Synthetic Distributor",
+      "name": "Unresolved price comparison case",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Resolve price conflict",
+      "action": "Unresolved price comparison case",
+      "verdict": "Synthetic verdict",
+      "reason": "Synthetic reason",
+      "next": "Synthetic next",
+      "recommendation": "Resolve the price source; a scoped application or purchasing review may still proceed.",
+      "counter": "Synthetic counter",
+      "application": "Synthetic application note",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": "Catalogue pairing held; fitment approval not stated.",
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 80,
+            "eur": 800.0
+          },
+          "revenueDelta": -200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 180,
+            "eur": 1800.0
+          },
+          "revenueDelta": -200.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [
+          {
+            "relationship_record_id": "R07-1",
+            "part_number_a": "SYN-PRC-001",
+            "part_number_b": "SYN-BVP-001",
+            "relationship_type": "catalogue pairing (Genuine listed beside BVP alternative)",
+            "direction": "genuine -> bvp",
+            "source_type": "catalog_paired",
+            "source_document": "synthetic",
+            "application_vehicle": "N*",
+            "application_engine": "",
+            "country_of_origin": "",
+            "technical_fitment_approved": false,
+            "validation_status": "declared",
+            "source_reference": "synthetic",
+            "description": "Catalogue pairing without stated fitment approval",
+            "note": "",
+            "pointer": "synthetic"
+          }
+        ],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": true,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "REVIEW07-PRICE",
+        "packDate": "2026-10-06",
+        "supplierCostStatus": null
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": [],
+      "reviewExplanations": [
+        {
+          "kind": "price_comparison",
+          "status": "unresolved",
+          "statement": "Two recorded list candidates remain unresolved; the applicable customer net price is not identified.",
+          "linked_evidence": [
+            "packEvidence.listConflict"
+          ]
+        },
+        {
+          "kind": "application",
+          "status": "competing",
+          "statement": "A catalogue pairing exists but fitment approval is not stated.",
+          "linked_evidence": [
+            "packEvidence.relationships"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REVIEW07-KEEP",
+      "pn": "SYN-KEEP-001",
+      "customer": "Synthetic Distributor",
+      "name": "Justified no action case",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Protect the price",
+      "action": "Justified no action case",
+      "verdict": "Synthetic verdict",
+      "reason": "Synthetic reason",
+      "next": "Synthetic next",
+      "recommendation": "Keep the recorded terms.",
+      "counter": "Synthetic counter",
+      "application": "Synthetic application note",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": null,
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 120,
+            "eur": 1200.0
+          },
+          "revenueDelta": 200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 180,
+            "eur": 1800.0
+          },
+          "revenueDelta": -200.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": false,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "REVIEW07-KEEP",
+        "packDate": "2026-10-06",
+        "supplierCostStatus": null
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": [],
+      "reviewExplanations": [
+        {
+          "kind": "justified_no_action",
+          "status": "known",
+          "statement": "Billing quantity rose while the recorded list was unchanged; no automatic commercial change is justified.",
+          "linked_evidence": [
+            "comparisons.half"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REVIEW07-FAMILY",
+      "pn": "SYN-FAM-001",
+      "customer": "Synthetic Distributor",
+      "name": "Family decline without evidence",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Review",
+      "action": "Family decline without evidence",
+      "verdict": "Synthetic verdict",
+      "reason": "Synthetic reason",
+      "next": "Synthetic next",
+      "recommendation": "Synthetic recommendation",
+      "counter": "Synthetic counter",
+      "application": "Synthetic application note",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": null,
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 80,
+            "eur": 800.0
+          },
+          "revenueDelta": -200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 180,
+            "eur": 1800.0
+          },
+          "revenueDelta": -200.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": false,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "REVIEW07-FAMILY",
+        "packDate": "2026-10-06",
+        "supplierCostStatus": null
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": [],
+      "reviewExplanations": [
+        {
+          "kind": "unknown",
+          "status": "unknown",
+          "statement": "The cause of the family-level movement is unknown.",
+          "linked_evidence": []
+        }
+      ],
+      "familyDecline": {
+        "precise_reason": "Customers switched to a competing family",
+        "linked_evidence": []
+      }
+    }
+  ],
+  "app_cases": [
+    {
+      "id": "ITUK-PADS",
+      "pn": "SYN-SUP-001",
+      "customer": "Synthetic Distributor",
+      "name": "Pads supply timing",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Supply and timing check",
+      "action": "Supply timing case",
+      "verdict": "Synthetic verdict",
+      "reason": "Synthetic reason",
+      "next": "Synthetic next",
+      "recommendation": "Check supply and timing before any commercial change.",
+      "counter": "Synthetic counter",
+      "application": "Synthetic application note",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": null,
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 80,
+            "eur": 800.0
+          },
+          "revenueDelta": -200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 180,
+            "eur": 1800.0
+          },
+          "revenueDelta": -200.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": false,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "ITUK-PADS",
+        "packDate": "2026-10-06",
+        "supplierCostStatus": null
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": [],
+      "reviewExplanations": [
+        {
+          "kind": "supply",
+          "status": "known",
+          "statement": "Deliveries were delayed in the matched half year; replenishment timing explains the quantity dip.",
+          "linked_evidence": [
+            "series:2025-03",
+            "packEvidence.sourceIssues"
+          ]
+        },
+        {
+          "kind": "unknown",
+          "status": "unknown",
+          "statement": "Customer eligibility for any special term is unknown.",
+          "linked_evidence": []
+        }
+      ],
+      "familyDecline": null
+    },
+    {
+      "id": "IMOTORS-CABIN",
+      "pn": "SYN-CAB-001",
+      "customer": "Synthetic Distributor",
+      "name": "Cabin shell",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Protect the price",
+      "action": "Justified no action case",
+      "verdict": "Synthetic verdict",
+      "reason": "Synthetic reason",
+      "next": "Synthetic next",
+      "recommendation": "Keep the recorded terms.",
+      "counter": "Synthetic counter",
+      "application": "Synthetic application note",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": null,
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 120,
+            "eur": 1200.0
+          },
+          "revenueDelta": 200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 180,
+            "eur": 1800.0
+          },
+          "revenueDelta": -200.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": false,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "IMOTORS-CABIN",
+        "packDate": "2026-10-06",
+        "supplierCostStatus": null
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": [],
+      "reviewExplanations": [
+        {
+          "kind": "evidence_request",
+          "status": "known",
+          "statement": "Current customer net price is not held.",
+          "linked_evidence": [
+            "priceEvidence"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ITUK-TURBO",
+      "pn": "SYN-PRC-001",
+      "customer": "Synthetic Distributor",
+      "name": "Turbo unresolved price",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Resolve price conflict",
+      "action": "Unresolved price comparison case",
+      "verdict": "Synthetic verdict",
+      "reason": "Synthetic reason",
+      "next": "Synthetic next",
+      "recommendation": "Resolve the price source; a scoped application or purchasing review may still proceed.",
+      "counter": "Synthetic counter",
+      "application": "Synthetic application note",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": "Catalogue pairing held; fitment approval not stated.",
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 80,
+            "eur": 800.0
+          },
+          "revenueDelta": -200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 180,
+            "eur": 1800.0
+          },
+          "revenueDelta": -200.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [
+          {
+            "relationship_record_id": "R07-1",
+            "part_number_a": "SYN-PRC-001",
+            "part_number_b": "SYN-BVP-001",
+            "relationship_type": "catalogue pairing (Genuine listed beside BVP alternative)",
+            "direction": "genuine -> bvp",
+            "source_type": "catalog_paired",
+            "source_document": "synthetic",
+            "application_vehicle": "N*",
+            "application_engine": "",
+            "country_of_origin": "",
+            "technical_fitment_approved": false,
+            "validation_status": "declared",
+            "source_reference": "synthetic",
+            "description": "Catalogue pairing without stated fitment approval",
+            "note": "",
+            "pointer": "synthetic"
+          }
+        ],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": true,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "ITUK-TURBO",
+        "packDate": "2026-10-06",
+        "supplierCostStatus": null
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": [],
+      "reviewExplanations": [
+        {
+          "kind": "price_comparison",
+          "status": "unresolved",
+          "statement": "Two recorded list candidates remain unresolved; the applicable customer net price is not identified.",
+          "linked_evidence": [
+            "packEvidence.listConflict"
+          ]
+        },
+        {
+          "kind": "application",
+          "status": "competing",
+          "statement": "A catalogue pairing exists but fitment approval is not stated.",
+          "linked_evidence": [
+            "packEvidence.relationships"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ITUK-DISCS",
+      "pn": "SYN-DSC-001",
+      "customer": "Synthetic Distributor",
+      "name": "Discs shell",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Protect the price",
+      "action": "Justified no action case",
+      "verdict": "Synthetic verdict",
+      "reason": "Synthetic reason",
+      "next": "Synthetic next",
+      "recommendation": "Keep the recorded terms.",
+      "counter": "Synthetic counter",
+      "application": "Synthetic application note",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": null,
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 120,
+            "eur": 1200.0
+          },
+          "revenueDelta": 200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 180,
+            "eur": 1800.0
+          },
+          "revenueDelta": -200.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": false,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "ITUK-DISCS",
+        "packDate": "2026-10-06",
+        "supplierCostStatus": null
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": [],
+      "reviewExplanations": [
+        {
+          "kind": "bvp_application",
+          "status": "competing",
+          "statement": "A predecessor relationship is declared; application fitment is not approved.",
+          "linked_evidence": [
+            "packEvidence.relationships"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IMOTORS-OIL",
+      "pn": "SYN-KEEP-001",
+      "customer": "Synthetic Distributor",
+      "name": "Oil justified no action",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Protect the price",
+      "action": "Justified no action case",
+      "verdict": "Synthetic verdict",
+      "reason": "Synthetic reason",
+      "next": "Synthetic next",
+      "recommendation": "Keep the recorded terms.",
+      "counter": "Synthetic counter",
+      "application": "Synthetic application note",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": null,
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 120,
+            "eur": 1200.0
+          },
+          "revenueDelta": 200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 180,
+            "eur": 1800.0
+          },
+          "revenueDelta": -200.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": false,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "IMOTORS-OIL",
+        "packDate": "2026-10-06",
+        "supplierCostStatus": null
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": [],
+      "reviewExplanations": [
+        {
+          "kind": "justified_no_action",
+          "status": "known",
+          "statement": "Billing quantity rose while the recorded list was unchanged; no automatic commercial change is justified.",
+          "linked_evidence": [
+            "comparisons.half"
+          ]
+        }
+      ]
+    }
+  ],
+  "unit_cases": [
+    {
+      "id": "REVIEW07-SUPPLY",
+      "pn": "SYN-SUP-001",
+      "customer": "Synthetic Distributor",
+      "name": "Supply timing case",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Supply and timing check",
+      "action": "Supply timing case",
+      "verdict": "Synthetic verdict",
+      "reason": "Synthetic reason",
+      "next": "Synthetic next",
+      "recommendation": "Check supply and timing before any commercial change.",
+      "counter": "Synthetic counter",
+      "application": "Synthetic application note",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": null,
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 80,
+            "eur": 800.0
+          },
+          "revenueDelta": -200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 180,
+            "eur": 1800.0
+          },
+          "revenueDelta": -200.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": false,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "REVIEW07-SUPPLY",
+        "packDate": "2026-10-06",
+        "supplierCostStatus": null
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": [],
+      "reviewExplanations": [
+        {
+          "kind": "supply",
+          "status": "known",
+          "statement": "Deliveries were delayed in the matched half year; replenishment timing explains the quantity dip.",
+          "linked_evidence": [
+            "series:2025-03",
+            "packEvidence.sourceIssues"
+          ]
+        },
+        {
+          "kind": "unknown",
+          "status": "unknown",
+          "statement": "Customer eligibility for any special term is unknown.",
+          "linked_evidence": []
+        }
+      ],
+      "familyDecline": null
+    },
+    {
+      "id": "REVIEW07-PRICE",
+      "pn": "SYN-PRC-001",
+      "customer": "Synthetic Distributor",
+      "name": "Unresolved price comparison case",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Resolve price conflict",
+      "action": "Unresolved price comparison case",
+      "verdict": "Synthetic verdict",
+      "reason": "Synthetic reason",
+      "next": "Synthetic next",
+      "recommendation": "Resolve the price source; a scoped application or purchasing review may still proceed.",
+      "counter": "Synthetic counter",
+      "application": "Synthetic application note",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": "Catalogue pairing held; fitment approval not stated.",
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 80,
+            "eur": 800.0
+          },
+          "revenueDelta": -200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 180,
+            "eur": 1800.0
+          },
+          "revenueDelta": -200.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [
+          {
+            "relationship_record_id": "R07-1",
+            "part_number_a": "SYN-PRC-001",
+            "part_number_b": "SYN-BVP-001",
+            "relationship_type": "catalogue pairing (Genuine listed beside BVP alternative)",
+            "direction": "genuine -> bvp",
+            "source_type": "catalog_paired",
+            "source_document": "synthetic",
+            "application_vehicle": "N*",
+            "application_engine": "",
+            "country_of_origin": "",
+            "technical_fitment_approved": false,
+            "validation_status": "declared",
+            "source_reference": "synthetic",
+            "description": "Catalogue pairing without stated fitment approval",
+            "note": "",
+            "pointer": "synthetic"
+          }
+        ],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": true,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "REVIEW07-PRICE",
+        "packDate": "2026-10-06",
+        "supplierCostStatus": null
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": [],
+      "reviewExplanations": [
+        {
+          "kind": "price_comparison",
+          "status": "unresolved",
+          "statement": "Two recorded list candidates remain unresolved; the applicable customer net price is not identified.",
+          "linked_evidence": [
+            "packEvidence.listConflict"
+          ]
+        },
+        {
+          "kind": "application",
+          "status": "competing",
+          "statement": "A catalogue pairing exists but fitment approval is not stated.",
+          "linked_evidence": [
+            "packEvidence.relationships"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REVIEW07-KEEP",
+      "pn": "SYN-KEEP-001",
+      "customer": "Synthetic Distributor",
+      "name": "Justified no action case",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Protect the price",
+      "action": "Justified no action case",
+      "verdict": "Synthetic verdict",
+      "reason": "Synthetic reason",
+      "next": "Synthetic next",
+      "recommendation": "Keep the recorded terms.",
+      "counter": "Synthetic counter",
+      "application": "Synthetic application note",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": null,
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 120,
+            "eur": 1200.0
+          },
+          "revenueDelta": 200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 180,
+            "eur": 1800.0
+          },
+          "revenueDelta": -200.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": false,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "REVIEW07-KEEP",
+        "packDate": "2026-10-06",
+        "supplierCostStatus": null
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": [],
+      "reviewExplanations": [
+        {
+          "kind": "justified_no_action",
+          "status": "known",
+          "statement": "Billing quantity rose while the recorded list was unchanged; no automatic commercial change is justified.",
+          "linked_evidence": [
+            "comparisons.half"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REVIEW07-FAMILY",
+      "pn": "SYN-FAM-001",
+      "customer": "Synthetic Distributor",
+      "name": "Family decline without evidence",
+      "category": "Filter",
+      "unit": "pcs",
+      "market": "UK",
+      "country": "United Kingdom",
+      "defaultCompare": "half",
+      "actionType": "Review",
+      "action": "Family decline without evidence",
+      "verdict": "Synthetic verdict",
+      "reason": "Synthetic reason",
+      "next": "Synthetic next",
+      "recommendation": "Synthetic recommendation",
+      "counter": "Synthetic counter",
+      "application": "Synthetic application note",
+      "owner": "Synthetic",
+      "tier": "t1",
+      "baselineDefined": true,
+      "priceMove": 0,
+      "bvp": null,
+      "comparisons": {
+        "half": {
+          "label": "H1 2025 vs H1 2026",
+          "prior": {
+            "year": 2025,
+            "months": 6,
+            "quantity": 100,
+            "eur": 1000.0
+          },
+          "current": {
+            "year": 2026,
+            "months": 6,
+            "quantity": 80,
+            "eur": 800.0
+          },
+          "revenueDelta": -200.0
+        },
+        "annual": {
+          "label": "2024 vs 2025",
+          "prior": {
+            "year": 2024,
+            "months": 12,
+            "quantity": 200,
+            "eur": 2000.0
+          },
+          "current": {
+            "year": 2025,
+            "months": 12,
+            "quantity": 180,
+            "eur": 1800.0
+          },
+          "revenueDelta": -200.0
+        }
+      },
+      "half": {},
+      "annual": {},
+      "series": [
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "billingQuantity": 10,
+          "billingEUR": 100.0,
+          "price": 10.0,
+          "onwardQuantity": 10,
+          "billingState": "recorded",
+          "onwardState": "recorded"
+        }
+      ],
+      "relatedEvidence": [],
+      "related": [],
+      "offers": [],
+      "alternatives": [],
+      "packEvidence": {
+        "relationships": [],
+        "parts": [],
+        "costRecordPresent": false,
+        "listChanges": [],
+        "listConflict": false,
+        "costBasis": null,
+        "offers": [],
+        "prices": [],
+        "snapshots": [],
+        "sourceIssues": [],
+        "readiness": {},
+        "inputFile": "synthetic",
+        "packCase": "REVIEW07-FAMILY",
+        "packDate": "2026-10-06",
+        "supplierCostStatus": null
+      },
+      "priceEvidence": {},
+      "fleet": {},
+      "costParts": [],
+      "reviewExplanations": [
+        {
+          "kind": "unknown",
+          "status": "unknown",
+          "statement": "The cause of the family-level movement is unknown.",
+          "linked_evidence": []
+        }
+      ],
+      "familyDecline": {
+        "precise_reason": "Customers switched to a competing family",
+        "linked_evidence": []
+      }
+    }
+  ]
+}
