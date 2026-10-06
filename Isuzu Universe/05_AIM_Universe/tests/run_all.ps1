@@ -1,4 +1,4 @@
-<#
+﻿<#
     The one entry point for the AIM Universe verification suite.
 
     The checks live in tests\accept\ because that folder holds everything the
@@ -393,6 +393,18 @@ if ($connect05 -match "fail\s+0" -and $connect05 -match "pass\s+2") {
 
 
 
+
+# CONNECT-06 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "CONNECT-06 - optional stock snapshot for a defined case"
+$connect06 = & node --test (Join-Path $PSScriptRoot "connect_06_stock_snapshot.test.mjs") 2>&1 | Out-String
+Write-Host $connect06
+if ($connect06 -match "fail\s+0" -and $connect06 -match "pass\s+2") {
+    Write-Host "CONNECT-06 2/0/2"
+} else {
+    Write-Host "CONNECT-06 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
 # CONNECT-07 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "CONNECT-07 - tender feed to owned investigation"

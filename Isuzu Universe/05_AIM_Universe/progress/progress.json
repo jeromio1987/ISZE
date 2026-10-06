@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T19:45:20Z",
+  "written_at": "2026-10-06T19:58:14Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 80,
-    "not started": 16
+    "technically verified": 81,
+    "not started": 15
   },
   "total_tasks": 96,
-  "overlay_applied": 80,
+  "overlay_applied": 81,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1284,8 +1284,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "CONNECT-05, DATA-01, DATA-04, SAFE-06",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/connect_06_stock_snapshot.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/stock_snapshot.js acceptStockSnapshot (unknown reserved defaulted to 0) -> CONNECT-06 E1 fails; restored -> passes",
+        "mutation src/data/stock_snapshot.js declineStockContribution (closes unrelated commercial/application requests) -> CONNECT-06 E2 fails; restored -> passes",
+        "Synthetic stock snapshot only. Unknown reserved never becomes available via default zero. Declining stock contribution leaves unrelated commercial and application requests open. Missing snapshot leaves narrower review usable. No real stock file."
+      ],
       "blockers": []
     },
     {

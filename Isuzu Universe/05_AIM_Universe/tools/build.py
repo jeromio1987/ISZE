@@ -1,4 +1,4 @@
-"""
+﻿"""
 Build the internal AIM pricing-decisions HTML (BASE-04, BASE-07).
 
 The generated v03 file was both the source and the product, so a fix could only
@@ -74,6 +74,7 @@ MODULES = [
     ("src/data/service_demand_bounds.js", "service-demand and shared-applicability boundaries"),
     ("src/data/availability_question.js", "dated availability question and response"),
     ("src/data/tender_investigation.js", "tender feed to owned investigation"),
+    ("src/data/stock_snapshot.js", "optional case stock snapshot"),
     ("src/data/candidates.js", "candidate workbench"),
     ("src/data/cases.js", "case facade over src/case/*"),
     ("src/data/scenario.js", "one shared scenario"),
@@ -128,6 +129,7 @@ PUBLISHED_BY = {
     "src/data/service_demand_bounds.js": "AIMServiceDemandBounds",
     "src/data/availability_question.js": "AIMAvailabilityQuestion",
     "src/data/tender_investigation.js": "AIMTenderInvestigation",
+    "src/data/stock_snapshot.js": "AIMStockSnapshot",
     "src/data/export.js": "AIMExport",
     "src/data/candidates.js": "AIMCandidates",
     "src/data/cases.js": "AIMCases",
