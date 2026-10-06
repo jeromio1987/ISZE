@@ -322,6 +322,20 @@ if ($accept03 -match "fail\s+0" -and $accept03 -match "pass\s+2") {
 }
 
 
+# CONNECT-02 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "CONNECT-02 - IDS answer to separate improvement action"
+$connect02 = & node --test (Join-Path $PSScriptRoot "connect_02_ids_improvement_action.test.mjs") 2>&1 | Out-String
+Write-Host $connect02
+if ($connect02 -match "fail\s+0" -and $connect02 -match "pass\s+2") {
+    Write-Host "CONNECT-02 2/0/2"
+} else {
+    Write-Host "CONNECT-02 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
+
+
 # SAFE-05 independent verification (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "SAFE-05 - test actual exported bytes and download paths"

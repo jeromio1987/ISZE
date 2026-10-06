@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T18:11:34Z",
+  "written_at": "2026-10-06T18:23:55Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 69,
-    "not started": 27
+    "technically verified": 70,
+    "not started": 26
   },
   "total_tasks": 96,
-  "overlay_applied": 69,
+  "overlay_applied": 70,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1210,8 +1210,14 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "CONNECT-01, CASE-02, CASE-03, CASE-06",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/connect_02_ids_improvement_action.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/ids_improvement_action.js closeImprovement (ids_score bumped and answer rewritten to MUTATED) -> CONNECT-02 E1 fails; restored -> passes",
+        "mutation src/data/ids_improvement_action.js purchasingReviewWithIdsLink (unresolved sets enabled=false) -> CONNECT-02 E2 fails; restored -> passes",
+        "Synthetic dealers and synthetic IDS answers only. Closing an improvement leaves the original answer and score unchanged. An unresolved IDS link does not disable the purchasing review; new action work can remain independent. No sentence claims the answer caused a historical purchasing movement. Real IDS workbooks were not read.",
+        "F08-IDENTITY: unchanged by CONNECT-02 (still open under the integration owner). CONNECT-02 attaches actions to already-gated IDS answers; it does not close identity provider / tenant / revocation gaps."
+      ],
       "blockers": []
     },
     {
