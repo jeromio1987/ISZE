@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T19:44:20Z",
+  "written_at": "2026-10-06T19:45:20Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 79,
-    "not started": 17
+    "technically verified": 80,
+    "not started": 16
   },
   "total_tasks": 96,
-  "overlay_applied": 79,
+  "overlay_applied": 80,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1448,8 +1448,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "SAFE-02, SAFE-03, SAFE-05, SAFE-06, SAFE-07",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/safe_08_independent_access.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/identity.js establishIdentity (client organisation becomes tenant) -> SAFE-08 E1 fails; restored -> passes. Attack showed SAFE-01 ignored client org fields.",
+        "mutation src/data/safe_08_report.js buildEnvironmentReport (certification flag forced true) -> SAFE-08 E2 fails; restored -> passes.",
+        "Adversarial fixtures attack SAFE-01/02/06/07: body/URL/account swaps, attachment id reuse, revoked session with injected instructions. Report states node/platform/version and remaining restrictions; generated code is not called independent production certification. AI-only checks marked not applicable."
+      ],
       "blockers": []
     },
     {
