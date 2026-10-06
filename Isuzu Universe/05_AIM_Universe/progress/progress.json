@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T13:15:49Z",
+  "written_at": "2026-10-06T13:20:53Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 54,
-    "not started": 40,
+    "technically verified": 55,
+    "not started": 39,
     "implemented": 2
   },
   "total_tasks": 96,
-  "overlay_applied": 56,
+  "overlay_applied": 57,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1071,8 +1071,13 @@
       "existing_finding": "F07",
       "can_start_after": "BASE-03",
       "integrate_after": "RANGE-03",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/range_04_transfer.test.mjs -> 2 pass, 0 fail (RANGE-04 E1, E2). tests/run_all.ps1 prints RANGE-04 2/0/2.",
+        "Sufficiency before code: no case holds packEvidence.transfer_split on the real payload (0). Real cases render transfer unavailable. Fixture range_04_transfer.json covers pure one-for-one transfer and transfer-plus-new with single displaced deduction. No data invented for a green.",
+        "mutation src/data/evidence.js:785 (newGrossRevenue uses transferred+newUnits) -> RANGE-04 E1 fails (rc 1); restored -> rc 0.",
+        "mutation src/data/evidence.js:803 (displaced deducted twice in net) -> RANGE-04 E2 fails (rc 1); restored -> rc 0."
+      ],
       "blockers": []
     },
     {
