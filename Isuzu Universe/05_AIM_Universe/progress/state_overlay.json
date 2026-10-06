@@ -486,6 +486,15 @@
         "Synthetic dealers and a synthetic IDS sheet only. Validated identity shows evidence; unvalidated shows 'identity not validated' with no answers; UMI and UTI are never merged; an unknown identity stays unknown and does not borrow the previous row. Real IDS workbooks were not read.",
         "F08-IDENTITY: this task narrows the dealer/IDS identity half (validated identities gate IDS answers; UMI/UTI stay apart). It does not close F08-IDENTITY: approved identity provider, tenant policy, revocation and server-side enforcement remain open under the integration owner."
       ]
+    },
+    "ACCEPT-03": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/accept_03_independent.test.mjs -> 2 pass, 0 fail (ACCEPT-03 E1, E2). Independent fixtures (H1-2027/CY-2026/2027-03; share 3+5 units / 27+45 EUR; qty 7/49 EUR). Expected counts computed in the test file, not borrowed from accept_03_conservation.cjs.",
+        "mutation src/data/evidence.js comparability ok forced true -> ACCEPT-03 E1 fails (rc 1); restored -> passes.",
+        "mutation src/data/candidates.js keyOf drops sourceSection -> ACCEPT-03 E2 fails (rc 1, two invoices collapse); restored -> passes.",
+        "tests/run_all.ps1 prints ACCEPT-03-INDEPENDENT 2/0/2."
+      ]
     }
   },
   "closed_findings": [

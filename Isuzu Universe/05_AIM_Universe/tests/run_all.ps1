@@ -236,6 +236,16 @@ if ($connect01 -match "fail\s+0" -and $connect01 -match "pass\s+2") {
     Write-Host "CONNECT-01 2/0/2"
 } else {
     Write-Host "CONNECT-01 FAILED"
+
+# ACCEPT-03 independent verification (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "ACCEPT-03 - prove source conservation and correction behaviour"
+$accept03 = & node --test (Join-Path $PSScriptRoot "accept_03_independent.test.mjs") 2>&1 | Out-String
+Write-Host $accept03
+if ($accept03 -match "fail\s+0" -and $accept03 -match "pass\s+2") {
+    Write-Host "ACCEPT-03-INDEPENDENT 2/0/2"
+} else {
+    Write-Host "ACCEPT-03-INDEPENDENT FAILED"
     $global:REVIEW_UNIT_FAIL = $true
 }
 
