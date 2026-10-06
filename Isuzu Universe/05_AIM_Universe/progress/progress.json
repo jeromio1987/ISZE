@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T18:23:55Z",
+  "written_at": "2026-10-06T18:27:40Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 70,
-    "not started": 26
+    "technically verified": 71,
+    "not started": 25
   },
   "total_tasks": 96,
-  "overlay_applied": 70,
+  "overlay_applied": 71,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1229,8 +1229,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "DATA-01, DATA-02, DATA-04, UX-01",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/connect_03_prism_context.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/prism_context.js attachPrismContext (request_per_truck_from_national returns a invented rate) -> CONNECT-03 E1 fails; restored -> passes",
+        "mutation src/data/prism_context.js filterMeasures (fleet forecast beyond 2025 kept: if (false && isFleetForecastBeyond2025)) -> CONNECT-03 E2 fails; restored -> passes",
+        "Synthetic PRISM-shaped fixtures only. A dealer review cannot acquire a per-truck rate from a national total. Fleet forecast beyond 2025 excluded; each historical measure keeps its own source, period, population and accepted basis. Real PRISM outputs were not read."
+      ],
       "blockers": []
     },
     {
