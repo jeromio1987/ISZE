@@ -104,6 +104,28 @@ if ($review08 -match "fail\s+0" -and $review08 -match "pass\s+2") {
 
 
 
+
+# RANGE-05 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "RANGE-05 - unsupported migration unresolved"
+$range05 = Join-Path $Root "tests\range_05_unresolved.test.mjs"
+if (Test-Path $range05) {
+  & node --test $range05
+  if ($LASTEXITCODE -eq 0) { Write-Host "RANGE-05 2/0/2" } else { Write-Host "RANGE-05 FAILED"; $script:failed += 1 }
+} else {
+  Write-Host "RANGE-05 SKIPPED (test file missing)"
+}
+
+# RANGE-06 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "RANGE-06 - price-up and price-down investigations"
+$range06 = Join-Path $Root "tests\range_06_price_direction.test.mjs"
+if (Test-Path $range06) {
+  & node --test $range06
+  if ($LASTEXITCODE -eq 0) { Write-Host "RANGE-06 2/0/2" } else { Write-Host "RANGE-06 FAILED"; $script:failed += 1 }
+} else {
+  Write-Host "RANGE-06 SKIPPED (test file missing)"
+}
 # RANGE-04 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "RANGE-04 - transferred versus new business"

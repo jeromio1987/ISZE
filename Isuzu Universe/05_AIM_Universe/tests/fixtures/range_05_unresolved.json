@@ -1,0 +1,29 @@
+{
+  "note": "Fixture only. Hypothetical sensitivity inputs are labelled as such.",
+  "hypothetical_complete": {
+    "label": "hypothetical sensitivity exercise",
+    "is_hypothetical": true,
+    "from": {
+      "pn": "SYN-FROM",
+      "price_eur": 10.0,
+      "cost_eur": 4.0
+    },
+    "to": {
+      "pn": "SYN-TO",
+      "price_eur": 8.0,
+      "cost_eur": 3.5
+    },
+    "quantity_transferred": 100
+  },
+  "unsupported": {
+    "label": "unsupported migration",
+    "is_hypothetical": false,
+    "from": {
+      "pn": "SYN-FROM",
+      "price_eur": 10.0,
+      "cost_eur": null
+    },
+    "to": null,
+    "quantity_transferred": null
+  }
+}
