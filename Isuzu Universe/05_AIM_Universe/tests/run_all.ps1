@@ -60,6 +60,19 @@ if ($review04 -match "fail\s+0" -and $review04 -match "pass\s+2") {
 }
 
 
+
+# REVIEW-06 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "REVIEW-06 - recurrence, interruption and new purchasing"
+$review06 = & node --test (Join-Path $PSScriptRoot "review_06_recurrence.test.mjs") 2>&1 | Out-String
+Write-Host $review06
+if ($review06 -match "fail\s+0" -and $review06 -match "pass\s+2") {
+    Write-Host "REVIEW-06 2/0/2"
+} else {
+    Write-Host "REVIEW-06 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
 & $impl @PSBoundParameters
 if ($global:REVIEW_UNIT_FAIL) { exit 1 }
 exit $LASTEXITCODE
