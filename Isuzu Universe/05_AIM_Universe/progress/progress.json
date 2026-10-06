@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T18:27:40Z",
+  "written_at": "2026-10-06T18:36:33Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 71,
-    "not started": 25
+    "technically verified": 72,
+    "not started": 24
   },
   "total_tasks": 96,
-  "overlay_applied": 71,
+  "overlay_applied": 72,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1247,8 +1247,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "CONNECT-03, DATA-07, SAFE-04",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/connect_04_service_demand_bounds.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/service_demand_bounds.js selectServiceBasis (external returns average of internal+external) -> CONNECT-04 E1 fails; restored -> passes",
+        "mutation src/data/service_demand_bounds.js bandServiceCover (repeated_market_over_band_expectation returns a cover ratio) -> CONNECT-04 E2 fails; restored -> passes",
+        "Synthetic fixtures only. Switching internal/external changes the labelled method and does not average them. No band-level service cover from dividing repeated market purchasing by a band expectation. Shared parts stay pooled. Restricted euro aggregates stay out of external views. Series codes become bands only through bandFor on series_to_band.csv."
+      ],
       "blockers": []
     },
     {
