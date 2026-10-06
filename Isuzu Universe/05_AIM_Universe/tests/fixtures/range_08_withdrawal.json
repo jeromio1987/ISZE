@@ -1,0 +1,58 @@
+{
+  "withdrawal_reason": "Synthetic technical authority withdrew the pairing after a catalogue revision. Fixture only.",
+  "pairing": {
+    "part_a": "898240-9990",
+    "part_b": "898240-BVP1",
+    "source": "Synthetic catalogue pairing fixture",
+    "source_version": "2026-09-fixture",
+    "conditions": { "application_vehicle": "synthetic N-series cabin filter" }
+  },
+  "cases": [
+    {
+      "id": "IMOTORS-CABIN",
+      "pn": "898240-9990",
+      "parts": {
+        "genuine": {
+          "pn": "898240-9990",
+          "reference_price_eur": 18.5,
+          "actual_price_eur": 17.2,
+          "application_status": "active",
+          "cost_eur": 6.1
+        },
+        "bvp": {
+          "pn": "898240-BVP1",
+          "reference_price_eur": 14.0,
+          "actual_price_eur": 13.5,
+          "application_status": "active",
+          "cost_eur": 4.8
+        }
+      },
+      "packEvidence": {
+        "relationships": [
+          {
+            "part_number_a": "898240-9990",
+            "part_number_b": "898240-BVP1",
+            "relationship_type": "catalogue pairing",
+            "validation_status": "approved",
+            "authority": "approved",
+            "source_document": "Synthetic catalogue pairing fixture"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ITUK-PADS",
+      "pn": "897111-0000",
+      "parts": {
+        "genuine": {
+          "pn": "897111-0000",
+          "reference_price_eur": 40.0,
+          "actual_price_eur": 39.0,
+          "application_status": "active",
+          "cost_eur": 12.0
+        }
+      },
+      "packEvidence": { "relationships": [] }
+    }
+  ]
+}

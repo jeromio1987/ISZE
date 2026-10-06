@@ -645,10 +645,43 @@
       return rows.map(function (r) { return JSON.parse(JSON.stringify(r)); });
     }
 
+    function getById(id) {
+      var row = byId[id];
+      return row ? JSON.parse(JSON.stringify(row)) : null;
+    }
+
+    function withdraw(id, meta) {
+      meta = meta || {};
+      var row = byId[id];
+      if (!row) return { ok: false, error: 'No range relationship with id ' + id + '.' };
+      if (!row.saved_evidence) {
+        row.saved_evidence = {
+          authority: row.authority,
+          part_a: row.part_a,
+          part_b: row.part_b,
+          source: row.source,
+          source_version: row.source_version,
+          type: row.type,
+          conditions: JSON.parse(JSON.stringify(row.conditions || {})),
+          version: row.version
+        };
+      }
+      row.authority = 'withdrawn';
+      row.version = (row.version || 1) + 1;
+      row.withdrawal = {
+        reason: meta.reason || 'Relationship withdrawn by technical authority.',
+        withdrawn_by: meta.withdrawn_by || null,
+        withdrawn_at: meta.withdrawn_at || null
+      };
+      return { ok: true, relationship: JSON.parse(JSON.stringify(row)) };
+    }
+
     return {
       record: record,
       listForPair: listForPair,
       listAll: listAll,
+      getById: getById,
+      withdraw: withdraw,
       TYPES: RANGE_RELATIONSHIP_TYPES.slice()
     };
   }
@@ -704,8 +737,20 @@
     else if (authority === 'approved' && relationship.type === 'pairing') role = 'approved_pairing';
     else if (authority === 'approved') role = 'approved_' + String(relationship.type || 'relationship');
     else role = 'candidate';
-    /* Price and cost never promote authority. */
-    if (authority !== 'approved') role = 'candidate';
+    /* Price and cost never promote authority. Withdrawn stays withdrawn. */
+    if (authority !== 'approved' && authority !== 'withdrawn') role = 'candidate';
+    var statement;
+    if (authority === 'withdrawn') {
+      statement = 'This relationship is withdrawn. The earlier saved evidence is kept for history. '
+        + 'A new action needs a fresh review; the withdrawn approval cannot be reused.';
+    } else if (authority === 'approved') {
+      statement = 'Authority is approved for this ' + (relationship.type || 'relationship')
+        + '. Price and cost are reported beside it and do not change the authority.';
+    } else {
+      statement = 'Unapproved relationship stays a candidate even when price and cost are present. '
+        + 'Price present: ' + (pricePresent ? 'yes' : 'no') + '; cost present: '
+        + (costPresent ? 'yes' : 'no') + '.';
+    }
     return {
       role: role,
       interchangeable: pair.interchangeable && authority === 'approved',
@@ -713,15 +758,76 @@
       type: relationship.type || null,
       price_present: pricePresent,
       cost_present: costPresent,
-      statement: authority === 'approved'
-        ? ('Authority is approved for this ' + (relationship.type || 'relationship')
-          + '. Price and cost are reported beside it and do not change the authority.')
-        : ('Unapproved relationship stays a candidate even when price and cost are present. '
-          + 'Price present: ' + (pricePresent ? 'yes' : 'no') + '; cost present: '
-          + (costPresent ? 'yes' : 'no') + '.')
+      statement: statement
     };
   }
 
+
+  /* -------------------------------------------------------- RANGE-08 withdrawal -- */
+
+  function withdrawRangeRelationship(ledger, relationshipId, meta) {
+    if (!ledger || typeof ledger.withdraw !== 'function') {
+      return { ok: false, error: 'A range relationship ledger with withdraw is required.' };
+    }
+    return ledger.withdraw(relationshipId, meta || {});
+  }
+
+  function rangeWithdrawalImpact(cases, relationship) {
+    cases = cases || [];
+    relationship = relationship || {};
+    var a = String(relationship.part_a || relationship.part_number_a || '');
+    var b = String(relationship.part_b || relationship.part_number_b || '');
+    var affected = [];
+    cases.forEach(function (c) {
+      if (!c) return;
+      var rels = ((c.packEvidence || {}).relationships) || [];
+      var hit = false;
+      rels.forEach(function (r) {
+        var ra = String(r.part_number_a || r.part_a || '');
+        var rb = String(r.part_number_b || r.part_b || '');
+        if ((ra === a && rb === b) || (ra === b && rb === a)) hit = true;
+      });
+      var pn = String(c.pn || '');
+      var g = (((c.parts || {}).genuine) || {}).pn;
+      var v = (((c.parts || {}).bvp) || {}).pn;
+      if (pn === a || pn === b || g === a || g === b || v === a || v === b) hit = true;
+      if (hit) affected.push(c.id);
+    });
+    var uniq = [];
+    affected.forEach(function (id) { if (uniq.indexOf(id) < 0) uniq.push(id); });
+    return {
+      affected_case_ids: uniq,
+      requires_fresh_review: true,
+      relationship_id: relationship.relationship_id || null,
+      statement: 'Relationship withdrawn. Affected active case(s): '
+        + (uniq.length ? uniq.join(', ') : 'none')
+        + '. Original saved evidence is preserved. A fresh review is required before any new action.'
+    };
+  }
+
+  function canReuseApplicationApproval(relationship) {
+    relationship = relationship || {};
+    var authority = String(relationship.authority || '').toLowerCase();
+    if (authority === 'withdrawn') {
+      return {
+        allowed: false,
+        statement: 'Cannot reuse a withdrawn application approval. Record a fresh review with a new '
+          + 'approval before any new commercial scenario uses this pairing.'
+      };
+    }
+    if (authority === 'approved' && (relationship.type === 'pairing'
+        || relationship.relationship_type === 'catalogue_pairing'
+        || relationship.relationship_type === 'catalogue pairing')) {
+      return {
+        allowed: true,
+        statement: 'Approved pairing may be used for a commercial scenario that cites this relationship.'
+      };
+    }
+    return {
+      allowed: false,
+      statement: 'No reusable application approval is held for this relationship.'
+    };
+  }
 
   /* -------------------------------------------------------- RANGE-02 view -- */
 
@@ -739,9 +845,16 @@
     var bvp = parts.bvp || null;
     var rels = ((caseObject.packEvidence || {}).relationships) || [];
     var approvedPair = null;
+    var withdrawnPair = null;
     rels.forEach(function (r) {
+      var auth = String(r.authority || '').toLowerCase();
+      var status = String(r.validation_status || '').toLowerCase();
       var cls = classifyRelationship(r);
       var fit = fitmentStatus(r);
+      if (auth === 'withdrawn' || status === 'withdrawn') {
+        if (cls.kind === 'catalogue_pairing') withdrawnPair = r;
+        return;
+      }
       if (cls.kind === 'catalogue_pairing' && fit.approved === true) approvedPair = r;
     });
 
@@ -766,7 +879,9 @@
         side_a: side(genuine, genuine.pn),
         side_b: side(bvp, bvp.pn),
         labels: labels,
-        relationship_authority: approvedPair ? 'approved pairing' : 'pairing not approved on the held relationship',
+        relationship_authority: withdrawnPair
+          ? 'withdrawn pairing - fresh review required'
+          : (approvedPair ? 'approved pairing' : 'pairing not approved on the held relationship'),
         cost_statement: audience === 'internal'
           ? 'Cost is shown in the internal view only.'
           : 'Cost is not shown outside the internal view.',
@@ -1968,7 +2083,7 @@
      Covered months are those whose billingState is "recorded" or "no recorded line".
      Months marked "outside supplied period", and months absent from the series, are not
      covered: they are marked missing and never produce a lapsed flag. Descriptive flags
-     only — no rating, no score, no 0-100.
+     only Ã¢â‚¬â€ no rating, no score, no 0-100.
      Regular: recorded activity in every covered month (or with gaps shorter than three).
      Intermittent: recorded months mixed with covered no-recorded-line gaps, not a clean
      terminal lapse of three or more covered months.
@@ -2386,6 +2501,9 @@
     rangeCommercialRole: rangeCommercialRole,
     RANGE_RELATIONSHIP_TYPES: RANGE_RELATIONSHIP_TYPES,
     exactRangeComparison: exactRangeComparison,
+    withdrawRangeRelationship: withdrawRangeRelationship,
+    rangeWithdrawalImpact: rangeWithdrawalImpact,
+    canReuseApplicationApproval: canReuseApplicationApproval,
     partReference: partReference,
     makeRelationshipLedger: makeRelationshipLedger,
     makeStageState: makeStageState,
