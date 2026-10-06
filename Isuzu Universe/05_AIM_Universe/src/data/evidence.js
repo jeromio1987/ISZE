@@ -1509,6 +1509,246 @@
     };
   }
 
+  /* ---------------------------------------------------- price / quantity / mix -- */
+
+  /* REVIEW-05. Stated method (plain words, returned on every call).
+
+     The compatible set is the case's own part reference plus every relatedEvidence
+     reference that carries BOTH a quantity and an euro in BOTH periods of the
+     selected comparison. Each such reference i has prior quantity q0i and euro r0i,
+     current quantity q1i and euro r1i, and a unit revenue p0i = r0i / q0i and
+     p1i = r1i / q1i. A reference with q0i = 0 and q1i > 0 is new; a reference with
+     q0i > 0 and q1i = 0 is discontinued; each is shown on its own line with its
+     euro and is never folded into the price effect.
+
+     On the continuing references only (q0i > 0 and q1i > 0), with Q0 and Q1 the
+     summed quantities and P0 = sum(r0i) / Q0 the prior average unit revenue:
+       price effect    = sum over i of (p1i - p0i) x q1i
+       quantity effect = (Q1 - Q0) x P0
+       mix effect      = sum over i of p0i x (q1i - q0i) - quantity effect
+     Those three add up to the continuing references' euro change exactly; the
+     arithmetic is returned as continuing_check so the screen can state it.
+
+     Returns are negative billing lines and are shown on their own line. The
+     residual is the observed euro change of the selected case comparison minus
+     (price + quantity + mix + new + discontinued + returns). It is printed even
+     when it is 0. A non-zero residual is reported as not explained by the supplied
+     references; it is never absorbed into a component.
+
+     A reference with no quantity in either period, and a reference with no euro in
+     either period, are excluded from the compatible set and listed as not
+     decomposed with the reason. No euro and no quantity is ever invented for them.
+
+     Label rule returned with every result: this is a unit-revenue change, never a
+     list-price increase and never an elasticity. The list price change stays the
+     separate offer / price-list field. Fewer than two compatible continuing
+     references means the mix effect cannot be separated, and the result says so
+     instead of producing a mix number. Margin only, never a factor. */
+  var PRICE_QUANTITY_MIX_RULE =
+    'The compatible set is the case part plus every related reference that carries both '
+    + 'a quantity and an euro in both periods of the selected comparison. A reference with '
+    + 'no prior quantity is new and one with no current quantity is discontinued; each is '
+    + 'shown on its own line and never folded into price. On the continuing references, the '
+    + 'price effect is each reference\'s own unit-revenue change at its current quantity, the '
+    + 'quantity effect is the total volume change at the prior average unit revenue, and the '
+    + 'mix effect is what is left after those two. The three add up to the continuing '
+    + 'references\' euro change exactly, and that sum is shown. The residual is the observed '
+    + 'euro change of the comparison minus every component above; it is printed even when it '
+    + 'is zero, and a non-zero residual is not explained by the supplied references. This is a '
+    + 'unit-revenue change: it is not a like-for-like list-price change and it is not an '
+    + 'elasticity. The list price change stays the separate offer and price-list field. Margin '
+    + 'only: no factor is used or shown.';
+
+  function priceQuantityMix(caseObject, compareKey) {
+    caseObject = caseObject || {};
+    var cmp = caseObject.comparisons ? caseObject.comparisons[compareKey] : null;
+    var held = !!(cmp && cmp.prior && cmp.current);
+    var out = {
+      ok: false,
+      available: false,
+      compare: compareKey || null,
+      label: held ? cmp.label : null,
+      method: PRICE_QUANTITY_MIX_RULE,
+      label_rule: 'Unit-revenue change, not a list-price increase and not an elasticity. The list price change stays the separate offer and price-list field.',
+      observed_change_eur: null,
+      components: {
+        price_eur: null,
+        quantity_eur: null,
+        mix_eur: null,
+        new_eur: null,
+        discontinued_eur: null,
+        returns_eur: null,
+        residual_eur: null
+      },
+      continuing: [],
+      new_references: [],
+      discontinued_references: [],
+      returns: [],
+      not_decomposed: [],
+      continuing_count: 0,
+      continuing_change_eur: null,
+      continuing_check: null,
+      mix_state: 'unavailable',
+      statement: ''
+    };
+    if (!held) {
+      out.statement = 'No comparison is held for the selected period.';
+      return out;
+    }
+
+    /* The case's own observed movement for this comparison is the same figure
+       REVIEW-04 calls the selected movement. */
+    var observed = round2(Number(cmp.current.eur) - Number(cmp.prior.eur));
+    out.observed_change_eur = observed;
+    out.available = true;
+
+    var refs = [];
+    refs.push({
+      pn: caseObject.pn, role: 'own_part', status: caseObject.bvp || null,
+      prior: cmp.prior, current: cmp.current
+    });
+    var related = caseObject.relatedEvidence || [];
+    for (var i = 0; i < related.length; i++) {
+      var r = related[i];
+      if (!periodMatchesComparison(r, compareKey)) continue;
+      refs.push({ pn: r.pn, role: 'related', status: r.status || null, prior: r.prior || {}, current: r.current || {} });
+    }
+
+    var priceEffect = 0;
+    var mixBase = 0;
+    var Q0 = 0;
+    var Q1 = 0;
+    var R0 = 0;
+    var R1 = 0;
+
+    for (var k = 0; k < refs.length; k++) {
+      var ref = refs[k];
+      var q0 = toNumberOrNull(ref.prior.quantity);
+      var q1 = toNumberOrNull(ref.current.quantity);
+      var r0 = toNumberOrNull(ref.prior.eur);
+      var r1 = toNumberOrNull(ref.current.eur);
+
+      if (q0 === null || q1 === null) {
+        out.not_decomposed.push({
+          pn: ref.pn, role: ref.role, reason: 'not decomposed: no quantity in the source',
+          quantity_prior: q0, quantity_current: q1
+        });
+        continue;
+      }
+      if (r0 === null || r1 === null) {
+        out.not_decomposed.push({
+          pn: ref.pn, role: ref.role, reason: 'not decomposed: no euro in the source',
+          quantity_prior: q0, quantity_current: q1
+        });
+        continue;
+      }
+      if (r0 < 0 || r1 < 0) {
+        out.returns.push({
+          pn: ref.pn, role: ref.role, quantity_delta: q1 - q0, eur: round2(r1 - r0),
+          statement: 'Return / negative billing line in the source; shown on its own'
+        });
+        continue;
+      }
+      if (q0 === 0 && q1 > 0) {
+        out.new_references.push({
+          pn: ref.pn, role: ref.role, quantity_prior: 0, quantity_current: q1,
+          eur: round2(r1 - r0), statement: 'New reference: no quantity in the prior period'
+        });
+        continue;
+      }
+      if (q0 > 0 && q1 === 0) {
+        out.discontinued_references.push({
+          pn: ref.pn, role: ref.role, quantity_prior: q0, quantity_current: 0,
+          eur: round2(r1 - r0), statement: 'Discontinued reference: no quantity in the current period'
+        });
+        continue;
+      }
+      if (q0 === 0 && q1 === 0) {
+        out.not_decomposed.push({
+          pn: ref.pn, role: ref.role, reason: 'not decomposed: no quantity in either period',
+          quantity_prior: q0, quantity_current: q1
+        });
+        continue;
+      }
+
+      /* q0 > 0 and q1 > 0: a continuing reference. */
+      var p0 = r0 / q0;
+      var p1 = r1 / q1;
+      priceEffect += (p1 - p0) * q1;
+      mixBase += p0 * (q1 - q0);
+      Q0 += q0;
+      Q1 += q1;
+      R0 += r0;
+      R1 += r1;
+      out.continuing.push({
+        pn: ref.pn, role: ref.role, status: ref.status,
+        prior_quantity: q0, current_quantity: q1,
+        prior_eur: round2(r0), current_eur: round2(r1),
+        prior_unit_revenue: round2(p0), current_unit_revenue: round2(p1),
+        unit_revenue_change: round2(p1 - p0),
+        quantity_delta: q1 - q0,
+        eur_delta: round2(r1 - r0),
+        price_effect_eur: round2((p1 - p0) * q1)
+      });
+    }
+
+    out.continuing_count = out.continuing.length;
+
+    var P0 = Q0 > 0 ? R0 / Q0 : 0;
+    var quantityEffect = Q0 > 0 ? (Q1 - Q0) * P0 : 0;
+    var mixEffect = out.continuing_count >= 2 ? mixBase - quantityEffect : null;
+    out.mix_state = mixEffect === null
+      ? (out.continuing_count === 1
+        ? 'mix: unavailable, only one compatible reference'
+        : 'mix: unavailable, no compatible continuing reference')
+      : 'mix separated';
+
+    var sum = function (list, key) {
+      var t = 0;
+      for (var x = 0; x < list.length; x++) t += list[x][key];
+      return t;
+    };
+    var priceEur = round2(priceEffect);
+    var quantityEur = round2(quantityEffect);
+    var mixEur = mixEffect === null ? null : round2(mixEffect);
+    var newEur = round2(sum(out.new_references, 'eur'));
+    var discontinuedEur = round2(sum(out.discontinued_references, 'eur'));
+    var returnsEur = round2(sum(out.returns, 'eur'));
+
+    out.components = {
+      price_eur: priceEur,
+      quantity_eur: quantityEur,
+      mix_eur: mixEur,
+      new_eur: newEur,
+      discontinued_eur: discontinuedEur,
+      returns_eur: returnsEur,
+      residual_eur: round2(observed - (priceEur + quantityEur
+        + (mixEur === null ? 0 : mixEur) + newEur + discontinuedEur + returnsEur))
+    };
+
+    out.continuing_change_eur = round2(R1 - R0);
+    out.continuing_check = round2(priceEur + quantityEur + (mixEur === null ? 0 : mixEur));
+    out.continuing_reconciles = out.continuing_check === out.continuing_change_eur;
+
+    var identity = out.components.price_eur + out.components.quantity_eur
+      + (out.components.mix_eur === null ? 0 : out.components.mix_eur)
+      + out.components.new_eur + out.components.discontinued_eur
+      + out.components.returns_eur + out.components.residual_eur;
+    out.ok = round2(identity) === observed;
+
+    out.statement = (out.continuing_reconciles
+      ? 'Price, quantity and mix add up to the continuing references\' euro change exactly. '
+      : 'Price, quantity and mix do NOT reproduce the continuing references\' euro change. ')
+      + out.continuing_count + ' compatible continuing reference(s). '
+      + (mixEffect === null
+        ? out.mix_state + '. '
+        : '')
+      + (out.components.residual_eur === 0
+        ? 'Residual 0.00: every euro of the observed change is explained by the supplied references. '
+        : 'Residual is ' + out.components.residual_eur.toFixed(2)
+          + ' euro: not explained by the supplied references. ');
+    return out;
+  }
 
   /* ------------------------------------------------------------ purchasing activity -- */
 
@@ -1943,6 +2183,7 @@
     observationConflicts: observationConflicts,
     inventory: inventory,
     movementContributors: movementContributors,
+    priceQuantityMix: priceQuantityMix,
     purchasingActivity: purchasingActivity,
     nextActionPlan: nextActionPlan,
     periodMatchesComparison: periodMatchesComparison,
