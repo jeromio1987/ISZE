@@ -429,6 +429,18 @@ function contributorsPanel(c){
    says so in plain words. It never says "price increase" and never shows a factor. */
 
 
+function rangeBasketPanel(c){
+const Ev = (typeof AIMEvidence!=='undefined') ? AIMEvidence : null;
+if(!Ev || typeof Ev.rangeBasket!=='function') return '';
+const raw = ((c.packEvidence||{}).basket_lines) || ((c.parts&&c.parts.basket_lines)) || null;
+if(!raw || !raw.length){
+  return `<div class="panel" data-range-basket="1" data-range-basket-state="unavailable"><h3>Multi-part basket</h3><p class="small">No basket lines are held for this case. A multi-part financial scenario needs explicit line references, quantities, prices and cost basis. Absence is not a zero basket.</p></div>`;
+}
+const basket = Ev.rangeBasket(raw);
+const rows = (basket.lines||[]).map(l=>`<tr data-eligible="${l.eligible?'1':'0'}"><td class="pn">${esc(l.original_reference||'')}</td><td>${l.quantity===null?'':l.quantity}</td><td>${l.price_eur===null?'':l.price_eur}</td><td>${l.cost_eur===null?'missing':l.cost_eur}</td><td>${l.eligible?'yes':'no'}</td><td>${l.revenue_eur===null?'':l.revenue_eur}</td><td>${l.profit_eur===null?'':l.profit_eur}</td></tr>`).join('');
+return `<div class="panel" data-range-basket="1" data-range-basket-state="${esc(basket.state)}" data-range-basket-profit="${esc(basket.profit_state)}"><h3>Multi-part basket</h3><p class="small">${esc(basket.statement)}</p><p class="small">Revenue (eligible): ${basket.revenue_eur===null?'unavailable':basket.revenue_eur+' '+esc(basket.currency||'')}. Profit: ${basket.profit_eur===null?(basket.profit_state==='partial'?'partial':'unavailable'):basket.profit_eur+' '+esc(basket.currency||'')}.</p><div class="tablewrap" tabindex="0"><table><thead><tr><th>Reference</th><th>Qty</th><th>Price</th><th>Cost</th><th>Eligible</th><th>Revenue</th><th>Profit</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+}
+
 function rangeWithdrawalPanel(c){
 const Ev = (typeof AIMEvidence!=='undefined') ? AIMEvidence : null;
 if(!Ev || typeof Ev.rangeWithdrawalImpact!=='function' || typeof Ev.canReuseApplicationApproval!=='function') return '';
@@ -905,7 +917,7 @@ function marketView(c){
 function decision(c){
  const cmp=c.comparisons[state.compare];
  return `<div class="compare-row"><div><span class="eyebrow">Measured record</span><div class="small">${sourceButton()} &middot; no forecast or lost-sales attribution</div></div><select id="comparison" aria-label="Comparison period"><option value="half" ${state.compare==='half'?'selected':''}>January-June 2026 vs 2025</option><option value="annual" ${state.compare==='annual'?'selected':''}>Calendar 2025 vs 2024</option></select></div>
- ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${contributorsPanel(c)}${rangeRelationshipsPanel(c)}${rangeWithdrawalPanel(c)}${exactRangeComparisonPanel(c)}${priceQuantityMixPanel(c)}${purchasingActivityPanel(c)}${nextActionPlanPanel(c)}${targetBox(c)}
+ ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${contributorsPanel(c)}${rangeRelationshipsPanel(c)}${rangeWithdrawalPanel(c)}${rangeBasketPanel(c)}${exactRangeComparisonPanel(c)}${priceQuantityMixPanel(c)}${purchasingActivityPanel(c)}${nextActionPlanPanel(c)}${targetBox(c)}
  <div class="grid2">${chart(c,state.billingMetric,state.billingMetric==='billingEUR'?'What ISZE billed':'What ISZE supplied')}${onwardHeld(c)?chart(c,'onwardQuantity','What the distributor supplied to dealers'):onwardMissing()}</div>
  <div class="grid2"><div class="panel"><span class="badge fact">Evidence supporting review</span><p style="margin-top:12px">${esc(c.reason)}</p></div><div class="panel warn"><span class="badge review">Evidence against a simple price story</span><p style="margin-top:12px">${esc(c.counter)}</p></div></div>
  <div class="grid2">${chart(c,'price','Observed ISZE unit price',true)}<div class="panel"><div class="eyebrow">Reconcile the euro change</div><h3>${signedEUR(cmp.revenueDelta)} in recorded billing</h3><div class="evidence-line"><span>Quantity effect, at prior price</span><b class="${color(cmp.volumeEffect)}">${signedEUR(cmp.volumeEffect)}</b></div><div class="evidence-line"><span>Effective price / terms effect</span><b class="${color(cmp.effectivePriceEffect)}">${signedEUR(cmp.effectivePriceEffect)}</b></div><div class="ruleline small">Exact identity: (new quantity &minus; old quantity) &times; old price + new quantity &times; (new price &minus; old price). The second term includes mix of order conditions. It is not causal price elasticity or a measured price-list effect.</div><div class="scopebox"><b>${num(c.fleet)} ${c.market==='ITUK'?'trucks':'vehicles'} &middot; 2025 market reference</b><br>${esc(c.application)} No part-level demand gap or dealer rate is computed.</div></div></div>

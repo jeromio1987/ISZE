@@ -1,0 +1,71 @@
+{
+  "lines_complete": [
+    {
+      "original_reference": "898240-9990",
+      "quantity": 10,
+      "price_eur": 17.2,
+      "cost_eur": 6.1,
+      "cost_basis": "dated purchase cost fixture",
+      "eligible": true,
+      "currency": "EUR"
+    },
+    {
+      "original_reference": "898240-BVP1",
+      "quantity": 10,
+      "price_eur": 13.5,
+      "cost_eur": 4.8,
+      "cost_basis": "dated purchase cost fixture",
+      "eligible": true,
+      "currency": "EUR"
+    },
+    {
+      "original_reference": "899999-SKIP",
+      "quantity": 5,
+      "price_eur": 99.0,
+      "cost_eur": 1.0,
+      "cost_basis": "dated purchase cost fixture",
+      "eligible": false,
+      "currency": "EUR"
+    }
+  ],
+  "lines_missing_cost": [
+    {
+      "original_reference": "898240-9990",
+      "quantity": 10,
+      "price_eur": 17.2,
+      "cost_eur": 6.1,
+      "cost_basis": "dated purchase cost fixture",
+      "eligible": true,
+      "currency": "EUR"
+    },
+    {
+      "original_reference": "898240-BVP1",
+      "quantity": 10,
+      "price_eur": 13.5,
+      "cost_eur": null,
+      "cost_basis": null,
+      "eligible": true,
+      "currency": "EUR"
+    }
+  ],
+  "lines_mixed_currency": [
+    {
+      "original_reference": "898240-9990",
+      "quantity": 10,
+      "price_eur": 17.2,
+      "cost_eur": 6.1,
+      "cost_basis": "dated purchase cost fixture",
+      "eligible": true,
+      "currency": "EUR"
+    },
+    {
+      "original_reference": "GBP-PART-01",
+      "quantity": 10,
+      "price_eur": 12.0,
+      "cost_eur": 4.0,
+      "cost_basis": "dated purchase cost fixture",
+      "eligible": true,
+      "currency": "GBP"
+    }
+  ]
+}
