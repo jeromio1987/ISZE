@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T06:11:31Z",
+  "written_at": "2026-10-06T08:33:55Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,9 +12,9 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 49,
-    "implemented": 3,
-    "not started": 44
+    "technically verified": 50,
+    "not started": 44,
+    "implemented": 2
   },
   "total_tasks": 96,
   "overlay_applied": 52,
@@ -562,9 +562,14 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "REVIEW-04, DATA-04",
-      "state": "implemented",
+      "state": "technically verified",
       "evidence": [
-        "The 'case' view key was missing from TAB_LABELS so the part-review tab rendered its raw key instead of a label. Now 'Part review', confirmed present in the assembled artifact. Recorded here rather than under a new id: the fix has no task of its own in the plan, and inventing one would inflate the count. (An earlier revision of this overlay used a made-up id 'KX-01' and tools/build_progress.py correctly refused it.)"
+        "node --test tests/review_05_price_quantity_mix.test.mjs -> 3 pass, 0 fail (REVIEW-05 E1, E2, E3). tests/run_all.ps1 prints REVIEW-05 3/0/3.",
+        "Sufficiency measured before the code: of all 5 cases and both comparisons, not one relatedEvidence reference carries quantity and euro in BOTH periods (continuing compatible references per case: ITUK-PADS 0 of 3, IMOTORS-CABIN 0 of 1, ITUK-TURBO 0 of 3, ITUK-DISCS 0 of 1, IMOTORS-OIL 0 of 2). So the mix effect is separated on fixtures, and on every real case and comparison the screen states 'mix: unavailable' with the count behind it instead of producing a mix number. No data was created to obtain a green.",
+        "mutation src/data/evidence.js:1699 (mix effect replaced by a constant 0) -> REVIEW-05 E1 fails (1 pass, 2 fail); restored -> 3 pass, 0 fail.",
+        "mutation src/data/evidence.js:1725 (residual forced to 0 instead of observed minus the components) -> REVIEW-05 E2 fails (1 pass, 2 fail); restored -> 3 pass, 0 fail.",
+        "mutation src/data/evidence.js:1640 (a quantity-only reference is given an invented eur: 0) -> REVIEW-05 E3 fails (2 pass, 1 fail); restored -> 3 pass, 0 fail.",
+        "History, kept from the earlier overlay: The 'case' view key was missing from TAB_LABELS so the part-review tab rendered its raw key instead of a label. Now 'Part review', confirmed present in the assembled artifact. Recorded here rather than under a new id: the fix has no task of its own in the plan, and inventing one would inflate the count. (An earlier revision of this overlay used a made-up id 'KX-01' and tools/build_progress.py correctly refused it.)"
       ],
       "blockers": []
     },
