@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T19:13:08Z",
+  "written_at": "2026-10-06T19:14:41Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 74,
-    "not started": 22
+    "technically verified": 75,
+    "not started": 21
   },
   "total_tasks": 96,
-  "overlay_applied": 74,
+  "overlay_applied": 75,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1297,8 +1297,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "DATA-01, CASE-02, CASE-03",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/connect_07_tender_investigation.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/tender_investigation.js isNonActionable (expired/cancelled treated as actionable) -> CONNECT-07 E1 fails; restored -> passes",
+        "mutation src/data/tender_investigation.js awardFinancialEffects (auto-creates billing/GP/won quotation from award) -> CONNECT-07 E2 fails; restored -> passes",
+        "Synthetic tender-feed shaped fixtures only. Live tender_data.json not written. Expired/cancelled notices are not current actionable deadlines. Awards do not auto-create billing, gross profit or a won parts quotation. Notice value is never Isuzu parts revenue."
+      ],
       "blockers": []
     },
     {

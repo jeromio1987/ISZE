@@ -1,7 +1,7 @@
 {
   "_note": "Evidence-backed state for the tasks that have landed. Merged by tools/build_progress.py. A state here must name the command that showed it. The integration owner writes this file; workers do not.",
-  "_written_by": "cursor U21 CONNECT-05",
-  "_written_at": "2026-10-06T19:13:08Z",
+  "_written_by": "cursor U21 CONNECT-07",
+  "_written_at": "2026-10-06T19:14:41Z",
   "_authority": "A state of technically verified means a named command was run and its output read. It does not mean human accepted, and it confers no business, technical, privacy or spending authority.",
   "_acceptance_run": {
     "command": "powershell -ExecutionPolicy Bypass -File tests/run_all.ps1",
@@ -604,6 +604,15 @@
         "mutation src/data/availability_question.js currentStockAvailability (historical purchase shown as current stock) -> CONNECT-05 E1 fails; restored -> passes",
         "mutation src/data/availability_question.js recordAvailabilityResponse (unconfirmed kept as confirmed_commitment without estimate label) -> CONNECT-05 E2 fails; restored -> passes",
         "Synthetic fixtures only. Dated availability question carries part, application, quantity, required date and distributor route. Historical purchase cannot display as current stock. Unconfirmed response is labelled estimate and retains next-update obligation. Meanings stay separate: estimated_date, confirmed_commitment, allocated, dispatched, delivered. Nothing is sent."
+      ]
+    },
+    "CONNECT-07": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/connect_07_tender_investigation.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/tender_investigation.js isNonActionable (expired/cancelled treated as actionable) -> CONNECT-07 E1 fails; restored -> passes",
+        "mutation src/data/tender_investigation.js awardFinancialEffects (auto-creates billing/GP/won quotation from award) -> CONNECT-07 E2 fails; restored -> passes",
+        "Synthetic tender-feed shaped fixtures only. Live tender_data.json not written. Expired/cancelled notices are not current actionable deadlines. Awards do not auto-create billing, gross profit or a won parts quotation. Notice value is never Isuzu parts revenue."
       ]
     }
   },
