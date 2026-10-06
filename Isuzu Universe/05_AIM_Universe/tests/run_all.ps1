@@ -364,6 +364,22 @@ if ($connect04 -match "fail\s+0" -and $connect04 -match "pass\s+2") {
 
 
 
+# RUN-01 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "RUN-01 - shared local case backend"
+$run01 = & node --test (Join-Path $PSScriptRoot "run_01_shared_backend.test.mjs") 2>&1 | Out-String
+Write-Host $run01
+if ($run01 -match "fail\s+0" -and $run01 -match "pass\s+2") {
+    Write-Host "RUN-01 2/0/2"
+} else {
+    Write-Host "RUN-01 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
+
+
+
+
 # SAFE-05 independent verification (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "SAFE-05 - test actual exported bytes and download paths"
