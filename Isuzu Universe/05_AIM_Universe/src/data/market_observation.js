@@ -1,0 +1,285 @@
+/* ===========================================================================
+   MARKET evidence record (MARKET-01 and later MARKET-02..06 helpers).
+
+   WHY THIS FILE EXISTS
+     Competitor quotes arrive as loose rows. Before any panel compares them, each
+     row must become a dated evidence record that keeps source, date, references,
+     seller, market, currency, tax, pack, channel and availability meaning as
+     separate fields. Missing values stay missing. Nothing here scrapes, invents
+     a competitor price, or fills MARKET-DATA-GAP.
+
+   WHAT IT DOES NOT DO
+     It does not draw a screen. It does not certify a price action. It does not
+     borrow a previous row's currency or reference when the current row is blank.
+   =========================================================================== */
+(function (root) {
+  'use strict';
+
+  var RECORD_FIELDS = [
+    'observation_id',
+    'source',
+    'observed_date',
+    'original_reference',
+    'alternative_reference',
+    'seller',
+    'market',
+    'currency',
+    'tax',
+    'pack',
+    'channel',
+    'availability_meaning',
+    'role',
+    'level',
+    'part_number',
+    'case_id',
+    'amount',
+    'amount_scope',
+    'unit',
+    'vat_rate',
+    'vat_rate_unit',
+    'delivery_included',
+    'delivery_cost_eur',
+    'fx_to_eur',
+    'fx_date',
+    'match',
+    'equivalence',
+    'supersedes',
+    'saved_comparison_id'
+  ];
+
+  function isBlank(v) {
+    return v === undefined || v === null || (typeof v === 'string' && String(v).trim() === '');
+  }
+
+  function name(v) {
+    if (isBlank(v)) return null;
+    return String(v).trim();
+  }
+
+  function toNumberOrNull(v) {
+    if (v === undefined || v === null || v === '') return null;
+    var n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function copyPack(pack) {
+    if (pack === undefined || pack === null) return null;
+    if (typeof pack !== 'object') return pack;
+    try { return JSON.parse(JSON.stringify(pack)); }
+    catch (e) { return null; }
+  }
+
+  function copyMatch(match) {
+    if (match === undefined || match === null) return null;
+    if (typeof match !== 'object') return null;
+    try { return JSON.parse(JSON.stringify(match)); }
+    catch (e) { return null; }
+  }
+
+  /* Read one field from THIS input only. Aliases never look at another row. */
+  function fromInput(input, primary, aliases) {
+    if (!input || typeof input !== 'object') return null;
+    if (Object.prototype.hasOwnProperty.call(input, primary) && !isBlank(input[primary])) {
+      return input[primary];
+    }
+    var list = aliases || [];
+    for (var i = 0; i < list.length; i++) {
+      var key = list[i];
+      if (Object.prototype.hasOwnProperty.call(input, key) && !isBlank(input[key])) {
+        return input[key];
+      }
+    }
+    if (Object.prototype.hasOwnProperty.call(input, primary)) return null;
+    return null;
+  }
+
+  function unknownFieldsOf(record) {
+    var out = [];
+    [
+      'source', 'observed_date', 'original_reference', 'alternative_reference',
+      'seller', 'market', 'currency', 'tax', 'pack', 'channel', 'availability_meaning'
+    ].forEach(function (k) {
+      if (record[k] === null || record[k] === undefined) out.push(k);
+    });
+    return out;
+  }
+
+  /**
+   * Build one competitor observation as evidence, not truth.
+   * Every named field is present. Unknowns are null, never borrowed.
+   */
+  function buildRecord(input) {
+    input = input || {};
+
+    var source = name(fromInput(input, 'source', ['source_reference']));
+    var observedDate = name(fromInput(input, 'observed_date', ['retrieved', 'observation_date']));
+    var originalRef = name(fromInput(input, 'original_reference', ['part_number', 'reference']));
+    var altRef = name(fromInput(input, 'alternative_reference', ['alt_reference', 'cross_reference']));
+    var seller = name(fromInput(input, 'seller', []));
+    var market = name(fromInput(input, 'market', []));
+    var currency = name(fromInput(input, 'currency', []));
+    if (currency) currency = currency.toUpperCase();
+    var tax = name(fromInput(input, 'tax', []));
+    var pack = copyPack(fromInput(input, 'pack', []));
+    var channel = name(fromInput(input, 'channel', []));
+    var availability = name(fromInput(input, 'availability_meaning', ['availability']));
+
+    var record = {
+      observation_id: name(fromInput(input, 'observation_id', ['id'])) || null,
+      source: source,
+      observed_date: observedDate,
+      original_reference: originalRef,
+      alternative_reference: altRef,
+      seller: seller,
+      market: market,
+      currency: currency,
+      tax: tax,
+      pack: pack,
+      channel: channel,
+      availability_meaning: availability,
+      role: name(fromInput(input, 'role', [])) || null,
+      level: name(fromInput(input, 'level', ['price_level'])) || null,
+      part_number: name(fromInput(input, 'part_number', [])) || originalRef,
+      case_id: name(fromInput(input, 'case_id', [])) || null,
+      amount: toNumberOrNull(fromInput(input, 'amount', ['price'])),
+      amount_scope: name(fromInput(input, 'amount_scope', [])) || null,
+      unit: name(fromInput(input, 'unit', [])) || null,
+      vat_rate: toNumberOrNull(fromInput(input, 'vat_rate', [])),
+      vat_rate_unit: name(fromInput(input, 'vat_rate_unit', [])) || null,
+      delivery_included: (function () {
+        if (!Object.prototype.hasOwnProperty.call(input, 'delivery_included')) return null;
+        if (input.delivery_included === null) return null;
+        return !!input.delivery_included;
+      })(),
+      delivery_cost_eur: toNumberOrNull(fromInput(input, 'delivery_cost_eur', [])),
+      fx_to_eur: toNumberOrNull(fromInput(input, 'fx_to_eur', [])),
+      fx_date: name(fromInput(input, 'fx_date', [])) || null,
+      match: copyMatch(fromInput(input, 'match', [])),
+      equivalence: copyMatch(fromInput(input, 'equivalence', [])),
+      supersedes: name(fromInput(input, 'supersedes', [])) || null,
+      saved_comparison_id: name(fromInput(input, 'saved_comparison_id', [])) || null,
+      field_state: {},
+      review: null,
+      saved_case: null
+    };
+
+    RECORD_FIELDS.forEach(function (k) {
+      if (!Object.prototype.hasOwnProperty.call(record, k)) record[k] = null;
+    });
+
+    record.unknown_fields = unknownFieldsOf(record);
+    record.field_state = {
+      source_known: record.source !== null,
+      observed_date_known: record.observed_date !== null,
+      currency_known: record.currency !== null,
+      original_reference_known: record.original_reference !== null,
+      channel_known: record.channel !== null,
+      availability_known: record.availability_meaning !== null
+    };
+    record.as_evidence = true;
+    record.as_truth = false;
+    return record;
+  }
+
+  /**
+   * Build many records. Each row is independent: a blank currency or reference
+   * on row N never inherits the value from row N-1.
+   */
+  function buildRecords(inputs) {
+    var list = inputs || [];
+    var out = [];
+    for (var i = 0; i < list.length; i++) {
+      out.push(buildRecord(list[i]));
+    }
+    return out;
+  }
+
+  /**
+   * Carry the same observation through a review step without rewriting source
+   * or observed date.
+   */
+  function retainThroughReview(record, review) {
+    record = record || {};
+    review = review || {};
+    var copy = JSON.parse(JSON.stringify(record));
+    copy.review = {
+      review_id: name(review.review_id) || null,
+      reviewed_at: name(review.reviewed_at) || null,
+      reviewer: name(review.reviewer) || null,
+      note: name(review.note) || null
+    };
+    copy.source = record.source;
+    copy.observed_date = record.observed_date;
+    copy.source_retained = true;
+    copy.observed_date_retained = true;
+    return copy;
+  }
+
+  /**
+   * Attach the observation to a saved case. Source and date stay the ones that
+   * were observed; the case link is additive.
+   */
+  function attachToSavedCase(record, savedCase) {
+    record = record || {};
+    savedCase = savedCase || {};
+    var copy = JSON.parse(JSON.stringify(record));
+    copy.saved_case = {
+      case_id: name(savedCase.case_id) || null,
+      saved_at: name(savedCase.saved_at) || null,
+      revision: toNumberOrNull(savedCase.revision)
+    };
+    if (copy.saved_case.case_id && !copy.case_id) copy.case_id = copy.saved_case.case_id;
+    copy.source = record.source;
+    copy.observed_date = record.observed_date;
+    copy.source_retained = true;
+    copy.observed_date_retained = true;
+    return copy;
+  }
+
+  /** Map a record onto the offer shape that comparable.panel already accepts. */
+  function toPanelOffer(record) {
+    record = record || {};
+    return {
+      observation_id: record.observation_id,
+      role: record.role,
+      level: record.level,
+      seller: record.seller,
+      market: record.market,
+      retrieved: record.observed_date,
+      source_reference: record.source,
+      part_number: record.part_number || record.original_reference,
+      case_id: record.case_id,
+      amount: record.amount,
+      amount_scope: record.amount_scope,
+      currency: record.currency,
+      unit: record.unit,
+      pack: record.pack,
+      tax: record.tax,
+      vat_rate: record.vat_rate,
+      vat_rate_unit: record.vat_rate_unit,
+      delivery_included: record.delivery_included,
+      delivery_cost_eur: record.delivery_cost_eur,
+      fx_to_eur: record.fx_to_eur,
+      fx_date: record.fx_date,
+      match: record.match,
+      equivalence: record.equivalence,
+      supersedes: record.supersedes,
+      saved_comparison_id: record.saved_comparison_id,
+      channel: record.channel,
+      availability_meaning: record.availability_meaning,
+      alternative_reference: record.alternative_reference
+    };
+  }
+
+  var API = {
+    RECORD_FIELDS: RECORD_FIELDS,
+    buildRecord: buildRecord,
+    buildRecords: buildRecords,
+    retainThroughReview: retainThroughReview,
+    attachToSavedCase: attachToSavedCase,
+    toPanelOffer: toPanelOffer
+  };
+
+  root.AIMMarketObservation = API;
+  if (typeof module === 'object' && module.exports) module.exports = API;
+})(typeof globalThis !== 'undefined' ? globalThis : this);

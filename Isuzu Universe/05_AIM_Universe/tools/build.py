@@ -61,6 +61,7 @@ MODULES = [
     ("src/engine/engine.js", "calculation (one entry point)"),
     ("src/data/manifest.js", "source manifest"),
     ("src/data/evidence.js", "evidence states"),
+    ("src/data/market_observation.js", "competitor observation evidence record"),
     ("src/data/comparable.js", "comparable-price panel (computes, renders nothing)"),
     ("src/data/ids_evidence.js", "IDS evidence through validated identities"),
     ("src/data/candidates.js", "candidate workbench"),
