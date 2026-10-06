@@ -348,6 +348,20 @@ if ($connect03 -match "fail\s+0" -and $connect03 -match "pass\s+2") {
 }
 
 
+# CONNECT-04 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "CONNECT-04 - service-demand and shared-applicability boundaries"
+$connect04 = & node --test (Join-Path $PSScriptRoot "connect_04_service_demand_bounds.test.mjs") 2>&1 | Out-String
+Write-Host $connect04
+if ($connect04 -match "fail\s+0" -and $connect04 -match "pass\s+2") {
+    Write-Host "CONNECT-04 2/0/2"
+} else {
+    Write-Host "CONNECT-04 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
+
+
 
 
 # SAFE-05 independent verification (node). Existing accept rows are untouched below.
