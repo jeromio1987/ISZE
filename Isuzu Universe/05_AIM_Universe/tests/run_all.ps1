@@ -202,6 +202,18 @@ if ($market07 -match "fail\s+0" -and $market07 -match "pass\s+2") {
     $global:REVIEW_UNIT_FAIL = $true
 }
 
+# MARKET-08 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "MARKET-08 - ask only for the missing comparison evidence"
+$market08 = & node --test (Join-Path $PSScriptRoot "market_08_request.test.mjs") 2>&1 | Out-String
+Write-Host $market08
+if ($market08 -match "fail\s+0" -and $market08 -match "pass\s+2") {
+    Write-Host "MARKET-08 2/0/2"
+} else {
+    Write-Host "MARKET-08 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
 & $impl @PSBoundParameters
 if ($global:REVIEW_UNIT_FAIL) { exit 1 }
 exit $LASTEXITCODE
