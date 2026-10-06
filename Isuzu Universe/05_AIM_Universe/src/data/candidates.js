@@ -675,6 +675,27 @@
     };
   }
 
+  /* A period the reviewer typed. It is never written back onto the candidate
+     row and never treated as source data. */
+  function reviewerStatedBasis(period) {
+    var text = (period === null || period === undefined) ? '' : String(period).trim();
+    if (!text) {
+      return {
+        declared: false, period: null, period_state: 'undeclared',
+        fields: [], values: [], row_count: 0,
+        screen_period_count: 0, screen_period_note: null,
+        statement: 'No evidence period was stated by the reviewer.'
+      };
+    }
+    return {
+      declared: true, period: text, period_state: 'stated by reviewer',
+      fields: [], values: [text], row_count: 0,
+      screen_period_count: 0, screen_period_note: null,
+      statement: 'The evidence period was stated by the reviewer. It is not carried as '
+        + 'source data on the candidate row.'
+    };
+  }
+
   function promoteToCase(row, payload, opts) {
     opts = opts || {};
     var check = promotionBlockers(row, payload, opts);
@@ -728,6 +749,7 @@
     workbench: workbench,
     makeDataset: makeDataset,
     promotionBlockers: promotionBlockers,
+    reviewerStatedBasis: reviewerStatedBasis,
     promoteToCase: promoteToCase,
     numericSort: numericSort,
     evidenceInventory: evidence ? evidence.inventory : null

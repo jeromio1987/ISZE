@@ -27,7 +27,7 @@ const ordered=['IMOTORS-CABIN','ITUK-TURBO','ITUK-PADS','ITUK-DISCS','IMOTORS-OI
 let state={unsavedReview:{},caseId:'IMOTORS-CABIN',compare:'half',view:'objectives',objective:'revenue',market:'all',billingMetric:'billingEUR',
            candidateQuery:'',candidatePage:1,candidatePageSize:50,candidateCriteria:{},
            candidateSortKey:'observed_billing_eur',candidateSortDirection:'desc',
-           partRoute:null,offerDate:null,viewError:null,dealer:null};
+           partRoute:null,candidateDraft:null,offerDate:null,viewError:null,dealer:null};
 
 /* ---------------------------------------------------------------- helpers */
 function current(){return D.cases.find(c=>c.id===state.caseId)||D.cases[0];}
@@ -1110,7 +1110,7 @@ function candidatesView(){
       <td class="n">${r.verified_cost_eur_oct26===null?'<span class="danger-line">not held</span>':eur(r.verified_cost_eur_oct26,4)}</td>
       <td class="small">${esc(r.selection_reasons)}</td><td class="small">${esc(r.unresolved_inputs||'-')}</td>
       <td class="small">${esc(r.competitor_evidence)}</td>
-      <td><button class="linkbutton" data-open-part="${esc(r.part_number)}">Review ${esc(r.part_number)}</button></td></tr>`).join(''):'<tr><td colspan="12">No row matches the current search and filters. Clear the search or widen a filter; this is not an empty source.</td></tr>'}
+      <td><button class="linkbutton" data-open-part="${esc(r.part_number)}" data-open-distributor="${esc(r.distributor)}">Review ${esc(r.part_number)}</button></td></tr>`).join(''):'<tr><td colspan="12">No row matches the current search and filters. Clear the search or widen a filter; this is not an empty source.</td></tr>'}
     </tbody></table></div>
     <div class="pager">
       <button class="button" id="c-first" data-page="1" ${pg.page<=1?'disabled':''}>First</button>
@@ -1125,6 +1125,23 @@ function candidatesView(){
     <p class="small">Excluded from the measure: ${(D.meta.confirmedRules.excludedFromMeasure||[]).join(', ')}. ${esc(D.meta.confirmedRules.doubleDeduction)}.</p>
     <p class="small">${esc(D.meta.confirmedRules.classMarginWarning)}</p>
     <p class="small">Minimum gross margin: <b>${esc(D.meta.confirmedRules.minMarginStatus)}</b>. Acceptable profit sacrifice: <b>${esc(D.meta.confirmedRules.maxProfitSacrificeStatus)}</b>. ${esc(D.meta.confirmedRules.effectOfAbsence)}</p></div>`;
+}
+
+
+/* REVIEW-08. A worked case matches a candidate row only when the distributor /
+   customer agrees. Sharing a part number alone must never open another account's
+   case or borrow its cost, fleet, application or competitors. */
+function caseMatchesCandidateRow(c, distributor){
+  if(!c)return false;
+  if(!distributor)return true;
+  const d=String(distributor);
+  return c.customer===d || c.market===d || (c.entity_label&&c.entity_label===d)
+    || (c.country&&c.country===d);
+}
+function candidateRowsForRoute(route){
+  if(!route||!route.partNumber)return [];
+  return (D.candidateScreen||[]).filter(r=>r.part_number===route.partNumber
+    && (!route.distributor || r.distributor===route.distributor));
 }
 
 /* F10 / UX-05. The route from a candidate row to that exact part.
@@ -1142,22 +1159,57 @@ function caseView(){
       required:'a part number selected from the candidate workbench',
       scope:'selected part review'});
   }
-  const rows=C.search(D.candidateScreen||[],route.partNumber).filter(r=>r.part_number===route.partNumber);
-  const worked=(D.cases||[]).find(x=>x.pn===route.partNumber);
+  const rows=candidateRowsForRoute(route);
+  const worked=(D.cases||[]).find(x=>x.pn===route.partNumber && caseMatchesCandidateRow(x,route.distributor));
   const accounts={};rows.forEach(r=>{accounts[r.distributor]=(accounts[r.distributor]||0)+1;});
   const billing=rows.reduce((s,r)=>s+(Number.isFinite(Number(r.observed_billing_eur))?Number(r.observed_billing_eur):0),0);
   const withoutBilling=rows.filter(r=>!Number.isFinite(Number(r.observed_billing_eur))).length;
-  const blockers=(typeof C.promotionBlockers==='function')?C.promotionBlockers(rows[0]||{}):null;
+  const row0=rows[0]||{};
+  const periodOpts=state.candidateDraft && state.candidateDraft.part_number===route.partNumber
+    && (!route.distributor || state.candidateDraft.customer===route.distributor)
+    ? {basis:C.reviewerStatedBasis?C.reviewerStatedBasis(state.candidateDraft.evidence_period):null}
+    : {};
+  const promotion=(typeof C.promotionBlockers==='function')
+    ? C.promotionBlockers(row0,D,periodOpts.basis?periodOpts:{}):null;
+  const blockers=(promotion&&Array.isArray(promotion.blockers))?promotion.blockers:[];
+  const structuralBlockers=blockers.filter(b=>b.code!=='PERIOD_UNDECLARED');
+  const incomplete=structuralBlockers.length>0;
+  const draft=state.candidateDraft && state.candidateDraft.part_number===route.partNumber
+    && (!route.distributor || state.candidateDraft.customer===route.distributor)
+    ? state.candidateDraft : null;
+  const statedPeriod=draft?draft.evidence_period:null;
+  const narrowerNote=incomplete
+    ? `<div class="panel warn"><h3>Narrower review — incomplete candidate</h3>
+       <p class="small">This review shows only what this screened row carries. It does not borrow cost, fleet, application or competitor figures from any of the five worked cases.</p>
+       <div class="ruleline"><b>What is missing before a draft case can be opened</b>${structuralBlockers.map(b=>`<div class="evidence-line"><span>${esc(b.code||'Required')}</span><b class="small">${esc(b.text||'')}</b></div>`).join('')}</div></div>`
+    : '';
+  const promotePanel=(!worked && !incomplete)?`<div class="panel ${draft?'good':'callout'}">
+    <div class="eyebrow">Draft case from this candidate</div>
+    <h3>${draft?'Linked draft case':'Open a draft case'}</h3>
+    <p class="small">The candidate row carries no reporting period. If you open a draft, the evidence period is stated by you and labelled <b>stated by reviewer</b>. It is never written back as source data on the candidate row.</p>
+    ${draft?`<div class="evidence-line"><span>Draft case</span><b>${esc(draft.case_id)}</b></div>
+      <div class="evidence-line"><span>Evidence period</span><b>${esc(draft.evidence_period||'not stated')}</b></div>
+      <div class="evidence-line"><span>Period basis</span><b>stated by reviewer</b></div>
+      <p class="small">${esc(draft.statement||'')}</p>`
+     :`<div class="field"><label for="cand-evidence-period">Evidence period (stated by reviewer)</label>
+        <input id="cand-evidence-period" value="" placeholder="e.g. H1 2026">
+        <small>Required. Labelled stated by reviewer — not source data.</small></div>
+        <button class="button primary" data-promote-candidate="1">Open draft case</button>`}
+    ${promotion&&promotion.statement?`<p class="small">${esc(promotion.statement)}</p>`:''}
+  </div>`:'';
   return `<div class="panel callout"><div class="eyebrow">Selected part review</div>
-  <h3>${esc(route.partNumber)} &mdash; ${esc(rows.length?(rows[0].description||'description not held'):'description not held')}</h3>
+  <h3>${esc(route.partNumber)} &mdash; ${esc(rows.length?(row0.description||'description not held'):'description not held')}</h3>
   <div class="evidence-line"><span>Exact original part reference</span><b class="pn">${esc(route.partNumber)}</b></div>
+  ${route.distributor?`<div class="evidence-line"><span>Distributor on the screened row</span><b>${esc(route.distributor)}</b></div>`:''}
   <div class="evidence-line"><span>Screened rows covering it</span><b>${num(rows.length,0)}</b></div>
-  <div class="evidence-line"><span>Accounts it was billed to</span><b class="small">${esc(Object.keys(accounts).map(k=>k+' ('+accounts[k]+' row(s))').join(', '))}</b></div>
+  <div class="evidence-line"><span>Accounts it was billed to</span><b class="small">${esc(Object.keys(accounts).map(k=>k+' ('+accounts[k]+' row(s))').join(', ')||'none')}</b></div>
   <div class="evidence-line"><span>Recorded billing across those rows</span><b>${eur(billing)}</b></div>
-  ${withoutBilling?`<p class="small">${withoutBilling} of these rows carry no billing value. They are excluded from that total rather than counted as zero.</p>`:''}</div>
+  ${withoutBilling?`<p class="small">${withoutBilling} of these rows carry no billing value. They are excluded from that total rather than counted as zero.</p>`:''}
+  ${statedPeriod?`<div class="evidence-line"><span>Evidence period</span><b>${esc(statedPeriod)}</b></div>
+    <div class="evidence-line"><span>Period basis</span><b>stated by reviewer</b></div>`:''}</div>
   ${unavailableBlock({title:'Comparison period is unavailable',reason:'unavailable: the candidate records carry no period. No half-year or calendar comparison is inferred from similar-looking values.',required:'a reviewer-stated evidence period, labelled as stated by the reviewer, before a comparison can be shown',scope:'candidate part review'})}
   ${worked?`<div class="panel good"><h3>This part is one of the worked cases</h3><p class="small">Open case ${esc(worked.id)} to test price and gross profit against its recorded evidence. The case carries the same exact part reference ${esc(worked.pn)}.</p><button class="button primary" data-open-case="${esc(worked.id)}">Open case ${esc(worked.id)}</button></div>`
-   :`<div class="panel warn"><h3>No case record exists for this exact part yet</h3><p class="small">A screened row is a candidate for review. It is not a case, and nothing on this screen creates one. The row carries recorded billing and a list value and, where held, a parts purchase cost.</p>${blockers&&blockers.length?`<div class="ruleline"><b>What would have to exist before this could become a case</b>${blockers.map(b=>`<div class="evidence-line"><span>${esc(b.code||'Required')}</span><b class="small">${esc(b.text||'')}</b></div>`).join('')}</div>`:'<p class="small">The row does not state the current customer net price, the applicable cost basis and effective date, or a stated alternative to test. None of those three is inferred from the screened row, because the row shows what was billed, not what was offered.</p>'}</div>`}
+   :`<div class="panel warn"><h3>No case record exists for this exact part yet</h3><p class="small">A screened row is a candidate for review. It is not a case, and nothing on this screen creates one silently. The row carries recorded billing and a list value and, where held, a parts purchase cost.</p></div>${narrowerNote}${promotePanel}`}
   <div class="panel"><h3>The screened rows for this exact part</h3>
   <div class="tablewrap" tabindex="0" aria-label="Scrollable table"><table><thead><tr><th>Account</th><th class="n">Billed qty</th><th class="n">Observed billing</th><th class="n">Observed unit price</th><th class="n">List</th><th class="n">Parts purchase cost</th><th>Selection reason</th><th>Unresolved</th></tr></thead><tbody>
   ${rows.slice(0,50).map(r=>`<tr><td>${esc(r.distributor)}</td><td class="n">${num(r.billed_qty,0)}</td><td class="n">${eur(r.observed_billing_eur)}</td><td class="n">${r.observed_unit_price===null?'-':eur(r.observed_unit_price,2)}</td><td class="n">${r.list_eur===null?'-':eur(r.list_eur,2)}</td><td class="n">${r.verified_cost_eur_oct26===null?'<span class="danger-line">not held</span>':eur(r.verified_cost_eur_oct26,4)}</td><td class="small">${esc(r.selection_reasons)}</td><td class="small">${esc(r.unresolved_inputs||'-')}</td></tr>`).join('')}
@@ -1532,11 +1584,26 @@ function bind(){
      case opens its own review rather than borrowing a case's numbers. */
   $$('[data-open-part]').forEach(el=>el.addEventListener('click',()=>{
     const pn=el.dataset.openPart;
-    const worked=(D.cases||[]).find(x=>x.pn===pn);
-    if(worked){route({caseId:worked.id,view:'decision',partRoute:null});return;}
-    const found=C.search(D.candidateScreen||[],pn).filter(r=>r.part_number===pn);
-    if(!found.length){toast('No screened row carries part number '+pn+'.');return;}
-    route({partRoute:{partNumber:pn},view:'case'});}));
+    const dist=el.dataset.openDistributor||null;
+    const worked=(D.cases||[]).find(x=>x.pn===pn && caseMatchesCandidateRow(x,dist));
+    if(worked){route({caseId:worked.id,view:'decision',partRoute:null,candidateDraft:null});return;}
+    const found=(D.candidateScreen||[]).filter(r=>r.part_number===pn && (!dist || r.distributor===dist));
+    if(!found.length){toast('No screened row carries part number '+pn+(dist?' for '+dist:'')+'.');return;}
+    route({partRoute:{partNumber:pn,distributor:dist||found[0].distributor},view:'case'});}));
+  $$('[data-promote-candidate]').forEach(el=>el.addEventListener('click',()=>{
+    const input=$('#cand-evidence-period');
+    const period=input?String(input.value||'').trim():'';
+    const route=state.partRoute;
+    if(!route){toast('No candidate is selected.');return;}
+    const res=promoteCandidateToCase({
+      distributor:route.distributor,
+      part_number:route.partNumber,
+      evidence_period:period
+    });
+    if(!res.ok){toast(res.error||res.statement||'Draft case was not opened.');return;}
+    toast('Draft case '+res.case_id+' opened.');
+    render();
+  }));
   $$('[data-open-case]').forEach(el=>el.addEventListener('click',()=>{
     route({caseId:el.dataset.openCase,view:'decision',partRoute:null});}));
   if(state.view==='action'){
@@ -1557,6 +1624,102 @@ function bind(){
   }
   const ex=$('#export-review');
   if(ex)ex.addEventListener('click',exportReview);
+}
+
+
+/* REVIEW-08. Open the candidate review for one distributor × part row. */
+function openCandidateRow(distributor, partNumber){
+  const dist=distributor==null||distributor===''?null:String(distributor);
+  const pn=String(partNumber||'');
+  if(!pn)return {ok:false,error:'A part number is required.'};
+  const found=(D.candidateScreen||[]).filter(r=>r.part_number===pn && (!dist || r.distributor===dist));
+  if(!found.length){
+    return {ok:false,error:'No screened record carries part number '+pn+(dist?' for '+dist:'.')};
+  }
+  const worked=(D.cases||[]).find(x=>x.pn===pn && caseMatchesCandidateRow(x,dist||found[0].distributor));
+  if(worked){
+    route({caseId:worked.id,view:'decision',partRoute:null,candidateDraft:null});
+    return {ok:true,view:'decision',case_id:worked.id,distributor:dist||found[0].distributor,part_number:pn};
+  }
+  const useDist=dist|| (found.length===1?found[0].distributor:null);
+  route({partRoute:{partNumber:pn,distributor:useDist},view:'case',candidateDraft:null});
+  return {ok:true,view:'case',part_number:pn,distributor:useDist,rows:found.length};
+}
+
+/* REVIEW-08. Promote a supported candidate into a linked draft case. The
+   evidence period is stated by the reviewer and labelled as such. */
+function promoteCandidateToCase(opts){
+  opts=opts||{};
+  const dist=opts.distributor==null||opts.distributor===''?null:String(opts.distributor);
+  const pn=String(opts.part_number||'');
+  const period=opts.evidence_period==null?'':String(opts.evidence_period).trim();
+  if(!pn)return {ok:false,created:false,error:'A part number is required.'};
+  const rows=(D.candidateScreen||[]).filter(r=>r.part_number===pn && (!dist || r.distributor===dist));
+  if(!rows.length)return {ok:false,created:false,error:'No screened row matches that distributor and part.'};
+  const row=rows[0];
+  if(typeof C.promoteToCase!=='function' || typeof C.reviewerStatedBasis!=='function'){
+    return {ok:false,created:false,error:'Candidate promotion is not available in this build.'};
+  }
+  const basis=C.reviewerStatedBasis(period);
+  const promoted=C.promoteToCase(row,D,{
+    basis:basis,
+    case_id:opts.case_id||('CAND-'+row.distributor+'-'+row.part_number)
+  });
+  if(!promoted.ok || !promoted.created){
+    return {
+      ok:false, created:false,
+      blockers:promoted.blockers||[],
+      statement:promoted.statement||'Not promotable.',
+      error:promoted.statement||'Not promotable.'
+    };
+  }
+  const draft=promoted.case;
+  /* Force the reviewer label even if an older caller passed a different state. */
+  draft.evidence_period_state='stated by reviewer';
+  const saved=repo.save(draft.case_id,{
+      customer:draft.customer,
+      market:draft.entity && draft.entity.market || null,
+      part_number:draft.part_number,
+      description:(draft.source_row&&draft.source_row.description)||row.description||null,
+      evidence_period:draft.evidence_period,
+      review:{note:'Draft opened from candidate row. Evidence period stated by reviewer.'}
+    },{
+      expected_version:0,
+      customer:draft.customer,
+      part_number:draft.part_number,
+      evidence_period:draft.evidence_period,
+      recorded_by:'reviewer',
+      note:'REVIEW-08 draft from candidate'
+    });
+  if(!saved.ok){
+    return {ok:false,created:false,error:saved.error||'Draft case could not be stored.',statement:saved.error};
+  }
+  state.candidateDraft={
+    case_id:draft.case_id,
+    customer:draft.customer,
+    part_number:draft.part_number,
+    evidence_period:draft.evidence_period,
+    evidence_period_state:'stated by reviewer',
+    evidence_period_label:'stated by reviewer',
+    statement:promoted.statement,
+    linked:true
+  };
+  if(state.partRoute){
+    state.partRoute={partNumber:pn,distributor:dist||row.distributor};
+  } else {
+    state.partRoute={partNumber:pn,distributor:dist||row.distributor};
+  }
+  state.view='case';
+  render();
+  return {
+    ok:true, created:true,
+    case_id:draft.case_id,
+    evidence_period:draft.evidence_period,
+    evidence_period_state:'stated by reviewer',
+    evidence_period_label:'stated by reviewer',
+    statement:promoted.statement,
+    case:draft
+  };
 }
 
 /* ------------------------------------------------------------------ routes */
@@ -1622,15 +1785,22 @@ window.AIMPricing={data:D,engine:E,export:X,candidates:C,cases:repo,contracts:CT
   /* The QA sweep and the ux_flow checks drive the shipped layer through these.
      openPart is the one candidate-route entry point the retired shell had; it is
      ported rather than re-implemented beside the click handler. */
-  openPart:(partNumber)=>{
+  openPart:(partNumber,distributor)=>{
+    if(distributor)return openCandidateRow(distributor,partNumber);
     const worked=(D.cases||[]).find(x=>x.pn===partNumber);
-    if(worked){route({caseId:worked.id,view:'decision',partRoute:null});
+    if(worked){route({caseId:worked.id,view:'decision',partRoute:null,candidateDraft:null});
       return {ok:true,view:'decision',case_id:worked.id};}
     const found=C.search(D.candidateScreen||[],partNumber).filter(r=>r.part_number===partNumber);
     if(!found.length)return {ok:false,error:'No screened record carries part number '+partNumber+'.'};
-    route({partRoute:{partNumber},view:'case'});
-    return {ok:true,view:'case',part_number:partNumber,rows:found.length};
+    /* Several distributors can share a part number. Without a distributor, open
+       the candidate review rather than stealing the first worked case match. */
+    const onlyDist=[...new Set(found.map(r=>r.distributor))];
+    route({partRoute:{partNumber,distributor:onlyDist.length===1?onlyDist[0]:null},view:'case'});
+    return {ok:true,view:'case',part_number:partNumber,distributor:onlyDist.length===1?onlyDist[0]:null,rows:found.length};
   },
+  openCandidateRow,
+  promoteCandidateToCase,
+
   openCase:caseId=>route({caseId,view:'decision',partRoute:null}),
   go:patch=>route(patch),
   /* The candidate screen's search is state, not an action, and the QA probe has
