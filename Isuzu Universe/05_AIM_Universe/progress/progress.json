@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T17:39:10Z",
+  "written_at": "2026-10-06T17:41:35Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 62,
-    "not started": 34
+    "technically verified": 63,
+    "not started": 33
   },
   "total_tasks": 96,
-  "overlay_applied": 62,
+  "overlay_applied": 63,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1327,8 +1327,13 @@
       "existing_finding": "F08",
       "can_start_after": "BASE-03",
       "integrate_after": "SAFE-04",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/safe_05_independent.test.mjs -> 2 pass, 0 fail (SAFE-05 E1, E2). Same call chain as UI download (memberBrief/internalRecord + toBytes), bytes written to disk then re-read. Synthetic PRIVATE_MARKER_U16 only; no restricted payload figures.",
+        "mutation src/data/export.js checkAttachmentName forced clear -> SAFE-05 E1 fails (rc 1); restored -> passes.",
+        "mutation src/data/export.js memberBrief contract_version forced null -> SAFE-05 E2 fails (rc 1); restored -> passes.",
+        "tests/run_all.ps1 prints SAFE-05-INDEPENDENT 2/0/2. F08 remains an open infrastructure finding (no approved identity provider)."
+      ],
       "blockers": []
     },
     {
