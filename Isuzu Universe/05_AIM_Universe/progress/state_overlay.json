@@ -1,7 +1,7 @@
 {
   "_note": "Evidence-backed state for the tasks that have landed. Merged by tools/build_progress.py. A state here must name the command that showed it. The integration owner writes this file; workers do not.",
-  "_written_by": "cursor-u22-safe-02",
-  "_written_at": "2026-10-06T19:41:30Z",
+  "_written_by": "cursor-u22-safe-06",
+  "_written_at": "2026-10-06T19:43:16Z",
   "_authority": "A state of technically verified means a named command was run and its output read. It does not mean human accepted, and it confers no business, technical, privacy or spending authority.",
   "_acceptance_run": {
     "command": "powershell -ExecutionPolicy Bypass -File tests/run_all.ps1",
@@ -631,6 +631,15 @@
         "mutation src/case/server/permissions.js authorizeCaseQuery (tenant filter disabled) -> SAFE-02 E1 fails; restored -> passes",
         "mutation src/case/server/permissions.js authorizeCaseRead (cross-tenant deny disabled) -> SAFE-02 E2 fails; restored -> passes",
         "Server HTTP /cases and /cases/:id require validated identity claims. Client distributor/account/case query fields cannot return another organisation records or counts. Direct permission helpers tested without UI. Local disposable backend keeps development fallback so RUN-01 stays green."
+      ]
+    },
+    "SAFE-06": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/safe_06_attachments.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/attachments.js fetch (unauthorised link allowed) -> SAFE-06 E1 fails; restored -> passes",
+        "mutation src/data/attachments.js fetch (quarantine gate disabled) -> SAFE-06 E2 fails; restored -> passes",
+        "Synthetic attachment store only. Path traversal and executables refused. Unscanned files quarantined and unavailable. Fetch requires case authorisation; guessed id cannot reuse another case. Refused upload does not erase the case. Original not auto-forwarded on short response."
       ]
     }
   },
