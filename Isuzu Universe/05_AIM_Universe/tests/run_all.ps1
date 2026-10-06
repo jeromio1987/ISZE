@@ -475,6 +475,18 @@ if ($run03 -match "fail\s+0" -and $run03 -match "pass\s+2") {
     Write-Host "RUN-03 FAILED"
     $global:REVIEW_UNIT_FAIL = $true
 }
+
+# RUN-04 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "RUN-04 - separate configuration, secrets and restricted working files"
+$run04 = & node --test (Join-Path $PSScriptRoot "run_04_config_secrets.test.mjs") 2>&1 | Out-String
+Write-Host $run04
+if ($run04 -match "fail\s+0" -and $run04 -match "pass\s+2") {
+    Write-Host "RUN-04 2/0/2"
+} else {
+    Write-Host "RUN-04 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
 # SAFE-08 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "SAFE-08 - independent access and untrusted-content tests"

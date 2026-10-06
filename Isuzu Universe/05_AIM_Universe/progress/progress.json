@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T20:04:21Z",
+  "written_at": "2026-10-06T20:05:03Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 84,
-    "not started": 12
+    "technically verified": 85,
+    "not started": 11
   },
   "total_tasks": 96,
-  "overlay_applied": 84,
+  "overlay_applied": 85,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1530,8 +1530,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "RUN-01, BASE-02",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/run_04_config_secrets.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/config_secrets.js scanPackage (always clean) -> RUN-04 E1 fails; restored -> passes",
+        "mutation src/data/config_secrets.js startExternalService (missing config starts live with permissive defaults) -> RUN-04 E2 fails; restored -> passes",
+        "No real secrets created or read. Package and diagnostic log scanners refuse credential-shaped values and private data table markers. Missing identity/storage configuration fail-closes and cannot start a seemingly live external service with permissive defaults. Development mode stays labelled non-live."
+      ],
       "blockers": []
     },
     {
