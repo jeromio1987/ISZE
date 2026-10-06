@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T13:13:30Z",
+  "written_at": "2026-10-06T13:15:49Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 53,
-    "not started": 41,
+    "technically verified": 54,
+    "not started": 40,
     "implemented": 2
   },
   "total_tasks": 96,
-  "overlay_applied": 55,
+  "overlay_applied": 56,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1052,8 +1052,14 @@
       "existing_finding": "F07",
       "can_start_after": "BASE-03",
       "integrate_after": "FIN-03, FIN-04, FIN-06, RANGE-01",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/range_03_basket.test.mjs -> 3 pass, 0 fail (RANGE-03 E1, E2, E3). tests/run_all.ps1 prints RANGE-03 3/0/3.",
+        "Sufficiency before code: no case holds packEvidence.basket_lines on the real payload (0). Real cases render basket unavailable. Fixture range_03_basket.json covers complete reconcile, missing-cost partial profit, and mixed-currency refusal. No data invented for a green.",
+        "mutation src/data/evidence.js:812 (eligible filter disabled) -> RANGE-03 E1 fails (rc 1); restored -> rc 0.",
+        "mutation src/data/evidence.js:819 (missingCost forced false) -> RANGE-03 E2 fails (rc 1); restored -> rc 0.",
+        "mutation src/data/evidence.js:796 (mixed-currency gate disabled) -> RANGE-03 E3 fails (rc 1); restored -> rc 0."
+      ],
       "blockers": []
     },
     {

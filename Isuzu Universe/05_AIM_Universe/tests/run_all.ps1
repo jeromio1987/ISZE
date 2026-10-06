@@ -102,6 +102,17 @@ if ($review08 -match "fail\s+0" -and $review08 -match "pass\s+2") {
 
 
 
+
+# RANGE-03 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "RANGE-03 - multi-part basket"
+$range03 = Join-Path $Root "tests\range_03_basket.test.mjs"
+if (Test-Path $range03) {
+  & node --test $range03
+  if ($LASTEXITCODE -eq 0) { Write-Host "RANGE-03 3/0/3" } else { Write-Host "RANGE-03 FAILED"; $script:failed += 1 }
+} else {
+  Write-Host "RANGE-03 SKIPPED (test file missing)"
+}
 # RANGE-08 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "RANGE-08 - relationship withdrawal without rewriting history"

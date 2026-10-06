@@ -763,6 +763,87 @@
   }
 
 
+  /* -------------------------------------------------------- RANGE-03 basket -- */
+
+  function rangeBasket(lines) {
+    lines = Array.isArray(lines) ? lines : [];
+    var outLines = [];
+    var currencies = {};
+    lines.forEach(function (raw, i) {
+      raw = raw || {};
+      var qty = toNumberOrNull(raw.quantity);
+      var price = toNumberOrNull(raw.price_eur !== undefined ? raw.price_eur : raw.price);
+      var cost = toNumberOrNull(raw.cost_eur !== undefined ? raw.cost_eur : raw.cost);
+      var eligible = raw.eligible !== false;
+      var currency = isBlank(raw.currency) ? null : String(raw.currency).toUpperCase();
+      var revenue = (qty !== null && price !== null) ? round2(qty * price) : null;
+      var profit = (qty !== null && price !== null && cost !== null) ? round2(qty * (price - cost)) : null;
+      if (eligible && currency) currencies[currency] = 1;
+      outLines.push({
+        line_index: i,
+        original_reference: raw.original_reference || raw.reference || null,
+        quantity: qty,
+        price_eur: price,
+        cost_eur: cost,
+        cost_basis: raw.cost_basis || null,
+        eligible: eligible,
+        currency: currency,
+        revenue_eur: revenue,
+        profit_eur: profit
+      });
+    });
+    var currencyList = Object.keys(currencies).sort();
+    if (currencyList.length > 1) {
+      return {
+        state: 'currency_mixed',
+        profit_state: 'unresolved',
+        currency: null,
+        currencies_seen: currencyList,
+        eligible_line_count: outLines.filter(function (l) { return l.eligible; }).length,
+        excluded_line_count: outLines.filter(function (l) { return !l.eligible; }).length,
+        revenue_eur: null,
+        profit_eur: null,
+        lines: outLines,
+        statement: 'Basket totals are not mixed across currencies. Eligible lines use '
+          + currencyList.join(' and ')
+          + '. Keep each currency in its own basket; line facts above stay.'
+      };
+    }
+    var eligible = outLines.filter(function (l) { return l.eligible; });
+    var revenue = 0;
+    var revenueOk = true;
+    eligible.forEach(function (l) {
+      if (l.revenue_eur === null) revenueOk = false;
+      else revenue += l.revenue_eur;
+    });
+    var missingCost = eligible.some(function (l) { return l.cost_eur === null; });
+    var profit = 0;
+    var profitOk = !missingCost;
+    if (profitOk) {
+      eligible.forEach(function (l) {
+        if (l.profit_eur === null) profitOk = false;
+        else profit += l.profit_eur;
+      });
+    }
+    return {
+      state: missingCost ? 'partial' : 'complete',
+      profit_state: missingCost ? 'partial' : 'complete',
+      currency: currencyList[0] || null,
+      currencies_seen: currencyList,
+      eligible_line_count: eligible.length,
+      excluded_line_count: outLines.length - eligible.length,
+      revenue_eur: revenueOk ? round2(revenue) : null,
+      profit_eur: profitOk ? round2(profit) : null,
+      lines: outLines,
+      statement: missingCost
+        ? ('Basket profit is partial: at least one eligible material line is missing cost. '
+          + 'Known line facts (reference, quantity, price, and any held cost) are preserved. '
+          + 'Ineligible lines are excluded from the basket totals.')
+        : ('Basket revenue and profit reconcile exactly to the eligible line results. '
+          + 'Ineligible lines are excluded. Margin figures stay as margin, not a factor.')
+    };
+  }
+
   /* -------------------------------------------------------- RANGE-08 withdrawal -- */
 
   function withdrawRangeRelationship(ledger, relationshipId, meta) {
@@ -2501,6 +2582,7 @@
     rangeCommercialRole: rangeCommercialRole,
     RANGE_RELATIONSHIP_TYPES: RANGE_RELATIONSHIP_TYPES,
     exactRangeComparison: exactRangeComparison,
+    rangeBasket: rangeBasket,
     withdrawRangeRelationship: withdrawRangeRelationship,
     rangeWithdrawalImpact: rangeWithdrawalImpact,
     canReuseApplicationApproval: canReuseApplicationApproval,
