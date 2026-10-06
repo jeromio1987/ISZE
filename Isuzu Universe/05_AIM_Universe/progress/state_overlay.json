@@ -52,6 +52,14 @@
       "mutation src/ui/app.js:1361 (exportReviewText dumps Object.values(c.comparisons) instead of the selected comparison) -> REVIEW-03 E2 fails; restored -> passes"
     ]
   },
+  "REVIEW-04": {
+    "state": "technically verified",
+    "evidence": [
+      "node --test tests/review_04_contributors.test.mjs -> 2 pass, 0 fail",
+      "mutation src/data/evidence.js:1480 (remainder quantity_delta uses moveQ instead of moveQ-sumQ) -> REVIEW-04 E1 fails; restored -> passes",
+      "mutation src/data/evidence.js:1461 (quantity-only eur_delta defaults to 0 instead of null) -> REVIEW-04 E2 fails; restored -> passes"
+    ]
+  },
     "REVIEW-05": { "state": "implemented", "evidence": ["The 'case' view key was missing from TAB_LABELS so the part-review tab rendered its raw key instead of a label. Now 'Part review', confirmed present in the assembled artifact. Recorded here rather than under a new id: the fix has no task of its own in the plan, and inventing one would inflate the count. (An earlier revision of this overlay used a made-up id 'KX-01' and tools/build_progress.py correctly refused it.)"] },
     "MARKET-07": { "state": "implemented", "evidence": ["src/data/comparable.js is assembled and the price-position view draws it without recomputing anything. On the authorised payload the eligible set is empty on all five cases and renders as an explicit unavailable state naming the reason per row, not a blank panel. ux_market 12/0. NOT verified end to end, because no commercial comparison is possible from the current data."] },
     "MARKET-08": { "state": "implemented", "evidence": ["The panel reads the exclusion codes and requests the smallest missing item as a draft ask, rather than asking for everything."] },

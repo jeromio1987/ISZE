@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T05:29:58Z",
+  "written_at": "2026-10-06T05:43:57Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 45,
-    "not started": 48,
-    "implemented": 3
+    "technically verified": 46,
+    "implemented": 3,
+    "not started": 47
   },
   "total_tasks": 96,
-  "overlay_applied": 48,
+  "overlay_applied": 49,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -545,8 +545,12 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "DATA-07, REVIEW-03",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/review_04_contributors.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/evidence.js:1480 (remainder quantity_delta uses moveQ instead of moveQ-sumQ) -> REVIEW-04 E1 fails; restored -> passes",
+        "mutation src/data/evidence.js:1461 (quantity-only eur_delta defaults to 0 instead of null) -> REVIEW-04 E2 fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
