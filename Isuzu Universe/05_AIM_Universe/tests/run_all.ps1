@@ -451,6 +451,18 @@ if ($run01 -match "fail\s+0" -and $run01 -match "pass\s+2") {
 
 
 
+
+# RUN-02 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "RUN-02 - connect cases and scenarios to the maintained application"
+$run02 = & node --test (Join-Path $PSScriptRoot "run_02_app_connection.test.mjs") 2>&1 | Out-String
+Write-Host $run02
+if ($run02 -match "fail\s+0" -and $run02 -match "pass\s+2") {
+    Write-Host "RUN-02 2/0/2"
+} else {
+    Write-Host "RUN-02 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
 # SAFE-08 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "SAFE-08 - independent access and untrusted-content tests"

@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T19:59:47Z",
+  "written_at": "2026-10-06T20:03:41Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 82,
-    "not started": 14
+    "technically verified": 83,
+    "not started": 13
   },
   "total_tasks": 96,
-  "overlay_applied": 82,
+  "overlay_applied": 83,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1494,8 +1494,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "RUN-01, CASE-01, CASE-07, UX-08, FIN-08",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/run_02_app_connection.test.mjs -> 2 pass, 0 fail",
+        "mutation src/case/app_connection.js saveScenario (engine_version stamped +99) -> RUN-02 E1 fails; restored -> passes",
+        "mutation src/case/app_connection.js acceptConsequentialRecord (client profit tamper check disabled) -> RUN-02 E2 fails; restored -> passes",
+        "Synthetic only. UI bridge uses makeCaseService saveRecord/reopen with loading/error/retry. Canonical snapshot in scenario+result+review.engine_version. Consequential accept recomputes via AIMEngine.calculate; tampered client profit/result is refused."
+      ],
       "blockers": []
     },
     {
