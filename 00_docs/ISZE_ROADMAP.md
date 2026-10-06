@@ -170,6 +170,7 @@ Newest first. One line each; the reasoning is in `DECISIONS.md` under the same d
 
 | Date | Shipped |
 |------|---------|
+| 2026-10-06 | **PriceLedger weekly repaired** — `ISZE_PriceLedger_Weekly` had failed at step 3 of 6 with exit `3221225786` (`0xC000013A`) since 2026-09-28, because the task ran only when the user was logged on, so a terminal window opened and closing it killed the step; it now starts the windowless `04_tools/delegation/run_price_ledger_hidden.pyw` through `pythonw.exe`, step 3 of `04_tools/price_ledger/build_scraped_observations.py` logs progress every 100 pages and the ks page parse in `04_tools/delegation/parsers/site_ks.py` is faster with identical output on all 938 saved pages, and the step 4 input `02_dashboards/Data/01_Pricing/_raw/eucon_crossref_iam_20260329.csv` was restored from `91156f6`. First full pass 2026-10-06, `LastTaskResult = 0`, log ends `EXIT 0 - all six steps completed.` (PR #30, merge `379f08d`) |
 | 2026-08-25 | **P8 Action Ledger** — nine adapters → `action_ledger*.parquet/csv` + ops HTML; `BILLING_HORIZON` now reads `max(sales_fact.billing_date)` |
 | 2026-08-25 | Overnight process audit — verify green 116/0/0, junctions restored, Nordics keys closed as an ask |
 | 2026-08-25 | `sales_fact` extended with `Q1FY2027.XLSX` (Apr–Jun 2026); dealer sell-out CSVs re-emitted for 5 DBs |
