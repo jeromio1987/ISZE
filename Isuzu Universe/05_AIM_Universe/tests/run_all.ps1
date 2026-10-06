@@ -100,6 +100,18 @@ if ($review08 -match "fail\s+0" -and $review08 -match "pass\s+2") {
 }
 
 
+
+# RANGE-02 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "RANGE-02 - exact Genuine/BVP comparison"
+$range02 = Join-Path $Root "tests\range_02_comparison.test.mjs"
+if (Test-Path $range02) {
+  & node --test $range02
+  if ($LASTEXITCODE -eq 0) { Write-Host "RANGE-02 2/0/2" } else { Write-Host "RANGE-02 FAILED"; $script:failed += 1 }
+} else {
+  Write-Host "RANGE-02 SKIPPED (test file missing)"
+}
+
 # RANGE-01 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "RANGE-01 - typed pairing, supersession and fitment"

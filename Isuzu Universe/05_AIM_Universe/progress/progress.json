@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-06T12:29:28Z",
+  "written_at": "2026-10-06T13:08:06Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 51,
-    "not started": 43,
+    "technically verified": 52,
+    "not started": 42,
     "implemented": 2
   },
   "total_tasks": 96,
-  "overlay_applied": 53,
+  "overlay_applied": 54,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1034,8 +1034,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "RANGE-01, UX-01",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/range_02_comparison.test.mjs -> 2 pass, 0 fail (RANGE-02 E1, E2). tests/run_all.ps1 prints RANGE-02 2/0/2.",
+        "Sufficiency: no real case carries parts.genuine and parts.bvp together for an exact approved pair. Fixture range_02_exact_pair.json covers the exact state; real cases render counterpart unresolved. No data invented for a green.",
+        "mutation src/data/evidence.js:761 (exact branch disabled) -> RANGE-02 E1 fails (rc 1); restored -> rc 0.",
+        "mutation src/data/evidence.js:750 (cost shown regardless of audience) -> RANGE-02 E2 fails (rc 1); restored -> rc 0."
+      ],
       "blockers": []
     },
     {

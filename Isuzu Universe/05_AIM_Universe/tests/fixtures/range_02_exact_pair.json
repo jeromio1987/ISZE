@@ -1,0 +1,63 @@
+{
+  "cases": [
+    {
+      "id": "ITUK-PADS",
+      "pn": "000-G-PAIR",
+      "name": "Synthetic Genuine pad",
+      "packEvidence": {
+        "relationships": [
+          {
+            "relationship_record_id": "SYN-REL-PAIR-1",
+            "part_number_a": "000-G-PAIR",
+            "part_number_b": "000-B-PAIR",
+            "relationship_type": "catalogue pairing (Genuine listed beside BVP alternative)",
+            "technical_fitment_approved": "approved",
+            "validation_status": "approved",
+            "source_type": "synthetic catalogue",
+            "source_document": "synthetic",
+            "application_vehicle": "synthetic N75",
+            "application_engine": null,
+            "direction": "Genuine to BVP"
+          }
+        ],
+        "parts": {
+          "aim_l3": "Synthetic pad kit"
+        }
+      },
+      "parts": {
+        "genuine": {
+          "pn": "000-G-PAIR",
+          "reference_price_eur": 100.0,
+          "actual_price_eur": 92.0,
+          "cost_eur": 40.0,
+          "application_status": "approved for synthetic N75"
+        },
+        "bvp": {
+          "pn": "000-B-PAIR",
+          "reference_price_eur": 70.0,
+          "actual_price_eur": 68.0,
+          "cost_eur": 28.0,
+          "application_status": "approved for synthetic N75"
+        }
+      }
+    },
+    {
+      "id": "IMOTORS-CABIN",
+      "pn": "000-G-ONLY",
+      "name": "Synthetic Genuine only",
+      "packEvidence": {
+        "relationships": [],
+        "parts": {}
+      },
+      "parts": {
+        "genuine": {
+          "pn": "000-G-ONLY",
+          "reference_price_eur": 50.0,
+          "actual_price_eur": 48.0,
+          "cost_eur": 20.0,
+          "application_status": "unresolved"
+        }
+      }
+    }
+  ]
+}
