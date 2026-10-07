@@ -53,6 +53,9 @@ reports a real result about code the assembled artifact does not run.
 - `src/ui/views.js` - retired second view layer; every view it held is ported into src/ui/app.js
 - `src/ui/render.js` - retired second shell; the F05 guard and routing live in src/ui/app.js
 - `src/engine/range.js` - range economics prototype never wired into the app; deleted 2026-10-07; **DELETED from the tree, entry kept as a tombstone**
+
+## Audit-only (assembled by no build; used by tools and tests only)
+
 - `src/case/server/migrate.js` - RUN-01 migration runner, used by tools and tests only
 - `src/case/server/sqlite_adapter.js` - RUN-01 SQLite adapter, Node-only
 - `src/case/server/permissions.js` - SAFE-02 request-identity resolver, Node-only
@@ -99,6 +102,10 @@ reports a real result about code the assembled artifact does not run.
     - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
 - `tests/audit_h_named_tasks.test.mjs`
     - shipped: src/case/schema.js, src/case/store.js, src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/ops_measurements.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/behavioural_base_and_case.test.mjs`
+    - shipped: src/case/schema.js, src/case/store.js, src/data/cases.js, src/data/contracts.js, src/ui/app.js
+- `tests/case07_child.cjs`
+    - shipped: src/case/store.js
 - `tests/case_06_explanations.test.mjs`
     - shipped: src/case/schema.js, src/case/store.js
 - `tests/case_08_queue.test.mjs`
@@ -131,6 +138,8 @@ reports a real result about code the assembled artifact does not run.
     - shipped: src/data/tender_investigation.js
 - `tests/connect_08_service_capability.test.mjs`
     - shipped: src/data/service_capability.js
+- `tests/connect_matrix.test.mjs`
+    - shipped: src/data/availability_question.js, src/data/ids_evidence.js, src/data/ids_improvement_action.js, src/data/prism_context.js, src/data/service_capability.js, src/data/service_demand_bounds.js, src/data/stock_snapshot.js, src/data/tender_investigation.js, src/ui/app.js
 - `tests/continuation_finance.test.cjs`
     - shipped: src/engine/engine.js
 - `tests/continuation_positive_control.test.cjs`
@@ -250,10 +259,12 @@ reports a real result about code the assembled artifact does not run.
     - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/evidence.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
 - `tests/ux_reopen.test.mjs`
     - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/ux_screens_browser.test.mjs`
+    - shipped: src/ui/app.js
 
 ## Summary
 
-89 test files load a source module; 12 of them load a retired one.
+93 test files load a source module; 12 of them load a retired one.
 
 ## Read this before acting on the number above
 
