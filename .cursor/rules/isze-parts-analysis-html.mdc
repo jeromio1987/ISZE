@@ -1,0 +1,52 @@
+---
+description: House style for every parts analysis deliverable in ISZE - self-contained dynamic HTML, chart-first, euros first, drill-down.
+alwaysApply: true
+---
+
+# Parts analysis -> dynamic HTML, one house style
+
+Jerome (2026-10-07): *"can you make a memory to do all parts analysis in this style"* - pointing at the
+pricing-revision file he sent Suzuki san. Applies to **every** parts / backlog / GPS / PMS / pricing
+analysis that becomes a deliverable: a distributor view, a family view, a case study, a worklist.
+
+## Form (non-negotiable)
+
+- **One self-contained `.html`.** No CDN, no sibling JSON fetch. Payload inline in
+  `<script type="application/json" id="payload">`. It must paint from `file://` on double-click
+  (`isze-html-openable.mdc`). Chart.js is inlined, never linked.
+- **Sibling `OPEN_*.cmd`** (CRLF) next to it. Do not auto-start it unless he says open now.
+- Kept large files are fine: 6-9 MB is normal and expected. Size is not a reason for a launcher.
+
+## Screens
+
+- **Chart first, not table first.** The point of the page is the chart. Tables only as a short top-N
+  with the line-level detail behind a click.
+- **Picker = the business question:** distributor / market, parts family, SaTy (SOR / VOR / RUSH),
+  period. Never a raw chart-type selector.
+- **Drill down** from every aggregate to the lines behind it.
+- **KPI tiles** carry a hover tooltip with the definition, the window and what is excluded.
+- Chart **titles state the question** ("who is holding the oldest open volume"), never the folder name.
+
+## Numbers
+
+- **Euros first.** A piece count alone is not a finding - pair it with the parts family, the euro at an
+  observed selling price, and the fleet/rate behind it (`isze-gaps-need-context.mdc`,
+  `isze-analytical-conventions.mdc`).
+- **%GM / margin**, never markup factors or class factors (`isze-spoken-labels.mdc`).
+- **Fiscal year** as the default window (FY2026 = 1 Apr 2025 - 31 Mar 2026), same as GPS and Power BI.
+- Name the source file and the as-of date in a footnote, not in the headline.
+- No invented figure. If a number is not observed, print the gap and say so.
+
+## Look
+
+- Navy `#15233c`, terracotta `#c0552d`, paper `#f7f4ee`, ink `#222`. Georgia headings,
+  system sans body. Never white text on a pale row (`dashboard-contrast-kpi.mdc`).
+- Reference builds to imitate: `02_dashboards/pricing/ISZE_Pricing_Revision_AIM_Source.html` (6.6 MB,
+  the file sent to Suzuki san), `02_dashboards/sales/ISZE_AIM_Comparison_ALL.html` (8.2 MB),
+  `02_dashboards/sales/ISZE_AIM_DB_DLR_Deep_Dive_ALL.html` (7.2 MB).
+
+## Gate
+
+Still read-only until he says rebuild or ship (`isze-no-ship-without-ok.mdc`). Before claiming done:
+verify the rendered page paints and contains its rows (`isze-verify-rendered-output.mdc`,
+`isze-ship-gate.mdc`).
