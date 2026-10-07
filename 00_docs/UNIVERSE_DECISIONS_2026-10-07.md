@@ -19,6 +19,7 @@ From the approved U1–U26 assessment plan. Internal.
 - PR **76** MERGED (`545f1a02`) — coverage CSVs; eligible still 0.
 - PR **71** CLOSED (superseded by 75/76; fat scrape cache stayed out of main).
 - PR **77** MERGED (`7d2c1630`) — real IDS for ITUK (Ferndown) + Portugal I-Motors (Astara Lisboa) on INTERNAL.
+- PR **79** MERGED (`81ff33f2`) — Universe board re-graded live.
 
 ## Still open (your call)
 

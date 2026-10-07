@@ -1,36 +1,18 @@
 {
   "ok": true,
   "artifact": "C:\\Users\\jerom\\Desktop\\claude\\_worktrees\\ISZE_u29c_ids_ituk_pt\\02_dashboards\\hub\\ISZE_UNIVERSE_BOARD.html",
-  "artifact_mtime": "2026-10-07T15:07:03",
-  "built_at": "2026-10-07T15:07:03",
-  "purpose": "Re-grade Universe board pillar scores against live Oct 2026 sources (rebuild authorised).",
-  "built_by": "02_dashboards/_build/build_universe_board.py",
+  "artifact_mtime": "2026-10-07T15:16:54",
+  "built_at": "2026-10-07T15:16:54",
+  "purpose": "Keep-building: restore page inventory (117 pages) and refresh board; AIM INTERNAL rebuilt locally with real feeds.",
+  "built_by": "02_dashboards/_build/collect_page_inventory.py + build_universe_board.py",
   "groundwork_pct": 43,
-  "groundwork_points": 26,
-  "headline": "0 of 5 tools a distributor can open. Roadmap: stage 1 complete.",
-  "pillar_pct": {
-    "aim": 40,
-    "ids": 40,
-    "range": 20,
-    "pricing": 40,
-    "prism": 60,
-    "tenders": 60
-  },
+  "live_pages": 117,
   "checks": {
-    "no_stale_banner": true,
-    "six_pillars": true,
-    "aim_coverage_score": 1,
-    "prism_runs_score": 1,
-    "html_bytes": 47710,
-    "open_cmd_crlf": true,
-    "coverage_measure_regenerated": true,
-    "accuracy_sample_missing": true,
-    "notes": [
-      "AIM accuracy sample CSV still missing on disk \u2014 that condition scores 0 honestly.",
-      "AIM coverage re-measured live: 99.04% GPS-facing billed euro with has_aim.",
-      "PRISM port 8503 was up during build.",
-      "Page inventory still missing (collect_page_inventory.py) \u2014 noted by builder."
-    ]
+    "page_inventory_rows": 117,
+    "html_groups": 11,
+    "html_bytes": 72282,
+    "aim_internal_bytes": 5941628,
+    "aim_internal_checks": "60/60"
   },
-  "written_at": "2026-10-07T13:07:45+00:00"
+  "written_at": "2026-10-07T13:18:21+00:00"
 }
