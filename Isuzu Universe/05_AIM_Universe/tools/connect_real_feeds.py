@@ -25,8 +25,13 @@ import pandas as pd
 HERE = Path(__file__).resolve().parent
 COMPONENT = HERE.parent
 ISZE = COMPONENT.parents[1]  # ...\ISZE
-DERIVED = ISZE / "01_data" / "00_derived"
-TENDER = ISZE / "01_data" / "14_dashboards" / "tender_data.json"
+# Worktrees often omit gitignored IDS/xlsx; fall back to the main clone.
+_MAIN_ISZE = Path(r"C:\Users\jerom\Desktop\claude\ISZE")
+DATA_ROOT = ISZE if (ISZE / "01_data" / "08_Distributor" / "IDS_2026" / "ITUK" / "IDS ITUK self evaluations.xlsx").exists() else _MAIN_ISZE
+DERIVED = DATA_ROOT / "01_data" / "00_derived"
+TENDER = DATA_ROOT / "01_data" / "14_dashboards" / "tender_data.json"
+if not TENDER.exists():
+    TENDER = _MAIN_ISZE / "01_data" / "14_dashboards" / "tender_data.json"
 OUT = COMPONENT / "payload" / "real_feeds.local.json"
 
 # The two markets this pilot prices. Never another distributor.
@@ -175,20 +180,222 @@ def build_prism_measures() -> dict:
     }
 
 
+
+# --- IDS sheet (ITUK + Portugal / I-Motors) appended for U29 IDS wire ---
+import re as _re
+
+IDS_ITUK_SELF = (
+    DATA_ROOT / "01_data" / "08_Distributor" / "IDS_2026" / "ITUK"
+    / "IDS ITUK self evaluations.xlsx"
+)
+IDS_PT_RESULT = (
+    DATA_ROOT / "01_data" / "08_Distributor" / "IDS_2026" / "reports"
+    / "evaluation_result" / "2026 IDS Evaluation Result Report_Portugal.xls"
+)
+
+CASE_DEALERS = {
+    "ITUK": {
+        "dealer_id": "ITUK-FERNDOWN",
+        "display_name": "Ferndown Commercials Ltd",
+        "match_names": ["Ferndown Commercials Ltd"],
+    },
+    "PORTUGAL": {
+        "dealer_id": "PT-ASTARA-LISBOA",
+        "display_name": "ASTARA RETAIL LISBOA",
+        "match_names": ["ASTARA RETAIL LISBOA", "ASTARA RETAIL LISBON"],
+    },
+}
+
+QUESTION_CODE_RE = _re.compile(r"^[A-H]\.\d+-\d+[A-Z]?$", _re.IGNORECASE)
+
+
+def _slug_dealer(name: str) -> str:
+    s = "".join(ch if ch.isalnum() else "-" for ch in (name or "").upper())
+    while "--" in s:
+        s = s.replace("--", "-")
+    return s.strip("-") or "UNKNOWN"
+
+
+def _find_dealer_col(header_row, match_names):
+    wanted = {str(n).strip().upper() for n in match_names}
+    for i, cell in enumerate(header_row):
+        if cell is None or (isinstance(cell, float) and pd.isna(cell)):
+            continue
+        if str(cell).strip().upper() in wanted:
+            return i
+    return None
+
+
+def _rows_from_ituk_self():
+    if not IDS_ITUK_SELF.exists():
+        return [], {"present": False, "reason": "ITUK self-evaluation workbook missing",
+                    "path": str(IDS_ITUK_SELF)}
+    xl = pd.ExcelFile(IDS_ITUK_SELF)
+    sheet_name = "Sales, Parts & Service"
+    if sheet_name not in xl.sheet_names:
+        sheet_name = xl.sheet_names[0]
+    m = pd.read_excel(IDS_ITUK_SELF, sheet_name=sheet_name, header=None)
+    meta = CASE_DEALERS["ITUK"]
+    col = _find_dealer_col(list(m.iloc[2].values), meta["match_names"])
+    if col is None:
+        return [], {"present": False, "reason": "Ferndown column not found in ITUK self-eval",
+                    "path": str(IDS_ITUK_SELF)}
+    rows = []
+    for i in range(4, len(m)):
+        code = m.iloc[i, 0]
+        text = m.iloc[i, 1]
+        val = m.iloc[i, col]
+        if pd.isna(code):
+            continue
+        code_s = str(code).strip()
+        if not QUESTION_CODE_RE.match(code_s):
+            continue
+        if pd.isna(val):
+            continue
+        ans = str(val).strip()
+        if ans.lower() in {"result", "nan", ""}:
+            continue
+        low = ans.lower()
+        if low in {"yes", "y", "compliant"}:
+            state, answer = "answered", "meets"
+        elif low in {"no", "n", "non compliant", "non-compliant"}:
+            state, answer = "answered", "does_not_meet"
+        else:
+            state, answer = "answered", ans
+        qtext = "" if pd.isna(text) else str(text).strip()
+        rows.append({
+            "dealer_id": meta["dealer_id"],
+            "distributor": "ITUK",
+            "questionnaire_version": "IDS-2026-ITUK",
+            "local_question_code": code_s,
+            "question_text": (qtext or code_s)[:240],
+            "answer_state": state,
+            "answer": answer,
+            "date_or_round": "2026",
+        })
+    return rows, {
+        "present": True,
+        "path": str(IDS_ITUK_SELF),
+        "sheet": sheet_name,
+        "dealer": meta["display_name"],
+        "dealer_id": meta["dealer_id"],
+        "rows": len(rows),
+    }
+
+
+def _rows_from_portugal_result():
+    if not IDS_PT_RESULT.exists():
+        return [], {"present": False, "reason": "Portugal IDS result report missing",
+                    "path": str(IDS_PT_RESULT)}
+    m = pd.read_excel(IDS_PT_RESULT, sheet_name="Portugal26", header=None)
+    meta = dict(CASE_DEALERS["PORTUGAL"])
+    col = _find_dealer_col(list(m.iloc[2].values), meta["match_names"])
+    if col is None:
+        for i in range(3, m.shape[1]):
+            name = m.iloc[2, i]
+            if pd.isna(name):
+                continue
+            if "ASTARA" in str(name).upper():
+                col = i
+                meta = {
+                    "dealer_id": "PT-" + _slug_dealer(str(name)),
+                    "display_name": str(name).strip(),
+                    "match_names": [str(name).strip()],
+                }
+                break
+    if col is None:
+        return [], {"present": False, "reason": "no Portugal dealer column found",
+                    "path": str(IDS_PT_RESULT)}
+    rows = []
+    for i in range(16, len(m)):
+        code = m.iloc[i, 0]
+        if pd.isna(code):
+            continue
+        code_s = str(code).strip()
+        if not QUESTION_CODE_RE.match(code_s):
+            continue
+        text = m.iloc[i, 1]
+        mx = m.iloc[i, 2]
+        val = m.iloc[i, col]
+        if pd.isna(val):
+            state, answer = "missing", None
+        else:
+            try:
+                v = float(val)
+                mxx = float(mx) if not pd.isna(mx) else None
+            except (TypeError, ValueError):
+                state, answer = "answered", str(val)
+            else:
+                if mxx is not None and v >= mxx:
+                    state, answer = "answered", "meets"
+                elif v == 0:
+                    state, answer = "answered", "does_not_meet"
+                else:
+                    state, answer = "answered", (
+                        f"partial:{v:g}/{mxx:g}" if mxx is not None else f"score:{v:g}"
+                    )
+        rows.append({
+            "dealer_id": meta["dealer_id"],
+            "distributor": "PORTUGAL",
+            "questionnaire_version": "IDS-2026-PORTUGAL",
+            "local_question_code": code_s,
+            "question_text": (str(text).strip()[:240] if not pd.isna(text) else code_s),
+            "answer_state": state,
+            "answer": answer,
+            "date_or_round": "2026",
+        })
+    return rows, {
+        "present": True,
+        "path": str(IDS_PT_RESULT),
+        "sheet": "Portugal26",
+        "dealer": meta["display_name"],
+        "dealer_id": meta["dealer_id"],
+        "rows": len(rows),
+    }
+
+
+def build_ids_sheet():
+    ituk_rows, ituk_meta = _rows_from_ituk_self()
+    pt_rows, pt_meta = _rows_from_portugal_result()
+    rows = ituk_rows + pt_rows
+    return {
+        "present": bool(rows),
+        "rows": rows,
+        "identities": {
+            "ITUK": {
+                "dealer_id": CASE_DEALERS["ITUK"]["dealer_id"],
+                "distributor": "ITUK",
+                "display_name": CASE_DEALERS["ITUK"]["display_name"],
+                "validated": True,
+            },
+            "PORTUGAL": {
+                "dealer_id": pt_meta.get("dealer_id") or CASE_DEALERS["PORTUGAL"]["dealer_id"],
+                "distributor": "PORTUGAL",
+                "display_name": pt_meta.get("dealer") or CASE_DEALERS["PORTUGAL"]["display_name"],
+                "validated": True,
+            },
+        },
+        "provenance": {"ITUK": ituk_meta, "PORTUGAL": pt_meta},
+    }
+
 def main() -> int:
     notices = build_notices()
     prism = build_prism_measures()
+    ids = build_ids_sheet()
     block = {
-        "_note": ("Real feeds for the INTERNAL build only (U29 task C). Tender notices are "
-                  "read from the weekly feed; PRISM measures are read from derived files at "
-                  "their measured level. The SYNTHETIC artifact never carries this block."),
+        "_note": ("Real feeds for the INTERNAL build only (U29 task C + IDS for ITUK and "
+                  "Portugal/I-Motors). Tender from the weekly feed; PRISM from derived files; "
+                  "IDS answers from the 2026 evaluation files. SYNTHETIC never carries this."),
         "built_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "markets": MARKETS,
         "tender_data": {"notices": notices["notices"]},
         "prism_measures": prism["measures"],
+        "ids_sheet": {"rows": ids["rows"]},
+        "ids_identities": ids["identities"],
         "provenance": {
             "tender": {k: v for k, v in notices.items() if k != "notices"},
             "prism": {k: v for k, v in prism.items() if k != "measures"},
+            "ids": ids["provenance"],
         },
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -199,6 +406,9 @@ def main() -> int:
     print(f"wrote {OUT}")
     print(f"  tender notices (ITUK/PORTUGAL): {len(notices['notices'])}  by market: {by}")
     print(f"  prism measures: {len(prism['measures'])}")
+    print(f"  ids sheet rows: {len(ids['rows'])}  "
+          f"ITUK={ids['provenance']['ITUK'].get('rows')}  "
+          f"PORTUGAL={ids['provenance']['PORTUGAL'].get('rows')}")
     return 0
 
 
