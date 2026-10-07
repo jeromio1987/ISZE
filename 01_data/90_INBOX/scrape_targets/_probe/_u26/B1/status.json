@@ -1,0 +1,146 @@
+{
+  "agent": "B1",
+  "work_package": "B (Portugal) — discovery + first usable host",
+  "ran_at": "2026-10-07T03:17:41+00:00",
+  "branch": "cursor/2026-10-07-universe-u26-market-harvest",
+  "hosts_tried": 186,
+  "hosts_by_verdict": {
+    "allowed": 40,
+    "unreachable": 143,
+    "not_retried": 3
+  },
+  "hosts_allowed_by_robots": [
+    "www.soauto.pt",
+    "www.roady.pt",
+    "www.feuvert.pt",
+    "www.autosil.pt",
+    "www.motocar.pt",
+    "www.autopartslogistic.com",
+    "www.ersatzteile-24.com",
+    "www.custojusto.pt",
+    "www.oscaro.pt",
+    "www.casadaspecas.pt",
+    "www.rodasa.com",
+    "www.rasch.pt",
+    "www.agauto.pt",
+    "www.lojadaspecas.pt",
+    "www.pneubeato.com",
+    "www.parts.pt",
+    "www.motointegrator.pt",
+    "www.oscaro.es",
+    "www.winparts.es",
+    "www.midas.pt",
+    "www.rodauto.pt",
+    "www.silvauto.pt",
+    "www.epecas.pt",
+    "www.areal.pt",
+    "www.autoparts24.eu",
+    "www.motointegrator.com",
+    "www.winparts.nl",
+    "www.todoparatucoche.com",
+    "www.nortecar.pt",
+    "www.isuzu.pt",
+    "www.acp.pt",
+    "www.pecasauto.com.pt",
+    "www.autopecas.online",
+    "www.autopecas.com.pt",
+    "www.megapecas.pt",
+    "www.autolux.pt",
+    "www.autocenter.pt",
+    "www.pecasoriginais.pt",
+    "www.pecasauto.com",
+    "www.b-parts.com"
+  ],
+  "usable_hosts": [],
+  "numbers_queried_to_a_usable_host": 0,
+  "numbers_with_at_least_one_row": 0,
+  "numbers_still_empty": 123,
+  "competitor_numbers_queried": 0,
+  "pages_fetched": 71,
+  "rows": 0,
+  "priced_rows": 0,
+  "hits": 0,
+  "misses": 0,
+  "blocked_hosts": 143,
+  "result": "No Portuguese host passed all three gates at once (server-rendered price, HTTP 200 to the declared bot, robots-allowed path). The Portuguese market is closed to automated price collection through the shops reachable from this machine.",
+  "exact_blockers": {
+    "bot_check_403_or_turnstile": [
+      "www.norauto.pt",
+      "www.olx.pt",
+      "www.endado.com",
+      "www.skruvat.com",
+      "www.motointegrator.pt",
+      "www.b-parts.com (product pages)",
+      "www.autodoc.co.uk",
+      "www.oscaro.com",
+      "www.trodo.com",
+      "www.alvadi.pt"
+    ],
+    "robots_disallows_the_search": [
+      "www.soauto.pt",
+      "www.feuvert.pt",
+      "www.winparts.es",
+      "www.winparts.nl",
+      "www.todoparatucoche.com",
+      "www.oscaro.pt",
+      "www.oscaro.es",
+      "www.casadaspecas.pt (pt/pesquisa)"
+    ],
+    "prices_only_in_javascript": [
+      "www.pneubeato.com",
+      "www.autoparts24.eu",
+      "www.autocenter.pt",
+      "www.winparts.es product pages"
+    ],
+    "no_isuzu_coverage": [
+      "www.megapecas.pt",
+      "www.autocenter.pt",
+      "www.autosil.pt",
+      "www.rodasa.com",
+      "www.lojadaspecas.pt",
+      "www.casadaspecas.pt"
+    ],
+    "not_a_parts_shop": [
+      "www.motocar.pt",
+      "www.rodauto.pt",
+      "www.silvauto.pt",
+      "www.autolux.pt",
+      "www.nortecar.pt",
+      "www.midas.pt",
+      "www.isuzu.pt",
+      "www.acp.pt",
+      "www.rasch.pt"
+    ],
+    "no_robots_txt_404_or_403": [
+      "www.intercars.pt",
+      "www.intercars.eu",
+      "katalog.intercars.eu"
+    ],
+    "dead_or_no_catalogue": [
+      "www.parts.pt",
+      "www.areal.pt",
+      "www.epecas.pt",
+      "www.autopecas.online",
+      "www.pecasauto.com",
+      "www.pecasoriginais.pt (503)",
+      "www.agauto.pt",
+      "www.pecasauto.com.pt"
+    ],
+    "terms_forbid_automation": [
+      "www.custojusto.pt"
+    ],
+    "dns_or_ssl_failure": [
+      "most of the .pt guesses tested (see tried.csv)"
+    ]
+  },
+  "reconciliation": {
+    "match_method": "kept schema-valid `crossref`; the brief's `crossref_candidate` / `crossref_corroborated` are not in MATCH_METHODS, so the grade travels in the separate `crossref_grade` column, as the run instructions require. MATCH_METHODS was NOT widened.",
+    "tax_basis": "Portuguese pages were read for IVA wording but no page states a price basis in the HTML we could read, so no `vat` value was written."
+  },
+  "parser": "No host passed, so no `site_*.py` parser was written. `price_parsers.py --selftest` was run to confirm the existing parsers are green.",
+  "could_not_do": [
+    "Fetch any Portuguese part price: no allowed host served one server-side.",
+    "Query the 123 OE / 153 competitor numbers against a usable PT host: no usable host.",
+    "Use megapacas OR b-parts search: megapecas ignores the OE term (identical 24-card list for every query, verified on 'filtro', 'travao', 2 OEs and a brand number); b-parts product pages return HTTP 403 to our identity (bot check). Nothing was bypassed."
+  ]
+}

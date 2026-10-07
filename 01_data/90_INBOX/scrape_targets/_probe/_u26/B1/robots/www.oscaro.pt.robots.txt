@@ -1,0 +1,100 @@
+# legacy
+User-agent: *
+Disallow: /account/
+Disallow: /Account/
+Disallow: /api/
+Disallow: /API/
+Disallow: /shop/
+Disallow: /Shop/
+Disallow: /catalog/
+Disallow: /Catalog/
+Disallow: /bo/
+Disallow: /BO/
+Disallow: /index.html
+Disallow: /about.html
+# update 01/2022
+Disallow: *.asp
+Disallow: /*/search
+Allow: /*/search?q=*&*
+Disallow: /*?q=
+Disallow: /*?facets=
+Disallow: /*?aaf=
+Disallow: /*?sort=
+Disallow: /catalog/cross/sellings
+Disallow: /testTrackingConversion
+Disallow: /invoice/
+Disallow: /account
+Disallow: /Account
+Disallow: /*/account/
+Disallow: /*/Account/
+Disallow: /return/
+Disallow: /contact/
+Disallow: /be/
+Disallow: /Catalog/Part/GetGallery?*
+Disallow: /plan/
+Disallow: /MoteurZanox?.js*
+Disallow: *-egv$
+Disallow: *-egf$
+Disallow: *-sce$
+Disallow: *-scev$
+Disallow: *-scef$
+Disallow: /m/
+Disallow: /mobile/
+
+# update 06/2025
+Disallow: *-sct$
+
+# update 01/2022
+Disallow: /fr/form/
+Disallow: /scope:all/
+Disallow: /*?email_newsletters=*
+Disallow: /*?idOscModelFamily=*
+Disallow: /*?idOscManufacturer=*
+Disallow: /*?sort=*
+Disallow: /*?idGenArt=*
+Disallow: /Authentication/
+Disallow: /xhr/
+Disallow: /cdn-cgi/
+Disallow: /fr/operations-commerciales/
+Disallow: /es/operaciones-especiales
+Disallow: /de/aktion/
+
+# update 01/2022
+User-agent: Mediapartners-Google
+User-agent: AdsBot-Google
+User-agent: AdsBot-Google-Mobile
+User-agent: AdsBot-Google-Mobile-Apps
+User-agent: Googlebot-Image
+User-agent: Googlebot-News
+User-agent: Storebot-Google
+Disallow:
+Allow: /*order=*
+Allow: /*query=*
+Allow: /*gclsrc=*
+Allow: /*gclid=*
+
+# 01/2022
+# Veille de prix 
+User-agent: ia_archiver
+User-agent: ia_archiver/1.6
+User-agent: Mozilla/4.0 (compatible; BullsEye; Windows 95)
+User-agent: MS Search 4.0 Robot
+User-agent: MS Search 5.0 Robot
+User-agent: Naverbot
+User-agent: SeznamBot/3.0
+User-agent: Sogou web spider/4.0
+User-agent: Xenu Link Sleuth/1.3.8
+User-agent: Xenu's
+User-agent: Xenu's Link Sleuth 1.1c
+User-agent: yandex
+User-agent: YandexBot
+User-agent: Keox
+User-agent: Net veille
+User-agent: Paarly
+User-agent: Price Observatory
+User-agent: Pricejet
+User-agent: Pricing Assistant
+User-agent: Prixan
+User-agent: SpyCommerce
+User-agent: Workit
+Disallow: /

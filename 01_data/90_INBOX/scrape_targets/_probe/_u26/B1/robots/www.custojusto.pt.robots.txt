@@ -1,0 +1,67 @@
+# It is expressly forbidden to use spiders or other 
+# automated methods to access CustoJusto.pt. Only if custojusto.pt 
+# has given special permit such access is allowed.
+
+User-agent: ia_archiver
+Disallow: /
+
+User-agent: *
+
+Disallow: /ar/
+Disallow: /cp/
+Disallow: /ma/
+Disallow: /sp/
+Disallow: /support/
+Disallow: /vf/
+Disallow: /thumbs/
+Disallow: /pg/
+Disallow: /adreply?id*
+Disallow: /testemunhos?*
+Disallow: /payments/*
+Disallow: /cdn-cgi/
+Disallow: /newvi/*
+
+#all
+Disallow: /aw/
+Disallow: /st/
+Disallow: /redir/
+Disallow: /iredir/
+Disallow: /*mc?id=*
+Disallow: /*f=c
+Disallow: /*ros=*
+Disallow: /*shopreply?*
+Disallow: /destaques/*?source=vi*
+Disallow: /user/
+Disallow: /login
+Disallow: /signup
+Disallow: /modal/
+Disallow: /servicos/
+Disallow: /404
+
+#payments
+Disallow: /payments*
+
+#filter-price
+Disallow: /*si=0*
+
+#filter-images
+Disallow: /*si=1*
+
+#user random urls
+Disallow: /*user=*
+
+# paginations
+Disallow: /*?o=*
+Disallow: /*&o=*
+
+# gone param
+Disallow: /*?gone=*
+Disallow: /*&gone=*
+
+# auth endoints
+Disallow: /v2/
+
+Sitemap: https://www.custojusto.pt/sitemap_list.xml
+Sitemap: https://www.custojusto.pt/sitemap_index.xml
+Sitemap: https://www.custojusto.pt/sitemap_static.xml
+Sitemap: https://www.custojusto.pt/sitemap.xml

@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rasch Remodeling LDA — Construção e Remodelação em Lisboa</title>
+<meta name="description" content="Construção e remodelação com equipa 100% interna. Carpintaria, pintura, electricidade, canalização, impermeabilizações, casas de banho e revestimentos. Oeiras, Lisboa e Cascais desde 2007.">
+<meta name="author" content="Rasch Remodeling LDA">
+<link rel="canonical" href="https://rasch.pt/">
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="assets/img/logo-positiva.png">
+<link rel="apple-touch-icon" href="assets/img/logo-positiva.png">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rasch.pt/">
+<meta property="og:title" content="Rasch Remodeling LDA — Construção e Remodelação">
+<meta property="og:description" content="Uma equipa. Todas as especialidades. Acabamento que se nota. Construção e remodelação completa em Lisboa desde 2007.">
+<meta property="og:image" content="https://rasch.pt/assets/img/portfolio/fachada-moradia.jpg">
+<meta property="og:locale" content="pt_PT">
+<meta property="og:site_name" content="Rasch Remodeling LDA">
+<meta name="theme-color" content="#071E21">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Sora:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RASCH REMODELING LDA — Website v2
+   Premium · Minimal · Architectural
+   Palette: green #071E21 · gold #CCA268 · beige #E6E4CF · grey-green #748E8D
+   ============================================================ */
+
+@font-face {
+    font-family: 'Just Sans';
+    src: url('assets/fonts/just-sans-bold.otf') format('opentype');
+    font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Just Sans';
+    src: url('assets/fonts/just-sans-medium.otf') format('opentype');
+    font-weight: 500; font-style: normal; font-display: swap;
+}
+
+:root {
+    --green:        #071E21;
+    --green-900:    #04161a;
+    --green-800:    #0a2629;
+    --green-700:    #103338;
+    --gold:         #CCA268;
+    --gold-light:   #ddb87e;
+    --beige:        #E6E4CF;
+    --beige-soft:   #efedE0;
+    --grey-green:   #748E8D;
+    --text-cream:   #E6E4CF;
+    --text-muted:   #9aa8a3;
+    --line:         rgba(204,162,104,0.22);
+    --line-soft:    rgba(230,228,207,0.12);
+
+    --font-display: 'Sora', 'Manrope', sans-serif;
+    --font-body:    'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --maxw: 1280px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+    font-family: var(--font-body);
+    background: var(--green);
+    color: var(--text-cream);
+    line-height: 1.6;
+    font-weight: 400;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--gold); color: var(--green); }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+}
+h4 { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.01em; }
+
+.wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+
+.eyebrow {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--gold);
+    display: inline-flex; align-items: center; gap: 12px;
+}
+.eyebrow::before {
+    content: ""; width: 28px; height: 1px; background: var(--gold); display: inline-block;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-body); font-weight: 600; font-size: 15px;
+    padding: 16px 28px; border-radius: 100px; cursor: pointer;
+    border: 1px solid transparent; transition: all .35s var(--ease);
+    letter-spacing: 0.01em;
+}
+.btn-gold { background: var(--gold); color: var(--green); }
+.btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 14px 40px rgba(204,162,104,0.28); }
+.btn-ghost { background: transparent; color: var(--text-cream); border-color: var(--line-soft); }
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+.btn svg { width: 17px; height: 17px; }
+
+/* ---------- NAV ---------- */
+.nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    transition: all .4s var(--ease);
+    padding: 22px 0;
+}
+.nav.scrolled {
+    background: rgba(7,30,33,0.82);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--line-soft);
+    padding: 14px 0;
+}
+.nav-inner { display: flex; align-items: center; justify-content: space-between; }
+.nav-logo img { height: 40px; width: auto; }
+.nav-menu { display: flex; align-items: center; gap: 36px; }
+.nav-menu a.link { font-size: 14px; font-weight: 500; color: var(--text-cream); opacity: .82; transition: opacity .25s, color .25s; }
+.nav-menu a.link:hover { opacity: 1; color: var(--gold); }
+.nav-cta { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--green); background: var(--gold); padding: 11px 20px; border-radius: 100px; transition: all .3s var(--ease); }
+.nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+.lang-btn { background: none; border: 1px solid var(--line-soft); color: var(--text-cream); font-family: var(--font-body); font-size: 13px; font-weight: 600; padding: 7px 13px; border-radius: 100px; cursor: pointer; letter-spacing: 0.08em; transition: all .25s var(--ease); }
+.lang-btn:hover { border-color: var(--gold); color: var(--gold); }
+.mobile-nav .lang-btn { font-size: 18px; padding: 10px 22px; }
+.burger { display: none; flex-direction: column; gap: 6px; background: none; border: 0; cursor: pointer; padding: 6px; }
+.burger span { width: 26px; height: 2px; background: var(--text-cream); transition: .3s var(--ease); }
+
+/* ---------- HERO ---------- */
+.hero { position: relative; min-height: 100vh; display: flex; align-items: flex-end; overflow: hidden; }
+.hero-media { position: absolute; inset: 0; z-index: 0; }
+.hero-media img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.08); animation: heroZoom 14s var(--ease) forwards; }
+@keyframes heroZoom { to { transform: scale(1); } }
+.hero-media::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(4,16,18,0.62) 0%, rgba(4,16,18,0.30) 38%, rgba(4,16,18,0.88) 100%);
+}
+.hero-inner { position: relative; z-index: 2; width: 100%; padding-bottom: 72px; padding-top: 140px; }
+.hero-badge {
+    display: inline-flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold);
+    border: 1px solid var(--line); border-radius: 100px; padding: 9px 18px; margin-bottom: 30px;
+    background: rgba(7,30,33,0.35); backdrop-filter: blur(6px);
+}
+.hero-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 0 rgba(204,162,104,0.6); animation: pulse 2.4s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(204,162,104,0.5);} 70%{ box-shadow: 0 0 0 9px rgba(204,162,104,0);} 100%{box-shadow:0 0 0 0 rgba(204,162,104,0);} }
+.hero h1 { font-size: clamp(44px, 7.2vw, 104px); line-height: 0.98; max-width: 16ch; }
+.hero h1 .gold { color: var(--gold); }
+.hero-sub { margin-top: 26px; font-size: clamp(16px, 1.7vw, 20px); color: var(--text-cream); opacity: .9; max-width: 56ch; font-weight: 400; line-height: 1.55; }
+.hero-actions { margin-top: 38px; display: flex; flex-wrap: wrap; gap: 14px; }
+.hero-scroll { position: absolute; bottom: 30px; right: 28px; z-index: 2; display: flex; align-items: center; gap: 12px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+.hero-scroll .bar { width: 1px; height: 40px; background: linear-gradient(var(--gold), transparent); position: relative; overflow: hidden; }
+.hero-scroll .bar::after { content:""; position:absolute; top:-40px; left:0; width:1px; height:40px; background: var(--gold); animation: scrollLine 2s infinite var(--ease); }
+@keyframes scrollLine { to { top: 40px; } }
+
+/* ---------- TRUST BAR ---------- */
+.trust { border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); background: var(--green-900); }
+.trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+.trust-item { padding: 40px 28px; text-align: center; border-right: 1px solid var(--line-soft); }
+.trust-item:last-child { border-right: 0; }
+.trust-num { font-family: var(--font-display); font-weight: 300; font-size: clamp(36px, 4.4vw, 56px); color: var(--gold); line-height: 1; letter-spacing: -0.02em; }
+.trust-label { margin-top: 12px; font-size: 13px; letter-spacing: 0.06em; color: var(--text-muted); text-transform: uppercase; }
+
+/* ---------- SECTIONS ---------- */
+section { position: relative; }
+.section-pad { padding: clamp(80px, 11vw, 150px) 0; }
+.section-head { max-width: 760px; margin-bottom: 64px; }
+.section-head h2 { font-size: clamp(32px, 4.6vw, 60px); margin-top: 22px; }
+.section-head p { margin-top: 22px; font-size: 18px; color: var(--text-muted); line-height: 1.6; }
+
+/* ---------- ESPECIALIDADES ---------- */
+.spec { background: var(--green); }
+.spec-list { border-top: 1px solid var(--line-soft); }
+.spec-row {
+    display: grid; grid-template-columns: 90px 1fr auto; align-items: center; gap: 30px;
+    padding: 34px 0; border-bottom: 1px solid var(--line-soft);
+    cursor: default; transition: padding .4s var(--ease);
+}
+.spec-row:hover { padding-left: 18px; }
+.spec-idx { font-family: var(--font-display); font-size: 15px; color: var(--gold); font-weight: 600; }
+.spec-main h3 { font-size: clamp(24px, 3.2vw, 38px); transition: color .3s; }
+.spec-row:hover .spec-main h3 { color: var(--gold); }
+.spec-main p { margin-top: 8px; font-size: 15px; color: var(--text-muted); max-width: 62ch; }
+.spec-arrow { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; color: var(--gold); transition: all .3s var(--ease); flex-shrink: 0; }
+.spec-row:hover .spec-arrow { background: var(--gold); color: var(--green); transform: rotate(-45deg); }
+.spec-arrow svg { width: 18px; height: 18px; }
+/* floating preview image on hover (desktop) */
+.spec-preview { position: fixed; width: 320px; height: 220px; border-radius: 16px; overflow: hidden; pointer-events: none; opacity: 0; transform: translate(-50%,-50%) scale(.9); transition: opacity .3s, transform .4s var(--ease); z-index: 60; box-shadow: 0 30px 70px rgba(0,0,0,0.5); border: 1px solid var(--line); }
+.spec-preview.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+.spec-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ---------- DIFERENCIAL (split) ---------- */
+.diff { background: var(--beige); color: var(--green); }
+.diff-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(40px, 6vw, 96px); align-items: center; }
+.diff .eyebrow { color: #9a7b46; }
+.diff .eyebrow::before { background: #9a7b46; }
+.diff h2 { color: var(--green); font-size: clamp(30px, 4.2vw, 54px); margin-top: 20px; }
+.diff p { margin-top: 22px; color: #3c4a48; font-size: 17px; line-height: 1.7; }
+.diff-points { margin-top: 36px; display: grid; gap: 4px; }
+.diff-point { display: flex; gap: 16px; padding: 20px 0; border-top: 1px solid rgba(7,30,33,0.12); }
+.diff-point:last-child { border-bottom: 1px solid rgba(7,30,33,0.12); }
+.diff-point .pi { color: var(--gold); flex-shrink: 0; }
+.diff-point h4 { font-family: var(--font-display); font-size: 18px; color: var(--green); }
+.diff-point p { margin-top: 4px; font-size: 15px; color: #4a5856; }
+.diff-media { position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 4/5; box-shadow: 0 40px 80px rgba(7,30,33,0.18); }
+.diff-media img { width: 100%; height: 100%; object-fit: cover; }
+.diff-tag { position: absolute; left: 20px; bottom: 20px; background: rgba(7,30,33,0.92); color: var(--beige); padding: 12px 18px; border-radius: 100px; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; backdrop-filter: blur(4px); }
+
+/* ---------- PORTFÓLIO ---------- */
+.work { background: var(--green-900); }
+.work-track { display: grid; grid-auto-flow: column; grid-auto-columns: min(78vw, 460px); gap: 22px; overflow-x: auto; padding: 8px 28px 24px; scroll-snap-type: x mandatory; margin: 0 calc(50% - 50vw); }
+.work-track::-webkit-scrollbar { height: 6px; }
+.work-track::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+.work-card { scroll-snap-align: start; border-radius: 18px; overflow: hidden; position: relative; aspect-ratio: 4/5; background: var(--green-800); }
+.work-card img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
+.work-card:hover img { transform: scale(1.06); }
+.work-card::after { content:""; position:absolute; inset:0; background: linear-gradient(180deg, transparent 45%, rgba(4,16,18,0.85)); }
+.work-cta { position: absolute; top: 16px; right: 16px; z-index: 3; display: inline-flex; align-items: center; gap: 7px; background: var(--gold); color: var(--green); font-size: 12px; font-weight: 700; padding: 9px 15px; border-radius: 100px; opacity: 0; transform: translateY(-8px); transition: opacity .35s var(--ease), transform .35s var(--ease); }
+.work-cta svg { width: 14px; height: 14px; }
+.work-card:hover .work-cta { opacity: 1; transform: none; }
+.work-card .gtag { position: absolute; left: 16px; top: 16px; z-index: 3; display: inline-flex; align-items: center; gap: 7px; background: rgba(7,30,33,0.78); color: var(--beige); font-size: 12px; font-weight: 600; padding: 8px 13px; border-radius: 100px; backdrop-filter: blur(4px); }
+.work-card .gtag svg { width: 14px; height: 14px; }
+/* lightbox / project gallery */
+.lb { position: fixed; inset: 0; z-index: 200; background: rgba(4,16,18,0.96); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 36px 16px; backdrop-filter: blur(8px); }
+.lb.open { display: flex; }
+.lb-stage { position: relative; width: 100%; max-width: 1040px; flex: 1; display: flex; align-items: center; justify-content: center; }
+.lb-img { max-width: 100%; max-height: 76vh; border-radius: 12px; object-fit: contain; box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
+.lb-video { max-width: 100%; max-height: 76vh; border-radius: 12px; background: #000; box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
+.lb-close { position: absolute; top: 20px; right: 26px; background: none; border: 0; color: var(--text-cream); font-size: 38px; line-height: 1; cursor: pointer; }
+.lb-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--line); background: rgba(7,30,33,0.6); color: var(--gold); cursor: pointer; display: grid; place-items: center; transition: background .25s; }
+.lb-nav:hover { background: var(--gold); color: var(--green); }
+.lb-prev { left: 6px; } .lb-next { right: 6px; }
+.lb-nav svg { width: 22px; height: 22px; }
+.lb-bar { display: flex; align-items: center; gap: 22px; margin-top: 22px; flex-wrap: wrap; justify-content: center; }
+.lb-count { font-size: 13px; letter-spacing: 0.1em; color: var(--text-muted); }
+.lb-title { font-family: var(--font-display); font-size: 18px; color: var(--text-cream); }
+.lb-cta { display: inline-flex; align-items: center; gap: 8px; background: var(--gold); color: var(--green); font-weight: 600; font-size: 14px; padding: 11px 20px; border-radius: 100px; transition: background .25s; }
+.lb-cta:hover { background: var(--gold-light); }
+.lb-cta svg { width: 16px; height: 16px; }
+.work-cap { position: absolute; left: 22px; bottom: 22px; z-index: 2; }
+.work-cap .cat { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+.work-cap h4 { font-family: var(--font-display); font-size: 22px; margin-top: 6px; }
+.work-hint { margin-top: 26px; font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 10px; }
+
+/* ---------- ANTES & DEPOIS ---------- */
+.ba { background: var(--green); }
+.ba-frame { position: relative; max-width: 540px; margin: 0 auto; border-radius: 20px; overflow: hidden; aspect-ratio: 2/3; user-select: none; box-shadow: 0 40px 90px rgba(0,0,0,0.45); cursor: ew-resize; }
+.ba-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ba-after { clip-path: inset(0 0 0 50%); }
+.ba-handle { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: var(--gold); transform: translateX(-1px); z-index: 3; }
+.ba-knob { position: absolute; top: 50%; left: 50%; width: 50px; height: 50px; transform: translate(-50%,-50%); background: var(--gold); border-radius: 50%; display: grid; place-items: center; color: var(--green); box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+.ba-knob svg { width: 22px; height: 22px; }
+.ba-pill { position: absolute; top: 16px; z-index: 3; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; padding: 7px 14px; border-radius: 100px; background: rgba(7,30,33,0.78); color: var(--beige); backdrop-filter: blur(4px); }
+.ba-pill.l { left: 16px; } .ba-pill.r { right: 16px; }
+.ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 1100px; margin: 0 auto; }
+.ba-card { position: relative; margin: 0; border-radius: 16px; overflow: hidden; aspect-ratio: 4/3; box-shadow: 0 30px 70px rgba(0,0,0,0.4); }
+.ba-card img { width: 100%; height: 100%; object-fit: cover; }
+.ba-tag { position: absolute; top: 14px; left: 14px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; padding: 7px 14px; border-radius: 100px; background: rgba(7,30,33,0.82); color: var(--beige); backdrop-filter: blur(4px); }
+@media (max-width: 640px) { .ba-grid { grid-template-columns: 1fr; } }
+/* ---------- VÍDEOS / REELS ---------- */
+.reels { background: var(--green-900); }
+.reels-grid { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+.reel { position: relative; margin: 0; width: 340px; max-width: 100%; aspect-ratio: 9/16; border-radius: 20px; overflow: hidden; background: #000; box-shadow: 0 30px 70px rgba(0,0,0,0.5); cursor: pointer; border: 1px solid var(--line-soft); }
+.reel video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.reel figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 56px 18px 18px; background: linear-gradient(transparent, rgba(4,16,18,0.92)); display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; pointer-events: none; }
+.reel .rl-cat { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+.reel .rl-title { font-family: var(--font-display); font-size: 18px; margin-top: 4px; color: var(--text-cream); line-height: 1.1; }
+.reel .rl-sound { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: rgba(7,30,33,0.55); color: var(--gold); display: grid; place-items: center; flex-shrink: 0; backdrop-filter: blur(4px); }
+.reel .rl-sound svg { width: 17px; height: 17px; }
+.reel.sound-on .rl-sound { background: var(--gold); color: var(--green); }
+.reel.sound-on .rl-sound svg path:last-child { display: none; }
+@media (max-width: 760px) { .reel { width: 300px; } }
+
+/* ---------- PROCESSO ---------- */
+.proc { background: var(--green-800); }
+.proc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.proc-step { padding-top: 26px; border-top: 1px solid var(--line); }
+.proc-step .n { font-family: var(--font-display); font-size: 14px; color: var(--gold); font-weight: 600; letter-spacing: 0.1em; }
+.proc-step h4 { font-family: var(--font-display); font-size: 22px; margin-top: 16px; }
+.proc-step p { margin-top: 12px; font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+
+/* ---------- CTA / CONTACTO ---------- */
+.contact { background: var(--green); position: relative; overflow: hidden; }
+.contact-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(40px, 6vw, 90px); align-items: start; }
+.contact h2 { font-size: clamp(34px, 5vw, 68px); }
+.contact h2 .gold { color: var(--gold); }
+.contact .lead { margin-top: 24px; font-size: 18px; color: var(--text-muted); max-width: 48ch; }
+.contact-actions { margin-top: 38px; display: flex; flex-wrap: wrap; gap: 14px; }
+.contact-info { margin-top: 46px; display: grid; gap: 2px; }
+.ci-row { display: flex; align-items: center; gap: 18px; padding: 18px 0; border-top: 1px solid var(--line-soft); }
+.ci-row:last-child { border-bottom: 1px solid var(--line-soft); }
+.ci-ic { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; color: var(--gold); flex-shrink: 0; }
+.ci-ic svg { width: 18px; height: 18px; }
+.ci-row .lbl { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); }
+.ci-row .val { font-size: 17px; font-weight: 600; color: var(--text-cream); }
+/* form card */
+.form-card { background: var(--green-800); border: 1px solid var(--line-soft); border-radius: 22px; padding: 36px; }
+.form-card h3 { font-family: var(--font-display); font-size: 22px; }
+.form-card p.fc-sub { color: var(--text-muted); font-size: 14px; margin-top: 8px; }
+.field { margin-top: 20px; }
+.field label { display: block; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+.field input, .field textarea, .field select {
+    width: 100%; background: var(--green-900); border: 1px solid var(--line-soft); border-radius: 12px;
+    padding: 14px 16px; color: var(--text-cream); font-family: var(--font-body); font-size: 15px; transition: border-color .25s;
+}
+.field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--gold); }
+.field textarea { resize: vertical; min-height: 96px; }
+.form-card .btn-gold { width: 100%; justify-content: center; margin-top: 24px; }
+.form-note { margin-top: 14px; font-size: 12px; color: var(--text-muted); text-align: center; }
+
+/* ---------- FOOTER ---------- */
+footer { background: var(--green-900); border-top: 1px solid var(--line-soft); padding: 64px 0 32px; }
+.foot-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; flex-wrap: wrap; }
+.foot-brand img { height: 34px; margin-bottom: 18px; }
+.foot-brand p { color: var(--text-muted); font-size: 14px; max-width: 34ch; }
+.foot-cols { display: flex; gap: 70px; flex-wrap: wrap; }
+.foot-col h5 { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+.foot-col a, .foot-col span { display: block; font-size: 14px; color: var(--text-muted); margin-bottom: 10px; transition: color .25s; }
+.foot-col a:hover { color: var(--gold); }
+.foot-bottom { margin-top: 54px; padding-top: 24px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-muted); }
+
+/* ---------- REVEAL ANIM ---------- */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
+.reveal.in { opacity: 1; transform: none; }
+
+/* ---------- WHATSAPP FLOAT ---------- */
+.wa-float { position: fixed; right: 22px; bottom: 22px; z-index: 90; width: 56px; height: 56px; border-radius: 50%; background: #25D366; display: grid; place-items: center; box-shadow: 0 12px 30px rgba(37,211,102,0.4); transition: transform .3s var(--ease); }
+.wa-float:hover { transform: scale(1.08); }
+.wa-float svg { width: 30px; height: 30px; fill: #fff; }
+
+/* ---------- MOBILE MENU ---------- */
+.mobile-nav { position: fixed; inset: 0; z-index: 99; background: var(--green-900); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 28px; transform: translateY(-100%); transition: transform .5s var(--ease); }
+.mobile-nav.open { transform: none; }
+.mobile-nav a { font-family: var(--font-display); font-size: 30px; }
+.mobile-nav a:hover { color: var(--gold); }
+.mobile-close { position: absolute; top: 24px; right: 24px; background: none; border: 0; color: var(--text-cream); font-size: 30px; cursor: pointer; }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 920px) {
+    .nav-menu { display: none; }
+    .burger { display: flex; }
+    .trust-grid { grid-template-columns: repeat(2, 1fr); }
+    .trust-item:nth-child(2) { border-right: 0; }
+    .trust-item:nth-child(1), .trust-item:nth-child(2) { border-bottom: 1px solid var(--line-soft); }
+    .diff-grid { grid-template-columns: 1fr; }
+    .diff-media { aspect-ratio: 16/11; order: -1; }
+    .proc-grid { grid-template-columns: repeat(2, 1fr); }
+    .contact-grid { grid-template-columns: 1fr; }
+    .spec-preview { display: none; }
+}
+@media (max-width: 540px) {
+    .wrap { padding: 0 20px; }
+    .trust-grid { grid-template-columns: 1fr 1fr; }
+    .proc-grid { grid-template-columns: 1fr; }
+    .spec-row { grid-template-columns: 50px 1fr 40px; gap: 14px; }
+    .spec-arrow { width: 38px; height: 38px; }
+    .hero-scroll { display: none; }
+}
+@media (max-width: 920px) {
+    .work-cta { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ======= NAV ======= -->
+<nav class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="nav-logo"><img src="assets/img/logo-nav.png" alt="Rasch Remodeling LDA"></a>
+    <div class="nav-menu">
+      <a href="#videos" class="link">Vídeos</a>
+      <a href="#trabalhos" class="link">Trabalhos</a>
+      <a href="#especialidades" class="link">Especialidades</a>
+      <a href="#diferencial" class="link">Porquê a Rasch</a>
+      <a href="#processo" class="link">Processo</a>
+      <button class="lang-btn" aria-label="Switch language">EN</button>
+      <a href="#contacto" class="nav-cta">Vamos conversar</a>
+    </div>
+    <button class="burger" id="burger" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ======= MOBILE NAV ======= -->
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-close" id="mobileClose" aria-label="Fechar menu">&times;</button>
+  <a href="#videos">Vídeos</a>
+  <a href="#trabalhos">Trabalhos</a>
+  <a href="#especialidades">Especialidades</a>
+  <a href="#diferencial">Porquê a Rasch</a>
+  <a href="#processo">Processo</a>
+  <a href="#contacto">Vamos conversar</a>
+  <button class="lang-btn" aria-label="Switch language">EN</button>
+</div>
+
+<!-- ======= HERO ======= -->
+<header class="hero" id="top">
+  <div class="hero-media">
+    <img src="assets/img/obras/sala-ampla.jpg" alt="Sala remodelada pela Rasch">
+  </div>
+  <div class="wrap hero-inner">
+    <div class="hero-badge"><span class="dot"></span> Construção &amp; Remodelação · Lisboa desde 2007</div>
+    <h1>Tratamos da sua casa<br><span class="gold">como se fosse a nossa.</span></h1>
+    <p class="hero-sub">Do primeiro dia ao último detalhe, é sempre a mesma equipa. Fazemos carpintaria, pintura, electricidade, canalização, impermeabilizações, casas de banho e revestimentos — sem passar a sua obra de mão em mão.</p>
+    <div class="hero-actions">
+      <a href="#contacto" class="btn btn-gold">Conte-nos a sua ideia
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a href="#trabalhos" class="btn btn-ghost">Ver trabalhos</a>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll <span class="bar"></span></div>
+</header>
+
+<!-- ======= TRUST BAR ======= -->
+<section class="trust">
+  <div class="wrap">
+    <div class="trust-grid">
+      <div class="trust-item"><div class="trust-num" data-count="18">0</div><div class="trust-label">Anos de obra</div></div>
+      <div class="trust-item"><div class="trust-num" data-count="8">0</div><div class="trust-label">Especialidades</div></div>
+      <div class="trust-item"><div class="trust-num">100%</div><div class="trust-label">Equipa interna</div></div>
+      <div class="trust-item"><div class="trust-num">1</div><div class="trust-label">Responsável pela obra</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= VÍDEOS / EM MOVIMENTO ======= -->
+<section class="reels section-pad" id="videos">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Acabamento ao detalhe</span>
+      <h2>Veja a obra em movimento.</h2>
+      <p>Há detalhe que uma foto não mostra. Estes são acabamentos reais nossos, filmados na obra.</p>
+    </div>
+    <div class="reels-grid reveal">
+      <figure class="reel">
+        <video src="assets/video/painel-pladur.mp4?v=2" muted loop playsinline preload="none" poster="assets/img/obras/pladur-painel.jpg"></video>
+        <figcaption>
+          <div><span class="rl-cat">Carpintaria &amp; acabamentos</span><div class="rl-title">Painel em pladur + móvel à medida</div></div>
+        </figcaption>
+      </figure>
+      <figure class="reel">
+        <video src="assets/video/ginasio.mp4?v=2" muted loop playsinline preload="none" poster="assets/img/obras/estudio.jpg"></video>
+        <figcaption>
+          <div><span class="rl-cat">Espaços comerciais</span><div class="rl-title">Estúdio / ginásio</div></div>
+        </figcaption>
+      </figure>
+      <figure class="reel">
+        <video src="assets/video/painel-sala-final.mp4?v=2" muted loop playsinline preload="none" poster="assets/img/obras/apartamento-1.jpg"></video>
+        <figcaption>
+          <div><span class="rl-cat">Carpintaria &amp; acabamentos</span><div class="rl-title">Painel de sala + lareira</div></div>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ======= TRABALHOS ======= -->
+<section class="work section-pad" id="trabalhos">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Trabalhos</span>
+      <h2>Obras reais. Acabamentos para ver de perto.</h2>
+    </div>
+  </div>
+  <div class="work-track reveal">
+    <a class="work-card" href="#" data-gallery="fachada-1.jpg|fachada-2.jpg|fachada-3.jpg|fachada-4.jpg|fachada-5.jpg|fachada-6.jpg|fachada-7.jpg" data-title="Fachada em madeira"><span class="gtag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/></svg>7 fotos</span><span class="work-cta">Ver projeto <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><img src="assets/img/obras/fachada-1.jpg" alt="Fachada em madeira" loading="lazy"><div class="work-cap"><span class="cat">Fachadas</span><h4>Fachada em madeira</h4></div></a>
+    <a class="work-card" href="#" data-gallery="pintura-metalica-1.jpg|pintura-metalica-2.jpg|pintura-metalica-3.jpg|pintura-metalica-4.jpg|pintura-metalica-5.jpg" data-title="Pintura metálica"><span class="gtag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/></svg>5 fotos</span><span class="work-cta">Ver projeto <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><img src="assets/img/obras/pintura-metalica-1.jpg" alt="Pintura metálica" loading="lazy"><div class="work-cap"><span class="cat">Pintura</span><h4>Pintura metálica</h4></div></a>
+    <a class="work-card" href="#" data-gallery="tv-painel-1.jpg|tv-painel-2.jpg" data-title="Painéis de TV com iluminação"><span class="gtag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/></svg>2 fotos</span><span class="work-cta">Ver projeto <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><img src="assets/img/obras/tv-painel-1.jpg" alt="Painéis de TV com iluminação" loading="lazy"><div class="work-cap"><span class="cat">Carpintaria</span><h4>Painéis de TV com iluminação</h4></div></a>
+    <a class="work-card" href="#" data-gallery="deck-1.jpg|deck-2.jpg" data-title="Impermeabilização &amp; deck"><span class="gtag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/></svg>2 fotos</span><span class="work-cta">Ver projeto <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><img src="assets/img/obras/deck-1.jpg" alt="Impermeabilização e deck em madeira" loading="lazy"><div class="work-cap"><span class="cat">Exteriores</span><h4>Impermeabilização &amp; deck</h4></div></a>
+    <a class="work-card" href="#" data-gallery="vinil-1.jpg|vinil-2.jpg|vinil-3.jpg|vinil-4.jpg" data-title="Pavimento vinílico"><span class="gtag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/></svg>4 fotos</span><span class="work-cta">Ver projeto <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><img src="assets/img/obras/vinil-1.jpg" alt="Pavimento vinílico" loading="lazy"><div class="work-cap"><span class="cat">Pavimentos</span><h4>Pavimento vinílico</h4></div></a>
+    <a class="work-card" href="#" data-gallery="estudio.jpg|estudio-depois.jpg|ginasio.mp4?v=2" data-title="Estúdio / ginásio"><span class="gtag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="10 8 16 12 10 16 10 8"/><rect x="3" y="4" width="18" height="16" rx="2"/></svg>Foto + vídeo</span><span class="work-cta">Ver projeto <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><img src="assets/img/obras/estudio.jpg" alt="Estúdio / ginásio" loading="lazy"><div class="work-cap"><span class="cat">Espaços comerciais</span><h4>Estúdio / ginásio</h4></div></a>
+    <a class="work-card" href="#" data-gallery="pladur-painel.jpg|painel-pladur.mp4?v=2" data-title="Painel em pladur + móvel à medida"><span class="gtag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="10 8 16 12 10 16 10 8"/><rect x="3" y="4" width="18" height="16" rx="2"/></svg>Foto + vídeo</span><span class="work-cta">Ver projeto <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><img src="assets/img/obras/pladur-painel.jpg" alt="Painel em pladur com móvel à medida" loading="lazy"><div class="work-cap"><span class="cat">Pladur &amp; acabamentos</span><h4>Painel em pladur + móvel à medida</h4></div></a>
+  </div>
+  <div class="wrap"><div class="work-hint reveal">Toque num projeto para ver as fotos e o vídeo da obra.</div></div>
+</section>
+
+<!-- ======= ANTES & DEPOIS ======= -->
+<section class="ba section-pad">
+  <div class="wrap">
+    <div class="section-head reveal" style="text-align:center; margin-left:auto; margin-right:auto;">
+      <span class="eyebrow" style="justify-content:center;">Antes &amp; Depois</span>
+      <h2>A diferença está no fim.</h2>
+    </div>
+    <div class="ba-frame reveal" id="baFrame">
+      <img class="ba-before" src="assets/img/obras/ba2-antes.jpg" alt="Antes da obra">
+      <img class="ba-after" id="baAfter" src="assets/img/obras/ba2-depois.jpg" alt="Depois da obra">
+      <span class="ba-pill l">Antes</span>
+      <span class="ba-pill r">Depois</span>
+      <div class="ba-handle" id="baHandle">
+        <div class="ba-knob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= ESPECIALIDADES ======= -->
+<section class="spec section-pad" id="especialidades">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">O que fazemos</span>
+      <h2>Tudo o que a sua obra precisa, sob o mesmo nome.</h2>
+      <p>Não subcontratamos as partes que importam. Cada especialidade tem profissionais da casa, o que mantém o ritmo, o padrão e a responsabilidade do princípio ao fim.</p>
+    </div>
+    <div class="spec-list reveal">
+      <div class="spec-row" data-img="assets/img/obras/beliche-carvalho.jpg">
+        <div class="spec-idx">01</div>
+        <div class="spec-main"><h3>Carpintaria &amp; acabamentos</h3><p>Roupeiros, cozinhas e mobiliário por medida, portas, rodapés e os remates finos que definem uma obra bem feita.</p></div>
+        <div class="spec-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></div>
+      </div>
+      <div class="spec-row" data-img="assets/img/obras/sala-ampla.jpg">
+        <div class="spec-idx">02</div>
+        <div class="spec-main"><h3>Pintura</h3><p>Interior e exterior, preparação cuidada e acabamentos lisos. Cor certa, sem manchas, sem atalhos.</p></div>
+        <div class="spec-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></div>
+      </div>
+      <div class="spec-row" data-img="assets/img/obras/estudio.jpg">
+        <div class="spec-idx">03</div>
+        <div class="spec-main"><h3>Electricidade</h3><p>Instalações novas e remodelações, quadros, iluminação técnica e decorativa. Tudo dentro da norma.</p></div>
+        <div class="spec-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></div>
+      </div>
+      <div class="spec-row" data-img="assets/img/obras/wc-led.jpg">
+        <div class="spec-idx">04</div>
+        <div class="spec-main"><h3>Canalização</h3><p>Redes de água e esgotos, louças sanitárias e sistemas de aquecimento, executados para durar.</p></div>
+        <div class="spec-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></div>
+      </div>
+      <div class="spec-row" data-img="assets/img/obras/apto-antes.jpg">
+        <div class="spec-idx">05</div>
+        <div class="spec-main"><h3>Impermeabilizações</h3><p>Terraços, varandas, coberturas e zonas húmidas. Resolvemos a origem do problema, não só a mancha.</p></div>
+        <div class="spec-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></div>
+      </div>
+      <div class="spec-row" data-img="assets/img/obras/wc-led.jpg">
+        <div class="spec-idx">06</div>
+        <div class="spec-main"><h3>Casas de banho</h3><p>Remodelação completa: do esticar da rede ao último silicone. Espaços estanques, práticos e bonitos.</p></div>
+        <div class="spec-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></div>
+      </div>
+      <div class="spec-row" data-img="assets/img/obras/sala-detalhe.jpg">
+        <div class="spec-idx">07</div>
+        <div class="spec-main"><h3>Mosaico &amp; revestimentos</h3><p>Azulejo, mosaico e microcimento assentes com nível e juntas certas. O detalhe que separa o bom do impecável.</p></div>
+        <div class="spec-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></div>
+      </div>
+      <div class="spec-row" data-img="assets/img/obras/estrutura-madeira.jpg">
+        <div class="spec-idx">08</div>
+        <div class="spec-main"><h3>Pladur &amp; construção</h3><p>Tectos falsos, divisórias, sancas e pequenas construções. A estrutura que sustenta o resto da obra.</p></div>
+        <div class="spec-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="spec-preview" id="specPreview"><img src="" alt=""></div>
+
+<!-- ======= DIFERENCIAL ======= -->
+<section class="diff section-pad" id="diferencial">
+  <div class="wrap diff-grid">
+    <div class="reveal">
+      <span class="eyebrow">Porquê a Rasch</span>
+      <h2>Importamo-nos. E isso nota-se no fim.</h2>
+      <p>Cada obra é uma responsabilidade que levamos a sério. Cuidamos do detalhe, cumprimos o que combinamos e acompanhamos tudo do princípio ao fim. Não deixamos ninguém na mão a meio do caminho — ficamos até estar bem feito e entregamos com a qualidade que quereríamos na nossa própria casa.</p>
+      <div class="diff-points">
+        <div class="diff-point">
+          <span class="pi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>
+          <div><h4>Cuidado no detalhe</h4><p>Aquilo que quase ninguém repara é o que mais nos preocupa. É no detalhe que se vê o trabalho bem feito.</p></div>
+        </div>
+        <div class="diff-point">
+          <span class="pi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>
+          <div><h4>Responsáveis até ao fim</h4><p>Assumimos a obra de uma ponta à outra. Não desaparecemos a meio nem passamos a culpa para o lado.</p></div>
+        </div>
+        <div class="diff-point">
+          <span class="pi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>
+          <div><h4>Clientes bem tratados</h4><p>Falamos claro, ouvimos e estamos presentes. Quem confia em nós fica à vontade, do orçamento à entrega da chave.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="diff-media reveal">
+      <img src="assets/img/obras/diff-fachada.jpg" alt="Fachada em madeira Rasch Remodeling">
+      <span class="diff-tag">Fachada em madeira · obra Rasch</span>
+    </div>
+  </div>
+</section>
+
+<!-- ======= PROCESSO ======= -->
+<section class="proc section-pad" id="processo">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Como trabalhamos</span>
+      <h2>Um processo claro, do primeiro contacto à entrega.</h2>
+    </div>
+    <div class="proc-grid">
+      <div class="proc-step reveal"><div class="n">01</div><h4>Conversa &amp; visita</h4><p>Ouvimos a sua ideia e vamos ao local. Sem isso, nenhum orçamento é honesto.</p></div>
+      <div class="proc-step reveal"><div class="n">02</div><h4>Orçamento claro</h4><p>Trabalhos, materiais e prazos discriminados. Sabe ao que vai antes de começar.</p></div>
+      <div class="proc-step reveal"><div class="n">03</div><h4>Obra coordenada</h4><p>Uma equipa, uma sequência. Cada especialidade entra na altura certa.</p></div>
+      <div class="proc-step reveal"><div class="n">04</div><h4>Entrega &amp; acompanhamento</h4><p>Verificamos o detalhe consigo e continuamos disponíveis depois da chave.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= CONTACTO ======= -->
+<section class="contact section-pad" id="contacto">
+  <div class="wrap contact-grid">
+    <div class="reveal">
+      <span class="eyebrow">Vamos conversar</span>
+      <h2>Conte-nos a sua <span class="gold">ideia.</span></h2>
+      <p class="lead">Não é pedir um orçamento. É começar uma conversa. Diga-nos o que tem em mente, mostre-nos o espaço, e respondemos com ideias. Sem compromisso, sem pressão.</p>
+      <div class="contact-actions">
+        <a href="https://wa.me/351935495302" target="_blank" rel="noopener" class="btn btn-gold">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.82 11.82 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24z"/></svg>
+          Falar no WhatsApp
+        </a>
+        <a href="tel:+351935495302" class="btn btn-ghost">+351 935 495 302</a>
+      </div>
+      <div class="contact-info">
+        <div class="ci-row">
+          <span class="ci-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+          <div><div class="lbl">Zona</div><div class="val">Oeiras · Lisboa · Cascais</div></div>
+        </div>
+        <div class="ci-row">
+          <span class="ci-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span>
+          <div><div class="lbl">Email</div><div class="val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="167f78707956647765757e386662">[email&#160;protected]</a></div></div>
+        </div>
+        <div class="ci-row">
+          <span class="ci-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span>
+          <div><div class="lbl">Instagram</div><div class="val">@rasch.pt</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="form-card reveal">
+      <h3>Comece a conversa</h3>
+      <p class="fc-sub">Escreva à vontade. Respondemos rápido, normalmente no mesmo dia.</p>
+      <form id="orcForm">
+        <div class="field"><label>Nome</label><input type="text" name="nome" placeholder="Como lhe chamamos?" required></div>
+        <div class="field"><label>Telefone</label><input type="tel" name="telefone" placeholder="+351 ..." required></div>
+        <div class="field"><label>A sua ideia</label><textarea name="mensagem" placeholder="O que tem em mente? Um espaço, uma obra, uma dúvida..."></textarea></div>
+        <button type="submit" class="btn btn-gold">Enviar mensagem
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="form-note">Abrimos o WhatsApp com a sua mensagem já escrita.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ======= FOOTER ======= -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <img src="assets/img/logo-nav.png" alt="Rasch Remodeling LDA">
+        <p>Construção e remodelação com equipa 100% interna. Lisboa, Oeiras e Cascais desde 2007.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Especialidades</h5>
+          <a href="#especialidades">Carpintaria</a>
+          <a href="#especialidades">Pintura</a>
+          <a href="#especialidades">Electricidade</a>
+          <a href="#especialidades">Canalização</a>
+          <a href="#especialidades">Casas de banho</a>
+        </div>
+        <div class="foot-col">
+          <h5>Empresa</h5>
+          <a href="#diferencial">Porquê a Rasch</a>
+          <a href="#trabalhos">Trabalhos</a>
+          <a href="#processo">Processo</a>
+          <a href="#contacto">Contacto</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contacto</h5>
+          <a href="https://wa.me/351935495302" target="_blank" rel="noopener">WhatsApp</a>
+          <a href="/cdn-cgi/l/email-protection#10797e767f5062716373783e6064"><span class="__cf_email__" data-cfemail="5831363e37182a392b3b3076282c">[email&#160;protected]</span></a>
+          <a href="https://instagram.com/rasch.pt" target="_blank" rel="noopener">@rasch.pt</a>
+          <span>+351 935 495 302</span>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> Rasch Remodeling LDA · NIF 518986756</span>
+      <span>Oeiras, Portugal</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Lightbox / galeria de projeto -->
+<div class="lb" id="lightbox">
+  <button class="lb-close" aria-label="Fechar">&times;</button>
+  <div class="lb-stage">
+    <button class="lb-nav lb-prev" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <img class="lb-img" src="" alt="Projeto Rasch">
+    <video class="lb-video" controls playsinline preload="none" style="display:none"></video>
+    <button class="lb-nav lb-next" aria-label="Seguinte"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
+  </div>
+  <div class="lb-bar">
+    <span class="lb-count"></span>
+    <span class="lb-title"></span>
+    <a class="lb-cta" target="_blank" rel="noopener">Quero uma assim <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </div>
+</div>
+
+<!-- WhatsApp float -->
+<a class="wa-float" href="https://wa.me/351935495302" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.82 11.82 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+</a>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// nav scroll
+const nav = document.getElementById('nav');
+addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
+
+// mobile menu
+const mob = document.getElementById('mobileNav');
+document.getElementById('burger').onclick = () => mob.classList.add('open');
+document.getElementById('mobileClose').onclick = () => mob.classList.remove('open');
+mob.querySelectorAll('a').forEach(a => a.onclick = () => mob.classList.remove('open'));
+
+// reveal on scroll
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// number counters
+const counters = document.querySelectorAll('[data-count]');
+const cio = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target, target = +el.dataset.count; let n = 0;
+    const step = Math.max(1, Math.round(target / 40));
+    const t = setInterval(() => { n += step; if (n >= target) { n = target; clearInterval(t); } el.textContent = n; }, 28);
+    cio.unobserve(el);
+  });
+}, { threshold: 0.6 });
+counters.forEach(c => cio.observe(c));
+
+// spec floating preview (desktop) — desativado: fotos por definir
+const preview = document.getElementById('specPreview');
+const previewImg = preview.querySelector('img');
+if (false && matchMedia('(min-width: 921px)').matches) {
+  document.querySelectorAll('.spec-row').forEach(row => {
+    if (!row.dataset.img) return;
+    row.addEventListener('mouseenter', () => { previewImg.src = row.dataset.img; preview.classList.add('show'); });
+    row.addEventListener('mouseleave', () => preview.classList.remove('show'));
+    row.addEventListener('mousemove', (ev) => { preview.style.left = ev.clientX + 'px'; preview.style.top = ev.clientY + 'px'; });
+  });
+}
+
+// before/after: slider de arrastar
+const baFrame = document.getElementById('baFrame');
+if (baFrame) {
+  const baAfter = document.getElementById('baAfter');
+  const baHandle = document.getElementById('baHandle');
+  let baDrag = false;
+  function setBA(x) {
+    const r = baFrame.getBoundingClientRect();
+    let p = ((x - r.left) / r.width) * 100;
+    p = Math.max(2, Math.min(98, p));
+    baAfter.style.clipPath = `inset(0 0 0 ${p}%)`;
+    baHandle.style.left = p + '%';
+  }
+  baFrame.addEventListener('mousedown', e => { baDrag = true; setBA(e.clientX); });
+  addEventListener('mousemove', e => baDrag && setBA(e.clientX));
+  addEventListener('mouseup', () => baDrag = false);
+  baFrame.addEventListener('touchstart', e => setBA(e.touches[0].clientX), {passive:true});
+  baFrame.addEventListener('touchmove', e => setBA(e.touches[0].clientX), {passive:true});
+}
+
+// reels: autoplay sem som ao entrar no ecrã, toque para som
+const reelVids = document.querySelectorAll('.reel video');
+if (reelVids.length) {
+  const rio = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.play().catch(()=>{}); } else { e.target.pause(); }
+  }), { threshold: 0.5 });
+  reelVids.forEach(v => rio.observe(v));
+}
+
+// portfólio que fala -> cada obra abre o WhatsApp a referir aquela obra
+document.querySelectorAll('.work-card[data-work]').forEach(a => {
+  const t = a.dataset.work;
+  a.href = `https://wa.me/351935495302?text=${encodeURIComponent('Olá Rasch! Vi a obra "' + t + '" no vosso site e queria algo parecido. Podemos conversar?')}`;
+  a.target = '_blank'; a.rel = 'noopener';
+});
+
+// galeria de projeto (lightbox)
+const lb = document.getElementById('lightbox');
+const lbImg = lb.querySelector('.lb-img');
+const lbCount = lb.querySelector('.lb-count');
+const lbTitle = lb.querySelector('.lb-title');
+const lbCta = lb.querySelector('.lb-cta');
+const lbVid = lb.querySelector('.lb-video');
+let gImgs = [], gIdx = 0, gTitle = '';
+function showG(){
+  const name = gImgs[gIdx];
+  if (/\.mp4(\?|$)/i.test(name)) {
+    lbImg.style.display = 'none';
+    lbVid.style.display = '';
+    lbVid.src = 'assets/video/' + name;
+  } else {
+    lbVid.pause(); lbVid.removeAttribute('src'); lbVid.style.display = 'none';
+    lbImg.style.display = '';
+    lbImg.src = 'assets/img/obras/' + name;
+  }
+  lbCount.textContent = (gIdx+1) + ' / ' + gImgs.length;
+}
+function navG(d){ lbVid.pause(); gIdx = (gIdx + d + gImgs.length) % gImgs.length; showG(); }
+function openGallery(imgs, title){
+  gImgs = imgs; gIdx = 0; gTitle = title;
+  lbTitle.textContent = (typeof lang !== 'undefined' && lang === 'en' && I18N[title]) ? I18N[title] : title;
+  lbCta.href = `https://wa.me/351935495302?text=${encodeURIComponent('Olá Rasch! Vi o projeto "' + title + '" no vosso site e queria algo parecido. Podemos conversar?')}`;
+  showG(); lb.classList.add('open'); document.body.style.overflow = 'hidden';
+}
+function closeG(){ lbVid.pause(); lb.classList.remove('open'); document.body.style.overflow = ''; }
+document.querySelectorAll('.work-card[data-gallery]').forEach(c => {
+  c.addEventListener('click', e => { e.preventDefault(); openGallery(c.dataset.gallery.split('|'), c.dataset.title || 'Projeto'); });
+});
+lb.querySelector('.lb-close').onclick = closeG;
+lb.querySelector('.lb-prev').onclick = () => navG(-1);
+lb.querySelector('.lb-next').onclick = () => navG(1);
+lb.addEventListener('click', e => { if (e.target === lb) closeG(); });
+addEventListener('keydown', e => { if (!lb.classList.contains('open')) return; if (e.key === 'Escape') closeG(); if (e.key === 'ArrowLeft') navG(-1); if (e.key === 'ArrowRight') navG(1); });
+
+// conversa -> whatsapp
+document.getElementById('orcForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const f = e.target;
+  const txt = `Olá Rasch! Tenho uma ideia em mente.\n\nNome: ${f.nome.value}\nTelefone: ${f.telefone.value}\nIdeia: ${f.mensagem.value}`;
+  window.open(`https://wa.me/351935495302?text=${encodeURIComponent(txt)}`, '_blank');
+});
+
+// year
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// ===== i18n PT <-> EN =====
+const I18N = {
+  "Especialidades":"Specialties","Porquê a Rasch":"Why Rasch","Trabalhos":"Work","Processo":"Process","Vamos conversar":"Let's talk",
+  "Construção & Remodelação · Lisboa desde 2007":"Construction & Renovation · Lisbon since 2007",
+  "Tratamos da sua casa":"We treat your home","como se fosse a nossa.":"as if it were ours.",
+  "Do primeiro dia ao último detalhe, é sempre a mesma equipa. Fazemos carpintaria, pintura, electricidade, canalização, impermeabilizações, casas de banho e revestimentos — sem passar a sua obra de mão em mão.":"From day one to the final detail, it's always the same team. We handle carpentry, painting, electrics, plumbing, waterproofing, bathrooms and tiling — without passing your project from hand to hand.",
+  "Conte-nos a sua ideia":"Tell us your idea","Ver trabalhos":"View work",
+  "Anos de obra":"Years on site","Equipa interna":"In-house team","Responsável pela obra":"Project lead",
+  "O que fazemos":"What we do","Tudo o que a sua obra precisa, sob o mesmo nome.":"Everything your project needs, under one name.",
+  "Não subcontratamos as partes que importam. Cada especialidade tem profissionais da casa, o que mantém o ritmo, o padrão e a responsabilidade do princípio ao fim.":"We don't subcontract the parts that matter. Every trade has in-house professionals — keeping the pace, the standard and the responsibility from start to finish.",
+  "Carpintaria & acabamentos":"Carpentry & finishes","Roupeiros, cozinhas e mobiliário por medida, portas, rodapés e os remates finos que definem uma obra bem feita.":"Wardrobes, kitchens and bespoke furniture, doors, skirting and the fine details that define work done right.",
+  "Pintura":"Painting","Interior e exterior, preparação cuidada e acabamentos lisos. Cor certa, sem manchas, sem atalhos.":"Interior and exterior, careful prep and smooth finishes. The right colour, no patches, no shortcuts.",
+  "Electricidade":"Electrics","Instalações novas e remodelações, quadros, iluminação técnica e decorativa. Tudo dentro da norma.":"New installs and rewiring, panels, technical and decorative lighting. All up to code.",
+  "Canalização":"Plumbing","Redes de água e esgotos, louças sanitárias e sistemas de aquecimento, executados para durar.":"Water and drainage systems, sanitary ware and heating, built to last.",
+  "Impermeabilizações":"Waterproofing","Terraços, varandas, coberturas e zonas húmidas. Resolvemos a origem do problema, não só a mancha.":"Terraces, balconies, roofs and wet areas. We fix the source of the problem, not just the stain.",
+  "Casas de banho":"Bathrooms","Remodelação completa: do esticar da rede ao último silicone. Espaços estanques, práticos e bonitos.":"Full renovation: from the pipework to the final sealant. Watertight, practical and beautiful spaces.",
+  "Mosaico & revestimentos":"Tiling & surfaces","Azulejo, mosaico e microcimento assentes com nível e juntas certas. O detalhe que separa o bom do impecável.":"Tile, mosaic and microcement laid level with clean joints. The detail that separates good from flawless.",
+  "Pladur & construção":"Drywall & building","Tectos falsos, divisórias, sancas e pequenas construções. A estrutura que sustenta o resto da obra.":"False ceilings, partitions, coving and small builds. The structure that holds the rest together.",
+  "Importamo-nos. E isso nota-se no fim.":"We care. And it shows at the end.",
+  "Cada obra é uma responsabilidade que levamos a sério. Cuidamos do detalhe, cumprimos o que combinamos e acompanhamos tudo do princípio ao fim. Não deixamos ninguém na mão a meio do caminho — ficamos até estar bem feito e entregamos com a qualidade que quereríamos na nossa própria casa.":"Every project is a responsibility we take seriously. We care about the detail, we deliver what we promised and we see everything through from start to finish. We don't leave anyone hanging halfway — we stay until it's done right and deliver with the quality we'd want in our own home.",
+  "Cuidado no detalhe":"Care in the detail","Aquilo que quase ninguém repara é o que mais nos preocupa. É no detalhe que se vê o trabalho bem feito.":"What almost no one notices is what we care about most. The detail is where good work shows.",
+  "Responsáveis até ao fim":"Responsible to the end","Assumimos a obra de uma ponta à outra. Não desaparecemos a meio nem passamos a culpa para o lado.":"We own the project from one end to the other. We don't vanish halfway or pass the blame.",
+  "Clientes bem tratados":"Clients treated well","Falamos claro, ouvimos e estamos presentes. Quem confia em nós fica à vontade, do orçamento à entrega da chave.":"We speak clearly, we listen and we're present. Anyone who trusts us feels at ease, from quote to handover.",
+  "Acabamento real · obra Rasch":"Real finish · Rasch project",
+  "Obras reais. Acabamentos para ver de perto.":"Real projects. Finishes worth a closer look.",
+  "Carpintaria":"Carpentry","Beliche em carvalho":"Oak bunk bed","Acabamentos":"Finishes","Painel de sala em madeira":"Wooden living-room panel",
+  "Casa de banho com LED":"Bathroom with LED","Hall em madeira":"Wood-lined hallway","Remodelação":"Renovation","Sala de estar":"Living room",
+  "Espaços comerciais":"Commercial spaces","Estúdio iluminado":"Lit studio","Construção":"Building","Estrutura em madeira":"Timber structure","Parede em madeira":"Wood-clad wall",
+  "Quero uma assim":"I want one like this","Ver projeto":"View project","5 fotos":"5 photos","Apartamento em madeira":"Wood-panelled apartment","Carpintaria & acabamentos":"Carpentry & finishes","Painel em pladur + móvel à medida":"Drywall panel + bespoke unit","Estúdio / ginásio":"Studio / gym","Acabamento ao detalhe":"Finish in detail","Veja a obra em movimento.":"See the work in motion.","Há detalhe que uma foto não mostra. Estes são acabamentos reais nossos, filmados na obra.":"Some detail a photo can't show. These are real finishes of ours, filmed on site.","Vídeos":"Videos","Fotos + vídeo":"Photos + video","Painel de sala + lareira":"Living-room panel + fireplace","Fachada em madeira":"Timber facade","Fachadas":"Facades","Pintura metálica":"Metal painting","7 fotos":"7 photos","Painéis de TV com iluminação":"Lit TV panels","Impermeabilização & deck":"Waterproofing & decking","Exteriores":"Exteriors","Pavimento vinílico":"Vinyl flooring","Pavimentos":"Flooring","2 fotos":"2 photos","4 fotos":"4 photos","Fachada em madeira · obra Rasch":"Timber facade · Rasch project","Pladur & acabamentos":"Drywall & finishes","Foto + vídeo":"Photo + video",
+  "Toque num projeto para ver as fotos e o vídeo da obra.":"Tap a project to see the photos and video of the work.",
+  "Antes & Depois":"Before & After","A diferença está no fim.":"The difference shows at the end.","Antes":"Before","Depois":"After",
+  "Como trabalhamos":"How we work","Um processo claro, do primeiro contacto à entrega.":"A clear process, from first contact to handover.",
+  "Conversa & visita":"Talk & visit","Ouvimos a sua ideia e vamos ao local. Sem isso, nenhum orçamento é honesto.":"We listen to your idea and visit the site. Without that, no quote is honest.",
+  "Orçamento claro":"Clear quote","Trabalhos, materiais e prazos discriminados. Sabe ao que vai antes de começar.":"Work, materials and timelines itemised. You know exactly what to expect before we start.",
+  "Obra coordenada":"Coordinated work","Uma equipa, uma sequência. Cada especialidade entra na altura certa.":"One team, one sequence. Each trade steps in at the right time.",
+  "Entrega & acompanhamento":"Handover & support","Verificamos o detalhe consigo e continuamos disponíveis depois da chave.":"We check the details with you and stay available after the keys are handed over.",
+  "Conte-nos a sua":"Tell us your","ideia.":"idea.",
+  "Não é pedir um orçamento. É começar uma conversa. Diga-nos o que tem em mente, mostre-nos o espaço, e respondemos com ideias. Sem compromisso, sem pressão.":"It's not asking for a quote. It's starting a conversation. Tell us what you have in mind, show us the space, and we'll reply with ideas. No commitment, no pressure.",
+  "Falar no WhatsApp":"Chat on WhatsApp","Zona":"Area","Oeiras · Lisboa · Cascais":"Oeiras · Lisbon · Cascais",
+  "Comece a conversa":"Start the conversation","Escreva à vontade. Respondemos rápido, normalmente no mesmo dia.":"Write freely. We reply fast, usually the same day.",
+  "Nome":"Name","Telefone":"Phone","A sua ideia":"Your idea","Enviar mensagem":"Send message","Abrimos o WhatsApp com a sua mensagem já escrita.":"We'll open WhatsApp with your message ready.",
+  "Construção e remodelação com equipa 100% interna. Lisboa, Oeiras e Cascais desde 2007.":"Construction and renovation with a 100% in-house team. Lisbon, Oeiras and Cascais since 2007.",
+  "Empresa":"Company","Contacto":"Contact"
+};
+const PH = {
+  "Como lhe chamamos?":"What should we call you?",
+  "O que tem em mente? Um espaço, uma obra, uma dúvida...":"What do you have in mind? A space, a project, a question..."
+};
+let lang = 'pt';
+function setLang(l) {
+  lang = l; const toEN = l === 'en';
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, { acceptNode(n){
+    if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+    const p = n.parentNode; if (!p) return NodeFilter.FILTER_REJECT;
+    const tag = p.nodeName; if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'BUTTON') return NodeFilter.FILTER_REJECT;
+    if (p.id === 'year' || p.classList.contains('trust-num') || p.hasAttribute('data-count')) return NodeFilter.FILTER_REJECT;
+    return NodeFilter.FILTER_ACCEPT;
+  }});
+  const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(n => {
+    if (n.__pt === undefined) n.__pt = n.nodeValue;
+    const key = n.__pt.trim();
+    if (toEN && I18N[key] !== undefined) {
+      const lead = (n.__pt.match(/^\s*/)||[''])[0], trail = (n.__pt.match(/\s*$/)||[''])[0];
+      n.nodeValue = lead + I18N[key] + trail;
+    } else { n.nodeValue = n.__pt; }
+  });
+  document.querySelectorAll('[placeholder]').forEach(el => {
+    if (el.__ph === undefined) el.__ph = el.getAttribute('placeholder');
+    el.setAttribute('placeholder', (toEN && PH[el.__ph] !== undefined) ? PH[el.__ph] : el.__ph);
+  });
+  document.documentElement.lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.textContent = toEN ? 'PT' : 'EN');
+}
+document.querySelectorAll('.lang-btn').forEach(b => b.onclick = () => setLang(lang === 'pt' ? 'en' : 'pt'));
+</script>
+</body>
+</html>
