@@ -499,6 +499,42 @@ if ($run05 -match "fail\s+0" -and $run05 -match "pass\s+2") {
     Write-Host "RUN-05 FAILED"
     $global:REVIEW_UNIT_FAIL = $true
 }
+
+# RUN-06 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "RUN-06 - record operational failures and useful-work measurements"
+$run06 = & node --test (Join-Path $PSScriptRoot "run_06_ops_measurements.test.mjs") 2>&1 | Out-String
+Write-Host $run06
+if ($run06 -match "fail\s+0" -and $run06 -match "pass\s+2") {
+    Write-Host "RUN-06 2/0/2"
+} else {
+    Write-Host "RUN-06 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
+# RUN-07 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "RUN-07 - back up and restore the full permitted working record"
+$run07 = & node --test (Join-Path $PSScriptRoot "run_07_backup_restore.test.mjs") 2>&1 | Out-String
+Write-Host $run07
+if ($run07 -match "fail\s+0" -and $run07 -match "pass\s+2") {
+    Write-Host "RUN-07 2/0/2"
+} else {
+    Write-Host "RUN-07 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
+# RUN-08 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "RUN-08 - package an internal release and a recoverable deployment route"
+$run08 = & node --test (Join-Path $PSScriptRoot "run_08_release_package.test.mjs") 2>&1 | Out-String
+Write-Host $run08
+if ($run08 -match "fail\s+0" -and $run08 -match "pass\s+2") {
+    Write-Host "RUN-08 2/0/2"
+} else {
+    Write-Host "RUN-08 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
 # SAFE-08 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "SAFE-08 - independent access and untrusted-content tests"
