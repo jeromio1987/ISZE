@@ -1,150 +1,36 @@
 {
-  "artifact": "02_dashboards/hub/ISZE_UNIVERSE_BOARD.html",
-  "artifact_abs": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\hub\\ISZE_UNIVERSE_BOARD.html",
-  "built_by": "02_dashboards/_build/build_universe_board.py",
-  "built_at_local": "2026-09-24 22:39",
-  "artifact_bytes": 72203,
-  "artifact_sha256": "60e30db1bd9ea6aa870ada0d4cb865cc712f571a353dd78a039a2b306b9b45be",
-  "artifact_mtime": "2026-09-24T22:39:23",
   "ok": true,
-  "schema": "v2",
-  "purpose": "Pillar board: what the strategy paper's five tools actually are today, each of the six pillars scored condition by condition with its reason printed, the roadmap stage by stage, every live page listed, unattended jobs read live, and the honest open list.",
-  "rebuilt_reason": "Jerome's two decisions of 2026-09-24: the conditions become quality-based and the scoring becomes graded, per 00_docs/AIM_COVERAGE_MEASURE_2026-09-24.md (the five AIM conditions) and 02_dashboards/hub/_review/PILLAR_BOARD_ATTACK_2026-09-24.md (the counter-score and the three plain errors).",
-  "what_changed": [
-    {
-      "fault": "Twelve of sixteen met conditions tested only whether a file existed.",
-      "fix": "Each pillar's file-existence lines are replaced by a test of the work: AIM takes the five conditions from the coverage memo (coverage on billed euro, accuracy on a 50-part sample, one approved frozen release, a distributor page, the safety gate); elsewhere the tests read the page's own prose, the feed's own scores, the paper's own funding table, the app's own port and page files, and the onward-purchase files on disk.",
-      "effect": "29 of 60 condition points are earned: AIM 60%, IDS 40%, Range 20%, Pricing 40%, PRISM 60%, Tenders 70%."
-    },
-    {
-      "fault": "Every condition scored yes or no, so a partial or double-counted product scored a full point.",
-      "fix": "Graded: 1 met, 1/2 partial or credit repeated for the same product, 0 not met. Every condition carries a written 'what this tests' sentence and a written reason, and a condition that cannot be tested from a file says so instead of scoring a weaker stand-in.",
-      "effect": "10 conditions met, 9 half, 11 not met across the 30."
-    },
-    {
-      "fault": "'53% Whole portfolio' was the headline, a progress-bar reading that hides that no tool is open.",
-      "fix": "Headline is now '0 of 5 tools a distributor can open. Roadmap: stage 1 complete.' - read from the paper's own five tool names and the strategy paper's own six stages. The groundwork figure (48%, 29 of 60 points) sits under the pillars, labelled internal groundwork.",
-      "effect": "Headline changed; no overall percentage appears as a headline."
-    },
-    {
-      "fault": "'96 country pages' on the IDS pillar.",
-      "cause": "The counter matched the bare name 'dealer_compare_', so it counted 19 real pages, 39 backups and 19 receipts.",
-      "fix": "count_country_pages() counts live .html pages only, excluding .bak_ copies, receipts and the all-markets overview.",
-      "effect": "Reads 19 real pages, and the roadmap line reads the same count so it cannot drift again."
-    },
-    {
-      "fault": "GBP 150,000 as the minimum campaign size.",
-      "cause": "Typed into the builder in pounds; the strategy paper writes every amount in euros.",
-      "fix": "The paper's funding table is parsed at build time and printed in euros.",
-      "effect": "EUR 150,000 eligible billing, plus the EUR 60,000 to EUR 90,000 line and the EUR 15,000 to EUR 25,000 enablement line, all from the paper."
-    },
-    {
-      "fault": "The weekly tender job was reported as never having run.",
-      "cause": "The builder stored the task as 'ISZE_Tender_Monitor' and looked it up as 'ISZE Tender Monitor'.",
-      "fix": "The task is read by its registered name, verified against schtasks before the change.",
-      "effect": "The line reads last ran 21/09/2026 7:30:00, last result 0; the jobs table agrees."
-    }
-  ],
-  "scores_after_build": {
-    "headline": "0 of 5 tools a distributor can open. Roadmap: stage 1 complete.",
-    "tools_open_to_a_distributor": 0,
-    "tools_total": 5,
-    "groundwork_pct": 48,
-    "groundwork_points": "29 of 60",
-    "aim": 60,
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\_worktrees\\ISZE_u29c_ids_ituk_pt\\02_dashboards\\hub\\ISZE_UNIVERSE_BOARD.html",
+  "artifact_mtime": "2026-10-07T15:07:03",
+  "built_at": "2026-10-07T15:07:03",
+  "purpose": "Re-grade Universe board pillar scores against live Oct 2026 sources (rebuild authorised).",
+  "built_by": "02_dashboards/_build/build_universe_board.py",
+  "groundwork_pct": 43,
+  "groundwork_points": 26,
+  "headline": "0 of 5 tools a distributor can open. Roadmap: stage 1 complete.",
+  "pillar_pct": {
+    "aim": 40,
     "ids": 40,
-    "range_campaign": 20,
-    "pricing_margin": 40,
+    "range": 20,
+    "pricing": 40,
     "prism": 60,
-    "tenders": 70,
-    "conditions": "10 met, 9 half, 11 not met"
+    "tenders": 60
   },
-  "checks_on_the_written_file": {
-    "method": "check_universe_board.py on the file on disk, plus a headless Chrome DOM dump",
-    "checker_verdict": "BOARD_CHECK_OK",
-    "static": {
-      "pillar_cards": 6,
-      "ring_charts": 6,
-      "check_lines": 30,
-      "stage_rows": 6,
-      "groups": 11,
-      "page_links": 115,
-      "nan_literal": false,
-      "fetch_calls": 0,
-      "cdn_refs": 0
-    },
-    "source_links": "132 checked, 0 missing",
-    "deploy_links": "132 checked, 1 missing - the 04_tools R&M digest, which is not in the deploy set",
-    "headline_painted": "0 of 5 tools a distributor can open. Roadmap: stage 1 complete.",
-    "scores_painted": [
-      "60",
-      "40",
-      "20",
-      "40",
-      "60",
-      "70"
-    ],
-    "groundwork_painted": "48% of 60 condition points",
-    "corrected_numbers_painted": [
-      "19 real pages",
-      "EUR 150,000",
-      "last ran 21/09/2026 7:30:00, result 0"
-    ],
-    "stale_strings_absent": [
-      "96 country pages",
-      "GBP",
-      "&pound;",
-      "Whole portfolio",
-      "EUR 56.5"
-    ],
-    "every_condition_has_a_test_and_a_reason": true,
-    "graded_scores_only": true
+  "checks": {
+    "no_stale_banner": true,
+    "six_pillars": true,
+    "aim_coverage_score": 1,
+    "prism_runs_score": 1,
+    "html_bytes": 47710,
+    "open_cmd_crlf": true,
+    "coverage_measure_regenerated": true,
+    "accuracy_sample_missing": true,
+    "notes": [
+      "AIM accuracy sample CSV still missing on disk \u2014 that condition scores 0 honestly.",
+      "AIM coverage re-measured live: 99.04% GPS-facing billed euro with has_aim.",
+      "PRISM port 8503 was up during build.",
+      "Page inventory still missing (collect_page_inventory.py) \u2014 noted by builder."
+    ]
   },
-  "visual_checks": {
-    "engine": "headless Chrome --headless=new, 1400px wide, file:// open, no server",
-    "screenshots_taken": 9,
-    "screenshots_read": 9,
-    "read_by": "the agent in this session, one at a time, at full size",
-    "band_detail": "rendered to a 1400x14000 canvas, cropped to content (last content row 11679), sliced into band1.png, band2.png, band3.png, band4.png, band5.png, band6.png, band7.png, band8.png, band9.png",
-    "ink_density_per_band_pct": [
-      66,
-      82,
-      82,
-      71,
-      72,
-      81,
-      78,
-      59,
-      76
-    ],
-    "blank_bands": 0,
-    "what_was_seen": [
-      "Hero prints the headline sentence and the two lede paragraphs; the overall ring is gone",
-      "The five-tools table lists all five tool names, each marked no, with the reason beside it",
-      "Pillar cards print graded half and quarter marks beside 1 and 0, each with a test line and a reason line",
-      "Tenders card dates the weekly run; the jobs table shows the same date and result 0",
-      "Roadmap stage 2 reads 'Done 2026-09-24'; cost note is in euros",
-      "Numbers table names the unclassified part numbers above EUR 5,000 with their euro and prints the residual euro"
-    ],
-    "not_read_word_by_word": "The reason sentences are set at 12.5px; at band scale the structure, scores, headline and corrected numbers were confirmed, but the longest reason sentences were not re-read word by word on the image."
-  },
-  "launcher": {
-    "path": "02_dashboards/hub/OPEN_ISZE_UNIVERSE_BOARD.cmd",
-    "line_ending": "CRLF",
-    "user_open": "cmd-only (not auto-started)"
-  },
-  "release_context": {
-    "approved_release": "2026-09-20",
-    "approved_by": "Jerome",
-    "approved_on": "2026-09-24",
-    "sha256": "60111c104ddeb466e6c15f084039639d35172056b0fd2ea10225a3c50da610e0",
-    "other_candidate": "2026-09-24-candidate still NOT_RELEASED"
-  },
-  "not_done": [
-    "Nothing published to GitHub Pages.",
-    "The board is not pushed anywhere; the deploy mirrors were refreshed by sync_to_deploys.ps1 only.",
-    "The 04_tools R&M digest link resolves in the working copy and in neither deploy copy - unchanged.",
-    "The ten per-distributor tender pages were not made a scored condition.",
-    "No IDS page, PRISM page or tender digest was touched: other agents are working on those."
-  ]
+  "written_at": "2026-10-07T13:07:45+00:00"
 }

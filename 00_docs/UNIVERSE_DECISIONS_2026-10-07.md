@@ -9,7 +9,7 @@ From the approved U1–U26 assessment plan. Internal.
 | 3 | Portugal competitor scrape | **UK first; Portugal insufficient for now** | Two host sweeps; no usable PT shop pages; bar 50 rows, PT ~27. No third automated sweep. Hand collection only if you later ask |
 | 4 | First real INTERNAL feeds | **Tender + PRISM + IDS (ITUK + Portugal I-Motors)** | PR 72 MERGED `41cddad1` (tender + PRISM). PR **77** MERGED `7d2c1630` — real IDS answers for Ferndown (ITUK) and Astara Lisboa (Portugal). Stock still optional later — needs a real stock observation file, not billed-vs-sales-to-dealer |
 | 5 | ACCEPT-04 / 05 participants | **Names blank — you fill** | Roster: `UNIVERSE_ACCEPT_PARTICIPANT_ROSTER_2026-10-07.md`. Scripts on PR 73 |
-| 6 | Sep 24 Universe board | **Marked STALE** (scores not re-graded) | Banner on `ISZE_UNIVERSE_BOARD.html` + fields in `universe_board_state.json`. Live status = status note + map |
+| 6 | Universe board scores | **Re-graded 7 Oct 2026** | Live rebuild: groundwork **43%** (26/60). AIM accuracy sample file still missing (scores 0). Launcher `OPEN_ISZE_UNIVERSE_BOARD.cmd`. |
 
 ## Landed after the assessment pack (7 Oct, small pieces)
 
@@ -24,4 +24,4 @@ From the approved U1–U26 assessment plan. Internal.
 
 - Fill participant names on the roster before any ACCEPT run.
 - Hand a **real stock observation** file if you want CONNECT-06 filled on INTERNAL (not inventable from billing).
-- Universe board pillar scores remain Sep 24 content (STALE banner); re-grade only when you say rebuild.
+- Universe board re-graded 7 Oct (see decision #6). Accuracy sample CSV still missing.

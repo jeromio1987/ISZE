@@ -1,0 +1,144 @@
+{
+  "window": {
+    "from": "2025-09-01",
+    "to": "2026-08-31",
+    "basis": "sales_fact.parquet GPS-facing sold_to (PRISM exclusions), NON_PART_LINE_KIND removed, positive billed_qty; aim_master_v2.csv has_aim=1"
+  },
+  "totals": {
+    "eur": 33285903.270000003,
+    "rows": 146466,
+    "part_numbers": 15868
+  },
+  "covered": {
+    "eur": 32965931.209999997,
+    "share": 0.9903871600718016,
+    "part_numbers": 14218
+  },
+  "residual_top15": [
+    {
+      "part_number": "8982263230",
+      "billed_eur": 19525.08,
+      "description": "REPAIR KIT; AIR DRYER",
+      "family": "",
+      "pn": "8982263230",
+      "desc": "REPAIR KIT; AIR DRYER"
+    },
+    {
+      "part_number": "7552498490",
+      "billed_eur": 8999.92,
+      "description": "FRAME ASM",
+      "family": "",
+      "pn": "7552498490",
+      "desc": "FRAME ASM"
+    },
+    {
+      "part_number": "7552498500",
+      "billed_eur": 8999.92,
+      "description": "FRAME ASM",
+      "family": "",
+      "pn": "7552498500",
+      "desc": "FRAME ASM"
+    },
+    {
+      "part_number": "7553068050",
+      "billed_eur": 7414.2,
+      "description": "CASE; RR AXLE",
+      "family": "",
+      "pn": "7553068050",
+      "desc": "CASE; RR AXLE"
+    },
+    {
+      "part_number": "8979461460",
+      "billed_eur": 6992.62,
+      "description": "HOSE; FLEX,P/S CONT VLV",
+      "family": "",
+      "pn": "8979461460",
+      "desc": "HOSE; FLEX,P/S CONT VLV"
+    },
+    {
+      "part_number": "8982034990",
+      "billed_eur": 6850.25,
+      "description": "TRANSMISSION ASM; MANUAL",
+      "family": "",
+      "pn": "8982034990",
+      "desc": "TRANSMISSION ASM; MANUAL"
+    },
+    {
+      "part_number": "8984818641",
+      "billed_eur": 6410.29,
+      "description": "CASE; RR AXLE",
+      "family": "",
+      "pn": "8984818641",
+      "desc": "CASE; RR AXLE"
+    },
+    {
+      "part_number": "7552623640",
+      "billed_eur": 6214.67,
+      "description": "BOX ASM; SHIFT CONT",
+      "family": "",
+      "pn": "7552623640",
+      "desc": "BOX ASM; SHIFT CONT"
+    },
+    {
+      "part_number": "8976641840",
+      "billed_eur": 3975.34,
+      "description": "FRAME; CUSHION,FRT SEAT",
+      "family": "",
+      "pn": "8976641840",
+      "desc": "FRAME; CUSHION,FRT SEAT"
+    },
+    {
+      "part_number": "8975372320",
+      "billed_eur": 3642.57,
+      "description": "TRANSMISSION ASM; AUTO",
+      "family": "",
+      "pn": "8975372320",
+      "desc": "TRANSMISSION ASM; AUTO"
+    },
+    {
+      "part_number": "8972666576",
+      "billed_eur": 3533.16,
+      "description": "DISPLAY; MULTI",
+      "family": "",
+      "pn": "8972666576",
+      "desc": "DISPLAY; MULTI"
+    },
+    {
+      "part_number": "7552029253",
+      "billed_eur": 3331.2,
+      "description": "MOTOR ASM; REAR DRIVE",
+      "family": "",
+      "pn": "7552029253",
+      "desc": "MOTOR ASM; REAR DRIVE"
+    },
+    {
+      "part_number": "7552357310",
+      "billed_eur": 3251.26,
+      "description": "HYDRAULIC UNIT; ANTI LOCK BRK",
+      "family": "",
+      "pn": "7552357310",
+      "desc": "HYDRAULIC UNIT; ANTI LOCK BRK"
+    },
+    {
+      "part_number": "8984818581",
+      "billed_eur": 3190.63,
+      "description": "CASE; RR AXLE",
+      "family": "",
+      "pn": "8984818581",
+      "desc": "CASE; RR AXLE"
+    },
+    {
+      "part_number": "8983996200",
+      "billed_eur": 3173.8,
+      "description": "RAIL ASM; COMMON",
+      "family": "",
+      "pn": "8983996200",
+      "desc": "RAIL ASM; COMMON"
+    }
+  ],
+  "source_files": [
+    "sales_fact.parquet",
+    "aim_master_v2.csv"
+  ],
+  "built_at": "2026-10-07T15:05:45"
+}
