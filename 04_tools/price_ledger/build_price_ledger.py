@@ -100,12 +100,40 @@ FX, FX_NOTE = _load_fx()
 
 PLACEHOLDER_MAX = 2.34      # Autodoc-style 'no result' placeholder; anything <= this is refused
 
+# U26 2026-10-07 (delivery basis, Jerome's instruction): the ledger's row fields are
+# "delivery included or not (+ cost if shown)". Two columns, deliberately split so the
+# field cannot pretend to know more than the page said:
+#
+#   delivery_note      what the page actually says, short and verbatim-ish, or blank
+#                      when the page is silent on carriage.
+#   delivery_included  only yes / no, and ONLY where the page states it for that
+#                      listing, or states a threshold rule the listed price meets or
+#                      fails. Blank when the page is silent. NEVER inferred from the
+#                      absence of a charge, and never from the price.
+#
+# WHY A SEPARATE PAIR AND NOT ONE FIELD. The evidence rules refuse a row whose delivery
+# basis is not stated (reason code DELIVERY_BASIS_NOT_STATED, produced in
+# `Isuzu Universe/05_AIM_Universe/src/data/comparable.js` from the shared rule in
+# `evidence.js` `adjustToComparable`). Before today no column carried that basis, so
+# EVERY harvested row was excluded on it and the coverage build could not produce a
+# single eligible comparable. `delivery_included` supplies what that rule reads;
+# `delivery_note` keeps the wording so a reader can see what was read rather than
+# trusting a yes or no.
+#
+# NOTE FOR EDITORS: keep this comment OUT of the COLUMNS literal below. The schema
+# mirror is checked by `04_tools/delegation/parsers/_selftest_schema.py`, which reads the
+# literal with a regex for quoted strings and would otherwise pick words out of a comment.
 COLUMNS = [
     "obs_id", "part_no", "match_method", "competitor_brand", "competitor_pn", "description",
     "source", "source_url", "country", "observed_at", "vintage",
     "price", "price_avg", "currency", "price_eur", "fx_note", "vat",
     "price_type", "stock", "n_obs", "loader",
+    "delivery_note", "delivery_included",
 ]
+
+# The only values `delivery_included` may carry. Blank (None/NaN) is the default and means
+# the page stated nothing; it is not the same as "no".
+DELIVERY_INCLUDED_VALUES = {"yes", "no"}
 PRICE_TYPES = {
     "aftermarket_trade", "aftermarket_retail", "genuine_grey", "online_median",
     "survey_workshop", "survey_list", "dealer", "quote", "oem_value_line", "marketplace", "estimate",
@@ -332,6 +360,14 @@ def load_scraped_phase1():
 
     Rows whose verdict starts with `reject:` are not loaded. Missing file = no rows,
     so the ledger still builds from local sources alone if the bridge has not been run.
+
+    U26 (2026-10-07, agent E merge): rows whose loader is `spareto_crossref` are
+    deliberately NOT loaded here. A Spareto row is a cross-reference observation, not
+    a usable competitor price — the price is retail incl. VAT at a rate the page does
+    not state, so the evidence rules exclude it (TAX_RATE_NOT_STATED) and it would
+    inflate the ledger's row counts without adding a usable comparable. It travels
+    through `04_tools/aftermarket_intelligence/state/spareto_crossref.csv`, the path
+    `grade_crossref_edges.py` reads. Dropped by loader, on purpose, not by accident.
     """
     f = ROOT / "04_tools" / "price_ledger" / "OFFERED_ROWS.csv"
     if not f.exists():
@@ -339,6 +375,24 @@ def load_scraped_phase1():
     d = pd.read_csv(f, dtype={"part_no": str, "competitor_pn": str, "obs_id": str})
     if "verdict" in d.columns:
         d = d[~d["verdict"].astype(str).str.startswith("reject:")]
+    if "loader" in d.columns:
+        before = len(d)
+        d = d[d["loader"].astype(str) != "spareto_crossref"]
+        if before != len(d):
+            print(f"scrape_phase1: {before - len(d)} spareto_crossref row(s) left in the "
+                  f"crossref state file on purpose (not a usable competitor price)")
+    # U26 2026-10-07: one product card can appear on more than one saved category page
+    # (T&M's brake and service leaves overlap). The bridge issues obs_id from the
+    # observation's own identity — part, competing number, seller, date, price — not from
+    # the page it was read on, so the same observation read twice shares an obs_id. It IS
+    # one observation, so it is counted once; `validate()` would otherwise refuse the
+    # whole file with "duplicate obs_id".
+    if "obs_id" in d.columns:
+        before = len(d)
+        d = d.drop_duplicates(subset=["obs_id"], keep="first")
+        if before != len(d):
+            print(f"scrape_phase1: {before - len(d)} row(s) seen on more than one saved page "
+                  f"— the same observation, counted once")
     rows = []
     for _, r in d.iterrows():
         price = r.get("price")
@@ -358,6 +412,13 @@ def load_scraped_phase1():
             stock=r.get("stock") if pd.notna(r.get("stock")) else "unknown",
             n_obs=int(r["n_obs"]) if pd.notna(r.get("n_obs")) else 1,
             loader=r.get("loader") or "scrape_phase1",
+            # U26 2026-10-07: the delivery basis the parser read off the page. Blank when
+            # the parser set nothing or the page was silent. `load_scraped_phase1` never
+            # infers it — the parsers do, from the listing or a stated threshold rule.
+            delivery_note=(r.get("delivery_note")
+                           if pd.notna(r.get("delivery_note")) else None),
+            delivery_included=(r.get("delivery_included")
+                               if pd.notna(r.get("delivery_included")) else None),
         ))
     return rows
 
@@ -370,6 +431,21 @@ def validate(df):
         errors.append("vintage missing")
     if not set(df["match_method"]).issubset(MATCH_METHODS):
         errors.append("match_method unknown")
+    # `delivery_included` is yes / no / blank on purpose (blank = the page stated nothing).
+    # Anything else is a parser writing a third state the evidence rules never asked for.
+    if "delivery_included" in df.columns:
+        present = df["delivery_included"].dropna()
+        present = present[present.astype(str).str.strip() != ""]
+        bad = sorted(set(present.astype(str)) - DELIVERY_INCLUDED_VALUES)
+        if bad:
+            errors.append(f"delivery_included has values outside {sorted(DELIVERY_INCLUDED_VALUES)}: {bad}")
+        no_note = present[present.astype(str) == "yes"].index
+        if len(no_note):
+            missing = df.loc[no_note, "delivery_note"].isna() | (
+                df.loc[no_note, "delivery_note"].astype(str).str.strip() == "")
+            if missing.any():
+                errors.append(f"{int(missing.sum())} row(s) say delivery_included=yes with "
+                              f"no delivery_note — a yes must carry what the page said")
     if (df["price"] <= PLACEHOLDER_MAX).any():
         errors.append("placeholder-level price present")
     bad_pn = df["part_no"].notna() & (df["part_no"].str.len() != 10)
@@ -445,11 +521,38 @@ def main():
             "mekonomen": "RETIRED 2026-09-24 - part-number search returned an unrelated item "
                          "(Kilen coil spring for brake pad kit 8975056801); all 7 rows false",
             "auto365": "retired 2026-09-24 - no OEM part number anywhere; also robots-disallowed",
-            "tranzparts": "retired 2026-09-24 - carries no Isuzu (every handle is Volvo/Iveco/DAF)",
+            "tranzparts": "NOTE 2026-10-07 - the retired 2026-09-24 category_only loader still "
+                          "does not run (that file carried no Isuzu number). Since U26 the LIVE "
+                          "Tranzparts rows are page-derived (loader `tranzparts` in "
+                          "OFFERED_ROWS.csv, match_method exact_oem, the searched number is "
+                          "printed on the product page) and ARE loaded, with 6 rows on the 123 "
+                          "worklist.",
             "autodoc": "retired; placeholder prices",
+            "spareto_crossref": "NOT loaded as a price observation (2026-10-07): Spareto prices "
+                                "are retail incl. VAT at a rate the page does not state, so the "
+                                "evidence rules exclude them; they are a cross-reference source "
+                                "in 04_tools/aftermarket_intelligence/state/spareto_crossref.csv, "
+                                "used by grade_crossref_edges.py, not a price row",
         },
         "fx": FX_NOTE,
         "rule": "price_type and vintage required; never average across price_type",
+        "delivery_basis": {
+            "columns": ["delivery_note", "delivery_included"],
+            "added": "2026-10-07 (U26), on Jerome's instruction: 'dd delivery basis to the "
+                     "ledger, read from the saved pages'",
+            "delivery_note": "what the page actually says, short and verbatim-ish; blank when "
+                             "the page states nothing about carriage",
+            "delivery_included": "yes / no only, and only where the page states it for that "
+                                 "listing or states a threshold rule the listed price meets or "
+                                 "fails; blank when the page is silent. Never inferred from the "
+                                 "absence of a charge, and never from the price.",
+            "why": "the shared evidence rule (evidence.js adjustToComparable, reported as "
+                   "DELIVERY_BASIS_NOT_STATED) excludes every row whose delivery basis is not "
+                   "stated. Before this column existed no row could be eligible.",
+            "rows_stating_a_basis": int(
+                (df["delivery_included"].astype(str).isin(DELIVERY_INCLUDED_VALUES)).sum()
+            ) if "delivery_included" in df.columns else 0,
+        },
     }
     META.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(meta, indent=2, ensure_ascii=False))

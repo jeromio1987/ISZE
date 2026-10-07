@@ -24,7 +24,15 @@ COLUMNS = [
     "source", "source_url", "country", "observed_at", "vintage",
     "price", "price_avg", "currency", "price_eur", "fx_note", "vat",
     "price_type", "stock", "n_obs", "loader",
+    # U26 2026-10-07: the delivery basis, mirroring build_price_ledger.py exactly (the
+    # `--selftest` compares the two lists character for character, so this copy must move
+    # in the same commit as the ledger's). `delivery_note` carries what the page said;
+    # `delivery_included` carries yes / no / blank. See the ledger's COLUMNS comment for
+    # why the pair is split and why blank is not the same as "no".
+    "delivery_note", "delivery_included",
 ]
+
+DELIVERY_INCLUDED_VALUES = {"yes", "no"}
 
 PRICE_TYPES = {
     "aftermarket_trade", "aftermarket_retail", "genuine_grey", "online_median",
@@ -154,6 +162,14 @@ def row_problems(row: dict) -> list[str]:
             cur = row.get("currency")
             if cur is not None and cur not in CURRENCIES:
                 problems.append(f"currency not allowed: {cur!r}")
+    # Delivery: blank is the honest default, and a "yes" must carry what the page said.
+    di = row.get("delivery_included")
+    if di is not None and str(di).strip() != "":
+        if str(di).strip() not in DELIVERY_INCLUDED_VALUES:
+            problems.append(f"delivery_included not one of {sorted(DELIVERY_INCLUDED_VALUES)}: {di!r}")
+        elif str(di).strip() == "yes" and not str(row.get("delivery_note") or "").strip():
+            problems.append("delivery_included='yes' with no delivery_note — a yes must carry "
+                            "what the page said")
     return problems
 
 
@@ -174,6 +190,115 @@ def issue_obs_id(source: str, part_no: str, observed_at: str, price_type: str) -
     import hashlib
     raw = f"{source}|{part_no}|{observed_at}|{price_type}"
     return hashlib.sha1(raw.encode("utf-8")).hexdigest()[:16]
+
+
+# ---------------------------------------------------------------------------
+# Delivery basis — read off the page, never inferred (U26, 2026-10-07)
+# ---------------------------------------------------------------------------
+# The ledger carries two delivery columns and they are deliberately split:
+#
+#   delivery_note      what the page actually says, short; blank when it says nothing
+#                      about carriage.
+#   delivery_included  "yes" / "no" only, and only where the page states it for that
+#                      listing or states an UNAMBIGUOUS free-delivery threshold the
+#                      listed price meets or fails. Blank when the page is silent.
+#
+# WHY IT EXISTS AT ALL. The shared evidence rule (`evidence.js` `adjustToComparable`,
+# reported as `DELIVERY_BASIS_NOT_STATED` in `comparable.js`) excludes every row whose
+# delivery basis is not stated. Before 2026-10-07 the ledger had no such column, so every
+# harvested row was excluded on it and no comparable could ever be eligible.
+#
+# WHAT IT REFUSES TO DO. It never infers the basis from the absence of a charge and never
+# from the price. A page that states no delivery term yields blank, which is a valid and
+# expected result. A page that states two free-delivery thresholds which disagree for the
+# listed price yields blank plus a note saying so — "unambiguous" is part of the condition,
+# not a nicety.
+
+# A free-delivery threshold, in GBP, written on the page. The currency sign is required,
+# so "delivery takes over 3 days" cannot be read as a threshold.
+_THRESHOLD_RE = re.compile(
+    r"(?:delivery|shipping|carriage|postage)\b[^.!?]{0,120}?\b(?:over|above)\s*£\s*"
+    r"(\d+(?:\.\d{1,2})?)",
+    re.I)
+# The charge the page states when the threshold is not met, for the note only.
+_CHARGE_RE = re.compile(r"(?:charge|fee|cost)\s*(?:of|is|:)?\s*£\s*(\d+(?:\.\d{1,2})?)", re.I)
+# A page that simply says the price includes carriage.
+_INCLUDED_RE = re.compile(
+    r"(?:price|prices|amount|cost)s?\b[^.!?]{0,50}?\b(?:include[sd]?|inclusive\s+of)\s+"
+    r"(?:free\s+)?(?:delivery|shipping|carriage|postage)",
+    re.I)
+# A page that only LINKS to a delivery information page, or carries one as a bare heading,
+# and states no term itself. This is not a delivery basis — it is the absence of one, and
+# it is recorded as such so Jerome can see what was read. Measured 2026-10-07: KS
+# International's shop pages carry a footer link named "Delivery Information" and nothing
+# else; the lead of every KS page is a footer link of that kind.
+_INFO_ONLY_RE = re.compile(
+    r"(?:delivery|shipping|carriage|postage)\s+(?:information|info|policy|policies|charges|"
+    r"terms|details)\b",
+    re.I)
+
+
+def read_delivery_basis(text: str | None, price=None,
+                        currency: str | None = "GBP") -> tuple[str | None, str | None]:
+    """(delivery_note, delivery_included) read off a page's text, or (None, None).
+
+    Never raises, never guesses. `price` is the listed price in the page's own currency;
+    pass it so a stated threshold can be met or failed. Pass `price=None` when the listing
+    shows no price — the reader then records the threshold without claiming a value.
+
+    Three outcomes, and only the first two touch eligibility:
+
+      1. the page states a free-delivery threshold        -> note + yes / no / blank
+      2. the page states the price includes delivery      -> note + yes
+      3. the page only links to a delivery info page      -> "delivery info page only",
+         basis BLANK. This is the honest answer for a shop that publishes carriage terms on
+         another page: nothing about THIS listing is stated, so nothing is claimed. It is
+         recorded rather than discarded so the reader can see the page was looked at.
+      4. the page says nothing about carriage at all      -> blank, blank
+    """
+    if not text:
+        return None, None
+    try:
+        if str(currency or "").upper() != "GBP":
+            # The patterns are written for GBP pages. A page in another currency gets
+            # nothing from this reader rather than a threshold compared in the wrong money.
+            return None, None
+        txt = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", text))
+        thresholds = sorted({float(m.group(1)) for m in _THRESHOLD_RE.finditer(txt)})
+        charges = sorted({float(m.group(1)) for m in _CHARGE_RE.finditer(txt)})
+
+        if not thresholds:
+            if _INCLUDED_RE.search(txt):
+                return "page states the price includes delivery", "yes"
+            if _INFO_ONLY_RE.search(txt):
+                return "delivery info page only", None
+            return None, None
+
+        lo, hi = thresholds[0], thresholds[-1]
+        charge_txt = ""
+        if charges:
+            charge_txt = " (page states a charge of " + " / ".join(
+                f"GBP {c:g}" for c in charges) + " when it is not met)"
+
+        if price is None or (isinstance(price, float) and price != price):
+            return f"free delivery stated over GBP {lo:g}", None
+        try:
+            p = float(price)
+        except (TypeError, ValueError):
+            return f"free delivery stated over GBP {lo:g}", None
+
+        if p >= hi:
+            meets = f"free over GBP {hi:g}"
+            if lo != hi:
+                meets += f" (the lower GBP {lo:g} threshold is also met)"
+            return meets, "yes"
+        if p < lo:
+            return (f"below the stated free-delivery threshold of GBP {lo:g}"
+                    f"{charge_txt}"), "no"
+        return (f"page states two free-delivery thresholds (GBP {lo:g} and GBP {hi:g}) "
+                f"that disagree for this listed price, so no single basis is claimed"), None
+    except Exception:                                              # noqa: BLE001
+        return None, None
 
 
 # ---------------------------------------------------------------------------
