@@ -487,6 +487,18 @@ if ($run04 -match "fail\s+0" -and $run04 -match "pass\s+2") {
     Write-Host "RUN-04 FAILED"
     $global:REVIEW_UNIT_FAIL = $true
 }
+
+# RUN-05 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "RUN-05 - show due actions without automatically sending messages"
+$run05 = & node --test (Join-Path $PSScriptRoot "run_05_due_actions.test.mjs") 2>&1 | Out-String
+Write-Host $run05
+if ($run05 -match "fail\s+0" -and $run05 -match "pass\s+2") {
+    Write-Host "RUN-05 2/0/2"
+} else {
+    Write-Host "RUN-05 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
 # SAFE-08 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "SAFE-08 - independent access and untrusted-content tests"

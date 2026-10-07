@@ -1,7 +1,7 @@
 {
   "_note": "Evidence-backed state for the tasks that have landed. Merged by tools/build_progress.py. A state here must name the command that showed it. The integration owner writes this file; workers do not.",
-  "_written_by": "cursor-u23-run-04",
-  "_written_at": "2026-10-06T20:05:03Z",
+  "_written_by": "cursor-u24-run-05",
+  "_written_at": "2026-10-07T01:29:39Z",
   "_authority": "A state of technically verified means a named command was run and its output read. It does not mean human accepted, and it confers no business, technical, privacy or spending authority.",
   "_acceptance_run": {
     "command": "powershell -ExecutionPolicy Bypass -File tests/run_all.ps1",
@@ -703,6 +703,15 @@
         "mutation src/data/config_separation.js scanPackage (always clean) -> RUN-04 E1 fails; restored -> passes",
         "mutation src/data/config_separation.js startExternalService (missing config starts live with permissive defaults) -> RUN-04 E2 fails; restored -> passes",
         "No real secrets created or read. Package and diagnostic log scanners refuse credential-shaped values and private data table markers. Missing identity/storage configuration fail-closes and cannot start a seemingly live external service with permissive defaults. Development mode stays labelled non-live."
+      ]
+    },
+    "RUN-05": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/run_05_due_actions.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/due_actions.js openDueItem (opens WRONG-CASE) -> RUN-05 E1 fails; restored -> passes",
+        "mutation src/data/due_actions.js sendExternalNotification (marks sent) -> RUN-05 E2 fails; restored -> passes",
+        "Synthetic due board only. Draft summaries never send. Reassignment does not reset waiting age. No email or external notification is sent in development or tests."
       ]
     }
   },
