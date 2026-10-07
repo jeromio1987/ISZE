@@ -35,11 +35,15 @@ test('RANGE-02 E2: reference prices, actual prices and application status cannot
   assert.equal(view.labels.actual_price, 'Actual price');
   assert.equal(view.labels.application_status, 'Application status');
   assert.notEqual(view.labels.reference_price, view.labels.actual_price);
-  assert.ok(view.side_a.reference_price_eur !== undefined);
-  assert.ok(view.side_a.actual_price_eur !== undefined);
-  assert.ok(view.side_a.application_status);
+  /* Values, not presence: each label must carry its own fixture figure. */
+  const g = FIX.cases[0].parts.genuine;
+  assert.equal(view.side_a.reference_price_eur, g.reference_price_eur);
+  assert.equal(view.side_a.actual_price_eur, g.actual_price_eur);
+  assert.notEqual(view.side_a.reference_price_eur, view.side_a.actual_price_eur,
+    'the fixture must keep the two prices different or this check proves nothing');
+  assert.equal(view.side_a.application_status, g.application_status);
   // cost only internal
-  assert.ok(view.side_a.cost_eur !== null && view.side_a.cost_eur !== undefined);
+  assert.equal(view.side_a.cost_eur, g.cost_eur);
   const external = evidence.exactRangeComparison(FIX.cases[0], { audience: 'external' });
   assert.equal(external.side_a.cost_eur, null);
   assert.match(external.cost_statement, /internal|not shown|cost/i);

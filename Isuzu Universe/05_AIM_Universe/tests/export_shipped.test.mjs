@@ -456,11 +456,27 @@ check('X10', 'S10c the internal record\'s limits block is not empty and states e
   return statements.length + ' stated limitations: ' + statements[0];
 });
 
+/* The five facts the internal record's limits must state, by content. */
+const INTERNAL_LIMIT_FACTS = [
+  /no price in this record is approved/i,
+  /customer net price is unconfirmed/i,
+  /purchase cost[\s\S]*excluded: freight, duty, overheads and distributor kickbacks/i,
+  /no raw invoices/i,
+  /no credentials/i
+];
+function assertLimitFacts(limits, label) {
+  assert.ok(Array.isArray(limits), label + ': limits is not an array: ' + JSON.stringify(limits));
+  INTERNAL_LIMIT_FACTS.forEach((re) => {
+    assert.ok(limits.some((s) => re.test(String(s))), label + ': no limit statement matches ' + re);
+  });
+}
+
 check('X11', 'S10c the limits block is not empty in the written bytes either', () => {
   const record = X.internalRecord(caseObject, scenario, result, { exported_at: null });
   const written = JSON.parse(textOf(record));
 
-  assert.ok(written.limits !== undefined, 'the written record has no limits key');
+  assertLimitFacts(written.limits, 'written bytes');
+  assert.deepEqual(written.limits, record.payload.limits, 'the written bytes differ from the built record');
   const statements = Array.isArray(written.limits) ? written.limits : Object.values(written.limits || {});
   assert.ok(statements.length >= 5,
     'the written record carries "limits": ' + JSON.stringify(written.limits));
@@ -686,8 +702,7 @@ check('X21', 'the shipped module answers the reviewer\'s own SAFE-05 inputs, whi
 
   const record = X.internalRecord(caseObject, scenario, result,
     { exported_at: null, review: null, sources: [], history: [] });
-  assert.ok(record.payload.limits !== undefined,
-    'S10c: the shipped module dropped the limits key');
+  assertLimitFacts(record.payload.limits, 'S10c: the shipped module');
   assert.ok(!(typeof record.payload.limits === 'object' && !Array.isArray(record.payload.limits)
     && Object.keys(record.payload.limits).length === 0),
   'S10c: the shipped module wrote an empty limits object: ' + JSON.stringify(record.payload.limits));

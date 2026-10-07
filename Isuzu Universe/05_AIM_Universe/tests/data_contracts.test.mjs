@@ -458,7 +458,13 @@ test('DATA-01 every analytical input carries file, pointer, period, basis, statu
       assert.ok(Object.prototype.hasOwnProperty.call(r, f),
         r.reference_id + ' is missing the field "' + f + '"');
     });
-    assert.ok(r.period !== undefined, r.reference_id + ' has no period field at all');
+    /* Values: a declared period is a stated string; a missing one says so. */
+    if (r.period !== null) {
+      assert.equal(typeof r.period, 'string', r.reference_id + ' period is not text: ' + JSON.stringify(r.period));
+      assert.ok(r.period.trim().length > 0, r.reference_id + ' has an empty period');
+      assert.ok(['declared', 'partial'].includes(r.period_state),
+        r.reference_id + ' states a period but marks it ' + r.period_state);
+    }
     if (r.period === null) {
       assert.equal(r.period_state, 'undeclared',
         r.reference_id + ' carries no period and does not say so');
@@ -1554,7 +1560,7 @@ test('the authorised payload, when present, satisfies the same dates and counts'
 test('the restricted fixture is excluded from version control and marked restricted', () => {
   const ignore = fs.readFileSync(path.join(ROOT, '.gitignore'), 'utf8');
   assert.match(ignore, /payload\/\*\.json/, 'the payload folder is not ignored');
-  assert.ok(FIXTURE_FILE.indexOf(path.join('05_AIM_Universe', 'payload')) >= 0,
+  assert.equal(path.dirname(path.resolve(FIXTURE_FILE)), path.join(path.resolve(ROOT), 'payload'),
     'the fixture is not inside the ignored payload folder');
   const written = JSON.parse(fs.readFileSync(FIXTURE_FILE, 'utf8'));
   assert.match(written._note, /RESTRICTED LOCAL TEST FIXTURE/);

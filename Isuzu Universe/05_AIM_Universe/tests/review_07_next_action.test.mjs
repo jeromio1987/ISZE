@@ -136,14 +136,16 @@ function loadApp(payload) {
 function fireLatest(el, type) {
   const list = (el && el._listeners && el._listeners[type]) || [];
   const fn = list.length ? list[list.length - 1] : (type === 'click' ? el.onclick : el.onchange);
-  if (typeof fn === 'function') fn({ preventDefault() {}, target: el, currentTarget: el });
+  /* A missing handler is a failure, not a silent no-op. */
+  assert.equal(typeof fn, 'function', 'no ' + type + ' handler is bound on #' + (el && el.id));
+  fn({ preventDefault() {}, target: el, currentTarget: el });
 }
 
 function selectCase(session, caseId) {
   session.sandbox.location.hash = '#case/' + caseId + '/decision';
   const hashFn = session.sandbox._listeners.hashchange;
-  if (typeof hashFn === 'function') hashFn();
-  else if (session.api && typeof session.api.showCase === 'function') session.api.showCase(caseId);
+  assert.equal(typeof hashFn, 'function', 'the app bound no hashchange handler');
+  hashFn();
   return session.doc.getElementById('content').innerHTML || '';
 }
 

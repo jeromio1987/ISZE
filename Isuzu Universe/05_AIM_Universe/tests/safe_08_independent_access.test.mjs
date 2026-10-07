@@ -143,7 +143,7 @@ test('SAFE-08 E2: Tests report actual environment/version and remaining restrict
   assert.equal(typeof report.environment.node, 'string');
   assert.match(report.environment.node, /^v\d+/);
   assert.equal(typeof report.environment.platform, 'string');
-  assert.ok(report.environment.component_root.includes('05_AIM_Universe'));
+  assert.equal(report.environment.component_root, ROOT);
   assert.equal(report.environment.ai_only_checks, 'not_applicable_when_ai_absent');
   assert.equal(report.generated_code_is_independent_production_certification, false);
   assert.equal(report.certification_claim, 'not_made');
