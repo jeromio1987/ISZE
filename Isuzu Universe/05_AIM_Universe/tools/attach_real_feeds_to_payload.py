@@ -47,43 +47,64 @@ def main() -> int:
         if code:
             by_market.setdefault(code, []).append(n["opportunity_id"])
 
-    # Top-level: the feed the product reads, plus PRISM measures.
+    ids_sheet = feeds.get("ids_sheet") or {"rows": []}
+    ids_identities = feeds.get("ids_identities") or {}
+
+    # Top-level: the feed the product reads, plus PRISM measures and IDS sheet.
     payload["tender_data"] = {"notices": notices}
     payload["prism_measures"] = feeds.get("prism_measures") or []
+    payload["ids_sheet"] = ids_sheet
 
     linked = {}
     for case in payload.get("cases") or []:
         market = MARKET_KEYS.get((case.get("market") or "").upper())
         if not market:
             continue
-        ids = by_market.get(market) or []
-        if ids:
-            case["tender_notice_ids"] = ids
+        notice_ids = by_market.get(market) or []
+        if notice_ids:
+            case["tender_notice_ids"] = notice_ids
         case["prism_level"] = {
             "dealer_id": None,
             "distributor": market,
             "scope": "national",
         }
-        linked[case.get("id")] = {"market": market, "tender_notice_ids": len(ids)}
+        identity = ids_identities.get(market)
+        if identity:
+            case["ids_identity"] = {
+                "dealer_id": identity.get("dealer_id"),
+                "distributor": identity.get("distributor"),
+                "display_name": identity.get("display_name"),
+                "validated": True,
+            }
+        linked[case.get("id")] = {
+            "market": market,
+            "tender_notice_ids": len(notice_ids),
+            "ids_dealer": (identity or {}).get("display_name"),
+        }
 
-    # Provenance so a reader can see where the block came from.
     meta = payload.setdefault("meta", {})
     meta["real_feeds"] = {
         "built_at": feeds.get("built_at"),
         "tender_notices": len(notices),
         "tender_by_market": {k: len(v) for k, v in by_market.items()},
         "prism_measures": len(payload["prism_measures"]),
-        "source": "01_data/14_dashboards/tender_data.json + 01_data/00_derived/ (ITUK, PORTUGAL)",
+        "ids_sheet_rows": len(ids_sheet.get("rows") or []),
+        "ids_identities": {k: v.get("display_name") for k, v in ids_identities.items()},
+        "source": ("01_data/14_dashboards/tender_data.json + 01_data/00_derived/ "
+                   "+ IDS 2026 ITUK self-eval + Portugal evaluation result"),
         "rule": ("the link is the case's own market; a notice value is never parts revenue; "
-                 "a national PRISM total is never split to a dealer"),
+                 "a national PRISM total is never split to a dealer; "
+                 "IDS answers are shown only for the validated dealer on that case"),
     }
 
     OUT.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"wrote {OUT}")
     print(f"  tender notices attached: {len(notices)}")
     print(f"  prism measures attached: {len(payload['prism_measures'])}")
+    print(f"  ids sheet rows attached: {len(ids_sheet.get('rows') or [])}")
     for cid, info in linked.items():
-        print(f"  case {cid}: market {info['market']}, {info['tender_notice_ids']} notice(s)")
+        print(f"  case {cid}: market {info['market']}, "
+              f"{info['tender_notice_ids']} notice(s), ids={info['ids_dealer']}")
     return 0
 
 
