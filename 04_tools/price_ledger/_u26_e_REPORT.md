@@ -382,15 +382,21 @@ reads `sufficient` on the 50-row bar while Portugal stays `insufficient` at 27.
 The numbers in this report were produced at
 `3e8381158aab886f3d5ec0a4db88e3247ae98dd9` (merge, grading and coverage). This report
 rides on the same branch, one commit on top of it, so the branch tip is one commit past
-that hash and is given in the run output.
+that hash and is printed by the run output.
+
+Because this report contains the diff stat, quoting the tip's own stat inside the report
+churns it by the report's own line count. Both stable figures are therefore measured at
+the commit that produced them:
 
 ```
-git diff --shortstat 8729346926caf7b2265f2487ff460f98d18f2d21..HEAD
-662 files changed, 632595 insertions(+), 1913 deletions(-)
+git diff --stat 8729346926caf7b2265f2487ff460f98d18f2d21..3e8381158aab886f3d5ec0a4db88e3247ae98dd9
+658 files changed, 631849 insertions(+), 1913 deletions(-)
+
+git diff --stat 115e7fad8295b7956251ef00ef2f5f83a64ba6e0..3e8381158aab886f3d5ec0a4db88e3247ae98dd9
+50 files changed, 24433 insertions(+), 1875 deletions(-)
 ```
 
-The 662 files include the eight other agents' work. Agent E's own work is three
-commits on top of `115e7fad8295b7956251ef00ef2f5f83a64ba6e0`, and
-`git diff --shortstat 115e7fad8295b7956251ef00ef2f5f83a64ba6e0..HEAD`
-(agent E alone) is **54 files changed, 24,449 insertions(+), 1,875 deletions(-)**.
+The 662 files include the eight other agents' work. Agent E's own work is that one
+commit plus the report commits on top of it, all on
+`cursor/2026-10-07-universe-u26-market-harvest`.
 
