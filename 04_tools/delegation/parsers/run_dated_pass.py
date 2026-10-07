@@ -167,12 +167,25 @@ def pns_from_tier(tier: str) -> list[str]:
 
 
 def pns_from_csv(path: Path) -> list[str]:
-    """Distinct 10-digit part numbers from a CSV's part_no column, in file order."""
-    with path.open(encoding="utf-8", newline="") as fh:
+    """Distinct 10-digit part numbers from a CSV's part_no column, in file order.
+
+    U26 (2026-10-07): the A/B/C seed files (`...\\_u26\\<ID>\\seed_oe_pns.csv`) are
+    **headerless** — one bare 10-digit number per line. The first version read every
+    file through `DictReader`, which treats that first number as a header and then finds
+    no `part_no` key, so it returned `[]` for all of them (measured: 0 of 123). Now, when
+    the file has no `part_no` column (or no comma at all), each line is read as a bare
+    part number. A file with a `part_no` column behaves exactly as before.
+    """
+    text = path.read_text(encoding="utf-8-sig")
+    with path.open(encoding="utf-8-sig", newline="") as fh:
         rows = list(csv.DictReader(fh))
     out, seen = [], set()
-    for r in rows:
-        p = (r.get("part_no") or "").strip()
+    if rows and "part_no" in (rows[0].keys() if rows else ()):
+        values = [(r.get("part_no") or "").strip() for r in rows]
+    else:
+        values = [ln.strip().strip('"') for ln in text.splitlines()
+                  if ln.strip().lower() not in ("part_no", "isuzu_part_number")]
+    for p in values:
         if re.fullmatch(r"\d{10}", p) and p not in seen:
             seen.add(p)
             out.append(p)
@@ -181,8 +194,13 @@ def pns_from_csv(path: Path) -> list[str]:
 
 def cmd_fetch(a) -> int:
     pdir = PASSES / a.label
-    cache_root = pdir / "cache"
+    cache_root = Path(a.cache_root) if getattr(a, "cache_root", None) else pdir / "cache"
     pdir.mkdir(parents=True, exist_ok=True)
+
+    # U26 (2026-10-07): a hard stop another agent can trigger. If the file exists at the
+    # start of a URL, the pass stops (a 403/429 on a shared host, or a manual halt). The
+    # page already fetched before the stop-file appeared stays cached and logged.
+    stop_file = Path(a.stop_file) if getattr(a, "stop_file", None) else None
 
     if a.pns_from_run:
         pns = pns_from_run(Path(a.pns_from_run))
@@ -214,7 +232,8 @@ def cmd_fetch(a) -> int:
 
     meta = {"label": a.label, "site": site, "seed": seed_desc, "n_pns": len(pns),
             "skipped_known_404": len(skipped), "min_interval_s": MIN_INTERVAL,
-            "online": a.online,
+            "online": a.online, "cache_root": str(cache_root),
+            "stop_file": (str(stop_file) if stop_file else None),
             "started_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
     (pdir / f"plan_{site}.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
     print(json.dumps(meta, indent=2))
@@ -239,6 +258,9 @@ def cmd_fetch(a) -> int:
     stop_reason = None
     with log.open("a", encoding="utf-8") as fh:
         for i, pn in enumerate(pns, 1):
+            if stop_file is not None and stop_file.exists():
+                stop_reason = f"stop file {stop_file.name} present before {pn}"
+                break
             if pn in done:
                 counts["already_logged"] += 1
                 continue
@@ -416,6 +438,9 @@ def main() -> int:
     f.add_argument("--tier")
     f.add_argument("--pns-from-csv", help="a CSV with a part_no column (e.g. seed_reach_tierA.csv)")
     f.add_argument("--limit", type=int, default=0)
+    f.add_argument("--cache-root", help="write the per-pass cache here instead of "
+                   "passes/<label>/cache (U26: an agent may keep pages in its own folder)")
+    f.add_argument("--stop-file", help="stop the pass when this file exists (U26 halt)")
     f.add_argument("--skip-uncached-in", help="amayama only: skip part numbers that have no "
                    "page in this earlier cache (the known 404s)")
     f.add_argument("--online", action="store_true")
