@@ -1,4 +1,4 @@
-"""
+﻿"""
 Build the internal AIM pricing-decisions HTML (BASE-04, BASE-07).
 
 The generated v03 file was both the source and the product, so a fix could only
@@ -56,8 +56,13 @@ COMPONENT_VERSION = "0.4"
 MODULES = [
     ("src/data/contracts.js", "shared records"),
     ("src/data/export.js", "recipient-specific exports, identity and permission"),
+    ("src/data/identity.js", "approved and development-only identity resolution"),
+    ("src/data/attachments.js", "case attachment upload storage and access"),
+    ("src/data/access_lifecycle.js", "role changes, departure and record-use decisions"),
+    ("src/data/safe_08_report.js", "independent access test environment report"),
     ("src/case/schema.js", "case lifecycle and valid transitions"),
     ("src/case/store.js", "durable case repository, file and browser adapters"),
+    ("src/case/app_connection.js", "connect cases and scenarios to the maintained application"),
     ("src/engine/engine.js", "calculation (one entry point)"),
     ("src/data/manifest.js", "source manifest"),
     ("src/data/evidence.js", "evidence states"),
@@ -68,6 +73,18 @@ MODULES = [
     ("src/data/prism_context.js", "read-only PRISM context at measured level"),
     ("src/data/vehicle_bands.js", "series_to_band.csv band_for (no second dictionary)"),
     ("src/data/service_demand_bounds.js", "service-demand and shared-applicability boundaries"),
+    ("src/data/availability_question.js", "dated availability question and response"),
+    ("src/data/tender_investigation.js", "tender feed to owned investigation"),
+    ("src/data/stock_snapshot.js", "optional case stock snapshot"),
+    ("src/data/service_capability.js", "enable services only with supported work"),
+    ("src/data/refresh_jobs.js", "selected refresh jobs without duplication"),
+    ("src/data/config_separation.js", "separate configuration secrets and restricted files"),
+    ("src/data/due_actions.js", "due actions without automatic send"),
+    ("src/data/ops_measurements.js", "operational failures and useful-work measurements"),
+    ("src/data/backup_restore.js", "backup and restore permitted working record"),
+    ("src/data/release_package.js", "internal release package without deploy"),
+    ("src/data/product_images.js", "permitted product images with fallback"),
+    ("src/data/browser_journey.js", "browser journey continuity and blocked reporting"),
     ("src/data/candidates.js", "candidate workbench"),
     ("src/data/cases.js", "case facade over src/case/*"),
     ("src/data/scenario.js", "one shared scenario"),
@@ -97,6 +114,10 @@ UNWIRED_MODULES = [
     ("src/ui/candidates.js", "duplicate candidate view"),
     ("src/ui/views.js", "retired second view layer; every view it held is ported into src/ui/app.js"),
     ("src/ui/render.js", "retired second shell; the F05 guard and routing live in src/ui/app.js"),
+    # Retired 2026-10-07 (U27, Jerome's decision). A second range calculation the
+    # app never loaded; the range views the app shows come from src/data/evidence.js.
+    # Deleted with its two tests; this entry stays as a tombstone, like pricing.js.
+    ("src/engine/range.js", "range economics prototype never wired into the app; deleted 2026-10-07"),
 ]
 
 # The global each SHIPPED and each RETIRED module actually publishes, read from its
@@ -106,12 +127,28 @@ UNWIRED_MODULES = [
 # every build. It therefore did not catch a facade assembled without its
 # dependency, which is the exact defect it exists to prevent. Measured 2026-09-22
 # with tools/published_names.py.
+# Modules loaded by tools/ and by their own tests but never assembled into the
+# artifact, which has no process and no socket: the four src/case/server/
+# modules. src/case/server/server.js is the RUN-01 backend that
+# tests/run_01_shared_backend.test.mjs starts on 127.0.0.1, and the product
+# reaches it over HTTP. A third, explicit list keeps them out of the orphan
+# report and lets the build refuse an assembled module that tries to read one,
+# which in a browser is a silent undefined.
+AUDIT_ONLY_MODULES = [
+    ("src/case/server/migrate.js", "RUN-01 migration runner, used by tools and tests only"),
+    ("src/case/server/sqlite_adapter.js", "RUN-01 SQLite adapter, Node-only"),
+    ("src/case/server/permissions.js", "SAFE-02 request-identity resolver, Node-only"),
+    ("src/case/server/server.js", "RUN-01 local HTTP service, Node-only"),
+]
+
 PUBLISHED_BY = {
     "src/data/contracts.js": "AIMContracts",
     "src/case/schema.js": "AIMCaseSchema",
     "src/case/store.js": "AIMCaseStore",
+    "src/case/app_connection.js": "AIMAppConnection",
     "src/engine/engine.js": "PricingEngine",
     "src/engine/pricing.js": "PricingEngine",
+    "src/engine/range.js": "AIMRangeEngine",
     "src/data/manifest.js": "AIMManifest",
     "src/data/evidence.js": "AIMEvidence",
     "src/data/comparable.js": "AIMComparable",
@@ -120,10 +157,28 @@ PUBLISHED_BY = {
     "src/data/prism_context.js": "AIMPrismContext",
     "src/data/vehicle_bands.js": "AIMVehicleBands",
     "src/data/service_demand_bounds.js": "AIMServiceDemandBounds",
+    "src/data/availability_question.js": "AIMAvailabilityQuestion",
+    "src/data/tender_investigation.js": "AIMTenderInvestigation",
+    "src/data/stock_snapshot.js": "AIMStockSnapshot",
+    "src/data/service_capability.js": "AIMServiceCapability",
+    "src/data/refresh_jobs.js": "AIMRefreshJobs",
+    "src/data/config_separation.js": "AIMConfigSecrets",
+    "src/data/due_actions.js": "AIMDueActions",
+    "src/data/ops_measurements.js": "AIMOpsMeasurements",
+    "src/data/backup_restore.js": "AIMBackupRestore",
+    "src/data/release_package.js": "AIMReleasePackage",
+    "src/data/product_images.js": "AIMProductImages",
+    "src/data/browser_journey.js": "AIMBrowserJourney",
     "src/data/export.js": "AIMExport",
     "src/data/candidates.js": "AIMCandidates",
     "src/data/cases.js": "AIMCases",
     "src/data/scenario.js": "AIMScenario",
+    # Audit-only modules publish a global too; without an entry here the class
+    # guard below cannot name what an assembled module must not read.
+    "src/case/server/migrate.js": "AIMCaseMigrate",
+    "src/case/server/sqlite_adapter.js": "AIMCaseSqliteAdapter",
+    "src/case/server/permissions.js": "AIMCasePermissions",
+    "src/case/server/server.js": "AIMCaseSharedBackend",
     "src/data/costbasis.js": "AIMCostBasis",
     "src/output/recipients.js": "AIMOutput",
     "src/ui/viewmodel.js": "AIMViewModel",
@@ -337,13 +392,58 @@ def build(payload_path):
                 "silently replaces the other." % (seen[name], rel, name))
         seen[name] = rel
 
-    # A module named in neither list is invisible to the checks above. Report it
-    # rather than let it ship unlinted; the caller decides, not the build.
-    known = {rel for rel, _ in MODULES} | {rel for rel, _ in UNWIRED_MODULES}
+    # U28 task 2. An assembled module must not read an audit-only global: in a
+    # browser there is no require, so the read is undefined and the failure is at
+    # runtime. Stated the other way round too, as a relative require.
+    audit_names = {rel for rel, _ in AUDIT_ONLY_MODULES}
+    for rel, _label in MODULES:
+        source = read(os.path.join(ROOT, rel))
+        for audit_only, why in AUDIT_ONLY_MODULES:
+            name = PUBLISHED_BY.get(audit_only)
+            if not name:
+                continue
+            holder = "root." + name
+            for match in re.finditer(re.escape(holder) + r"(?!\s*=)", source):
+                line_no = source[:match.start()].count("\n") + 1
+                raise SystemExit(
+                    "%s line %d reads %s, which is audit-only and never assembled "
+                    "into the artifact (%s is %s). Wire it deliberately or retire it."
+                    % (rel, line_no, holder, audit_only, why))
+        folder = os.path.dirname(rel)
+        for audit_only, _why in AUDIT_ONLY_MODULES:
+            stem = os.path.basename(audit_only)
+            tail = os.path.relpath(audit_only, folder).replace("\\", "/")
+            forms = ("'" + tail + "'", '"' + tail + '"',
+                     "require('./" + stem + "')", 'require("./' + stem + '")',
+                     "require('../" + os.path.basename(folder) + "/" + stem + "')")
+            for form in forms:
+                if form in source:
+                    raise SystemExit(
+                        "%s reaches the audit-only module %s, so the assembled "
+                        "artifact would try to load it in a browser. Move the value "
+                        "into the payload or declare the module assembled."
+                        % (rel, audit_only))
+
+    # A module named in none of the three lists is invisible to the checks above.
+    # Report it rather than let it ship unlinted; the caller decides.
+    known = {rel for rel, _ in MODULES} | {rel for rel, _ in UNWIRED_MODULES} | audit_names
     for rel in sorted(PUBLISHED_BY):
         if rel not in known:
-            print("warning : %s publishes root.%s but is in neither MODULES nor "
-                  "UNWIRED_MODULES" % (rel, PUBLISHED_BY[rel] or "(nothing)"))
+            print("warning : %s publishes root.%s but is in none of MODULES, "
+                  "UNWIRED_MODULES or AUDIT_ONLY_MODULES"
+                  % (rel, PUBLISHED_BY[rel] or "(nothing)"))
+    unclassified = []
+    for base, _dirs, files in os.walk(os.path.join(ROOT, "src")):
+        for fname in files:
+            if not fname.endswith(".js"):
+                continue
+            rel = os.path.relpath(os.path.join(base, fname), ROOT).replace("\\", "/")
+            if rel not in known:
+                unclassified.append(rel)
+    if unclassified:
+        print("warning : %d source module(s) are in none of MODULES, UNWIRED_MODULES "
+              "or AUDIT_ONLY_MODULES: %s"
+              % (len(unclassified), ", ".join(sorted(unclassified))))
     parts.append("</body></html>")
     html = "\n".join(parts)
 

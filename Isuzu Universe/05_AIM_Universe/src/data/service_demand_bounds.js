@@ -153,16 +153,23 @@
     if (!B || typeof B.bandFor !== 'function') {
       return { ok: false, error: 'AIMVehicleBands.bandFor unavailable', bands: null };
     }
-    var bands = (codes || []).map(function (c) {
-      return { code: c, tonnage_band: B.bandFor(c, csvPath) };
-    });
+    var bands;
+    try {
+      bands = (codes || []).map(function (c) {
+        return { code: c, tonnage_band: B.bandFor(c, csvPath) };
+      });
+    } catch (e) {
+      /* A missing or unreadable series_to_band.csv is a refusal, not a crash. */
+      return { ok: false, error: 'series_to_band.csv could not be read: ' + String(e && e.message || e), bands: null };
+    }
     return { ok: true, bands: bands, statement: 'Bands from series_to_band.csv via bandFor only.' };
   }
 
+  /* Same five characters as esc in src/ui/app.js, the single quote included. */
   function escapeHtml(s) {
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
   }
 
   function renderTwoMethods(view) {
@@ -186,6 +193,7 @@
   }
 
   var API = {
+    escapeHtml: escapeHtml,
     METHOD_INTERNAL: METHOD_INTERNAL,
     METHOD_EXTERNAL: METHOD_EXTERNAL,
     selectServiceBasis: selectServiceBasis,

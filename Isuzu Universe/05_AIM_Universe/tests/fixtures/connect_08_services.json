@@ -1,0 +1,17 @@
+{
+  "_note": "Synthetic service declarations for CONNECT-08. Written by hand, not built by the module or the test. Each row says whether it should be enabled and why.",
+  "services": [
+    { "id": "pricing_core", "spec": { "capability": "internally_usable", "returns_supported_work": true, "source": "synthetic_pricing_engine", "response_route": "internal_calculate", "adapter_kind": "internal" },
+      "expect": { "enabled": true, "development_only": false, "why": "usable and returns supported work" } },
+    { "id": "ids_read", "spec": { "capability": "internally_usable", "returns_supported_work": true, "source": "synthetic_ids_fixture", "response_route": "ids_evidence_panel", "adapter_kind": "test" },
+      "expect": { "enabled": true, "development_only": true, "why": "enabled, but a test adapter is development-only" } },
+    { "id": "tender_feed", "spec": { "capability": "approved_participant_facing", "returns_supported_work": false, "source": "synthetic_tender_feed", "response_route": "tender_panel", "adapter_kind": "internal" },
+      "expect": { "enabled": false, "development_only": false, "why": "approved level alone is not enough without supported work" } },
+    { "id": "fleet_read", "spec": { "capability": "unavailable", "returns_supported_work": true, "source": "synthetic_fleet", "response_route": "fleet_panel", "adapter_kind": "internal" },
+      "expect": { "enabled": false, "development_only": false, "why": "unavailable level is never enabled" } },
+    { "id": "stock_read", "spec": { "capability": "connected", "returns_supported_work": true, "source": "synthetic_stock", "response_route": "stock_panel", "adapter_kind": "development" },
+      "expect": { "enabled": false, "development_only": true, "why": "an unknown capability word reads as unavailable" } },
+    { "id": "prism_read", "spec": { "capability": "approved_participant_facing", "returns_supported_work": true, "source": "synthetic_prism", "response_route": "prism_panel", "adapter_kind": "internal", "development_only": true },
+      "expect": { "enabled": true, "development_only": true, "why": "an explicit development_only flag is kept" } }
+  ]
+}

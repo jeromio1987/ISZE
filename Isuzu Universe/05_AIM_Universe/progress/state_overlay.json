@@ -1,7 +1,7 @@
 {
   "_note": "Evidence-backed state for the tasks that have landed. Merged by tools/build_progress.py. A state here must name the command that showed it. The integration owner writes this file; workers do not.",
-  "_written_by": "cursor U18 CONNECT-04",
-  "_written_at": "2026-10-06T19:08:43Z",
+  "_written_by": "cursor-u24-accept-02",
+  "_written_at": "2026-10-07T01:38:16Z",
   "_authority": "A state of technically verified means a named command was run and its output read. It does not mean human accepted, and it confers no business, technical, privacy or spending authority.",
   "_acceptance_run": {
     "command": "powershell -ExecutionPolicy Bypass -File tests/run_all.ps1",
@@ -595,6 +595,168 @@
         "mutation src/case/server/migrate.js applyMigrations (skip db.exec(sql)) -> RUN-01 E1 fails; restored -> passes",
         "mutation src/case/server/server.js (inject function calculate) -> RUN-01 E2 fails; restored -> passes",
         "Jerome approved BUILD minimal 2026-10-06: node:sqlite + node:http on 127.0.0.1 wrapping makeCaseService via SQLite adapter under src/case/server/. Synthetic disposable DB only. schema.js + store.js remain the case contract; AIMEngine.calculate remains the only pricing entry point."
+      ]
+    },
+    "CONNECT-05": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/connect_05_availability_question.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/availability_question.js currentStockAvailability (historical purchase shown as current stock) -> CONNECT-05 E1 fails; restored -> passes",
+        "mutation src/data/availability_question.js recordAvailabilityResponse (unconfirmed kept as confirmed_commitment without estimate label) -> CONNECT-05 E2 fails; restored -> passes",
+        "Synthetic fixtures only. Dated availability question carries part, application, quantity, required date and distributor route. Historical purchase cannot display as current stock. Unconfirmed response is labelled estimate and retains next-update obligation. Meanings stay separate: estimated_date, confirmed_commitment, allocated, dispatched, delivered. Nothing is sent."
+      ]
+    },
+    "CONNECT-07": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/connect_07_tender_investigation.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/tender_investigation.js isNonActionable (expired/cancelled treated as actionable) -> CONNECT-07 E1 fails; restored -> passes",
+        "mutation src/data/tender_investigation.js awardFinancialEffects (auto-creates billing/GP/won quotation from award) -> CONNECT-07 E2 fails; restored -> passes",
+        "Synthetic tender-feed shaped fixtures only. Live tender_data.json not written. Expired/cancelled notices are not current actionable deadlines. Awards do not auto-create billing, gross profit or a won parts quotation. Notice value is never Isuzu parts revenue."
+      ]
+    },
+    "SAFE-01": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/safe_01_identity.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/identity.js resolveStartupIdentity (shared missing-config check disabled) -> SAFE-01 E1 fails; restored -> passes",
+        "mutation src/data/identity.js establishIdentity (client organisation used as tenant) -> SAFE-01 E2 fails; restored -> passes",
+        "Development-only identity is loud-labelled and refused in INTERNAL builds and shared-mode startup. Shared-mode also refuses missing approved identity configuration. Identity tenant comes from provider claims only; client organisation fields are ignored. Real IdP wiring not done (needs IT)."
+      ]
+    },
+    "SAFE-02": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/safe_02_permissions.test.mjs -> 2 pass, 0 fail",
+        "mutation src/case/server/permissions.js authorizeCaseQuery (tenant filter disabled) -> SAFE-02 E1 fails; restored -> passes",
+        "mutation src/case/server/permissions.js authorizeCaseRead (cross-tenant deny disabled) -> SAFE-02 E2 fails; restored -> passes",
+        "Server HTTP /cases and /cases/:id require validated identity claims. Client distributor/account/case query fields cannot return another organisation records or counts. Direct permission helpers tested without UI. Local disposable backend keeps development fallback so RUN-01 stays green."
+      ]
+    },
+    "SAFE-06": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/safe_06_attachments.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/attachments.js fetch (unauthorised link allowed) -> SAFE-06 E1 fails; restored -> passes",
+        "mutation src/data/attachments.js fetch (quarantine gate disabled) -> SAFE-06 E2 fails; restored -> passes",
+        "Synthetic attachment store only. Path traversal and executables refused. Unscanned files quarantined and unavailable. Fetch requires case authorisation; guessed id cannot reuse another case. Refused upload does not erase the case. Original not auto-forwarded on short response."
+      ]
+    },
+    "SAFE-07": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/safe_07_access_lifecycle.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/access_lifecycle.js retrieveThroughSession (revocation checks disabled) -> SAFE-07 E1 fails; restored -> passes",
+        "mutation src/data/access_lifecycle.js stopOptionalFeed (flags deletion / drops retained) -> SAFE-07 E2 fails; restored -> passes",
+        "Revocation invalidates sessions and old links; policy records that downloads are not remotely recallable and invents no universal retention period. Stopping an optional feed retains unrelated permitted historical responses."
+      ]
+    },
+    "SAFE-08": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/safe_08_independent_access.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/identity.js establishIdentity (client organisation becomes tenant) -> SAFE-08 E1 fails; restored -> passes. Attack showed SAFE-01 ignored client org fields.",
+        "mutation src/data/safe_08_report.js buildEnvironmentReport (certification flag forced true) -> SAFE-08 E2 fails; restored -> passes.",
+        "Adversarial fixtures attack SAFE-01/02/06/07: body/URL/account swaps, attachment id reuse, revoked session with injected instructions. Report states node/platform/version and remaining restrictions; generated code is not called independent production certification. AI-only checks marked not applicable."
+      ]
+    },
+    "CONNECT-06": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/connect_06_stock_snapshot.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/stock_snapshot.js acceptStockSnapshot (unknown reserved defaulted to 0) -> CONNECT-06 E1 fails; restored -> passes",
+        "mutation src/data/stock_snapshot.js declineStockContribution (closes unrelated commercial/application requests) -> CONNECT-06 E2 fails; restored -> passes",
+        "Synthetic stock snapshot only. Unknown reserved never becomes available via default zero. Declining stock contribution leaves unrelated commercial and application requests open. Missing snapshot leaves narrower review usable. No real stock file."
+      ]
+    },
+    "CONNECT-08": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/connect_08_service_capability.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/service_capability.js runPricingCaseJourney (missing optional breaks journey) -> CONNECT-08 E1 fails; restored -> passes",
+        "mutation src/data/service_capability.js describeEnabled (test adapter not labelled development-only) -> CONNECT-08 E2 fails; restored -> passes",
+        "Synthetic capability registry only. Levels: unavailable, source-limited, internally usable, approved participant-facing. Services enable only with supported work. Missing IDS/fleet/stock/tender does not break pricing/case journey. Enabled services state source and response route; test adapters are development-only. No connected-badge as completed integration."
+      ]
+    },
+    "RUN-02": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/run_02_app_connection.test.mjs -> 2 pass, 0 fail",
+        "mutation src/case/app_connection.js saveScenario (engine_version stamped +99) -> RUN-02 E1 fails; restored -> passes",
+        "mutation src/case/app_connection.js acceptConsequentialRecord (client profit tamper check disabled) -> RUN-02 E2 fails; restored -> passes",
+        "Synthetic only. UI bridge uses makeCaseService saveRecord/reopen with loading/error/retry. Canonical snapshot in scenario+result+review.engine_version. Consequential accept recomputes via AIMEngine.calculate; tampered client profit/result is refused."
+      ]
+    },
+    "RUN-03": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/run_03_refresh_jobs.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/refresh_jobs.js runJob (lock check disabled) -> RUN-03 E1 fails; restored -> passes",
+        "mutation src/data/refresh_jobs.js runJob (interrupt overwrites last accepted and unrelated evidence dates) -> RUN-03 E2 fails; restored -> passes",
+        "Synthetic disposable refresh jobs only. Locks prevent duplicate simultaneous accepts. Interrupted jobs retain last accepted source and record failure; unrelated evidence dates unchanged. No scheduled-job registry or Windows tasks touched."
+      ]
+    },
+    "RUN-04": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/run_04_config_separation.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/config_separation.js scanPackage (always clean) -> RUN-04 E1 fails; restored -> passes",
+        "mutation src/data/config_separation.js startExternalService (missing config starts live with permissive defaults) -> RUN-04 E2 fails; restored -> passes",
+        "No real secrets created or read. Package and diagnostic log scanners refuse credential-shaped values and private data table markers. Missing identity/storage configuration fail-closes and cannot start a seemingly live external service with permissive defaults. Development mode stays labelled non-live."
+      ]
+    },
+    "RUN-05": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/run_05_due_actions.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/due_actions.js openDueItem (opens WRONG-CASE) -> RUN-05 E1 fails; restored -> passes",
+        "mutation src/data/due_actions.js sendExternalNotification (marks sent) -> RUN-05 E2 fails; restored -> passes",
+        "Synthetic due board only. Draft summaries never send. Reassignment does not reset waiting age. No email or external notification is sent in development or tests."
+      ]
+    },
+    "RUN-06": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/run_06_ops_measurements.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/ops_measurements.js investigate (lookup disabled) -> RUN-06 E1 fails; restored -> passes",
+        "mutation src/data/ops_measurements.js recordMeasurement (kind gate disabled) -> RUN-06 E2 fails; restored -> passes",
+        "Synthetic ops recorder only. Failures keep safe references and tested build; confidential fields stripped. Usefulness measurements stay separate from visits/logins."
+      ]
+    },
+    "RUN-07": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/run_07_working_record_restore.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/backup_restore.js restore (drops evidence, database_row_only) -> RUN-07 E1 fails; restored -> passes",
+        "mutation src/data/backup_restore.js markProviderFeature/restore (recovery_accepted forced true) -> RUN-07 E2 fails; restored -> passes",
+        "Synthetic working-record restore only. Module kept name backup_restore.js; test renamed off *_backup_* gitignore. Restore into isolated disposable folder. Untested provider features are not recovery accepted."
+      ]
+    },
+    "RUN-08": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/run_08_release_package.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/release_package.js startReleaseCandidate (journey never reproduced) -> RUN-08 E1 fails; restored -> passes",
+        "mutation src/data/release_package.js buildPackage (public_publishing/published forced true) -> RUN-08 E2 fails; restored -> passes",
+        "Local internal package only. No deploy, upload or public publishing. Task plan is not treated as a completed release."
+      ]
+    },
+    "RANGE-07": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/range_07_product_images.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/product_images.js fallback (identification/workflow broken) -> RANGE-07 E1 fails; restored -> passes",
+        "mutation src/data/product_images.js associateImage (cross-part copy allowed) -> RANGE-07 E2 fails; restored -> passes",
+        "Sufficiency: insufficient authentic permitted images in the repo (none recorded). Built fallback path only; no image downloaded. Synthetic permission fixtures labelled synthetic."
+      ]
+    },
+    "ACCEPT-02": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/accept_02_journey.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/browser_journey.js verifyRouteContinuity (always ok) -> ACCEPT-02 E1 fails; restored -> passes",
+        "mutation src/data/browser_journey.js reportBrowserEnvironment (UNTESTED forced to PASS / restart_persistence_passed true) -> ACCEPT-02 E2 fails; restored -> passes",
+        "python tests/accept/accept_02_journey.py -> summary pass 61 / fail 0 / untested 0; screenshots taken 17, read 17 by Cursor agent this chat (copied to docs/cursor_briefs/_u24_shots and image-read). Real file:// journey on INTERNAL artifact. Blocked-browser path remains UNTESTED in accept_02_journey.py J00."
       ]
     }
   },

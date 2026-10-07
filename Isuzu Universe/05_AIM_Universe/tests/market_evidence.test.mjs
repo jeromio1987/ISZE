@@ -429,9 +429,19 @@ test('M07 every excluded observation carries a named reason and its raw record',
   assert.equal(result.eligible_offers.length, 1);
   assert.equal(result.ineligible_offers.length, 5);
 
+  /* Each planted defect must be excluded for its own reason, not just any reason. */
+  const EXPECTED = {
+    'BAD-LEVEL': [['NO_PRICE_LEVEL_DECLARED'], 'excluded'],
+    'BAD-PACK': [['PACK_CONTENTS_UNKNOWN'], 'unresolved'],
+    'BAD-MATCH': [['PRODUCT_MATCH_REJECTED'], 'excluded'],
+    'BAD-CURRENCY': [['CURRENCY_NOT_STATED'], 'unresolved'],
+    'BAD-ROLE': [['ROLE_NOT_STATED'], 'excluded']
+  };
+  assert.deepEqual(result.ineligible_offers.map((r) => r.observation_id).sort(), Object.keys(EXPECTED).sort());
   result.ineligible_offers.forEach((row) => {
-    assert.ok((row.reason_codes || []).length > 0,
-      row.observation_id + ' was excluded with no reason code');
+    assert.deepEqual(row.reason_codes, EXPECTED[row.observation_id][0],
+      row.observation_id + ' was excluded for the wrong reason');
+    assert.equal(row.exclusion_kind, EXPECTED[row.observation_id][1], row.observation_id + ' exclusion kind');
     assert.ok(typeof row.reason === 'string' && row.reason.length > 20,
       row.observation_id + ' was excluded without a readable reason');
     (row.reason_codes || []).forEach((code) => {

@@ -167,10 +167,11 @@
     };
   }
 
+  /* Same five characters as esc in src/ui/app.js, the single quote included. */
   function escapeHtml(s) {
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
   }
 
   function renderContextPanel(view) {
@@ -202,6 +203,7 @@
   }
 
   var API = {
+    escapeHtml: escapeHtml,
     FORECAST_CUTOFF_YEAR: FORECAST_CUTOFF_YEAR,
     filterMeasures: filterMeasures,
     separateDenominatorVersions: separateDenominatorVersions,

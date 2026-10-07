@@ -635,4 +635,4 @@ run.note_on_brief_naming = 'The task brief names src/engine/pricing.js. No such 
   + 'is pinned in tested_files.';
 
 const s = H.write(run, 'accept_01_engine.json');
-process.exitCode = s.fail ? 1 : 0;
+process.exitCode = H.exitCode(s);

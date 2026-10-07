@@ -124,9 +124,20 @@ function write(run, filename) {
         + (r.reproduction ? ' | reproduction: ' + r.reproduction : ''));
     }
   }
+  if (run.known_findings.length) console.log(run.known_findings.length + ' known findings open');
   console.log(JSON.stringify(run.summary));
   console.log('raw: ' + target);
   return run.summary;
+}
+
+/* Exit codes. A known finding is not an ordinary fail, but it is never exit 0:
+   run_all.ps1 reads 3 as "known findings open" and 4 as "not run". */
+const EXIT = { PASS: 0, FAIL: 1, KNOWN_FINDINGS: 3, NOT_RUN: 4 };
+function exitCode(s) {
+  if (s.fail) return EXIT.FAIL;
+  if (s.untested || s.skipped) return EXIT.NOT_RUN;
+  if (s.known_findings) return EXIT.KNOWN_FINDINGS;
+  return EXIT.PASS;
 }
 
 /* deterministic assertion helper: reports the observed and expected values */
@@ -144,5 +155,5 @@ function eq(observed, expected, label) {
 
 module.exports = {
   ROOT, OUT, PATHS, sha256, exists, pin, frozenPayload, loadInVm, requireModule,
-  makeRun, test, summary, write, approx, isTrue, eq
+  makeRun, test, summary, write, approx, isTrue, eq, EXIT, exitCode
 };

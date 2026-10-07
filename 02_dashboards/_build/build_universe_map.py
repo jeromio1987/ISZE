@@ -230,6 +230,37 @@ def count_pages() -> list[tuple[str, int, str]]:
 
 # ---------------------------------------------------------------- content
 
+def read_universe_progress() -> dict:
+    """The U1..U28 engineering status, read from the record itself.
+
+    `progress/progress.json` is the single progress record for the AIM Universe
+    component (BASE-08). It is written by tools/build_progress.py from
+    TASKS_96.txt and the overlay, so a state here is the state the component's own
+    checks produced - never a count typed into this page. Absent, the section
+    says so rather than showing a guess.
+    """
+    p = ROOT / "Isuzu Universe" / "05_AIM_Universe" / "progress" / "progress.json"
+    try:
+        doc = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        MISSING.append("the AIM Universe progress record")
+        return {"present": False}
+    tasks = doc.get("tasks") or []
+    run = doc.get("_acceptance_run") or {}
+    return {
+        "present": True,
+        "total": doc.get("total_tasks") or len(tasks),
+        "counts": doc.get("counts") or {},
+        "written_at": doc.get("written_at") or "",
+        "artifact": (run.get("artifact") or "").split(" (")[0],
+        "tests": [
+            {"id": t.get("id"), "title": t.get("title"),
+             "state": t.get("state"), "owner": t.get("owner")}
+            for t in tasks
+        ],
+    }
+
+
 def build_context() -> dict:
     m = read_metrics()
     w = read_wallet()
@@ -261,6 +292,7 @@ def build_context() -> dict:
         "tasks": tasks,
         "aim": aim,
         "pages": pages,
+        "universe": read_universe_progress(),
     }
 
 
@@ -491,8 +523,47 @@ def build_html(c: dict) -> str:
       </tr>""" for j in c["tasks"]
     )
 
+    # ---- the engineering build status (U1..U28)
+    u = c.get("universe") or {}
+    if not u.get("present"):
+        universe_html = (
+            "<p class='missing'>The component's progress record could not be read, so this page "
+            "cannot state which tasks are verified. Nothing is guessed to fill the gap.</p>")
+    else:
+        counts = u["counts"]
+        chips = []
+        for state, kind in (("technically verified", "ok"), ("implemented", "warn"),
+                            ("in progress", "warn"), ("not started", "todo")):
+            if counts.get(state):
+                chips.append(f"<span class='chip {kind}'>{counts[state]} {esc(state)}</span>")
+        rows = "".join(
+            "<tr>"
+            f"<td class='nowrap'><strong>{esc(t.get('id'))}</strong></td>"
+            f"<td>{esc(t.get('title') or '')}</td>"
+            f"<td class='nowrap'>{esc(t.get('state') or 'not started')}</td>"
+            f"<td class='nowrap'>{esc(t.get('owner') or '')}</td>"
+            "</tr>" for t in u["tests"])
+        universe_html = (
+            "<div class='chips'>{chips}</div>"
+            "<p class='note'>Of {total} planned tasks, {verified} are verified by the component's "
+            "own checks. A verified task means a named check ran and its output was recorded. It is "
+            "not a person's acceptance, and nothing here is deployed or published. "
+            "Record written {when}.</p>"
+            "<div class='tablewrap'><table>"
+            "<thead><tr><th>Task</th><th>What it is</th><th>State</th><th>Owner</th></tr></thead>"
+            "<tbody>{rows}</tbody></table></div>"
+            "<p class='note'><strong>Three checks are deliberately red.</strong> Two reproduce the "
+            "original v0.3 defects on the frozen reference, and one asks for a reporting period the "
+            "source does not carry. They stay red on purpose: making them green would mean changing "
+            "the yardstick or inventing the period.</p>"
+        ).format(chips="".join(chips), total=u["total"],
+                 verified=counts.get("technically verified", 0),
+                 when=esc(u.get("written_at") or "not stated"), rows=rows)
+
     # ---- where to look next
     nexts = [
+        ("What I built with AI", "../hub/ISZE_AI_MILESTONES.html",
+         "Every tool, finding and pack built here, as a milestone list"),
         ("The hub that indexes everything", "../hub/ISZE_OS_Hub.html",
          "How the layers connect, and where each one lives"),
         ("The operating console", "../ops/ISZE_OS_Console.html",
@@ -726,9 +797,17 @@ footer code{{font-size:.85em}}
     or widen the group to find a better answer.</div>
   </section>
 
+  <section id="universe">
+    <div class="shead"><span class="n">08</span><h2>The engineering build, task by task</h2>
+      <p>Read live from the component's own progress record
+      (<code>Isuzu Universe/05_AIM_Universe/progress/progress.json</code>), which is written from
+      the task plan and the checks that ran. Nothing in this table is typed here.</p></div>
+    {universe_html}
+  </section>
+
   <section id="next">
-    <div class="shead"><span class="n">08</span><h2>Where to look next</h2>
-      <p>Six places worth opening, and what each one is for.</p></div>
+    <div class="shead"><span class="n">09</span><h2>Where to look next</h2>
+      <p>Seven places worth opening, and what each one is for.</p></div>
     <div class="nexts">{next_html}</div>
     {missing_note}
   </section>

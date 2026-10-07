@@ -378,4 +378,4 @@ H.test(run, 'D10', 'Record which export module the shipped artifact actually use
 });
 
 const s = H.write(run, 'accept_04_participant.json');
-process.exitCode = s.fail ? 1 : 0;
+process.exitCode = H.exitCode(s);

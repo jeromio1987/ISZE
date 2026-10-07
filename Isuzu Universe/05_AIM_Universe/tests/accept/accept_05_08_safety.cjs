@@ -577,4 +577,4 @@ H.test(run, 'S11', 'The unimplemented access controls are stated rather than imp
 });
 
 const s = H.write(run, 'accept_05_08_safety.json');
-process.exitCode = s.fail ? 1 : 0;
+process.exitCode = H.exitCode(s);

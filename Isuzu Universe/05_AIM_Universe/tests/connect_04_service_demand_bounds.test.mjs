@@ -24,7 +24,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const CSV = path.resolve(__dirname, '../../../03_analytics/Isuzu/prism/data/series_to_band.csv');
+/* A synthetic map in the component's own fixtures, so the test does not depend on
+   where the component folder sits relative to 03_analytics. */
+const CSV = path.join(__dirname, 'fixtures', 'series_to_band_synthetic.csv');
 
 const bands = (await import(new URL('../src/data/vehicle_bands.js', import.meta.url))).default;
 const mod = (await import(new URL('../src/data/service_demand_bounds.js', import.meta.url))).default;
@@ -77,7 +79,7 @@ test('CONNECT-04 E1: Changing from internal to external service basis changes th
   assert.ok(ext.stripped_keys.includes('cost_eur'));
 
   const bf = bands.bandFor('NPR', CSV);
-  assert.notEqual(bf, bands.UNRESOLVED);
+  assert.equal(bf, 'SYN-BAND-7.5T');
   const via = mod.bandsForSeries(['NPR', 'N*'], CSV);
   assert.equal(via.ok, true);
   assert.equal(via.bands[0].tonnage_band, bf);
