@@ -1,0 +1,85 @@
+{
+  "built_at": "2026-10-07T06:32:21+00:00",
+  "rule": "A pair from ONE source stays a candidate. A pair claimed by a second independent pipeline (the Eucon cross-reference graph) moves the existing edge up exactly one step (reject->doubtful->likely->confirmed) when the brand agrees, never down. Nothing is 'approved' unless Eucon-listed (Jerome-approved) or graded confirmed by the existing rules.",
+  "sources_are_pipelines": "C1 and C2 are two readings of ONE pipeline (Spareto) and count as day stability, never as two witnesses. The two independent pipelines here are Eucon and Spareto.",
+  "state_file": {
+    "path": "04_tools/aftermarket_intelligence/state/spareto_crossref.csv",
+    "rows_before": 1688,
+    "c1_rows_read": 761,
+    "c1_rows_appended": 0,
+    "rows_after": 1688,
+    "parts_before": 217,
+    "parts_after": 217,
+    "c1_label": "u26_c1_spareto_20261007 (observed 2026-10-07)",
+    "previous_label": "spareto_tierA_2026-10-02 (observed 2026-10-02)"
+  },
+  "worklist": {
+    "numbers": 123,
+    "needs_crossref_112": 112,
+    "eucon_11": 11
+  },
+  "q1_numbers_with_spareto_pair": {
+    "of_worklist": 69,
+    "of_123": 69,
+    "of_112_no_eucon": 58,
+    "of_11_eucon": 11,
+    "c1_only_reading": {
+      "pairs": 735,
+      "numbers_of_123": 69
+    }
+  },
+  "q2_of_112": {
+    "gained_at_least_one_pair": 58,
+    "with_at_least_one_corroborated_pair": 4,
+    "single_source_only_numbers": 54,
+    "pairs_corroborated": 13,
+    "pairs_single_source": 546
+  },
+  "q3_pairs": {
+    "all_worklist": {
+      "pairs": 735,
+      "numbers_with_a_pair": 69,
+      "pairs_in_eucon_graph": 156,
+      "pairs_in_graph_brand_agrees": 156,
+      "single_source_only": 579
+    },
+    "all_1688_pairs": {
+      "pairs": 1634,
+      "numbers_with_a_pair": 217,
+      "pairs_in_eucon_graph": 487,
+      "pairs_in_graph_brand_agrees": 487,
+      "single_source_only": 1147
+    }
+  },
+  "tier_counts": {
+    "before_eucon_only": {
+      "doubtful": 4663,
+      "confirmed": 1395,
+      "reject": 272,
+      "likely": 125
+    },
+    "after_full_file": {
+      "doubtful": 5146,
+      "confirmed": 1450,
+      "likely": 849,
+      "reject": 157
+    },
+    "edges_moved": 949,
+    "moves": {
+      "doubtful -> likely": 779,
+      "likely -> confirmed": 55,
+      "reject -> doubtful": 115
+    },
+    "distinct_pairs_moved": 340
+  },
+  "c2_measured_for_comparison": {
+    "of_123_with_a_pair": 69,
+    "of_112_with_a_pair": 58,
+    "of_112_single_source_only": 54,
+    "of_112_with_a_corroborated_pair": 4,
+    "pairs_on_123": 735,
+    "pairs_corroborated": 156,
+    "pairs_single_source": 579,
+    "would_move_an_eucon_edge": 155
+  }
+}
