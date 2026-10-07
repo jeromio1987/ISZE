@@ -6,13 +6,38 @@ reports a real result about code the assembled artifact does not run.
 ## Shipped by tools/build.py
 
 - `src/data/contracts.js` - shared records
+- `src/data/export.js` - recipient-specific exports, identity and permission
+- `src/data/identity.js` - approved and development-only identity resolution
+- `src/data/attachments.js` - case attachment upload storage and access
+- `src/data/access_lifecycle.js` - role changes, departure and record-use decisions
+- `src/data/safe_08_report.js` - independent access test environment report
+- `src/case/schema.js` - case lifecycle and valid transitions
+- `src/case/store.js` - durable case repository, file and browser adapters
+- `src/case/app_connection.js` - connect cases and scenarios to the maintained application
 - `src/engine/engine.js` - calculation (one entry point)
 - `src/data/manifest.js` - source manifest
 - `src/data/evidence.js` - evidence states
+- `src/data/market_observation.js` - competitor observation evidence record
 - `src/data/comparable.js` - comparable-price panel (computes, renders nothing)
-- `src/data/export.js` - recipient-specific exports
+- `src/data/ids_evidence.js` - IDS evidence through validated identities
+- `src/data/ids_improvement_action.js` - IDS answer to separate improvement action
+- `src/data/prism_context.js` - read-only PRISM context at measured level
+- `src/data/vehicle_bands.js` - series_to_band.csv band_for (no second dictionary)
+- `src/data/service_demand_bounds.js` - service-demand and shared-applicability boundaries
+- `src/data/availability_question.js` - dated availability question and response
+- `src/data/tender_investigation.js` - tender feed to owned investigation
+- `src/data/stock_snapshot.js` - optional case stock snapshot
+- `src/data/service_capability.js` - enable services only with supported work
+- `src/data/refresh_jobs.js` - selected refresh jobs without duplication
+- `src/data/config_separation.js` - separate configuration secrets and restricted files
+- `src/data/due_actions.js` - due actions without automatic send
+- `src/data/ops_measurements.js` - operational failures and useful-work measurements
+- `src/data/backup_restore.js` - backup and restore permitted working record
+- `src/data/release_package.js` - internal release package without deploy
+- `src/data/product_images.js` - permitted product images with fallback
+- `src/data/browser_journey.js` - browser journey continuity and blocked reporting
 - `src/data/candidates.js` - candidate workbench
-- `src/data/cases.js` - durable case record
+- `src/data/cases.js` - case facade over src/case/*
 - `src/data/scenario.js` - one shared scenario
 - `src/ui/app.js` - views and interaction
 
@@ -20,8 +45,6 @@ reports a real result about code the assembled artifact does not run.
 
 - `src/engine/pricing.js` - superseded by src/engine/engine.js; duplicate deleted 2026-09-22; **DELETED from the tree, entry kept as a tombstone**
 - `src/data/costbasis.js` - overlaps the engine's basis resolution
-- `src/case/schema.js` - duplicate case contract
-- `src/case/store.js` - duplicate case store
 - `src/output/recipients.js` - duplicate export builder
 - `src/ui/viewmodel.js` - duplicate view model
 - `src/ui/scenario.js` - duplicate scenario view helper
@@ -55,9 +78,66 @@ reports a real result about code the assembled artifact does not run.
 - `tests/accept/lib/harness.cjs`  <-- LOADS A RETIRED MODULE
     - shipped: src/data/candidates.js, src/data/cases.js, src/data/contracts.js, src/data/evidence.js, src/data/export.js, src/data/manifest.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
     - RETIRED: src/data/costbasis.js, src/output/recipients.js
+- `tests/accept_01_independent.test.mjs`
+    - shipped: src/engine/engine.js
+- `tests/accept_02_journey.test.mjs`
+    - shipped: src/data/browser_journey.js
+- `tests/accept_03_independent.test.mjs`
+    - shipped: src/data/candidates.js, src/data/evidence.js
+- `tests/audit_a_confidential_strip.test.mjs`
+    - shipped: src/data/ops_measurements.js
+- `tests/audit_b_version_guard.test.mjs`
+    - shipped: src/case/app_connection.js, src/case/store.js, src/engine/engine.js
+- `tests/audit_d_missing_files.test.mjs`
+    - shipped: src/case/store.js, src/data/service_demand_bounds.js, src/data/vehicle_bands.js
+- `tests/audit_e_quote_escaping.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/audit_h_named_tasks.test.mjs`
+    - shipped: src/case/schema.js, src/case/store.js, src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/ops_measurements.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/case_06_explanations.test.mjs`
+    - shipped: src/case/schema.js, src/case/store.js
+- `tests/case_08_queue.test.mjs`
+    - shipped: src/case/schema.js, src/case/store.js, src/data/export.js
+- `tests/case_build_wiring.cjs`
+    - shipped: src/data/cases.js
+- `tests/case_restart_child.cjs`
+    - shipped: src/case/schema.js, src/case/store.js
+- `tests/case_service.test.mjs`  <-- LOADS A RETIRED MODULE
+    - shipped: src/case/schema.js, src/case/store.js, src/data/cases.js, src/data/contracts.js
+    - RETIRED: src/output/recipients.js
 - `tests/case_store.test.mjs`  <-- LOADS A RETIRED MODULE
-    - shipped: src/data/contracts.js
-    - RETIRED: src/case/schema.js, src/case/store.js, src/output/recipients.js
+    - shipped: src/case/schema.js, src/case/store.js, src/data/contracts.js
+    - RETIRED: src/output/recipients.js
+- `tests/connect_01_ids_identities.test.mjs`
+    - shipped: src/data/ids_evidence.js
+- `tests/connect_01_ui_ids_evidence.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/evidence.js, src/data/export.js, src/data/ids_evidence.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/connect_02_ids_improvement_action.test.mjs`
+    - shipped: src/data/ids_improvement_action.js
+- `tests/connect_03_prism_context.test.mjs`
+    - shipped: src/data/prism_context.js
+- `tests/connect_04_service_demand_bounds.test.mjs`
+    - shipped: src/data/service_demand_bounds.js, src/data/vehicle_bands.js
+- `tests/connect_05_availability_question.test.mjs`
+    - shipped: src/data/availability_question.js
+- `tests/connect_06_stock_snapshot.test.mjs`
+    - shipped: src/data/stock_snapshot.js
+- `tests/connect_07_tender_investigation.test.mjs`
+    - shipped: src/data/tender_investigation.js
+- `tests/connect_08_service_capability.test.mjs`
+    - shipped: src/data/service_capability.js
+- `tests/continuation_finance.test.cjs`
+    - shipped: src/engine/engine.js
+- `tests/continuation_positive_control.test.cjs`
+    - shipped: src/engine/engine.js
+- `tests/data_01_manifest.test.mjs`
+    - shipped: src/data/manifest.js
+- `tests/data_02_entities.test.mjs`
+    - shipped: src/data/manifest.js
+- `tests/data_03_references.test.mjs`
+    - shipped: src/data/evidence.js
+- `tests/data_07_reconcile.test.mjs`
+    - shipped: src/data/manifest.js
 - `tests/data_contracts.test.mjs`  <-- LOADS A RETIRED MODULE
     - shipped: src/data/candidates.js, src/data/evidence.js, src/data/manifest.js, src/engine/engine.js
     - RETIRED: src/data/costbasis.js
@@ -68,10 +148,101 @@ reports a real result about code the assembled artifact does not run.
     - shipped: src/data/contracts.js, src/data/export.js, src/ui/app.js
 - `tests/fin_math.test.mjs`
     - shipped: src/data/contracts.js, src/engine/engine.js
+- `tests/market_01_observation.test.mjs`
+    - shipped: src/data/comparable.js, src/data/market_observation.js
+- `tests/market_02_equivalence.test.mjs`
+    - shipped: src/data/comparable.js, src/data/market_observation.js
+- `tests/market_03_packs.test.mjs`
+    - shipped: src/data/comparable.js, src/data/market_observation.js
+- `tests/market_04_adjustments.test.mjs`
+    - shipped: src/data/comparable.js, src/data/market_observation.js
+- `tests/market_05_levels.test.mjs`
+    - shipped: src/data/comparable.js, src/data/market_observation.js
+- `tests/market_06_conflicts.test.mjs`
+    - shipped: src/data/comparable.js, src/data/market_observation.js
+- `tests/market_07_panel.test.mjs`
+    - shipped: src/data/comparable.js
+- `tests/market_08_request.test.mjs`
+    - shipped: src/data/comparable.js
 - `tests/market_evidence.test.mjs`
     - shipped: src/data/comparable.js, src/data/evidence.js
+- `tests/range_01_relationships.test.mjs`
+    - shipped: src/data/evidence.js
+- `tests/range_02_comparison.test.mjs`
+    - shipped: src/data/evidence.js
+- `tests/range_03_basket.test.mjs`
+    - shipped: src/data/evidence.js
+- `tests/range_04_transfer.test.mjs`
+    - shipped: src/data/evidence.js
+- `tests/range_05_unresolved.test.mjs`
+    - shipped: src/data/evidence.js, src/engine/engine.js
+- `tests/range_06_price_direction.test.mjs`
+    - shipped: src/data/evidence.js
+- `tests/range_07_product_images.test.mjs`
+    - shipped: src/data/product_images.js
+- `tests/range_08_withdrawal.test.mjs`
+    - shipped: src/data/evidence.js
+- `tests/range_engine.test.cjs`
+    - unlisted: src/engine/range.js
+- `tests/range_engine_parity.test.cjs`
+    - shipped: src/engine/engine.js
+    - unlisted: src/engine/range.js
+- `tests/review_03_comparison.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/review_04_contributors.test.mjs`
+    - shipped: src/data/evidence.js
+- `tests/review_05_price_quantity_mix.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/evidence.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/review_06_recurrence.test.mjs`
+    - shipped: src/data/evidence.js
+- `tests/review_07_next_action.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/evidence.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/review_08_new_review.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/run_01_shared_backend.test.mjs`
+    - shipped: src/case/store.js, src/engine/engine.js
+- `tests/run_02_app_connection.test.mjs`
+    - shipped: src/case/app_connection.js, src/case/store.js, src/engine/engine.js
+- `tests/run_03_refresh_jobs.test.mjs`
+    - shipped: src/data/refresh_jobs.js
+- `tests/run_04_config_separation.test.mjs`
+    - shipped: src/data/config_separation.js
+- `tests/run_05_due_actions.test.mjs`
+    - shipped: src/data/due_actions.js
+- `tests/run_06_ops_measurements.test.mjs`
+    - shipped: src/data/ops_measurements.js
+- `tests/run_07_working_record_restore.test.mjs`
+    - shipped: src/data/backup_restore.js
+- `tests/run_08_release_package.test.mjs`
+    - shipped: src/data/release_package.js
 - `tests/run_tests.cjs`
     - shipped: src/data/candidates.js, src/data/cases.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js
+- `tests/safe_01_identity.test.mjs`
+    - shipped: src/data/identity.js
+- `tests/safe_05_independent.test.mjs`
+    - shipped: src/data/contracts.js, src/data/export.js, src/engine/engine.js
+- `tests/safe_06_attachments.test.mjs`
+    - shipped: src/data/attachments.js
+- `tests/safe_07_access_lifecycle.test.mjs`
+    - shipped: src/data/access_lifecycle.js
+- `tests/safe_08_independent_access.test.mjs`
+    - shipped: src/data/access_lifecycle.js, src/data/attachments.js, src/data/identity.js
+- `tests/ux_01_context.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/ux_02_alternative.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/ux_03_assumptions.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/ux_04_sensitivity.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/ux_05_summary.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/ux_06_states.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/ux_07_keyboard_small.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+- `tests/ux_08_one_decision.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
 - `tests/ux_flow.test.mjs`  <-- LOADS A RETIRED MODULE
     - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
     - RETIRED: src/ui/render.js, src/ui/views.js
@@ -82,7 +253,7 @@ reports a real result about code the assembled artifact does not run.
 
 ## Summary
 
-18 test files load a source module; 11 of them load a retired one.
+91 test files load a source module; 12 of them load a retired one.
 
 ## Read this before acting on the number above
 
