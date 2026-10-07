@@ -26,9 +26,13 @@ def shipped_and_retired():
     mods_region = src[:src.find("UNWIRED_MODULES")]
     shipped = re.findall(r'\("(src/[^"]+)",\s*"([^"]+)"\)', mods_region)
     # UNWIRED_MODULES entries are plain 2-tuples with a reason string.
-    block = src[src.find("UNWIRED_MODULES"):src.find("BANNED_IN_OUTPUT")]
+    block = src[src.find("UNWIRED_MODULES"):src.find("AUDIT_ONLY_MODULES")]
     retired = re.findall(r'\("(src/[^"]+)",\s*"([^"]+)"\)', block)
-    return shipped, retired
+    # The third class, so one report shows all three and a reader does not have to
+    # read tools/build.py to find the audit-only modules (U29 task F).
+    audit_block = src[src.find("AUDIT_ONLY_MODULES"):src.find("PUBLISHED_BY")]
+    audit_only = re.findall(r'\("(src/[^"]+)",\s*"([^"]+)"\)', audit_block)
+    return shipped, retired, audit_only
 
 
 def test_files():
@@ -124,9 +128,10 @@ def deleted_retired(retired):
 
 
 def main():
-    shipped, retired = shipped_and_retired()
+    shipped, retired, audit_only = shipped_and_retired()
     ship_names = {p for p, _ in shipped}
     retired_names = {p for p, _ in retired}
+    audit_names = {p for p, _ in audit_only}
     reason = dict(retired)
 
     # A retired entry whose file has been deleted is a tombstone, not a live
@@ -142,11 +147,15 @@ def main():
             continue
         on_ship = sorted(m for m in mods if m in ship_names)
         on_retired = sorted(m for m in mods if m in retired_names)
+        on_audit = sorted(m for m in mods if m in audit_names)
         on_gone = sorted(m for m in mods if m in gone)
-        other = sorted(m for m in mods if m not in ship_names and m not in retired_names)
+        other = sorted(m for m in mods
+                       if m not in ship_names and m not in retired_names
+                       and m not in audit_names)
         rows.append({
             "test": os.path.relpath(t, ROOT).replace("\\", "/"),
-            "shipped": on_ship, "retired": on_retired, "deleted": on_gone, "other": other,
+            "shipped": on_ship, "retired": on_retired, "audit_only": on_audit,
+            "deleted": on_gone, "other": other,
         })
 
     lines = ["# Which module each test loads", "",
@@ -163,6 +172,13 @@ def main():
         else:
             lines.append("- `%s` - %s" % (p, why))
 
+    lines += ["", "## Audit-only (assembled by no build; used by tools and tests only)", ""]
+    if audit_only:
+        for p, why in audit_only:
+            lines.append("- `%s` - %s" % (p, why))
+    else:
+        lines.append("- none declared")
+
     lines += ["", "## Tests, by what they load", ""]
     bad = 0
     for r in rows:
@@ -174,6 +190,8 @@ def main():
             lines.append("    - shipped: %s" % ", ".join(r["shipped"]))
         if r["retired"]:
             lines.append("    - RETIRED: %s" % ", ".join(r["retired"]))
+        if r["audit_only"]:
+            lines.append("    - audit-only (not assembled): %s" % ", ".join(r["audit_only"]))
         if r["deleted"]:
             lines.append("    - names a DELETED module in a comment (not a load): %s"
                          % ", ".join(r["deleted"]))
