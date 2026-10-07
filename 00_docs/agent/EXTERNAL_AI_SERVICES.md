@@ -82,7 +82,8 @@ over and not point it at a repo clone.
 
 **Agreed 2026-10-07:** the Bot works from public web sources only. Findings come back as documents
 filed into `01_data/90_INBOX/`. Nothing it produces is used until the figures are checked against a
-source, the same as a DeepSeek batch or a GPT reply.
+source, the same as a DeepSeek batch or a GPT reply. The mechanical half of that check is scripted
+in [`../../04_tools/external_intake/parse_external_intel_doc.py`](../../04_tools/external_intake/parse_external_intel_doc.py).
 
 Hard rules for any Grok Bot on ISZE work:
 

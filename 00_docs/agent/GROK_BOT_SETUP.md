@@ -153,13 +153,17 @@ The Bot's output is treated exactly like a DeepSeek batch or a GPT reply:
 
 1. The document is filed into `01_data/90_INBOX/` (the inbox is the only landing place for
    unsorted material).
-2. Claude reads it and checks every figure and source against the page it names.
-3. Nothing enters a dashboard, a deck or a workbook until that check passes.
+2. Claude runs the check:
+   `python 04_tools/external_intake/parse_external_intel_doc.py --doc "<the document>"`. Exit 0
+   means the document is structurally checkable; non-zero means it goes back to the Bot.
+3. The figures and sources are then read against the pages they name. Nothing enters a dashboard,
+   a deck or a workbook until that passes.
 4. The same acceptance bar as the machine-produced rows in the scraper programme: if a number
    cannot be traced to the source, it is not used.
 
 A run with an honest "these sources did not load" section is worth more than a full-looking
-document with a guessed number in it.
+document with a guessed number in it. What the check does and does not prove is spelled out in
+[`../../04_tools/external_intake/README.md`](../../04_tools/external_intake/README.md).
 
 ---
 

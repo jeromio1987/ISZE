@@ -63,7 +63,7 @@ job that runs unattended is a job that needs an owner and a boundary.
 
 | Worker | Status | Runs in | Cadence | Produces | Boundary |
 |---|---|---|---|---|---|
-| **Grok Bot** — `ISZE Intel Watch` | Setup designed, not yet created (2026-10-07) | Cursor cloud computer (Grok Bot app) | routine, daily to start | one intel document, filed into `01_data/90_INBOX/` | public web only; no repo clone, no mailbox, no internal figures; drafts only, never sends. Full rules: [`agent/EXTERNAL_AI_SERVICES.md`](agent/EXTERNAL_AI_SERVICES.md) · setup: [`agent/GROK_BOT_SETUP.md`](agent/GROK_BOT_SETUP.md) |
+| **Grok Bot** — `ISZE Intel Watch` | Setup designed, not yet created (2026-10-07) | Cursor cloud computer (Grok Bot app) | routine, daily to start | one intel document, filed into `01_data/90_INBOX/` | public web only; no repo clone, no mailbox, no internal figures; drafts only, never sends. Full rules: [`agent/EXTERNAL_AI_SERVICES.md`](agent/EXTERNAL_AI_SERVICES.md) · setup: [`agent/GROK_BOT_SETUP.md`](agent/GROK_BOT_SETUP.md) · acceptance check: `04_tools/external_intake/parse_external_intel_doc.py` |
 
 **Why it is here and not in the task list.** It cannot reach this machine's disk — there is no mount
 to `C:\Users\jerom\Desktop\claude`. That is the fence: internal data stays out of it because it is
