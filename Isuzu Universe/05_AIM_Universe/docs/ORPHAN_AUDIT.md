@@ -7,11 +7,36 @@ list, so nothing states whether they are live.
 ## Shipped
 
 - `src/data/contracts.js`
+- `src/data/export.js`
+- `src/data/identity.js`
+- `src/data/attachments.js`
+- `src/data/access_lifecycle.js`
+- `src/data/safe_08_report.js`
+- `src/case/schema.js`
+- `src/case/store.js`
+- `src/case/app_connection.js`
 - `src/engine/engine.js`
 - `src/data/manifest.js`
 - `src/data/evidence.js`
+- `src/data/market_observation.js`
 - `src/data/comparable.js`
-- `src/data/export.js`
+- `src/data/ids_evidence.js`
+- `src/data/ids_improvement_action.js`
+- `src/data/prism_context.js`
+- `src/data/vehicle_bands.js`
+- `src/data/service_demand_bounds.js`
+- `src/data/availability_question.js`
+- `src/data/tender_investigation.js`
+- `src/data/stock_snapshot.js`
+- `src/data/service_capability.js`
+- `src/data/refresh_jobs.js`
+- `src/data/config_separation.js`
+- `src/data/due_actions.js`
+- `src/data/ops_measurements.js`
+- `src/data/backup_restore.js`
+- `src/data/release_package.js`
+- `src/data/product_images.js`
+- `src/data/browser_journey.js`
 - `src/data/candidates.js`
 - `src/data/cases.js`
 - `src/data/scenario.js`
@@ -21,8 +46,6 @@ list, so nothing states whether they are live.
 
 - `src/engine/pricing.js`
 - `src/data/costbasis.js`
-- `src/case/schema.js`
-- `src/case/store.js`
 - `src/output/recipients.js`
 - `src/ui/viewmodel.js`
 - `src/ui/scenario.js`
@@ -33,9 +56,13 @@ list, so nothing states whether they are live.
 
 ## ORPHANS (in neither list)
 
-None.
+- `src/case/server/migrate.js` - loaded by no test
+- `src/case/server/permissions.js` - loaded by: tests/safe_02_permissions.test.mjs, tests/safe_08_independent_access.test.mjs
+- `src/case/server/server.js` - loaded by: tests/run_01_shared_backend.test.mjs, tests/safe_02_permissions.test.mjs
+- `src/case/server/sqlite_adapter.js` - loaded by no test
+- `src/engine/range.js` - loaded by: tests/range_engine.test.cjs, tests/range_engine_parity.test.cjs
 
 ## Summary
 
-20 .js modules on disk, 10 shipped, 11 deliberately retired, 0 orphaned.
+48 .js modules on disk, 35 shipped, 9 deliberately retired, 5 orphaned.
 
