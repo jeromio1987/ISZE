@@ -164,6 +164,34 @@ Live scheduled tasks and their SSOT: [`AUTOMATION_REGISTER.md`](AUTOMATION_REGIS
 
 ---
 
+---
+
+### Universe engineering programme (U1 to U28)
+
+One block, so nobody answers "where does the Universe build stand" from the
+September papers again. The component's own record is the source:
+`Isuzu Universe/05_AIM_Universe/progress/progress.json` (96 planned tasks), and the
+plain-language page is `02_dashboards/hub/ISZE_UNIVERSE_MAP.html`.
+
+**On main.** Universe pull requests #22 to #69 are merged, covering
+U1, U10, U11, U13, U14, U15, U16, U17, U18, U19, U2, U20, U3, U4, U5, U6, U7, U8, U9.
+
+**On branches, not merged.** cursor/2026-10-06-universe-u20-connect-01-ui (tip `f30b3dfc`), cursor/2026-10-07-universe-u21-connect-05-07 (tip `528a501d`), cursor/2026-10-07-universe-u22-safe-chain (tip `79a2c60c`), cursor/2026-10-07-universe-u23-connect-06-08-run-02-04 (tip `3b871c95`), cursor/2026-10-07-universe-u24-run-05-08-range-07-accept-02 (tip `d3adf7f4`), cursor/2026-10-07-universe-u26-market-harvest (tip `730279ea`), cursor/2026-10-07-universe-u27-aim-audit-fixes (tip `63df1c08`). The Friday 2026-10-09 audit decides the
+merge order; nothing in this list is on main.
+
+**Waiting for a person, not for effort.**
+- `ACCEPT-04` to `ACCEPT-08` need real participants. No amount of machine work closes them.
+- Real sign-in needs IT. Jerome parked it; the development-only identity stays.
+- The `R27` check inside `ACCEPT-01` asks for a candidate reporting period the source
+  data does not carry. It stays red until a source supplies one.
+- How the pilot performed needs ITUK sales-to-dealer from after December 2025.
+
+**State, from the record.** 90 verified, 1 implemented, 5 not started. A verified
+task means a named check ran and its output was recorded. It is not a person's
+acceptance, and nothing in this programme is deployed or published.
+
+---
+
 ## 4. Shipped
 
 Newest first. One line each; the reasoning is in `DECISIONS.md` under the same date.

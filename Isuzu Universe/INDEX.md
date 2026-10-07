@@ -2,6 +2,28 @@
 
 This is the working map for the Isuzu Universe project. It holds **two programmes** sharing one folder: a planning and evidence programme, and an engineering programme that builds the software. Both are below.
 
+## Where the engineering build stands (read this first)
+
+The pricing-decision component in `05_AIM_Universe\` is the live product, and its
+own record is the answer to "what is built":
+
+- `05_AIM_Universe\progress\progress.json` - 96 planned tasks with the state each
+  one really holds. 90 verified, 1 implemented, 5 not started. A verified task
+  means a named check ran and its output was recorded; it is not a person's
+  acceptance, and nothing here is deployed or published.
+- `..\02_dashboards\hub\ISZE_UNIVERSE_MAP.html` - the same status in plain
+  language, rebuilt from that record.
+- `..\00_docs\ISZE_ROADMAP.md` - the programme roadmap, with one Universe block
+  listing what is on main and what still sits on a branch.
+- `05_AIM_Universe\docs\VERIFICATION.md` - what passes and what remains.
+
+**What waits for a person, not for effort:** `ACCEPT-04` to `ACCEPT-08` need real
+participants; real sign-in needs IT and was parked; the `R27` check needs a
+candidate reporting period the source data does not carry; and how the pilot
+performed needs ITUK sales-to-dealer from after December 2025.
+
+---
+
 ## The working software
 
 **`05_AIM_Universe\`** — the maintained pricing-decision component, and the only part of this folder under version control. It carries corrected pricing arithmetic, one shared scenario record, a durable case record, recipient-specific exports and an independent acceptance suite. Its own `README.md`, `docs\` and `progress\progress.json` explain what is verified and what is not.
@@ -12,7 +34,7 @@ Three checks are deliberately red and should stay that way: the two unchanged ba
 
 **Not yet integrated:** three packages supplied by the other tool sit at this folder's root as zips - a range-decision prototype, a patch to the engine, and an opportunity-review module. None is applied. See `UNIVERSE_MAP_AUDIT_2026-09-22.md`.
 
-## The current edition (planning)
+## The planning papers (September 2026 - not the live product)
 
 **`ISUZU_UNIVERSE_3_0_2026-09-23.pdf`** — the commercial vision and participation paper, 25 pages, rebuilt from the 23 September review of the two editions written on 22 September. It carries the scope boundary, the five-tool portfolio, the money chapter, the participation assessment with a score per step, and the decision it asks for. Source: `01_Strategy\ISUZU_UNIVERSE_3_0_2026-09-23.md`. Double-click `OPEN_ISUZU_UNIVERSE_3_0.cmd`. Check `ISUZU_UNIVERSE_3_0_2026-09-23.SHIP_RECEIPT.json`.
 
