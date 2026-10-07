@@ -22,15 +22,49 @@
 
   var CONFIDENTIAL_KEYS = ['cost_eur', 'margin', 'gross_profit', 'dealer_email', 'private_note'];
 
+  function isConfidentialKey(k) {
+    return CONFIDENTIAL_KEYS.indexOf(k) !== -1;
+  }
+
+  /* Remove every confidential key at any depth, inside arrays too. */
   function stripConfidential(obj) {
-    var out = deepClone(obj || {});
-    CONFIDENTIAL_KEYS.forEach(function (k) { if (k in out) delete out[k]; });
-    return out;
+    function walk(v) {
+      if (Array.isArray(v)) return v.map(walk);
+      if (v && typeof v === 'object') {
+        var o = {};
+        Object.keys(v).forEach(function (k) {
+          if (!isConfidentialKey(k)) o[k] = walk(v[k]);
+        });
+        return o;
+      }
+      return v;
+    }
+    return walk(deepClone(obj || {}));
+  }
+
+  /* Paths of every confidential key still present, e.g. 'context.case.cost_eur'. */
+  function findConfidential(obj) {
+    var hits = [];
+    function walk(v, path) {
+      if (Array.isArray(v)) {
+        v.forEach(function (x, i) { walk(x, path.concat(String(i))); });
+      } else if (v && typeof v === 'object') {
+        Object.keys(v).forEach(function (k) {
+          var p = path.concat(k);
+          if (isConfidentialKey(k)) hits.push(p.join('.'));
+          walk(v[k], p);
+        });
+      }
+    }
+    walk(obj, []);
+    return hits;
   }
 
   function makeOpsRecorder(options) {
     options = options || {};
     var clock = typeof options.now === 'function' ? options.now : function () { return Date.now(); };
+    /* options.strip exists only so a test can prove the re-scan catches a leak. */
+    var strip = typeof options.strip === 'function' ? options.strip : stripConfidential;
     var failures = [];
     var measurements = [];
 
@@ -47,10 +81,11 @@
         stage: name(event.stage) || null,
         message: name(event.message) || 'Operation failed',
         elapsed_ms: elapsed_ms,
-        safe_context: stripConfidential(event.context || {}),
-        confidential_copied: false,
+        safe_context: strip(event.context || {}),
+        confidential_copied: null,
         synthetic: true
       };
+      row.confidential_copied = findConfidential(row).length > 0;
       failures.push(deepClone(row));
       return deepClone(row);
     }
@@ -137,7 +172,7 @@
     };
   }
 
-  var API = { makeOpsRecorder: makeOpsRecorder, stripConfidential: stripConfidential };
+  var API = { makeOpsRecorder: makeOpsRecorder, stripConfidential: stripConfidential, findConfidential: findConfidential };
   root.AIMOpsMeasurements = API;
   if (typeof module === 'object' && module.exports) module.exports = API;
 }(typeof globalThis !== 'undefined' ? globalThis : (typeof window !== 'undefined' ? window : this)));
