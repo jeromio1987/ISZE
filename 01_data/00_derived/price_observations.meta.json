@@ -1,18 +1,19 @@
 {
-  "built_at": "2026-10-02T07:04:52+00:00",
+  "built_at": "2026-10-07T06:48:49+00:00",
   "builder": "04_tools/price_ledger/build_price_ledger.py",
-  "rows": 6597,
+  "rows": 6690,
   "rows_by_loader": {
     "amayama": 3011,
     "eucon_online_2025": 898,
     "eucon_march_2024": 822,
     "eucon_crossref": 821,
-    "ks": 775,
+    "ks": 807,
     "eucon_survey_2023": 68,
     "tandm_commercials": 62,
+    "tmc": 55,
     "ks_gen": 41,
     "ks_am": 40,
-    "tranzparts": 20,
+    "tranzparts": 26,
     "autoline": 16,
     "omega": 10,
     "mekster": 5,
@@ -21,8 +22,8 @@
     "tungen": 1
   },
   "rows_by_price_type": {
-    "genuine_grey": 3454,
-    "aftermarket_retail": 1294,
+    "genuine_grey": 3501,
+    "aftermarket_retail": 1340,
     "aftermarket_rrp": 898,
     "online_median": 821,
     "aftermarket_trade": 40,
@@ -31,12 +32,13 @@
     "marketplace": 16,
     "dealer": 6
   },
-  "isuzu_part_numbers_with_observation": 1245,
+  "isuzu_part_numbers_with_observation": 1268,
   "not_loaded": {
     "mekonomen": "RETIRED 2026-09-24 - part-number search returned an unrelated item (Kilen coil spring for brake pad kit 8975056801); all 7 rows false",
     "auto365": "retired 2026-09-24 - no OEM part number anywhere; also robots-disallowed",
-    "tranzparts": "retired 2026-09-24 - carries no Isuzu (every handle is Volvo/Iveco/DAF)",
-    "autodoc": "retired; placeholder prices"
+    "tranzparts": "NOTE 2026-10-07 - the retired 2026-09-24 category_only loader still does not run (that file carried no Isuzu number). Since U26 the LIVE Tranzparts rows are page-derived (loader `tranzparts` in OFFERED_ROWS.csv, match_method exact_oem, the searched number is printed on the product page) and ARE loaded, with 6 rows on the 123 worklist.",
+    "autodoc": "retired; placeholder prices",
+    "spareto_crossref": "NOT loaded as a price observation (2026-10-07): Spareto prices are retail incl. VAT at a rate the page does not state, so the evidence rules exclude them; they are a cross-reference source in 04_tools/aftermarket_intelligence/state/spareto_crossref.csv, used by grade_crossref_edges.py, not a price row"
   },
   "fx": "ECB euro reference rates, reference date 2026-09-24. Whole ledger from one source; GBP and SEK rebased 2026-09-25 (were 1.17 / 0.089 from the 2026-05-01 working table).",
   "rule": "price_type and vintage required; never average across price_type"

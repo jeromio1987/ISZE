@@ -1,14 +1,14 @@
 # Cross-reference grading (task 2.2)
 
-Built 2026-10-04T05:17:47+00:00 by `grade_crossref_edges.py`.
+Built 2026-10-07T06:31:19+00:00 by `grade_crossref_edges.py`.
 
-- rival edges graded: **7,162**
-- confirmed: **1,439**
-- likely: **756**
-- doubtful: **4,806**
-- reject: **161**
-- usable (confirmed + likely): **2,195** edges, 541 counterpart numbers
-- of the usable, carrying a price: **962**
+- rival edges graded: **7,602**
+- confirmed: **1,450**
+- likely: **849**
+- doubtful: **5,146**
+- reject: **157**
+- usable (confirmed + likely): **2,299** edges, 583 counterpart numbers
+- of the usable, carrying a price: **966**
 
 ## The boundary that shaped the method
 
@@ -29,11 +29,11 @@ A 'confirmed' tier means corroborated by independent files. It is **not** verifi
 
 Spareto `/oe/<isuzu number>` pages, file `spareto_crossref.csv`. An edge moves up ONE tier when Spareto lists the same (our part, rival number) pair under an agreeing brand; never down. The Eucon-only tier is kept in `tier_eucon_only`.
 
-- edges whose pair Spareto lists: 1,600 (brand differs, not moved: 25)
-- edges moved: 830 (doubtful -> likely: 675, likely -> confirmed: 44, reject -> doubtful: 111)
-- Spareto pairs not in the graph (new, single-source, doubtful): 707 -> `crossref_spareto_new_edges.csv`
+- edges whose pair Spareto lists: 1,719 (brand differs, not moved: 25)
+- edges moved: 949 (doubtful -> likely: 779, likely -> confirmed: 55, reject -> doubtful: 115)
+- Spareto pairs not in the graph (new, single-source, doubtful): 1,147 -> `crossref_spareto_new_edges.csv`
 
-- Spareto-only pairs merged into this file: 707 rows, tier doubtful, `edge_origin = spareto_only`. Single source: not used as trusted matches (downstream reads confirmed/likely only) until a second source confirms them.
+- Spareto-only pairs merged into this file: 1,147 rows, tier doubtful, `edge_origin = spareto_only`. Single source: not used as trusted matches (downstream reads confirmed/likely only) until a second source confirms them.
 
 Spareto's own upstream source is not stated on its pages: it is independent of Eucon as a pipeline, not proven independent upstream.
 
@@ -41,7 +41,7 @@ Spareto's own upstream source is not stated on its pages: it is independent of E
 
 `brand_aliases.csv`: 39 spellings mapped to a canonical brand, each with a reason. Used in the Spareto brand check and the brand-collision trap.
 
-- Spareto-matched edges whose brand now agrees only through the table: 35
+- Spareto-matched edges whose brand now agrees only through the table: 37
 - edges whose brand-collision flag the table cleared: 373 (74 rival numbers)
 
 ## Limit, stated plainly

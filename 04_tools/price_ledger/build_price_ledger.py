@@ -332,6 +332,14 @@ def load_scraped_phase1():
 
     Rows whose verdict starts with `reject:` are not loaded. Missing file = no rows,
     so the ledger still builds from local sources alone if the bridge has not been run.
+
+    U26 (2026-10-07, agent E merge): rows whose loader is `spareto_crossref` are
+    deliberately NOT loaded here. A Spareto row is a cross-reference observation, not
+    a usable competitor price — the price is retail incl. VAT at a rate the page does
+    not state, so the evidence rules exclude it (TAX_RATE_NOT_STATED) and it would
+    inflate the ledger's row counts without adding a usable comparable. It travels
+    through `04_tools/aftermarket_intelligence/state/spareto_crossref.csv`, the path
+    `grade_crossref_edges.py` reads. Dropped by loader, on purpose, not by accident.
     """
     f = ROOT / "04_tools" / "price_ledger" / "OFFERED_ROWS.csv"
     if not f.exists():
@@ -339,6 +347,24 @@ def load_scraped_phase1():
     d = pd.read_csv(f, dtype={"part_no": str, "competitor_pn": str, "obs_id": str})
     if "verdict" in d.columns:
         d = d[~d["verdict"].astype(str).str.startswith("reject:")]
+    if "loader" in d.columns:
+        before = len(d)
+        d = d[d["loader"].astype(str) != "spareto_crossref"]
+        if before != len(d):
+            print(f"scrape_phase1: {before - len(d)} spareto_crossref row(s) left in the "
+                  f"crossref state file on purpose (not a usable competitor price)")
+    # U26 2026-10-07: one product card can appear on more than one saved category page
+    # (T&M's brake and service leaves overlap). The bridge issues obs_id from the
+    # observation's own identity — part, competing number, seller, date, price — not from
+    # the page it was read on, so the same observation read twice shares an obs_id. It IS
+    # one observation, so it is counted once; `validate()` would otherwise refuse the
+    # whole file with "duplicate obs_id".
+    if "obs_id" in d.columns:
+        before = len(d)
+        d = d.drop_duplicates(subset=["obs_id"], keep="first")
+        if before != len(d):
+            print(f"scrape_phase1: {before - len(d)} row(s) seen on more than one saved page "
+                  f"— the same observation, counted once")
     rows = []
     for _, r in d.iterrows():
         price = r.get("price")
@@ -445,8 +471,18 @@ def main():
             "mekonomen": "RETIRED 2026-09-24 - part-number search returned an unrelated item "
                          "(Kilen coil spring for brake pad kit 8975056801); all 7 rows false",
             "auto365": "retired 2026-09-24 - no OEM part number anywhere; also robots-disallowed",
-            "tranzparts": "retired 2026-09-24 - carries no Isuzu (every handle is Volvo/Iveco/DAF)",
+            "tranzparts": "NOTE 2026-10-07 - the retired 2026-09-24 category_only loader still "
+                          "does not run (that file carried no Isuzu number). Since U26 the LIVE "
+                          "Tranzparts rows are page-derived (loader `tranzparts` in "
+                          "OFFERED_ROWS.csv, match_method exact_oem, the searched number is "
+                          "printed on the product page) and ARE loaded, with 6 rows on the 123 "
+                          "worklist.",
             "autodoc": "retired; placeholder prices",
+            "spareto_crossref": "NOT loaded as a price observation (2026-10-07): Spareto prices "
+                                "are retail incl. VAT at a rate the page does not state, so the "
+                                "evidence rules exclude them; they are a cross-reference source "
+                                "in 04_tools/aftermarket_intelligence/state/spareto_crossref.csv, "
+                                "used by grade_crossref_edges.py, not a price row",
         },
         "fx": FX_NOTE,
         "rule": "price_type and vintage required; never average across price_type",

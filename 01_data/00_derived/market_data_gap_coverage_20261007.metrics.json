@@ -1,0 +1,318 @@
+{
+  "built_at": "2026-10-07T06:48:58+00:00",
+  "rule": "billed euros of the Isuzu numbers that now have at least one eligible comparable offer; then usable rows against the 50 threshold; then the remaining exclusion reasons by count; then the numbers still empty with their billed euros. eur_all is the all-market billed euro for the number (epc_decode_worklist.csv); it is a size-of-part measure, not a per-market one.",
+  "focus_families": [
+    "brake_pad",
+    "oil_filter"
+  ],
+  "focus_pn_count": 123,
+  "billed_eur_all_markets_focus": 6485561.9,
+  "by_market": {
+    "UK": {
+      "label": "UK (ITUK)",
+      "distributor": "ITUK",
+      "focus_rows": 79,
+      "focus_rows_status": "sufficient",
+      "min_usable": 50,
+      "eligible_rows": 0,
+      "eligible_pns": 0,
+      "eligible_pns_detail": [],
+      "billed_eur_of_eligible_pns": 0.0,
+      "exclusions_by_reason": [
+        {
+          "reason": "DELIVERY_BASIS_NOT_STATED",
+          "rows": 79
+        },
+        {
+          "reason": "PRODUCT_MATCH_UNRESOLVED",
+          "rows": 54
+        },
+        {
+          "reason": "PACK_CONTENTS_UNKNOWN",
+          "rows": 33
+        },
+        {
+          "reason": "TAX_BASIS_NOT_STATED",
+          "rows": 9
+        }
+      ],
+      "empty_pns": 99,
+      "empty_pns_billed_eur": 2263157.99,
+      "empty_pns_top": [
+        {
+          "part_number": "8975056801",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 995353.21,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "8978279610",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 276680.31,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "5876150640",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 171518.22,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "5876150610",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 167629.42,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "5876150000",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "oil_filter",
+          "eur_all_billed_all_markets": 78626.31,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "8975546600",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 73597.49,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "8980791040",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 57404.54,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "5876150050",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "oil_filter",
+          "eur_all_billed_all_markets": 50647.84,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "8978279590",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 45244.2,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "5876101180",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "oil_filter",
+          "eur_all_billed_all_markets": 41843.42,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "5876150600",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 35292.74,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "5876150531",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "oil_filter",
+          "eur_all_billed_all_markets": 32769.19,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "8978279601",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 29211.59,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "5876150650",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 26267.79,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "8978279620",
+          "market": "UK",
+          "distributor": "ITUK",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 26178.29,
+          "ledger_rows": 0
+        }
+      ]
+    },
+    "PT": {
+      "label": "Portugal (I-Motors)",
+      "distributor": "PORTUGAL",
+      "focus_rows": 27,
+      "focus_rows_status": "insufficient",
+      "min_usable": 50,
+      "eligible_rows": 0,
+      "eligible_pns": 0,
+      "eligible_pns_detail": [],
+      "billed_eur_of_eligible_pns": 0.0,
+      "exclusions_by_reason": [
+        {
+          "reason": "PRODUCT_MATCH_UNRESOLVED",
+          "rows": 27
+        },
+        {
+          "reason": "TAX_BASIS_NOT_STATED",
+          "rows": 27
+        },
+        {
+          "reason": "DELIVERY_BASIS_NOT_STATED",
+          "rows": 27
+        },
+        {
+          "reason": "PACK_CONTENTS_UNKNOWN",
+          "rows": 13
+        }
+      ],
+      "empty_pns": 118,
+      "empty_pns_billed_eur": 5109832.91,
+      "empty_pns_top": [
+        {
+          "part_number": "8982447940",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 1088863.6,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "8975056801",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 995353.21,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "8976526220",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 399871.48,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "5876101170",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "oil_filter",
+          "eur_all_billed_all_markets": 296928.15,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "8978279610",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 276680.31,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "8982984040",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "oil_filter",
+          "eur_all_billed_all_markets": 249990.41,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "8982169210",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 235542.72,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "1876102890",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "oil_filter",
+          "eur_all_billed_all_markets": 198609.24,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "8982169220",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 195698.16,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "5876150640",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 171518.22,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "5876150610",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 167629.42,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "5876150530",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "oil_filter",
+          "eur_all_billed_all_markets": 145544.19,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "8983282070",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "oil_filter",
+          "eur_all_billed_all_markets": 77241.58,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "8975546600",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "brake_pad",
+          "eur_all_billed_all_markets": 73597.49,
+          "ledger_rows": 0
+        },
+        {
+          "part_number": "5876150050",
+          "market": "PT",
+          "distributor": "PORTUGAL",
+          "pms_category": "oil_filter",
+          "eur_all_billed_all_markets": 50647.84,
+          "ledger_rows": 0
+        }
+      ]
+    }
+  }
+}

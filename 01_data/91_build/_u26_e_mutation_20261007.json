@@ -1,0 +1,98 @@
+{
+  "row_under_test": {
+    "obs_id": "b38b7a880a57fe33",
+    "part_no": "5876101170",
+    "match_method": "exact_oem",
+    "competitor_brand": "UFI",
+    "competitor_pn": "365226900",
+    "description": "UFI OIL FILTER 23 577 00 \u2014 Tranzparts sku 365226900 \u2014 brand UFI \u2014 the number we searched for is printed on this product page \u2014 page cross-reference list: Cross References: 5876101170, 8970967770, 8971364700, 8-97148270-1, 8972475140, 8-97371334-0, 8-98328207-0, BD7169, 8970967770, 8971364700, 8-97148270-1, 8972475140, 8-97371334-0,",
+    "source": "Tranzparts",
+    "source_url": "https://tranzparts.co.uk/products/365226900?_pos=1&_sid=20cddc687&_ss=r",
+    "country": "UK",
+    "observed_at": "2026-10-07",
+    "vintage": "Tranzparts 2026-10-07",
+    "price": 20.22,
+    "price_avg": null,
+    "currency": "GBP",
+    "price_eur": 23.52,
+    "fx_note": "ECB euro reference rates, reference date 2026-09-24. Whole ledger from one source; GBP and SEK rebased 2026-09-25 (were 1.17 / 0.089 from the 2026-05-01 working table).",
+    "vat": "excl",
+    "price_type": "aftermarket_retail",
+    "stock": "in",
+    "n_obs": 1,
+    "loader": "tranzparts"
+  },
+  "A_as_the_builder_maps_it_today": {
+    "label": "A_as_the_builder_maps_it_today",
+    "eligible": false,
+    "reason_codes": [
+      "DELIVERY_BASIS_NOT_STATED"
+    ],
+    "adjustment_ok": null,
+    "comparable_value": null,
+    "mapped_tax": "excluded",
+    "mapped_delivery": null
+  },
+  "D0_baseline_delivery_stated_tax_as_printed": {
+    "label": "D0_delivery_stated_tax_as_printed",
+    "eligible": true,
+    "reason_codes": [],
+    "adjustment_ok": null,
+    "comparable_value": null,
+    "mapped_tax": "excluded",
+    "mapped_delivery": true
+  },
+  "D1_delivery_field_stripped": {
+    "label": "D1_delivery_field_stripped",
+    "eligible": false,
+    "reason_codes": [
+      "DELIVERY_BASIS_NOT_STATED"
+    ],
+    "adjustment_ok": null,
+    "comparable_value": null,
+    "mapped_tax": "excluded",
+    "mapped_delivery": null
+  },
+  "D2_delivery_restored": {
+    "label": "D2_delivery_restored",
+    "eligible": true,
+    "reason_codes": [],
+    "adjustment_ok": null,
+    "comparable_value": null,
+    "mapped_tax": "excluded",
+    "mapped_delivery": true
+  },
+  "T1_tax_field_stripped": {
+    "label": "T1_tax_field_stripped",
+    "eligible": false,
+    "reason_codes": [
+      "TAX_BASIS_NOT_STATED"
+    ],
+    "adjustment_ok": null,
+    "comparable_value": null,
+    "mapped_tax": "",
+    "mapped_delivery": true
+  },
+  "T2_tax_restored": {
+    "label": "T2_tax_restored",
+    "eligible": true,
+    "reason_codes": [],
+    "adjustment_ok": null,
+    "comparable_value": null,
+    "mapped_tax": "excluded",
+    "mapped_delivery": true
+  },
+  "delivery_field_is_read": true,
+  "tax_field_is_read": true,
+  "delivery_field_where_it_decides": "DELIVERY_BASIS_NOT_STATED is the reason code, produced in the shared evidence rule `adjustToComparable`; the value the coverage builder hands it is `delivery_included`, and the ledger has no column that states it.",
+  "tax_field_where_it_decides": "TAX_BASIS_NOT_STATED is a separate code, produced by the shared rule `adjustToComparable` when `tax` is neither exclusive nor inclusive. The coverage builder hands it the value `map_tax` produced from the ledger's `vat` column (excl->excluded, incl->included, unknown/blank->null).",
+  "finding": [
+    "DELIVERY: the row is eligible with the delivery basis stated (D0), drops out when the field is stripped (D1, reason ['DELIVERY_BASIS_NOT_STATED']), and is eligible again when it is restored (D2). The coverage builder reads the delivery field. It is not a spare field: it decides eligibility outright.",
+    "TAX: the row is eligible with the tax basis as the page prints it (D0), drops out when it is stripped (T1, reason ['TAX_BASIS_NOT_STATED']), and is eligible again when it is restored (T2). The coverage builder reads the tax field.",
+    "AS THE BUILDER MAPS IT TODAY (A): every ledger row is excluded on DELIVERY_BASIS_NOT_STATED, because no ledger column carries a delivery basis. That is the single field standing between the harvested rows and an eligible comparable, and it is a ledger-schema gap, not a scraping gap."
+  ],
+  "tax_reading_confirmed_separately": {
+    "rule": "the tax basis decides on a row that carries an amount; `map_tax` in the coverage builder maps the ledger's `vat` column (excl->excluded, incl->included, unknown/blank->null) and a null tax produces 'the tax basis is not stated' in the shared rule",
+    "tested_here": "T1 and T2 above; the row drops out on TAX_BASIS_NOT_STATED and is eligible again when the basis is restored"
+  }
+}

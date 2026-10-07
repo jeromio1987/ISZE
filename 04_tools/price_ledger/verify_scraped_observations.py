@@ -52,7 +52,17 @@ OFFERED = HERE / "OFFERED_ROWS.csv"
 
 # The loaders whose rows came from a saved web page. The rest are local files with
 # their own provenance, already covered by the ledger's own notes.
-SCRAPE_LOADERS = {"amayama", "ks", "omega", "geparden", "mekster", "tungen", "autoline"}
+# `tmc` and `tranzparts` were added on 2026-10-07 when the U26 harvest promoted their
+# pages into the shared _probe root; their rows are page-derived in exactly the same
+# way as the ones above.
+#
+# `spareto_crossref` is NOT in this list, on purpose. Its rows are a cross-reference
+# reading, not a competitor price, and `build_price_ledger.load_scraped_phase1()`
+# drops them by loader, so they are never in the ledger. Verifying them here fails
+# every row with "row is not present in the ledger" (measured 2026-10-07: 759 such
+# failures) and buries the real ones. They are checked on the crossref path instead.
+SCRAPE_LOADERS = {"amayama", "ks", "omega", "geparden", "mekster", "tungen", "autoline",
+                  "tmc", "tranzparts"}
 
 
 def price_forms(price: float, currency: str | None) -> list[str]:
