@@ -165,10 +165,11 @@
     return { ok: true, bands: bands, statement: 'Bands from series_to_band.csv via bandFor only.' };
   }
 
+  /* Same five characters as esc in src/ui/app.js, the single quote included. */
   function escapeHtml(s) {
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
   }
 
   function renderTwoMethods(view) {
@@ -192,6 +193,7 @@
   }
 
   var API = {
+    escapeHtml: escapeHtml,
     METHOD_INTERNAL: METHOD_INTERNAL,
     METHOD_EXTERNAL: METHOD_EXTERNAL,
     selectServiceBasis: selectServiceBasis,

@@ -218,10 +218,11 @@
     });
   }
 
+  /* Same five characters as esc in src/ui/app.js, the single quote included. */
   function escapeHtml(s) {
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
   }
 
   /* Side-by-side panel for a validated and an unvalidated dealer (synthetic). */
@@ -259,6 +260,7 @@
   }
 
   var API = {
+    escapeHtml: escapeHtml,
     scopedQuestionId: scopedQuestionId,
     readIdsEvidence: readIdsEvidence,
     idsPopulation2026: idsPopulation2026,

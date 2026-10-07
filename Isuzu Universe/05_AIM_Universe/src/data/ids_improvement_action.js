@@ -199,10 +199,11 @@
     };
   }
 
+  /* Same five characters as esc in src/ui/app.js, the single quote included. */
   function escapeHtml(s) {
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
   }
 
   /* Action beside an unchanged answer (synthetic). */
@@ -232,6 +233,7 @@
   }
 
   var API = {
+    escapeHtml: escapeHtml,
     openFromIdsAnswer: openFromIdsAnswer,
     closeImprovement: closeImprovement,
     purchasingReviewWithIdsLink: purchasingReviewWithIdsLink,
