@@ -11,6 +11,9 @@
    * what is independent verification and what is only a developer test
    * that a non-zero exit is expected while defects remain, and that exit 0
      would not mean the product is accepted
+   * every step that did not run, by name; exit 3 means known findings are
+     open or a step did not run, and is never reported as "every check
+     returned zero"
 
  Nothing here writes to src\, build\ or dist\. It reads them and reports.
 
@@ -50,6 +53,19 @@ New-Item -ItemType Directory -Force -Path $Out | Out-Null
 $script:Checks  = @()
 $script:Failed  = 0
 $script:Skipped = 0
+# Steps that did not run, with the reason. A skipped step is never a pass.
+$script:NotRun  = @()
+# Steps that exited 3: no ordinary fail, but known findings are still open.
+$script:KnownOpen = @()
+
+# Exit codes the checks use (testsccept\lib\harness.cjs and accept_02_journey.py).
+$EXIT_KNOWN_FINDINGS = 3
+$EXIT_NOT_RUN = 4
+
+function Add-NotRun($id, $reason) {
+    $script:Skipped++
+    $script:NotRun += [pscustomobject]@{ Id = $id; Reason = $reason }
+}
 
 function Write-Head($text) {
     Write-Host ""
@@ -126,7 +142,13 @@ function Invoke-Step {
     }
     $script:Checks += $record
 
-    if ($code -ne 0) { $script:Failed++ }
+    if ($code -eq $EXIT_KNOWN_FINDINGS) {
+        $script:KnownOpen += $Id
+    } elseif ($code -eq $EXIT_NOT_RUN) {
+        Add-NotRun $Id "the step started but reported that it could not run (exit $EXIT_NOT_RUN)"
+    } elseif ($code -ne 0) {
+        $script:Failed++
+    }
     $colour = "Green"; if ($code -ne 0) { $colour = "Yellow" }
     Write-Host ("   -> exit $code in $($record.seconds)s" + $(if ($RawFile -and -not $wrote) { "  (NO RESULT FILE WRITTEN)" } else { "" })) -ForegroundColor $colour
     return $code
@@ -254,7 +276,8 @@ if (-not $SkipBaseline) {
     if (-not (Test-Path $engineCheck)) {
         Write-Note "The supplied review pack is not present at $Handoff" "Red"
         Write-Note "The baseline cannot be reproduced in this environment. Steps skipped." "Red"
-        $script:Skipped += 2
+        Add-NotRun "BASE-ENGINE" "the supplied review pack is not present at $Handoff"
+        Add-NotRun "BASE-BROWSER" "the supplied review pack is not present at $Handoff"
     } else {
         Invoke-Step -Id "BASE-ENGINE" -Title "Supplied 30 engine checks against frozen v03 (expect 11 pass / 19 fail)" `
             -Command "node" `
@@ -334,7 +357,8 @@ if (-not $SkipBaseline) {
         $env:PLAYWRIGHT_BROWSERS_PATH = $pwBefore
     }
 } else {
-    $script:Skipped++
+    Add-NotRun "BASE-ENGINE" "skipped by -SkipBaseline"
+    Add-NotRun "BASE-BROWSER" "skipped by -SkipBaseline"
     Write-Head "BASELINE - skipped by -SkipBaseline"
 }
 
@@ -346,10 +370,10 @@ Invoke-Step -Id "ACCEPT-01" -Title "30 supplied expectations carried to src/engi
 
 Write-Head "ACCEPT-02 - complete browser journey (real file URL, restart, reopen)"
 if ($SkipBrowser) {
-    $script:Skipped++
+    Add-NotRun "ACCEPT-02" "skipped by -SkipBrowser"
     Write-Note "skipped by -SkipBrowser" "Yellow"
 } elseif (-not (Test-Path (Join-Path $Root "dist\ISZE_AIM_Pricing_Decisions_v04_INTERNAL.html"))) {
-    $script:Skipped++
+    Add-NotRun "ACCEPT-02" "the built artifact does not exist yet"
     Write-Note "skipped: the built artifact does not exist yet" "Yellow"
 } else {
     $browserArgs = @((Join-Path $Accept "accept_02_journey.py"))
@@ -362,10 +386,10 @@ if ($SkipBrowser) {
 
 Write-Head "UX-07 - the agreed small-screen layout, measured on the painted page"
 if ($SkipBrowser) {
-    $script:Skipped++
+    Add-NotRun "UX-07" "skipped by -SkipBrowser"
     Write-Note "skipped by -SkipBrowser" "Yellow"
 } elseif (-not (Test-Path (Join-Path $Root "dist\ISZE_AIM_Pricing_Decisions_v04_INTERNAL.html"))) {
-    $script:Skipped++
+    Add-NotRun "UX-07" "the built artifact does not exist yet"
     Write-Note "skipped: the built artifact does not exist yet" "Yellow"
 } else {
     $narrowArgs = @((Join-Path $Accept "ux_07_narrow.py"))
@@ -418,7 +442,11 @@ foreach ($c in $script:Checks) {
 $rows | Format-Table -AutoSize | Out-String -Width 200 | Write-Host
 
 foreach ($c in $script:Checks) {
-    if ($c.exit_code -ne 0) {
+    if ($c.exit_code -eq $EXIT_KNOWN_FINDINGS) {
+        Write-Host "  KNOWN FINDINGS OPEN: $($c.id) - no ordinary fail, but $($c.summary.known_findings) known finding(s) open; see $($c.console_log)" -ForegroundColor Yellow
+    } elseif ($c.exit_code -eq $EXIT_NOT_RUN) {
+        Write-Host "  NOT RUN: $($c.id) - the step could not run; see $($c.console_log)" -ForegroundColor Red
+    } elseif ($c.exit_code -ne 0) {
         Write-Host "  NON-ZERO: $($c.id) - see $($c.console_log)" -ForegroundColor Yellow
         if ($c.summary -and $c.summary.fail -gt 0) {
             Write-Host "            $($c.summary.fail) of $($c.summary.total) assertions failed" -ForegroundColor Yellow
@@ -448,13 +476,23 @@ Write-Note "here: the reviewer writes failing tests and reports them."
 Write-Note "No check in this suite confers business, technical, privacy or spending approval, and none"
 Write-Note "substitutes for production identity, server-side access control or an independent audit."
 
+Write-Host ""
+foreach ($n in $script:NotRun) {
+    Write-Host ("  NOT RUN: {0} - {1}" -f $n.Id, $n.Reason) -ForegroundColor Red
+}
 if ($script:Failed -gt 0) {
-    Write-Host ""
-    Write-Host "  Result: $script:Failed check(s) returned non-zero. That is expected while defects remain." -ForegroundColor Yellow
+    Write-Host "  Result: $script:Failed check(s) failed. That is expected while defects remain." -ForegroundColor Yellow
     Write-Host "  Exit code 0 here would mean every assertion passed, which is NOT the same as accepted." -ForegroundColor Yellow
-} else {
-    Write-Host ""
-    Write-Host "  Result: every check returned zero." -ForegroundColor Green
+}
+if ($script:KnownOpen.Count -gt 0) {
+    Write-Host ("  Result: known findings still open in {0}. Not passed." -f ($script:KnownOpen -join ", ")) -ForegroundColor Yellow
+}
+if ($script:NotRun.Count -gt 0) {
+    Write-Host ("  Result: {0} step(s) not run ({1}). This run is incomplete and is not a pass." -f `
+        $script:NotRun.Count, (($script:NotRun | ForEach-Object { $_.Id }) -join ", ")) -ForegroundColor Red
+}
+if ($script:Failed -eq 0 -and $script:KnownOpen.Count -eq 0 -and $script:NotRun.Count -eq 0) {
+    Write-Host "  Result: every check ran and returned zero." -ForegroundColor Green
     Write-Host "  That is not an acceptance. Human, technical, commercial and independent review are separate." -ForegroundColor Green
 }
 
@@ -480,6 +518,8 @@ $report = [ordered]@{
     checks         = $script:Checks
     failed_checks  = $script:Failed
     skipped_steps  = $script:Skipped
+    not_run        = $script:NotRun
+    known_findings_open_in = $script:KnownOpen
     interpretation = @(
         "Independent verification, written by the reviewer, run against the maintained source and the built artifact.",
         "A non-zero exit is expected while the reported defects remain unfixed.",
@@ -495,5 +535,7 @@ Write-Host "  Combined report : $Summary" -ForegroundColor White
 Write-Host "  Raw outputs     : $Out" -ForegroundColor White
 Write-Host ""
 
+# 1 = a check failed; 3 = nothing failed but findings are open or steps did not run; 0 = all ran clean.
 if ($script:Failed -gt 0) { exit 1 }
+if ($script:KnownOpen.Count -gt 0 -or $script:NotRun.Count -gt 0) { exit $EXIT_KNOWN_FINDINGS }
 exit 0

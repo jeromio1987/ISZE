@@ -471,5 +471,5 @@ H.test(run, 'C26', 'Period, entity, scope and control each have a named check', 
 })();
 
 const s = H.write(run, 'accept_03_conservation.json');
-process.exitCode = s.fail ? 1 : 0;
+process.exitCode = H.exitCode(s);
 

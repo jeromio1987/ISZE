@@ -95,7 +95,7 @@ try {
   const failed = H.makeRun('GUARD-09', 'The acceptance suite only loads modules the build assembles');
   H.test(failed, 'G00', 'The build module lists are readable', () => { throw e; });
   const s = H.write(failed, 'guard_09_module_scope.json');
-  process.exit(s.fail ? 1 : 0);
+  process.exit(H.exitCode(s));
 }
 
 const RETIRED = new Set(lists.retired);
@@ -279,4 +279,4 @@ H.test(run, 'G05', 'The export builder that decides what a distributor receives 
   });
 
 const s = H.write(run, 'guard_09_module_scope.json');
-process.exitCode = s.fail ? 1 : 0;
+process.exitCode = H.exitCode(s);

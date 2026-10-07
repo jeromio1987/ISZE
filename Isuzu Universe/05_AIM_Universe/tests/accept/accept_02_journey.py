@@ -60,7 +60,9 @@ KNOWN_FINDINGS: list[dict] = []
 
 def record(check_id: str, name: str, ok: bool, evidence, *, status: str | None = None,
            known_finding: bool = False, reproduction: str | None = None) -> None:
-    """UNTESTED is never stored as PASS. A known_finding FAIL does not fail the run."""
+    """UNTESTED is never stored as PASS. A known_finding FAIL is not counted as an
+    ordinary fail, but it is never silent: the run prints "N known findings open"
+    and exits with EXIT_KNOWN_FINDINGS, which run_all.ps1 treats as not passed."""
     if status is None:
         status = "PASS" if ok else "FAIL"
     if status == "PASS" and not ok:
@@ -72,6 +74,23 @@ def record(check_id: str, name: str, ok: bool, evidence, *, status: str | None =
     RESULTS.append(row)
     if known_finding:
         KNOWN_FINDINGS.append(row)
+
+# Exit codes. 0 only when every check ran and passed with nothing open.
+EXIT_PASS = 0
+EXIT_FAIL = 1
+EXIT_KNOWN_FINDINGS = 3   # no ordinary fail, but at least one known finding is open
+EXIT_NOT_RUN = 4          # the browser did not start, or a check is UNTESTED
+
+
+def _exit_code(summary: dict) -> int:
+    if summary["fail"]:
+        return EXIT_FAIL
+    if summary["untested"]:
+        return EXIT_NOT_RUN
+    if summary["known_findings"]:
+        return EXIT_KNOWN_FINDINGS
+    return EXIT_PASS
+
 
 class _BrowserUntested(Exception):
     pass
@@ -232,7 +251,8 @@ def main() -> int:
         (OUT / "accept_02_journey.json").write_text(json.dumps(run, indent=2) + "\n", encoding="utf-8")
         print("UNTESTED J00: browser environment blocked -- " + str(env_err)[:400])
         print(json.dumps(run["summary"]))
-        return 0
+        print("NOT RUN: the browser journey did not start (exit %d)" % EXIT_NOT_RUN)
+        return EXIT_NOT_RUN
     try:
         def open_page(label, profile_dir):
             """A persistent context on the given profile directory, one alive at a time.
@@ -266,7 +286,8 @@ def main() -> int:
             (OUT / "accept_02_journey.json").write_text(json.dumps(run, indent=2) + "\n", encoding="utf-8")
             print("UNTESTED J00: browser environment blocked -- " + str(env_err)[:400])
             print(json.dumps(run["summary"]))
-            return 0
+            print("NOT RUN: the browser journey did not start (exit %d)" % EXIT_NOT_RUN)
+            return EXIT_NOT_RUN
         page.wait_for_function("() => !!window.AIMPricing", timeout=30000)
         clear_storage(page)
         page.reload()
@@ -719,7 +740,9 @@ def main() -> int:
     print(json.dumps(run["summary"]))
     print("screenshots taken: %d" % run["screenshots"]["taken"])
     print("raw: " + str(OUT / "accept_02_journey.json"))
-    return 1 if run["summary"]["fail"] else 0
+    if KNOWN_FINDINGS:
+        print("%d known findings open" % len(KNOWN_FINDINGS))
+    return _exit_code(run["summary"])
 
 
 if __name__ == "__main__":
