@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-07T01:32:04Z",
+  "written_at": "2026-10-07T01:32:08Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 88,
-    "not started": 8
+    "technically verified": 89,
+    "not started": 7
   },
   "total_tasks": 96,
-  "overlay_applied": 88,
+  "overlay_applied": 89,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1602,8 +1602,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "BASE-07, UX-08",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/run_08_release_package.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/release_package.js startReleaseCandidate (journey never reproduced) -> RUN-08 E1 fails; restored -> passes",
+        "mutation src/data/release_package.js buildPackage (public_publishing/published forced true) -> RUN-08 E2 fails; restored -> passes",
+        "Local internal package only. No deploy, upload or public publishing. Task plan is not treated as a completed release."
+      ],
       "blockers": []
     },
     {
