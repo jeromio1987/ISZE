@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-07T06:48:58.670154+00:00",
+  "built_at": "2026-10-07T09:49:16.822575+00:00",
   "builder": "01_data/91_build/build_market_data_gap_coverage_20261007.py",
   "node_runner": "01_data/91_build/run_u19_ledger_through_evidence_20261007.mjs",
   "evidence_modules": [
@@ -10,8 +10,8 @@
   "euros_file": "01_data/00_derived/gps_spu_pms.csv",
   "ledger_path": "C:\\Users\\jerom\\Desktop\\claude\\_worktrees\\ISZE_u26\\01_data\\00_derived\\price_observations.parquet",
   "ledger_path_rule": "the worktree copy is first in LEDGER_CANDIDATES; the main-clone path remains only as a fallback",
-  "ledger_sha256": "925842d5af8add01fa979bf1f847606dcf9f82478eea1806ba6804cf72465bf9",
-  "ledger_meta_sha256": "9890f74b842f7380ffdd7d9e70ebcc17764a529b922073e3493eb89afdec6464",
+  "ledger_sha256": "d52bc58a8595d19fbbb0e46903a5cfed246c67c9055e4b19d3438a8932548e4f",
+  "ledger_meta_sha256": "f54cfabfbdf21a367e5136f40389794081e7abd5552f6c7ea89df1981c6acfa3",
   "family_file_sha256": "e1ce21938b66a8c5bd7515bf50ac62249b913c7b7ae7e818f67f6611988af9c5",
   "focus_families": [
     "brake_pad",
@@ -26,8 +26,10 @@
       "distributor": "ITUK",
       "label": "UK (ITUK)",
       "focus_rows": 79,
+      "usable_rows": 0,
       "focus_pns_with_rows": 24,
-      "status": "sufficient",
+      "status": "insufficient",
+      "status_basis": "usable_rows (rows that pass the evidence checks) against min_usable",
       "min_usable": 50,
       "by_loader_price_type_family": [
         {
@@ -126,14 +128,17 @@
           "pms_category": "oil_filter",
           "rows": 3
         }
-      ]
+      ],
+      "empty_focus_rows": 79
     },
     "PT": {
       "distributor": "PORTUGAL",
       "label": "Portugal (I-Motors)",
       "focus_rows": 27,
+      "usable_rows": 0,
       "focus_pns_with_rows": 5,
       "status": "insufficient",
+      "status_basis": "usable_rows (rows that pass the evidence checks) against min_usable",
       "min_usable": 50,
       "by_loader_price_type_family": [
         {
@@ -148,9 +153,11 @@
           "pms_category": "oil_filter",
           "rows": 14
         }
-      ]
+      ],
+      "empty_focus_rows": 27
     }
   },
+  "sufficiency_rule": "status is decided on usable_rows (rows passing the evidence checks) against min_usable; focus_rows is the raw count and is retained but no longer decides the label",
   "eligible_offers_by_market": {
     "UK": 0,
     "PT": 0
@@ -204,9 +211,19 @@
     "match": "exact_oem -> basis exact_part_number (product id only); crossref/category_only -> unresolved candidate; never status accepted",
     "pack": "pack contents always null from ledger (kit/set words set amount_scope=per_pack only; contents never inferred)",
     "level": "all competitor ledger rows -> public_advertised_retail; price_type kept in stage JSON under _ledger",
-    "delivery": "delivery_included null (ledger has no field)",
+    "delivery": "the ledger's delivery_note / delivery_included are read here (delivery_basis()); yes -> true, no -> false, blank -> null. Blank is not 'no'. delivery_cost_eur stays null: no cost was read into a numeric field.",
     "tax": "vat excl->excluded (+vat_rate 0 percent); unknown/blank->null"
   },
   "worktree": "C:\\Users\\jerom\\Desktop\\claude\\_worktrees\\ISZE_u26",
-  "start_commit": "115e7fad8295b7956251ef00ef2f5f83a64ba6e0"
+  "correction_note": {
+    "what": "the delivery basis is now carried into the evidence row (the ledger's delivery_note / delivery_included are read here), and the sufficiency label now counts usable rows instead of raw focus rows",
+    "backup_suffix": ".bak_20261007T081251Z_before_delivery_col",
+    "backed_up": [
+      "market_data_gap_coverage_20261007.csv",
+      "market_data_gap_coverage_20261007.meta.json",
+      "market_data_gap_coverage_20261007.metrics.json"
+    ],
+    "convention": "same date-named files rewritten in place; no new version label such as _b was invented"
+  },
+  "start_commit": "c55fa3a88a23e0a16b6d092ba02deb2bc342e555"
 }

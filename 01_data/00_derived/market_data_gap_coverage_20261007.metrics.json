@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-07T06:48:58+00:00",
+  "built_at": "2026-10-07T09:49:16+00:00",
   "rule": "billed euros of the Isuzu numbers that now have at least one eligible comparable offer; then usable rows against the 50 threshold; then the remaining exclusion reasons by count; then the numbers still empty with their billed euros. eur_all is the all-market billed euro for the number (epc_decode_worklist.csv); it is a size-of-part measure, not a per-market one.",
   "focus_families": [
     "brake_pad",
@@ -7,12 +7,28 @@
   ],
   "focus_pn_count": 123,
   "billed_eur_all_markets_focus": 6485561.9,
+  "delivery_basis_finding": {
+    "ledger_columns_added": [
+      "delivery_note",
+      "delivery_included"
+    ],
+    "read_from": "the pages already saved under _probe/ and _probe/_u26/",
+    "rows_in_ledger_stating_a_basis": 4,
+    "rows_in_build_focus_stating_a_basis": 0,
+    "pages_stating_a_free_delivery_threshold": "6 Tranzparts pages, all the same shop-wide rule ('FREE DELIVERY WHEN YOU SPEND OVER GBP 50' in the announcement bar; free tracked over GBP 80 in the Delivery and Shipping panel). Where the two disagree for a listing, no basis is claimed and the note says so.",
+    "pages_stating_delivery_info_only": "KS International shop pages carry a footer link named 'Delivery Information' and nothing else. Recorded as the note 'delivery info page only' with the basis LEFT BLANK: a link states no basis for this listing.",
+    "why_no_focus_row_is_eligible_on_delivery": "4 UK Tranzparts rows state 'no' (price GBP 19.26-32.00, below the stated GBP 50 threshold), and 2 more state the two-threshold ambiguity. A 'no' needs a delivered cost to compare and no cost was read into a numeric field, so those rows would be excluded on DELIVERY_COST_NOT_SUPPLIED; they do not reach the build at all because RETIRED_LOADERS (unchanged) drops that loader. All 79 UK focus rows that DO reach the build state nothing, so they remain excluded on DELIVERY_BASIS_NOT_STATED. No harvested UK page states that its price includes delivery, so the honest answer is that the field is now carried but the market still has no eligible comparable."
+  },
   "by_market": {
     "UK": {
       "label": "UK (ITUK)",
       "distributor": "ITUK",
       "focus_rows": 79,
-      "focus_rows_status": "sufficient",
+      "usable_rows": 0,
+      "focus_rows_excluded": 79,
+      "sufficiency_status": "insufficient",
+      "sufficiency_basis": "usable_rows (rows that pass the evidence checks) against min_usable",
+      "focus_rows_status": "insufficient",
       "min_usable": 50,
       "eligible_rows": 0,
       "eligible_pns": 0,
@@ -36,6 +52,7 @@
           "rows": 9
         }
       ],
+      "rows_stating_a_delivery_basis": 0,
       "empty_pns": 99,
       "empty_pns_billed_eur": 2263157.99,
       "empty_pns_top": [
@@ -165,6 +182,10 @@
       "label": "Portugal (I-Motors)",
       "distributor": "PORTUGAL",
       "focus_rows": 27,
+      "usable_rows": 0,
+      "focus_rows_excluded": 27,
+      "sufficiency_status": "insufficient",
+      "sufficiency_basis": "usable_rows (rows that pass the evidence checks) against min_usable",
       "focus_rows_status": "insufficient",
       "min_usable": 50,
       "eligible_rows": 0,
@@ -189,6 +210,7 @@
           "rows": 13
         }
       ],
+      "rows_stating_a_delivery_basis": 0,
       "empty_pns": 118,
       "empty_pns_billed_eur": 5109832.91,
       "empty_pns_top": [

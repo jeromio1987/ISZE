@@ -78,7 +78,7 @@ from bs4 import BeautifulSoup
 HERE = Path(__file__).resolve().parent
 ISZE = HERE.parents[2]
 sys.path.insert(0, str(HERE))
-from ledger_schema import find_pns, make_row, normalise_pn                # noqa: E402
+from ledger_schema import find_pns, make_row, normalise_pn, read_delivery_basis  # noqa: E402
 
 SITE = "ks"
 PROBE_PAGE = "v_ks_search.html"
@@ -169,9 +169,18 @@ def parse(html: str, *, source_url: str = "", observed_at: str = "") -> list[dic
             f"recognised the KS search page ({title!r}) but it carries 0 product cards"
         )
 
+    # U26 2026-10-07: the delivery basis, read off the search page. KS states no per-listing
+    # delivery term on the card, so this normally returns blank. The shared reader reads the
+    # SERVED Page Source (the runner's bytes), so a threshold added later on a product page
+    # is not silently read from a different static file. Read once per page, before the loop
+    # that builds the rows, so a 2.4 MB Magento page is not rescanned per card.
+    _page_text = html or ""
+    _del_note_pre, _del_inc_pre = read_delivery_basis(_page_text, price=None, currency="GBP")
+
     rows: list[dict] = []
     for card in cards:
-        row = _card_row(card, query_pn=query_pn, source_url=source_url, observed_at=observed_at)
+        row = _card_row(card, query_pn=query_pn, source_url=source_url, observed_at=observed_at,
+                        page_text=_page_text, delivery_pre=(_del_note_pre, _del_inc_pre))
         if row:
             rows.append(row)
 
@@ -183,7 +192,7 @@ def parse(html: str, *, source_url: str = "", observed_at: str = "") -> list[dic
 # ── card → row ─────────────────────────────────────────────────────────────────
 
 def _card_row(card, *, query_pn: str | None, source_url: str,
-              observed_at: str) -> dict | None:
+              observed_at: str, page_text: str = "", delivery_pre=None) -> dict | None:
     name_el = (card.select_one("a.product-item-link")
                or card.select_one(".product-item-name a")
                or card.select_one(".product-item-name"))
@@ -227,6 +236,15 @@ def _card_row(card, *, query_pn: str | None, source_url: str,
         fx_note=None if price_ex is not None else "no ex-VAT price shown on the card",
         vat="excl", price_type=price_type, stock=_stock(card, card_text),
         n_obs=1, loader=SITE,
+        # No per-listing delivery term is stated on a KS card. Rather than assume blank,
+        # the shared reader is given the page: it returns blank when the page says nothing
+        # about carriage, and a stated threshold if KS ever publishes one.
+        delivery_note=(delivery_pre[0] if delivery_pre else
+                       read_delivery_basis(page_text or card_text, price=price_ex,
+                                           currency="GBP")[0]),
+        delivery_included=(delivery_pre[1] if delivery_pre else
+                           read_delivery_basis(page_text or card_text, price=price_ex,
+                                               currency="GBP")[1]),
     )
 
 

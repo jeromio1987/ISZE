@@ -140,6 +140,38 @@ def stock_meaning(stock) -> str | None:
     return None
 
 
+def delivery_basis(row: dict) -> tuple:
+    """(delivery_included, note) read off the ledger row, honestly.
+
+    The ledger carries two delivery columns since 2026-10-07 (U26):
+    `delivery_note` (what the page said) and `delivery_included` (yes / no / blank).
+    This maps them into the shape the shared evidence rule reads:
+
+      "yes"   -> True    the listing price includes delivery
+      "no"    -> False   the listing price excludes delivery
+      blank   -> None    the page said nothing; the rule then excludes the row, correctly
+
+    A blank is NOT the same as "no": the absence of a stated charge is never read as a
+    charge. Anything that is not yes / no / blank is treated as blank rather than guessed,
+    and `delivery_cost_eur` is deliberately left alone — no delivery cost was read into a
+    numeric field, so a "no" row is excluded on DELIVERY_COST_NOT_SUPPLIED until a cost is
+    actually stated on the page. This is the ONLY place eligibility learns about delivery.
+    """
+    raw = row.get("delivery_included")
+    note = row.get("delivery_note")
+    if note is not None and isinstance(note, float) and pd.isna(note):
+        note = None
+    note_out = str(note) if note else None
+    if raw is None or (isinstance(raw, float) and pd.isna(raw)):
+        return None, note_out
+    s = str(raw).strip().lower()
+    if s == "yes":
+        return True, note_out
+    if s == "no":
+        return False, note_out
+    return None, note_out
+
+
 def row_to_evidence_input(r: dict) -> dict:
     price = r.get("price")
     price_eur = r.get("price_eur")
@@ -157,6 +189,7 @@ def row_to_evidence_input(r: dict) -> dict:
         alt = None
     elif alt is not None:
         alt = str(alt)
+    delivery, delivery_note = delivery_basis(r)
     return {
         "observation_id": r["obs_id"],
         "source": r.get("source") or r.get("loader"),
@@ -179,7 +212,7 @@ def row_to_evidence_input(r: dict) -> dict:
         "unit": "piece",
         "vat_rate": 0 if tax == "excluded" else None,
         "vat_rate_unit": "percent" if tax == "excluded" else None,
-        "delivery_included": None,
+        "delivery_included": delivery,
         "delivery_cost_eur": None,
         "fx_to_eur": fx,
         "fx_date": "2026-09-24" if fx is not None else None,
@@ -190,6 +223,7 @@ def row_to_evidence_input(r: dict) -> dict:
             "vat": r.get("vat"),
             "match_method": r.get("match_method"),
             "description": desc,
+            "delivery_note": delivery_note,
             "price_eur": None
             if price_eur is None or (isinstance(price_eur, float) and pd.isna(price_eur))
             else float(price_eur),
@@ -222,6 +256,11 @@ def main() -> int:
 
     ledger, ledger_path = load_ledger()
     print(f"ledger read: {ledger_path}  ({len(ledger):,} rows)")
+    # U26 2026-10-07: counted BEFORE the retired-loader filter, so the number reported is
+    # what the ledger actually holds rather than what this build happens to read.
+    _delivery_stated_raw = int(
+        ledger["delivery_included"].astype(str).isin(["yes", "no"]).sum()
+    ) if "delivery_included" in ledger.columns else 0
     ledger = ledger[~ledger["loader"].isin(RETIRED_LOADERS)].copy()
     focus = focus_pn_map()
     focus_pns = set(focus["part_number"].astype(str))
@@ -235,6 +274,14 @@ def main() -> int:
     ].copy()
     focus_rows["pms_category"] = focus_rows["part_no"].astype(str).map(pn_family)
 
+    # U26 2026-10-07 (Jerome: "Fix the sufficiency label to count usable rows only").
+    # The old label compared the RAW focus row count to the 50 bar, which printed
+    # `sufficient` for UK on 79 rows that the evidence rules then excluded one and all —
+    # a row count that flatters a market with no usable comparable. The status is now
+    # decided on USABLE rows (rows the evidence checks actually pass), and it is decided
+    # AFTER those checks run, below. Both numbers are kept and labelled: `focus_rows` is
+    # the raw count, `usable_rows` is the eligible count. The raw count is not deleted;
+    # it just no longer decides the label.
     print("=== DATA SUFFICIENCY (focus families via %s) ===" % FAMILY_FILE)
     for country, meta in MARKETS.items():
         sub = focus_rows[focus_rows["country"] == country]
@@ -244,18 +291,20 @@ def main() -> int:
             .reset_index(name="rows")
         )
         n = len(sub)
-        status = "sufficient" if n >= MIN_USABLE else "insufficient"
         sufficiency[country] = {
             "distributor": meta["distributor"],
             "label": meta["label"],
             "focus_rows": n,
+            "usable_rows": None,          # filled in after the evidence checks, below
             "focus_pns_with_rows": int(sub["part_no"].nunique()),
-            "status": status,
+            "status": "pending",          # decided on usable rows, after the evidence run
+            "status_basis": "usable_rows (rows that pass the evidence checks) against min_usable",
             "min_usable": MIN_USABLE,
             "by_loader_price_type_family": counts.to_dict(orient="records"),
         }
         print(
-            f"{meta['label']}: {n} focus rows, {sub['part_no'].nunique()} PNs -> {status}"
+            f"{meta['label']}: {n} focus rows, {sub['part_no'].nunique()} PNs "
+            f"(usable count comes from the evidence run)"
         )
         if len(counts):
             print(counts.to_string(index=False))
@@ -317,6 +366,19 @@ def main() -> int:
         for code in er.get("reason_codes") or []:
             a["reason_codes"][code] += 1
             exclusion_totals[(r["country"], code)] += 1
+
+    # U26 2026-10-07: the sufficiency label, decided on USABLE rows. A raw focus row that
+    # the evidence rules exclude is not evidence a market can be compared on, so it must not
+    # make the market read `sufficient`. Both counts are kept in the output.
+    for country in MARKETS:
+        u = eligible_total[country]
+        sufficiency[country]["usable_rows"] = u
+        sufficiency[country]["empty_focus_rows"] = sufficiency[country]["focus_rows"] - u
+        sufficiency[country]["status"] = "sufficient" if u >= MIN_USABLE else "insufficient"
+        print(
+            f"{sufficiency[country]['label']}: {sufficiency[country]['focus_rows']} focus rows "
+            f"(raw), {u} usable rows (eligible) -> {sufficiency[country]['status']}"
+        )
 
     all_codes = sorted(
         {c for (_, c) in exclusion_totals.keys()}
@@ -401,6 +463,38 @@ def main() -> int:
         "focus_families": list(FOCUS_FAMILIES),
         "focus_pn_count": int(len(focus_pns)),
         "billed_eur_all_markets_focus": round(billed_eur_all_markets, 2),
+        # U26 2026-10-07: why the delivery field, now that it exists, still does not make a
+        # row eligible. Stated here so the zero cannot be read as "the field was not added".
+        "delivery_basis_finding": {
+            "ledger_columns_added": ["delivery_note", "delivery_included"],
+            "read_from": "the pages already saved under _probe/ and _probe/_u26/",
+            "rows_in_ledger_stating_a_basis": _delivery_stated_raw,
+            "rows_in_build_focus_stating_a_basis": int(
+                focus_rows["delivery_included"].astype(str).isin(["yes", "no"]).sum()
+            ),
+            "pages_stating_a_free_delivery_threshold": (
+                "6 Tranzparts pages, all the same shop-wide rule ('FREE DELIVERY WHEN YOU "
+                "SPEND OVER GBP 50' in the announcement bar; free tracked over GBP 80 in the "
+                "Delivery and Shipping panel). Where the two disagree for a listing, no basis "
+                "is claimed and the note says so."
+            ),
+            "pages_stating_delivery_info_only": (
+                "KS International shop pages carry a footer link named 'Delivery Information' "
+                "and nothing else. Recorded as the note 'delivery info page only' with the "
+                "basis LEFT BLANK: a link states no basis for this listing."
+            ),
+            "why_no_focus_row_is_eligible_on_delivery": (
+                "4 UK Tranzparts rows state 'no' (price GBP 19.26-32.00, below the stated "
+                "GBP 50 threshold), and 2 more state the two-threshold ambiguity. A 'no' needs "
+                "a delivered cost to compare and no cost was read into a numeric field, so "
+                "those rows would be excluded on DELIVERY_COST_NOT_SUPPLIED; they do not reach "
+                "the build at all because RETIRED_LOADERS (unchanged) drops that loader. All "
+                "79 UK focus rows that DO reach the build state nothing, so they remain "
+                "excluded on DELIVERY_BASIS_NOT_STATED. No harvested UK page states that its "
+                "price includes delivery, so the honest answer is that the field is now "
+                "carried but the market still has no eligible comparable."
+            ),
+        },
         "by_market": {},
     }
     for country, meta in MARKETS.items():
@@ -412,7 +506,14 @@ def main() -> int:
         metrics["by_market"][country] = {
             "label": meta["label"],
             "distributor": meta["distributor"],
+            # U26 2026-10-07: both counts, side by side and labelled. `focus_rows` is the
+            # raw count; `usable_rows` is what the evidence checks passed and what the
+            # status is now decided on.
             "focus_rows": sufficiency[country]["focus_rows"],
+            "usable_rows": sufficiency[country]["usable_rows"],
+            "focus_rows_excluded": sufficiency[country].get("empty_focus_rows"),
+            "sufficiency_status": sufficiency[country]["status"],
+            "sufficiency_basis": sufficiency[country]["status_basis"],
             "focus_rows_status": sufficiency[country]["status"],
             "min_usable": MIN_USABLE,
             "eligible_rows": eligible_total[country],
@@ -420,6 +521,10 @@ def main() -> int:
             "eligible_pns_detail": eligible_eur_pns[country],
             "billed_eur_of_eligible_pns": round(eligible_eur[country], 2),
             "exclusions_by_reason": reason_rows,
+            "rows_stating_a_delivery_basis": int(
+                sum(1 for r in focus_rows.to_dict(orient="records")
+                    if str(r.get("delivery_included") or "").strip().lower() in ("yes", "no"))
+            ),
             "empty_pns": len(empt),
             "empty_pns_billed_eur": round(
                 float(sum((r["eur_all_billed_all_markets"] or 0) for r in empt)), 2
@@ -454,7 +559,14 @@ def main() -> int:
         "focus_ledger_rows": int(len(focus_rows)),
         "coverage_rows": len(cov_rows),
         "empty_pn_rows": len(empty_rows),
+        # U26 2026-10-07: the sufficiency label now counts USABLE rows (eligible), not raw
+        # focus rows. Both are kept, labelled. This file was corrected for the sufficiency
+        # fix (and to carry the delivery basis into the evidence row); see
+        # `correction_note` below for the backup it was taken from.
         "sufficiency": sufficiency,
+        "sufficiency_rule": ("status is decided on usable_rows (rows passing the evidence "
+                             "checks) against min_usable; focus_rows is the raw count and is "
+                             "retained but no longer decides the label"),
         "eligible_offers_by_market": eligible_total,
         "exclusion_totals_by_market": {
             f"{m}:{c}": n for (m, c), n in sorted(exclusion_totals.items())
@@ -465,10 +577,27 @@ def main() -> int:
             "match": "exact_oem -> basis exact_part_number (product id only); crossref/category_only -> unresolved candidate; never status accepted",
             "pack": "pack contents always null from ledger (kit/set words set amount_scope=per_pack only; contents never inferred)",
             "level": "all competitor ledger rows -> public_advertised_retail; price_type kept in stage JSON under _ledger",
-            "delivery": "delivery_included null (ledger has no field)",
+            "delivery": ("the ledger's delivery_note / delivery_included are read here (delivery_basis()); "
+                         "yes -> true, no -> false, blank -> null. Blank is not 'no'. delivery_cost_eur "
+                         "stays null: no cost was read into a numeric field."),
             "tax": "vat excl->excluded (+vat_rate 0 percent); unknown/blank->null",
         },
         "worktree": str(ROOT),
+        # U26 2026-10-07: this build corrected two things in place, without a new version
+        # label (this repo's convention), so the replaced files are named here.
+        "correction_note": {
+            "what": ("the delivery basis is now carried into the evidence row (the ledger's "
+                     "delivery_note / delivery_included are read here), and the sufficiency "
+                     "label now counts usable rows instead of raw focus rows"),
+            "backup_suffix": ".bak_20261007T081251Z_before_delivery_col",
+            "backed_up": [
+                "market_data_gap_coverage_20261007.csv",
+                "market_data_gap_coverage_20261007.meta.json",
+                "market_data_gap_coverage_20261007.metrics.json",
+            ],
+            "convention": ("same date-named files rewritten in place; no new version label "
+                           "such as _b was invented"),
+        },
         "start_commit": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=str(ROOT), text=True
         ).strip(),
@@ -479,6 +608,7 @@ def main() -> int:
     summary = {
         "sufficiency": {k: v["status"] for k, v in sufficiency.items()},
         "focus_rows": {k: v["focus_rows"] for k, v in sufficiency.items()},
+        "usable_rows": {k: v["usable_rows"] for k, v in sufficiency.items()},
         "eligible": eligible_total,
         "empty_pn_counts": {c: sum(1 for r in empty_rows if r["market"] == c) for c in MARKETS},
         "exclusion_totals": meta["exclusion_totals_by_market"],

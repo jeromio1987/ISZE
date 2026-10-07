@@ -1,0 +1,87 @@
+{
+  "row_under_test": {
+    "obs_id": "b38b7a880a57fe33",
+    "part_no": "5876101170",
+    "match_method": "exact_oem",
+    "competitor_brand": "UFI",
+    "competitor_pn": "365226900",
+    "description": "UFI OIL FILTER 23 577 00 \u2014 Tranzparts sku 365226900 \u2014 brand UFI \u2014 the number we searched for is printed on this product page \u2014 page cross-reference list: Cross References: 5876101170, 8970967770, 8971364700, 8-97148270-1, 8972475140, 8-97371334-0, 8-98328207-0, BD7169, 8970967770, 8971364700, 8-97148270-1, 8972475140, 8-97371334-0,",
+    "source": "Tranzparts",
+    "source_url": "https://tranzparts.co.uk/products/365226900?_pos=1&_sid=20cddc687&_ss=r",
+    "country": "UK",
+    "observed_at": "2026-10-07",
+    "vintage": "Tranzparts 2026-10-07",
+    "price": 20.22,
+    "price_avg": null,
+    "currency": "GBP",
+    "price_eur": 23.52,
+    "fx_note": "ECB euro reference rates, reference date 2026-09-24. Whole ledger from one source; GBP and SEK rebased 2026-09-25 (were 1.17 / 0.089 from the 2026-05-01 working table).",
+    "vat": "excl",
+    "price_type": "aftermarket_retail",
+    "stock": "in",
+    "n_obs": 1,
+    "loader": "tranzparts",
+    "delivery_note": "below the stated free-delivery threshold of GBP 50 (page states a charge of GBP 5.99 / GBP 19.99 when it is not met)",
+    "delivery_included": "no"
+  },
+  "real_basis": {
+    "as_read": {
+      "label": "real_basis_as_read",
+      "eligible": false,
+      "reason_codes": [
+        "DELIVERY_COST_NOT_SUPPLIED"
+      ],
+      "mapped_delivery_included": false,
+      "mapped_has_note": true
+    },
+    "stripped": {
+      "label": "real_basis_stripped",
+      "eligible": false,
+      "reason_codes": [
+        "DELIVERY_BASIS_NOT_STATED"
+      ],
+      "mapped_delivery_included": null,
+      "mapped_has_note": true
+    },
+    "restored": {
+      "label": "real_basis_restored",
+      "eligible": false,
+      "reason_codes": [
+        "DELIVERY_COST_NOT_SUPPLIED"
+      ],
+      "mapped_delivery_included": false,
+      "mapped_has_note": true
+    },
+    "field_is_read_on_this_row": true,
+    "note": "on this row the basis is 'no' (free delivery stated only over GBP 50, listing is GBP 20.22). The field IS read: stripping it changes the reason from DELIVERY_COST_NOT_SUPPLIED to DELIVERY_BASIS_NOT_STATED. The row stays ineligible either way because a 'no' needs a delivered cost, and no cost was read into a numeric field."
+  },
+  "forced_yes_wiring_proof": {
+    "as_read": {
+      "label": "yes_keep",
+      "eligible": true,
+      "reason_codes": [],
+      "mapped_delivery_included": true,
+      "mapped_has_note": true
+    },
+    "stripped": {
+      "label": "yes_stripped",
+      "eligible": false,
+      "reason_codes": [
+        "DELIVERY_BASIS_NOT_STATED"
+      ],
+      "mapped_delivery_included": null,
+      "mapped_has_note": true
+    },
+    "restored": {
+      "label": "yes_restored",
+      "eligible": true,
+      "reason_codes": [],
+      "mapped_delivery_included": true,
+      "mapped_has_note": true
+    },
+    "wiring_proven": true
+  },
+  "mapping_is_wired": true,
+  "real_corpus_blocker": "DELIVERY_BASIS_NOT_STATED",
+  "verdict": "The mapping is wired. With the delivery basis stated and a price the basis covers, the row is eligible; stripped it drops out on DELIVERY_BASIS_NOT_STATED; restored it is eligible again. On the real U26 rows the field is read too (the reason code moves between DELIVERY_BASIS_NOT_STATED and DELIVERY_COST_NOT_SUPPLIED), but no harvested UK page states delivery-included, so no real row becomes eligible \u2014 the real rows are blocked on DELIVERY_COST_NOT_SUPPLIED (a stated threshold the price fails) or on a silent page."
+}

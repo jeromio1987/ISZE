@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-07T06:48:49+00:00",
+  "built_at": "2026-10-07T09:13:31+00:00",
   "builder": "04_tools/price_ledger/build_price_ledger.py",
   "rows": 6690,
   "rows_by_loader": {
@@ -41,5 +41,16 @@
     "spareto_crossref": "NOT loaded as a price observation (2026-10-07): Spareto prices are retail incl. VAT at a rate the page does not state, so the evidence rules exclude them; they are a cross-reference source in 04_tools/aftermarket_intelligence/state/spareto_crossref.csv, used by grade_crossref_edges.py, not a price row"
   },
   "fx": "ECB euro reference rates, reference date 2026-09-24. Whole ledger from one source; GBP and SEK rebased 2026-09-25 (were 1.17 / 0.089 from the 2026-05-01 working table).",
-  "rule": "price_type and vintage required; never average across price_type"
+  "rule": "price_type and vintage required; never average across price_type",
+  "delivery_basis": {
+    "columns": [
+      "delivery_note",
+      "delivery_included"
+    ],
+    "added": "2026-10-07 (U26), on Jerome's instruction: 'dd delivery basis to the ledger, read from the saved pages'",
+    "delivery_note": "what the page actually says, short and verbatim-ish; blank when the page states nothing about carriage",
+    "delivery_included": "yes / no only, and only where the page states it for that listing or states a threshold rule the listed price meets or fails; blank when the page is silent. Never inferred from the absence of a charge, and never from the price.",
+    "why": "the shared evidence rule (evidence.js adjustToComparable, reported as DELIVERY_BASIS_NOT_STATED) excludes every row whose delivery basis is not stated. Before this column existed no row could be eligible.",
+    "rows_stating_a_basis": 4
+  }
 }
