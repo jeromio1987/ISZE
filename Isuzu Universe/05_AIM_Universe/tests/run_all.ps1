@@ -515,7 +515,7 @@ if ($run06 -match "fail\s+0" -and $run06 -match "pass\s+2") {
 # RUN-07 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "RUN-07 - back up and restore the full permitted working record"
-$run07 = & node --test (Join-Path $PSScriptRoot "run_07_backup_restore.test.mjs") 2>&1 | Out-String
+$run07 = & node --test (Join-Path $PSScriptRoot "run_07_working_record_restore.test.mjs") 2>&1 | Out-String
 Write-Host $run07
 if ($run07 -match "fail\s+0" -and $run07 -match "pass\s+2") {
     Write-Host "RUN-07 2/0/2"

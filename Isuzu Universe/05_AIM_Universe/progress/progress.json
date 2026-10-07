@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-07T01:32:08Z",
+  "written_at": "2026-10-07T01:32:49Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -1586,10 +1586,10 @@
       "integrate_after": "RUN-02, SAFE-06, RUN-04",
       "state": "technically verified",
       "evidence": [
-        "node --test tests/run_07_backup_restore.test.mjs -> 2 pass, 0 fail",
+        "node --test tests/run_07_working_record_restore.test.mjs -> 2 pass, 0 fail",
         "mutation src/data/backup_restore.js restore (drops evidence, database_row_only) -> RUN-07 E1 fails; restored -> passes",
         "mutation src/data/backup_restore.js markProviderFeature/restore (recovery_accepted forced true) -> RUN-07 E2 fails; restored -> passes",
-        "Synthetic backup only. Restore into isolated disposable folder. Untested provider features are not recovery accepted."
+        "Synthetic working-record restore only. Module kept name backup_restore.js; test renamed off *_backup_* gitignore. Restore into isolated disposable folder. Untested provider features are not recovery accepted."
       ],
       "blockers": []
     },
