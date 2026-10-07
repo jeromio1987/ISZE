@@ -381,7 +381,10 @@ reads `sufficient` on the 50-row bar while Portugal stays `insufficient` at 27.
 
 ```
 git rev-parse HEAD
-13d334836cae4bb8d94c21c904e71fa70ba49e73
+44434fc198c3c5338ebc4b865009610dd98bc0fd      (this report's commit)
+
+the commit the measurements were produced at
+3e8381158aab886f3d5ec0a4db88e3247ae98dd9
 
 git diff --shortstat 8729346926caf7b2265f2487ff460f98d18f2d21..HEAD
 662 files changed, 632526 insertions(+), 1913 deletions(-)
