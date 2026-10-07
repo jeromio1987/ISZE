@@ -1,0 +1,99 @@
+{
+  "agent": "C2",
+  "work_package": "U26 work package C — second-day completeness pass + corroboration arithmetic",
+  "status": "COMPLETE",
+  "finished_at": "2026-10-07T02:52:00+00:00",
+  "branch": "cursor/2026-10-07-universe-u26-market-harvest",
+  "base_commit": "8729346926caf7b2265f2487ff460f98d18f2d21",
+
+  "step_1_dated_second_pass": {
+    "waited_for_C1": "u26_c1_spareto_20261007",
+    "c1_finished": "2026-10-07T02:41:00+00:00",
+    "c1_entries": 123,
+    "c1_outcomes": {"ok": 123},
+    "c1_stopped": null,
+    "label_used": "u26_c2_spareto_20261008",
+    "label_choice_note": "the brief's first choice; its cache was empty (0 files) when the fetch started, so the pages are genuinely re-read, not replayed from C1",
+    "my_pass_started": "2026-10-07T02:42:05+00:00",
+    "my_pass_finished": "2026-10-07T02:48:27+00:00",
+    "my_entries": 123,
+    "my_outcomes": {"ok": 123},
+    "stopped": null,
+    "refusals": 0,
+    "min_interval_s": 2.2,
+    "fetcher": "fetch_polite.PoliteFetcher via run_dated_pass.PassFetcher (consent gate first, >=2.2 s/host, stop on 403/429 or bot challenge)",
+    "cache_files_in_my_pass": 123,
+    "day_gap_between_C1_and_C2": 0,
+    "day_gap_note": "C1 finished 02:41Z, C2 started 02:42Z on the same UTC date (2026-10-07). The brief's label '20261008' was kept as instructed; the readings are ~8 minutes apart, not a calendar day apart. Stated plainly."
+  },
+
+  "step_2_arithmetic": {
+    "what_it_is": "a measurement, not a regrade; nothing shared was written",
+    "source_model": "independent sources are pipelines: eucon and spareto. C1 and C2 are two readings of ONE source and count as day stability, never as two witnesses.",
+    "inputs": {
+      "worklist_numbers": 123,
+      "needs_crossref_112": 112,
+      "eucon_11": 11,
+      "eucon_rival_edges": 6455,
+      "eucon_pairs": 2752,
+      "eucon_grading_reconciliation": "0 tier mismatches against committed crossref_graded.csv (tier_eucon_only), 6455 rows compared",
+      "c1_pairs_parsed": 735,
+      "c2_pairs_parsed": 735
+    },
+    "q1_numbers_with_at_least_one_spareto_brand_pair": {
+      "of_123": 69,
+      "of_112_no_eucon": 58,
+      "of_11_eucon": 11
+    },
+    "q2_of_the_112": {
+      "gained_at_least_one_pair": 58,
+      "single_source_only": 54,
+      "single_source_only_stays": "CANDIDATE, never approved",
+      "with_at_least_one_corroborated_pair": 4
+    },
+    "q3_pairs_spareto_lists_that_another_source_also_claims": {
+      "spareto_pairs_on_123": 735,
+      "corroborated_by_2plus_independent_sources": 156,
+      "corroborated_of_112": 13,
+      "single_source_pairs": 579,
+      "would_move_an_existing_eucon_edge_up_one_step": 155,
+      "would_move_on_c1_reading": 155,
+      "would_move_on_c2_reading": 155,
+      "rule": "one step up (reject->doubtful->likely->confirmed) when Spareto lists the same (our part, rival number) pair under an agreeing brand; never down. A pair from ONE source stays a candidate."
+    },
+    "context_of_the_112": {
+      "numbers_with_any_eucon_graph_edge": 5,
+      "numbers_with_2plus_eucon_source_files": 0,
+      "note": "the 112 are 'no Eucon cross-reference' by the worklist's narrow flag (Eucon Online 2025); 5 still carry Eucon UK IAM survey edges in the graph, so a handful are not zero-Eucon-evidence"
+    },
+    "day_stability": {
+      "pairs_on_both_days": 735,
+      "pairs_c1_only": 0,
+      "pairs_c2_only": 0,
+      "pairs_with_brand_differing_between_days": 0
+    },
+    "new_pairs_not_in_graph": {
+      "count": 579,
+      "of_112": 546,
+      "tier_assigned": "doubtful (single source)",
+      "note": "the merge step adds these as tier doubtful, edge_origin=spareto_only"
+    }
+  },
+
+  "files_written_in_C2": [
+    "seed_oe_pns.csv",
+    "run_c2.py",
+    "measure_arithmetic.py",
+    "spareto_crossref_day2.csv",
+    "spareto_crossref_day1.csv",
+    "crossref_arithmetic.json",
+    "tried.csv",
+    "status.json",
+    "pass_u26_c2_spareto_20261008/ (own pass cache: fetch_spareto.jsonl, plan_spareto.json, cache/spareto.com/*.html)"
+  ],
+  "shared_files_touched": "none (no crossref_graded.csv, no spareto_crossref.csv, no ledger, no page_manifest.csv, no shared _probe root)",
+  "could_not_do": [
+    "The second reading is ~8 minutes after C1's, not a calendar day later: C1's pass landed at 02:41Z and this agent must not run Spareto in parallel, so the 'second day' is a second reading on the same UTC date. The label u26_c2_spareto_20261008 was kept as the brief named it.",
+    "No further independent source exists for these 112 in this pass: with only two pipelines (Eucon, Spareto), a number that has a Spareto pair but no Eucon edge can never reach two sources here, so 54 of the 58 stay single-source CANDIDATE by construction."
+  ]
+}

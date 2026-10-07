@@ -1,0 +1,80 @@
+{
+  "built_at": "2026-10-07T02:51:02+00:00",
+  "labels": {
+    "c1": "u26_c1_spareto_20261007",
+    "c2": "u26_c2_spareto_20261008"
+  },
+  "observation_days": {
+    "c1": "2026-10-07",
+    "c2": "2026-10-07",
+    "gap_days": 0
+  },
+  "source_model": "independent sources are pipelines: eucon and spareto. C1 and C2 are two readings of ONE source (spareto) and are reported as day stability, not as two witnesses.",
+  "inputs": {
+    "worklist_numbers": 123,
+    "needs_crossref_112": 112,
+    "eucon_11": 11,
+    "eucon_rival_edges": 6455,
+    "eucon_pairs": 2752,
+    "c1": {
+      "label": "u26_c1_spareto_20261007",
+      "exists": true,
+      "entries": 123,
+      "parsed": 123,
+      "parse_errors": []
+    },
+    "c2": {
+      "label": "u26_c2_spareto_20261008",
+      "exists": true,
+      "entries": 123,
+      "parsed": 123,
+      "parse_errors": []
+    },
+    "committed_tier_reconciliation": {
+      "committed_rows_compared": 6455,
+      "tier_mismatches": 0
+    }
+  },
+  "q1_numbers_with_spareto_pair": {
+    "of_123": 69,
+    "of_112_no_eucon": 58,
+    "of_11_eucon": 11
+  },
+  "q2_of_112": {
+    "gained_at_least_one_pair": 58,
+    "single_source_only": 54,
+    "single_source_only_note": "all pairs Spareto-only: stays CANDIDATE, never approved",
+    "with_at_least_one_corroborated_pair": 4
+  },
+  "q3_pairs_also_claimed_elsewhere": {
+    "spareto_pairs_on_123": 735,
+    "corroborated_two_plus_independent": 156,
+    "corroborated_of_112": 13,
+    "single_source_pairs": 579,
+    "single_source_note": "Spareto only: stays a CANDIDATE pair",
+    "would_move_eucon_edge_brand_agrees": 155,
+    "would_move_on_c1_reading": 155,
+    "would_move_on_c2_reading": 155,
+    "would_move_note": "a pair moves a grade only where Spareto lists it on an existing graph edge AND the brand agrees; one source alone never moves it"
+  },
+  "eucon_context_of_112": {
+    "numbers_with_any_eucon_graph_edge": 5,
+    "numbers_with_2plus_eucon_source_files": 0,
+    "note": "the 112 are 'no Eucon cross-reference' by the worklist's narrow flag (Eucon Online 2025); some still carry Eucon UK IAM survey edges in the graph, so they are not zero-Eucon-evidence"
+  },
+  "day_stability_spareto": {
+    "pairs_on_both_days": 735,
+    "pairs_c1_only": 0,
+    "pairs_c2_only": 0,
+    "pairs_with_brand_differing_between_days": 0,
+    "note": "identical pair on both days means the second reading reproduced the first"
+  },
+  "new_pairs_not_in_graph": {
+    "count": 579,
+    "of_112": 546,
+    "tiers": {
+      "doubtful": 579
+    },
+    "note": "the merge step adds these as tier doubtful, edge_origin=spareto_only"
+  }
+}

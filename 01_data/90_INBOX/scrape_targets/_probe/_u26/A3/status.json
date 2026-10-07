@@ -1,0 +1,57 @@
+{
+  "agent": "A3",
+  "work_package": "A (second half) \u2014 Omega plus further UK online sellers",
+  "generated_at": "2026-10-07T02:50:43+00:00",
+  "label": "u26_a3_omega_20261007",
+  "git_head_at_start": "8729346926caf7b2265f2487ff460f98d18f2d21",
+  "sources": {
+    "omegaspareparts.com": {
+      "robots": "allowed",
+      "numbers_queried": 123,
+      "pages_fetched": 123,
+      "rows": 0,
+      "numbers_with_rows": 0,
+      "guard_refusals": {
+        "unrelated_product": 59,
+        "empty_search_page": 64
+      }
+    }
+  },
+  "numbers_queried": 123,
+  "pages_fetched": 123,
+  "rows": 0,
+  "priced_rows": 0,
+  "hits": 0,
+  "misses": 123,
+  "blocked_hosts": [
+    "www.micksgarage.com",
+    "www.autodoc.co.uk",
+    "www.partsupermarket.co.uk",
+    "www.truckpartsuk.co.uk",
+    "www.hgvtruckparts.co.uk",
+    "www.arpartsgroup.com",
+    "www.jcparts.co.uk",
+    "www.thetruckpartswarehouse.co.uk"
+  ],
+  "guard": {
+    "name": "mekonomen",
+    "rule": "accept only if the searched number appears in the page's product data (canonical URL, JSON-LD, details table) in any Isuzu spelling; the 'You searched for X' banner is ignored",
+    "refused_total": 123,
+    "refused_unrelated_product": 59,
+    "refused_empty_search_page": 64
+  },
+  "corroboration": {
+    "attribute_sitemaps_scanned": 13,
+    "distinct_10_digit_terms_in_omega_index": 1126,
+    "seed_numbers_found": 0,
+    "conclusion": "Omega holds none of the 123 numbers; the 59 'unrelated product' pages are the closest-match failure mode, not a parse fault."
+  },
+  "pages_saved": 0,
+  "notes": [
+    "No rows accepted, so rows.csv carries only its header; pages/ carries the 123-page classification instead of per-row copies; raw bytes stay in the per-pass cache (never the shared cache).",
+    "match_method would be exact_oem and crossref_grade='corroborated' in a separate column; MATCH_METHODS was not widened."
+  ],
+  "could_not_do": [
+    "Find any UK online seller that both allows automated search and serves the searched Isuzu number in server-rendered HTML. Web search is unavailable to this subagent, so candidates came from the recon plus a direct robots/serving test."
+  ]
+}
