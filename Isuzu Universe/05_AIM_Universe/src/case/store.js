@@ -173,6 +173,19 @@
     var fs = require('fs');
     var path = require('path');
     var caseDir = path.join(dir, 'cases');
+    var lockPath = path.join(dir, '.aim-case.lock');
+
+    /* An exclusive lock file around the read-check-write step.
+
+       The version guard in the service is optimistic and lives in memory, so it
+       cannot see another PROCESS. Measured 2026-10-07 by U28: two real node
+       processes each read version 1, each passed the guard, and each wrote
+       version 2. One write was lost and nothing reported it. Waiting on a lock
+       file closes that window; the re-read under the lock is what makes the
+       second writer see the first writer's version and be refused as stale.
+
+       A stale lock (a process that died holding it) is broken after a short
+       wait, so a crash cannot wedge the store. */
 
     function ensure() {
       fs.mkdirSync(caseDir, { recursive: true });
@@ -184,6 +197,40 @@
       if (!safe || safe === '.' || safe === '..') throw new Error('Refusing an unusable case id: ' + id);
       return path.join(caseDir, safe + '.json');
     }
+    function withLock(fn) {
+      ensure();
+      var started = Date.now();
+      var fd = null;
+      for (;;) {
+        try {
+          fd = fs.openSync(lockPath, 'wx');
+          break;
+        } catch (e) {
+          if (e.code !== 'EEXIST') throw e;
+          try {
+            var age = Date.now() - fs.statSync(lockPath).mtimeMs;
+            if (age > 10000) { fs.unlinkSync(lockPath); continue; }
+          } catch (e2) { /* the holder released it while we looked; retry */ }
+          if (Date.now() - started > 10000) {
+            return { ok: false, code: 'LOCK_TIMEOUT',
+              error: 'Another writer is holding the lock on this case folder and did not '
+                + 'release it within 10 seconds. Nothing was written and nothing was '
+                + 'overwritten. Try again, or check for a stray lock file.' };
+          }
+          /* A short synchronous sleep. This adapter is synchronous by design -
+             every caller of it is - so a busy wait is the honest option. */
+          var until = Date.now() + 5;
+          while (Date.now() < until) { /* spin */ }
+        }
+      }
+      try {
+        return fn();
+      } finally {
+        try { fs.closeSync(fd); } catch (e) { /* already closed */ }
+        try { fs.unlinkSync(lockPath); } catch (e) { /* the 10s breaker took it */ }
+      }
+    }
+
     function writeAtomic(target, object) {
       ensure();
       var tmp = target + '.tmp-' + process.pid + '-' + Date.now();
@@ -242,13 +289,42 @@
         writeAtomic(path.join(dir, INDEX_NAME), ids);
         return { ok: true, durable: true };
       },
+      /* The guarded write CASE-07 needs. The version is re-read and compared
+         INSIDE the lock, so two processes cannot both pass the check. */
+      saveIfVersion: function (id, record, expectedVersion) {
+        var adapter = this;
+        return withLock(function () {
+          var current = null;
+          try { current = JSON.parse(fs.readFileSync(casePath(id), 'utf8')); } catch (e) { current = null; }
+          if (current && expectedVersion != null && current.version !== expectedVersion) {
+            return { ok: false, code: 'STALE_WRITE',
+              error: 'This case was changed by someone else after you opened it. You were working '
+                + 'from version ' + expectedVersion + ' and the stored record is at version '
+                + current.version + '. Nothing was written and nothing was overwritten.',
+              expected_version: expectedVersion, actual_version: current.version };
+          }
+          if (current && record.version < current.version) {
+            return { ok: false, code: 'STALE_WRITE',
+              error: 'The stored record is at version ' + current.version + '; this write would '
+                + 'move it backwards. Nothing was written.',
+              actual_version: current.version };
+          }
+          writeAtomic(casePath(id), record);
+          var ids = adapter.readIndex();
+          if (ids.indexOf(id) < 0) { ids.push(id); ids.sort(); }
+          writeAtomic(path.join(dir, INDEX_NAME), ids);
+          return { ok: true, durable: true };
+        });
+      },
       remove: function (id) {
         var p = casePath(id);
         if (fs.existsSync(p)) fs.unlinkSync(p);
         var ids = this.readIndex().filter(function (x) { return x !== id; });
         writeAtomic(path.join(dir, INDEX_NAME), ids);
         return { ok: true };
-      }
+      },
+      now: function () { return new Date().toISOString(); },
+      withLock: withLock
     };
   }
 
@@ -265,7 +341,10 @@
     options = options || {};
     var adapter = options.adapter;
     if (!adapter) throw new Error('makeCaseService needs a storage adapter.');
-    var clock = options.now || function () { return new Date().toISOString(); };
+    /* A caller's clock wins; then the adapter's own clock, so a service built
+       over the file adapter reads the same wall clock the lock uses; then the
+       real clock. */
+    var clock = options.now || adapter.now || function () { return new Date().toISOString(); };
     var caller = options.caller || 'unspecified';
     var devIdentityPrefix = options.identityMode === 'development-only' ? 'dev:' : '';
 
@@ -658,8 +737,17 @@
         return reject('DUPLICATE_SUBMISSION',
           'That move would not change the record. Nothing was saved.');
       }
-      var written = adapter.save(caseId, prepared);
-      if (!written.ok) return reject('NOT_DURABLE', written.error || 'The store refused the write.');
+      /* Across PROCESSES the in-memory guard above is not enough: a second
+         process can pass it before the first one writes. When the adapter offers
+         a guarded write, it is the one used, because only the adapter can hold
+         the lock and re-read. */
+      var written = typeof adapter.saveIfVersion === 'function'
+        ? adapter.saveIfVersion(caseId, prepared, stored.version)
+        : adapter.save(caseId, prepared);
+      if (!written.ok) {
+        if (written.code === 'STALE_WRITE' || written.code === 'LOCK_TIMEOUT') return written;
+        return reject('NOT_DURABLE', written.error || 'The store refused the write.');
+      }
       return {
         ok: true, record: prepared, version: prepared.version,
         action: applied.transition.action, state: prepared.state,

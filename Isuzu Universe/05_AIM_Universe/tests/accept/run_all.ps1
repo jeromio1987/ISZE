@@ -399,7 +399,22 @@ if ($SkipBrowser) {
         -RawFile (Join-Path $Out "ux_07_narrow.json") | Out-Null
 }
 
-Write-Head "U28-CONNECT-MATRIX - every feed paints, or states what is missing"`r`nif ($SkipBrowser) {`r`n    Add-NotRun "U28-CONNECT-MATRIX" "skipped by -SkipBrowser"`r`n    Write-Note "skipped by -SkipBrowser" "Yellow"`r`n} elseif (-not (Test-Path (Join-Path $Root "dist\ISZE_AIM_Pricing_Decisions_v04_SYNTHETIC.html"))) {`r`n    Add-NotRun "U28-CONNECT-MATRIX" "the synthetic artifact the matrix drives has not been built"`r`n    Write-Note "skipped: the synthetic artifact the matrix drives has not been built (run python tools/build.py)" "Yellow"`r`n} else {`r`n    $matrixArgs = @((Join-Path $Accept "connect_matrix_journey.py"))`r`n    if ($Chrome) { $matrixArgs += @("--chrome", $Chrome) }`r`n    Invoke-Step -Id "U28-CONNECT-MATRIX" -Title "nine feeds, one browser run: painted with its source, or honestly not available" `r`n        -Command "python" -Arguments $matrixArgs `r`n        -RawFile (Join-Path $Out "connect_matrix_journey.json") | Out-Null`r`n}`r`n`r`nWrite-Head "ACCEPT-03 - source conservation and correction behaviour"
+Write-Head "U28-CONNECT-MATRIX - every feed paints, or states what is missing"
+if ($SkipBrowser) {
+    Add-NotRun "U28-CONNECT-MATRIX" "skipped by -SkipBrowser"
+    Write-Note "skipped by -SkipBrowser" "Yellow"
+} elseif (-not (Test-Path (Join-Path $Root "dist\ISZE_AIM_Pricing_Decisions_v04_SYNTHETIC.html"))) {
+    Add-NotRun "U28-CONNECT-MATRIX" "the synthetic artifact the matrix drives has not been built"
+    Write-Note "skipped: the synthetic artifact the matrix drives has not been built (run python tools/build.py)" "Yellow"
+} else {
+    $matrixArgs = @((Join-Path $Accept "connect_matrix_journey.py"))
+    if ($Chrome) { $matrixArgs += @("--chrome", $Chrome) }
+    Invoke-Step -Id "U28-CONNECT-MATRIX" -Title "nine feeds, one browser run: painted with its source, or honestly not available" `
+        -Command "python" -Arguments $matrixArgs `
+        -RawFile (Join-Path $Out "connect_matrix_journey.json") | Out-Null
+}
+
+Write-Head "ACCEPT-03 - source conservation and correction behaviour"
 Invoke-Step -Id "ACCEPT-03" -Title "repeat import, correction, set-aside, visible remainder" `
     -Command "node" -Arguments @((Join-Path $Accept "accept_03_conservation.cjs")) `
     -RawFile (Join-Path $Out "accept_03_conservation.json") | Out-Null
