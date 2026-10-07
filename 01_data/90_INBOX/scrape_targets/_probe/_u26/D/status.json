@@ -57,7 +57,8 @@
       ]
     ],
     "file": "01_data/00_derived/pricing_pr00_ie40.parquet (part_number -> newest_pn) and 01_data/00_derived/pn_supersession_map.csv",
-    "eucon_column": "Supersession Info ID (code 0-3) in Eucon_March.xlsx/RRP MODE and in the raw txt export; a code, not a successor part number"
+    "eucon_column": "Supersession Info ID (code 0-3) in Eucon_March.xlsx/RRP MODE and in the raw txt export; a code, not a successor part number",
+    "map_caveat": "pn_supersession_map.csv was checked against the EPC parts catalogue on 2026-09-22 (01_data/90_INBOX/pn_supersession_epc_catalogue_validation_20260922_SUMMARY.md): 899 of its 925 pairs are in NEITHER catalogue, so the map is not EPC-corroborated. The chain used here is the price list's own part_number -> newest_pn, which is a renumbering map, not an EPC supersession chain."
   },
   "portugal_2025_online": {
     "file": "01_data/Fresh list_Export_28072025_0932.txt (the raw export behind Eucon_Online28072025.xlsx)",
