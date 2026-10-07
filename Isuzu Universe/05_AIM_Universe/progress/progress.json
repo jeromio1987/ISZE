@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-07T01:34:57Z",
+  "written_at": "2026-10-07T01:38:16Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 90,
-    "not started": 6
+    "technically verified": 91,
+    "not started": 5
   },
   "total_tasks": 96,
-  "overlay_applied": 90,
+  "overlay_applied": 91,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1643,8 +1643,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "BASE-05, BASE-06, UX-08",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/accept_02_journey.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/browser_journey.js verifyRouteContinuity (always ok) -> ACCEPT-02 E1 fails; restored -> passes",
+        "mutation src/data/browser_journey.js reportBrowserEnvironment (UNTESTED forced to PASS / restart_persistence_passed true) -> ACCEPT-02 E2 fails; restored -> passes",
+        "python tests/accept/accept_02_journey.py -> summary pass 61 / fail 0 / untested 0; screenshots taken 17, read 17 by Cursor agent this chat (copied to docs/cursor_briefs/_u24_shots and image-read). Real file:// journey on INTERNAL artifact. Blocked-browser path remains UNTESTED in accept_02_journey.py J00."
+      ],
       "blockers": []
     },
     {
