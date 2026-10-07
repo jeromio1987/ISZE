@@ -374,3 +374,23 @@ and no amount of further scraping changes that while the ledger cannot record a
 delivery basis. The harvest did do its job on the row count: UK numbers with at least
 one price row went from 10 to 24 and UK focus rows from 38 to 79, which is why UK now
 reads `sufficient` on the 50-row bar while Portugal stays `insufficient` at 27.
+
+---
+
+## Commits
+
+```
+git rev-parse HEAD
+13d334836cae4bb8d94c21c904e71fa70ba49e73
+
+git diff --shortstat 8729346926caf7b2265f2487ff460f98d18f2d21..HEAD
+662 files changed, 632526 insertions(+), 1913 deletions(-)
+```
+
+The 662 files include the eight other agents' work; agent E's own work is three commits
+on top of `115e7fad8295b7956251ef00ef2f5f83a64ba6e0` —
+`3e8381158aab886f3d5ec0a4db88e3247ae98dd9` (merge, grading and coverage),
+`9f5573d70c03a9f140cde8c688657db50c01214f` (the report and its measured outputs) and
+this one. `git diff --shortstat 115e7fad8295b7956251ef00ef2f5f83a64ba6e0..HEAD`
+(agent E alone) is **54 files changed, 24,449 insertions(+), 1,875 deletions(-)**.
+
