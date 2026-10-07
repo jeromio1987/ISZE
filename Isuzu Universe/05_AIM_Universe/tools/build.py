@@ -114,6 +114,10 @@ UNWIRED_MODULES = [
     ("src/ui/candidates.js", "duplicate candidate view"),
     ("src/ui/views.js", "retired second view layer; every view it held is ported into src/ui/app.js"),
     ("src/ui/render.js", "retired second shell; the F05 guard and routing live in src/ui/app.js"),
+    # Retired 2026-10-07 (U27, Jerome's decision). A second range calculation the
+    # app never loaded; the range views the app shows come from src/data/evidence.js.
+    # Deleted with its two tests; this entry stays as a tombstone, like pricing.js.
+    ("src/engine/range.js", "range economics prototype never wired into the app; deleted 2026-10-07"),
 ]
 
 # The global each SHIPPED and each RETIRED module actually publishes, read from its
@@ -130,6 +134,7 @@ PUBLISHED_BY = {
     "src/case/app_connection.js": "AIMAppConnection",
     "src/engine/engine.js": "PricingEngine",
     "src/engine/pricing.js": "PricingEngine",
+    "src/engine/range.js": "AIMRangeEngine",
     "src/data/manifest.js": "AIMManifest",
     "src/data/evidence.js": "AIMEvidence",
     "src/data/comparable.js": "AIMComparable",

@@ -52,6 +52,7 @@ reports a real result about code the assembled artifact does not run.
 - `src/ui/candidates.js` - duplicate candidate view
 - `src/ui/views.js` - retired second view layer; every view it held is ported into src/ui/app.js
 - `src/ui/render.js` - retired second shell; the F05 guard and routing live in src/ui/app.js
+- `src/engine/range.js` - range economics prototype never wired into the app; deleted 2026-10-07; **DELETED from the tree, entry kept as a tombstone**
 
 ## Tests, by what they load
 
@@ -182,11 +183,6 @@ reports a real result about code the assembled artifact does not run.
     - shipped: src/data/product_images.js
 - `tests/range_08_withdrawal.test.mjs`
     - shipped: src/data/evidence.js
-- `tests/range_engine.test.cjs`
-    - unlisted: src/engine/range.js
-- `tests/range_engine_parity.test.cjs`
-    - shipped: src/engine/engine.js
-    - unlisted: src/engine/range.js
 - `tests/review_03_comparison.test.mjs`
     - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
 - `tests/review_04_contributors.test.mjs`
@@ -253,7 +249,7 @@ reports a real result about code the assembled artifact does not run.
 
 ## Summary
 
-91 test files load a source module; 12 of them load a retired one.
+89 test files load a source module; 12 of them load a retired one.
 
 ## Read this before acting on the number above
 
@@ -274,6 +270,7 @@ load. The build keeps the entry on purpose so the guard that names it
 keeps working, and nothing can load a file that is not on disk:
 
 - `src/engine/pricing.js` - superseded by src/engine/engine.js; duplicate deleted 2026-09-22
+- `src/engine/range.js` - range economics prototype never wired into the app; deleted 2026-10-07
 
 A module name that a test NAMES in order to assert it is not loaded is
 still counted, because the scan cannot tell that from a load. A real

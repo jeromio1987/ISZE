@@ -53,6 +53,7 @@ list, so nothing states whether they are live.
 - `src/ui/candidates.js`
 - `src/ui/views.js`
 - `src/ui/render.js`
+- `src/engine/range.js`
 
 ## ORPHANS (in neither list)
 
@@ -60,9 +61,8 @@ list, so nothing states whether they are live.
 - `src/case/server/permissions.js` - loaded by: tests/safe_02_permissions.test.mjs, tests/safe_08_independent_access.test.mjs
 - `src/case/server/server.js` - loaded by: tests/run_01_shared_backend.test.mjs, tests/safe_02_permissions.test.mjs
 - `src/case/server/sqlite_adapter.js` - loaded by no test
-- `src/engine/range.js` - loaded by: tests/range_engine.test.cjs, tests/range_engine_parity.test.cjs
 
 ## Summary
 
-48 .js modules on disk, 35 shipped, 9 deliberately retired, 5 orphaned.
+47 .js modules on disk, 35 shipped, 10 deliberately retired, 4 orphaned.
 

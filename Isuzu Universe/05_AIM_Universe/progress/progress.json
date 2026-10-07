@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-07T06:03:23Z",
+  "written_at": "2026-10-07T06:07:42Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -585,7 +585,7 @@
   },
   "_acceptance_run": {
     "command": "powershell -ExecutionPolicy Bypass -File tests/run_all.ps1",
-    "artifact": "dist/ISZE_AIM_Pricing_Decisions_v04_INTERNAL.html (5758535 bytes, sha256 a46c8f230d278b78e8fea689863387c52f041c917dc3dc2264724bc01500cee6, measured 2026-10-07T06:03:23Z)",
+    "artifact": "dist/ISZE_AIM_Pricing_Decisions_v04_INTERNAL.html (5758535 bytes, sha256 a46c8f230d278b78e8fea689863387c52f041c917dc3dc2264724bc01500cee6, measured 2026-10-07T06:07:42Z)",
     "artifact_note": "The artifact hash moved from 1a567723... to 2ed65429... during this session for one reason and no other: a real part number was removed from the search placeholder in src/ui/app.js as part of the restricted-value cleanup, so the assembled bytes changed by 5 and nothing else moved. Every count below is unchanged from the run before that edit, and the suite was re-run afterwards and reproduced it.",
     "payload": "payload/aim_payload_20260922.json - the authorized local payload. Its own sha256 was re-measured at run time by tests/run_tests.cjs, which prints it; the value is not copied here because it is not needed to read the counts.",
     "results": {
@@ -603,7 +603,7 @@
     "artifact_as_recorded": "dist/ISZE_AIM_Pricing_Decisions_v04_INTERNAL.html (real payload, 5404107 bytes, sha256 2ed65429e9267faac8c4a69a7caf5737a1858c2682338c2282dff459098ba681)",
     "latest_runner_summary": {
       "file": "tests/accept/_out/run_all_summary.json",
-      "generated_at": "2026-10-07T08:02:46",
+      "generated_at": "2026-10-07T08:07:14",
       "failed_checks": 1,
       "not_run": [
         {
