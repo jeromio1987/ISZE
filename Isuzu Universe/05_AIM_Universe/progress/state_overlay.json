@@ -1,7 +1,7 @@
 {
   "_note": "Evidence-backed state for the tasks that have landed. Merged by tools/build_progress.py. A state here must name the command that showed it. The integration owner writes this file; workers do not.",
-  "_written_by": "cursor-u24-run-07",
-  "_written_at": "2026-10-07T01:32:49Z",
+  "_written_by": "cursor-u24-range-07",
+  "_written_at": "2026-10-07T01:34:57Z",
   "_authority": "A state of technically verified means a named command was run and its output read. It does not mean human accepted, and it confers no business, technical, privacy or spending authority.",
   "_acceptance_run": {
     "command": "powershell -ExecutionPolicy Bypass -File tests/run_all.ps1",
@@ -739,6 +739,15 @@
         "mutation src/data/release_package.js startReleaseCandidate (journey never reproduced) -> RUN-08 E1 fails; restored -> passes",
         "mutation src/data/release_package.js buildPackage (public_publishing/published forced true) -> RUN-08 E2 fails; restored -> passes",
         "Local internal package only. No deploy, upload or public publishing. Task plan is not treated as a completed release."
+      ]
+    },
+    "RANGE-07": {
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/range_07_product_images.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/product_images.js fallback (identification/workflow broken) -> RANGE-07 E1 fails; restored -> passes",
+        "mutation src/data/product_images.js associateImage (cross-part copy allowed) -> RANGE-07 E2 fails; restored -> passes",
+        "Sufficiency: insufficient authentic permitted images in the repo (none recorded). Built fallback path only; no image downloaded. Synthetic permission fixtures labelled synthetic."
       ]
     }
   },

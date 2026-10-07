@@ -535,6 +535,30 @@ if ($run08 -match "fail\s+0" -and $run08 -match "pass\s+2") {
     Write-Host "RUN-08 FAILED"
     $global:REVIEW_UNIT_FAIL = $true
 }
+
+# RANGE-07 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "RANGE-07 - authentic permitted product images with clear fallback"
+$range07 = & node --test (Join-Path $PSScriptRoot "range_07_product_images.test.mjs") 2>&1 | Out-String
+Write-Host $range07
+if ($range07 -match "fail\s+0" -and $range07 -match "pass\s+2") {
+    Write-Host "RANGE-07 2/0/2"
+} else {
+    Write-Host "RANGE-07 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
+
+# ACCEPT-02 unit checks (node). Existing accept rows are untouched below.
+Write-Host ""
+Write-Host "ACCEPT-02 - complete browser journey not only isolated screens"
+$accept02 = & node --test (Join-Path $PSScriptRoot "accept_02_journey.test.mjs") 2>&1 | Out-String
+Write-Host $accept02
+if ($accept02 -match "fail\s+0" -and $accept02 -match "pass\s+2") {
+    Write-Host "ACCEPT-02 2/0/2"
+} else {
+    Write-Host "ACCEPT-02 FAILED"
+    $global:REVIEW_UNIT_FAIL = $true
+}
 # SAFE-08 unit checks (node). Existing accept rows are untouched below.
 Write-Host ""
 Write-Host "SAFE-08 - independent access and untrusted-content tests"

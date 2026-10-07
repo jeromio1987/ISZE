@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-07T01:32:49Z",
+  "written_at": "2026-10-07T01:34:57Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,11 +12,11 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 89,
-    "not started": 7
+    "technically verified": 90,
+    "not started": 6
   },
   "total_tasks": 96,
-  "overlay_applied": 89,
+  "overlay_applied": 90,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -1160,8 +1160,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "RANGE-01, RANGE-02",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/range_07_product_images.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/product_images.js fallback (identification/workflow broken) -> RANGE-07 E1 fails; restored -> passes",
+        "mutation src/data/product_images.js associateImage (cross-part copy allowed) -> RANGE-07 E2 fails; restored -> passes",
+        "Sufficiency: insufficient authentic permitted images in the repo (none recorded). Built fallback path only; no image downloaded. Synthetic permission fixtures labelled synthetic."
+      ],
       "blockers": []
     },
     {
