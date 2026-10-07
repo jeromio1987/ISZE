@@ -208,10 +208,22 @@
         }
         return JSON.parse(fs.readFileSync(indexPath, 'utf8'));
       },
+      /* A truncated or corrupt case file reads as null here, the same as
+         loadAll treats it, so no caller throws. loadChecked says why. */
       load: function (id) {
+        var checked = this.loadChecked(id);
+        return checked.ok ? checked.record : null;
+      },
+      loadChecked: function (id) {
         var p = casePath(id);
-        if (!fs.existsSync(p)) return null;
-        return JSON.parse(fs.readFileSync(p, 'utf8'));
+        if (!fs.existsSync(p)) return { ok: false, code: 'NO_SUCH_CASE', record: null };
+        try {
+          return { ok: true, record: JSON.parse(fs.readFileSync(p, 'utf8')) };
+        } catch (e) {
+          return { ok: false, code: 'STORED_RECORD_UNREADABLE', record: null,
+            error: 'The stored file for "' + id + '" cannot be read (' + String(e && e.message || e)
+              + '). It may be truncated. Nothing was changed; restore it from a backup.' };
+        }
       },
       loadAll: function () {
         var out = {};
@@ -270,6 +282,12 @@
 
     function requireRecord(caseId) {
       var record = get(caseId);
+      if (!record && caseId && typeof adapter.loadChecked === 'function') {
+        var checked = adapter.loadChecked(caseId);
+        if (checked.code === 'STORED_RECORD_UNREADABLE') {
+          return { error: reject('STORED_RECORD_UNREADABLE', checked.error) };
+        }
+      }
       if (!record) return { error: reject('NO_SUCH_CASE', 'No case with id "' + caseId + '" is stored.') };
       var shape = schema.validate(record);
       if (!shape.ok) {
