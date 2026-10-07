@@ -1,8 +1,8 @@
 {
-  "built_at": "2026-09-24T22:39:23",
+  "built_at": "2026-10-07T15:07:03",
   "scoring": "graded: 1 met, 0.5 partial or repeated credit, 0 not met; points are halves of a condition",
-  "groundwork_pct": 48,
-  "groundwork_points": 29,
+  "groundwork_pct": 43,
+  "groundwork_points": 26,
   "groundwork_out_of": 60,
   "headline": "0 of 5 tools a distributor can open. Roadmap: stage 1 complete.",
   "tools_open_to_a_distributor": 0,
@@ -11,30 +11,30 @@
     {
       "key": "aim",
       "name": "AIM — what each part is",
-      "points": 6,
+      "points": 4,
       "out_of": 10,
-      "pct": 60,
-      "met": 2,
+      "pct": 40,
+      "met": 1,
       "half": 2,
-      "not_met": 1,
+      "not_met": 2,
       "conditions": [
         {
           "label": "Coverage on billed euro",
           "score": 1,
           "tests": "Over the twelve months to 2026-08-31, the share of billed parts euro sitting on a part number with a governed family is at least 98.0%, and every unclassified part number above EUR 5,000 in that window is named. Read from sales_fact.parquet joined to aim_master_v2.csv.",
-          "reason": "99.01% of the billed euro has a family (EUR 33.07M of EUR 33.40M), above the 98.0% bar, and the 9 unclassified part numbers above EUR 5,000 are printed on the memo by number, euro and description."
+          "reason": "99.04% of the billed euro has a family (EUR 32.97M of EUR 33.29M), above the 98.0% bar, and the 8 unclassified part numbers above EUR 5,000 are printed on the memo by number, euro and description."
         },
         {
           "label": "Accuracy on a sample",
-          "score": 1,
+          "score": 0,
           "tests": "Fifty classified part numbers drawn by billed euro on a fixed seed; a named reader compares each part's billed description with the family it carries; at least 90% must agree and every disagreement must be listed.",
-          "reason": "47 of 50 agree at family level (94%), above the 90% bar; the three disagreements are named with their part numbers and euro. Group agrees on 43 and leaf on 41, which is where the coarser call sits."
+          "reason": "The 50-part accuracy sample file (`01_data/91_build/_aim_accuracy_sample_20260924.csv`) is not on disk, so this condition cannot be re-measured. Score 0 until the sample is restored."
         },
         {
           "label": "One named, approved, frozen release",
           "score": 0.5,
           "tests": "_releases/RELEASES.json holds exactly one candidate marked APPROVED, its recorded hash still matches the file on disk, and the gate's checks pass on the file the AIM pages are built from.",
-          "reason": "Approved 2026-09-24 by Jerome, 164,908 rows; the hash was re-verified against the register before the status was changed. Half rather than full for two reasons: the gate's own checks do not all pass (it runs against aim_pn_classification_v2.csv, not this release), and the AIM comparison pages on disk read a separately exported master (AIM_Master_PN_Categories_Figkey_20260924.csv, 165,292 rows), so the release is named and approved but no builder is pinned to it yet."
+          "reason": "Approved 2026-10-04 by Jerome, 164,943 rows; the hash was re-verified against the register before the status was changed. Half rather than full for two reasons: the gate's own checks do not all pass (it runs against aim_pn_classification_v2.csv, not this release), and the AIM comparison pages on disk read a separately exported master (AIM_Master_PN_Categories_Figkey_release_2026-10-04.csv, 165,312 rows), so the release is named and approved but no builder is pinned to it yet."
         },
         {
           "label": "A distributor can open his own parts by family",
@@ -106,7 +106,7 @@
           "label": "A tool that selects the range for an initiative",
           "score": 0,
           "tests": "A page or workbook where a range is selected for an initiative and the selection carries into the next step. Searched by name across both working trees at build time.",
-          "reason": "The name search finds 2 file(s): Sør-Varanger_Bilteknikk_AS.html, AIM_RANGE_DECISION_PROTOTYPE_2026-09-22.zip. That is a prototype and a decision record, not a tool a person selects a range in, so the condition is not met."
+          "reason": "No file matching a range or selection tool exists in either working tree."
         },
         {
           "label": "Account coverage so a campaign can be aimed",
@@ -166,13 +166,13 @@
           "label": "A lab a distributor can drive himself",
           "score": 0,
           "tests": "A version a distributor opens and runs his own scenario in, with access control, tested by scanning the shared pricing pages for access words.",
-          "reason": "Not built. Scanned 30 shared pricing pages for password, sign-in and permitted-audience words: 0 of them carry any, and none of the pricing pages does - and one that carries five customers' own price conditions could not be shown to another party at all."
+          "reason": "Not built. Scanned 29 shared pricing pages for password, sign-in and permitted-audience words: 0 of them carry any, and none of the pricing pages does - and one that carries five customers' own price conditions could not be shown to another party at all."
         },
         {
           "label": "A margin layer beside the revenue layer",
           "score": 0,
           "tests": "Margin beside the revenue figures in the shared pages, on a supplied cost basis. Scanned for a margin figure or for the stated reason there is none.",
-          "reason": "Not met. Of 30 shared pricing pages, 5 carry a gross-margin figure and 1 state that gross profit has no supplied cost basis. Recorded as a named data gap rather than a missing file, because what is missing is the cost basis, not the intent."
+          "reason": "Not met. Of 29 shared pricing pages, 6 carry a gross-margin figure and 0 state that gross profit has no supplied cost basis. Recorded as a named data gap rather than a missing file, because what is missing is the cost basis, not the intent."
         }
       ]
     },
@@ -221,46 +221,46 @@
     {
       "key": "tenders",
       "name": "Coordinated tenders",
-      "points": 7,
+      "points": 6,
       "out_of": 10,
-      "pct": 70,
+      "pct": 60,
       "met": 3,
-      "half": 1,
-      "not_met": 1,
+      "half": 0,
+      "not_met": 2,
       "conditions": [
         {
           "label": "A weekly collection that runs on its own",
           "score": 1,
           "tests": "The Windows task is read by its registered name at build time, and the condition turns on whether it has actually run.",
-          "reason": "Read live as 'ISZE Tender Monitor': last ran 21/09/2026 7:30:00, last result 0, next 28/09/2026 7:30:00. The earlier board stored the task as 'ISZE_Tender_Monitor' and looked it up as 'ISZE Tender Monitor', found nothing and printed 'Last ran ?', scoring a met condition as failed."
+          "reason": "Read live as 'ISZE Tender Monitor': last ran 5/10/2026 7:30:00, last result 0, next 12/10/2026 7:30:00. The earlier board stored the task as 'ISZE_Tender_Monitor' and looked it up as 'ISZE Tender Monitor', found nothing and printed 'Last ran ?', scoring a met condition as failed."
         },
         {
           "label": "Coverage of national portals plus the EU-wide portal",
           "score": 1,
           "tests": "The feed's own source list is read at build time: how many named sources it carries, how many countries they cover, and that the EU-wide portal is among them with a real share of the notices.",
-          "reason": "14 named sources across 28 countries, with the EU-wide portal the largest single source. The test counts countries rather than portals, which flatters a feed where several national sources supply one or two notices each - noted, still met."
+          "reason": "15 named sources across 29 countries, with the EU-wide portal the largest single source. The test counts countries rather than portals, which flatters a feed where several national sources supply one or two notices each - noted, still met."
         },
         {
           "label": "Repair-and-maintenance contracts identified and scored",
           "score": 1,
           "tests": "Every R&M notice in the feed carries a score computed by the feed, so the identification is scored rather than only flagged.",
-          "reason": "279 of 619 opportunities are R&M and each one carries a computed score in the feed. The headline is still flattered: only 29 have a deadline still ahead, so the workable set is far smaller than 279."
+          "reason": "279 of 654 opportunities are R&M and each one carries a computed score in the feed. The headline is still flattered: only 40 have a deadline still ahead, so the workable set is far smaller than 279."
         },
         {
           "label": "What happened to each tender recorded",
           "score": 0,
           "tests": "An outcome recorded against each opportunity in the live feed.",
-          "reason": "0 of 619 recorded, read from the feed's own summary block."
+          "reason": "0 of 654 recorded, read from the feed's own summary block."
         },
         {
           "label": "Routed to the distributor and dealer who could bid",
-          "score": 0.5,
+          "score": 0,
           "tests": "A per-distributor view of the notices that concern that distributor, and the evidence that it reached them.",
-          "reason": "The weekly R&M digest is on disk, one page per distributor, and the board links to it - so more than the earlier 'not built'. Half rather than full because nothing has been sent, it is not part of the weekly job, and 240 of 619 notices still carry no distributor."
+          "reason": "The weekly R&M digest is on disk, one page per distributor, and the board links to it - so more than the earlier 'not built'. Half rather than full because nothing has been sent, it is not part of the weekly job, and 258 of 654 notices still carry no distributor."
         }
       ]
     }
   ],
-  "live_pages": 115,
+  "live_pages": 0,
   "not_testable": []
 }

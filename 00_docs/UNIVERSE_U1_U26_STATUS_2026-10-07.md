@@ -77,7 +77,7 @@ This track is scrape × Eucon/open cross-ref for AIM pricing — **not** scrape 
 | Surface | Vintage | Status |
 |---|---|---|
 | Universe 3.0 / INDEX planning block | 23 Sep | Planning edition |
-| Universe **board** scores | 24 Sep | **STALE banner** added 7 Oct; scores not re-graded |
+| Universe **board** scores | 7 Oct rebuild | Live scores; groundwork 43% (26/60); accuracy sample still missing |
 | Universe **map** | Rebuilt 7 Oct | Live; task list from progress |
 | Action Centre / Opportunity / Atlases | Sep | Internal / snapshot; no Parts Universe v2.1 product |
 

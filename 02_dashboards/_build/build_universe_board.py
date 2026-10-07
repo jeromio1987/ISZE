@@ -26,6 +26,8 @@ Run: python 02_dashboards/_build/build_universe_board.py
 """
 from __future__ import annotations
 
+from pathlib import Path
+
 import csv
 import hashlib
 import io
@@ -37,7 +39,7 @@ import subprocess
 from datetime import datetime
 from html import escape as _escape
 
-ROOT = r"C:\Users\jerom\Desktop\claude\ISZE"
+ROOT = str(Path(__file__).resolve().parents[2])  # ISZE repo root (worktree-safe)
 DASH = os.path.join(ROOT, "02_dashboards")
 HUB = os.path.join(DASH, "hub")
 OUT_HTML = os.path.join(HUB, "ISZE_UNIVERSE_BOARD.html")
@@ -427,11 +429,17 @@ def build_pillars(F: dict) -> list[dict]:
                     "tests": ("Fifty classified part numbers drawn by billed euro on a fixed seed; a named "
                               "reader compares each part's billed description with the family it carries; "
                               "at least 90% must agree and every disagreement must be listed."),
-                    "reason": (f"{F['sample_l1']} of {F['sample_n']} agree at family level "
-                               f"({F['sample_l1'] / F['sample_n'] * 100:.0f}%), above the 90% bar; the three "
-                               "disagreements are named with their part numbers and euro. Group agrees on "
-                               f"{F['sample_l2']} and leaf on {F['sample_l3']}, which is where the coarser "
-                               "call sits."),
+                    "reason": (
+                        (f"{F['sample_l1']} of {F['sample_n']} agree at family level "
+                         f"({F['sample_l1'] / F['sample_n'] * 100:.0f}%), above the 90% bar; the three "
+                         "disagreements are named with their part numbers and euro. Group agrees on "
+                         f"{F['sample_l2']} and leaf on {F['sample_l3']}, which is where the coarser "
+                         "call sits.")
+                        if F["sample_n"]
+                        else ("The 50-part accuracy sample file "
+                              "(`01_data/91_build/_aim_accuracy_sample_20260924.csv`) is not on disk, "
+                              "so this condition cannot be re-measured. Score 0 until the sample is restored.")
+                    ),
                 },
                 {
                     "label": "One named, approved, frozen release",
@@ -1023,7 +1031,7 @@ def build_html(F: dict, pillars: list[dict]) -> str:
         f"<td class='nowrap'>{esc(b)}</td><td>{esc(c)}</td></tr>" for a, b, c in opens)
 
     big = "; ".join(f"{r['pn']} EUR {r['billed_eur']:,.0f} ({r['desc']})" for r in F["cov_big"][:9])
-    bad_pns = ", ".join(r["part_number"] for r in F["sample_bad"])
+    bad_pns = (", ".join(r["part_number"] for r in F["sample_bad"]) if F.get("sample_n") else "")
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -1250,8 +1258,8 @@ footer{{margin-top:56px;border-top:2px solid var(--navy);padding-top:20px;font-s
         <tr><td>Billed parts euro with a family</td><td class="nowrap">{F['cov_pct']:.2f}% ({F['cov_window'].get('from', '?')} to {F['cov_window'].get('to', '?')})</td><td><code>sales_fact.parquet</code> + <code>aim_master_v2.csv</code></td></tr>
         <tr><td>Parts above EUR 5,000 with no family</td><td class="nowrap">{len(F['cov_big'])} named: {esc(big)}</td><td><code>_aim_coverage_measure_20260924.json</code></td></tr>
         <tr><td>Unclassified parts euro, twelve months</td><td class="nowrap">EUR {F['coverage'].get('residual', {}).get('eur', 0):,.0f} on {F['coverage'].get('residual', {}).get('pns', 0):,} part numbers</td><td><code>_aim_coverage_measure_20260924.json</code></td></tr>
-        <tr><td>Family agreement on the 50-part sample</td><td class="nowrap">{F['sample_l1']} of {F['sample_n']} = {F['sample_l1'] / F['sample_n'] * 100:.0f}%; group {F['sample_l2']}, leaf {F['sample_l3']}</td><td><code>_aim_accuracy_sample_20260924.csv</code></td></tr>
-        <tr><td>The three family disagreements</td><td class="nowrap">{esc(bad_pns)}</td><td><code>_aim_accuracy_sample_20260924.csv</code></td></tr>
+        <tr><td>Family agreement on the 50-part sample</td><td class="nowrap">{(str(F['sample_l1']) + ' of ' + str(F['sample_n']) + ' = ' + format(F['sample_l1'] / F['sample_n'] * 100, '.0f') + '%; group ' + str(F['sample_l2']) + ', leaf ' + str(F['sample_l3'])) if F['sample_n'] else 'sample file missing — not re-measured'}</td><td><code>_aim_accuracy_sample_20260924.csv</code></td></tr>
+        <tr><td>The three family disagreements</td><td class="nowrap">{esc(bad_pns) if F['sample_n'] else 'n/a — sample file missing'}</td><td><code>_aim_accuracy_sample_20260924.csv</code></td></tr>
         <tr><td>Classification gate</td><td class="nowrap">{F['gate_pass']} of {F['gate_pass'] + F['gate_fail']} pass, verdict {esc(F['gate_verdict'])}</td><td><code>aim_classification_gate.json</code></td></tr>
         <tr><td>Approved classification release</td><td class="nowrap">{esc((F['approved_releases'][0]['release_id'] if F['approved_releases'] else 'none'))}, {F['release_sha_ok'] and 'hash matches' or 'no hash match'}, approved {esc(F['approved_releases'][0].get('approved_on', ''))} by {esc(F['approved_releases'][0].get('approved_by', ''))}</td><td><code>_releases/RELEASES.json</code></td></tr>
         <tr><td>Live public tenders watched</td><td class="nowrap">{F['tender_rows']}, of which {F['tender_rm']} R&amp;M and {F['tender_rm_open']} with a deadline still ahead</td><td><code>tender_data.json</code> ({esc(F['tender_generated'])})</td></tr>
