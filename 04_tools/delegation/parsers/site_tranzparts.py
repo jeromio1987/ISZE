@@ -87,7 +87,8 @@ from bs4 import BeautifulSoup
 HERE = Path(__file__).resolve().parent
 ISZE = HERE.parents[2]
 sys.path.insert(0, str(HERE))
-from ledger_schema import normalise_pn, make_row, row_problems               # noqa: E402
+from ledger_schema import (normalise_pn, make_row, row_problems,      # noqa: E402
+                           read_delivery_basis)
 
 SITE = "tranzparts"
 PROBE_PAGE = "v_tranzparts_product.html"
@@ -267,6 +268,16 @@ def parse(html: str, *, expected_pn: str = "", source_url: str = "",
     genuine = _is_genuine(name, brand)
     vat = VAT_PRODUCT if _EX_VAT_RE.search(html) else "unknown"
 
+    # U26 2026-10-07: the delivery basis, read off the page. The announcement bar states
+    # "FREE DELIVERY WHEN YOU SPEND OVER £50" and the "Delivery and Shipping" panel states
+    # free tracked delivery over £80 to mainland UK, otherwise £5.99 ex VAT standard. Those
+    # two thresholds disagree for a basket between £50 and £80, so the listed price meets a
+    # threshold only when it clears the HIGHER one; between the two the reader returns blank
+    # and says why. Read from the SERVED Page Source the runner hands in, so the runner
+    # stays the only party that fetches.
+    delivery_note, delivery_included = read_delivery_basis(
+        html, price=price, currency=currency)
+
     bits = [name or expected_pn, f"Tranzparts sku {sku}" if sku else ""]
     if brand:
         bits.append(f"brand {brand}")
@@ -287,6 +298,7 @@ def parse(html: str, *, expected_pn: str = "", source_url: str = "",
         fx_note=DELIVERY_NOTE, vat=vat,
         price_type="genuine_grey" if genuine else "aftermarket_retail",
         stock=stock, n_obs=1, loader=SITE,
+        delivery_note=delivery_note, delivery_included=delivery_included,
     )]
 
 

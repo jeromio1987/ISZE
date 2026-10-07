@@ -99,7 +99,7 @@ from bs4 import BeautifulSoup
 HERE = Path(__file__).resolve().parent
 ISZE = HERE.parents[2]
 sys.path.insert(0, str(HERE))
-from ledger_schema import make_row, normalise_pn, row_problems        # noqa: E402
+from ledger_schema import make_row, normalise_pn, row_problems, read_delivery_basis  # noqa: E402
 
 SITE = "tmc"
 PROBE_PAGE = "v_tmc_product.html"
@@ -291,6 +291,11 @@ def parse(html: str, *, source_url: str = "", observed_at: str = "") -> list[dic
     stock = _stock(product, soup)
     genuine, says_after = _genuine_and_aftermarket(name, description, block)
 
+    # U26 2026-10-07: the delivery basis, read off the page. The page states no carriage
+    # term, so this is blank — but it is read rather than assumed, so if the shop ever
+    # publishes a threshold the field fills itself instead of a parser edit being needed.
+    delivery_note, delivery_included = read_delivery_basis(html, price=price, currency=currency)
+
     bits = [name or oem]
     if description and description not in bits:
         bits.append(description)
@@ -313,6 +318,7 @@ def parse(html: str, *, source_url: str = "", observed_at: str = "") -> list[dic
         f"no price shown; {DELIVERY_NOTE}",
         vat=vat, price_type="genuine_grey" if genuine else "aftermarket_retail",
         stock=stock, n_obs=1, loader=SITE,
+        delivery_note=delivery_note, delivery_included=delivery_included,
     )]
 
 
@@ -333,6 +339,9 @@ def parse_category(html: str, *, source_url: str = "", observed_at: str = "") ->
     if not cards:
         raise ParseError("recognised a category page but found 0 li.product cards")
 
+    # U26 2026-10-07: the delivery basis. Read per card with that card's own price, so a
+    # stated threshold would be met or failed for the listing it belongs to (the page is
+    # ~9 KB, so a listing of 42 cards is cheap). Blank is the expected answer on this shop.
     rows: list[dict] = []
     for card in cards:
         atc = card.select_one("a.add_to_cart_button, a[data-product_sku]")
@@ -362,6 +371,9 @@ def parse_category(html: str, *, source_url: str = "", observed_at: str = "") ->
         if price is None:
             bits.append("no price on the card")
 
+        # per card, with that card's own price, so a threshold is judged for this listing
+        del_note, del_inc = read_delivery_basis(html, price=price, currency="GBP")
+
         rows.append(make_row(
             part_no=oem, match_method="exact_oem",
             competitor_brand="Isuzu" if genuine else None,
@@ -375,6 +387,7 @@ def parse_category(html: str, *, source_url: str = "", observed_at: str = "") ->
             vat=VAT_CATEGORY,
             price_type="genuine_grey" if genuine else "aftermarket_retail",
             stock=stock, n_obs=1, loader=SITE,
+            delivery_note=del_note, delivery_included=del_inc,
         ))
 
     if not rows:

@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-07T06:48:58+00:00",
+  "built_at": "2026-10-07T09:07:59+00:00",
   "rule": "billed euros of the Isuzu numbers that now have at least one eligible comparable offer; then usable rows against the 50 threshold; then the remaining exclusion reasons by count; then the numbers still empty with their billed euros. eur_all is the all-market billed euro for the number (epc_decode_worklist.csv); it is a size-of-part measure, not a per-market one.",
   "focus_families": [
     "brake_pad",
@@ -12,7 +12,11 @@
       "label": "UK (ITUK)",
       "distributor": "ITUK",
       "focus_rows": 79,
-      "focus_rows_status": "sufficient",
+      "usable_rows": 0,
+      "focus_rows_excluded": 79,
+      "sufficiency_status": "insufficient",
+      "sufficiency_basis": "usable_rows (rows that pass the evidence checks) against min_usable",
+      "focus_rows_status": "insufficient",
       "min_usable": 50,
       "eligible_rows": 0,
       "eligible_pns": 0,
@@ -36,6 +40,7 @@
           "rows": 9
         }
       ],
+      "rows_stating_a_delivery_basis": 0,
       "empty_pns": 99,
       "empty_pns_billed_eur": 2263157.99,
       "empty_pns_top": [
@@ -165,6 +170,10 @@
       "label": "Portugal (I-Motors)",
       "distributor": "PORTUGAL",
       "focus_rows": 27,
+      "usable_rows": 0,
+      "focus_rows_excluded": 27,
+      "sufficiency_status": "insufficient",
+      "sufficiency_basis": "usable_rows (rows that pass the evidence checks) against min_usable",
       "focus_rows_status": "insufficient",
       "min_usable": 50,
       "eligible_rows": 0,
@@ -189,6 +198,7 @@
           "rows": 13
         }
       ],
+      "rows_stating_a_delivery_basis": 0,
       "empty_pns": 118,
       "empty_pns_billed_eur": 5109832.91,
       "empty_pns_top": [

@@ -206,6 +206,10 @@ def normalise(row: dict, entry: dict, fx: dict) -> dict:
         # ledger refuses the whole file with "duplicate obs_id" — real prices rejected
         # as if they were a data fault.
         "price", "currency"))
+    # U26 2026-10-07: `delivery_note` and `delivery_included` are deliberately NOT in the
+    # obs_id key. Two readings of the same page at the same price are the same observation,
+    # and adding the note would re-key every existing row for a wording change. The fields
+    # travel through because `normalise()` copies every `ledger_schema.COLUMNS` key.
     out["obs_id"] = hashlib.sha1(key.encode("utf-8")).hexdigest()[:16]
     return out
 

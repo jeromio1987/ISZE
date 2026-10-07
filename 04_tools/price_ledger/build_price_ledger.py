@@ -100,12 +100,40 @@ FX, FX_NOTE = _load_fx()
 
 PLACEHOLDER_MAX = 2.34      # Autodoc-style 'no result' placeholder; anything <= this is refused
 
+# U26 2026-10-07 (delivery basis, Jerome's instruction): the ledger's row fields are
+# "delivery included or not (+ cost if shown)". Two columns, deliberately split so the
+# field cannot pretend to know more than the page said:
+#
+#   delivery_note      what the page actually says, short and verbatim-ish, or blank
+#                      when the page is silent on carriage.
+#   delivery_included  only yes / no, and ONLY where the page states it for that
+#                      listing, or states a threshold rule the listed price meets or
+#                      fails. Blank when the page is silent. NEVER inferred from the
+#                      absence of a charge, and never from the price.
+#
+# WHY A SEPARATE PAIR AND NOT ONE FIELD. The evidence rules refuse a row whose delivery
+# basis is not stated (reason code DELIVERY_BASIS_NOT_STATED, produced in
+# `Isuzu Universe/05_AIM_Universe/src/data/comparable.js` from the shared rule in
+# `evidence.js` `adjustToComparable`). Before today no column carried that basis, so
+# EVERY harvested row was excluded on it and the coverage build could not produce a
+# single eligible comparable. `delivery_included` supplies what that rule reads;
+# `delivery_note` keeps the wording so a reader can see what was read rather than
+# trusting a yes or no.
+#
+# NOTE FOR EDITORS: keep this comment OUT of the COLUMNS literal below. The schema
+# mirror is checked by `04_tools/delegation/parsers/_selftest_schema.py`, which reads the
+# literal with a regex for quoted strings and would otherwise pick words out of a comment.
 COLUMNS = [
     "obs_id", "part_no", "match_method", "competitor_brand", "competitor_pn", "description",
     "source", "source_url", "country", "observed_at", "vintage",
     "price", "price_avg", "currency", "price_eur", "fx_note", "vat",
     "price_type", "stock", "n_obs", "loader",
+    "delivery_note", "delivery_included",
 ]
+
+# The only values `delivery_included` may carry. Blank (None/NaN) is the default and means
+# the page stated nothing; it is not the same as "no".
+DELIVERY_INCLUDED_VALUES = {"yes", "no"}
 PRICE_TYPES = {
     "aftermarket_trade", "aftermarket_retail", "genuine_grey", "online_median",
     "survey_workshop", "survey_list", "dealer", "quote", "oem_value_line", "marketplace", "estimate",
@@ -384,6 +412,13 @@ def load_scraped_phase1():
             stock=r.get("stock") if pd.notna(r.get("stock")) else "unknown",
             n_obs=int(r["n_obs"]) if pd.notna(r.get("n_obs")) else 1,
             loader=r.get("loader") or "scrape_phase1",
+            # U26 2026-10-07: the delivery basis the parser read off the page. Blank when
+            # the parser set nothing or the page was silent. `load_scraped_phase1` never
+            # infers it — the parsers do, from the listing or a stated threshold rule.
+            delivery_note=(r.get("delivery_note")
+                           if pd.notna(r.get("delivery_note")) else None),
+            delivery_included=(r.get("delivery_included")
+                               if pd.notna(r.get("delivery_included")) else None),
         ))
     return rows
 
@@ -396,6 +431,21 @@ def validate(df):
         errors.append("vintage missing")
     if not set(df["match_method"]).issubset(MATCH_METHODS):
         errors.append("match_method unknown")
+    # `delivery_included` is yes / no / blank on purpose (blank = the page stated nothing).
+    # Anything else is a parser writing a third state the evidence rules never asked for.
+    if "delivery_included" in df.columns:
+        present = df["delivery_included"].dropna()
+        present = present[present.astype(str).str.strip() != ""]
+        bad = sorted(set(present.astype(str)) - DELIVERY_INCLUDED_VALUES)
+        if bad:
+            errors.append(f"delivery_included has values outside {sorted(DELIVERY_INCLUDED_VALUES)}: {bad}")
+        no_note = present[present.astype(str) == "yes"].index
+        if len(no_note):
+            missing = df.loc[no_note, "delivery_note"].isna() | (
+                df.loc[no_note, "delivery_note"].astype(str).str.strip() == "")
+            if missing.any():
+                errors.append(f"{int(missing.sum())} row(s) say delivery_included=yes with "
+                              f"no delivery_note — a yes must carry what the page said")
     if (df["price"] <= PLACEHOLDER_MAX).any():
         errors.append("placeholder-level price present")
     bad_pn = df["part_no"].notna() & (df["part_no"].str.len() != 10)
@@ -486,6 +536,23 @@ def main():
         },
         "fx": FX_NOTE,
         "rule": "price_type and vintage required; never average across price_type",
+        "delivery_basis": {
+            "columns": ["delivery_note", "delivery_included"],
+            "added": "2026-10-07 (U26), on Jerome's instruction: 'dd delivery basis to the "
+                     "ledger, read from the saved pages'",
+            "delivery_note": "what the page actually says, short and verbatim-ish; blank when "
+                             "the page states nothing about carriage",
+            "delivery_included": "yes / no only, and only where the page states it for that "
+                                 "listing or states a threshold rule the listed price meets or "
+                                 "fails; blank when the page is silent. Never inferred from the "
+                                 "absence of a charge, and never from the price.",
+            "why": "the shared evidence rule (evidence.js adjustToComparable, reported as "
+                   "DELIVERY_BASIS_NOT_STATED) excludes every row whose delivery basis is not "
+                   "stated. Before this column existed no row could be eligible.",
+            "rows_stating_a_basis": int(
+                (df["delivery_included"].astype(str).isin(DELIVERY_INCLUDED_VALUES)).sum()
+            ) if "delivery_included" in df.columns else 0,
+        },
     }
     META.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(meta, indent=2, ensure_ascii=False))

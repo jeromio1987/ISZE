@@ -1,0 +1,15 @@
+{
+  "baseline_eligible": 0,
+  "blocked_by_delivery_alone": 8,
+  "eligible_after_setting_basis": 8,
+  "eligible_after_blanking_one": 7,
+  "one_row_after_blank": {
+    "observation_id": "1e132fa482192298",
+    "eligible": false,
+    "reason_codes": [
+      "DELIVERY_BASIS_NOT_STATED"
+    ]
+  },
+  "verdict": "the field is wired: a stated basis flips these rows to eligible and blanking it drops the row back out",
+  "caveat": "the rows it flips are file-derived (Eucon survey and KS_CROSSREF); no saved page for a focus row states a delivery basis, so this is not a reachable result on real UK pages"
+}
