@@ -1,0 +1,61 @@
+{
+  "agent": "C1",
+  "work_package": "C - Spareto cross-reference",
+  "label": "u26_c1_spareto_20261007",
+  "site": "spareto.com",
+  "branch": "cursor/2026-10-07-universe-u26-market-harvest",
+  "min_interval_s": 2.2,
+  "robots_verdict": "allowed (check_scrape_consent.py exit 0 on https://spareto.com/oe/<pn>)",
+  "numbers_queried": 123,
+  "pages_fetched": 123,
+  "pages_with_cards": 69,
+  "pages_with_no_match": 54,
+  "rows": 761,
+  "distinct_brand_pairs": 735,
+  "distinct_brands": 74,
+  "outcomes": {
+    "with_rows": 69,
+    "no_match": 54
+  },
+  "crossref_grade_written": "candidate (all rows; final grade is the merge step's)",
+  "rows_not_for_price_ledger": true,
+  "vat": "incl, rate not stated - no rate invented",
+  "comparison_with_2026_10_02_run": {
+    "old_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\04_tools\\aftermarket_intelligence\\state\\spareto_crossref_per_part.csv",
+    "old_parts": 487,
+    "old_parts_with_rows": 170,
+    "old_rows_in_spareto_crossref": 1144,
+    "overlap_with_my_123": 34,
+    "new_not_in_old_run": 89,
+    "pairs_already_known": 245,
+    "pairs_new": 490
+  },
+  "eucon_11": {
+    "queried": 11,
+    "with_rows": 11,
+    "no_match": 0
+  },
+  "without_eucon_112": {
+    "queried": 112,
+    "with_rows": 58,
+    "no_match": 54
+  },
+  "blocked_hosts": [],
+  "not_done": [
+    "shared finalize deliberately not run (would write page_manifest.csv and the shared ledger)",
+    "crossref_graded.csv not regenerated (merge step)"
+  ],
+  "eucon_11_pns": [
+    "5876150000",
+    "8975056800",
+    "8975056801",
+    "8975546600",
+    "8975546610",
+    "8976526220",
+    "8978279610",
+    "8980791040",
+    "8981650710",
+    "8982169220",
+    "8982705240"
+  ]
+}
