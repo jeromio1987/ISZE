@@ -1,0 +1,46 @@
+{
+  "built_at": "2026-10-07T06:54:38+00:00",
+  "rule": "for every number still empty, which sources were tried and what each returned. A per-number column is filled only from an agent's own per-number record and matched on the exact number; a source recorded only by host gets one honest summary line; a source not attempted is written not_attempted.",
+  "rows": 217,
+  "empty_by_market": {
+    "UK": 99,
+    "PT": 118
+  },
+  "per_number_channels": {
+    "KS International (UK)": 127,
+    "Omega (UK)": 123,
+    "PT hosts, second sweep (B2)": 131,
+    "Spareto (crossref)": 123
+  },
+  "host_level_sources": {
+    "Tranzparts/T&M (A2)": {
+      "hosts_checked": 11,
+      "hosts_blocked_or_unknown": 9,
+      "hosts_allowed": 2
+    },
+    "PT first sweep (B1)": {
+      "hosts_checked": 186,
+      "hosts_blocked_or_unknown": 145,
+      "hosts_allowed": 41
+    },
+    "PT host records (B2)": {
+      "hosts_checked": 295,
+      "hosts_blocked_or_unknown": 0,
+      "hosts_allowed": 295
+    }
+  },
+  "columns": [
+    "part_number",
+    "market",
+    "distributor",
+    "pms_category",
+    "eur_all_billed_all_markets",
+    "tried_KS_International_UK",
+    "tried_Omega_UK",
+    "tried_Tranzparts_UK",
+    "tried_TM_Commercials_UK",
+    "tried_PT_first_sweep",
+    "tried_PT_second_sweep",
+    "tried_Spareto_crossref"
+  ]
+}
