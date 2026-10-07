@@ -14,7 +14,7 @@
 1. Read **`INDEX.md`** — numbered folders; do not recursive-glob the repo.
 2. Read **`00_docs/ROUTING.yaml`** for the matching `tasks.<name>` entry — open only listed paths; stop when answered.
 3. Fallback: **`00_docs/REFERENCE.md`** if no task key fits.
-4. **Automation / overnight cron SSOT:** `00_docs/AUTOMATION_REGISTER.md` + `Documents\Claude\Scheduled\` + latest `05_memory/briefs/automation_drift_*.md`. Do not invent a second scheduler via Cursor `/loop` alone.
+4. **Automation / overnight cron SSOT:** `00_docs/AUTOMATION_REGISTER.md` + `Documents\Claude\Scheduled\` + latest `05_memory/briefs/automation_drift_*.md`. Do not invent a second scheduler via Cursor `/loop` alone. **Cloud workers** (jobs running outside this machine, e.g. Grok Bot) are registered in the same file under "Cloud workers" and are governed by `00_docs/agent/EXTERNAL_AI_SERVICES.md` — public sources only, no repo clone, no mailbox.
 5. **Numbers (read in order, stop when answered):**
    - `00_docs/ISZE_BI_FRAMEWORK.md` — which KPI to quote (FY first, euros first)
    - `01_data/00_derived/_verification_report.json` — must be green (`ok`) before quoting KPIs

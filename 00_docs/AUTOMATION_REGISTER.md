@@ -53,6 +53,27 @@ Each `SKILL.md` states `**Model tier: …**` under the frontmatter. Prefer Haiku
 |---|---|---|---|---|
 | `zondag-checkin-traject` | Active | desktop app | Sun | **Not ISZE**, personal check-in. |
 | `feedback` | Paused | desktop app | weekly | Jerome 3 Oct: "stop this session"; each run stopped at its first check. |
+
+---
+
+## Cloud workers (outside this machine)
+
+Not scheduled tasks — these run on someone else's cloud, so they are recorded here too, because a
+job that runs unattended is a job that needs an owner and a boundary.
+
+| Worker | Status | Runs in | Cadence | Produces | Boundary |
+|---|---|---|---|---|---|
+| **Grok Bot** — `ISZE Intel Watch` | Setup designed, not yet created (2026-10-07) | Cursor cloud computer (Grok Bot app) | routine, daily to start | one intel document, filed into `01_data/90_INBOX/` | public web only; no repo clone, no mailbox, no internal figures; drafts only, never sends. Full rules: [`agent/EXTERNAL_AI_SERVICES.md`](agent/EXTERNAL_AI_SERVICES.md) · setup: [`agent/GROK_BOT_SETUP.md`](agent/GROK_BOT_SETUP.md) |
+
+**Why it is here and not in the task list.** It cannot reach this machine's disk — there is no mount
+to `C:\Users\jerom\Desktop\claude`. That is the fence: internal data stays out of it because it is
+never handed over. Its output is treated like a DeepSeek batch or a GPT reply — filed into the
+inbox and checked against the source before any figure is used.
+
+**Do not give it a clone of this repo.** Git tracks `sales_fact.parquet`, the `outlook_extracts`
+mail files and `JEROME_ONLY`, and an ignore rule never untracks a committed file. If repo context is
+ever genuinely needed, build a separate slimmed repo from
+[`context_sync_whitelist.txt`](context_sync_whitelist.txt), never a clone of this one.
 ---
 
 ## Disabled / duplicate job directories
