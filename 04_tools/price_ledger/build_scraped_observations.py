@@ -69,7 +69,51 @@ SITE_MODULE = {
     "mekster": "site_mekster",
     "tungen": "site_tungen",
     "autoline": "site_autoline",
+    # U26 (2026-10-07, agent E merge): the three sources the harvest added. `tmc` pages
+    # in the manifest are category listing pages, so they go through `parse_category`
+    # (see `dispatch_parse`); `tranzparts` product pages need the number that was
+    # searched for, which the search URL does not carry, so it is read from
+    # `_u26_e_page_query.csv`; `spareto` pages name their own OE number in the title.
+    "tmc": "site_tmc",
+    "tranzparts": "site_tranzparts",
+    "spareto": "site_spareto",
 }
+
+# U26: page_file -> the Isuzu number the shop was searched for, where the page URL
+# does not carry it. Written by the U26 merge helper. Absent file = no change to any
+# existing site's behaviour.
+PAGE_QUERY = HERE / "_u26_e_page_query.csv"
+_PAGE_QUERY_CACHE: dict[str, str] | None = None
+
+
+def _accepts_keyword(fn, name: str) -> bool:
+    """True when `fn` declares a keyword argument called `name` (data, not bytecode).
+
+    `co_argcount` counts positional parameters only; a parser that takes its extra
+    inputs keyword-only (`def parse(html, *, expected_pn="", ...)`) would be missed,
+    so the keyword-only names are counted too.
+    """
+    try:
+        code = fn.__code__
+        n = code.co_argcount + code.co_kwonlyargcount
+        return name in code.co_varnames[:n]
+    except AttributeError:
+        return False
+
+
+def page_query_map() -> dict[str, str]:
+    """{page_file: queried Isuzu number}. Empty when the sidecar is absent."""
+    global _PAGE_QUERY_CACHE
+    if _PAGE_QUERY_CACHE is None:
+        _PAGE_QUERY_CACHE = {}
+        if PAGE_QUERY.exists():
+            with PAGE_QUERY.open(encoding="utf-8", newline="") as fh:
+                for r in csv.DictReader(fh):
+                    p = (r.get("page_file") or "").strip()
+                    q = (r.get("queried_pn") or "").strip()
+                    if p and q:
+                        _PAGE_QUERY_CACHE[p] = q
+    return _PAGE_QUERY_CACHE
 
 # The two checks a script can do on its own. Everything else needs a human sample.
 KNOWN_JUNK_PRICES = {2.34, 2.0}     # the placeholder the retired Autodoc source used
@@ -112,8 +156,20 @@ def parse_page(entry: dict) -> tuple[list[dict], str | None, str]:
 
     html = page.read_text(encoding="utf-8", errors="replace")
     try:
-        rows = mod.parse(html, source_url=entry["source_url"].strip(),
-                         observed_at=entry["fetched_at"].strip())
+        if site == "tmc" and hasattr(mod, "parse_category"):
+            # U26: a manifest row for T&M is a category listing page, not a product page.
+            rows = mod.parse_category(html, source_url=entry["source_url"].strip(),
+                                      observed_at=entry["fetched_at"].strip())
+        elif site == "tranzparts" and _accepts_keyword(mod.parse, "expected_pn"):
+            # U26: the Tranzparts product page must print the number that was searched
+            # for, and that number is not in the product URL. It travels in the sidecar.
+            q = page_query_map().get(entry["page_file"].strip(), "")
+            rows = mod.parse(html, expected_pn=q,
+                             source_url=entry["source_url"].strip(),
+                             observed_at=entry["fetched_at"].strip())
+        else:
+            rows = mod.parse(html, source_url=entry["source_url"].strip(),
+                             observed_at=entry["fetched_at"].strip())
     except NotImplementedError as e:
         return [], f"{site}: parser still a stub: {e}", html
     except Exception as e:                                          # noqa: BLE001
@@ -150,6 +206,10 @@ def normalise(row: dict, entry: dict, fx: dict) -> dict:
         # ledger refuses the whole file with "duplicate obs_id" — real prices rejected
         # as if they were a data fault.
         "price", "currency"))
+    # U26 2026-10-07: `delivery_note` and `delivery_included` are deliberately NOT in the
+    # obs_id key. Two readings of the same page at the same price are the same observation,
+    # and adding the note would re-key every existing row for a wording change. The fields
+    # travel through because `normalise()` copies every `ledger_schema.COLUMNS` key.
     out["obs_id"] = hashlib.sha1(key.encode("utf-8")).hexdigest()[:16]
     return out
 

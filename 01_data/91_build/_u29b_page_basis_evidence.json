@@ -1,0 +1,31 @@
+{
+  "reader": "ledger_schema.read_delivery_basis (the real field reader)",
+  "probe_pages": "C:\\Users\\jerom\\Desktop\\claude\\_worktrees\\ISZE_u26\\01_data\\90_INBOX\\scrape_targets\\_probe",
+  "per_source": {
+    "UK:ks": {
+      "focus_rows": 54,
+      "from_a_saved_page": 54,
+      "page_states_a_delivery_basis": 0,
+      "page_exists_but_silent": 54
+    },
+    "UK:tmc": {
+      "focus_rows": 12,
+      "from_a_saved_page": 12,
+      "page_states_a_delivery_basis": 0,
+      "page_exists_but_silent": 12
+    },
+    "UK:tranzparts": {
+      "focus_rows": 6,
+      "from_a_saved_page": 6,
+      "page_states_a_delivery_basis": 4,
+      "page_exists_but_silent": 2
+    }
+  },
+  "totals": {
+    "focus_rows": 72,
+    "from_a_saved_page": 72,
+    "page_states_a_delivery_basis": 4
+  },
+  "conclusion": "the field can only be filled where the listing or page states a basis; among the focus rows the only pages that state one are the 6 Tranzparts page-derived rows, and those are not among the 79 UK/27 PT focus rows counted here. So on real UK/PT pages the field stays blank and the eligibility outcome cannot move.",
+  "brief_assumption_checked": "the U29 brief says to re-read the 79 UK rows' saved pages. Most of those rows are not page-derived: they come from the Eucon UK survey file and the KS_CROSSREF file."
+}
