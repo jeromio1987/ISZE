@@ -1,0 +1,93 @@
+{
+  "agent": "D",
+  "job": "mine what we already hold - no new scraping, no network calls at all",
+  "read_only_on": "everything outside _u26/D",
+  "raw_files_read": 7,
+  "rows_examined": 18005,
+  "rows_examined_note": "9,772 rows across the six xlsx/survey files, plus 13,314 rows in the raw text export",
+  "rows_linked_to_123": 1658,
+  "distinct_raw_observations_on_123": 1203,
+  "observations_missing": 599,
+  "reasons_by_count": {
+    "NO_COMPETITOR_PRICE_ON_THE_ROW": 454,
+    "SECOND_GENERATION_NUMBER_NOT_A_LEDGER_KEY": 58,
+    "DUPLICATE_NOT_IN_LEDGER": 46,
+    "FILE_SHEET_NEVER_LOADED": 20,
+    "LOADER_DROPS_MATCHING_LEVEL": 16,
+    "FILE_NEVER_LOADED": 5
+  },
+  "missing_by_file": {
+    "Eucon_March.xlsx": 81,
+    "Eucon_Online28072025.xlsx": 512,
+    "Eucon_PriceSurvey_ITUK_2023_OEM_rawdata.xlsx": 1,
+    "Eucon_PriceSurvey_UK_2023_IAM_rawdata_20240109.xlsx": 2,
+    "Eucon_PriceSurvey_UK_2023_OEM_rawdata_20240109.xlsx": 3
+  },
+  "missing_by_family": {
+    "brake_pad": 365,
+    "oil_filter": 234
+  },
+  "missing_distinct_pns": 13,
+  "supersessions_found": {
+    "map_rows": 925,
+    "price_list_chain_pairs": 90823,
+    "worklist_pns_in_supersession_graph": 55,
+    "empty_worklist_pns": 89,
+    "empty_pns_unlocked_by_a_successor": 4,
+    "pairs": [
+      [
+        "5876100310",
+        "1876102890",
+        "successor carries 4 ledger rows (Amayama genuine_grey, USD)"
+      ],
+      [
+        "5876150531",
+        "5876150530",
+        "successor carries 4 ledger rows (Amayama genuine_grey, USD)"
+      ],
+      [
+        "8978279600",
+        "8978279601",
+        "successor carries 6 ledger rows (Amayama genuine_grey, USD)"
+      ],
+      [
+        "8983282071",
+        "8983282070",
+        "successor carries 12 ledger rows: Eucon UK IAM survey 2023 (BLUE PRINT, Donaldson-AU, FLEETGUARD) survey_workshop GBP 12.91 / survey_list GBP 27.86, plus Amayama genuine_grey"
+      ]
+    ],
+    "file": "01_data/00_derived/pricing_pr00_ie40.parquet (part_number -> newest_pn) and 01_data/00_derived/pn_supersession_map.csv",
+    "eucon_column": "Supersession Info ID (code 0-3) in Eucon_March.xlsx/RRP MODE and in the raw txt export; a code, not a successor part number"
+  },
+  "portugal_2025_online": {
+    "file": "01_data/Fresh list_Export_28072025_0932.txt (the raw export behind Eucon_Online28072025.xlsx)",
+    "pt_rows_in_file": 2589,
+    "pt_rows_with_a_competitor_price": 265,
+    "pt_competitor_rows": 100,
+    "of_which_on_the_123": 27,
+    "already_in_ledger": 27,
+    "missing": 0,
+    "note": "all 27 Portugal rows are already in the ledger as eucon_online_2025 price_type aftermarket_rrp; the xlsx carries only 100 of the 265 Portugal priced rows"
+  },
+  "worklist_123": {
+    "total": 123,
+    "with_any_ledger_row": 34,
+    "with_any_eucon_row": 15,
+    "still_empty": 89,
+    "empty_unlocked_by_supersession": 4
+  },
+  "second_generation": {
+    "rows_carrying_a_second_generation_number": 58,
+    "distinct_pns": 8,
+    "note": "'Additional Part Numbers' in Eucon_Online28072025.xlsx holds a second-generation Isuzu number with its own RRP; the ledger keys only on the searched number, so a search on the second number finds nothing"
+  },
+  "could_not_do": [
+    "no new scraping: work package D is read-only on files already on disk",
+    "the 89 empty numbers need external sources (work packages A/B/C); this package cannot fill them",
+    "the Eucon Supersession Info ID is a code, not a part number, so it cannot be turned into an old->new map",
+    "no Portugal 2025 file separate from the raw text export was found; the export is where the 27 rows live"
+  ],
+  "withdrawn": [
+    "an earlier version of missing_observations.csv claimed 136 competitor rows were lost between the raw export and the xlsx. Checked key by key (PN, brand, competitor number, country, price): both files carry the same 217 competitor-priced rows for the 123, and all 27 Portugal rows are in the ledger. That claim is withdrawn."
+  ]
+}

@@ -1,0 +1,17 @@
+source,kind,status,what,outcome
+01_data/01_Pricing/_raw/eucon_pricing_partspool_20260329.xlsx,local raw file,read; read only,"Eucon_Pricing_Clean (1,364) + Summary_by_PN (44) + Metadata","45 PNs, 492 competitor pairs; 6 pairs on the 123. Its rows reach the ledger only through the derived crossref csv."
+01_data/Eucon_Online28072025.xlsx,local raw file,read; read only,"Fresh list_Export_28072025_0932 (5,081)","1,146 rows reach 10 of the 123 PNs; 'Additional Part Numbers' is non-empty on 358 rows and never becomes a ledger key."
+01_data/Fresh list_Export_28072025_0932.txt,local raw file,read; read only,"raw text export, latin-1, ';' separated (13,314 rows)","keeps the 'Supersession Info ID' column the xlsx dropped. For the 123, competitor-priced rows are identical to the xlsx (217, key by key) and all 27 Portugal rows are already in the ledger."
+01_data/Eucon_March.xlsx,local raw file,read; read only,Online 15032024 (894) + RRP MODE (552),RRP MODE has no loader at all; 81 rows on the 123 are absent from the ledger.
+01_data/01_Pricing/_raw/Eucon_PriceSurvey_UK_2023_IAM_rawdata_20240109.xlsx,local raw file,read; read only,LCV (66) + HCV (170),2 rows on the 123 absent; 1 peer-number-only row cannot be joined.
+01_data/01_Pricing/_raw/Eucon_PriceSurvey_UK_2023_OEM_rawdata_20240109.xlsx,local raw file,read; read only,Isuzu UK (212),3 rows on the 123 absent; no loader.
+01_data/01_Pricing/_raw/Eucon_PriceSurvey_ITUK_2023_OEM_rawdata.xlsx,local raw file,read; read only,Sheet1 (138),1 row on the 123 absent; no loader.
+01_data/00_derived/price_observations.parquet,ledger,read; read only,"6,597 rows, 21 columns","1,246 PNs; 34 of the 123 carry any row."
+04_tools/aftermarket_intelligence/state/crossref_graded.csv,graded crossref,read; read only,"7,163 edges",the Eucon edges are graded doubtful on Eucon alone.
+01_data/00_derived/pn_supersession_map.csv,supersession map,read; read only,925 pairs,6 pairs touch the 123.
+01_data/00_derived/pricing_pr00_ie40.parquet,price list,read; read only,part_number -> newest_pn,"90,823 supersession pairs; 191 relations touch the 123."
+01_data/91_build/_tmp_eucon_coverage_20260924.py,existing probe,read; reused,coverage probe,its crossref pair set and coverage method reused.
+01_data/91_build/_tmp_eucon_prices_20260924.py,existing probe,read; reused,price probe,its documented loader rules reused: Currency (RRP) gate and RRP > 2.34.
+01_data/91_build/_tmp_eucon_newmat_20260924.py,existing probe,read; reused,Additional Part Numbers probe,its Additional Part Numbers test reused.
+01_data/91_build/_tmp_eucon_survey_crossref_20260924.py,existing probe,read; reused,survey crossref probe,its survey-as-crossref check reused.
+01_data/91_build/_tmp_supersession_lift_20260924.py,existing probe,read; reused,supersession lift probe,its newest_pn chain test reused.

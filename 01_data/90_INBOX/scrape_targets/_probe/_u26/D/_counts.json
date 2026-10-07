@@ -1,0 +1,82 @@
+{
+  "raw_files_read": 6,
+  "rows_examined": 9772,
+  "rows_linked_to_123": 1658,
+  "distinct_raw_observations_on_123": 1203,
+  "observations_missing": 541,
+  "reasons_by_count": {
+    "REQUIRED_FIELD_EMPTY": 454,
+    "DUPLICATE_NOT_IN_LEDGER": 46,
+    "FILE_SHEET_NEVER_LOADED": 20,
+    "LOADER_DROPS_MATCHING_LEVEL": 16,
+    "FILE_NEVER_LOADED": 5
+  },
+  "missing_by_file": {
+    "Eucon_March.xlsx": 81,
+    "Eucon_Online28072025.xlsx": 454,
+    "Eucon_PriceSurvey_ITUK_2023_OEM_rawdata.xlsx": 1,
+    "Eucon_PriceSurvey_UK_2023_IAM_rawdata_20240109.xlsx": 2,
+    "Eucon_PriceSurvey_UK_2023_OEM_rawdata_20240109.xlsx": 3
+  },
+  "missing_by_family": {
+    "brake_pad": 338,
+    "oil_filter": 203
+  },
+  "missing_distinct_pns": 13,
+  "files_seen": [
+    [
+      "eucon_pricing_partspool_20260329.xlsx",
+      [
+        "Eucon_Pricing_Clean",
+        "Summary_by_PN",
+        "Metadata"
+      ]
+    ],
+    [
+      "Eucon_Online28072025.xlsx",
+      [
+        "Sheet3",
+        "Fresh list_Export_28072025_0932",
+        "DE_Pricing",
+        "Sheet1"
+      ]
+    ],
+    [
+      "Eucon_March.xlsx",
+      [
+        "Online comparison",
+        "Online 15032024",
+        "RRP comparison",
+        "RRP MODE"
+      ]
+    ],
+    [
+      "Eucon_PriceSurvey_UK_2023_IAM_rawdata_20240109.xlsx",
+      [
+        "LCV",
+        "HCV"
+      ]
+    ],
+    [
+      "Eucon_PriceSurvey_UK_2023_OEM_rawdata_20240109.xlsx",
+      [
+        "Isuzu UK",
+        "Sheet1"
+      ]
+    ],
+    [
+      "Eucon_PriceSurvey_ITUK_2023_OEM_rawdata.xlsx",
+      [
+        "Sheet1"
+      ]
+    ]
+  ],
+  "partspool_clean_rows": 1364,
+  "online2025_rows": 5081,
+  "online2025_addpn_nonempty": 358,
+  "march_online_rows": 894,
+  "march_rrpmode_rows": 552,
+  "survey_files_missing": [],
+  "crossref_csv_rows": 822,
+  "graded_rows": 7162
+}
