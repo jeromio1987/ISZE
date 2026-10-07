@@ -164,7 +164,10 @@ moved more than one step.**
 **Moves: please read 156, not 155.** On the 123 worklist numbers, 156 pairs are
 corroborated by a second pipeline. C2's 155 is correct for the C1 reading alone; the
 shared state file also carries the earlier 2026-10-02 pass, which agrees on one further
-pair. The 1-pair difference is the earlier pass, and it is real.
+pair. The 1-pair difference is the earlier pass, and it is real. (Measured at
+`3e8381158aab886f3d5ec0a4db88e3247ae98dd9`: 949 edges moved, 340 distinct pairs, 1,147
+new Spareto-only pairs merged as doubtful. More edges than pairs because one pair can sit
+on several Eucon edges.)
 
 ---
 
@@ -329,15 +332,16 @@ gsfcarparts and ukpartsdirect (allowed, no usable route), milneroffroad (allowed
 Isuzu coverage), japanpartsuk / truckpartsonline / buycarparts (robots unreachable or
 403 — UNKNOWN means stop), tmcshop (host dead).
 
-**Portugal.** 296 hosts robots-checked across the two sweeps, 43 allowed by robots. Six
-gate-passing hosts were swept across all 123 OE and all 153 competitor numbers — 1,370
-queries — and returned **no usable price**: truckparts.pt, turbopecas.pt, isuzu.pt,
-ascendum.pt, sotecnica.pt, spareparts.pt. Two apparent hits were checked and discarded
-(Spareparts.pt prints a price-filter widget; isuzu.pt prints a D-MAX finance banner).
-Every allowed host fails at least one of the three gates: price not in raw HTML, or bot
-check on the product path, or robots disallows the search. Dropped at the gate: 245
-robots-unreachable, 4 explicit disallow, plus Autodoc / Oscaro / Mister-Auto / Trodo
-retired earlier.
+**Portugal.** Two sweeps, 186 hosts robots-checked in the first (41 allowed) and 295 in
+the second (43 allowed) — overlapping sets, not 481 distinct hosts. Six gate-passing
+hosts were swept across all 123 OE and all 153 competitor numbers — 1,370 queries — and
+returned **no usable price**: truckparts.pt, turbopecas.pt, isuzu.pt, ascendum.pt,
+sotecnica.pt, spareparts.pt. Two apparent hits were checked and discarded (Spareparts.pt
+prints a price-filter widget; isuzu.pt prints a D-MAX finance banner). Every allowed host
+fails at least one of the three gates: price not in raw HTML, or bot check on the product
+path, or robots disallows the search. Dropped at the gate: 245 robots-unreachable
+(second sweep), 4 explicit disallow, plus Autodoc / Oscaro / Mister-Auto / Trodo retired
+earlier.
 
 **Spareto** allowed, 123 numbers, 69 with cards, 759 cross-reference rows, 54 clean
 misses, 0 refusals.
