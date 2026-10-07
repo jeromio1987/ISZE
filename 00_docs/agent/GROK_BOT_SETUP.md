@@ -32,8 +32,18 @@ research, Grok Bot grinds the public web around the clock and hands back a docum
 ## 2. Access — no second purchase
 
 The Bot signs in with the **Cursor account**, not a separate login. Access is included with the paid
-individual Cursor plans. Open the Cursor usage screen and confirm a Grok Bot grant is shown before
-spending time on setup. If it is not shown, that is the first thing to settle.
+individual Cursor plans.
+
+**Confirmed on this machine, 2026-10-07.** The app is installed at
+`C:\Users\jerom\AppData\Local\Programs\Grok Bot\Grok Bot.exe`, version **0.68.1** (it self-updated
+from the `Grok_Bot_0.43.0_Setup.exe` download of 2026-09-06), and it reports `signedIn: true`. So the
+account is linked and the plan grant is live — this step is done.
+
+There is **no supported command-line route** on Windows and Node is not installed, so the Bot, the
+skill and the routine have to be created in the app itself. A third-party `gbot` CLI exists, but it
+works by reading the app's stored session credentials; **do not install it** on a work machine.
+
+The paste-ready messages for the three app steps are in [`GROK_BOT_PASTE.md`](GROK_BOT_PASTE.md).
 
 ---
 
@@ -137,13 +147,16 @@ If this is run as a scheduled routine
 Make the skill a routine by asking the Bot in chat, in this shape (the Bot records these fields):
 
 - **owning Bot** — the one just created
-- **schedule and time** — daily is a reasonable start; weekly is also fine
+- **schedule and time** — weekday mornings are a reasonable start
 - **input source** — the public source list in the skill
 - **expected result** — the intel document, named and dated
 - **approval boundary** — nothing is sent, posted or published; the run only produces the document
 - **when a source is missing** — report it as missing; do not substitute
 
 Confirm the routine shows a **next run**. It runs with the laptop closed.
+
+The exact messages for the Bot, the skill and the routine are in
+[`GROK_BOT_PASTE.md`](GROK_BOT_PASTE.md) — paste them as they are.
 
 ---
 
