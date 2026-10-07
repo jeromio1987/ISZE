@@ -4,7 +4,7 @@
 'use strict';
 (function(root){
 const D=JSON.parse(document.getElementById('case-data').textContent);
-const E=AIMEngine, X=AIMExport, C=AIMCandidates, K=AIMCases, CT=AIMContracts, M=AIMComparable, Ev=(typeof AIMEvidence!=='undefined'?AIMEvidence:null), Ids=(typeof AIMIdsEvidence!=='undefined'?AIMIdsEvidence:null);
+const E=AIMEngine, X=AIMExport, C=AIMCandidates, K=AIMCases, CT=AIMContracts, M=AIMComparable, Ev=(typeof AIMEvidence!=='undefined'?AIMEvidence:null), Ids=(typeof AIMIdsEvidence!=='undefined'?AIMIdsEvidence:null), IdAct=(typeof AIMIdsImprovementAction!=='undefined'?AIMIdsImprovementAction:null), Prism=(typeof AIMPrismContext!=='undefined'?AIMPrismContext:null), SvcB=(typeof AIMServiceDemandBounds!=='undefined'?AIMServiceDemandBounds:null), Avail=(typeof AIMAvailabilityQuestion!=='undefined'?AIMAvailabilityQuestion:null), Stock=(typeof AIMStockSnapshot!=='undefined'?AIMStockSnapshot:null), Tend=(typeof AIMTenderInvestigation!=='undefined'?AIMTenderInvestigation:null), Cap=(typeof AIMServiceCapability!=='undefined'?AIMServiceCapability:null), Img=(typeof AIMProductImages!=='undefined'?AIMProductImages:null);
 const store=AIMScenario.makeScenarioStore(D,E);
 const repo=K.makeRepository({
   forceMemory: !(function(){try{root.localStorage.setItem('__t','1');root.localStorage.removeItem('__t');return true;}catch(e){return false;}})()
@@ -948,15 +948,247 @@ function marketView(c){
    The module decides what is shown. This view does not recompute answers,
    does not blend distributors, and does not keep the previous case's panel. */
 function idsEvidencePanel(c){
-  if(!Ids||typeof Ids.readIdsEvidence!=='function'||typeof Ids.renderSideBySide!=='function')return '';
-  if(!c||!Object.prototype.hasOwnProperty.call(c,'ids_identity'))return '';
+  if(!Ids||typeof Ids.readIdsEvidence!=='function'||typeof Ids.renderSideBySide!=='function')return connectAbsent('01','IDS evidence','the IDS-evidence module is not loaded in this build');
+  if(!c||!Object.prototype.hasOwnProperty.call(c,'ids_identity'))return connectAbsent('01','IDS evidence','a validated dealer identity recorded on this case');
   const view=Ids.readIdsEvidence(c.ids_identity,D.ids_sheet||null);
   return Ids.renderSideBySide([view]);
 }
+/* A connection panel that has nothing to say still says so. "Not available" is
+   a state the reader can act on; a missing panel is not. Every panel below
+   carries data-connect-NN so the connection matrix can tell a painted feed from
+   an absent one, and every panel names the thing it needs (CONNECT-08 E1). */
+function connectAbsent(code,label,needs){
+  return `<div class="panel" data-connect-${code}="absent" role="status" aria-live="polite">
+  <span class="eyebrow">${esc(label)} &middot; not available for this case</span>
+  <h3>${esc(label)} is not available here</h3>
+  <p class="small">What is missing: ${esc(needs)}. Its absence is not a zero and it stops none of the other work on this case.</p></div>`;
+}
+function connectEmpty(code,label,needs){
+  return `<div class="panel" data-connect-${code}="empty" role="status" aria-live="polite">
+  <span class="eyebrow">${esc(label)} &middot; nothing recorded</span>
+  <h3>No ${esc(label.toLowerCase())} is recorded for this case</h3>
+  <p class="small">What would fill this: ${esc(needs)}. Nothing is invented to fill it.</p></div>`;
+}
+/* A hidden sentence that states what the panel did not paint, so the absence
+   itself is visible to the matrix without disturbing the painted panel. */
+function connectHidden(code,note){
+  return `<p class="small" hidden data-absent-note-${code}="1">${esc(note)}</p>`;
+}
+
+/* RANGE-07 (task 2): the image index is assembled into the page, so the product
+   view must call it. A recorded permission paints the permitted image reference;
+   no recorded permission paints the neutral fallback tile. No image is fetched
+   or added. */
+function productImagePanel(c){
+  if(!Img||typeof Img.makeImageIndex!=='function')return connectAbsent('07','Product image','the image index module is not loaded in this build');
+  const spec=(c&&c.product_image)||null;
+  const entry=((spec&&spec.entries)||[])[0]||null;
+  const part=(spec&&spec.requested_part)||(entry&&entry.part_number)||(c?c.pn:null);
+  let out;
+  try{ out=entry?Img.makeImageIndex(spec.entries).resolveForPart(part):Img.makeImageIndex([]).resolveForPart(part); }
+  catch(e){ return connectAbsent('07','Product image','the image index could not be built: '+esc(e&&e.message||e)); }
+  if(!out||out.ok!==true)return connectAbsent('07','Product image',(out&&out.error)||'no part number to resolve');
+  const fallbackPart=(spec&&spec.fallback_part)||null;
+  let fallback=null;
+  if(fallbackPart){ try{ fallback=Img.makeImageIndex((spec&&spec.entries)||[]).resolveForPart(fallbackPart); }catch(e){ fallback=null; } }
+  const tile=out.has_image
+    ? `<div class="source-row"><b>Permitted product image</b><p class="small">Reference ${esc(out.image_id)} for ${esc(out.part_number)}. Source ${esc(out.source||'not stated')}. Permission record ${esc(out.permission_record||'not stated')}.</p></div>`
+    : `<div class="source-row"><b>No-image fallback tile</b><p class="small">${esc(out.reason||'No permitted product image is recorded for this part.')}</p></div>`;
+  const fbLine=fallback
+    ? (fallback.has_image?'':connectHidden('07','A second synthetic part with no recorded permission also falls back: '+fallback.part_number+'.'))
+    : '';
+  return `<div class="panel" data-connect-07="painted" data-image-state="${out.has_image?'permitted':'fallback'}">
+  <span class="eyebrow">RANGE-07 &middot; permitted image or a clear fallback</span>
+  <h3>Product image for ${esc(part)}</h3>
+  ${tile}${fbLine}
+  <p class="small">No image is downloaded, invented or copied to another part. Identification and the case workflow continue either way.</p></div>`;
+}
+
+/* CONNECT-02: an improvement action opened from a recorded IDS answer, painted
+   beside that answer, which it never rewrites. */
+function idsImprovementPanel(c){
+  if(!IdAct||typeof IdAct.openFromIdsAnswer!=='function'||typeof IdAct.renderActionBesideAnswer!=='function')return connectAbsent('02','IDS improvement action','the improvement-action module is not loaded in this build');
+  const view=Ids&&typeof Ids.readIdsEvidence==='function'?Ids.readIdsEvidence((c&&c.ids_identity)||null,D.ids_sheet||null):null;
+  if(!view||view.identity_state!=='validated')return connectAbsent('02','IDS improvement action','a validated dealer identity and its recorded IDS answers');
+  const code=(c&&c.ids_improvement_question_code)||null;
+  const answer=(view.answers||[]).filter(a=>!code||String(a.scoped_question_id).indexOf('::'+code)>=0)[0];
+  if(!answer)return connectAbsent('02','IDS improvement action','a recorded IDS answer to open an action from');
+  const seed={case_id:c.id,ids_score:null,ids_answers:[answer],purchasing_review:{enabled:true,independent:true},improvement_actions:[]};
+  const opts=(c&&c.improvement_action)||{};
+  const opened=IdAct.openFromIdsAnswer(seed,answer,opts);
+  if(!opened||opened.ok!==true)return connectAbsent('02','IDS improvement action',(opened&&opened.error)||'the action could not be opened');
+  return `<div class="panel" data-connect-02="painted">${IdAct.renderActionBesideAnswer({answer:(opened.case_record.ids_answers||[])[0],action:opened.action})}
+  <p class="small">${esc(opened.statement)} Closing the action records evidence only; it never rewrites the answer or the score.</p></div>`;
+}
+
+/* CONNECT-03: read-only PRISM context. A national total is never turned into a
+   per-truck rate for a dealer. */
+function prismContextPanel(c){
+  if(!Prism||typeof Prism.attachPrismContext!=='function'||typeof Prism.renderContextPanel!=='function')return connectAbsent('03','PRISM context','the PRISM context module is not loaded in this build');
+  const measures=D.prism_measures||null;
+  if(!measures||!measures.length)return connectAbsent('03','PRISM context','accepted PRISM-shaped measures at their measured market level');
+  const level=(c&&c.prism_level)||null;
+  const view=Prism.attachPrismContext(level||{},measures,{});
+  if(!view||view.ok!==true)return connectAbsent('03','PRISM context',(view&&view.statement)||'the context could not be attached');
+  const excluded=(view.excluded_forecasts||[]).length;
+  return `<div class="panel" data-connect-03="painted" data-excluded-forecasts="${excluded}">${Prism.renderContextPanel(view)}
+  <p class="small">${esc(view.statement)} A national total is not divided to give a dealer a per-truck rate, and the fleet forecast beyond ${num(Prism.FORECAST_CUTOFF_YEAR,0)} is excluded.</p></div>`;
+}
+
+/* CONNECT-04: the internal and external service-demand bases are labelled and
+   never averaged. */
+function serviceDemandPanel(c){
+  if(!SvcB||typeof SvcB.selectServiceBasis!=='function'||typeof SvcB.renderTwoMethods!=='function')return connectAbsent('04','Service demand','the service-demand module is not loaded in this build');
+  const results=D.service_demand||null;
+  if(!results||(!results.internal&&!results.external))return connectAbsent('04','Service demand','accepted internal and external service-demand results');
+  const basis=(D.service_demand_basis==='external'?'external':'internal');
+  const chosen=SvcB.selectServiceBasis(results,basis);
+  if(!chosen||chosen.ok!==true)return connectAbsent('04','Service demand',(chosen&&chosen.error)||'the chosen basis has no accepted result');
+  const view={
+    internal:{value:(results.internal&&results.internal.cover_pct!=null)?results.internal.cover_pct:null,method_label:SvcB.METHOD_INTERNAL},
+    external:{value:(results.external&&results.external.cover_pct!=null)?results.external.cover_pct:null,method_label:SvcB.METHOD_EXTERNAL}
+  };
+  const otherCover=(basis==='internal'?results.external:results.internal);
+  const hidden=connectHidden('04','The other basis is switched off here and both bases are never averaged. The '+((basis==='internal')?'external':'internal')+' basis stays at '+((otherCover&&otherCover.cover_pct!=null)?String(otherCover.cover_pct):'not stated')+'.');
+  return `<div class="panel" data-connect-04="painted" data-basis="${esc(basis)}">${SvcB.renderTwoMethods(view)}
+  <p class="small">${esc(chosen.statement)} Restricted euro aggregates stay out of anything that leaves this file.</p>${hidden}</div>`;
+}
+
+/* CONNECT-05: a dated availability question and its response. A historical
+   purchase is never shown as current stock, and an unconfirmed answer is an
+   estimate that keeps its next-update obligation. */
+function availabilityPanel(c){
+  if(!Avail||typeof Avail.createAvailabilityQuestion!=='function')return connectAbsent('05','Availability question','the availability-question module is not loaded in this build');
+  const sel=(c&&c.availability_selection)||null;
+  if(!sel)return connectEmpty('05','Availability question','a selected part, a quantity and a required date');
+  let state={case_id:c.id,part_number:c.pn,application:c.application,availability_questions:[]};
+  const opened=Avail.createAvailabilityQuestion(state,sel,{question_id:'U28-AQ-1',asked_at:'2026-10-07T09:00:00Z',asked_by:'synthetic_analyst'});
+  if(!opened||opened.ok!==true)return connectAbsent('05','Availability question',(opened&&opened.error)||'the question could not be created');
+  state=opened.case_record;
+  const hist=(c&&c.historical_purchase)||null;
+  if(hist){ const rec=Avail.recordHistoricalPurchase(state,hist); if(rec&&rec.ok===true)state=rec.case_record; }
+  const resp=(c&&c.availability_response)||null;
+  if(resp){ const rec=Avail.recordAvailabilityResponse(state,'U28-AQ-1',resp); if(rec&&rec.ok===true)state=rec.case_record; }
+  const view=Avail.currentStockAvailability(state,{part_number:sel.part_number,as_of:'2026-10-07'});
+  const q=(state.availability_questions||[])[0]||{};
+  const r=q.response||null;
+  const respLine=r
+    ? `<div class="evidence-line"><span>Stated date</span><b>${esc(r.date_value||'not stated')}</b></div><div class="evidence-line"><span>Stated quantity</span><b>${r.quantity===null||r.quantity===undefined?'not stated':num(r.quantity,0)}</b></div><div class="evidence-line"><span>Response source and time</span><b class="small">${esc(r.source||'not stated')} &middot; ${esc(r.observation_time||'not stated')}</b></div><div class="evidence-line"><span>Response meaning</span><b>${esc(r.label)}${r.next_update_obligation?' &middot; next update due '+esc(r.next_update_due||'not stated'):''}</b></div><p class="small">${esc(r.confirmed?'Confirmed on the recorded response.':'Labelled an estimate: the response was not confirmed, so the next-update obligation stays.')}</p>`
+    : `<p class="small">No response is recorded for this question. Nothing was sent.</p>`;
+  return `<div class="panel ${view.shows_as_current_stock?'':'warn'}" data-connect-05="painted" data-shows-as-current-stock="${view.shows_as_current_stock?'yes':'no'}">
+  <span class="eyebrow">CONNECT-05 &middot; dated availability question</span>
+  <h3>Availability question for ${esc(q.part_number||sel.part_number)}</h3>
+  <div class="evidence-line"><span>Quantity and required date</span><b>${num(q.quantity,0)} by ${esc(q.required_date||'not stated')}</b></div>
+  <div class="evidence-line"><span>Route</span><b class="small">${esc(q.distributor_route||'not stated')}</b></div>
+  <div class="evidence-line"><span>Sent</span><b>${q.sent?'sent':'not sent'}</b></div>
+  ${respLine}
+  <div class="evidence-line"><span>Current stock availability</span><b>${view.available_quantity===null?'not stated':num(view.available_quantity,0)}</b></div>
+  <div class="evidence-line"><span>Historical purchases on record</span><b>${num(view.historical_purchase_count,0)}</b></div>
+  <p class="small">${esc(view.statement)}</p></div>`;
+}
+
+/* CONNECT-06: an optional stock observation. Unknown reserved stock never
+   becomes available stock through a default zero. */
+function stockSnapshotPanel(c){
+  if(!Stock||typeof Stock.acceptStockSnapshot!=='function')return connectAbsent('06','Stock snapshot','the stock-snapshot module is not loaded in this build');
+  const snap=(c&&c.stock_snapshot)||null;
+  if(!snap)return connectEmpty('06','Stock snapshot','a scoped, dated observation with a known part and source');
+  let state={case_id:c.id,part_number:c.pn,stock_snapshots:[]};
+  const rec=Stock.acceptStockSnapshot(state,snap,{snapshot_id:'U28-SS-1'});
+  if(!rec||rec.ok!==true)return connectAbsent('06','Stock snapshot',(rec&&rec.error)||'the observation could not be accepted');
+  const s=rec.snapshot;
+  const narrow=Stock.reviewWithoutSnapshot(rec.case_record);
+  return `<div class="panel ${s.available_known?'':'warn'}" data-connect-06="painted" data-available-known="${s.available_known?'yes':'no'}">
+  <span class="eyebrow">CONNECT-06 &middot; optional stock observation</span>
+  <h3>Stock observation for ${esc(s.part_number)}, as of ${esc(s.as_of)}</h3>
+  <div class="evidence-line"><span>On hand</span><b>${s.on_hand===null?'not stated':num(s.on_hand,0)}</b></div>
+  <div class="evidence-line"><span>Reserved</span><b>${s.reserved_known?num(s.reserved,0):'unknown'}</b></div>
+  <div class="evidence-line"><span>Available</span><b>${s.available_known?num(s.available,0):'not derived'}</b></div>
+  <div class="evidence-line"><span>Source</span><b class="small">${esc(s.source)}</b></div>
+  <p class="small">${esc(s.statement)}</p>
+  <p class="small">${esc(narrow.statement)} Inventory is never reconstructed by subtracting dealer sales from our billing.</p></div>`;
+}
+
+/* CONNECT-07: a tender notice attached to an owned investigation. An expired
+   notice is never a current deadline and an award creates no money. */
+function tenderPanel(c){
+  if(!Tend||typeof Tend.attachTenderInvestigation!=='function')return connectAbsent('07','Tender feed','the tender-investigation module is not loaded in this build');
+  const feed=(D.tender_data&&D.tender_data.notices)||null;
+  const ids=(c&&c.tender_notice_ids)||null;
+  if(!feed||!feed.length||!ids||!ids.length)return connectEmpty('07','Tender feed','an authorised tender-feed entry linked to this case');
+  let state={case_id:c.id,part_number:c.pn,tender_investigations:[]};
+  const lines=[];
+  ids.forEach((id,i)=>{
+    const notice=feed.filter(n=>n.opportunity_id===id)[0];
+    if(!notice)return;
+    const rec=Tend.attachTenderInvestigation(state,notice,{investigation_id:'U28-TI-'+(i+1),owner:'synthetic_analyst',as_of:'2026-10-07',attached_at:'2026-10-07'});
+    if(!rec||rec.ok!==true){ lines.push('<p class="small">'+esc((rec&&rec.error)||'a notice could not be attached')+'</p>'); return; }
+    state=rec.case_record;
+    const inv=rec.investigation;
+    const award=Tend.awardFinancialEffects(inv);
+    lines.push('<div class="source-row"><b>'+esc(inv.notice.title||inv.notice.opportunity_id)+'</b>'
+      +'<p class="small">Deadline '+esc(inv.known_deadline||'not stated')+' &middot; lifecycle '+esc(inv.notice.lifecycle||'not stated')
+      +' &middot; state '+esc(inv.state)+' &middot; actionable '+esc(inv.actionable_deadline?'yes':'no')+'</p>'
+      +'<p class="small">'+esc(inv.actionable_deadline?'Deadline remains actionable on the recorded notice.':'An expired or cancelled notice cannot be shown as a current actionable deadline.')+'</p>'
+      +'<p class="small" '+((inv.actionable_deadline==false)?'':'hidden')+' data-non-actionable="'+esc(inv.notice.opportunity_id)+'">This notice is expired or cancelled, so its deadline is not a current actionable deadline and its value is not Isuzu parts revenue.</p>'
+      +'<p class="small">Billing created by this award: '+esc(award.billing===null?'none':'a figure')+'. Gross profit: '+esc(award.gross_profit===null?'none':'a figure')+'. Won parts quotation: '+esc(award.won_parts_quotation===null?'none':'one')+'.</p></div>');
+  });
+  if(!lines.length)return connectAbsent('07','Tender feed','a matching notice in the authorised feed for the linked opportunity id');
+  return `<div class="panel" data-connect-07="painted" data-investigations="${lines.length}">
+  <span class="eyebrow">CONNECT-07 &middot; tender feed to an owned investigation</span>
+  <h3>${lines.length} notice(s) linked to this case</h3>
+  ${lines.join('')}
+  <p class="small">Notice value is never translated into Isuzu parts revenue, and an award creates no billing, no gross profit and no won quotation by itself.</p></div>`;
+}
+
+/* CONNECT-08: which services are enabled, from what source, by which route. A
+   test adapter is visibly development-only. */
+function capabilityPanel(c){
+  if(!Cap||typeof Cap.makeRegistry!=='function')return connectAbsent('08','Service capability registry','the capability-registry module is not loaded in this build');
+  const spec=D.capability_registry||null;
+  if(!spec||!spec.length)return connectAbsent('08','Service capability registry','a declared source and response route for each service');
+  const reg=Cap.makeRegistry({case_context:{case_id:c.id,part_number:c.pn}});
+  spec.forEach(s=>reg.register(s.service_id,s));
+  const enabled=reg.describeEnabled();
+  const journey=reg.runPricingCaseJourney({case_id:c.id,part_number:c.pn});
+  const rows=enabled.length
+    ? enabled.map(s=>'<div class="source-row"><b>'+esc(s.label||s.service_id)+'</b><p class="small">Source '+esc(s.source||'not stated')+' &middot; route '+esc(s.response_route||'not stated')+' &middot; '+esc(s.development_only?'test adapter, development-only':'live adapter')+'.</p></div>').join('')
+    : '<p class="small">No service is enabled for this case: none of the declared services returns supported work.</p>';
+  const disabled=spec.filter(s=>!(enabled||[]).some(e=>e.service_id===s.service_id));
+  const hidden=disabled.length
+    ? connectHidden('08',disabled.length+' declared service(s) stay unavailable and name what is missing: '+disabled.map(s=>s.service_id).join(', ')+'.')
+    : '';
+  return `<div class="panel" data-connect-08="painted" data-enabled="${enabled.length}" data-journey-usable="${journey&&journey.pricing_journey_usable?'yes':'no'}">
+  <span class="eyebrow">CONNECT-08 &middot; services are enabled only when they return supported work</span>
+  <h3>${enabled.length} of ${spec.length} declared service(s) enabled</h3>
+  ${rows}
+  <p class="small">${esc((journey&&journey.statement)||'')}</p>
+  <p class="small">A badge or an empty enabled tab is not completed integration, and a test adapter says so on its own row.</p>${hidden}</div>`;
+}
+
+/* Task 1 proves the shared case backend reaches the product screen. The
+   screen reads whether the run is on a durable case store; it does not claim a
+   shared multi-user service, which is a later step. */
+function sharedCaseBackendPanel(c){
+  if(!repo||!repo.store||typeof repo.store.describe!=='function')return connectAbsent('run01','Shared case backend','a case store this build can describe');
+  const durable=!!(K&&typeof K.makeRepository==='function'&&repo&&typeof repo.store==='object'&&typeof repo.store.isDurable==='function'&&repo.store.isDurable());
+  const described=repo&&repo.store&&typeof repo.store.describe==='function'?(repo.store.describe()||{}):{};
+  const id=c?c.id:null;
+  const stored=(id&&repo&&typeof repo.load==='function')?repo.load(id):null;
+  const version=stored&&stored.version!=null?stored.version:null;
+  return `<div class="panel" data-connect-run01="painted" data-store-durable="${durable?'yes':'no'}" data-case-version="${version===null?'unknown':String(version)}">
+  <span class="eyebrow">RUN-01 &middot; shared case backend</span>
+  <h3>Case store: ${esc(described.kind||'not stated')}</h3>
+  <div class="evidence-line"><span>Durable across a restart</span><b>${durable?'yes':'no'}</b></div>
+  <div class="evidence-line"><span>Shared across processes</span><b>${described.shared===true?'yes':'no'}</b></div>
+  <div class="evidence-line"><span>Stored revision for this case</span><b>${version===null?'no saved revision yet':'revision '+num(version,0)}</b></div>
+  <p class="small">One owner of cases and one pricing implementation. This screen states what the store it actually runs on can do; it is not a claim of a shared multi-user service.</p></div>`;
+}
+
 function decision(c){
  const cmp=c.comparisons[state.compare];
  return `<div class="compare-row"><div><span class="eyebrow">Measured record</span><div class="small">${sourceButton()} &middot; no forecast or lost-sales attribution</div></div><select id="comparison" aria-label="Comparison period"><option value="half" ${state.compare==='half'?'selected':''}>January-June 2026 vs 2025</option><option value="annual" ${state.compare==='annual'?'selected':''}>Calendar 2025 vs 2024</option></select></div>
- ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${contributorsPanel(c)}${rangeRelationshipsPanel(c)}${rangeWithdrawalPanel(c)}${rangeBasketPanel(c)}${rangeTransferPanel(c)}${rangeMigrationBenefitPanel(c)}${rangePriceDirectionPanel(c)}${exactRangeComparisonPanel(c)}${priceQuantityMixPanel(c)}${purchasingActivityPanel(c)}${nextActionPlanPanel(c)}${idsEvidencePanel(c)}${targetBox(c)}
+ ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${contributorsPanel(c)}${rangeRelationshipsPanel(c)}${rangeWithdrawalPanel(c)}${rangeBasketPanel(c)}${rangeTransferPanel(c)}${rangeMigrationBenefitPanel(c)}${rangePriceDirectionPanel(c)}${exactRangeComparisonPanel(c)}${priceQuantityMixPanel(c)}${purchasingActivityPanel(c)}${nextActionPlanPanel(c)}${idsEvidencePanel(c)}${idsImprovementPanel(c)}${prismContextPanel(c)}${serviceDemandPanel(c)}${availabilityPanel(c)}${stockSnapshotPanel(c)}${tenderPanel(c)}${capabilityPanel(c)}${productImagePanel(c)}${targetBox(c)}${sharedCaseBackendPanel(c)}
  <div class="grid2">${chart(c,state.billingMetric,state.billingMetric==='billingEUR'?'What ISZE billed':'What ISZE supplied')}${onwardHeld(c)?chart(c,'onwardQuantity','What the distributor supplied to dealers'):onwardMissing()}</div>
  <div class="grid2"><div class="panel"><span class="badge fact">Evidence supporting review</span><p style="margin-top:12px">${esc(c.reason)}</p></div><div class="panel warn"><span class="badge review">Evidence against a simple price story</span><p style="margin-top:12px">${esc(c.counter)}</p></div></div>
  <div class="grid2">${chart(c,'price','Observed ISZE unit price',true)}<div class="panel"><div class="eyebrow">Reconcile the euro change</div><h3>${signedEUR(cmp.revenueDelta)} in recorded billing</h3><div class="evidence-line"><span>Quantity effect, at prior price</span><b class="${color(cmp.volumeEffect)}">${signedEUR(cmp.volumeEffect)}</b></div><div class="evidence-line"><span>Effective price / terms effect</span><b class="${color(cmp.effectivePriceEffect)}">${signedEUR(cmp.effectivePriceEffect)}</b></div><div class="ruleline small">Exact identity: (new quantity &minus; old quantity) &times; old price + new quantity &times; (new price &minus; old price). The second term includes mix of order conditions. It is not causal price elasticity or a measured price-list effect.</div><div class="scopebox"><b>${num(c.fleet)} ${c.market==='ITUK'?'trucks':'vehicles'} &middot; 2025 market reference</b><br>${esc(c.application)} No part-level demand gap or dealer rate is computed.</div></div></div>

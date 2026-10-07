@@ -54,15 +54,23 @@ list, so nothing states whether they are live.
 - `src/ui/views.js`
 - `src/ui/render.js`
 - `src/engine/range.js`
+- `src/case/server/migrate.js`
+- `src/case/server/sqlite_adapter.js`
+- `src/case/server/permissions.js`
+- `src/case/server/server.js`
+
+## Loaded by tools/ and tests, never assembled (audit-only)
+
+- `src/case/server/migrate.js`
+- `src/case/server/sqlite_adapter.js`
+- `src/case/server/permissions.js`
+- `src/case/server/server.js`
 
 ## ORPHANS (in neither list)
 
-- `src/case/server/migrate.js` - loaded by no test
-- `src/case/server/permissions.js` - loaded by: tests/safe_02_permissions.test.mjs, tests/safe_08_independent_access.test.mjs
-- `src/case/server/server.js` - loaded by: tests/run_01_shared_backend.test.mjs, tests/safe_02_permissions.test.mjs
-- `src/case/server/sqlite_adapter.js` - loaded by no test
+None.
 
 ## Summary
 
-47 .js modules on disk, 35 shipped, 10 deliberately retired, 4 orphaned.
+47 .js modules on disk, 35 shipped, 14 deliberately retired, 4 audit-only, 0 orphaned.
 

@@ -127,6 +127,20 @@ UNWIRED_MODULES = [
 # every build. It therefore did not catch a facade assembled without its
 # dependency, which is the exact defect it exists to prevent. Measured 2026-09-22
 # with tools/published_names.py.
+# Modules loaded by tools/ and by their own tests but never assembled into the
+# artifact, which has no process and no socket: the four src/case/server/
+# modules. src/case/server/server.js is the RUN-01 backend that
+# tests/run_01_shared_backend.test.mjs starts on 127.0.0.1, and the product
+# reaches it over HTTP. A third, explicit list keeps them out of the orphan
+# report and lets the build refuse an assembled module that tries to read one,
+# which in a browser is a silent undefined.
+AUDIT_ONLY_MODULES = [
+    ("src/case/server/migrate.js", "RUN-01 migration runner, used by tools and tests only"),
+    ("src/case/server/sqlite_adapter.js", "RUN-01 SQLite adapter, Node-only"),
+    ("src/case/server/permissions.js", "SAFE-02 request-identity resolver, Node-only"),
+    ("src/case/server/server.js", "RUN-01 local HTTP service, Node-only"),
+]
+
 PUBLISHED_BY = {
     "src/data/contracts.js": "AIMContracts",
     "src/case/schema.js": "AIMCaseSchema",
@@ -159,6 +173,12 @@ PUBLISHED_BY = {
     "src/data/candidates.js": "AIMCandidates",
     "src/data/cases.js": "AIMCases",
     "src/data/scenario.js": "AIMScenario",
+    # Audit-only modules publish a global too; without an entry here the class
+    # guard below cannot name what an assembled module must not read.
+    "src/case/server/migrate.js": "AIMCaseMigrate",
+    "src/case/server/sqlite_adapter.js": "AIMCaseSqliteAdapter",
+    "src/case/server/permissions.js": "AIMCasePermissions",
+    "src/case/server/server.js": "AIMCaseSharedBackend",
     "src/data/costbasis.js": "AIMCostBasis",
     "src/output/recipients.js": "AIMOutput",
     "src/ui/viewmodel.js": "AIMViewModel",
@@ -372,13 +392,58 @@ def build(payload_path):
                 "silently replaces the other." % (seen[name], rel, name))
         seen[name] = rel
 
-    # A module named in neither list is invisible to the checks above. Report it
-    # rather than let it ship unlinted; the caller decides, not the build.
-    known = {rel for rel, _ in MODULES} | {rel for rel, _ in UNWIRED_MODULES}
+    # U28 task 2. An assembled module must not read an audit-only global: in a
+    # browser there is no require, so the read is undefined and the failure is at
+    # runtime. Stated the other way round too, as a relative require.
+    audit_names = {rel for rel, _ in AUDIT_ONLY_MODULES}
+    for rel, _label in MODULES:
+        source = read(os.path.join(ROOT, rel))
+        for audit_only, why in AUDIT_ONLY_MODULES:
+            name = PUBLISHED_BY.get(audit_only)
+            if not name:
+                continue
+            holder = "root." + name
+            for match in re.finditer(re.escape(holder) + r"(?!\s*=)", source):
+                line_no = source[:match.start()].count("\n") + 1
+                raise SystemExit(
+                    "%s line %d reads %s, which is audit-only and never assembled "
+                    "into the artifact (%s is %s). Wire it deliberately or retire it."
+                    % (rel, line_no, holder, audit_only, why))
+        folder = os.path.dirname(rel)
+        for audit_only, _why in AUDIT_ONLY_MODULES:
+            stem = os.path.basename(audit_only)
+            tail = os.path.relpath(audit_only, folder).replace("\\", "/")
+            forms = ("'" + tail + "'", '"' + tail + '"',
+                     "require('./" + stem + "')", 'require("./' + stem + '")',
+                     "require('../" + os.path.basename(folder) + "/" + stem + "')")
+            for form in forms:
+                if form in source:
+                    raise SystemExit(
+                        "%s reaches the audit-only module %s, so the assembled "
+                        "artifact would try to load it in a browser. Move the value "
+                        "into the payload or declare the module assembled."
+                        % (rel, audit_only))
+
+    # A module named in none of the three lists is invisible to the checks above.
+    # Report it rather than let it ship unlinted; the caller decides.
+    known = {rel for rel, _ in MODULES} | {rel for rel, _ in UNWIRED_MODULES} | audit_names
     for rel in sorted(PUBLISHED_BY):
         if rel not in known:
-            print("warning : %s publishes root.%s but is in neither MODULES nor "
-                  "UNWIRED_MODULES" % (rel, PUBLISHED_BY[rel] or "(nothing)"))
+            print("warning : %s publishes root.%s but is in none of MODULES, "
+                  "UNWIRED_MODULES or AUDIT_ONLY_MODULES"
+                  % (rel, PUBLISHED_BY[rel] or "(nothing)"))
+    unclassified = []
+    for base, _dirs, files in os.walk(os.path.join(ROOT, "src")):
+        for fname in files:
+            if not fname.endswith(".js"):
+                continue
+            rel = os.path.relpath(os.path.join(base, fname), ROOT).replace("\\", "/")
+            if rel not in known:
+                unclassified.append(rel)
+    if unclassified:
+        print("warning : %d source module(s) are in none of MODULES, UNWIRED_MODULES "
+              "or AUDIT_ONLY_MODULES: %s"
+              % (len(unclassified), ", ".join(sorted(unclassified))))
     parts.append("</body></html>")
     html = "\n".join(parts)
 

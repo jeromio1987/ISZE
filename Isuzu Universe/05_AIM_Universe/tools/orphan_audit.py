@@ -27,6 +27,10 @@ def main():
     shipped = [m for m, _ in re.findall(r'\("(src/[^"]+)",\s*"([^"]+)"\)', mods_region)]
     block = src[src.find("UNWIRED_MODULES"):src.find("BANNED_IN_OUTPUT")]
     retired = [m for m, _ in re.findall(r'\("(src/[^"]+)",\s*"([^"]+)"\)', block)]
+    # U28: modules loaded by tools/ and by their own tests but never assembled.
+    # Reported on their own so they do not read as orphans.
+    ablock = src[src.find("AUDIT_ONLY_MODULES"):src.find("PUBLISHED_BY")]
+    audit_only = [m for m, _ in re.findall(r'\("(src/[^"]+)",\s*"([^"]+)"\)', ablock)]
 
     on_disk = []
     for base, _d, files in os.walk(os.path.join(ROOT, "src")):
@@ -36,7 +40,8 @@ def main():
                 on_disk.append(rel)
     on_disk.sort()
 
-    orphans = [m for m in on_disk if m not in shipped and m not in retired]
+    orphans = [m for m in on_disk
+               if m not in shipped and m not in retired and m not in audit_only]
 
     # Which tests load each orphan?
     loaders = {}
@@ -81,6 +86,9 @@ def main():
     lines += ["", "## Deliberately retired", ""]
     for m in retired:
         lines.append("- `%s`" % m)
+    lines += ["", "## Loaded by tools/ and tests, never assembled (audit-only)", ""]
+    for m in audit_only:
+        lines.append("- `%s`" % m)
     lines += ["", "## ORPHANS (in neither list)", ""]
     if not orphans:
         lines.append("None.")
@@ -88,14 +96,16 @@ def main():
         lines.append("- `%s`%s" % (m, (" - loaded by: " + ", ".join(sorted(loaders[m])))
                                    if m in loaders else " - loaded by no test"))
     lines += ["", "## Summary", "",
-              "%d .js modules on disk, %d shipped, %d deliberately retired, %d orphaned."
-              % (len(on_disk), len(shipped), len(retired), len(orphans)), ""]
+              "%d .js modules on disk, %d shipped, %d deliberately retired, "
+              "%d audit-only, %d orphaned."
+              % (len(on_disk), len(shipped), len(retired), len(audit_only), len(orphans)), ""]
 
     out = os.path.join(ROOT, "docs", "ORPHAN_AUDIT.md")
     io.open(out, "w", encoding="utf-8").write("\n".join(lines) + "\n")
 
     print("shipped :", len(shipped))
     print("retired :", len(retired))
+    print("audit-only :", len(audit_only))
     print("ORPHANS :", len(orphans))
     for m in orphans:
         print("   %s" % m)

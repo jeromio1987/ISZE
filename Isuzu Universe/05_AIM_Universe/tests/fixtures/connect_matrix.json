@@ -1,0 +1,232 @@
+{
+  "_note": "Synthetic connection-matrix fixtures (U28, task 1). Invented dealers, parts, dates, reference prices, stock counts, notices and fleet figures only. Nothing here is a real dealer, a real part, a real price, a real stock file, a real tender or a real PRISM output. The payload block is merged into the built artifact's embedded case-data payload; the per-case block is merged onto the named case. Read by tests/connect_matrix.test.mjs and tests/accept/connect_matrix_journey.py.",
+  "payload_extra": {
+    "ids_sheet": {
+      "rows": [
+        {
+          "dealer_id": "SYN-U28-UMI-01",
+          "distributor": "UMI",
+          "questionnaire_version": "IDS-2026-UMI",
+          "local_question_code": "Q12",
+          "question_text": "Synthetic parts handling readiness at the counter",
+          "answer_state": "answered",
+          "answer": "good",
+          "date_or_round": "2026-R1",
+          "score": 4
+        },
+        {
+          "dealer_id": "SYN-U28-UMI-01",
+          "distributor": "UMI",
+          "questionnaire_version": "IDS-2026-UMI",
+          "local_question_code": "Q13",
+          "question_text": "Synthetic workshop capacity on a single shift",
+          "answer_state": "answered",
+          "answer": "fair",
+          "date_or_round": "2026-R1",
+          "score": 3
+        }
+      ]
+    },
+    "prism_measures": [
+      {
+        "id": "SYN-PRISM-UIO-2024",
+        "kind": "trucks_in_service",
+        "value": 12000,
+        "unit": "vehicles",
+        "source": "synthetic PRISM UIO table",
+        "period": "CY2024",
+        "year": 2024,
+        "population": "national",
+        "accepted_basis": "historical_uio_v1",
+        "denominator_version": "uio_v1"
+      },
+      {
+        "id": "SYN-PRISM-SPEND-2024",
+        "kind": "measured_spend",
+        "value": 4800000,
+        "unit": "EUR",
+        "source": "synthetic PRISM billed spend",
+        "period": "CY2024",
+        "year": 2024,
+        "population": "national",
+        "accepted_basis": "billed_eur_v2",
+        "denominator_version": "spend_v2"
+      },
+      {
+        "id": "SYN-PRISM-FORECAST-2027",
+        "kind": "fleet_forecast",
+        "value": 15000,
+        "unit": "vehicles",
+        "source": "synthetic PRISM fleet forecast",
+        "period": "CY2027",
+        "year": 2027,
+        "population": "national",
+        "accepted_basis": "forecast_v0",
+        "forecast": true,
+        "denominator_version": "forecast_v0"
+      },
+      {
+        "id": "SYN-PRISM-TARGET-2024",
+        "kind": "modelled_target",
+        "value": 5200000,
+        "unit": "EUR",
+        "source": "synthetic PRISM modelled target",
+        "period": "CY2024",
+        "year": 2024,
+        "population": "national",
+        "accepted_basis": "target_spend_v3",
+        "denominator_version": "target_v3"
+      }
+    ],
+    "service_demand": {
+      "internal": { "cover_pct": 62, "method": "synthetic internal basis" },
+      "external": { "cover_pct": 48, "method": "synthetic external basis" }
+    },
+    "service_demand_basis": "internal",
+    "capability_registry": [
+      {
+        "service_id": "pricing_core",
+        "capability": "internally_usable",
+        "returns_supported_work": true,
+        "source": "synthetic pricing engine",
+        "response_route": "internal_calculate",
+        "adapter_kind": "internal",
+        "label": "Pricing core"
+      },
+      {
+        "service_id": "ids_read",
+        "capability": "internally_usable",
+        "returns_supported_work": true,
+        "source": "synthetic IDS fixture",
+        "response_route": "ids_evidence_panel",
+        "adapter_kind": "test",
+        "development_only": true,
+        "label": "IDS read (test adapter)"
+      },
+      {
+        "service_id": "fleet_context",
+        "capability": "source_limited",
+        "returns_supported_work": false,
+        "source": null,
+        "response_route": null,
+        "adapter_kind": "none",
+        "label": "Fleet context"
+      },
+      {
+        "service_id": "stock_observation",
+        "capability": "unavailable",
+        "returns_supported_work": false,
+        "source": null,
+        "response_route": null,
+        "adapter_kind": "none",
+        "label": "Stock observation"
+      }
+    ],
+    "tender_data": {
+      "notices": [
+        {
+          "opportunity_id": "SYN-U28-TEND-OPEN",
+          "title": "Synthetic municipal workshop parts notice",
+          "buyer": "Synthetic Buyer Council",
+          "country": "Syntheticland",
+          "deadline_date": "2026-11-30",
+          "published_latest": "2026-09-01",
+          "lifecycle": "competition",
+          "notice_type": "procedure",
+          "value_amount": 80000,
+          "currency": "EUR",
+          "source": "synthetic_tender_feed",
+          "url": "https://example.test/synthetic-open"
+        },
+        {
+          "opportunity_id": "SYN-U28-TEND-EXPIRED",
+          "title": "Synthetic expired fleet notice",
+          "buyer": "Synthetic Agency",
+          "country": "Syntheticland",
+          "deadline_date": "2026-01-15",
+          "published_latest": "2025-12-01",
+          "lifecycle": "expired",
+          "notice_type": "procedure",
+          "value_amount": 100000,
+          "currency": "EUR",
+          "source": "synthetic_tender_feed",
+          "url": "https://example.test/synthetic-expired"
+        }
+      ]
+    }
+  },
+  "cases": {
+    "SYNTH-CASE-A": {
+      "ids_identity": {
+        "dealer_id": "SYN-U28-UMI-01",
+        "distributor": "UMI",
+        "display_name": "Synthetic UMI Dealer",
+        "validated": true
+      },
+      "improvement_action": {
+        "action_id": "IMP-U28-01",
+        "owner": "dealer",
+        "support_owed_by": "isze_support",
+        "note": "Agree a counter stock check for the missing references.",
+        "opened_at": "2026-10-07"
+      },
+      "ids_improvement_question_code": "Q12",
+      "prism_level": { "dealer_id": "SYN-U28-UMI-01", "distributor": "UMI", "scope": "dealer" },
+      "availability_selection": {
+        "part_number": "SYNTH-PART-A",
+        "application": "synthetic application note",
+        "quantity": 4,
+        "required_date": "2026-11-01",
+        "distributor_route": "Synthetic distributor route"
+      },
+      "availability_response": {
+        "source": "synthetic distributor reply",
+        "observation_time": "2026-10-07T09:00:00Z",
+        "confirmed": false,
+        "date_value": "2026-11-10",
+        "next_update_due": "2026-10-21"
+      },
+      "historical_purchase": {
+        "part_number": "SYNTH-PART-A",
+        "purchased_on": "2025-03-12",
+        "quantity": 2,
+        "source": "synthetic billing history",
+        "observation_time": "2026-10-07T09:05:00Z"
+      },
+      "stock_snapshot": {
+        "part_number": "SYNTH-PART-A",
+        "as_of": "2026-10-07",
+        "on_hand": 12,
+        "reserved": "unknown",
+        "source": "synthetic stock observation"
+      },
+      "tender_notice_ids": ["SYN-U28-TEND-OPEN", "SYN-U28-TEND-EXPIRED"],
+      "product_image": {
+        "entries": [
+          {
+            "image_id": "SYN-U28-IMG-1",
+            "part_number": "SYNTH-PART-A",
+            "permission_record": "SYNTHETIC-PERMISSION-RECORD-ONLY",
+            "source": "synthetic-fixture://SYN-U28-IMG-1",
+            "synthetic": true
+          }
+        ],
+        "requested_part": "SYNTH-PART-A",
+        "fallback_part": "SYNTH-PART-NO-IMAGE"
+      }
+    },
+    "SYNTH-CASE-B": {
+      "ids_identity": {
+        "dealer_id": "SYN-U28-UNVAL-01",
+        "distributor": "UMI",
+        "display_name": "Synthetic Unvalidated Dealer",
+        "validated": false
+      },
+      "prism_level": { "dealer_id": "SYN-U28-UNVAL-01", "distributor": "UMI", "scope": "dealer" },
+      "product_image": {
+        "entries": [],
+        "requested_part": "SYNTH-PART-B"
+      }
+    }
+  }
+}

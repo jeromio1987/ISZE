@@ -53,6 +53,10 @@ reports a real result about code the assembled artifact does not run.
 - `src/ui/views.js` - retired second view layer; every view it held is ported into src/ui/app.js
 - `src/ui/render.js` - retired second shell; the F05 guard and routing live in src/ui/app.js
 - `src/engine/range.js` - range economics prototype never wired into the app; deleted 2026-10-07; **DELETED from the tree, entry kept as a tombstone**
+- `src/case/server/migrate.js` - RUN-01 migration runner, used by tools and tests only
+- `src/case/server/sqlite_adapter.js` - RUN-01 SQLite adapter, Node-only
+- `src/case/server/permissions.js` - SAFE-02 request-identity resolver, Node-only
+- `src/case/server/server.js` - RUN-01 local HTTP service, Node-only
 
 ## Tests, by what they load
 
