@@ -1,0 +1,56 @@
+{
+  "agent": "A2",
+  "run_at": "2026-10-07T03:32:02+00:00",
+  "date": "2026-10-07",
+  "online": true,
+  "hosts": {
+    "tranzparts.co.uk": {
+      "robots": "allowed",
+      "route": "search?q=<n>&type=product then the product page",
+      "pages": 302,
+      "rows": 6,
+      "priced_rows": 6
+    },
+    "www.tmcgroup.co.uk": {
+      "robots": "allowed",
+      "route": "category walk (every search route returns HTTP 504)",
+      "pages": 17,
+      "cards": 140,
+      "rows": 55,
+      "priced_rows": 55
+    }
+  },
+  "numbers_queried_oe": 123,
+  "numbers_with_rows_oe": 5,
+  "numbers_empty_oe": 118,
+  "numbers_queried_competitor": 153,
+  "numbers_with_rows_competitor": 0,
+  "numbers_empty_competitor": 153,
+  "cards_seen": 9,
+  "cards_followed": 9,
+  "card_fetch_failed": 0,
+  "cards_rejected_number_not_on_page": 0,
+  "fetch_stats": {
+    "fetched": 0,
+    "cached": 302,
+    "refused": 0,
+    "errors": 0
+  },
+  "known_issue": "match_method stays schema-valid; the U26 grade (candidate) travels in the separate crossref_grade column. MATCH_METHODS not widened.",
+  "measured_limits": {
+    "tranzparts": "the search card does NOT print the searched number; the number is on the product page cross-reference list. One query costs the search page plus one product page per card, all >= 2.2 s apart.",
+    "tmc": "no part-number query URL exists: /?s=, wp-json store/v2, wp-json wp/v2, sitemap_index.xml and product-sitemap.xml all return HTTP 504, and /product-category/.../page/2/ is 504. Only the /page/1 category tree answers."
+  },
+  "outputs": {
+    "rows": 61,
+    "priced_rows": 61,
+    "distinct_part_no": 57,
+    "rows_on_the_123_worklist_numbers": 15,
+    "pages_saved": 19,
+    "tried_rows": 302,
+    "tried_hosts": 11,
+    "distinct_worklist_numbers_with_rows": 11,
+    "note_on_the_other_rows": "The remaining 46 rows are Isuzu parts outside the 123 that the same T&M category walk reached."
+  },
+  "bug_found_and_fixed": "The first Tranzparts parser emitted every 10-digit number on a product page. A 14459 query returned a brake valve whose Cross reference list holds 105 competitor numbers and no Isuzu number, producing 20 fabricated rows (a leading-digit shape filter still let 10 through). parse() now requires expected_pn and emits one row only when that number is printed on the page (the Mekonomen rule in verdict_for). The 105-number page is kept as fixture v_tranzparts_nonisuzu.html and the selftest asserts it raises."
+}
