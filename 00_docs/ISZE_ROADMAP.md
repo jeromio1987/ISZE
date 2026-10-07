@@ -1,6 +1,6 @@
 # ISZE — programme roadmap (hub)
 
-**Last updated:** 2026-09-19 · **Domain detail:** [`roadmaps/`](roadmaps/) · **Registry:** [`MAP_REGISTRY.yaml`](MAP_REGISTRY.yaml)
+**Last updated:** 2026-10-07 · **Domain detail:** [`roadmaps/`](roadmaps/) · **Registry:** [`MAP_REGISTRY.yaml`](MAP_REGISTRY.yaml)
 
 > **Numbers rule:** green [`01_data/00_derived/_verification_report.json`](../01_data/00_derived/_verification_report.json) → `metrics_snapshot.json` → [`FACTS.md`](../FACTS.md). That order wins over any deck, memory file, or GPT answer.
 > **Pipeline state 2026-08-25:** verify **116 pass / 0 warn / 0 fail** · `sales_fact` billed through **2026-06-30** · SaTy coverage min 92% (Q1 hole documented).
@@ -42,6 +42,7 @@ Ordered. `Blocked on` names the single thing that unblocks the item — if it sa
 | 14 | **Workspace cleanup decisions** | **Both halves already decided in writing** — see below, not waiting on Jerome | — nothing — | [`ISZE_Cleanup_Plan.md`](ISZE_Cleanup_Plan.md) · [`UI_STACK.md`](UI_STACK.md) |
 | 15 | **AIM attribute layer** (size / position / duty on leaves) | **On hold (roadmap)** — Jerome 2026-09-17; do not build; not “proceed” | deferred / later — not this week | `DECISIONS.md` 2026-09-17 · audit `CLASSIFICATION_FULL_AUDIT_20260917.md` §8 item 10 · paper §08–§09 |
 | 16 | **Pricing programme** — the measured weighted increase, the industrial-engine discount rate, the 3% vs 5.96% reconciliation, the override rows, competitor-evidence funding, class assignment | Live 2026-09-19. The weighted increase of all prices is **+5.9616%** whole book, **+6.2081% Japan**, **+6.3088% Thailand**; per market PR00 +5.92%, UTI +5.58%, UMI +5.64%, CIS +4.85% — all inside 4–6% | **Jerome** — items 2.2–2.8 | [`roadmaps/pricing.md`](roadmaps/pricing.md) |
+| 17 | **BVDB update — AIM classification release 2026-10-07** (DESC_PROVEN + EQ proven + Oct4 sync) | Ready for BVDB / pending BVDB. Family coverage on `aim_master_v2` rose ~25k → ~56k AIM-filled. Paths: `01_data/00_derived/aim_master_v2.csv`; release `01_data/00_derived/_releases/aim_pn_classification_release_2026-10-07*`. Date 2026-10-07. Independent double-check CONFIRM. Do not email BVDB from here — Jerome hands it | **Jerome** — next BVDB / Power BI hand-off | `_aim_apply_doublecheck_20261007.md` · `_aim_apply_proven_20261007.md` · `RELEASES.json` release `2026-10-07` APPROVED |
 
 **Not on this list on purpose:** anything in §5. Also: no new 0–100 score on any surface, and no Dash / Evidence work — Streamlit :8503 is the product. The AIM **two-axes** lock (identity + commercial score beside it) stays live; only the **attribute layer** is deferred.
 

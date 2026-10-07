@@ -84,7 +84,7 @@
       "release_id": "2026-10-04",
       "path": "aim_pn_classification_release_2026-10-04.csv",
       "sha256": "8aad884f49db1a49ab86faca571942d912196ce08f7734f38d5a04f035e18896",
-      "status": "APPROVED",
+      "status": "SUPERSEDED",
       "rows": 164943,
       "rows_note": "data rows, header excluded (same as 2026-10-02)",
       "base_release": "2026-10-02-chassis-frame",
@@ -93,7 +93,25 @@
       "notes": "Cut 2026-10-04 by claude from the approved 2026-10-02-chassis-frame. Change log aim_pn_classification_release_2026-10-04.changes.csv. One new AIM label: Intake Exhaust Emission > DEF System > DEF Injector (Jerome approved). Release id: 2026-10-04 not taken, date alone.",
       "approved_by": "Jerome",
       "approved_on": "2026-10-04",
-      "approved_note": "Jerome approved in chat on 2026-10-04 (answer 'approve' to APPROVAL_SUMMARY_2026-10-04.md): 24 high-confidence billed parts added; engine gasket sets to Engine > Gasket & Sealing > Gasket; EVRV valves to EGR Component; antennas to Audio > Radio; rear cameras on the catalogue tree only; DEF injectors to the new AIM label Intake Exhaust Emission > DEF System > DEF Injector. Includes the parts whose description is only in the Japanese parts-code file (111 parts, EUR 60). sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-04.gate.json): 18 checks pass, release_approved PENDING, 0 fail. Supersedes 2026-10-02-chassis-frame in the same edit. Approval covers the release file only; AIM pages, the page-input export and deploy copies were not changed by it."
+      "approved_note": "Jerome approved in chat on 2026-10-04 (answer 'approve' to APPROVAL_SUMMARY_2026-10-04.md): 24 high-confidence billed parts added; engine gasket sets to Engine > Gasket & Sealing > Gasket; EVRV valves to EGR Component; antennas to Audio > Radio; rear cameras on the catalogue tree only; DEF injectors to the new AIM label Intake Exhaust Emission > DEF System > DEF Injector. Includes the parts whose description is only in the Japanese parts-code file (111 parts, EUR 60). sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-04.gate.json): 18 checks pass, release_approved PENDING, 0 fail. Supersedes 2026-10-02-chassis-frame in the same edit. Approval covers the release file only; AIM pages, the page-input export and deploy copies were not changed by it.",
+      "superseded_by": "2026-10-07",
+      "superseded_on": "2026-10-07",
+      "superseded_note": "Superseded when Jerome approved release 2026-10-07 on 2026-10-07. Hash, history and the approval record kept unchanged."
+    },
+    {
+      "release_id": "2026-10-07",
+      "path": "aim_pn_classification_release_2026-10-07.csv",
+      "sha256": "aba81764e9aa3defaaa1636a9dfd13c520aadb4dfc2879e318f5c4e390010210",
+      "status": "APPROVED",
+      "rows": 165055,
+      "rows_note": "data rows, header excluded",
+      "base_release": "2026-10-04",
+      "source": "release 2026-10-04 (aim_pn_classification_release_2026-10-04.csv, sha256 8aad884f...) + DESC_PROVEN 30563 AIM fills + EQ proven 112 added / 4 skipped",
+      "recommendation": "Jerome GO 2026-10-07; DESC_PROVEN + EQ_PROVEN only; _aim_tranche1_DESC_PROVEN_verify_20261007.md; _aim_eq_hit_126_rigor_20261007.md",
+      "notes": "Cut 2026-10-07 from approved 2026-10-04. Change log aim_pn_classification_release_2026-10-07.changes.csv. No new AIM labels. EQ overnight labels remapped onto existing leaves. Release id: 2026-10-07 not taken, date alone.",
+      "approved_by": "Jerome",
+      "approved_on": "2026-10-07",
+      "approved_note": "Jerome GO in chat on 2026-10-07: apply DESC_PROVEN (~30,653) and EQ_PROVEN (~116) as a dated release. sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-07.gate.json): 18 checks pass, release_approved PENDING, 0 fail. Supersedes 2026-10-04 in the same edit. Master sync: aim_master_v2.csv AIM fills for DESC + append EQ mapped rows (see _aim_apply_proven_20261007.md)."
     }
   ]
 }

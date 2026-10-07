@@ -1,0 +1,111 @@
+{
+  "as_of": "2026-10-07T14:08:34.409597+00:00",
+  "source_safe_v2_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\next_release_proposal_full_class_tranche1_catmap_SAFE_v2_2026-10-07.csv",
+  "rigor_safe_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\_aim_tranche1_CLEAN_rigor_SAFE_20261007.csv",
+  "rigor_fails_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\_aim_tranche1_CLEAN_rigor_fails_20261007.csv",
+  "rigor_json": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\_aim_tranche1_CLEAN_rigor_20261007.json",
+  "desc_proven_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\next_release_proposal_full_class_tranche1_catmap_DESC_PROVEN_2026-10-07.csv",
+  "apply": "NO \u2014 proposal only. DESC_PROVEN does not write aim_master and is not a dated release apply.",
+  "permission": "PARTIAL_CONDITIONAL",
+  "permission_bar": "PARTIAL",
+  "apply_permission_earned": false,
+  "apply_permission_sentence": "PARTIAL \u2014 description + catalogue-path + hard-hold leaks are clean on this 30,653-row desc-proven slice (blank-desc path-majority dropped), so Jerome can grant conditional apply permission for THIS file only; ZKK is still not a family proof (almost unused at scale) and does not earn the full PN/description/price/ZKK rigor bar by itself.",
+  "rows_safe_v2": 37807,
+  "rows_rigor_pass_expected": 30653,
+  "rows_desc_proven": 30653,
+  "rows_dropped_blank_desc_inconclusive": 7154,
+  "rows_inconclusive_in_fails_file": 7154,
+  "leftover_nonpass_noninc_in_safe_v2": 0,
+  "unified_description": {
+    "with_unified_desc": 30653,
+    "blank_unified_desc": 0,
+    "note": "Usable description = JP + master + proposal text united (same as rigor). Proposal `description` column is often blank even when JP text exists."
+  },
+  "price_zkk_hkk_honesty": "Price absurdity: 0 fails on the parent rigor run (none left in this slice). ZKK: only 1 pure majority code(s) at n\u226520 / \u226580% purity; 296 rows checked against that majority; 0 conflicts. HKK: 23 usable codes; 3097 rows checked; 1 conflicts (already removed with the 406 rigor fails). ZKK/HKK did not define AIM family for most of this proposal \u2014 description text did. PN length fails: 0; PN prefix outliers: 0.",
+  "zkk_contribution": {
+    "zkk_majority_codes_usable": 1,
+    "zkk_rows_checked_against_majority": 296,
+    "zkk_conflict_count": 0,
+    "note": "ZKK is a Japan catalogue attribute, not an AIM family. On known master rows, only 1 ZKK code(s) reach >=80% single-family purity at n>=20. Commodity/ZKK cannot define what each part is for most of this proposal; description text is the primary rigor signal."
+  },
+  "hkk_contribution": {
+    "hkk_majority_codes_usable": 23,
+    "hkk_rows_checked_against_majority": 3097,
+    "hkk_conflict_count": 1
+  },
+  "price_pn_contribution": {
+    "price_fail_count": 0,
+    "pn_length_fail_count": 0,
+    "pn_prefix_outlier_count": 0
+  },
+  "zero_checks": {
+    "cyl_hd_gasket_desc_to_transmission": {
+      "n": 0,
+      "pass": true
+    },
+    "cyl_hd_gasket_path_to_transmission": {
+      "n": 0,
+      "pass": true
+    },
+    "gasket_set_to_transmission": {
+      "n": 0,
+      "pass": true,
+      "cat_path": "Repair parts > Gaskets / seals > Gasket set",
+      "propose_aim_l1": "Transmission"
+    },
+    "trans_asm_to_literature": {
+      "n": 0,
+      "pass": true,
+      "cat_path": "High value repair > Transmission parts > Transmission assembly",
+      "propose_aim_l1": "Literature Marketing"
+    },
+    "air_valve_to_steering": {
+      "n": 0,
+      "pass": true,
+      "cat_path": "Competitive parts > Air system > Air valve",
+      "propose_aim_l1": "Steering"
+    },
+    "any_propose_transmission": {
+      "n": 0,
+      "pass": true
+    }
+  },
+  "zero_checks_all_pass": true,
+  "by_confidence": {
+    "HIGH": 29002,
+    "MED_HIGH": 1651
+  },
+  "top_propose_l1": {
+    "Accident & Body": 9515,
+    "Electrical": 5366,
+    "Engine": 2479,
+    "Chassis Frame": 2367,
+    "Lighting": 2365,
+    "Fuel System": 1833,
+    "Intake Exhaust Emission": 1556,
+    "Wheels Hub": 1244,
+    "Brakes": 1041,
+    "Clutch": 813,
+    "Cooling": 759,
+    "Maintenance Service": 715,
+    "Suspension": 486,
+    "Cabin Interior": 94,
+    "Fluids Chemicals": 20
+  },
+  "coverage_if_desc_proven_applied": {
+    "master_rows": 165310,
+    "base_with_family": 21045,
+    "base_with_family_pct": 12.73,
+    "desc_proven_rows_added": 30653,
+    "with_family_if_applied": 51698,
+    "with_family_pct_if_applied": 31.27,
+    "without_family_if_applied": 113612,
+    "note": "Projected only \u2014 DESC_PROVEN not applied to master."
+  },
+  "notes": [
+    "Intersect SAFE-v2 with rigor PASS (usable JP/master/proposal description evidence).",
+    "Dropped 7,154 rigor-inconclusive blank-desc path-majority rows.",
+    "Hard holds and cyl-head\u2192Transmission re-zeroed on the desc-proven file.",
+    "Does not apply aim_master. ZKK is not claimed as family proof."
+  ]
+}
