@@ -375,6 +375,8 @@ def main() -> int:
             "qty": int(r["qty"]), "days": (int(d) if pd.notna(d) else None),
             "aim": r["aim"], "cat": r["cat"], "fig": fig_label(r["pn"]) or "",
             "loc": r["loc"], "band": (band(d) if pd.notna(d) else "not yet due"),
+            # the required delivery date the distributor asked for: the drill shows it per line
+            "req": (r["req_dlv"].strftime("%Y-%m-%d") if pd.notna(r["req_dlv"]) else ""),
         })
     print("bo_facts rows:", len(bo_facts), "| pieces:", sum(f["qty"] for f in bo_facts))
 
@@ -508,19 +510,20 @@ def main() -> int:
         "rows": K["iml_lines"],
     }
 
-    # ---------------- build stamp: generated here so it always matches the file on disk ----------
-    stamp_src = json.dumps({
-        "iml_lines": int(K["iml_lines"]), "wait_groups": [str(g["key"]) for g in by_noun],
-        "wait_pcs": int(K["wait_pcs"]), "bo_lines": int(K["bo_lines"]),
-        "cov_wh": {k: str(v) for k, v in cov_wh.items()},
-        "cov_bo": {k: str(v) for k, v in cov_bo.items()}, "asof": str(ASOF_IML),
-    }, sort_keys=True).encode("utf-8")
-    content_hash = hashlib.sha256(stamp_src).hexdigest()[:10]
-    build_stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + " build " + content_hash
+    import os
+    _aim_path = ROOT / "01_data" / "00_derived" / "aim_master_v2.csv"
+    _aim_mt = datetime.datetime.fromtimestamp(os.path.getmtime(_aim_path)).strftime("%Y-%m-%d %H:%M:%S")
+    aim_source = "modified " + _aim_mt + ", " + f"{len(aim):,}" + " rows"
 
+    # ---------------- build stamp: a real hash of the payload that is written to disk -------------
+    # The earlier version hashed a small hand-picked dict of figures, so it read the same number
+    # after a rebuild that did not move those five figures. It is now a hash of the serialised
+    # content itself, so any change anywhere in the page moves the stamp.
     payload = {
         "asof_iml": "2026-10-02", "asof_bo": ASOF_BO,
-        "build": build_stamp,
+        # replaced with the real build stamp once the payload is serialised and hashed
+        "build": "__BUILD_STAMP__",
+        "aim_source": aim_source,
         "kpi": K,
         "cov_bo": cov_bo, "cov_wh": cov_wh,
         "aim_master": {"parts": len(infile), "family": len(fam), "cat": len(cat)},
@@ -549,9 +552,20 @@ def main() -> int:
 
     chartjs = CHARTJS.read_text(encoding="utf-8", errors="replace").replace("//# sourceMappingURL=chart.umd.min.js.map", "")
     pj = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    HTML.write_text(TEMPLATE.replace("__PAYLOAD__", pj).replace("__CHARTJS__", chartjs), encoding="utf-8")
+    # The stamp hashes the WHOLE page that is about to be written - payload, markup, styles and script -
+    # together with the classification file's own modified time. So any change anywhere in the output
+    # moves the stamp, and a rebuild that changes nothing keeps it. The earlier version hashed only a
+    # short list of figures, which is why a real rebuild could leave the same hash on screen.
+    draft = TEMPLATE.replace("__PAYLOAD__", pj).replace("__CHARTJS__", chartjs)
+    content_hash = hashlib.sha256(
+        (draft + "|aim_mtime=" + str(_aim_path.stat().st_mtime_ns)).encode("utf-8")).hexdigest()[:10]
+    build_stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + " build " + content_hash
+    page = draft.replace('"__BUILD_STAMP__"', json.dumps(build_stamp))
+    HTML.write_text(page, encoding="utf-8")
     CMD.write_text('@echo off\r\nstart "" "%~dp0ISZE_Backlog_IML_WK41.html"\r\n', encoding="ascii", newline="")
     print("wrote", HTML, f"{HTML.stat().st_size/1e6:.2f} MB")
+    print("build stamp:", build_stamp)
+    print("coverage heading:", "Why the warehouse reads", cov_wh["pct_family"], "% and the backlog", cov_bo["pct_family"], "%")
     print(json.dumps(K, indent=1))
     print("overlap parts:", K["ov_pns"], "of delayed parts", K["delayed_pns"], "| bo lines", K["ov_lines"], "| pcs", K["ov_pcs"], "| custs", K["ov_custs"])
     print("fill-rate rows:", len(fr))
@@ -588,7 +602,8 @@ h2{font-family:Georgia,serif;font-weight:400;font-size:19px;color:var(--navy);ma
 .row{display:grid;gap:18px}.r2{grid-template-columns:1fr 1fr}
 .card{background:#fff;border:1px solid var(--line);padding:14px 16px}
 .card h3{font-family:Georgia,serif;font-weight:400;font-size:15px;margin:0 0 10px;color:var(--navy)}
-canvas{max-height:340px}
+/* No max-height on the canvas: the height lives on the chart box below, and a cap here would leave
+   the taller boxes half empty instead of letting the chart fill the frame it was given. */
 /* A canvas has no intrinsic height and Chart.js writes an inline style, so a height on the canvas
    is overridden. The height therefore lives on the containing chart box, which is what Chart.js
    reads when maintainAspectRatio is false. Without this, a chart drawn while its panel was
@@ -632,6 +647,8 @@ ul.tight{margin:6px 0 0 18px;padding:0}ul.tight li{margin-bottom:5px}
 button.clearbtn{font:inherit;font-size:12px;padding:3px 9px;border:1px solid var(--terra);background:#fff;color:var(--terra);cursor:pointer}
 button.clearbtn:hover{background:var(--terra);color:#fff}
 .nomatch{padding:14px;color:var(--muted);font-size:12.5px}
+.path{font-family:Georgia,serif;font-size:13.5px;color:var(--navy);margin-right:10px}
+div[data-cursor],div[data-click],canvas[data-click]{cursor:pointer}
 table.clickable tbody tr{cursor:pointer}
 </style>
 </head>
@@ -663,12 +680,12 @@ table.clickable tbody tr{cursor:pointer}
     <div id="warn-p-delay"></div>
     <div class="applied" id="ap-delay"></div>
     <div class="row r2">
-    <div class="card"><h3 id="h-ch-age">Pieces by waiting time, split by process status</h3><canvas id="ch-age" data-h="340"></canvas></div>
-    <div class="card"><h3 id="h-ch-status">Lines and pieces by process status</h3><canvas id="ch-status" data-h="340"></canvas></div>    </div>
+    <div class="card"><h3 id="h-ch-age">Pieces by waiting time, split by process status</h3><div class="chartbox" data-h="340"><canvas id="ch-age"></canvas></div></div>
+    <div class="card"><h3 id="h-ch-status">Lines and pieces by process status</h3><div class="chartbox" data-h="340"><canvas id="ch-status"></canvas></div></div>    </div>
     <div class="card" style="margin-top:14px"><h3>The rows this filter leaves</h3><div class="scroll" id="t-rows"></div></div>
     <h2>The delayed queue, by status</h2>
     <p class="q">Only the lines over 30 days. The point is which status they sit in. Click a bar to filter.</p>
-    <div class="card"><h3>Status of the 1,090 lines over 30 days</h3><canvas id="ch-over30" data-h="260" style="max-height:280px"></canvas></div>
+    <div class="card"><h3>Status of the 1,090 lines over 30 days</h3><div class="chartbox" data-h="260"><canvas id="ch-over30"></canvas></div></div>
     <h2>The oldest lines still open</h2>
     <div class="scroll" id="t-worst"></div>
     <h2>Orders carrying the most delayed lines</h2>
@@ -682,8 +699,8 @@ table.clickable tbody tr{cursor:pointer}
     <div id="warn-p-parts"></div>
     <div class="applied" id="ap-parts"></div>
     <div class="row r2">
-    <div class="card"><h3 id="h-ch-waim">Pieces delayed, by parts family</h3><canvas id="ch-waim" data-h="420" style="max-height:430px"></canvas></div>
-    <div class="card"><h3 id="h-ch-mode">Air against sea</h3><canvas id="ch-mode" data-h="260" style="max-height:230px"></canvas></div>
+    <div class="card"><h3 id="h-ch-waim">Pieces delayed, by parts family</h3><div class="chartbox" data-h="420"><canvas id="ch-waim"></canvas></div></div>
+    <div class="card"><h3 id="h-ch-mode">Air against sea</h3><div class="chartbox" data-h="260"><canvas id="ch-mode"></canvas></div></div>
     </div>
     <h2>Delayed parts, worst first</h2>
     <p class="hint">Status shows where each line sits in the process, and how many orders carry it. Click a row to filter the rest to that part.</p>
@@ -701,7 +718,7 @@ table.clickable tbody tr{cursor:pointer}
     <div class="kpis" id="k-who"></div>
     <h2>Distributors waiting on a part that is delayed in the warehouse</h2>
     <p class="q">Ranked by the oldest open order on such a part. Days open counted from the date the distributor asked for it. <b>Click a bar to open the deep dive for that distributor.</b></p>
-    <div class="card"><h3 id="h-ch-ov">Oldest open order on a delayed part, by distributor</h3><canvas id="ch-ov" data-h="340"></canvas></div>
+    <div class="card"><h3 id="h-ch-ov">Oldest open order on a delayed part, by distributor</h3><div class="chartbox" data-h="340"><canvas id="ch-ov"></canvas></div></div>
     <div id="who-detail"></div>
     <h2>The parts where a distributor is waiting and the warehouse is holding</h2>
     <p class="hint">Click a row to filter to that part. For a single distributor's parts and waiting times, click that distributor's bar above.</p>
@@ -716,8 +733,8 @@ table.clickable tbody tr{cursor:pointer}
     <div class="kpis" id="k-recur"></div>
     <h2>The weekly list, week by week</h2>
     <div class="row r2">
-      <div class="card"><h3>Lines on the list, and how many are urgent</h3><canvas id="ch-uti1" data-h="340"></canvas></div>
-      <div class="card"><h3>Median days open, and the oldest</h3><canvas id="ch-uti2" data-h="340"></canvas></div>
+      <div class="card"><h3>Lines on the list, and how many are urgent</h3><div class="chartbox" data-h="340"><canvas id="ch-uti1"></canvas></div></div>
+      <div class="card"><h3>Median days open, and the oldest</h3><div class="chartbox" data-h="340"><canvas id="ch-uti2"></canvas></div></div>
     </div>
     <h2>Parts that keep coming back</h2>
     <p class="q">Ranked by how many of the 39 weeks the part was on the list. "Orders" is how many separate orders were placed for it.</p>
@@ -735,8 +752,8 @@ table.clickable tbody tr{cursor:pointer}
     <div class="drillbar" id="dr-wait"></div>
     <div id="warn-p-wait"></div>
     <div class="row r2">
-      <div class="card"><h3 id="h-ch-wait">Pieces waiting over 30 days, by kind of part</h3><canvas id="ch-wait" data-h="420" style="max-height:430px"></canvas></div>
-      <div class="card"><h3 id="h-ch-waitage">Longest wait in days, by kind of part</h3><canvas id="ch-waitage" data-h="420" style="max-height:430px"></canvas></div>
+      <div class="card"><h3 id="h-ch-wait">Pieces waiting over 30 days, by kind of part</h3><div class="chartbox" data-h="420"><canvas id="ch-wait"></canvas></div></div>
+      <div class="card"><h3 id="h-ch-waitage">Longest wait in days, by kind of part</h3><div class="chartbox" data-h="420"><canvas id="ch-waitage"></canvas></div></div>
     </div>
     <h2>The groups</h2>
     <p class="hint">Pieces waiting, how many lines and orders, the longest wait, and the parts themselves in words.</p>
@@ -755,7 +772,7 @@ table.clickable tbody tr{cursor:pointer}
     <div class="kpis" id="k-fill"></div>
     <h2>Each distributor against its own target</h2>
     <p class="q">Gap in percentage points. Negative means below target.</p>
-    <div class="card"><h3>Gap to the fill-rate target</h3><canvas id="ch-fill" data-h="420" style="max-height:420px"></canvas></div>
+    <div class="card"><h3>Gap to the fill-rate target</h3><div class="chartbox" data-h="420"><canvas id="ch-fill"></canvas></div></div>
     <h2>The table</h2>
     <p class="hint">Latest reported value and its month, so a stale reading is visible rather than hidden.</p>
     <div class="scroll" id="t-fill"></div>
@@ -764,16 +781,17 @@ table.clickable tbody tr{cursor:pointer}
   <div class="panel" id="p-bo">
     <div class="kpis" id="k-bo"></div>
     <h2>Who is holding open orders, and how long</h2>
-    <p class="q">The customer side, from Natalie's week 41 file, for context. This is what distributors have asked for and not received - not what is delayed inside IML. Click a bar to filter; the dropdown decides what a click drills by.</p>
+    <p class="q">The customer side, from Natalie's week 41 file, for context. This is what distributors have asked for and not received - not what is delayed inside IML. <b>Click a distributor bar to open the deep dive for that customer, then keep clicking to narrow it:</b> distributor, then AIM family or catalogue category, then part number, then the delivery dates. The path you are on is printed at every step, with a step back and a clear all.</p>
     <div class="drillbar" id="dr-bo"></div>
     <div id="warn-p-bo"></div>
     <div class="applied" id="ap-bo"></div>
     <div class="row r2">
-    <div class="card"><h3 id="h-ch-cust">Pieces still open, by distributor</h3><canvas id="ch-cust" data-h="340"></canvas></div>
-    <div class="card"><h3 id="h-ch-custage">Oldest open order per distributor, in days</h3><canvas id="ch-custage" data-h="340"></canvas></div>
+    <div class="card"><h3 id="h-ch-cust">Pieces still open, by distributor</h3><div class="chartbox" data-h="340"><canvas id="ch-cust"></canvas></div></div>
+    <div class="card"><h3 id="h-ch-custage">Oldest open order per distributor, in days</h3><div class="chartbox" data-h="340"><canvas id="ch-custage"></canvas></div></div>
     </div>
     <h2>By parts family</h2>
-    <div class="card"><h3 id="h-ch-bofam">Pieces still open, by parts family - click a bar to filter</h3><canvas id="ch-bofam" data-h="420" style="max-height:420px"></canvas></div>
+    <div class="card"><h3 id="h-ch-bofam">Pieces still open, by parts family - click a bar to filter</h3><div class="chartbox" data-h="420"><canvas id="ch-bofam"></canvas></div></div>
+    <div id="bo-detail"></div>
     <h2>Line detail</h2>
     <p class="hint">Click any header to sort. A negative days open means the delivery date has not arrived yet.</p>
     <div class="scroll" id="t-bo"></div>
@@ -792,7 +810,7 @@ table.clickable tbody tr{cursor:pointer}
         <tbody id="cov-rows"></tbody>
       </table>
     </div>
-    <h2>Why the warehouse reads 60% and the backlog 87%</h2>
+    <h2 id="cov-head">Why the warehouse reads less than the backlog</h2><!-- filled from the payload below, so the heading cannot go stale when the classification file moves -->
     <div class="card" style="font-size:12.5px"><div id="why-60"></div>
       <p class="note">A small separate point, worth one line: 163 real AIM family names that once existed in
       <code>aim_pn_classification.csv.bak_pre_eq_20260917</code> are empty in the current master. That is a restore item,
@@ -858,6 +876,8 @@ table.clickable tbody tr{cursor:pointer}
   var NAVY='#15233c',TERRA='#c0552d',GREEN='#1e6b4f',RED='#9c2a1a';
   var PAL=['#15233c','#c0552d','#1e6b4f','#4a6fa5','#b8860b','#7a5c8e','#2f7d7d','#9c4a4a'];
   var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
+  /* escm escapes the quotes as well, so a label can be read back out of an attribute intact */
+  var escm=function(s){return esc(s).replace(/'/g,'&#39;');};
   var nf=function(v){return (v==null||isNaN(v))?'-':Math.round(v).toLocaleString('en-GB');};
   var pc=function(v,d){return (v==null||isNaN(v))?'-':(100*v).toFixed(d==null?1:d)+'%';};
   var K=D.kpi;
@@ -883,9 +903,12 @@ table.clickable tbody tr{cursor:pointer}
         ch.update();
       }catch(e){}
     }
-    /* a doughnut cannot compute its arcs while hidden, so verify at the moment the panel first
-       has a visible box */
+    /* a doughnut cannot compute its arcs while hidden, and even when visible it can need one
+       more frame before its geometry exists, so verify now and again on the next frame */
     verifyPainted(t);
+    if(window.requestAnimationFrame){
+      requestAnimationFrame(function(){ verifyPainted(t); });
+    }
   }
   function sizeVisiblePanel(){
     var on=document.querySelector('.panel.on');
@@ -931,7 +954,9 @@ table.clickable tbody tr{cursor:pointer}
   var SEL={
     'p-delay':{dim:'band',dim2:'status',f:{}},
     'p-parts':{dim:'aim',f:{}},
-    'p-bo':   {dim:'customer',f:{}},
+    /* deepDim is the family vocabulary used inside the customer deep dive, so the choice survives
+       the redraw that every click triggers */
+    'p-bo':   {dim:'customer',deepDim:'aim',f:{}},
     'p-wait': {dim:'noun',f:{}},
     'p-who':  {dim:'customer',f:{}}
   };
@@ -1346,9 +1371,32 @@ table.clickable tbody tr{cursor:pointer}
       {k:'oldest',t:'Longest wait',n:true},{k:'statuses',t:'Process status'}], D.dparts, 60,
       function(r){SEL['p-parts'].f={pn:r.pn};renderAll();});
 
-    /* When a filter is active on this tab, show the LINE detail the click selected, so clicking a
-       bar visibly narrows something rather than only tinting the chart. */
+    /* The parts table above is a payload computed from all 1,090 over-30-day lines independently of
+       the click filter, which is why a bar click never narrowed it. When a filter is active the
+       same payload is rebuilt from the FILTERED rows instead, so the table and the line detail
+       below agree with the bar. Clear restores the unfiltered set. */
     var pf=SEL['p-parts'].f, pfk=Object.keys(pf);
+    if(pfk.length){
+      var pfilt=rowsFor('p-parts',D.iml_facts).filter(function(r){return r.days>30;});
+      var byPn={};
+      pfilt.forEach(function(r){
+        var k=r.pn;
+        if(!byPn[k]) byPn[k]={pn:k,part:r.part,aim:r.aim,cat:r.cat,pcs:0,lines:0,orders:{},oldest:0,statuses:{}};
+        var g=byPn[k]; g.pcs+=r.qty||0; g.lines++; g.orders[r.order]=1; g.statuses[r.status]=1;
+        if((r.days||0)>g.oldest) g.oldest=r.days||0;
+      });
+      var pfRows=Object.keys(byPn).map(function(k){var g=byPn[k];
+        return {pn:g.pn,part:g.part,aim:g.aim,cat:g.cat,pcs:g.pcs,lines:g.lines,
+                orders:Object.keys(g.orders).length,oldest:g.oldest,
+                statuses:Object.keys(g.statuses).sort().join('/')};})
+        .sort(function(a,b){return b.pcs-a.pcs;});
+      makeTable('t-dparts',[
+        {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'cat',t:'Catalogue category'},
+        {k:'pcs',t:'Pieces delayed',n:true},{k:'lines',t:'Lines',n:true},{k:'orders',t:'Orders',n:true},
+        {k:'oldest',t:'Longest wait',n:true},{k:'statuses',t:'Process status'}], pfRows, 60,
+        function(r){SEL['p-parts'].f={pn:r.pn};renderAll();});
+    }
+
     (function(){
       var host=document.getElementById('t-dparts-lines'); if(!host) return;
       if(!pfk.length){ host.innerHTML=''; return; }
@@ -1387,7 +1435,18 @@ table.clickable tbody tr{cursor:pointer}
       if(!ovSel){ host.innerHTML=''; return; }
       var delayedPn={};
       D.iml_facts.forEach(function(r){ if(r.days>30 && !delayedPn[r.pn]) delayedPn[r.pn]=r; });
-      var rows=D.bo_lines.filter(function(r){return r.customer===ovSel && delayedPn[r.pn];});
+      var allRows=D.bo_lines.filter(function(r){return r.customer===ovSel && delayedPn[r.pn];});
+      var famSel=SEL['p-who'].f.wfam||'';
+      var partSel=SEL['p-who'].f.wpart||'';
+      var rows=allRows.filter(function(r){
+        if(famSel && r.aim!==famSel) return false;
+        if(partSel && r.pn!==partSel) return false;
+        return true;});
+      /* the path, so the level you are on is always visible */
+      var pathLine=ovSel
+        +(famSel?(' > '+famSel):'')
+        +(partSel?(' > '+partSel):'')
+        +' ('+rows.length+' lines)';
       rows.sort(function(a,b){return (b.days_open||0)-(a.days_open||0);});
       var pns={}, pieces=0, oldest=0, urgent=0;
       rows.forEach(function(r){
@@ -1404,14 +1463,18 @@ table.clickable tbody tr{cursor:pointer}
         +'<p class="q">Every open line this distributor has on a part number that is also sitting over 30 days in the '
         +'IML warehouse, oldest first. This is a part-number link, not a traced order - see the note at the top of '
         +'this tab.</p>'
-        +'<div class="applied on" style="border-left-color:var(--navy)"><span>showing: <b>'+esc(ovSel)+'</b></span>'
+        +'<div class="applied on" style="border-left-color:var(--navy)"><span class="path">'+esc(pathLine)+'</span>'
+        +(famSel||partSel?'<button class="clearbtn" data-back="p-who">Step back one level</button>':'')
         +'<button class="clearbtn" data-clearsel="p-who">Clear selection</button></div>'
         +'<div class="kpis" id="k-who-detail"></div>'
+        +(famSel?'<p class="hint">Family <b>'+esc(famSel)+'</b> is selected. Click a family bar below, or clear, to go back.</p>':'')
         +'<div class="row r2"><div class="card"><h3>Pieces waiting, by parts family</h3>'
-        +'<canvas id="ch-whofam" data-h="300" style="max-height:300px"></canvas></div>'
+        +'<div class="chartbox" data-h="300"><canvas id="ch-whofam"></canvas></div></div>'
         +'<div class="card"><h3>Days waiting of the oldest lines, by part</h3>'
-        +'<canvas id="ch-whowait" data-h="300" style="max-height:300px"></canvas></div></div>'
-        +'<h2>The lines, oldest first</h2><div class="scroll" id="t-wholines"></div>';
+        +'<div class="chartbox" data-h="300"><canvas id="ch-whowait"></canvas></div></div></div>'
+        +'<h2>The lines, oldest first</h2>'
+        +'<p class="hint">Click a part number in the table to add it to the path.</p>'
+        +'<div class="scroll" id="t-wholines"></div>';
 
       kpi('k-who-detail',[
         {n:nf(rows.length),l:'open lines',tip:'Lines this distributor has open on a part number the IML warehouse holds over 30 days.'},
@@ -1424,9 +1487,16 @@ table.clickable tbody tr{cursor:pointer}
       if(fams.length){
         SUM.whofam={}; fams.forEach(function(f){SUM.whofam[f.k]=f.v;});
         draw('ch-whofam',{type:'bar',data:{labels:fams.map(function(f){return f.k;}),
-          datasets:[{label:'Pieces',data:fams.map(function(f){return f.v;}),backgroundColor:NAVY}]},
-          options:Object.assign({},gOpt,{indexAxis:'y',plugins:{legend:{display:false}},
+          datasets:[{label:'Pieces',data:fams.map(function(f){return f.v;}),
+            backgroundColor:fams.map(function(f){return f.k===famSel?NAVY:'#9aa8bd';})}]},
+          options:Object.assign({},gOpt,{indexAxis:'y',plugins:{legend:{display:false},
+            tooltip:{callbacks:{afterLabel:function(){return 'click to set this family on the path';}}}},
             scales:{x:{grid:{color:'#eceae4'}},y:{grid:{display:false},ticks:{font:{size:10}}}}})});
+        bindChartClick('ch-whofam','p-who','bar',null,function(h){
+          var k=fams[h.i].k;
+          SEL['p-who'].f.wfam=(SEL['p-who'].f.wfam===k)?'':k;
+          if(!SEL['p-who'].f.wfam) delete SEL['p-who'].f.wfam;
+          renderAll();});
       }
       var waitArr=rows.slice(0,14).map(function(r){return {pn:r.pn,part:r.part,d:r.days_open||0};});
       if(waitArr.length){
@@ -1434,8 +1504,14 @@ table.clickable tbody tr{cursor:pointer}
         draw('ch-whowait',{type:'bar',data:{labels:waitArr.map(function(r){return r.pn;}),
           datasets:[{label:'Days waiting',data:waitArr.map(function(r){return r.d;}),backgroundColor:TERRA}]},
           options:Object.assign({},gOpt,{indexAxis:'y',plugins:{legend:{display:false},
-            tooltip:{callbacks:{afterLabel:function(c){return waitArr[c.dataIndex].part;}}}},
+            tooltip:{callbacks:{afterLabel:function(c){return waitArr[c.dataIndex].part;
+              },afterBody:function(){return 'click to set this part on the path';}}}},
             scales:{x:{grid:{color:'#eceae4'}},y:{grid:{display:false},ticks:{font:{size:10}}}}})});
+        bindChartClick('ch-whowait','p-who','bar',null,function(h){
+          var pn=waitArr[h.i].pn;
+          SEL['p-who'].f.wpart=(SEL['p-who'].f.wpart===pn)?'':pn;
+          if(!SEL['p-who'].f.wpart) delete SEL['p-who'].f.wpart;
+          renderAll();});
       }
 
       makeTable('t-wholines',[
@@ -1443,10 +1519,19 @@ table.clickable tbody tr{cursor:pointer}
         {k:'saty',t:'Order type',f:function(r){var cl=r.saty==='VOR'?'vor':(r.saty==='RUSH'?'rush':'sor');
           return '<span class="pill '+cl+'">'+esc(r.saty)+'</span>';}},
         {k:'qty',t:'Open pieces',n:true},{k:'days_open',t:'Days waiting',n:true,
-          f:function(r){return r.days_open<0?'not yet due':r.days_open;}}], rows, 400);
+          f:function(r){return r.days_open<0?'not yet due':r.days_open;}}], rows, 400,
+        function(r){
+          SEL['p-who'].f.wpart=(SEL['p-who'].f.wpart===r.pn)?'':r.pn;
+          if(!SEL['p-who'].f.wpart) delete SEL['p-who'].f.wpart;
+          renderAll();});
 
       var cb2=document.querySelector('#who-detail button[data-clearsel]');
       if(cb2)cb2.onclick=function(){SEL['p-who'].f={};renderAll();};
+      var sb=document.querySelector('#who-detail button[data-back]');
+      if(sb)sb.onclick=function(){
+        if(SEL['p-who'].f.wpart) delete SEL['p-who'].f.wpart;
+        else if(SEL['p-who'].f.wfam) delete SEL['p-who'].f.wfam;
+        renderAll();};
     })();
 
     makeTable('t-perpart',[
@@ -1456,7 +1541,49 @@ table.clickable tbody tr{cursor:pointer}
       {k:'n_custs',t:'Distributors waiting',n:true},{k:'custs',t:'Which distributors'},
       {k:'bo_pcs',t:'Pieces they wait for',n:true},{k:'bo_oldest',t:'Oldest of their orders',n:true},
       {k:'bo_urgent',t:'Urgent lines',n:true}], D.per_part, 120,
-      function(r){SEL['p-bo'].f={pn:r.pn};renderAll();});
+      function(r){SEL['p-who'].f={};SEL['p-who'].f.wpart=r.pn;renderAll();});
+
+    /* The per-part table above is the payload computation over all over-30-day warehouse parts, so a
+       bar click never narrowed it. When the deep dive selects a distributor, the same table is
+       rebuilt from the FILTERED set so the table matches the bar. */
+    var wf=SEL['p-who'].f, wfk=Object.keys(wf);
+    if(wfk.length){
+      var wfilt=rowsFor('p-who',D.iml_facts).filter(function(r){return r.days>30;});
+      var wByPn={};
+      wfilt.forEach(function(r){
+        var k=r.pn;
+        if(!wByPn[k]) wByPn[k]={pn:k,part:r.part,aim:r.aim,cat:r.cat,d_pcs:0,d_oldest:0,statuses:{}};
+        var g=wByPn[k]; g.d_pcs+=r.qty||0; g.statuses[r.status]=1;
+        if((r.days||0)>g.d_oldest) g.d_oldest=r.days||0;
+      });
+      var custByPn={};
+      D.bo_lines.forEach(function(r){
+        if(wf.customer && r.customer!==wf.customer) return;
+        if(!(r.pn in wByPn)) return;
+        var k=r.pn;
+        if(!custByPn[k]) custByPn[k]={n_custs:{},custs:{},bo_pcs:0,bo_oldest:0,bo_urgent:0};
+        var c=custByPn[k]; c.n_custs[r.customer]=1; c.custs[r.customer]=1;
+        c.bo_pcs+=r.qty||0;
+        if((r.days_open||0)>c.bo_oldest) c.bo_oldest=r.days_open||0;
+        if(r.saty==='VOR'||r.saty==='RUSH'||r.saty==='SVOR') c.bo_urgent++;
+      });
+      var wRows=Object.keys(wByPn).map(function(k){
+        var g=wByPn[k], c=custByPn[k]||{n_custs:{},custs:{},bo_pcs:0,bo_oldest:0,bo_urgent:0};
+        return {pn:g.pn,part:g.part,aim:g.aim,cat:g.cat,d_pcs:g.d_pcs,d_oldest:g.d_oldest,
+                d_status:Object.keys(g.statuses).sort().join('/'),
+                n_custs:Object.keys(c.n_custs).length,
+                custs:Object.keys(c.custs).sort().join(', '),
+                bo_pcs:c.bo_pcs,bo_oldest:c.bo_oldest,bo_urgent:c.bo_urgent};
+      }).sort(function(a,b){return b.d_pcs-a.d_pcs;});
+      makeTable('t-perpart',[
+        {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'cat',t:'Catalogue category'},
+        {k:'d_pcs',t:'Pieces held in warehouse',n:true},{k:'d_oldest',t:'Warehouse wait',n:true},
+        {k:'d_status',t:'Warehouse status'},
+        {k:'n_custs',t:'Distributors waiting',n:true},{k:'custs',t:'Which distributors'},
+        {k:'bo_pcs',t:'Pieces they wait for',n:true},{k:'bo_oldest',t:'Oldest of their orders',n:true},
+        {k:'bo_urgent',t:'Urgent lines',n:true}], wRows, 120,
+        function(r){SEL['p-who'].f={wpart:r.pn};renderAll();});
+    }
 
     /* ---- recurrence (week series, not filterable line data) ---- */
     var uw=D.uti_week;
@@ -1509,6 +1636,8 @@ table.clickable tbody tr{cursor:pointer}
     var bbase=rowsFor('p-bo',D.bo_facts);
     var bd=SEL['p-bo'].dim;
     var bdname=(BO_DIMS.filter(function(x){return x.k===bd;})[0]||{t:'value'}).t;
+    /* the bars actually drawn on chart 1, so the deep dive can name the one you clicked */
+    var boBars=[];
 
     if(bd==='customer'){
       var cMap={};
@@ -1516,6 +1645,8 @@ table.clickable tbody tr{cursor:pointer}
       var cArr=Object.keys(cMap).map(function(k){return {k:k,v:cMap[k]};})
         .sort(function(a,b){return b.v-a.v;}).slice(0,22);
       SUM.cust={}; cArr.forEach(function(r){SUM.cust[r.k]=r.v;});
+      boBars=cArr.map(function(r){var o=0;bbase.forEach(function(x){
+        if(x.customer===r.k)o=Math.max(o,x.days||0);});return {key:'customer',label:r.k,pcs:r.v,oldest:o};});
       setTitle('h-ch-cust','Pieces still open, by distributor');
       draw('ch-cust',{type:'bar',data:{labels:cArr.map(function(r){return r.k;}),
         datasets:[{label:'Pieces open',data:cArr.map(function(r){return r.v;}),backgroundColor:NAVY}]},
@@ -1540,6 +1671,7 @@ table.clickable tbody tr{cursor:pointer}
     } else {
       var bg1=safeGroups('p-bo',bd,groupBy(bbase,bd,'qty'),D.bo_facts,bdname,'qty');
       SUM.bg1={}; bg1.forEach(function(r){SUM.bg1[r.k]=r.qty;});
+      boBars=bg1.map(function(r){return {key:bd,label:r.k,pcs:r.qty,oldest:r.maxDays};});
       setTitle('h-ch-cust','Pieces still open, by '+bdname);
       draw('ch-cust',{type:'bar',data:{labels:bg1.map(function(r){return r.k;}),
         datasets:[{label:'Pieces open',data:bg1.map(function(r){return r.qty;}),backgroundColor:NAVY}]},
@@ -1561,8 +1693,12 @@ table.clickable tbody tr{cursor:pointer}
       bindChartClick('ch-custage','p-bo','bar',null,function(h){return bg2[h.i].k;});
     }
 
-    var bfMap={};
-    bbase.forEach(function(r){bfMap[r.aim]=(bfMap[r.aim]||0)+r.qty;});
+    /* The family picker keeps every family in view for the distributor selected, rather than
+       collapsing to the one family already chosen, so it stays a usable way to move sideways. */
+    var bfMap={}, bfRoot={};
+    var _bfc=SEL['p-bo'].f.customer;
+    D.bo_facts.forEach(function(r){ if(_bfc && r.customer!==_bfc) return;
+      bfMap[r.aim]=(bfMap[r.aim]||0)+r.qty; bfRoot[r.aim]=1; });
     var bfArr=Object.keys(bfMap).map(function(k){return {k:k,v:bfMap[k]};})
       .sort(function(a,b){return b.v-a.v;}).slice(0,16);
     SUM.bofam={}; bfArr.forEach(function(r){SUM.bofam[r.k]=r.v;});
@@ -1573,21 +1709,216 @@ table.clickable tbody tr{cursor:pointer}
       datasets:[{label:'Pieces open',data:bfArr.map(function(r){return r.v;}),
         backgroundColor:bfArr.map(function(r){return (r.k==='in AIM, no family yet'||r.k==='not in the AIM file')?'#c9c2b6':NAVY;})}]},
       options:Object.assign({},gOpt,{indexAxis:'y',plugins:{legend:{display:false},
-        tooltip:{callbacks:{afterLabel:function(){return 'click to filter to this value';}}}},
+        tooltip:{callbacks:{afterLabel:function(){return 'click to filter to this family';}}}},
         scales:{x:{grid:{color:'#eceae4'}},y:{grid:{display:false},ticks:{font:{size:10}}}}})});
-    bindChartClick('ch-bofam','p-bo','bar',null,function(h){return bfArr[h.i].k;});
+    /* This chart is always grouped by AIM family, so its click sets the AIM filter directly. Going
+       through the shared facet() used the panel's current dimension instead, which meant clicking a
+       family bar set the DISTRIBUTOR filter to a family name and the deep dive opened on no rows. */
+    (function(){
+      var c=document.getElementById('ch-bofam'); if(!c) return;
+      c.style.cursor='pointer';
+      if(c.__old) c.removeEventListener('click',c.__old);
+      var h=function(ev){
+        var ch=CH['ch-bofam']; if(!ch) return;
+        var r=c.getBoundingClientRect();
+        var hit=barHit(ch,ev.clientX-r.left,ev.clientY-r.top);
+        if(!hit) return;
+        var k=bfArr[hit.i].k, f=SEL['p-bo'].f;
+        if(f.aim===k) delete f.aim; else f.aim=k;
+        delete f.pn; delete f.cat;
+        renderAll();
+      };
+      c.__old=h; c.addEventListener('click',h);
+    })();
 
     var brows=bbase.map(function(r){
       return {customer:r.customer,pn:r.pn,part:r.part,saty:r.saty,qty:r.qty,
               days_open:(r.days==null?-1:r.days),aim:r.aim,cat:r.cat,
-              req_dlv:(r.days==null?'':String(r.days))};});
+              req_dlv:(r.req||'')};});
     makeTable('t-bo',[
       {k:'customer',t:'Distributor'},{k:'pn',t:'Part'},{k:'part',t:'Name'},
       {k:'saty',t:'Order type',f:function(r){var cl=r.saty==='VOR'?'vor':(r.saty==='RUSH'?'rush':'sor');
         return '<span class="pill '+cl+'">'+esc(r.saty)+'</span>';}},
       {k:'aim',t:'AIM family'},{k:'cat',t:'Catalogue category'},{k:'qty',t:'Pieces',n:true},
+      {k:'req_dlv',t:'Required delivery date'},
       {k:'days_open',t:'Days open',n:true,f:function(r){return r.days_open<0?'not yet due':r.days_open;}}],
       brows, 400);
+
+    /* ---------------- the customer drill: distributor -> family -> part -> lines ----------------
+       Jerome, 2026-10-08: "click on a customer and see which AIM category & parts he is waiting on".
+       His chain is customer, then family, then part, then the lines. It lives here on this tab and is
+       a part-number link to the customer's own open orders, never a traced warehouse document. */
+    (function(){
+      var host=document.getElementById('bo-detail'); if(!host) return;
+      var f=SEL['p-bo'].f, dim=SEL['p-bo'].dim;
+      var leaf=''; for(var lk in f){ if(f.hasOwnProperty(lk)) leaf=lk; }   /* the deepest key */
+      var keys=[];
+      ['customer','aim','cat','fig','saty','loc','band','pn'].forEach(function(k){
+        if(f.hasOwnProperty(k)) keys.push(k); });
+      if(!keys.length){ host.innerHTML='<div class="hint" style="margin-top:16px">Click a bar above to open the '
+        +'deep dive for that customer: the AIM family and the parts they are waiting on.</div>'; return; }
+
+      /* the path, in the order the levels were clicked, so the level you are on is always visible */
+      var path=keys.map(function(k){return esc(f[k]);}).join(' &gt; ');
+      /* every open line this customer has asked for and not received, oldest first. This is the whole
+         of his open backlog, not a cut of it, so the deep dive's line count and pieces are the bar's
+         own value - which is the check that it is the same thing he clicked. */
+      var rows=rowsFor('p-bo',D.bo_facts).slice();
+      rows.sort(function(a,b){return (b.days||0)-(a.days||0);});
+
+      var pns={}, pieces=0, oldest=0, urgent=0;
+      rows.forEach(function(r){ pns[r.pn]=1; pieces+=r.qty||0;
+        if((r.days||0)>oldest) oldest=r.days||0;
+        if(r.saty==='VOR'||r.saty==='RUSH'||r.saty==='SVOR') urgent++; });
+
+      /* What the bars drill to next. The chain Jerome asked for is customer, then family, then part,
+         then the lines, so once a family is on the path the next level is the part number and not the
+         other family vocabulary. Only dimensions that still leave a level below are offered. */
+      var famChosen=!!(f.aim||f.cat);
+      var NEXT=(famChosen?['pn']:({'customer':['aim','cat'],'aim':['pn'],'cat':['pn'],
+                'saty':['aim','cat'],'band':['customer','aim','cat'],'loc':['customer','aim','cat'],
+                'fig':['customer','aim','cat'],'pn':[]}[dim]||[]));
+      NEXT=NEXT.filter(function(d){return keys.indexOf(d)<0;});
+      if(f.pn) NEXT=[];
+      /* The two family vocabularies are both available inside the deep dive, because Jerome asked for
+         the AIM category and the catalogue category is the alternative cut of the same lines. The
+         choice sticks in the panel, so it survives the rebuild that every click triggers. */
+      var deepDim=(SEL['p-bo'].deepDim==='cat')?'cat':'aim';
+      var g1=null, g2=null;
+      if(NEXT.length){
+        if(famChosen){ g1=NEXT[0]; g2=deepDim; }          /* the part level, and the family beside it */
+        else { g1=deepDim; g2=(deepDim==='aim')?'cat':'aim'; }
+        if(g2===g1) g2=(g1==='aim')?'cat':'aim';
+      } else if(f.pn||f.aim||f.cat){
+        /* the deepest level: one part, or one family. How urgent its lines are, and how old. */
+        g1='saty'; g2='band';
+      } else { g1=deepDim; g2=(deepDim==='aim')?'cat':'aim'; }
+      /* how many bars a grouping would draw, so a chart that would come out as a single bar can be
+         swapped for a different cut of the same lines. A one-bar chart tells the reader nothing. */
+      function gcount(key){
+        var m={}; rows.forEach(function(r){ var k=(r[key]==null||r[key]==='')?'(none)':String(r[key]); m[k]=1; });
+        return Object.keys(m).length; }
+      function cands(pref){ return [pref].concat(['aim','cat','pn','saty','band','customer']
+        .filter(function(x){return x!==pref;})); }
+      if(g1!=='saty'&&g1!=='band'&&gcount(g1)<2){
+        var c1=cands(g1);
+        for(var ci=0;ci<c1.length;ci++){ if(gcount(c1[ci])>=2){ g1=c1[ci]; break; } }
+      }
+      if(g2!=='saty'&&g2!=='band'&&(g2===g1||gcount(g2)<2)){
+        var c2=cands(g2);
+        for(var cj=0;cj<c2.length;cj++){ if(c2[cj]!==g1&&gcount(c2[cj])>=2){ g2=c2[cj]; break; } }
+      }
+
+      /* what the deep dive is currently showing, in the DOM, so the QA harness can read it */
+      var anchor=document.getElementById('out-p-bo');
+      if(anchor) anchor.setAttribute('data-deep',g1+'|'+rows.length+' lines|'
+        +rows.reduce(function(a,r){return a+(r.qty||0);},0)+' pieces');
+
+      host.innerHTML='<h2>Deep dive: '+path+'</h2>'
+        +'<p class="q">Every open line this customer has asked for and not received, oldest first, with the AIM '
+        +'family and the catalogue category on each line. The path above grows as you click deeper: distributor, '
+        +'then family, then part, then the lines. This is the distributor\'s own open order, not a traced IML '
+        +'warehouse document. The line count and the pieces here are the same as the bar you clicked.</p>'
+        +'<div class="applied on" style="border-left-color:var(--navy)"><span class="path">'+path
+        +' ('+rows.length+' lines)</span>'
+        +'<button class="clearbtn" id="bo-switch">Group by: '
+        +((deepDim==='aim')?'AIM family (click for catalogue category)':'catalogue category (click for AIM family)')
+        +'</button>'
+        +(keys.length>1?'<button class="clearbtn" id="bo-back">Step back one level</button>':'')
+        +'<button class="clearbtn" id="bo-clear">Clear all</button></div>'
+        +'<div class="kpis" id="k-bo-detail"></div>'
+        +'<div class="row r2">'
+        +'<div class="card"><h3 id="h-ch-bodeep">Pieces waiting, by '+((deepDim==='aim')?'AIM family':'catalogue category')+'</h3>'
+        +'<div class="chartbox" data-h="300"><canvas id="ch-bodeep"></canvas></div></div>'
+        +'<div class="card"><h3 id="h-ch-bodeepage">Oldest wait in days, by parts family</h3>'
+        +'<div class="chartbox" data-h="300"><canvas id="ch-bodeepage"></canvas></div></div>'
+        +'</div>'
+        +'<h2>The lines, oldest first</h2>'
+        +'<p class="hint" id="bodeep-hint">Click a bar above, or a part number in the table, to narrow to it.</p>'
+        +'<div class="scroll" id="t-bodeep"></div>';
+
+      kpi('k-bo-detail',[
+        {n:nf(rows.length),l:'open lines',tip:'Open lines this selection leaves in the week 41 backlog.'},
+        {n:nf(Object.keys(pns).length),l:'distinct part numbers',tip:'Distinct part numbers across those lines.'},
+        {n:nf(pieces),l:'pieces',tip:'Open quantity on those lines.'},
+        {n:nf(oldest)+' d',l:'oldest wait',cls:'warn',tip:'Days since the delivery date the distributor asked for, against 6 October 2026.'},
+        {n:nf(urgent),l:'urgent lines (VOR or RUSH)',cls:'warn',tip:'Lines the distributor flagged vehicle off road or urgent.'}
+      ]);
+
+      function drawGroup(canvasId,titleId,key,metric,accent){
+        var m={};
+        rows.forEach(function(r){ var k=(r[key]==null||r[key]==='')?'(none recorded)':String(r[key]);
+          if(!m[k]) m[k]={k:k,pcs:0,oldest:0,n:0};
+          m[k].pcs+=r.qty||0; m[k].n++; if((r.days||0)>m[k].oldest) m[k].oldest=r.days||0; });
+        var arr=Object.keys(m).map(function(k){return m[k];})
+          .sort(function(a,b){return metric==='oldest'?b.oldest-a.oldest:b.pcs-a.pcs;}).slice(0,14);
+        var labelFor={'aim':'AIM family','cat':'catalogue category','pn':'part number','customer':'distributor',
+                      'saty':'order type','band':'how long it has waited','loc':'ships from',
+                      'fig':'parts family group'}[key]||key;
+        var title=document.getElementById(titleId);
+        if(title) title.textContent=(metric==='oldest'?'Oldest wait in days, by ':'Pieces waiting, by ')+labelFor;
+        if(!arr.length){ return; }
+        SUM['bo_'+canvasId]=arr.reduce(function(a,r){a[r.k]=r[metric==='oldest'?'oldest':'pcs'];return a;},{});
+        draw(canvasId,{type:'bar',data:{labels:arr.map(function(r){return String(r.k).slice(0,40);}),
+          datasets:[{label:(metric==='oldest'?'Days waiting':'Pieces'),
+            data:arr.map(function(r){return metric==='oldest'?r.oldest:r.pcs;}),
+            backgroundColor:accent||NAVY}]},
+          options:Object.assign({},gOpt,{indexAxis:'y',plugins:{legend:{display:false},
+            tooltip:{callbacks:{afterLabel:function(c){var r=arr[c.dataIndex];
+              return nf(r.n)+' lines, '+nf(r.pcs)+' pieces, oldest '+r.oldest+' days - click to drill in';}}}},
+            scales:{x:{grid:{color:'#eceae4'}},y:{grid:{display:false},ticks:{font:{size:10}}}}})});
+        /* clicking a bar adds that level to the path when the level can be drilled; a part number
+           always can, a family can once we are on the customer */
+        var nextKey=(key==='pn')?'pn':key;
+        bindChartClick(canvasId,'p-bo','bar',null,function(h){
+          var k=arr[h.i].k;
+          var ks=Object.keys(f);
+          /* a family or a part replaces any deeper level already on the path, so clicking a family
+             after a part does not leave both on and filter to nothing */
+          if(nextKey!=='pn'){ for(var z=ks.length-1;z>=0;z--){ if(ks[z]!=='customer') delete f[ks[z]]; } }
+          if(f[nextKey]===k) delete f[nextKey]; else f[nextKey]=k;
+          renderAll();});
+      }
+      drawGroup('ch-bodeep','h-ch-bodeep',g1,'pcs',NAVY);
+      drawGroup('ch-bodeepage','h-ch-bodeepage',g2,'oldest',TERRA);
+
+      var bh=document.getElementById('bodeep-hint');
+      if(bh) bh.textContent=(NEXT.length?'Click a bar above, or a part number in the table, to go one level deeper.'
+        :'Click a part number in the table to narrow to its own lines.');
+
+      makeTable('t-bodeep',[
+        {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'cat',t:'Catalogue category'},
+        {k:'saty',t:'Order type',f:function(r){var cl=r.saty==='VOR'?'vor':(r.saty==='RUSH'?'rush':'sor');
+          return '<span class="pill '+cl+'">'+esc(r.saty)+'</span>';}},
+        {k:'qty',t:'Pieces',n:true},
+        {k:'req_dlv',t:'Required delivery date'},
+        {k:'days_open',t:'Days waiting',n:true,f:function(r){return r.days_open<0?'not yet due':r.days_open;}}],
+        rows, 400, function(r){
+          if(f.pn===r.pn) delete f.pn; else f.pn=r.pn;
+          renderAll();});
+
+      var bb=document.getElementById('bo-back');
+      if(bb) bb.onclick=function(){ var ks=Object.keys(f); if(ks.length) delete f[ks[ks.length-1]]; renderAll(); };
+      /* switching the family vocabulary drops whichever family was on the path, because a catalogue
+         category name is not an AIM family name and leaving it on would filter to nothing */
+      var sw=document.getElementById('bo-switch');
+      if(sw) sw.onclick=function(){
+        SEL['p-bo'].deepDim=(deepDim==='aim')?'cat':'aim';
+        delete f.aim; delete f.cat; delete f.pn;
+        renderAll(); };
+      var bc=document.getElementById('bo-clear');
+      if(bc) bc.onclick=function(){ SEL['p-bo'].f={}; renderAll(); };
+    })();
+
+    /* the customer backlog state, in the DOM, for the QA harness: full counts and the click depth */
+    (function(){
+      var a=document.getElementById('out-p-bo'); if(!a) return;
+      var keys=Object.keys(SEL['p-bo'].f);
+      a.setAttribute('data-count',bbase.length+'|'+bbase.reduce(function(x,r){return x+(r.qty||0);},0));
+      a.setAttribute('data-depth',String(keys.length)+'|'+(keys.length?keys[keys.length-1]:'')+'|'
+        +esc(SEL['p-bo'].f[keys[keys.length-1]]||''));
+      a.setAttribute('data-bar0',boBars.length?(boBars[0].label+'|'+(boBars[0].key||'')+'|'+boBars[0].pcs):'');
+    })();
 
     /* the filter banner, built in the same pass as the tables */
     (function(){
@@ -1632,7 +1963,6 @@ table.clickable tbody tr{cursor:pointer}
           return g.lines+' lines, '+g.pns+' part numbers, longest wait '+g.oldest+' days';}}}},
         scales:{x:{grid:{color:'#eceae4'}},y:{grid:{display:false},ticks:{font:{size:10}}}}})});
     bindChartClick('ch-wait','p-wait','bar',null,function(h){return wgroups[h.i].key;});
-    bindChartClick('ch-waitage','p-wait','bar',null,function(h){return waArr[h.i].key;});
 
     var waArr=wgroups.slice().sort(function(a,b){return b.oldest-a.oldest;});
     setTitle('h-ch-waitage','Longest wait in days, by '+wdimLabel);
@@ -1656,8 +1986,7 @@ table.clickable tbody tr{cursor:pointer}
       {k:'n_customers',t:'Customers waiting',n:true},
       {k:'examples',t:'Examples',f:function(r){
         return (r.examples||[]).map(function(e){return esc(e.pn+' '+e.part);}).join('<br>');}}],
-      wgroups, 40, function(r){SEL['p-wait'].f={};SEL['p-wait'].f[wdim]=r.key;renderAll();});
-
+      wgroups, 40, function(r){SEL['p-wait'].f={};SEL['p-wait'].f[wdim]=r.key;SEL['p-wait'].dim=wdim;renderAll();});
     var custRows=[];
     wrows.forEach(function(g){
       (g.customers||[]).forEach(function(c){
@@ -1680,7 +2009,10 @@ table.clickable tbody tr{cursor:pointer}
     var wlines=[];
     D.iml_facts.forEach(function(r){
       if(r.days<=30) return;
-      var key=(wdim==='noun')?r.noun:(wdim==='aim')?r.aim:(wdim==='cat')?r.cat:r.part;
+      var key=(wdim==='noun')?r.noun
+              :(wdim==='aim')?r.aim
+              :(wdim==='cat')?r.cat
+              :(r.part.indexOf(';')>=0?r.part.split(';')[0].trim():'');   /* aim2: the prefix before ';' */
       if(wsel && String(key)!==String(wsel)) return;
       wlines.push({order:r.order,pn:r.pn,part:r.part,status:r.status,qty:r.qty,days:r.days,
                    band:r.band,mode:r.mode,aim:r.aim,cat:r.cat,noun:r.noun});
@@ -1795,6 +2127,17 @@ table.clickable tbody tr{cursor:pointer}
   if(/[?&]qa=/.test(location.search)){
     window.__QA={CH:CH,SEL:SEL,rowsFor:rowsFor,SUM:SUM,renderAll:renderAll,
       barHit:barHit,arcHit:arcHit,facet:facet,renderApplied:renderApplied,
+      /* the box the page's own hit-test uses for one bar, so a QA driver aims where a person clicks */
+      barBox:function(id,i){var ch=CH[id];if(!ch)return null;
+        if(ch.config.type!=='bar')return null;            /* only a bar has a clickable box */
+        var el=ch.getDatasetMeta(0).data[i||0];
+        if(!el||el.skip)return null;
+        if(!isFinite(el.x)||!isFinite(el.y)||!isFinite(el.base)||!isFinite(el.width))return null;
+        var c=document.getElementById(id); if(!c)return null;
+        var r=c.getBoundingClientRect();
+        var left=el.x-el.width/2,right=el.x+el.width/2;
+        var top=Math.min(el.y,el.base),bot=Math.max(el.y,el.base);
+        return {x:r.left+(left+right)/2,y:r.top+(top+bot)/2,label:String(ch.data.labels[i||0])};},
       state:function(){return {sel:JSON.parse(JSON.stringify(SEL)),sum:JSON.parse(JSON.stringify(SUM))};}};
     window.addEventListener('error',function(e){ window.__QA.err=String(e.message)+' | '+(e.error&&e.error.stack); });
     var _ra=renderAll;
@@ -1829,8 +2172,14 @@ table.clickable tbody tr{cursor:pointer}
   document.getElementById('miss-rows').innerHTML=rows.map(function(r){
     return '<tr><td><b>'+esc(r[0])+'</b></td><td>'+esc(r[1])+'</td><td>'+esc(r[2])+'</td></tr>';}).join('');
 
-  /* ---------------- definitions: coverage + why 60% ---------------- */
+  /* ---------------- definitions: coverage, heading and body from the same figures ---------------- */
   var cb=D.cov_bo, cw=D.cov_wh, M2=D.aim_master;
+  /* The heading names the two percentages it sits above. It is written here from the payload, not
+     typed into the template, so it cannot drift from the body or the coverage table when the
+     classification file is rebuilt. */
+  var covHead=document.getElementById('cov-head');
+  if(covHead) covHead.textContent='Why the warehouse reads '+cw.pct_family+'% and the backlog '
+    +cb.pct_family+'% (catalogue category: '+cw.pct_cat+'% and '+cb.pct_cat+'%)';
   var covRows=[
     ['Has a family (AIM)',cb.family,cw.family],
     ['Has a catalogue category',cb.cat,cw.cat],
@@ -1849,9 +2198,14 @@ table.clickable tbody tr{cursor:pointer}
     +'have never sold never got one. That is how the file was built, not a fault. The catalogue category is a different '
     +'vocabulary and is far more complete - <b class="hl">'+nf(M2.cat)+'</b> part numbers carry one - which is why it lifts '
     +'the warehouse picture from '+pc(cw.pct_family/100)+' to '+pc(cw.pct_cat/100)+'.'+
-    '<p>That is the whole reason the warehouse file reads '+pc(cw.pct_family/100)+' and the current sellable backlog reads '
-    +pc(cb.pct_family/100)+': it is <b>which parts are in each list</b>. The warehouse list carries slow, older and one-off '
-    +'parts. The backlog carries parts that are on order right now, which are the parts we sell.</p>'+
+    '<p>This section names no percentages in its heading, on purpose: the figures move whenever the classification file '
+    +'is updated. Stated from the file as it stands in this build: <b class="hl">warehouse '+pc(cw.pct_family/100)
+    +'</b> of lines carry a family and <b class="hl">'+pc(cw.pct_cat/100)+'</b> carry a catalogue category; '
+    +'<b class="hl">backlog '+pc(cb.pct_family/100)+'</b> and <b class="hl">'+pc(cb.pct_cat/100)+'</b>. That is the whole '
+    +'reason the warehouse file reads lower than the current sellable backlog: it is <b>which parts are in each list</b>. '
+    +'The warehouse list carries slow, older and one-off parts. The backlog carries parts that are on order right now, '
+    +'which are the parts we sell. Classification file: <code>aim_master_v2.csv</code>, part numbers '
+    +nf(M2.parts)+', '+esc(D.aim_source||'')+'.</p>'+
     '<p>Of the <b>'+nf(cw.absent)+'</b> warehouse lines with nothing in either column: every one is a genuine ten-digit '
     +'Isuzu part number, not a rebate or a service code. Not one of them has ever been billed, in any month from January '
     +'2023 to August 2026. 292 of the 345 distinct part numbers share their first six digits with a part we do hold, which '

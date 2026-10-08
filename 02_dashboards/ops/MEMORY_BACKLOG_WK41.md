@@ -135,17 +135,22 @@ Clicking a bar narrows the table on the **delay** and **backlog** tabs, and Clea
 because those three tables are built from tables computed in the payload (`D.dparts`, `D.per_part`,
 `D.wait`) rather than from the filtered rows. Next thing to fix.
 
-### The concurrent writer - read this before touching this page again
+### The concurrent writer - resolved 2026-10-08
 
-**Another worker is writing this page and its builder at the same time as this agent.**
+This was live on the evening of 2026-10-07 and is **not live any more**. Re-checked at 11:00 on
+2026-10-08: the only python processes running were streamlit on 8503, a stray `http.server` on 8962
+left over from the 22:11 build, and two twitter-mcp servers. Nothing was writing this page or its
+builder. Across the whole 11:00-11:35 session only the four expected files moved (page, builder,
+launcher, receipt), so the earlier conflict was another run of this same page and it has stopped.
 
-- 18:48: `01_data/00_derived/aim_master_v2.csv` rewritten by a process named `pre_forward_repair_oct4`.
-  Warehouse family coverage moved **60.3% -> 71.6%**, backlog **87.0% -> 90.1%**.
-- 19:11-19:16: `_build_backlog_iml_wk41.py` was edited by something other than this agent (new wording
-  about clicking a distributor bar) and it rebuilt the page at 19:12 and 19:16.
-- Consequence on the page: the Definitions **heading** still says "Why the warehouse reads 60% and the
-  backlog 87%" while its own body reads 71.6% and 90.1%. That inconsistency is real and unresolved.
-- Before editing, check the mtime of the builder and the page. Freeze a snapshot before testing.
+- 18:48, 2026-10-07: `01_data/00_derived/aim_master_v2.csv` rewritten by a process named
+  `pre_forward_repair_oct4`. Warehouse family coverage moved **60.3% -> 71.6%**, backlog
+  **87.0% -> 90.1%**. That file is unchanged since (mtime 2026-10-07 18:48:07).
+- 19:11-19:16, 2026-10-07: the builder was edited by something other than the then-current agent.
+- The stale Definitions heading ("60% and 87%") is **fixed** in the ninth pass: the heading is now
+  written at load from the payload, so it reads 71.6% and 90.1% and cannot drift again.
+- Still worth doing: check the builder and page mtime before editing, and keep the frozen snapshots
+  under `_qa_charts/` for any before-and-after comparison.
 
 ## Regrouping, the waiting view and the build stamp (seventh pass, 2026-10-07)
 

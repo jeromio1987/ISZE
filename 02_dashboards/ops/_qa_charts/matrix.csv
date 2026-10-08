@@ -1,65 +1,22 @@
-tab,dimension,canvas,datasets,points,data_max,scale_max,arcs_drawn,rows_lines,rows_pieces,applied,status
-delay,aim,ch-age,1,18,6821,7000,,2102,43951,,PASS
-delay,aim,ch-status,2,8,21002,25000,,2102,43951,,PASS
-delay,aim,ch-over30,2,8,808,900,,2102,43951,,PASS
-delay,cat,ch-age,1,8,12605,14000,,2102,43951,,PASS
-delay,cat,ch-status,2,8,21002,25000,,2102,43951,,PASS
-delay,cat,ch-over30,2,8,808,900,,2102,43951,,PASS
-delay,status,ch-age,1,4,21002,25000,,2102,43951,,PASS
-delay,status,ch-status,1,6,367,400,,2102,43951,,PASS
-delay,status,ch-over30,2,8,808,900,,2102,43951,,PASS
-delay,mode,ch-age,1,2,43598,50000,,2102,43951,,PASS
-delay,mode,ch-status,2,8,21002,50000,,2102,43951,,PASS
-delay,mode,ch-over30,2,8,808,1000,,2102,43951,,PASS
-delay,band,ch-age,4,24,13860,20000,,2102,43951,,PASS
-delay,band,ch-status,2,8,21002,50000,,2102,43951,,PASS
-delay,band,ch-over30,2,8,808,1000,,2102,43951,,PASS
-delay,pn,ch-age,1,18,5177,10000,,2102,43951,,PASS
-delay,pn,ch-status,2,8,21002,50000,,2102,43951,,PASS
-delay,pn,ch-over30,2,8,808,1000,,2102,43951,,PASS
-parts,aim,ch-waim,1,16,5723,6000,,60,14375,,PASS
-parts,aim,ch-mode,1,2,19708,n/a (doughnut),2,60,14375,,PASS
-parts,cat,ch-waim,1,8,8246,9000,,60,14375,,PASS
-parts,cat,ch-mode,1,2,19708,n/a (doughnut),2,60,14375,,PASS
-parts,status,ch-waim,1,4,8852,9000,,60,14375,,PASS
-parts,status,ch-mode,1,2,19708,n/a (doughnut),2,60,14375,,PASS
-parts,mode,ch-waim,1,2,19708,20000,,60,14375,,PASS
-parts,mode,ch-mode,1,2,19708,n/a (doughnut),2,60,14375,,PASS
-parts,band,ch-waim,1,4,18531,20000,,60,14375,,PASS
-parts,band,ch-mode,1,2,19708,n/a (doughnut),2,60,14375,,PASS
-parts,pn,ch-waim,1,18,5177,6000,,60,14375,,PASS
-parts,pn,ch-mode,1,2,19708,n/a (doughnut),2,60,14375,,PASS
-who,(none),ch-ov,1,14,131,140,,120,2157,,PASS
-recur,(none),ch-uti1,2,78,58,60,,40,,,PASS
-recur,(none),ch-uti2,2,78,202,250,,40,,,PASS
-wait,noun,ch-wait,1,48,5479,6000,,1090,,,PASS
-wait,noun,ch-waitage,1,48,367,400,,1090,,,PASS
-wait,aim,ch-wait,1,23,5723,6000,,1090,,,PASS
-wait,aim,ch-waitage,1,23,367,400,,1090,,,PASS
-wait,cat,ch-wait,1,8,8246,9000,,1090,,,PASS
-wait,cat,ch-waitage,1,8,367,400,,1090,,,PASS
-wait,aim2,ch-wait,1,163,5177,6000,,1090,,,PASS
-wait,aim2,ch-waitage,1,163,367,400,,1090,,,PASS
-fill,(none),ch-fill,1,17,20,5,,20,,,PASS
-bo,customer,ch-cust,1,21,8625,9000,,1846,14739,,PASS
-bo,customer,ch-custage,1,21,1625,1800,,1846,14739,,PASS
-bo,customer,ch-bofam,1,16,2648,3000,,1846,14739,,PASS
-bo,aim,ch-cust,1,18,2648,3000,,1846,14739,,PASS
-bo,aim,ch-custage,1,18,1625,1800,,1846,14739,,PASS
-bo,aim,ch-bofam,1,16,2648,3000,,1846,14739,,PASS
-bo,cat,ch-cust,1,8,4250,4500,,1846,14739,,PASS
-bo,cat,ch-custage,1,8,1625,1800,,1846,14739,,PASS
-bo,cat,ch-bofam,1,16,2648,3000,,1846,14739,,PASS
-bo,saty,ch-cust,1,5,12525,14000,,1846,14739,,PASS
-bo,saty,ch-custage,1,5,1625,1800,,1846,14739,,PASS
-bo,saty,ch-bofam,1,16,2648,3000,,1846,14739,,PASS
-bo,band,ch-cust,1,6,7980,8000,,1846,14739,,PASS
-bo,band,ch-custage,1,6,1625,1800,,1846,14739,,PASS
-bo,band,ch-bofam,1,16,2648,3000,,1846,14739,,PASS
-bo,loc,ch-cust,1,3,10560,12000,,1846,14739,,PASS
-bo,loc,ch-custage,1,3,1625,1800,,1846,14739,,PASS
-bo,loc,ch-bofam,1,16,2648,3000,,1846,14739,,PASS
-bo,fig,ch-cust,1,18,1641,1800,,1846,14739,,PASS
-bo,fig,ch-custage,1,18,1625,1800,,1846,14739,,PASS
-bo,fig,ch-bofam,1,16,2648,3000,,1846,14739,,PASS
-miss,(none),(no chart),0,0,0,,,12,,,PASS
+tab,canvas,clickable,box_h,canvas_h,chart_h,datasets,points,data_max,scale_max,arcs,click_label,click_changed,click_depth,status
+delay,ch-age,yes,340,340,340,4,24,13860,20000,,0-7 days,yes,0||0,PASS
+delay,ch-status,yes,340,340,340,2,8,21002,25000,,BACK ORDER,yes,0||0,PASS
+delay,ch-over30,yes,260,260,260,2,8,808,900,,TO BE PICKED,yes,0||0,PASS
+parts,ch-waim,yes,420,420,420,1,16,5723,6000,,Maintenance Service,yes,0||0,PASS
+parts,ch-mode,yes,260,260,260,1,1,5723,n/a,1,Sea,yes,0||0,PASS
+who,ch-ov,yes,340,340,340,1,14,131,140,,UNIVERSAL TRUCKS ISRAEL LTD,yes,0||0,PASS
+recur,ch-uti1,no,340,340,340,2,78,58,60,,,,,PASS
+recur,ch-uti2,no,340,340,340,2,78,202,250,,,,,PASS
+wait,ch-wait,yes,420,420,420,1,48,5479,6000,,element,yes,0||0,PASS
+wait,ch-waitage,yes,420,420,420,1,48,367,400,,kit,yes,0||0,PASS
+fill,ch-fill,no,420,420,420,1,17,20,5,,,,,PASS
+bo,ch-cust,yes,340,340,340,1,21,8625,9000,,ISUZU TRUCK (UK) LIMITED,yes,1|aim|628 lines|8625 pieces|400,PASS
+bo,ch-custage,yes,340,340,340,1,21,1625,1800,,ISUZU TRUCK (UK) LIMITED,yes,1|aim|628 lines|8625 pieces|400,PASS
+bo,ch-bofam,yes,420,420,420,1,16,2648,3000,,Chassis Frame,yes,1|pn|164 lines|2648 pieces|164,PASS
+miss,(no chart),,,,,0,0,0,,,,,,PASS
+bo-deep-1,ch-bodeep,yes,300,300,300,1,14,2225,2500,,,,1,PASS
+bo-deep-1,ch-bodeepage,yes,300,300,300,1,8,1625,1800,,,,1,PASS
+bo-deep-2,ch-bodeep,yes,300,300,300,1,14,683,700,,,,2,PASS
+bo-deep-2,ch-bodeepage,yes,300,300,300,1,7,1625,1800,,,,2,PASS
+bo-deep-3,ch-bodeep,no,300,300,300,1,1,683,700,,,,3,PASS
+bo-deep-3,ch-bodeepage,no,300,300,300,1,2,34,35,,,,3,PASS
