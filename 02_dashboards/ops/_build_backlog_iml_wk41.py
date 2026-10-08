@@ -55,11 +55,15 @@ def main() -> int:
     # ---------------- AIM ----------------
     aim = pd.read_csv(AIM, dtype=str, low_memory=False)
     aim["pn"] = aim["part_number"].fillna("").map(norm_pn)
-    fam: dict[str, str] = {}
-    cat: dict[str, str] = {}
+    fam: dict[str, str] = {}       # AIM family, aim_l1
+    aimcat: dict[str, str] = {}    # AIM category, aim_l2 - the level between family and part
+    cat: dict[str, str] = {}       # catalogue category, cat_l1 - a different vocabulary
     figg: dict[str, str] = {}
     fix_col = aim["aim_l1_fixed"].fillna("").str.strip() if "aim_l1_fixed" in aim.columns else None
     fix2_col = aim["cat_l1_fixed"].fillna("").str.strip() if "cat_l1_fixed" in aim.columns else None
+    # aim_l2 is the AIM category. aim_l2_fixed is the repaired copy of it, used only where aim_l2 is blank.
+    l2_col = aim["aim_l2"].fillna("").str.strip() if "aim_l2" in aim.columns else None
+    l2fix_col = aim["aim_l2_fixed"].fillna("").str.strip() if "aim_l2_fixed" in aim.columns else None
     fig_col = aim["fig_key"].fillna("").str.strip() if "fig_key" in aim.columns else None
     for i, (p, f, c) in enumerate(zip(aim["pn"], aim["aim_l1"].fillna("").str.strip(),
                                       aim["cat_l1"].fillna("").str.strip())):
@@ -74,6 +78,12 @@ def main() -> int:
             fam[k] = f
         if c and (k not in cat or not cat[k]):
             cat[k] = c
+        if l2_col is not None:
+            a2 = l2_col.iat[i] or ""
+            if not a2 and l2fix_col is not None:
+                a2 = l2fix_col.iat[i] or ""
+            if a2 and (k not in aimcat or not aimcat[k]):
+                aimcat[k] = a2
         if fig_col is not None:
             fv = fig_col.iat[i]
             if fv and k not in figg:
@@ -86,6 +96,16 @@ def main() -> int:
             f = fam.get(k, "")
             return (f, "family") if f else ("in AIM, no family yet", "nofam")
         return ("not in the AIM file", "absent")
+
+    def aimcat_label(pn: str) -> str:
+        """The AIM category, the level between the family and the part. Blank when we do not hold it."""
+        return aimcat.get(norm_pn(pn).lstrip("0"), "")
+
+    def aimcat_or(pn: str, aim: str) -> str:
+        """The AIM category, or the same two honest labels the family grouping already uses. Never
+        blank and never invented: a line with no category is grouped and named, not dropped."""
+        return aimcat_label(pn) or (
+            "not in the AIM file" if aim == "not in the AIM file" else "in AIM, no category yet")
 
     def cat_label(pn: str) -> str:
         """The catalogue category, in its own vocabulary. Blank when we do not hold it."""
@@ -123,6 +143,7 @@ def main() -> int:
     dly["days_waiting"] = (ASOF_IML - dly["procced"]).dt.days
     labs = [aim_label(p) for p in dly["pn"]]
     dly["aim"] = [a for a, _ in labs]
+    dly["aimcat"] = [aimcat_or(p, a) for p, a in zip(dly["pn"], dly["aim"])]
     dly["cat"] = [cat_label(p) for p in dly["pn"]]
 
     K = {}
@@ -163,14 +184,15 @@ def main() -> int:
             .sort_values("pcs", ascending=False))
     waim["over30_pcs"] = [int(over30[over30["aim"] == r]["qty"].sum()) for r in waim["aim"]]
 
-    dparts = (over30.groupby(["pn", "part", "aim", "cat"], as_index=False)
+    dparts = (over30.groupby(["pn", "part", "aim", "aimcat", "cat"], as_index=False)
               .agg(lines=("qty", "size"), pcs=("qty", "sum"), oldest=("days_waiting", "max"),
                    orders=("order_no", "nunique"),
                    statuses=("status", lambda s: "/".join(sorted(set(s)))))
               .sort_values("pcs", ascending=False))
 
     worst = over30.sort_values("days_waiting", ascending=False)[
-        ["order_no", "pn", "part", "status", "qty", "days_waiting", "mode", "aim", "cat", "procced"]].copy()
+        ["order_no", "pn", "part", "status", "qty", "days_waiting", "mode", "aim", "aimcat",
+         "cat", "procced"]].copy()
     worst["procced"] = worst["procced"].dt.strftime("%Y-%m-%d")
 
     oagg = (over30.groupby("order_no", as_index=False)
@@ -216,6 +238,7 @@ def main() -> int:
                 .merge(dw, on="pn", how="left")
                 .sort_values("d_pcs", ascending=False))
     per_part["aim"] = [aim_label(p)[0] for p in per_part["pn"]]
+    per_part["aimcat"] = [aimcat_or(p, aim_label(p)[0]) for p in per_part["pn"]]
     per_part["cat"] = [cat_label(p) for p in per_part["pn"]]
 
     ov_cust = (ov.groupby("customer", as_index=False)
@@ -226,6 +249,7 @@ def main() -> int:
     # ---------------- customer backlog roll-ups (kept from the first version) ----------------
     labs_bo = [aim_label(p) for p in data["pn"]]
     data["aim"] = [a for a, _ in labs_bo]
+    data["aimcat"] = [aimcat_or(p, a) for p, a in zip(data["pn"], data["aim"])]
     data["cat"] = [cat_label(p) for p in data["pn"]]
 
     cu = (data.groupby("customer", as_index=False)
@@ -269,7 +293,9 @@ def main() -> int:
     wait["noun"] = wait["part"].map(noun_of)
     wait["k_noun"] = wait["noun"]
     wait["k_aim"] = wait["aim"]
+    wait["k_aimcat"] = wait["aimcat"]
     wait["k_cat"] = wait["cat"]
+    wait["k_pn"] = wait["pn"]
     wait["k_aim2"] = wait["part"].map(
         lambda s: (s.split(";")[0].strip() if ";" in s else ""))
 
@@ -297,8 +323,10 @@ def main() -> int:
 
     by_noun = wait_group(wait, "k_noun", None)
     by_aim = wait_group(wait, "k_aim", None)
+    by_aimcat = wait_group(wait, "k_aimcat", None)
     by_cat = wait_group(wait, "k_cat", None)
     by_aim2 = wait_group(wait, "k_aim2", lambda k: (k if k else "(no sub-family in the description)"))
+    by_pn = wait_group(wait, "k_pn", None)
 
     K["wait_lines"] = int(len(wait))
     K["wait_pcs"] = int(wait["qty"].sum())
@@ -323,7 +351,8 @@ def main() -> int:
                 custs[c]["urgent"] += 1
         bo_by_pn[pn_key] = list(custs.values())
 
-    for keycol, glist in (("k_noun", by_noun), ("k_aim", by_aim), ("k_cat", by_cat), ("k_aim2", by_aim2)):
+    for keycol, glist in (("k_noun", by_noun), ("k_aim", by_aim), ("k_aimcat", by_aimcat),
+                          ("k_cat", by_cat), ("k_aim2", by_aim2), ("k_pn", by_pn)):
         for g in glist:
             sub = wait[wait[keycol].astype(str) == str(g["key"])]
             agg = {}
@@ -360,7 +389,8 @@ def main() -> int:
         iml_facts.append({
             "order": r["order_no"], "pn": r["pn"], "part": r["part"], "status": r["status"],
             "qty": int(r["qty"]), "days": int(r["days_waiting"]), "mode": r["mode"],
-            "aim": r["aim"], "cat": r["cat"], "band": band(r["days_waiting"]),
+            "aim": r["aim"], "aimcat": aimcat_or(r["pn"], r["aim"]), "cat": r["cat"],
+            "band": band(r["days_waiting"]),
             "noun": noun_of(r["part"]),
         })
     print("iml_facts rows:", len(iml_facts), "| pieces:", sum(f["qty"] for f in iml_facts))
@@ -373,7 +403,8 @@ def main() -> int:
         bo_facts.append({
             "customer": r["customer"], "pn": r["pn"], "part": r["part"], "saty": r["saty"],
             "qty": int(r["qty"]), "days": (int(d) if pd.notna(d) else None),
-            "aim": r["aim"], "cat": r["cat"], "fig": fig_label(r["pn"]) or "",
+            "aim": r["aim"], "aimcat": aimcat_or(r["pn"], r["aim"]),
+            "cat": r["cat"], "fig": fig_label(r["pn"]) or "",
             "loc": r["loc"], "band": (band(d) if pd.notna(d) else "not yet due"),
             # the required delivery date the distributor asked for: the drill shows it per line
             "req": (r["req_dlv"].strftime("%Y-%m-%d") if pd.notna(r["req_dlv"]) else ""),
@@ -387,15 +418,22 @@ def main() -> int:
         fam_n = int((~a.isin(["in AIM, no family yet", "not in the AIM file"])).sum())
         nofam = int((a == "in AIM, no family yet").sum())
         absent = int((a == "not in the AIM file").sum())
+        ac = frame["aimcat"].astype(str)
+        aimcat_n = int((~ac.isin(["in AIM, no category yet", "not in the AIM file"])).sum())
+        nocat = int((ac == "in AIM, no category yet").sum())
         cat_n = int((frame["cat"].astype(str).str.strip() != "").sum())
-        return {"lines": n, "family": fam_n, "nofam": nofam, "absent": absent, "cat": cat_n,
+        return {"lines": n, "family": fam_n, "nofam": nofam, "absent": absent,
+                "aimcat": aimcat_n, "noaimcat": nocat, "cat": cat_n,
                 "pct_family": round(100 * fam_n / n, 1) if n else 0,
+                "pct_aimcat": round(100 * aimcat_n / n, 1) if n else 0,
                 "pct_cat": round(100 * cat_n / n, 1) if n else 0}
 
     cov_bo, cov_wh = coverage(data), coverage(dly)
     print("coverage backlog   :", cov_bo)
     print("coverage warehouse :", cov_wh)
-    print("catalogue values:", len(cat), "| family values:", len(fam), "| master parts:", len(infile))
+    print("vocabulary sizes  family", len(fam), "| AIM category", len(aimcat), "| catalogue", len(cat),
+          "| master parts:", len(infile))
+    print("AIM category values (top 15):", pd.Series(list(aimcat.values())).value_counts().head(15).to_dict())
 
     # ---------------- UTI recurrence ----------------
     u = pd.read_csv(UTI)
@@ -526,7 +564,7 @@ def main() -> int:
         "aim_source": aim_source,
         "kpi": K,
         "cov_bo": cov_bo, "cov_wh": cov_wh,
-        "aim_master": {"parts": len(infile), "family": len(fam), "cat": len(cat)},
+        "aim_master": {"parts": len(infile), "family": len(fam), "aimcat": len(aimcat), "cat": len(cat)},
         "iml_facts": iml_facts,
         "bo_facts": bo_facts,
         "status": st.to_dict("records"),
@@ -545,7 +583,8 @@ def main() -> int:
         "customers": cu.to_dict("records"),
         "aim_cust": aim_c.to_dict("records"),
         "bo_lines": bl.to_dict("records"),
-        "wait": {"noun": by_noun, "aim": by_aim, "cat": by_cat, "aim2": by_aim2},
+        "wait": {"noun": by_noun, "aim": by_aim, "aimcat": by_aimcat, "cat": by_cat,
+                 "aim2": by_aim2, "pn": by_pn},
         "fillrate": fr,
         "missing": missing,
     }
@@ -706,6 +745,11 @@ table.clickable tbody tr{cursor:pointer}
     <p class="hint">Status shows where each line sits in the process, and how many orders carry it. Click a row to filter the rest to that part.</p>
     <div class="scroll" id="t-dparts" style="margin-bottom:14px"></div>
     <div id="t-dparts-lines"></div>
+    <h2>The drill, down to part number</h2>
+    <p class="q">This file carries no customer, so the drill here runs family, then category, then part number, then the
+    lines - it never claims to name a distributor. Click a bar in the two charts above, or a row in the table, and the path
+    prints below.</p>
+    <div id="parts-deep"></div>
   </div>
 
   <div class="panel" id="p-who">
@@ -810,7 +854,7 @@ table.clickable tbody tr{cursor:pointer}
         <tbody id="cov-rows"></tbody>
       </table>
     </div>
-    <h2 id="cov-head">Why the warehouse reads less than the backlog</h2><!-- filled from the payload below, so the heading cannot go stale when the classification file moves -->
+    <h2 id="cov-head">Why the warehouse reads less than the backlog</h2><!-- heading, body and the table below all read the same figures from the payload, so they cannot disagree -->
     <div class="card" style="font-size:12.5px"><div id="why-60"></div>
       <p class="note">A small separate point, worth one line: 163 real AIM family names that once existed in
       <code>aim_pn_classification.csv.bak_pre_eq_20260917</code> are empty in the current master. That is a restore item,
@@ -846,6 +890,7 @@ table.clickable tbody tr{cursor:pointer}
         <tr><td>MoT / Mode</td><td>Sea or air freight.</td></tr>
         <tr><td>Days waiting</td><td>2 October 2026 minus the processed date. This is time inside IML, not time at sea.</td></tr>
         <tr><td>AIM family</td><td>The family a part belongs to in our own aftersales classification: Chassis Frame, Brakes, Maintenance Service and so on. Filled in from the parts we bill, so a part we have never sold has none.</td></tr>
+        <tr><td>AIM category</td><td>The level below the AIM family in the same classification: Mounting Hardware, Oil Filter, Lamps and so on, 116 of them under the 24 families. It is filled on exactly the same part numbers as the family, so it splits a family without reaching parts the family does not already reach. Where it is blank the line is grouped as <code>in AIM, no category yet</code>, or as <code>not in the AIM file</code> when the part is not in the classification file at all.</td></tr>
         <tr><td>Catalogue category</td><td>The top level of the parts tree. A different vocabulary from the AIM family and much more complete, because it comes from the catalogue rather than from what we have sold. Shown beside the AIM family, never instead of it.</td></tr>
         <tr><td>First fill rate</td><td>Share of an order supplied first time, without a back order.</td></tr>
         <tr><td>MOS</td><td>Months of stock. Days of parts in stock, against the distributor's own band.</td></tr>
@@ -936,30 +981,53 @@ table.clickable tbody tr{cursor:pointer}
 
   /* ================= drill engine =================
      Every chart click and every dropdown sets a facet on a panel; the tables below narrow to it. */
+  /* Three classification vocabularies, kept apart. AIM family is aim_l1; AIM category is aim_l2, the
+     level between the family and the part; catalogue category is cat_l1, the parts tree. The first two
+     are the same system at two depths. The third is a different system and is never merged with them. */
   var IML_DIMS=[
-    {k:'aim',t:'AIM family',n:'AIM family'},{k:'cat',t:'Catalogue category',n:'catalogue category'},
+    {k:'aim',t:'AIM family',n:'AIM family'},{k:'aimcat',t:'AIM category',n:'AIM category'},
+    {k:'cat',t:'Catalogue category',n:'catalogue category'},
     {k:'status',t:'Process status',n:'process status'},
     {k:'mode',t:'Sea or air',n:'sea or air'},{k:'band',t:'Waiting-time band',n:'waiting-time band'},
     {k:'pn',t:'Part',n:'part'}];
   var BO_DIMS=[
     {k:'customer',t:'Distributor',n:'distributor'},{k:'aim',t:'AIM family',n:'AIM family'},
+    {k:'aimcat',t:'AIM category',n:'AIM category'},
     {k:'cat',t:'Catalogue category',n:'catalogue category'},
     {k:'saty',t:'Order type (SOR / VOR / RUSH)',n:'order type'},
     {k:'band',t:'Age band',n:'age band'},{k:'loc',t:'Ships from (ISZJ / IMIT)',n:'shipping location'},
-    {k:'fig',t:'Parts family group',n:'parts family group'}];
+    {k:'fig',t:'Parts family group',n:'parts family group'},{k:'pn',t:'Part',n:'part'}];
   /* the waiting tab groups the same over-30-day set by different cuts; noun is the plain-English one */
   var WAIT_DIMS=[
     {k:'noun',t:'Kind of part (in words)',n:'kind of part'},{k:'aim',t:'AIM family',n:'AIM family'},
-    {k:'cat',t:'Catalogue category',n:'catalogue category'},{k:'aim2',t:'Sub-family',n:'sub-family'}];
+    {k:'aimcat',t:'AIM category',n:'AIM category'},
+    {k:'cat',t:'Catalogue category',n:'catalogue category'},{k:'aim2',t:'Sub-family',n:'sub-family'},
+    {k:'pn',t:'Part',n:'part'}];
+  /* what each grouping is called on a chart, in one place so no title can disagree with its data */
+  var DIMNAME={'aim':'AIM family','aimcat':'AIM category','cat':'catalogue category','pn':'part number',
+               'customer':'distributor','saty':'order type','band':'how long it has waited',
+               'loc':'ships from','fig':'parts family group','noun':'kind of part','status':'process status',
+               'mode':'sea or air'};
+  var DIMTITLE={'aim':'AIM family','aimcat':'AIM category','cat':'catalogue category','pn':'part number',
+                'customer':'distributor','saty':'order type','band':'waiting-time band',
+                'loc':'ships from','fig':'parts family group'};
   var SEL={
     'p-delay':{dim:'band',dim2:'status',f:{}},
     'p-parts':{dim:'aim',f:{}},
-    /* deepDim is the family vocabulary used inside the customer deep dive, so the choice survives
-       the redraw that every click triggers */
-    'p-bo':   {dim:'customer',deepDim:'aim',f:{}},
+    /* familyDim is the classification depth used inside the customer deep dive, chosen from AIM
+       family, AIM category or catalogue category, so the choice survives the redraw every click makes */
+    'p-bo':   {dim:'customer',familyDim:'aim',f:{}},
     'p-wait': {dim:'noun',f:{}},
     'p-who':  {dim:'customer',f:{}}
   };
+  /* the family-depth vocabularies, in the order the two AIM levels then the catalogue are offered.
+     AIM family is level 1, AIM category is level 2 of the same system, catalogue category is separate.
+     Part number is offered too, so the drill can be started from the dropdown and not only by a click. */
+  var FAM_DEPTHS=['aim','aimcat','cat'];
+  var NEXT_DEPTH={'aim':'aimcat','aimcat':'cat','cat':'aim'};
+  /* the chain, shallowest level first: the path prints in this order and step-back unwinds it in
+     reverse, so the two are always consistent */
+  var CHAIN_ORDER=['customer','aim','aimcat','cat','fig','saty','loc','band','pn'];
   function fmt(dim,r){var v=r[dim];return (v==null||v==='')?'(none recorded)':String(v);}
   function rowsFor(panel,rows){var f=SEL[panel].f;return rows.filter(function(r){
     for(var k in f){if(f[k]&&fmt(k,r)!==f[k])return false;}return true;});}
@@ -1078,11 +1146,12 @@ table.clickable tbody tr{cursor:pointer}
     var pcs=rows.reduce(function(a,r){return a+r.qty;},0);
     var cap=rows.slice(0,400);
     var head='<tr><th>Order</th><th>Part</th><th>Name</th><th>Status</th><th class="n">Pieces</th>'
-      +'<th class="n">Days waiting</th><th>Band</th><th>Mode</th><th>AIM family</th><th>Catalogue category</th></tr>';
+      +'<th class="n">Days waiting</th><th>Band</th><th>Mode</th><th>AIM family</th>'
+      +'<th>AIM category</th><th>Catalogue category</th></tr>';
     var body=cap.map(function(r){
       return '<tr><td>'+esc(r.order)+'</td><td>'+esc(r.pn)+'</td><td>'+esc(r.part)+'</td><td>'+esc(r.status)
         +'</td><td class="n">'+nf(r.qty)+'</td><td class="n">'+nf(r.days)+'</td><td>'+esc(r.band)+'</td><td>'
-        +esc(r.mode)+'</td><td>'+esc(r.aim)+'</td><td>'+esc(r.cat)+'</td></tr>';}).join('');
+        +esc(r.mode)+'</td><td>'+esc(r.aim)+'</td><td>'+esc(r.aimcat)+'</td><td>'+esc(r.cat)+'</td></tr>';}).join('');
     mount.innerHTML='<p class="hint">'+appliedText('p-delay')
       +rows.length.toLocaleString('en-GB')+' lines, '+nf(pcs)+' pieces'
       +(rows.length>cap.length?' (first 400 shown)':'')+'</p><table><thead>'+head+'</thead><tbody>'+body+'</tbody></table>';
@@ -1300,7 +1369,7 @@ table.clickable tbody tr{cursor:pointer}
     makeTable('t-worst',[
       {k:'order_no',t:'Order'},{k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'status',t:'Status'},
       {k:'qty',t:'Pieces',n:true},{k:'days_waiting',t:'Days waiting',n:true},{k:'mode',t:'Mode'},
-      {k:'aim',t:'AIM family'},{k:'cat',t:'Catalogue category'},{k:'procced',t:'Processed'}], D.worst, 150);
+      {k:'aim',t:'AIM family'},{k:'aimcat',t:'AIM category'},{k:'cat',t:'Catalogue category'},{k:'procced',t:'Processed'}], D.worst, 150);
 
     makeTable('t-orders',[
       {k:'order_no',t:'Order'},{k:'lines',t:'Delayed lines',n:true},
@@ -1317,18 +1386,20 @@ table.clickable tbody tr{cursor:pointer}
     var pparts=pbase.filter(function(r){return r.days>30;});
     var psrc=pparts.length?pparts:pbase;
 
-    if(pdim==='aim'){
+    /* Every classification level gets the same treatment here, so selecting AIM family, AIM category
+       or Catalogue category regroups the chart rather than only changing what a click filters on. */
+    if(pdim==='aim'||pdim==='aimcat'||pdim==='cat'){
       var famMap={};
-      psrc.forEach(function(r){famMap[r.aim]=(famMap[r.aim]||0)+r.qty;});
+      psrc.forEach(function(r){famMap[fmt(pdim,r)]=(famMap[fmt(pdim,r)]||0)+r.qty;});
       var famArr=Object.keys(famMap).map(function(k){return {k:k,v:famMap[k]};})
         .filter(function(r){return r.v>0;}).sort(function(a,b){return b.v-a.v;}).slice(0,16);
       if(!famArr.length) famArr=safeGroups('p-parts',pdim,groupBy(psrc,pdim,'qty'),D.iml_facts,pdname,'qty')
         .map(function(g){return {k:g.k,v:g.qty};});
       SUM.fam={}; famArr.forEach(function(r){SUM.fam[r.k]=r.v;});
-      setTitle('h-ch-waim','Pieces delayed, by parts family (AIM)');
+      setTitle('h-ch-waim','Pieces delayed, by '+pdname);
       draw('ch-waim',{type:'bar',data:{labels:famArr.map(function(r){return r.k;}),
         datasets:[{label:'Pieces',data:famArr.map(function(r){return r.v;}),
-          backgroundColor:famArr.map(function(r){return (r.k==='in AIM, no family yet'||r.k==='not in the AIM file')?'#c9c2b6':NAVY;})}]},
+          backgroundColor:famArr.map(function(r){return (r.k==='in AIM, no family yet'||r.k==='in AIM, no category yet'||r.k==='not in the AIM file')?'#c9c2b6':NAVY;})}]},
         options:Object.assign({},gOpt,{indexAxis:'y',plugins:{legend:{display:false},
           tooltip:{callbacks:{afterLabel:function(){return 'click to filter to this value';}}}},
           scales:{x:{grid:{color:'#eceae4'}},y:{grid:{display:false},ticks:{font:{size:10}}}}})});
@@ -1366,7 +1437,7 @@ table.clickable tbody tr{cursor:pointer}
     bindChartClick('ch-mode','p-parts','arc',null,function(h){return modeKeys[h.i];});
 
     makeTable('t-dparts',[
-      {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'cat',t:'Catalogue category'},
+      {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'aimcat',t:'AIM category'},{k:'cat',t:'Catalogue category'},
       {k:'pcs',t:'Pieces delayed',n:true},{k:'lines',t:'Lines',n:true},{k:'orders',t:'Orders',n:true},
       {k:'oldest',t:'Longest wait',n:true},{k:'statuses',t:'Process status'}], D.dparts, 60,
       function(r){SEL['p-parts'].f={pn:r.pn};renderAll();});
@@ -1381,21 +1452,107 @@ table.clickable tbody tr{cursor:pointer}
       var byPn={};
       pfilt.forEach(function(r){
         var k=r.pn;
-        if(!byPn[k]) byPn[k]={pn:k,part:r.part,aim:r.aim,cat:r.cat,pcs:0,lines:0,orders:{},oldest:0,statuses:{}};
+        if(!byPn[k]) byPn[k]={pn:k,part:r.part,aim:r.aim,aimcat:r.aimcat,cat:r.cat,pcs:0,lines:0,orders:{},oldest:0,statuses:{}};
         var g=byPn[k]; g.pcs+=r.qty||0; g.lines++; g.orders[r.order]=1; g.statuses[r.status]=1;
         if((r.days||0)>g.oldest) g.oldest=r.days||0;
       });
       var pfRows=Object.keys(byPn).map(function(k){var g=byPn[k];
-        return {pn:g.pn,part:g.part,aim:g.aim,cat:g.cat,pcs:g.pcs,lines:g.lines,
+        return {pn:g.pn,part:g.part,aim:g.aim,aimcat:g.aimcat,cat:g.cat,pcs:g.pcs,lines:g.lines,
                 orders:Object.keys(g.orders).length,oldest:g.oldest,
                 statuses:Object.keys(g.statuses).sort().join('/')};})
         .sort(function(a,b){return b.pcs-a.pcs;});
       makeTable('t-dparts',[
-        {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'cat',t:'Catalogue category'},
+        {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'aimcat',t:'AIM category'},{k:'cat',t:'Catalogue category'},
         {k:'pcs',t:'Pieces delayed',n:true},{k:'lines',t:'Lines',n:true},{k:'orders',t:'Orders',n:true},
         {k:'oldest',t:'Longest wait',n:true},{k:'statuses',t:'Process status'}], pfRows, 60,
         function(r){SEL['p-parts'].f={pn:r.pn};renderAll();});
     }
+
+    /* ---- the warehouse to-Pn drill: AIM family > AIM category > part number > the lines ----
+       Same three levels as the customer side, with no customer anywhere in it, because this file has
+       none and no reference joins to it. */
+    (function(){
+      var host=document.getElementById('parts-deep'); if(!host) return;
+      var f=SEL['p-parts'].f, dim=SEL['p-parts'].dim;
+      var keys=[];
+      ['aim','aimcat','cat','status','mode','band','pn'].forEach(function(k){
+        if(f.hasOwnProperty(k)) keys.push(k); });
+      if(!keys.length){
+        host.innerHTML='<div class="hint">Click a bar above, or a row in the table, to open the drill: AIM family, '
+          +'then AIM category, then the part number, then the lines behind it.</div>'; return; }
+      var dd=rowsFor('p-parts',D.iml_facts).filter(function(r){return r.days>30;});
+      dd.sort(function(a,b){return (b.days||0)-(a.days||0);});
+      var path=keys.map(function(k){return esc(f[k]);}).join(' &gt; ');
+      var pns={}, pieces=0, oldest=0, orders={};
+      dd.forEach(function(r){ pns[r.pn]=1; pieces+=r.qty||0; orders[r.order]=1;
+        if((r.days||0)>oldest) oldest=r.days||0; });
+      var NEXT={aim:['aimcat','pn'],aimcat:['pn'],cat:['pn'],status:['aim','pn'],mode:['aim','pn'],
+                band:['aim','pn'],pn:[]}[dim]||['aim','pn'];
+      NEXT=NEXT.filter(function(d){return keys.indexOf(d)<0;});
+      if(f.pn) NEXT=[];
+      var g1=NEXT.length?NEXT[0]:'saty', g2=NEXT.length>1?NEXT[1]:'band';
+      if(g2===g1) g2=(g1==='aimcat')?'aim':'pn';
+      host.innerHTML='<div class="applied on" style="border-left-color:var(--navy)"><span class="path">'+path
+        +' ('+dd.length+' lines)</span>'
+        +(keys.length>1?'<button class="clearbtn" id="pd-back">Step back one level</button>':'')
+        +'<button class="clearbtn" id="pd-clearbtn">Clear all</button></div>'
+        +'<div class="kpis" id="k-parts-deep"></div>'
+        +'<div class="row r2">'
+        +'<div class="card"><h3 id="h-ch-pd1">Pieces delayed, by '+(DIMTITLE[g1]||g1)+'</h3>'
+        +'<div class="chartbox" data-h="300"><canvas id="ch-pd1"></canvas></div></div>'
+        +'<div class="card"><h3 id="h-ch-pd2">Longest wait in days, by '+(DIMTITLE[g2]||g2)+'</h3>'
+        +'<div class="chartbox" data-h="300"><canvas id="ch-pd2"></canvas></div></div></div>'
+        +'<h2>The lines behind this selection</h2>'
+        +'<div class="scroll" id="t-pdlines"></div>';
+      kpi('k-parts-deep',[
+        {n:nf(dd.length),l:'delayed lines',tip:'Lines in the IML warehouse file over 30 days that this selection leaves.'},
+        {n:nf(Object.keys(pns).length),l:'part numbers',tip:'Distinct part numbers across those lines.'},
+        {n:nf(pieces),l:'pieces',tip:'Quantity sitting on those lines.'},
+        {n:nf(Object.keys(orders).length),l:'orders',tip:'Distinct IML purchase orders carrying them.'},
+        {n:nf(oldest)+' d',l:'longest wait',cls:'warn',tip:'Days from the date IML processed the order to 2 October 2026.'}
+      ]);
+      function pdraw(canvasId,titleId,key,metric,accent){
+        var m={};
+        dd.forEach(function(r){ var k=(r[key]==null||r[key]==='')?'(none recorded)':String(r[key]);
+          if(!m[k]) m[k]={k:k,pcs:0,oldest:0,n:0};
+          m[k].pcs+=r.qty||0; m[k].n++; if((r.days||0)>m[k].oldest) m[k].oldest=r.days||0; });
+        var arr=Object.keys(m).map(function(k){return m[k];})
+          .sort(function(a,b){return metric==='oldest'?b.oldest-a.oldest:b.pcs-a.pcs;}).slice(0,14);
+        var t=document.getElementById(titleId);
+        if(t) t.textContent=(metric==='oldest'?'Longest wait in days, by ':'Pieces delayed, by ')
+          +(DIMTITLE[key]||DIMNAME[key]||key);
+        if(!arr.length) return;
+        draw(canvasId,{type:'bar',data:{labels:arr.map(function(r){return String(r.k).slice(0,40);}),
+          datasets:[{label:metric==='oldest'?'Days waiting':'Pieces',
+            data:arr.map(function(r){return metric==='oldest'?r.oldest:r.pcs;}),backgroundColor:accent||NAVY}]},
+          options:Object.assign({},gOpt,{indexAxis:'y',plugins:{legend:{display:false},
+            tooltip:{callbacks:{afterLabel:function(c){var r=arr[c.dataIndex];
+              return nf(r.n)+' lines, '+nf(r.pcs)+' pieces, longest '+r.oldest+' days - click to drill in';}}}},
+            scales:{x:{grid:{color:'#eceae4'}},y:{grid:{display:false},ticks:{font:{size:10}}}}})});
+        bindChartClick(canvasId,'p-parts','bar',null,function(h){
+          var k=arr[h.i].k, pos=CHAIN_ORDER.indexOf(key);
+          for(var z=0;z<CHAIN_ORDER.length;z++){
+            if(CHAIN_ORDER.indexOf(CHAIN_ORDER[z])>pos && f.hasOwnProperty(CHAIN_ORDER[z])) delete f[CHAIN_ORDER[z]];
+          }
+          if(f[key]===k) delete f[key]; else f[key]=k;
+          renderAll();});
+      }
+      pdraw('ch-pd1','h-ch-pd1',g1,'pcs',NAVY);
+      pdraw('ch-pd2','h-ch-pd2',g2,'oldest',TERRA);
+      makeTable('t-pdlines',[
+        {k:'order',t:'Order'},{k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'status',t:'Status'},
+        {k:'qty',t:'Pieces',n:true},{k:'days',t:'Days waiting',n:true},{k:'band',t:'Band'},
+        {k:'mode',t:'Mode'},{k:'aim',t:'AIM family'},{k:'aimcat',t:'AIM category'},
+        {k:'cat',t:'Catalogue category'}], dd, 400, function(r){
+          if(f.pn===r.pn) delete f.pn; else f.pn=r.pn;
+          renderAll();});
+      var pb=document.getElementById('pd-back');
+      if(pb) pb.onclick=function(){
+        for(var z=CHAIN_ORDER.length-1;z>=0;z--){ if(f.hasOwnProperty(CHAIN_ORDER[z])){ delete f[CHAIN_ORDER[z]]; break; } }
+        renderAll(); };
+      var pcl=document.getElementById('pd-clearbtn');
+      if(pcl) pcl.onclick=function(){ SEL['p-parts'].f={}; renderAll(); };
+    })();
 
     (function(){
       var host=document.getElementById('t-dparts-lines'); if(!host) return;
@@ -1405,11 +1562,11 @@ table.clickable tbody tr{cursor:pointer}
         +' lines, '+nf(pbase.reduce(function(a,r){return a+r.qty;},0))+' pieces</p>'
         +'<table><thead><tr><th>Order</th><th>Part</th><th>Name</th><th>Status</th>'
         +'<th class="n">Pieces</th><th class="n">Days waiting</th><th>Band</th><th>Mode</th>'
-        +'<th>AIM family</th><th>Catalogue category</th></tr></thead><tbody>'
+        +'<th>AIM family</th><th>AIM category</th><th>Catalogue category</th></tr></thead><tbody>'
         +pbase.slice(0,400).map(function(r){
           return '<tr><td>'+esc(r.order)+'</td><td>'+esc(r.pn)+'</td><td>'+esc(r.part)+'</td><td>'+esc(r.status)
             +'</td><td class="n">'+nf(r.qty)+'</td><td class="n">'+nf(r.days)+'</td><td>'+esc(r.band)+'</td><td>'
-            +esc(r.mode)+'</td><td>'+esc(r.aim)+'</td><td>'+esc(r.cat)+'</td></tr>';}).join('')
+            +esc(r.mode)+'</td><td>'+esc(r.aim)+'</td><td>'+esc(r.aimcat)+'</td><td>'+esc(r.cat)+'</td></tr>';}).join('')
         +'</tbody></table>';
       host.innerHTML=head;
     })();
@@ -1515,7 +1672,7 @@ table.clickable tbody tr{cursor:pointer}
       }
 
       makeTable('t-wholines',[
-        {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'cat',t:'Catalogue category'},
+        {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'aimcat',t:'AIM category'},{k:'cat',t:'Catalogue category'},
         {k:'saty',t:'Order type',f:function(r){var cl=r.saty==='VOR'?'vor':(r.saty==='RUSH'?'rush':'sor');
           return '<span class="pill '+cl+'">'+esc(r.saty)+'</span>';}},
         {k:'qty',t:'Open pieces',n:true},{k:'days_open',t:'Days waiting',n:true,
@@ -1535,7 +1692,7 @@ table.clickable tbody tr{cursor:pointer}
     })();
 
     makeTable('t-perpart',[
-      {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'cat',t:'Catalogue category'},
+      {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'aimcat',t:'AIM category'},{k:'cat',t:'Catalogue category'},
       {k:'d_pcs',t:'Pieces held in warehouse',n:true},{k:'d_oldest',t:'Warehouse wait',n:true},
       {k:'d_status',t:'Warehouse status'},
       {k:'n_custs',t:'Distributors waiting',n:true},{k:'custs',t:'Which distributors'},
@@ -1552,7 +1709,7 @@ table.clickable tbody tr{cursor:pointer}
       var wByPn={};
       wfilt.forEach(function(r){
         var k=r.pn;
-        if(!wByPn[k]) wByPn[k]={pn:k,part:r.part,aim:r.aim,cat:r.cat,d_pcs:0,d_oldest:0,statuses:{}};
+        if(!wByPn[k]) wByPn[k]={pn:k,part:r.part,aim:r.aim,aimcat:r.aimcat,cat:r.cat,d_pcs:0,d_oldest:0,statuses:{}};
         var g=wByPn[k]; g.d_pcs+=r.qty||0; g.statuses[r.status]=1;
         if((r.days||0)>g.d_oldest) g.d_oldest=r.days||0;
       });
@@ -1569,14 +1726,14 @@ table.clickable tbody tr{cursor:pointer}
       });
       var wRows=Object.keys(wByPn).map(function(k){
         var g=wByPn[k], c=custByPn[k]||{n_custs:{},custs:{},bo_pcs:0,bo_oldest:0,bo_urgent:0};
-        return {pn:g.pn,part:g.part,aim:g.aim,cat:g.cat,d_pcs:g.d_pcs,d_oldest:g.d_oldest,
+        return {pn:g.pn,part:g.part,aim:g.aim,aimcat:g.aimcat,cat:g.cat,d_pcs:g.d_pcs,d_oldest:g.d_oldest,
                 d_status:Object.keys(g.statuses).sort().join('/'),
                 n_custs:Object.keys(c.n_custs).length,
                 custs:Object.keys(c.custs).sort().join(', '),
                 bo_pcs:c.bo_pcs,bo_oldest:c.bo_oldest,bo_urgent:c.bo_urgent};
       }).sort(function(a,b){return b.d_pcs-a.d_pcs;});
       makeTable('t-perpart',[
-        {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'cat',t:'Catalogue category'},
+        {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'aimcat',t:'AIM category'},{k:'cat',t:'Catalogue category'},
         {k:'d_pcs',t:'Pieces held in warehouse',n:true},{k:'d_oldest',t:'Warehouse wait',n:true},
         {k:'d_status',t:'Warehouse status'},
         {k:'n_custs',t:'Distributors waiting',n:true},{k:'custs',t:'Which distributors'},
@@ -1733,13 +1890,13 @@ table.clickable tbody tr{cursor:pointer}
 
     var brows=bbase.map(function(r){
       return {customer:r.customer,pn:r.pn,part:r.part,saty:r.saty,qty:r.qty,
-              days_open:(r.days==null?-1:r.days),aim:r.aim,cat:r.cat,
+              days_open:(r.days==null?-1:r.days),aim:r.aim,aimcat:r.aimcat,cat:r.cat,
               req_dlv:(r.req||'')};});
     makeTable('t-bo',[
       {k:'customer',t:'Distributor'},{k:'pn',t:'Part'},{k:'part',t:'Name'},
       {k:'saty',t:'Order type',f:function(r){var cl=r.saty==='VOR'?'vor':(r.saty==='RUSH'?'rush':'sor');
         return '<span class="pill '+cl+'">'+esc(r.saty)+'</span>';}},
-      {k:'aim',t:'AIM family'},{k:'cat',t:'Catalogue category'},{k:'qty',t:'Pieces',n:true},
+      {k:'aim',t:'AIM family'},{k:'aimcat',t:'AIM category'},{k:'cat',t:'Catalogue category'},{k:'qty',t:'Pieces',n:true},
       {k:'req_dlv',t:'Required delivery date'},
       {k:'days_open',t:'Days open',n:true,f:function(r){return r.days_open<0?'not yet due':r.days_open;}}],
       brows, 400);
@@ -1752,9 +1909,10 @@ table.clickable tbody tr{cursor:pointer}
       var host=document.getElementById('bo-detail'); if(!host) return;
       var f=SEL['p-bo'].f, dim=SEL['p-bo'].dim;
       var leaf=''; for(var lk in f){ if(f.hasOwnProperty(lk)) leaf=lk; }   /* the deepest key */
+      /* the path is printed in the chain's own order, not in whatever order the clicks happened to
+         arrive, so it always reads distributor > AIM family > AIM category > part number */
       var keys=[];
-      ['customer','aim','cat','fig','saty','loc','band','pn'].forEach(function(k){
-        if(f.hasOwnProperty(k)) keys.push(k); });
+      CHAIN_ORDER.forEach(function(k){ if(f.hasOwnProperty(k)) keys.push(k); });
       if(!keys.length){ host.innerHTML='<div class="hint" style="margin-top:16px">Click a bar above to open the '
         +'deep dive for that customer: the AIM family and the parts they are waiting on.</div>'; return; }
 
@@ -1771,34 +1929,48 @@ table.clickable tbody tr{cursor:pointer}
         if((r.days||0)>oldest) oldest=r.days||0;
         if(r.saty==='VOR'||r.saty==='RUSH'||r.saty==='SVOR') urgent++; });
 
-      /* What the bars drill to next. The chain Jerome asked for is customer, then family, then part,
-         then the lines, so once a family is on the path the next level is the part number and not the
-         other family vocabulary. Only dimensions that still leave a level below are offered. */
-      var famChosen=!!(f.aim||f.cat);
-      var NEXT=(famChosen?['pn']:({'customer':['aim','cat'],'aim':['pn'],'cat':['pn'],
-                'saty':['aim','cat'],'band':['customer','aim','cat'],'loc':['customer','aim','cat'],
-                'fig':['customer','aim','cat'],'pn':[]}[dim]||[]));
-      NEXT=NEXT.filter(function(d){return keys.indexOf(d)<0;});
-      if(f.pn) NEXT=[];
-      /* The two family vocabularies are both available inside the deep dive, because Jerome asked for
-         the AIM category and the catalogue category is the alternative cut of the same lines. The
-         choice sticks in the panel, so it survives the rebuild that every click triggers. */
-      var deepDim=(SEL['p-bo'].deepDim==='cat')?'cat':'aim';
+      /* THE CHAIN. Jerome asked for the drill to run to part number with the AIM second level in it:
+         distributor > AIM family > AIM category > part number > the lines. Each level is clickable and
+         the path prints at every step.
+         The bottom of the chain is the part, so once a family is on the path the next level is AIM
+         category and then the part number. The catalogue category is the alternative cut of the same
+         lines and is offered instead of the AIM pair when he switches to it. */
+      var famSel=f.aim||'', aimcatSel=f.aimcat||'', catSel=f.cat||'', pnSel=f.pn||'';
+      var famDepth=(f.aim)?'aim':(f.aimcat)?'aimcat':(f.cat)?'cat':'';
+      /* the vocabulary to use when no family of any kind is on the path yet */
+      var chosen=(SEL['p-bo'].familyDim==='cat')?'cat':(SEL['p-bo'].familyDim==='aimcat')?'aimcat':'aim';
+      /* what the bars drill to next; empty means the next step is a part number */
+      var NEXT=(function(){
+        if(pnSel) return [];
+        if(dim!=='customer' && !famSel && !aimcatSel && !catSel){
+          /* the tab is grouped by something else, so a bar click sets that level and the family follows */
+          return (dim==='pn')?[]:[chosen];
+        }
+        if(catSel) return (dim==='customer')?['pn']:['pn'];
+        if(aimcatSel) return (dim==='customer')?['pn']:['cat','pn'];
+        if(famSel) return (dim==='customer')?['aimcat','pn']:(chosen==='cat'?['pn']:['cat','pn']);
+        return [chosen];
+      })().filter(function(d){return keys.indexOf(d)<0;});
+      /* one vocabulary at a time: the AIM pair and the catalogue category are never both on the path,
+         because an AIM category name and a catalogue category name are not the same thing */
+      var famDim=dim;
       var g1=null, g2=null;
       if(NEXT.length){
-        if(famChosen){ g1=NEXT[0]; g2=deepDim; }          /* the part level, and the family beside it */
-        else { g1=deepDim; g2=(deepDim==='aim')?'cat':'aim'; }
-        if(g2===g1) g2=(g1==='aim')?'cat':'aim';
-      } else if(f.pn||f.aim||f.cat){
-        /* the deepest level: one part, or one family. How urgent its lines are, and how old. */
+        g1=NEXT[0];
+        /* the second chart is the other cut of the same level, or a different level once we are deep */
+        g2=(g1==='pn')?'aim':(NEXT.length>1?NEXT[1]:'aimcat');
+        if(g2===g1) g2='aim';
+      } else {
+        /* the deepest level on this path: one part, so the charts say how urgent its lines are and how
+           long they have waited, which is what is left to ask of a single part */
         g1='saty'; g2='band';
-      } else { g1=deepDim; g2=(deepDim==='aim')?'cat':'aim'; }
+      }
       /* how many bars a grouping would draw, so a chart that would come out as a single bar can be
          swapped for a different cut of the same lines. A one-bar chart tells the reader nothing. */
       function gcount(key){
         var m={}; rows.forEach(function(r){ var k=(r[key]==null||r[key]==='')?'(none)':String(r[key]); m[k]=1; });
         return Object.keys(m).length; }
-      function cands(pref){ return [pref].concat(['aim','cat','pn','saty','band','customer']
+      function cands(pref){ return [pref].concat(['aim','aimcat','cat','pn','saty','band','customer']
         .filter(function(x){return x!==pref;})); }
       if(g1!=='saty'&&g1!=='band'&&gcount(g1)<2){
         var c1=cands(g1);
@@ -1814,23 +1986,24 @@ table.clickable tbody tr{cursor:pointer}
       if(anchor) anchor.setAttribute('data-deep',g1+'|'+rows.length+' lines|'
         +rows.reduce(function(a,r){return a+(r.qty||0);},0)+' pieces');
 
+      var chain=['distributor'].concat(famSel?['AIM family']:[],aimcatSel?['AIM category']:[],
+        catSel?['catalogue category']:[],pnSel?['part number']:[]);
       host.innerHTML='<h2>Deep dive: '+path+'</h2>'
         +'<p class="q">Every open line this customer has asked for and not received, oldest first, with the AIM '
-        +'family and the catalogue category on each line. The path above grows as you click deeper: distributor, '
-        +'then family, then part, then the lines. This is the distributor\'s own open order, not a traced IML '
+        +'family, the AIM category and the catalogue category each on its own line. The path above grows as you '
+        +'click deeper: '+chain.join(', then ')+'. This is the distributor\'s own open order, not a traced IML '
         +'warehouse document. The line count and the pieces here are the same as the bar you clicked.</p>'
         +'<div class="applied on" style="border-left-color:var(--navy)"><span class="path">'+path
         +' ('+rows.length+' lines)</span>'
-        +'<button class="clearbtn" id="bo-switch">Group by: '
-        +((deepDim==='aim')?'AIM family (click for catalogue category)':'catalogue category (click for AIM family)')
-        +'</button>'
+        +'<button class="clearbtn" id="bo-switch">Family level: '+(DIMTITLE[chosen]||chosen)+' (click for '
+        +(DIMTITLE[NEXT_DEPTH[chosen]]||'the next one')+')</button>'
         +(keys.length>1?'<button class="clearbtn" id="bo-back">Step back one level</button>':'')
         +'<button class="clearbtn" id="bo-clear">Clear all</button></div>'
         +'<div class="kpis" id="k-bo-detail"></div>'
         +'<div class="row r2">'
-        +'<div class="card"><h3 id="h-ch-bodeep">Pieces waiting, by '+((deepDim==='aim')?'AIM family':'catalogue category')+'</h3>'
+        +'<div class="card"><h3 id="h-ch-bodeep">Pieces waiting, by '+(DIMTITLE[g1]||g1)+'</h3>'
         +'<div class="chartbox" data-h="300"><canvas id="ch-bodeep"></canvas></div></div>'
-        +'<div class="card"><h3 id="h-ch-bodeepage">Oldest wait in days, by parts family</h3>'
+        +'<div class="card"><h3 id="h-ch-bodeepage">Oldest wait in days, by '+(DIMTITLE[g2]||g2)+'</h3>'
         +'<div class="chartbox" data-h="300"><canvas id="ch-bodeepage"></canvas></div></div>'
         +'</div>'
         +'<h2>The lines, oldest first</h2>'
@@ -1852,9 +2025,7 @@ table.clickable tbody tr{cursor:pointer}
           m[k].pcs+=r.qty||0; m[k].n++; if((r.days||0)>m[k].oldest) m[k].oldest=r.days||0; });
         var arr=Object.keys(m).map(function(k){return m[k];})
           .sort(function(a,b){return metric==='oldest'?b.oldest-a.oldest:b.pcs-a.pcs;}).slice(0,14);
-        var labelFor={'aim':'AIM family','cat':'catalogue category','pn':'part number','customer':'distributor',
-                      'saty':'order type','band':'how long it has waited','loc':'ships from',
-                      'fig':'parts family group'}[key]||key;
+        var labelFor=DIMTITLE[key]||DIMNAME[key]||key;
         var title=document.getElementById(titleId);
         if(title) title.textContent=(metric==='oldest'?'Oldest wait in days, by ':'Pieces waiting, by ')+labelFor;
         if(!arr.length){ return; }
@@ -1867,16 +2038,33 @@ table.clickable tbody tr{cursor:pointer}
             tooltip:{callbacks:{afterLabel:function(c){var r=arr[c.dataIndex];
               return nf(r.n)+' lines, '+nf(r.pcs)+' pieces, oldest '+r.oldest+' days - click to drill in';}}}},
             scales:{x:{grid:{color:'#eceae4'}},y:{grid:{display:false},ticks:{font:{size:10}}}}})});
-        /* clicking a bar adds that level to the path when the level can be drilled; a part number
-           always can, a family can once we are on the customer */
-        var nextKey=(key==='pn')?'pn':key;
+        /* Clicking a bar adds that level to the path, in the chain's own order: distributor, AIM family,
+           AIM category, part number. Clicking a deeper level replaces anything deeper than the one
+           clicked, so the path stays a chain and never holds two levels that contradict each other.
+           A part number is a leaf, so clicking one opens its own lines. */
+        var ORDER=CHAIN_ORDER;
         bindChartClick(canvasId,'p-bo','bar',null,function(h){
           var k=arr[h.i].k;
-          var ks=Object.keys(f);
-          /* a family or a part replaces any deeper level already on the path, so clicking a family
-             after a part does not leave both on and filter to nothing */
-          if(nextKey!=='pn'){ for(var z=ks.length-1;z>=0;z--){ if(ks[z]!=='customer') delete f[ks[z]]; } }
-          if(f[nextKey]===k) delete f[nextKey]; else f[nextKey]=k;
+          /* choose which level this bar represents: the chart's own key when that key is on the path,
+             otherwise the level the chart is currently cutting by */
+          var lvl=key;
+          if(key==='pn') lvl='pn';
+          else if(key==='customer') lvl='customer';
+          else if(key==='saty'||key==='band'||key==='loc'||key==='fig') lvl=key;
+          /* the two charts can show a different vocabulary from the one on the path, so set the level
+             the chart is actually grouped by */
+          if(!ORDER.includes(lvl)) lvl=key;
+          if(lvl!=='customer'&&lvl!=='pn'&&lvl!=='fig'&&lvl!=='saty'&&lvl!=='loc'&&lvl!=='band'){
+            SEL['p-bo'].familyDim=lvl;   /* the family depth this chart is using becomes the chosen one */
+          }
+          var pos=ORDER.indexOf(lvl);
+          for(var z=0;z<ORDER.length;z++){
+            if(ORDER[z]!==lvl && ORDER.indexOf(ORDER[z])>pos && f.hasOwnProperty(ORDER[z])) delete f[ORDER[z]];
+          }
+          /* one classification vocabulary at a time */
+          if(lvl==='aim'||lvl==='aimcat'){ if(lvl!=='cat') delete f.cat; }
+          if(lvl==='cat'){ delete f.aim; delete f.aimcat; }
+          if(f[lvl]===k) delete f[lvl]; else f[lvl]=k;
           renderAll();});
       }
       drawGroup('ch-bodeep','h-ch-bodeep',g1,'pcs',NAVY);
@@ -1887,24 +2075,33 @@ table.clickable tbody tr{cursor:pointer}
         :'Click a part number in the table to narrow to its own lines.');
 
       makeTable('t-bodeep',[
-        {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'cat',t:'Catalogue category'},
+        {k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'aim',t:'AIM family'},{k:'aimcat',t:'AIM category'},
+        {k:'cat',t:'Catalogue category'},
         {k:'saty',t:'Order type',f:function(r){var cl=r.saty==='VOR'?'vor':(r.saty==='RUSH'?'rush':'sor');
           return '<span class="pill '+cl+'">'+esc(r.saty)+'</span>';}},
         {k:'qty',t:'Pieces',n:true},
-        {k:'req_dlv',t:'Required delivery date'},
-        {k:'days_open',t:'Days waiting',n:true,f:function(r){return r.days_open<0?'not yet due':r.days_open;}}],
+        /* the deep dive reads the fact rows, whose fields are req and days, not the payload columns
+           req_dlv and days_open the customer backlog table uses */
+        {k:'req',t:'Required delivery date'},
+        {k:'days',t:'Days waiting',n:true,f:function(r){
+          return (r.days==null)?'not yet due':((r.days<0)?'not yet due':r.days);}}],
         rows, 400, function(r){
+          /* clicking a row opens that part's own lines, which is the bottom of the chain */
           if(f.pn===r.pn) delete f.pn; else f.pn=r.pn;
           renderAll();});
 
       var bb=document.getElementById('bo-back');
-      if(bb) bb.onclick=function(){ var ks=Object.keys(f); if(ks.length) delete f[ks[ks.length-1]]; renderAll(); };
-      /* switching the family vocabulary drops whichever family was on the path, because a catalogue
-         category name is not an AIM family name and leaving it on would filter to nothing */
+      if(bb) bb.onclick=function(){
+        /* unwind one level, deepest first, so the path shortens in the order it was built */
+        for(var z=CHAIN_ORDER.length-1;z>=0;z--){ if(f.hasOwnProperty(CHAIN_ORDER[z])){ delete f[CHAIN_ORDER[z]]; break; } }
+        renderAll(); };
+      /* switching the family level steps through AIM family, AIM category, catalogue category and back.
+         Whichever family was on the path is dropped, because a name in one vocabulary does not exist in
+         the next and leaving it on would filter to nothing. */
       var sw=document.getElementById('bo-switch');
       if(sw) sw.onclick=function(){
-        SEL['p-bo'].deepDim=(deepDim==='aim')?'cat':'aim';
-        delete f.aim; delete f.cat; delete f.pn;
+        SEL['p-bo'].familyDim=NEXT_DEPTH[chosen]||'aim';
+        delete f.aim; delete f.aimcat; delete f.cat; delete f.pn;
         renderAll(); };
       var bc=document.getElementById('bo-clear');
       if(bc) bc.onclick=function(){ SEL['p-bo'].f={}; renderAll(); };
@@ -1952,8 +2149,7 @@ table.clickable tbody tr{cursor:pointer}
     var wgroups=(W[wdim]||W.noun).slice();
     if(!wgroups.length){ wgroups=(W.noun||[]).slice();
       warn('p-wait','This grouping came back empty, so the groups are shown by kind of part instead.'); }
-    var wdimLabel=({'noun':'kind of part','aim':'AIM family','cat':'catalogue category',
-                    'aim2':'sub-family'})[wdim]||'group';
+    var wdimLabel=DIMTITLE[wdim]||DIMNAME[wdim]||'group';
     SUM.wait={}; wgroups.forEach(function(g){SUM.wait[g.label]=g.pcs;});
     setTitle('h-ch-wait','Pieces waiting over 30 days, by '+wdimLabel);
     draw('ch-wait',{type:'bar',data:{labels:wgroups.map(function(g){return g.label;}),
@@ -2011,16 +2207,19 @@ table.clickable tbody tr{cursor:pointer}
       if(r.days<=30) return;
       var key=(wdim==='noun')?r.noun
               :(wdim==='aim')?r.aim
+              :(wdim==='aimcat')?r.aimcat
               :(wdim==='cat')?r.cat
+              :(wdim==='pn')?r.pn
               :(r.part.indexOf(';')>=0?r.part.split(';')[0].trim():'');   /* aim2: the prefix before ';' */
       if(wsel && String(key)!==String(wsel)) return;
       wlines.push({order:r.order,pn:r.pn,part:r.part,status:r.status,qty:r.qty,days:r.days,
-                   band:r.band,mode:r.mode,aim:r.aim,cat:r.cat,noun:r.noun});
+                   band:r.band,mode:r.mode,aim:r.aim,aimcat:r.aimcat,cat:r.cat,noun:r.noun});
     });
     makeTable('t-waitlines',[
       {k:'order',t:'Order'},{k:'pn',t:'Part'},{k:'part',t:'Name'},{k:'noun',t:'Kind'},
       {k:'status',t:'Status'},{k:'qty',t:'Pieces',n:true},{k:'days',t:'Days waiting',n:true},
-      {k:'band',t:'Band'},{k:'aim',t:'AIM family'},{k:'cat',t:'Catalogue category'}], wlines, 400);
+      {k:'band',t:'Band'},{k:'aim',t:'AIM family'},{k:'aimcat',t:'AIM category'},
+      {k:'cat',t:'Catalogue category'}], wlines, 400);
 
     var wo=document.getElementById('out-p-wait');
     if(wo)wo.textContent=(wsel?(wrows.length+' group selected, '):'')+wlines.length.toLocaleString('en-GB')
@@ -2179,11 +2378,16 @@ table.clickable tbody tr{cursor:pointer}
      classification file is rebuilt. */
   var covHead=document.getElementById('cov-head');
   if(covHead) covHead.textContent='Why the warehouse reads '+cw.pct_family+'% and the backlog '
-    +cb.pct_family+'% (catalogue category: '+cw.pct_cat+'% and '+cb.pct_cat+'%)';
+    +cb.pct_family+'% on AIM family, the same on AIM category, and '+cw.pct_cat+'% / '+cb.pct_cat
+    +'% on catalogue category';
+  /* All three vocabularies, kept apart. AIM family is level 1, AIM category is level 2 of the same
+     system, the catalogue category is the parts tree and is the most complete of the three. */
   var covRows=[
-    ['Has a family (AIM)',cb.family,cw.family],
+    ['Has an AIM family (aim_l1)',cb.family,cw.family],
+    ['Has an AIM category (aim_l2)',cb.aimcat,cw.aimcat],
     ['Has a catalogue category',cb.cat,cw.cat],
     ['In the classification file, no family assigned yet',cb.nofam,cw.nofam],
+    ['In the classification file, no category assigned yet',cb.noaimcat,cw.noaimcat],
     ['Not in any list we hold',cb.absent,cw.absent],
     ['Total lines',cb.lines,cw.lines]
   ];
@@ -2194,14 +2398,19 @@ table.clickable tbody tr{cursor:pointer}
 
   document.getElementById('why-60').innerHTML=
     'Our classification file holds <b class="hl">'+nf(M2.parts)+'</b> part numbers and only <b class="hl">'
-    +nf(M2.family)+'</b> of them carry a family. The family is filled in from the parts we actually bill, so a part we '
-    +'have never sold never got one. That is how the file was built, not a fault. The catalogue category is a different '
-    +'vocabulary and is far more complete - <b class="hl">'+nf(M2.cat)+'</b> part numbers carry one - which is why it lifts '
-    +'the warehouse picture from '+pc(cw.pct_family/100)+' to '+pc(cw.pct_cat/100)+'.'+
+    +nf(M2.family)+'</b> of them carry an AIM family. The family is filled in from the parts we actually bill, so a part we '
+    +'have never sold never got one. That is how the file was built, not a fault. The AIM category is the level below the '
+    +'family in the same system, and it is filled on exactly the same <b class="hl">'+nf(M2.aimcat)+'</b> part numbers, '
+    +'so it breaks the same lines into 116 categories under 24 families but does not reach any further than the family '
+    +'does. The catalogue category is a different vocabulary and is far more complete - <b class="hl">'+nf(M2.cat)
+    +'</b> part numbers carry one - which is why it lifts the warehouse picture from '+pc(cw.pct_family/100)+' to '
+    +pc(cw.pct_cat/100)+'.'+
     '<p>This section names no percentages in its heading, on purpose: the figures move whenever the classification file '
     +'is updated. Stated from the file as it stands in this build: <b class="hl">warehouse '+pc(cw.pct_family/100)
-    +'</b> of lines carry a family and <b class="hl">'+pc(cw.pct_cat/100)+'</b> carry a catalogue category; '
-    +'<b class="hl">backlog '+pc(cb.pct_family/100)+'</b> and <b class="hl">'+pc(cb.pct_cat/100)+'</b>. That is the whole '
+    +'</b> of lines carry an AIM family, <b class="hl">'+pc(cw.pct_aimcat/100)+'</b> an AIM category and '
+    +'<b class="hl">'+pc(cw.pct_cat/100)+'</b> a catalogue category; '
+    +'<b class="hl">backlog '+pc(cb.pct_family/100)+'</b>, <b class="hl">'+pc(cb.pct_aimcat/100)+'</b> and '
+    +'<b class="hl">'+pc(cb.pct_cat/100)+'</b>. That is the whole '
     +'reason the warehouse file reads lower than the current sellable backlog: it is <b>which parts are in each list</b>. '
     +'The warehouse list carries slow, older and one-off parts. The backlog carries parts that are on order right now, '
     +'which are the parts we sell. Classification file: <code>aim_master_v2.csv</code>, part numbers '
