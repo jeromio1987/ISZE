@@ -1,6 +1,6 @@
 # Isuzu Excellence Partner Program — analyse en uitwerking
 
-**Status:** interne analyse, draft v2 (bijgesteld na feedback: doel = deelname) · **Datum:** 9 oktober 2026 · **Basis:** deck *Isuzu Excellence Partner Program* (13 slides, voorstel, niet goedgekeurd) getoetst aan de data en documenten in deze workspace.
+**Status:** interne analyse, draft v2 (bijgesteld na feedback: doel = deelname) · vervolg: `SYNERGIE_Excellence_Partner_x_Universe_2026-10-09.md` · **Datum:** 9 oktober 2026 · **Basis:** deck *Isuzu Excellence Partner Program* (13 slides, voorstel, niet goedgekeurd) getoetst aan de data en documenten in deze workspace.
 **Periode:** fiscaal jaar. FY2026 = 1 april 2025 – 31 maart 2026. FY2027 = 1 april 2026 – 31 maart 2027.
 **Cijfers:** verificatierapport groen (24 sep 2026, 164 pass / 1 warn / 0 fail). Elk getal hieronder heeft een bron; indicatieve getallen staan als zodanig gemarkeerd.
 
@@ -290,13 +290,14 @@ Het rekenscript achter de cijfers in §4 staat in `_build/order_mix_and_discount
 
 ## 7. Open vragen
 
-Beantwoord op 9 oktober: korting alleen op stockorders · bovenop de kickback · ISZE eigenaar, IMG ondersteunt · alle distributeurs, CIS mag erbuiten · geen plafond · training klaar in april 2027.
+Beantwoord op 9 oktober: korting alleen op stockorders · bovenop de kickback · ISZE eigenaar, IMG ondersteunt · alle distributeurs, CIS mag erbuiten · geen plafond · training klaar in april 2027 · "meer klanten aan boord" = de distributeurs · sales to dealer moet erin.
+
+De samenhang met Isuzu Universe, welke data het belangrijkst is en plan B staan in **`SYNERGIE_Excellence_Partner_x_Universe_2026-10-09.md`**.
 
 Nog open:
 
-1. **Bedoel je met "meer klanten aan boord" de distributeurs zelf**, of ook dealers? Ik ben uitgegaan van distributeurs.
-2. **Wat vraagt de kickback vandaag precies aan data?** Dat is nodig om niveau 1 er duidelijk boven te leggen.
-3. **Welke data is het belangrijkst** om binnen te krijgen: sales to dealer per dealer en per onderdeel, de maandelijkse KPI's, of beide? Dat bepaalt de checklist van niveau 1.
+1. **Wat vraagt de kickback vandaag precies aan data?** Nodig om niveau 1 er duidelijk boven te leggen.
+2. **Waarom staat er geen sales-to-dealer-bestand in de workspace** voor Duitsland, Benelux, Zweden, Noorwegen en UMI, terwijl dat in hun kickback zit?
 
 ---
 
