@@ -13,7 +13,7 @@ from typing import Any
 
 import xlrd
 
-from ids_paths import ISZE_ROOT, country_display_name
+from ids_paths import ISZE_ROOT, ITUK_INPUT, country_display_name
 from build_ids_result_report import (
     COL_FIRST_DEALER,
     COL_LABEL,
@@ -28,6 +28,10 @@ from build_ids_result_report import (
     _norm_ref,
     load_matrix_rows_from_sheet,
 )
+
+UKCV_LABEL = country_display_name("ITUK")
+UKCV_SCORE_BASIS = "UKCV-AH"
+AE_SECTION_IDS = ("A", "B", "C", "D", "E")
 
 SECTION_RE = re.compile(r"^([A-H])\.\s", re.IGNORECASE)
 
@@ -187,7 +191,8 @@ class DealerRecord:
     site_key: str | None = None
     # True when dealer is listed but excluded from country / section averages
     excluded_from_average: bool = False
-    # "A-E" (280), "A-D" (253 when Section E is not_scored), or "totals_only"
+    # "A-E" (280), "A-D" (253 when Section E is not_scored),
+    # "UKCV-AH" (ITUK Sheet2 A–H), or "totals_only"
     score_basis: str = "A-E"
     raw_total: float | None = None
     raw_total_pct: float | None = None
@@ -653,6 +658,91 @@ def extract_result_report(
         for qid, block in rec.questions.items():
             block["country_avg_pct"] = q_country_avg.get(qid)
 
+    if country == UKCV_LABEL:
+        country, records, sections_meta, question_meta = _enrich_ukcv_from_sheet2(
+            country, records, sections_meta, question_meta
+        )
+
+    return country, records, sections_meta, question_meta
+
+
+def _enrich_ukcv_from_sheet2(
+    country: str,
+    records: list[DealerRecord],
+    sections_meta: list[dict[str, str]],
+    question_meta: list[dict[str, Any]],
+) -> tuple[str, list[DealerRecord], list[dict[str, str]], list[dict[str, Any]]]:
+    """Replace empty A–E shells with Sheet2 A–H rollups for UK CV (ITUK)."""
+    if country != UKCV_LABEL or not records:
+        return country, records, sections_meta, question_meta
+    if not ITUK_INPUT.is_file():
+        return country, records, sections_meta, question_meta
+
+    from build_ituk_ranking import UKCV_SECTION_DEFS, ituk_sections_by_name
+
+    by_name = ituk_sections_by_name(ITUK_INPUT)
+    if not by_name:
+        return country, records, sections_meta, question_meta
+
+    matched = 0
+    for rec in records:
+        src = by_name.get(rec.name.casefold())
+        if not src:
+            continue
+        sections = src.get("sections") or {}
+        if not any(
+            isinstance(b, dict) and b.get("pct") is not None for b in sections.values()
+        ):
+            continue
+        # Fresh copies so later country-avg stamps do not leak across dealers.
+        rec.sections = {
+            sid: dict(block) if isinstance(block, dict) else block
+            for sid, block in sections.items()
+        }
+        rec.questions = {}
+        rec.totals_only = False
+        rec.score_basis = UKCV_SCORE_BASIS
+        mx = src.get("max_pts")
+        if isinstance(mx, (int, float)) and mx > 0:
+            rec.total_max = float(mx)
+        matched += 1
+
+    if matched == 0:
+        return country, records, sections_meta, question_meta
+
+    sections_meta = [dict(s) for s in UKCV_SECTION_DEFS]
+    # No per-question answers in the consolidated workbook.
+    question_meta = []
+
+    included = [r for r in records if not r.excluded_from_average]
+    basis = included or records
+    for sid, _label in ((s["id"], s["label"]) for s in sections_meta):
+        scores = [
+            (r.sections.get(sid) or {}).get("score")
+            for r in basis
+            if (r.sections.get(sid) or {}).get("score") is not None
+        ]
+        pcts = [
+            (r.sections.get(sid) or {}).get("pct")
+            for r in basis
+            if (r.sections.get(sid) or {}).get("pct") is not None
+        ]
+        avg_score = mean(scores) if scores else None
+        avg_pct = mean(pcts) if pcts else None
+        for r in records:
+            block = r.sections.setdefault(
+                sid,
+                {
+                    "score": None,
+                    "max": None,
+                    "pct": None,
+                    "country_avg_score": None,
+                    "country_avg_pct": None,
+                },
+            )
+            block["country_avg_score"] = avg_score
+            block["country_avg_pct"] = avg_pct
+
     return country, records, sections_meta, question_meta
 
 
@@ -829,13 +919,29 @@ def build_dashboard_payload(reports_dir: Path) -> dict[str, Any]:
         """Trust extract flags (IT/CH all-in may include zero-score shells)."""
         return not d.get("excluded_from_average")
 
-    def profile_for(dealer_list: list[dict[str, Any]]) -> dict[str, Any]:
+    def _is_ukcv(d: dict[str, Any]) -> bool:
+        return d.get("score_basis") == UKCV_SCORE_BASIS or d.get("country") == UKCV_LABEL
+
+    def profile_for(
+        dealer_list: list[dict[str, Any]],
+        *,
+        for_network: bool = False,
+    ) -> dict[str, Any]:
         basis = [d for d in dealer_list if _in_average(d)]
         sec_pct: dict[str, float | None] = {}
         for sid in section_order:
+            # Continental A–E network must not mix ITUK's different A–H checklist.
+            sec_basis = basis
+            if for_network:
+                if sid in AE_SECTION_IDS:
+                    sec_basis = [d for d in basis if not _is_ukcv(d)]
+                else:
+                    # F/G/H exist only on UK CV — no anonymous network overlay.
+                    sec_pct[sid] = None
+                    continue
             vals = [
                 d["sections"][sid]["pct"]
-                for d in basis
+                for d in sec_basis
                 if sid in d.get("sections", {})
                 and d["sections"][sid].get("pct") is not None
             ]
@@ -886,19 +992,68 @@ def build_dashboard_payload(reports_dir: Path) -> dict[str, Any]:
                 "0/27 is not a vehicle-sales fail. The operating gap is Section D "
                 "(Parts), not vehicle sales."
             )
+        if c == UKCV_LABEL:
+            prof["score_basis"] = UKCV_SCORE_BASIS
+            prof["avg_hover"] = (
+                "UK CV national average uses ITUK’s own A–H checklist "
+                "(max 234 / 224), not the continental A–E / 280-point form. "
+                "Compare dealers within UK CV only; section scores are not "
+                "comparable to other markets."
+            )
     network = {
         "dealer_count": len(all_dealers),
-        **profile_for(all_dealers),
-        "q_pct": question_profile(scored_for_network or all_dealers),
+        **profile_for(all_dealers, for_network=True),
+        "q_pct": question_profile(
+            [d for d in (scored_for_network or all_dealers) if not _is_ukcv(d)]
+            or scored_for_network
+            or all_dealers
+        ),
         "section_e": section_e_meta,
-        "avg_hover": section_e_meta["hover"],
+        "avg_hover": (
+            section_e_meta["hover"]
+            + " UK CV (ITUK) uses a different A–H checklist and is excluded "
+            "from continental A–E section network averages."
+        ),
     }
 
-    # Stamp network section avg onto each dealer section block
+    # Stamp network section avg onto each dealer section block.
+    # UK CV: leave null — continental A–E network is a different instrument.
     for d in all_dealers:
+        ukcv = _is_ukcv(d)
         for sid, sec in (d.get("sections") or {}).items():
-            if isinstance(sec, dict):
+            if not isinstance(sec, dict):
+                continue
+            if ukcv:
+                sec["network_avg_pct"] = None
+            else:
                 sec["network_avg_pct"] = network["sections_pct"].get(sid)
+
+    multi = len(countries) > 1
+    if multi:
+        # Keep global catalogue on continental A–E so F/G/H do not appear as
+        # empty columns for every market. Stash UK CV A–H for country packs.
+        for d in all_dealers:
+            if not _is_ukcv(d):
+                continue
+            d["_ukcv_sections"] = d.get("sections") or {}
+            d["sections"] = {
+                sid: {
+                    "score": None,
+                    "max": None,
+                    "pct": None,
+                    "network_avg_pct": None,
+                    "country_avg_pct": None,
+                    "country_avg_score": None,
+                }
+                for sid in AE_SECTION_IDS
+            }
+            d["totals_only"] = True
+            d["score_basis"] = UKCV_SCORE_BASIS
+        sections = [s for s in sections if s.get("id") in AE_SECTION_IDS]
+        # Drop F/G/H from network section map (already null) for a clean A–E shell
+        network["sections_pct"] = {
+            sid: (network.get("sections_pct") or {}).get(sid) for sid in AE_SECTION_IDS
+        }
 
     return {
         "countries": countries,

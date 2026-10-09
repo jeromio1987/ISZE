@@ -1,0 +1,66 @@
+{
+  "schema": "ship_receipt/v2",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\ISZE_DPD_Full_Analysis_20261006.html",
+  "artifact_mtime_ms": 1791294138642,
+  "written_at": "2026-10-06T13:42:49Z",
+  "ok": true,
+  "screenshots_taken": 17,
+  "screenshots_read": 7,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\ISZE_DPD_Full_Analysis_20261006.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "98741 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "dpd_asm_only",
+      "ok": true,
+      "detail": "DPD ASM only in rank; clickable rows; 150-558 mentioned as excluded"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "bar-row=29 tr=75"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN_ISZE_DPD_Full_Analysis.cmd CRLF"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "screenshots_taken 17, screenshots_read 7 by this agent via image-Read; missing=[]"
+    },
+    {
+      "id": "drawer_click",
+      "ok": true,
+      "detail": "qa script: drawer_open True after PN row click"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_dpd\\03_fullpage.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_dpd\\04_1__Ranked_DPD_assemblies___click_a_row.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_dpd\\05_2__Emission_of_the_billed_euros.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_dpd\\06_3__Every_distributor___click_for_interva.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_dpd\\07_4__Warranty___DPD___particulate_operatio.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_dpd\\08_drawer_pn.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_dpd\\09_drawer_db.png"
+  ],
+  "notes": "DPD ASM only; emission from Europe/Israel year + billed DB; clickable PN/DB drawer; observed interval per 1000 UIO."
+}

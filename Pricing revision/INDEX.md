@@ -7,6 +7,8 @@ Open this folder when you want the price-list work and the AIM classification ta
 1. Double-click `OPEN_Pricing_revision.cmd`  
    Opens the live pack from 14–20 September (base-price compare, FX view, stack simulation, AIM-by-source, classification). Start inside that pack at `00_START_HERE`.
 2. Or double-click the shortcut **AIM pricing pack 14–20 Sep** — same folder.
+3. Day-to-day new / superseded PN into SAP: double-click `OPEN_PriceCalc_AIM.cmd`  
+   Opens the AIM-aligned PriceCalc (Config matched to live `config.yaml`). Rules: `PRICECALC_AIM_OPS.md`. One open ask: `PRICECALC_AIM_VOICE_ASK.md`.
 
 Live pack:
 
@@ -16,6 +18,9 @@ Live pack:
 
 | File | Use |
 |---|---|
+| `OPEN_PriceCalc_AIM.cmd` | Opens AIM-aligned PriceCalc (FOB → SAP). Not a substitute for the revision pack. |
+| `PRICECALC_AIM_OPS.md` | How to use PriceCalc if you skip to AIM-led margins |
+| `PRICECALC_AIM_VOICE_ASK.md` | Spec Q1 — can ISZE set new-PN margin by AIM category? |
 | `AIM_Master_PN_Categories_Figkey_20260921.csv` | Power BI (BVDV) — flat AIM + figure-key table |
 | `AIM_Master_PN_Categories_Figkey_20260921.xlsx` | Same table for browsing (double-click `OPEN_AIM_Master_PN_Categories_Figkey_20260921.cmd`) |
 | `ISZE_AIM_Management_20_Slides_2026-09-21.pptx` | AIM management slides |

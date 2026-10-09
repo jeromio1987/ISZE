@@ -1,0 +1,148 @@
+{
+  "as_of": "2026-10-07T13:38:51.534467+00:00",
+  "shard": "A",
+  "proposal_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\next_release_proposal_full_class_tranche1_catmap_2026-10-07.csv",
+  "proposed_rows": 49208,
+  "by_confidence": {
+    "HIGH": 42845,
+    "MED_HIGH": 6363
+  },
+  "distinct_cat_paths": 59,
+  "descriptions_filled_after_jp_enrich": 287,
+  "descriptions_still_blank": 48921,
+  "top_propose_aim_l1": {
+    "Accident & Body": 14492,
+    "Transmission": 6878,
+    "Electrical": 6744,
+    "Chassis Frame": 4422,
+    "Lighting": 3100,
+    "Engine": 2889,
+    "Fuel System": 2137,
+    "Intake Exhaust Emission": 1749,
+    "Clutch": 1365,
+    "Wheels Hub": 1331,
+    "Brakes": 1183,
+    "Cooling": 879,
+    "Maintenance Service": 858,
+    "Suspension": 584,
+    "Steering": 241
+  },
+  "flagged_paths": 7,
+  "flagged_rows": 10995,
+  "unflagged_clean_rows": 38213,
+  "high_sample_checked": 0,
+  "high_sample_obvious_misses": 0,
+  "high_sample_miss_rate": null,
+  "high_sample_misses": [],
+  "gasket_set_rows": 6550,
+  "gasket_eng_keyword": 4,
+  "gasket_trans_keyword": 0,
+  "gasket_other_or_unmatched": 6546,
+  "coverage_if_full_tranche1_applied": {
+    "with_family": 70253,
+    "with_family_pct": 42.5,
+    "without_family": 95057,
+    "true_blank_remaining": 90930,
+    "unknown_markers_untouched": 4129
+  },
+  "coverage_if_only_unflagged_applied": {
+    "with_family": 59258,
+    "with_family_pct": 35.85,
+    "without_family": 106052,
+    "held_back_flagged_rows": 10995
+  },
+  "recommendation": "NO-GO full tranche1; HARD-HOLD gasket 6550 + trans-asm 219 (+ air valve 241); CONDITIONAL-GO unflagged 38213 via dated release only",
+  "flags": [
+    {
+      "cat_path": "Repair parts > Gaskets / seals > Gasket set",
+      "propose_aim_l1": "Transmission",
+      "n": 6550,
+      "agree_share": 1.0,
+      "known_n": 228,
+      "confidence": "HIGH",
+      "reasons": [
+        "engine gasket language on 4 rows but family=Transmission (contradicts Jerome 2026-10-04 Engine > Gasket & Sealing > Gasket for ENG gasket sets)"
+      ],
+      "sample_desc": ""
+    },
+    {
+      "cat_path": "Accident parts > Body parts > Body structure",
+      "propose_aim_l1": "Chassis Frame",
+      "n": 1788,
+      "agree_share": 0.9462,
+      "known_n": 93,
+      "confidence": "MED_HIGH",
+      "reasons": [
+        "large volume (1,788) below 95% agreement"
+      ],
+      "sample_desc": ""
+    },
+    {
+      "cat_path": "Accident parts > Body parts > Glass / window",
+      "propose_aim_l1": "Accident & Body",
+      "n": 1100,
+      "agree_share": 0.9135,
+      "known_n": 185,
+      "confidence": "MED_HIGH",
+      "reasons": [
+        "large volume (1,100) below 95% agreement"
+      ],
+      "sample_desc": ""
+    },
+    {
+      "cat_path": "Repair parts > Electrical sensors > Relay / solenoid / fuse",
+      "propose_aim_l1": "Electrical",
+      "n": 576,
+      "agree_share": 0.9,
+      "known_n": 130,
+      "confidence": "MED_HIGH",
+      "reasons": [
+        "relay/solenoid/fuse path at floor agreement 90%"
+      ],
+      "sample_desc": ""
+    },
+    {
+      "cat_path": "Competitive parts > Clutch parts > Clutch disc",
+      "propose_aim_l1": "Clutch",
+      "n": 521,
+      "agree_share": 0.9,
+      "known_n": 60,
+      "confidence": "MED_HIGH",
+      "reasons": [
+        "competitive clutch disc at only 90% agreement"
+      ],
+      "sample_desc": ""
+    },
+    {
+      "cat_path": "Competitive parts > Air system > Air valve",
+      "propose_aim_l1": "Steering",
+      "n": 241,
+      "agree_share": 0.9355,
+      "known_n": 31,
+      "confidence": "MED_HIGH",
+      "reasons": [
+        "air-system valves mapped to Steering \u2014 commercially doubtful"
+      ],
+      "sample_desc": ""
+    },
+    {
+      "cat_path": "High value repair > Transmission parts > Transmission assembly",
+      "propose_aim_l1": "Literature Marketing",
+      "n": 219,
+      "agree_share": 0.9268,
+      "known_n": 41,
+      "confidence": "MED_HIGH",
+      "reasons": [
+        "assembly/hardware language (1) at least as strong as literature language (0)",
+        "transmission-assembly catalogue path mapped to Literature Marketing"
+      ],
+      "sample_desc": ""
+    }
+  ],
+  "gasket_known_transmission": 228,
+  "gasket_known_transmission_with_eng_desc": 206,
+  "jp_columns_note": "JP cache uses pn/jp_description \u2014 first enrich looked for part_number/description; only 287 proposal rows had usable desc",
+  "high_sample_miss_rate_note": "not scored \u2014 insufficient described rows on unflagged HIGH sample",
+  "hard_fail_rows": 6769,
+  "doubtful_rows": 241
+}

@@ -1,0 +1,1458 @@
+{
+  "as_of": "2026-10-05",
+  "sources": {
+    "map": "series_to_band.csv (NMR=5.5t Europe; NKR=3.5t)",
+    "applicability": "vehicle_band_applicability.csv",
+    "evolution": "nseries_tonnage_evolution.csv FY2026",
+    "pms": "pms_tonnage_model.csv CY2025 PRISM lane",
+    "mileage": "warranty_cv_km_age_by_market.csv",
+    "n55": "uio_n55_share.csv"
+  },
+  "catalogue": {
+    "by_band": [
+      {
+        "band": "LCV_D-Max",
+        "label": "D-Max / LCV",
+        "exclusive_pns": 316,
+        "exclusive_eur_all_years": 38606223.0
+      },
+      {
+        "band": "shared_across_bands",
+        "label": "Shared across bands",
+        "exclusive_pns": 194,
+        "exclusive_eur_all_years": 23187768.0
+      },
+      {
+        "band": "F_series_MD_heavy",
+        "label": "F-series",
+        "exclusive_pns": 182,
+        "exclusive_eur_all_years": 4727363.0
+      },
+      {
+        "band": "7.5t_N50_N62_N75",
+        "label": "7.5 t (N75 class)",
+        "exclusive_pns": 114,
+        "exclusive_eur_all_years": 3600116.0
+      },
+      {
+        "band": "3.5t_N35",
+        "label": "3.5 t (N35)",
+        "exclusive_pns": 15,
+        "exclusive_eur_all_years": 251430.0
+      },
+      {
+        "band": "5.5t_N50_N55",
+        "label": "5.5 t (N55)",
+        "exclusive_pns": 2,
+        "exclusive_eur_all_years": 0.0
+      }
+    ],
+    "n_series_exclusive_pns": 131,
+    "n_series_shared_pns": 193,
+    "n_series_exclusive_eur": 3851545.0,
+    "n_series_shared_eur": 23147331.0,
+    "fy2026_n_series_billed": {
+      "period": "FY2026 (Apr 2025\u2013Mar 2026)",
+      "exclusive_eur": 254842.0,
+      "pooled_shared_eur": 997868.0,
+      "unresolved_eur": 87549.0,
+      "total_eur": 1340258.0,
+      "exclusive_pct": 19.0
+    },
+    "fy2026_by_membership": [
+      {
+        "band": "3.5 t (N35)",
+        "membership": "also_fits_band",
+        "eur": 890022.0,
+        "markets": 12
+      },
+      {
+        "band": "3.5 t (N35)",
+        "membership": "single_band_only",
+        "eur": 1787.0,
+        "markets": 7
+      },
+      {
+        "band": "5.5 t (N55)",
+        "membership": "also_fits_band",
+        "eur": 875017.0,
+        "markets": 12
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "membership": "also_fits_band",
+        "eur": 957077.0,
+        "markets": 12
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "membership": "single_band_only",
+        "eur": 253054.0,
+        "markets": 10
+      },
+      {
+        "band": "Shared across N-series bands",
+        "membership": "pooled_all_bands",
+        "eur": 997868.0,
+        "markets": 13
+      },
+      {
+        "band": "Unresolved series",
+        "membership": "series_unresolved",
+        "eur": 87549.0,
+        "markets": 10
+      }
+    ],
+    "top_exclusive_families": [
+      {
+        "band": "D-Max / LCV",
+        "family": "brake_rotor",
+        "eur": 2840309.0,
+        "pns": 9
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "brake_pad",
+        "eur": 1425474.0,
+        "pns": 4
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "air_filter",
+        "eur": 1113464.0,
+        "pns": 12
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "brake_shoe",
+        "eur": 428572.0,
+        "pns": 8
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "clutch_disc",
+        "eur": 389233.0,
+        "pns": 5
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "fuel_filter",
+        "eur": 1526327.0,
+        "pns": 11
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "clutch_kit",
+        "eur": 631497.0,
+        "pns": 18
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "air_filter",
+        "eur": 294835.0,
+        "pns": 4
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "brake_shoe",
+        "eur": 9562.0,
+        "pns": 5
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "oil_filter",
+        "eur": 251.0,
+        "pns": 2
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "fuel_filter",
+        "eur": 11328.0,
+        "pns": 2
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "clutch_disc",
+        "eur": 42.0,
+        "pns": 2
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "oil_filter",
+        "eur": 12.0,
+        "pns": 2
+      },
+      {
+        "band": "F-series",
+        "family": "air_filter",
+        "eur": 410820.0,
+        "pns": 27
+      },
+      {
+        "band": "F-series",
+        "family": "brake_shoe",
+        "eur": 121122.0,
+        "pns": 2
+      },
+      {
+        "band": "F-series",
+        "family": "clutch_kit",
+        "eur": 85106.0,
+        "pns": 43
+      },
+      {
+        "band": "F-series",
+        "family": "oil_filter",
+        "eur": 15540.0,
+        "pns": 8
+      },
+      {
+        "band": "F-series",
+        "family": "clutch_booster",
+        "eur": 3180.0,
+        "pns": 6
+      }
+    ],
+    "exclusive_5_5_detail": [
+      {
+        "pn": "5876103150",
+        "family": NaN,
+        "eur": 0.0
+      },
+      {
+        "pn": "8983053050",
+        "family": NaN,
+        "eur": 0.0
+      }
+    ],
+    "also_fits_fy2026": [
+      {
+        "band": "3.5 t (N35)",
+        "eur": 890022.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "eur": 875017.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "eur": 957077.0
+      }
+    ]
+  },
+  "fleet": {
+    "network_by_band": [
+      {
+        "band": "D-Max / LCV",
+        "uio": 125168.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "uio": 12462.7
+      },
+      {
+        "band": "3.5 t (N35)",
+        "uio": 1887.6
+      },
+      {
+        "band": "F-series",
+        "uio": 361.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "uio": 251.6
+      }
+    ],
+    "n_series_by_market": [
+      {
+        "market": "UTI",
+        "uio_3_5": 0.0,
+        "uio_5_5": 0.0,
+        "uio_7_5": 10336.0,
+        "n_total": 10336.0,
+        "pct_3_5": 0.0,
+        "pct_5_5": 0.0,
+        "pct_7_5": 100.0
+      },
+      {
+        "market": "PORTUGAL",
+        "uio_3_5": 1403.9,
+        "uio_5_5": 42.8,
+        "uio_7_5": 759.3,
+        "n_total": 2206.0,
+        "pct_3_5": 63.6,
+        "pct_5_5": 1.9,
+        "pct_7_5": 34.4
+      },
+      {
+        "market": "GERMANY",
+        "uio_3_5": 161.0,
+        "uio_5_5": 82.9,
+        "uio_7_5": 488.0,
+        "n_total": 731.9,
+        "pct_3_5": 22.0,
+        "pct_5_5": 11.3,
+        "pct_7_5": 66.7
+      },
+      {
+        "market": "IRELAND",
+        "uio_3_5": 225.8,
+        "uio_5_5": 0.0,
+        "uio_7_5": 505.2,
+        "n_total": 731.0,
+        "pct_3_5": 30.9,
+        "pct_5_5": 0.0,
+        "pct_7_5": 69.1
+      },
+      {
+        "market": "MALTA",
+        "uio_3_5": 0.0,
+        "uio_5_5": 89.7,
+        "uio_7_5": 153.3,
+        "n_total": 243.0,
+        "pct_3_5": 0.0,
+        "pct_5_5": 36.9,
+        "pct_7_5": 63.1
+      },
+      {
+        "market": "CYPRUS",
+        "uio_3_5": 0.0,
+        "uio_5_5": 10.8,
+        "uio_7_5": 192.2,
+        "n_total": 203.0,
+        "pct_3_5": 0.0,
+        "pct_5_5": 5.3,
+        "pct_7_5": 94.7
+      },
+      {
+        "market": "BELGIUM",
+        "uio_3_5": 96.9,
+        "uio_5_5": 6.9,
+        "uio_7_5": 9.2,
+        "n_total": 113.0,
+        "pct_3_5": 85.8,
+        "pct_5_5": 6.1,
+        "pct_7_5": 8.1
+      },
+      {
+        "market": "GREECE",
+        "uio_3_5": 0.0,
+        "uio_5_5": 18.5,
+        "uio_7_5": 18.5,
+        "n_total": 37.0,
+        "pct_3_5": 0.0,
+        "pct_5_5": 50.0,
+        "pct_7_5": 50.0
+      },
+      {
+        "market": "DENMARK",
+        "uio_3_5": 0.0,
+        "uio_5_5": 0.0,
+        "uio_7_5": 1.0,
+        "n_total": 1.0,
+        "pct_3_5": 0.0,
+        "pct_5_5": 0.0,
+        "pct_7_5": 100.0
+      }
+    ],
+    "markets_with_5_5": [
+      {
+        "market": "PORTUGAL",
+        "uio_3_5": 1403.9,
+        "uio_5_5": 42.8,
+        "uio_7_5": 759.3,
+        "n_total": 2206.0,
+        "pct_3_5": 63.6,
+        "pct_5_5": 1.9,
+        "pct_7_5": 34.4
+      },
+      {
+        "market": "GERMANY",
+        "uio_3_5": 161.0,
+        "uio_5_5": 82.9,
+        "uio_7_5": 488.0,
+        "n_total": 731.9,
+        "pct_3_5": 22.0,
+        "pct_5_5": 11.3,
+        "pct_7_5": 66.7
+      },
+      {
+        "market": "MALTA",
+        "uio_3_5": 0.0,
+        "uio_5_5": 89.7,
+        "uio_7_5": 153.3,
+        "n_total": 243.0,
+        "pct_3_5": 0.0,
+        "pct_5_5": 36.9,
+        "pct_7_5": 63.1
+      },
+      {
+        "market": "CYPRUS",
+        "uio_3_5": 0.0,
+        "uio_5_5": 10.8,
+        "uio_7_5": 192.2,
+        "n_total": 203.0,
+        "pct_3_5": 0.0,
+        "pct_5_5": 5.3,
+        "pct_7_5": 94.7
+      },
+      {
+        "market": "BELGIUM",
+        "uio_3_5": 96.9,
+        "uio_5_5": 6.9,
+        "uio_7_5": 9.2,
+        "n_total": 113.0,
+        "pct_3_5": 85.8,
+        "pct_5_5": 6.1,
+        "pct_7_5": 8.1
+      },
+      {
+        "market": "GREECE",
+        "uio_3_5": 0.0,
+        "uio_5_5": 18.5,
+        "uio_7_5": 18.5,
+        "n_total": 37.0,
+        "pct_3_5": 0.0,
+        "pct_5_5": 50.0,
+        "pct_7_5": 50.0
+      }
+    ],
+    "n55_shares": [
+      {
+        "market": "ITUK",
+        "n55_share_pct": 1.3,
+        "basis": "ituk_vin_models"
+      },
+      {
+        "market": "UTI",
+        "n55_share_pct": 0.0,
+        "basis": "cv_claims"
+      },
+      {
+        "market": "PORTUGAL",
+        "n55_share_pct": 1.9,
+        "basis": "imotors_registrations"
+      },
+      {
+        "market": "MALTA",
+        "n55_share_pct": 36.9,
+        "basis": "jp_vin_shipments"
+      },
+      {
+        "market": "GERMANY",
+        "n55_share_pct": 11.3,
+        "basis": "helwig_parc_bands"
+      },
+      {
+        "market": "IRELAND",
+        "n55_share_pct": 0.0,
+        "basis": "jp_vin_shipments"
+      },
+      {
+        "market": "BELGIUM",
+        "n55_share_pct": 6.1,
+        "basis": "jp_vin_shipments"
+      },
+      {
+        "market": "CYPRUS",
+        "n55_share_pct": 5.3,
+        "basis": "jp_vin_shipments"
+      },
+      {
+        "market": "GREECE",
+        "n55_share_pct": 50.0,
+        "basis": "jp_vin_shipments"
+      }
+    ],
+    "portugal": {
+      "n_series": {
+        "market": "PORTUGAL",
+        "uio_3_5": 1403.9,
+        "uio_5_5": 42.8,
+        "uio_7_5": 759.3,
+        "n_total": 2206.0,
+        "pct_3_5": 63.6,
+        "pct_5_5": 1.9,
+        "pct_7_5": 34.4
+      },
+      "lcv_uio": 4733.0,
+      "f_uio": 269.0
+    },
+    "uti_note": "UTI n55_share=0; CV claims show no NLR/NKR/NMR \u2014 no 3.5 t or 5.5 t class"
+  },
+  "exclusive_rate": {
+    "network": [
+      {
+        "band": "3.5 t (N35)",
+        "exclusive_eur": 1787.0,
+        "uio_network": 1887.6,
+        "eur_per_truck": 0.9
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "exclusive_eur": 253054.0,
+        "uio_network": 12462.7,
+        "eur_per_truck": 20.3
+      }
+    ],
+    "by_market": [
+      {
+        "market": "UTI",
+        "band": "7.5 t (N75 class)",
+        "exclusive_eur": 105514.0,
+        "uio": 10336.0,
+        "eur_per_truck": 10.2
+      },
+      {
+        "market": "IRELAND",
+        "band": "7.5 t (N75 class)",
+        "exclusive_eur": 25740.0,
+        "uio": 505.2,
+        "eur_per_truck": 50.9
+      },
+      {
+        "market": "BELGIUM",
+        "band": "7.5 t (N75 class)",
+        "exclusive_eur": 16752.0,
+        "uio": 9.2,
+        "eur_per_truck": 1820.8
+      },
+      {
+        "market": "PORTUGAL",
+        "band": "7.5 t (N75 class)",
+        "exclusive_eur": 15231.0,
+        "uio": 759.3,
+        "eur_per_truck": 20.1
+      },
+      {
+        "market": "DENMARK",
+        "band": "7.5 t (N75 class)",
+        "exclusive_eur": 5105.0,
+        "uio": 1.0,
+        "eur_per_truck": 5105.4
+      },
+      {
+        "market": "CYPRUS",
+        "band": "7.5 t (N75 class)",
+        "exclusive_eur": 4539.0,
+        "uio": 192.2,
+        "eur_per_truck": 23.6
+      },
+      {
+        "market": "IRELAND",
+        "band": "3.5 t (N35)",
+        "exclusive_eur": 953.0,
+        "uio": 225.8,
+        "eur_per_truck": 4.2
+      },
+      {
+        "market": "GERMANY",
+        "band": "7.5 t (N75 class)",
+        "exclusive_eur": 900.0,
+        "uio": 488.0,
+        "eur_per_truck": 1.8
+      },
+      {
+        "market": "GREECE",
+        "band": "7.5 t (N75 class)",
+        "exclusive_eur": 857.0,
+        "uio": 18.5,
+        "eur_per_truck": 46.3
+      },
+      {
+        "market": "PORTUGAL",
+        "band": "3.5 t (N35)",
+        "exclusive_eur": 170.0,
+        "uio": 1403.9,
+        "eur_per_truck": 0.1
+      },
+      {
+        "market": "BELGIUM",
+        "band": "3.5 t (N35)",
+        "exclusive_eur": 94.0,
+        "uio": 96.9,
+        "eur_per_truck": 1.0
+      }
+    ],
+    "caveat": "Only parts exclusive to one N-series band. Shared platform euro excluded. D-Max/F not in this N-series evolution cut."
+  },
+  "portugal_pms_km": {
+    "measured_km_yr": {
+      "3.5t_N35": 26584,
+      "5.5t_N50_N55": null,
+      "7.5t_N50_N62_N75": 40223,
+      "LCV_D-Max": null,
+      "F_series_MD_heavy": 17285
+    },
+    "intervals_km": {
+      "3.5t_N35": 20000,
+      "5.5t_N50_N55": 30000,
+      "7.5t_N50_N62_N75": 40000,
+      "LCV_D-Max": 20000,
+      "F_series_MD_heavy": 40000
+    },
+    "rows": [
+      {
+        "band": "3.5 t (N35)",
+        "family": "brake_pad",
+        "uio": 1403.9,
+        "visits_model": 0.5,
+        "visits_measured": 1.33,
+        "scale": 2.66,
+        "expected_model": 351.0,
+        "expected_km_adj": 933.1,
+        "market_actual_qty": 1611.0,
+        "market_capture_pct": 55.8,
+        "gap_eur_band_share": 9839.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "clutch_disc",
+        "uio": 1403.9,
+        "visits_model": 0.5,
+        "visits_measured": 1.33,
+        "scale": 2.66,
+        "expected_model": 140.4,
+        "expected_km_adj": 373.2,
+        "market_actual_qty": 213.0,
+        "market_capture_pct": 15.8,
+        "gap_eur_band_share": 13052.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "fuel_filter",
+        "uio": 1403.9,
+        "visits_model": 0.5,
+        "visits_measured": 1.33,
+        "scale": 2.66,
+        "expected_model": 701.9,
+        "expected_km_adj": 1865.9,
+        "market_actual_qty": 2698.0,
+        "market_capture_pct": 40.2,
+        "gap_eur_band_share": 3892.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "oil_filter",
+        "uio": 1403.9,
+        "visits_model": 0.5,
+        "visits_measured": 1.33,
+        "scale": 2.66,
+        "expected_model": 701.9,
+        "expected_km_adj": 1865.9,
+        "market_actual_qty": 3135.0,
+        "market_capture_pct": 46.7,
+        "gap_eur_band_share": 2076.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "brake_pad",
+        "uio": 759.3,
+        "visits_model": 0.5,
+        "visits_measured": 1.01,
+        "scale": 2.01,
+        "expected_model": 189.8,
+        "expected_km_adj": 381.7,
+        "market_actual_qty": 1611.0,
+        "market_capture_pct": 55.8,
+        "gap_eur_band_share": 5320.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "clutch_disc",
+        "uio": 759.3,
+        "visits_model": 0.5,
+        "visits_measured": 1.01,
+        "scale": 2.01,
+        "expected_model": 75.9,
+        "expected_km_adj": 152.6,
+        "market_actual_qty": 213.0,
+        "market_capture_pct": 15.8,
+        "gap_eur_band_share": 7056.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "fuel_filter",
+        "uio": 759.3,
+        "visits_model": 0.5,
+        "visits_measured": 1.01,
+        "scale": 2.01,
+        "expected_model": 379.7,
+        "expected_km_adj": 763.6,
+        "market_actual_qty": 2698.0,
+        "market_capture_pct": 40.2,
+        "gap_eur_band_share": 2105.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "oil_filter",
+        "uio": 759.3,
+        "visits_model": 0.5,
+        "visits_measured": 1.01,
+        "scale": 2.01,
+        "expected_model": 379.7,
+        "expected_km_adj": 763.6,
+        "market_actual_qty": 3135.0,
+        "market_capture_pct": 46.7,
+        "gap_eur_band_share": 1123.0
+      }
+    ],
+    "all_key_rows": [
+      {
+        "band": "3.5 t (N35)",
+        "family": "air_filter",
+        "uio": 1403.9,
+        "visits_model": 0.5,
+        "visits_measured": 1.33,
+        "scale": 2.66,
+        "expected_model": 351.0,
+        "expected_km_adj": 933.1,
+        "market_actual_qty": 1886.0,
+        "market_capture_pct": 56.1,
+        "gap_eur_band_share": 3545.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "brake_pad",
+        "uio": 1403.9,
+        "visits_model": 0.5,
+        "visits_measured": 1.33,
+        "scale": 2.66,
+        "expected_model": 351.0,
+        "expected_km_adj": 933.1,
+        "market_actual_qty": 1611.0,
+        "market_capture_pct": 55.8,
+        "gap_eur_band_share": 9839.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "brake_shoe",
+        "uio": 1403.9,
+        "visits_model": 0.5,
+        "visits_measured": 1.33,
+        "scale": 2.66,
+        "expected_model": 351.0,
+        "expected_km_adj": 933.1,
+        "market_actual_qty": 355.0,
+        "market_capture_pct": 10.6,
+        "gap_eur_band_share": 16320.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "clutch_disc",
+        "uio": 1403.9,
+        "visits_model": 0.5,
+        "visits_measured": 1.33,
+        "scale": 2.66,
+        "expected_model": 140.4,
+        "expected_km_adj": 373.2,
+        "market_actual_qty": 213.0,
+        "market_capture_pct": 15.8,
+        "gap_eur_band_share": 13052.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "clutch_kit",
+        "uio": 1403.9,
+        "visits_model": 0.5,
+        "visits_measured": 1.33,
+        "scale": 2.66,
+        "expected_model": 105.3,
+        "expected_km_adj": 279.9,
+        "market_actual_qty": 309.0,
+        "market_capture_pct": 30.7,
+        "gap_eur_band_share": 5564.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "fuel_filter",
+        "uio": 1403.9,
+        "visits_model": 0.5,
+        "visits_measured": 1.33,
+        "scale": 2.66,
+        "expected_model": 701.9,
+        "expected_km_adj": 1865.9,
+        "market_actual_qty": 2698.0,
+        "market_capture_pct": 40.2,
+        "gap_eur_band_share": 3892.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "oil_filter",
+        "uio": 1403.9,
+        "visits_model": 0.5,
+        "visits_measured": 1.33,
+        "scale": 2.66,
+        "expected_model": 701.9,
+        "expected_km_adj": 1865.9,
+        "market_actual_qty": 3135.0,
+        "market_capture_pct": 46.7,
+        "gap_eur_band_share": 2076.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "family": "air_filter",
+        "uio": 42.8,
+        "visits_model": 0.5,
+        "visits_measured": null,
+        "scale": null,
+        "expected_model": 10.7,
+        "expected_km_adj": null,
+        "market_actual_qty": 1886.0,
+        "market_capture_pct": 56.1,
+        "gap_eur_band_share": 108.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "family": "brake_pad",
+        "uio": 42.8,
+        "visits_model": 0.5,
+        "visits_measured": null,
+        "scale": null,
+        "expected_model": 10.7,
+        "expected_km_adj": null,
+        "market_actual_qty": 1611.0,
+        "market_capture_pct": 55.8,
+        "gap_eur_band_share": 300.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "family": "brake_shoe",
+        "uio": 42.8,
+        "visits_model": 0.5,
+        "visits_measured": null,
+        "scale": null,
+        "expected_model": 10.7,
+        "expected_km_adj": null,
+        "market_actual_qty": 355.0,
+        "market_capture_pct": 10.6,
+        "gap_eur_band_share": 498.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "family": "clutch_disc",
+        "uio": 42.8,
+        "visits_model": 0.5,
+        "visits_measured": null,
+        "scale": null,
+        "expected_model": 4.3,
+        "expected_km_adj": null,
+        "market_actual_qty": 213.0,
+        "market_capture_pct": 15.8,
+        "gap_eur_band_share": 400.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "family": "clutch_kit",
+        "uio": 42.8,
+        "visits_model": 0.5,
+        "visits_measured": null,
+        "scale": null,
+        "expected_model": 3.2,
+        "expected_km_adj": null,
+        "market_actual_qty": 309.0,
+        "market_capture_pct": 30.7,
+        "gap_eur_band_share": 169.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "family": "fuel_filter",
+        "uio": 42.8,
+        "visits_model": 0.5,
+        "visits_measured": null,
+        "scale": null,
+        "expected_model": 21.4,
+        "expected_km_adj": null,
+        "market_actual_qty": 2698.0,
+        "market_capture_pct": 40.2,
+        "gap_eur_band_share": 119.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "family": "oil_filter",
+        "uio": 42.8,
+        "visits_model": 0.5,
+        "visits_measured": null,
+        "scale": null,
+        "expected_model": 21.4,
+        "expected_km_adj": null,
+        "market_actual_qty": 3135.0,
+        "market_capture_pct": 46.7,
+        "gap_eur_band_share": 63.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "air_filter",
+        "uio": 759.3,
+        "visits_model": 0.5,
+        "visits_measured": 1.01,
+        "scale": 2.01,
+        "expected_model": 189.8,
+        "expected_km_adj": 381.7,
+        "market_actual_qty": 1886.0,
+        "market_capture_pct": 56.1,
+        "gap_eur_band_share": 1917.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "brake_pad",
+        "uio": 759.3,
+        "visits_model": 0.5,
+        "visits_measured": 1.01,
+        "scale": 2.01,
+        "expected_model": 189.8,
+        "expected_km_adj": 381.7,
+        "market_actual_qty": 1611.0,
+        "market_capture_pct": 55.8,
+        "gap_eur_band_share": 5320.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "brake_shoe",
+        "uio": 759.3,
+        "visits_model": 0.5,
+        "visits_measured": 1.01,
+        "scale": 2.01,
+        "expected_model": 189.8,
+        "expected_km_adj": 381.7,
+        "market_actual_qty": 355.0,
+        "market_capture_pct": 10.6,
+        "gap_eur_band_share": 8825.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "clutch_disc",
+        "uio": 759.3,
+        "visits_model": 0.5,
+        "visits_measured": 1.01,
+        "scale": 2.01,
+        "expected_model": 75.9,
+        "expected_km_adj": 152.6,
+        "market_actual_qty": 213.0,
+        "market_capture_pct": 15.8,
+        "gap_eur_band_share": 7056.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "clutch_kit",
+        "uio": 759.3,
+        "visits_model": 0.5,
+        "visits_measured": 1.01,
+        "scale": 2.01,
+        "expected_model": 56.9,
+        "expected_km_adj": 114.4,
+        "market_actual_qty": 309.0,
+        "market_capture_pct": 30.7,
+        "gap_eur_band_share": 3007.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "fuel_filter",
+        "uio": 759.3,
+        "visits_model": 0.5,
+        "visits_measured": 1.01,
+        "scale": 2.01,
+        "expected_model": 379.7,
+        "expected_km_adj": 763.6,
+        "market_actual_qty": 2698.0,
+        "market_capture_pct": 40.2,
+        "gap_eur_band_share": 2105.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "oil_filter",
+        "uio": 759.3,
+        "visits_model": 0.5,
+        "visits_measured": 1.01,
+        "scale": 2.01,
+        "expected_model": 379.7,
+        "expected_km_adj": 763.6,
+        "market_actual_qty": 3135.0,
+        "market_capture_pct": 46.7,
+        "gap_eur_band_share": 1123.0
+      },
+      {
+        "band": "F-series",
+        "family": "air_filter",
+        "uio": 269.0,
+        "visits_model": 0.6667,
+        "visits_measured": 0.43,
+        "scale": 0.65,
+        "expected_model": 89.7,
+        "expected_km_adj": 58.1,
+        "market_actual_qty": 1886.0,
+        "market_capture_pct": 56.1,
+        "gap_eur_band_share": 906.0
+      },
+      {
+        "band": "F-series",
+        "family": "brake_pad",
+        "uio": 269.0,
+        "visits_model": 0.6667,
+        "visits_measured": 0.43,
+        "scale": 0.65,
+        "expected_model": 89.7,
+        "expected_km_adj": 58.1,
+        "market_actual_qty": 1611.0,
+        "market_capture_pct": 55.8,
+        "gap_eur_band_share": 2514.0
+      },
+      {
+        "band": "F-series",
+        "family": "brake_shoe",
+        "uio": 269.0,
+        "visits_model": 0.6667,
+        "visits_measured": 0.43,
+        "scale": 0.65,
+        "expected_model": 89.7,
+        "expected_km_adj": 58.1,
+        "market_actual_qty": 355.0,
+        "market_capture_pct": 10.6,
+        "gap_eur_band_share": 4171.0
+      },
+      {
+        "band": "F-series",
+        "family": "clutch_disc",
+        "uio": 269.0,
+        "visits_model": 0.6667,
+        "visits_measured": 0.43,
+        "scale": 0.65,
+        "expected_model": 35.9,
+        "expected_km_adj": 23.3,
+        "market_actual_qty": 213.0,
+        "market_capture_pct": 15.8,
+        "gap_eur_band_share": 3337.0
+      },
+      {
+        "band": "F-series",
+        "family": "clutch_kit",
+        "uio": 269.0,
+        "visits_model": 0.6667,
+        "visits_measured": 0.43,
+        "scale": 0.65,
+        "expected_model": 26.9,
+        "expected_km_adj": 17.4,
+        "market_actual_qty": 309.0,
+        "market_capture_pct": 30.7,
+        "gap_eur_band_share": 1422.0
+      },
+      {
+        "band": "F-series",
+        "family": "fuel_filter",
+        "uio": 269.0,
+        "visits_model": 0.6667,
+        "visits_measured": 0.43,
+        "scale": 0.65,
+        "expected_model": 179.3,
+        "expected_km_adj": 116.2,
+        "market_actual_qty": 2698.0,
+        "market_capture_pct": 40.2,
+        "gap_eur_band_share": 994.0
+      },
+      {
+        "band": "F-series",
+        "family": "oil_filter",
+        "uio": 269.0,
+        "visits_model": 0.6667,
+        "visits_measured": 0.43,
+        "scale": 0.65,
+        "expected_model": 179.3,
+        "expected_km_adj": 116.2,
+        "market_actual_qty": 3135.0,
+        "market_capture_pct": 46.7,
+        "gap_eur_band_share": 530.0
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "air_filter",
+        "uio": 4733.0,
+        "visits_model": 1.0,
+        "visits_measured": null,
+        "scale": null,
+        "expected_model": 2366.5,
+        "expected_km_adj": null,
+        "market_actual_qty": 1886.0,
+        "market_capture_pct": 56.1,
+        "gap_eur_band_share": 23900.0
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "brake_pad",
+        "uio": 4733.0,
+        "visits_model": 1.0,
+        "visits_measured": null,
+        "scale": null,
+        "expected_model": 1893.2,
+        "expected_km_adj": null,
+        "market_actual_qty": 1611.0,
+        "market_capture_pct": 55.8,
+        "gap_eur_band_share": 53066.0
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "brake_shoe",
+        "uio": 4733.0,
+        "visits_model": 1.0,
+        "visits_measured": null,
+        "scale": null,
+        "expected_model": 2366.5,
+        "expected_km_adj": null,
+        "market_actual_qty": 355.0,
+        "market_capture_pct": 10.6,
+        "gap_eur_band_share": 110034.0
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "clutch_disc",
+        "uio": 4733.0,
+        "visits_model": 1.0,
+        "visits_measured": null,
+        "scale": null,
+        "expected_model": 946.6,
+        "expected_km_adj": null,
+        "market_actual_qty": 213.0,
+        "market_capture_pct": 15.8,
+        "gap_eur_band_share": 88000.0
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "clutch_kit",
+        "uio": 4733.0,
+        "visits_model": 1.0,
+        "visits_measured": null,
+        "scale": null,
+        "expected_model": 709.9,
+        "expected_km_adj": null,
+        "market_actual_qty": 309.0,
+        "market_capture_pct": 30.7,
+        "gap_eur_band_share": 37514.0
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "fuel_filter",
+        "uio": 4733.0,
+        "visits_model": 1.0,
+        "visits_measured": null,
+        "scale": null,
+        "expected_model": 4733.0,
+        "expected_km_adj": null,
+        "market_actual_qty": 2698.0,
+        "market_capture_pct": 40.2,
+        "gap_eur_band_share": 26245.0
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "oil_filter",
+        "uio": 4733.0,
+        "visits_model": 1.0,
+        "visits_measured": null,
+        "scale": null,
+        "expected_model": 4733.0,
+        "expected_km_adj": null,
+        "market_actual_qty": 3135.0,
+        "market_capture_pct": 46.7,
+        "gap_eur_band_share": 13997.0
+      }
+    ],
+    "verdict": "Measured Portugal distance raises N35 filter visits from 0.5 to ~1.33/yr and N75 from 0.5 to ~1.01/yr. Flat 0.5 visits understates expected demand, so capture looks better than the odometer supports."
+  },
+  "opportunity": {
+    "gap_by_band_eur": [
+      {
+        "band": "D-Max / LCV",
+        "gap_eur_band_share": 15830758.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "gap_eur_band_share": 2008953.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "gap_eur_band_share": 133122.0
+      },
+      {
+        "band": "F-series",
+        "gap_eur_band_share": 31008.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "gap_eur_band_share": 18270.0
+      }
+    ],
+    "top_families": [
+      {
+        "band": "D-Max / LCV",
+        "family": "clutch_disc",
+        "gap_eur_band_share": 2768758.0
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "brake_pad",
+        "gap_eur_band_share": 2204194.0
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "brake_shoe",
+        "gap_eur_band_share": 2155560.0
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "clutch_pressure_plate",
+        "gap_eur_band_share": 1552204.0
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "blower_filter",
+        "gap_eur_band_share": 1394180.0
+      },
+      {
+        "band": "D-Max / LCV",
+        "family": "urea_filter",
+        "gap_eur_band_share": 1387233.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "brake_pad",
+        "gap_eur_band_share": 471820.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "clutch_booster",
+        "gap_eur_band_share": 398325.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "clutch_pressure_plate",
+        "gap_eur_band_share": 264485.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "brake_rotor",
+        "gap_eur_band_share": 223763.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "clutch_disc",
+        "gap_eur_band_share": 185776.0
+      },
+      {
+        "band": "7.5 t (N75 class)",
+        "family": "clutch_kit",
+        "gap_eur_band_share": 171668.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "brake_shoe",
+        "gap_eur_band_share": 20977.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "clutch_booster",
+        "gap_eur_band_share": 16964.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "clutch_disc",
+        "gap_eur_band_share": 16744.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "clutch_pressure_plate",
+        "gap_eur_band_share": 14385.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "brake_pad",
+        "gap_eur_band_share": 13556.0
+      },
+      {
+        "band": "3.5 t (N35)",
+        "family": "urea_filter",
+        "gap_eur_band_share": 11182.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "family": "clutch_disc",
+        "gap_eur_band_share": 2926.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "family": "brake_pad",
+        "gap_eur_band_share": 2752.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "family": "brake_shoe",
+        "gap_eur_band_share": 2273.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "family": "urea_filter",
+        "gap_eur_band_share": 2131.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "family": "blower_filter",
+        "gap_eur_band_share": 1609.0
+      },
+      {
+        "band": "5.5 t (N55)",
+        "family": "clutch_pressure_plate",
+        "gap_eur_band_share": 1508.0
+      },
+      {
+        "band": "F-series",
+        "family": "brake_shoe",
+        "gap_eur_band_share": 4954.0
+      },
+      {
+        "band": "F-series",
+        "family": "clutch_booster",
+        "gap_eur_band_share": 4326.0
+      },
+      {
+        "band": "F-series",
+        "family": "clutch_disc",
+        "gap_eur_band_share": 3851.0
+      },
+      {
+        "band": "F-series",
+        "family": "clutch_pressure_plate",
+        "gap_eur_band_share": 3476.0
+      },
+      {
+        "band": "F-series",
+        "family": "brake_pad",
+        "gap_eur_band_share": 2965.0
+      },
+      {
+        "band": "F-series",
+        "family": "urea_filter",
+        "gap_eur_band_share": 2542.0
+      }
+    ],
+    "caveat": "gap_eur_band_share = market euro gap \u00d7 band share of expected demand. Not band purchases."
+  },
+  "warranty_km": [
+    {
+      "market": "ITALY",
+      "vins": 7874,
+      "km_all": 11961,
+      "km_N35": 11334,
+      "km_N75": 19423,
+      "km_F": 16524
+    },
+    {
+      "market": "UK",
+      "vins": 7440,
+      "km_all": 16688,
+      "km_N35": 12891,
+      "km_N75": 35478,
+      "km_F": 27242
+    },
+    {
+      "market": "ISRAEL",
+      "vins": 2360,
+      "km_all": 51680,
+      "km_N35": null,
+      "km_N75": 46591,
+      "km_F": 53737
+    },
+    {
+      "market": "SPAIN",
+      "vins": 1763,
+      "km_all": 19754,
+      "km_N35": 17349,
+      "km_N75": 36526,
+      "km_F": 17109
+    },
+    {
+      "market": "FRANCE",
+      "vins": 1742,
+      "km_all": 9963,
+      "km_N35": 9433,
+      "km_N75": 14515,
+      "km_F": 16234
+    },
+    {
+      "market": "SWITZERLAND",
+      "vins": 798,
+      "km_all": 9564,
+      "km_N35": 9481,
+      "km_N75": 8255,
+      "km_F": 24651
+    },
+    {
+      "market": "PORTUGAL",
+      "vins": 277,
+      "km_all": 27072,
+      "km_N35": 26584,
+      "km_N75": 40223,
+      "km_F": 17285
+    },
+    {
+      "market": "POLAND",
+      "vins": 115,
+      "km_all": 16168,
+      "km_N35": 13562,
+      "km_N75": 26148,
+      "km_F": 26415
+    },
+    {
+      "market": "CZECH",
+      "vins": 99,
+      "km_all": 8320,
+      "km_N35": 8130,
+      "km_N75": 16696,
+      "km_F": null
+    },
+    {
+      "market": "CROATIA",
+      "vins": 55,
+      "km_all": 15231,
+      "km_N35": 18895,
+      "km_N75": 13233,
+      "km_F": 10272
+    },
+    {
+      "market": "HUNGARY",
+      "vins": 49,
+      "km_all": 31264,
+      "km_N35": 25792,
+      "km_N75": 37396,
+      "km_F": 38629
+    },
+    {
+      "market": "IRELAND",
+      "vins": 43,
+      "km_all": 24044,
+      "km_N35": 10821,
+      "km_N75": 24192,
+      "km_F": 35386
+    },
+    {
+      "market": "ROMANIA",
+      "vins": 39,
+      "km_all": 30820,
+      "km_N35": 22023,
+      "km_N75": 38717,
+      "km_F": 20558
+    },
+    {
+      "market": "GERMANY",
+      "vins": 27,
+      "km_all": 11980,
+      "km_N35": 4414,
+      "km_N75": 17153,
+      "km_F": null
+    },
+    {
+      "market": "SERBIA MONTENEGRO",
+      "vins": 21,
+      "km_all": 7027,
+      "km_N35": 6604,
+      "km_N75": 42708,
+      "km_F": null
+    }
+  ]
+}

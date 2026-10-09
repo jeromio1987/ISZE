@@ -1,0 +1,89 @@
+{
+  "as_of": "2026-10-07T13:39:17.761636+00:00",
+  "track": "live_order_priority",
+  "bar": "all parts need a full AIM family (Jerome 2026-10-07) \u2014 live orders first",
+  "apply": "NO \u2014 proposal queue only. Do not write aim_master. Do not rebuild backlog HTML.",
+  "findings": {
+    "f1_backlog_higher_because_sellable_mix": {
+      "confirm": true,
+      "warehouse_line_aim_pct": 58.1,
+      "backlog_line_aim_pct": 85.9,
+      "warehouse_only_distinct_pns": 1293,
+      "backlog_only_distinct_pns": 894,
+      "shared_pn_aim_pct_warehouse": 95.6,
+      "shared_pn_aim_pct_backlog": 95.6,
+      "note": "Backlog line coverage is higher. Warehouse holds many warehouse-only PNs (slow / one-off stock). On the shared PN set, AIM rates are nearly the same \u2014 so the gap is mix, not a different matching rule."
+    },
+    "f2_about_1_in_5_warehouse_pns_never_billed": {
+      "confirm": false,
+      "never_billed_distinct": 620,
+      "warehouse_distinct_pns": 1542,
+      "share": 0.4021,
+      "among_unclassified_never_billed": 601,
+      "among_unclassified_share": 0.8997,
+      "note": "620 of 1542 warehouse distinct PNs never billed (40.2%, ~1 in 2)"
+    }
+  },
+  "coverage": {
+    "warehouse_line_aim_pct": 58.1,
+    "backlog_line_aim_pct": 85.9,
+    "warehouse_distinct_pn_aim_pct": 56.7,
+    "backlog_distinct_pn_aim_pct": 80.3,
+    "warehouse_lines": 2102,
+    "backlog_lines": 1846,
+    "warehouse_distinct_pns": 1542,
+    "backlog_distinct_pns": 1143,
+    "warehouse_lines_per_pn_classified": 1.4,
+    "warehouse_lines_per_pn_unclassified": 1.32,
+    "backlog_lines_per_pn_classified": 1.73,
+    "backlog_lines_per_pn_unclassified": 1.16,
+    "warehouse_never_billed_distinct": 620,
+    "warehouse_never_billed_share": 0.4021,
+    "warehouse_unclassified_never_billed": 601,
+    "warehouse_unclassified_never_billed_share": 0.8997,
+    "pn_overlap_both": 249,
+    "pn_warehouse_only": 1293,
+    "pn_backlog_only": 894,
+    "shared_pn_warehouse_aim_pct": 95.6,
+    "shared_pn_backlog_aim_pct": 95.6
+  },
+  "queue": {
+    "distinct_pns_unclassified": 882,
+    "by_source": {
+      "warehouse": 657,
+      "backlog": 214,
+      "both": 11
+    },
+    "by_suggested_method": {
+      "needs_EQ": 412,
+      "desc_rule": 355,
+      "cat_map": 115
+    },
+    "by_ever_billed": {
+      "False": 781,
+      "True": 101
+    },
+    "by_on_master": {
+      "True": 470,
+      "False": 412
+    },
+    "cat_map_eligible": 115
+  },
+  "proposal_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\next_release_proposal_live_order_unclassified_2026-10-07.csv",
+  "summary_json": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\next_release_proposal_live_order_unclassified_2026-10-07.summary.json",
+  "scope": {
+    "warehouse": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\ISZE_Order Status as of 2 October 2026_request to check.xlsx",
+    "backlog": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\_natalie_bo_wk41_20261007\\2026-10-06_1147_Natalie_BO info VP 06-10-2026.xlsx",
+    "backlog_excludes": [
+      "MIDI",
+      "RUS",
+      "KAZ",
+      "CBC-TRANS",
+      "GRAND AVTO",
+      "KOMTRANS",
+      "KIMA"
+    ],
+    "aim_family_rule": "aim_l1_fixed then aim_l1; blank/Unknown/Unknown Review = no family",
+    "pn_match": "alnum normalize + strip leading zeros"
+  }
+}

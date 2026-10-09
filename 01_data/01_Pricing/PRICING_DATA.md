@@ -32,7 +32,9 @@ Raw Excel stays immutable under `_raw/`. Dated vintages also live in `history/` 
 | **Calc book for Israel (older)** | `UTI_final_price_file.xlsx` | superseded for list SP by EXPORT_ZPR1 |
 
 **IML formula (unchanged):** `FOB = BP_JPY / FX × source_discount` · `SP = FOB / class_factor`  
-FX / discounts / class factors live in `03_analytics/isze_pricing/config.yaml` (FX 163.7 as of 2025-10-01).
+FX / discounts / class factors live in `03_analytics/isze_pricing/config.yaml` (live FX **178.5** as of 2026-10-01; prior vintages documented in that file).
+
+**Day-to-day PriceCalc (AIM-aligned, 2026-10-07):** `01_data/01_Pricing/ISZE_PriceCalc_AIM_20261007.xlsx` — Config matched to `config.yaml`; AIM category → target %GM lookup in CHECK mode until Spec Q1. Ops: `Pricing revision/PRICECALC_AIM_OPS.md`. Do not use legacy v3 Config (163.7 / 0.62) for new pricing.
 
 ---
 

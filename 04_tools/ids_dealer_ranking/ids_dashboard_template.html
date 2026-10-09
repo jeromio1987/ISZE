@@ -50,6 +50,7 @@
     .th-tip, .net-tip { position: relative; cursor: help; }
     .th-tip .tip, .net-tip .tip { min-width: 16rem; right: auto; }
     .ns-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: #15233c; background: #e8ecf2; border-radius: 4px; padding: 0.12rem 0.4rem; }
+    label.chk.hidden-ukcv { display: none !important; }
     .record-e { background: #f7f4ee; border-left: 4px solid #15233c; color: #222; padding: 0.75rem 1rem; border-radius: 8px; margin: 0 0 1rem; font-size: 0.88rem; }
     .record-e strong { color: #15233c; }
     .card { background: var(--card); border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 1rem; box-shadow: 0 1px 4px rgba(26,39,68,0.05); }
@@ -417,6 +418,23 @@
     function countryAvgHover(country) {
       return (DATA.country_profiles[country] || {}).avg_hover || "";
     }
+    function isUkcvBasis(d) {
+      return !!(d && (d.score_basis === "UKCV-AH" || d.country === "UK CV"));
+    }
+    function countryIsUkcv(country) {
+      if (country === "UK CV") return true;
+      const p = DATA.country_profiles[country] || {};
+      if (p.score_basis === "UKCV-AH") return true;
+      return DATA.dealers.some((d) => d.country === country && isUkcvBasis(d));
+    }
+    function packIsUkcvOnly() {
+      return DATA.countries && DATA.countries.length === 1 && DATA.countries[0] === "UK CV";
+    }
+    function hasSectionDetail(d) {
+      if (!d || d.totals_only) return false;
+      const secs = d.sections || {};
+      return Object.keys(secs).some((k) => secs[k] && secs[k].pct != null);
+    }
     function eFill(d) {
       return (d && d.sections && d.sections.E && d.sections.E.fill) || null;
     }
@@ -577,11 +595,16 @@
       el.innerHTML = svg + leg;
     }
 
-    function sectionTableHtml(title, rows) {
-      let h = `<h3 style="margin:0 0 0.5rem;font-size:0.95rem">${title}</h3><table class="data"><thead><tr><th>Section</th><th class="num">Dealer</th><th class="num">Country</th><th class="num th-tip">Network${tipHtml(networkAvgHover())}</th><th class="num">Δ ctry</th></tr></thead><tbody>`;
+    function sectionTableHtml(title, rows, opts) {
+      const hideNet = !!(opts && opts.hideNetwork);
+      let h = `<h3 style="margin:0 0 0.5rem;font-size:0.95rem">${title}</h3><table class="data"><thead><tr><th>Section</th><th class="num">Dealer</th><th class="num">Country</th>`;
+      if (!hideNet) h += `<th class="num th-tip">Network${tipHtml(networkAvgHover())}</th>`;
+      h += `<th class="num">Δ ctry</th></tr></thead><tbody>`;
       rows.forEach((r) => {
         const dShow = r.notScored ? '<span class="ns-label">Not scored</span>' : pct(r.d);
-        h += `<tr><td>${r.id} — ${secLabel(r.id).slice(0, 28)}</td><td class="num">${dShow}</td><td class="num">${r.notScored ? "—" : pct(r.c)}</td><td class="num">${pct(r.n)}</td><td class="num">${r.notScored ? "—" : pctGap(r.gap)}</td></tr>`;
+        h += `<tr><td>${r.id} — ${secLabel(r.id).slice(0, 28)}</td><td class="num">${dShow}</td><td class="num">${r.notScored ? "—" : pct(r.c)}</td>`;
+        if (!hideNet) h += `<td class="num">${pct(r.n)}</td>`;
+        h += `<td class="num">${r.notScored ? "—" : pctGap(r.gap)}</td></tr>`;
       });
       return h + "</tbody></table>";
     }
@@ -589,7 +612,7 @@
     function populateDealerSelect(sel, country, skipId) {
       const cur = sel.value;
       sel.innerHTML = "";
-      DATA.dealers.filter((d) => d.country === country && !d.totals_only && d.id !== skipId)
+      DATA.dealers.filter((d) => d.country === country && hasSectionDetail(d) && d.id !== skipId)
         .sort((a, b) => a.name.localeCompare(b.name))
         .forEach((d) => {
           const o = document.createElement("option");
@@ -648,17 +671,24 @@
       }
       const cAvg = dealer.country_avg_pct;
       const nAvg = DATA.network.total_pct;
-      const basis = dealer.score_basis === "A-D" ? " (A–D)" : "";
+      const ukcv = isUkcvBasis(dealer) || countryIsUkcv(country);
+      const basis = dealer.score_basis === "A-D" ? " (A–D)"
+        : (ukcv ? " (A–H)" : "");
       const totalTip = dealer.score_basis === "A-D"
         ? "Total is A–D only (max 253). Section E is recorded as not scored (0/18 questions, 0/27 points) and is not in this percentage. 0/27 is not a vehicle-sales fail."
-        : "";
-      $("#ov-kpis").innerHTML = [
+        : (ukcv
+          ? "UK CV total is percent of ITUK’s own checklist max (234 or 224), not the continental 280-point A–E form."
+          : "");
+      const kpis = [
         statHtml(pct(dealer.total_pct), dealer.name + " total" + basis, totalTip),
         statHtml(pct(cAvg), country + " avg", countryAvgHover(country)),
-        statHtml(pct(nAvg), "Network avg", networkAvgHover()),
         statHtml(pctGap(dealer.total_pct != null && cAvg != null ? dealer.total_pct - cAvg : null), "Δ vs country", countryAvgHover(country)),
-        statHtml(pctGap(dealer.total_pct != null && nAvg != null ? dealer.total_pct - nAvg : null), "Δ vs network", networkAvgHover()),
-      ].join("");
+      ];
+      if (!ukcv) {
+        kpis.splice(2, 0, statHtml(pct(nAvg), "Network avg", networkAvgHover()));
+        kpis.push(statHtml(pctGap(dealer.total_pct != null && nAvg != null ? dealer.total_pct - nAvg : null), "Δ vs network", networkAvgHover()));
+      }
+      $("#ov-kpis").innerHTML = kpis.join("");
 
       const eRec = eFill(dealer);
       const recEl = $("#ov-e-record");
@@ -678,7 +708,7 @@
         const notScored = sectionIsNotScored(dealer, id);
         const dPct = notScored ? null : (s.pct ?? null);
         const cPct = s.country_avg_pct ?? DATA.country_profiles[country]?.sections_pct?.[id] ?? null;
-        const nPct = s.network_avg_pct ?? DATA.network.sections_pct[id] ?? null;
+        const nPct = ukcv ? null : (s.network_avg_pct ?? DATA.network.sections_pct[id] ?? null);
         const gapC = dPct != null && cPct != null ? dPct - cPct : null;
         const band = notScored ? null : bandFor(dPct, cPct);
         return { id, dPct, cPct, nPct, gapC, band, notScored };
@@ -687,18 +717,23 @@
       $("#ov-section-bars").innerHTML = rows.map((r) => {
         const fill = r.notScored ? "" : (r.band || "medium");
         const meta = r.notScored
-          ? `Section E recorded · not scored (0/27) — excluded from averages · ${netLabel("Network")} ${pct(r.nPct)}`
-          : `Dealer ${pct(r.dPct)} · Country ${pct(r.cPct)} · ${netLabel("Network")} ${pct(r.nPct)} · Δ ${pctGap(r.gapC)}`;
+          ? (ukcv
+            ? `Section ${r.id} not scored on this dealer’s block · Country ${pct(r.cPct)}`
+            : `Section E recorded · not scored (0/27) — excluded from averages · ${netLabel("Network")} ${pct(r.nPct)}`)
+          : (ukcv
+            ? `Dealer ${pct(r.dPct)} · Country ${pct(r.cPct)} · Δ ${pctGap(r.gapC)}`
+            : `Dealer ${pct(r.dPct)} · Country ${pct(r.cPct)} · ${netLabel("Network")} ${pct(r.nPct)} · Δ ${pctGap(r.gapC)}`);
+        const qJump = ukcv ? "" : ` · <button type="button" class="linkish" data-jump-sec="${r.id}">Questions →</button>`;
+        const netTrack = ukcv ? "" : `<div class="bar-track" title="Network"><div class="bar-fill" style="width:${Math.min(100, (r.nPct ?? 0) * 100)}%;background:#6b7a90"></div></div>`;
         return `<div class="gbar">
-          <div><strong>${r.id}</strong><br/><small>${secLabel(r.id).replace(/^[A-E]\.\s*/, "").slice(0, 28)}</small><br/>${r.notScored ? '<span class="ns-label">Not scored</span>' : bandHtml(r.band)}</div>
+          <div><strong>${r.id}</strong><br/><small>${secLabel(r.id).replace(/^[A-H]\.\s*/, "").slice(0, 28)}</small><br/>${r.notScored ? '<span class="ns-label">Not scored</span>' : bandHtml(r.band)}</div>
           <div>
             <div class="gbar-tracks">
               <div class="bar-track" title="Dealer"><div class="bar-fill ${fill}" style="width:${r.notScored ? 0 : Math.min(100, (r.dPct ?? 0) * 100)}%;${r.notScored ? "background:#c5ccd6" : ""}"></div></div>
               <div class="bar-track" title="Country"><div class="bar-fill" style="width:${Math.min(100, (r.cPct ?? 0) * 100)}%;background:#1a2744"></div></div>
-              <div class="bar-track" title="Network"><div class="bar-fill" style="width:${Math.min(100, (r.nPct ?? 0) * 100)}%;background:#6b7a90"></div></div>
+              ${netTrack}
             </div>
-            <div class="gbar-meta">${meta}
-              · <button type="button" class="linkish" data-jump-sec="${r.id}">Questions →</button></div>
+            <div class="gbar-meta">${meta}${qJump}</div>
           </div>
         </div>`;
       }).join("");
@@ -707,16 +742,31 @@
         btn.addEventListener("click", () => jumpToQuestions(dealer.id, btn.getAttribute("data-jump-sec")));
       });
 
-      const hl = pickMaxPointHighlights(dealer);
-      $("#ov-strengths").innerHTML = hl.strengths.length
-        ? hl.strengths.map((r) => `<li><button type="button" class="linkish" data-jump-sec="${r.section}" data-jump-q="${r.id}"><strong>${r.id}</strong></button> ${r.score}/${r.max} (full) · ${esc(shortText(r.text))}</li>`).join("")
-        : "<li>No full-score max-point items in sections A–E.</li>";
-      $("#ov-weak").innerHTML = hl.weak.length
-        ? hl.weak.map((r) => `<li><button type="button" class="linkish" data-jump-sec="${r.section}" data-jump-q="${r.id}"><strong>${r.id}</strong></button> 0/${r.max} · ${esc(shortText(r.text))}</li>`).join("")
-        : "<li>No zero-score max-point items in sections A–E.</li>";
-      [...$("#ov-strengths").querySelectorAll("[data-jump-sec]"), ...$("#ov-weak").querySelectorAll("[data-jump-sec]")].forEach((btn) => {
-        btn.addEventListener("click", () => jumpToQuestions(dealer.id, btn.getAttribute("data-jump-sec")));
-      });
+      if (ukcv) {
+        const ranked = rows
+          .filter((r) => !r.notScored && r.dPct != null)
+          .slice()
+          .sort((a, b) => (b.dPct ?? 0) - (a.dPct ?? 0));
+        const strong = ranked.slice(0, 3);
+        const weak = ranked.slice().sort((a, b) => (a.dPct ?? 1) - (b.dPct ?? 1)).slice(0, 3);
+        $("#ov-strengths").innerHTML = strong.length
+          ? strong.map((r) => `<li><strong>${r.id}</strong> ${pct(r.dPct)} · ${esc(secLabel(r.id).replace(/^[A-H]\.\s*/, ""))}</li>`).join("")
+          : "<li>No section scores.</li>";
+        $("#ov-weak").innerHTML = weak.length
+          ? weak.map((r) => `<li><strong>${r.id}</strong> ${pct(r.dPct)} · ${esc(secLabel(r.id).replace(/^[A-H]\.\s*/, ""))}</li>`).join("")
+          : "<li>No section scores.</li>";
+      } else {
+        const hl = pickMaxPointHighlights(dealer);
+        $("#ov-strengths").innerHTML = hl.strengths.length
+          ? hl.strengths.map((r) => `<li><button type="button" class="linkish" data-jump-sec="${r.section}" data-jump-q="${r.id}"><strong>${r.id}</strong></button> ${r.score}/${r.max} (full) · ${esc(shortText(r.text))}</li>`).join("")
+          : "<li>No full-score max-point items in sections A–E.</li>";
+        $("#ov-weak").innerHTML = hl.weak.length
+          ? hl.weak.map((r) => `<li><button type="button" class="linkish" data-jump-sec="${r.section}" data-jump-q="${r.id}"><strong>${r.id}</strong></button> 0/${r.max} · ${esc(shortText(r.text))}</li>`).join("")
+          : "<li>No zero-score max-point items in sections A–E.</li>";
+        [...$("#ov-strengths").querySelectorAll("[data-jump-sec]"), ...$("#ov-weak").querySelectorAll("[data-jump-sec]")].forEach((btn) => {
+          btn.addEventListener("click", () => jumpToQuestions(dealer.id, btn.getAttribute("data-jump-sec")));
+        });
+      }
     }
 
     function shortText(s) {
@@ -759,7 +809,13 @@
       const country = $("#dr-country").value;
       populateDealerSelect($("#dr-dealer"), country);
       const dealer = DATA.dealers.find((d) => d.id === $("#dr-dealer").value);
-      if (!dealer || dealer.totals_only) {
+      const ukcv = countryIsUkcv(country) || isUkcvBasis(dealer);
+      const netChk = $("#dr-show-network");
+      if (netChk) {
+        netChk.closest("label")?.classList.toggle("hidden-ukcv", ukcv);
+        if (ukcv) netChk.checked = false;
+      }
+      if (!dealer || !hasSectionDetail(dealer)) {
         $("#dealer-radar-chart").innerHTML = "<p>No section detail for this dealer (totals only).</p>";
         $("#dealer-radar-table").innerHTML = "";
         return;
@@ -768,17 +824,21 @@
       if ($("#dr-show-country").checked) {
         series.push({ label: country + " avg", values: countryVector(country), color: "#1a2744", fill: "none", dash: "6 4", width: 2 });
       }
-      if ($("#dr-show-network").checked) {
+      if (!ukcv && $("#dr-show-network").checked) {
         series.push({ label: "Network avg", values: networkVector(), color: "#6b7a90", fill: "none", dash: "2 3", width: 1.5 });
       }
       drawRadar($("#dealer-radar-chart"), series);
-      const cv = countryVector(country), nv = networkVector(), dv = dealerVector(dealer);
+      const cv = countryVector(country), nv = ukcv ? secIds().map(() => null) : networkVector(), dv = dealerVector(dealer);
       const rows = secIds().map((id, i) => ({
         id, d: dv[i], c: cv[i], n: nv[i],
         gap: dv[i] != null && cv[i] != null ? dv[i] - cv[i] : null,
         notScored: sectionIsNotScored(dealer, id),
       }));
-      $("#dealer-radar-table").innerHTML = sectionTableHtml(dealer.name + " · total " + pct(dealer.total_pct), rows);
+      $("#dealer-radar-table").innerHTML = sectionTableHtml(
+        dealer.name + " · total " + pct(dealer.total_pct),
+        rows,
+        { hideNetwork: ukcv }
+      );
     }
 
     function renderCountryRadar() {
@@ -814,9 +874,17 @@
       const country = $("#gp-country").value;
       const sec = $("#gp-section").value;
       const limit = parseInt($("#gp-limit").value, 10);
-      const bench = $("#gp-bench").value;
+      const ukcv = countryIsUkcv(country);
+      const benchSel = $("#gp-bench");
+      if (benchSel && ukcv) {
+        [...benchSel.options].forEach((o) => {
+          if (o.value === "network") o.disabled = true;
+        });
+        if (benchSel.value === "network") benchSel.value = "country";
+      }
+      const bench = ukcv ? "country" : $("#gp-bench").value;
       const side = $("#gp-side").value;
-      const list = DATA.dealers.filter((d) => d.country === country && !d.totals_only);
+      const list = DATA.dealers.filter((d) => d.country === country && hasSectionDetail(d));
       const rows = list.map((d) => {
         const s = d.sections[sec] || {};
         const base = bench === "network"
@@ -864,7 +932,10 @@
       const sort = $("#qq-sort").value;
       const qs = questions();
       if (!dealer || !Array.isArray(dealer.q) || !qs.length) {
-        $("#qq-table").innerHTML = "<p>No question-level scores for this dealer (totals-only or missing extract).</p>";
+        const ukcv = dealer && isUkcvBasis(dealer);
+        $("#qq-table").innerHTML = ukcv
+          ? "<p>UK CV supplies section scores (A–H) only from the consolidated Sheet2 matrix — there are no per-question answers in this file. Use Heatmap, Gaps, Dealer radar and Compare dealers.</p>"
+          : "<p>No question-level scores for this dealer (totals-only or missing extract).</p>";
         $("#qq-summary").innerHTML = "";
         return;
       }
@@ -921,28 +992,40 @@
     }
 
     function renderVsNetwork() {
-      const secs = secIds();
+      if (packIsUkcvOnly()) {
+        $("#vs-network-table").innerHTML =
+          "<p>UK CV uses ITUK’s own A–H checklist (max 234/224). Section scores are not compared to the continental A–E network. Use <strong>Compare dealers</strong> and the heatmap against the UK CV national average.</p>";
+        return;
+      }
+      const secs = secIds().filter((s) => "ABCDE".includes(s));
       let html = `<table class="data matrix"><thead><tr><th>Country</th><th class="num th-tip">Total Δ${tipHtml(networkAvgHover())}</th>`;
       secs.forEach((s) => { html += `<th class="num">${s}</th>`; });
       html += `<th>Weakest vs net</th></tr></thead><tbody>`;
       const rows = DATA.countries.map((c) => {
         const p = DATA.country_profiles[c];
-        const totalGap = p.total_pct != null && DATA.network.total_pct != null ? p.total_pct - DATA.network.total_pct : null;
+        const ukcv = countryIsUkcv(c);
+        const totalGap = (!ukcv && p.total_pct != null && DATA.network.total_pct != null)
+          ? p.total_pct - DATA.network.total_pct
+          : null;
         const gaps = {};
         let weak = null, weakV = 0;
         secs.forEach((s) => {
+          if (ukcv) { gaps[s] = null; return; }
           const cv = p.sections_pct?.[s];
           const nv = DATA.network.sections_pct?.[s];
           const g = cv != null && nv != null ? cv - nv : null;
           gaps[s] = g;
           if (g != null && (weak == null || g < weakV)) { weak = s; weakV = g; }
         });
-        return { c, p, totalGap, gaps, weak, weakV };
+        return { c, p, totalGap, gaps, weak, weakV, ukcv };
       }).sort((a, b) => (a.totalGap ?? 0) - (b.totalGap ?? 0));
 
       rows.forEach((r) => {
         const cls = (v) => (v == null ? "" : v >= 0 ? "pos" : "neg");
-        html += `<tr><td>${r.c} <small>(${r.p.dealer_count})</small></td><td class="num ${cls(r.totalGap)}">${pctGap(r.totalGap)}</td>`;
+        const totalCell = r.ukcv
+          ? `<td class="num" title="Different checklist — total % not overlaid on continental A–E">—</td>`
+          : `<td class="num ${cls(r.totalGap)}">${pctGap(r.totalGap)}</td>`;
+        html += `<tr><td>${r.c} <small>(${r.p.dealer_count})</small>${r.ukcv ? " <small>· A–H own form</small>" : ""}</td>${totalCell}`;
         secs.forEach((s) => {
           html += `<td class="num ${cls(r.gaps[s])}">${pctGap(r.gaps[s])}</td>`;
         });
@@ -954,7 +1037,7 @@
     function populateCompareSelects() {
       const country = $("#cp-country").value;
       const dealers = DATA.dealers
-        .filter((d) => d.country === country && !d.totals_only)
+        .filter((d) => d.country === country && hasSectionDetail(d))
         .sort((a, b) => a.name.localeCompare(b.name));
       const specs = [
         { id: "cp-a", optional: false, pick: 0 },
@@ -978,6 +1061,8 @@
 
     function renderCompare() {
       populateCompareSelects();
+      const country = $("#cp-country").value;
+      const ukcv = countryIsUkcv(country);
       const ids = [$("#cp-a").value, $("#cp-b").value, $("#cp-c").value].filter(Boolean);
       const series = ids.map((id, i) => {
         const d = DATA.dealers.find((x) => x.id === id);
@@ -987,16 +1072,29 @@
         $("#compare-radar-chart").innerHTML = "<p>Select dealers to compare.</p>";
         return;
       }
+      // Always overlay UK CV / country average for same-market compare
+      series.push({
+        label: country + " avg",
+        values: countryVector(country),
+        color: "#1a2744",
+        fill: "none",
+        dash: "6 4",
+        width: 1.5,
+      });
       drawRadar($("#compare-radar-chart"), series);
       let tbl = '<table class="data"><thead><tr><th>Section</th>';
-      series.forEach((s) => { tbl += `<th class="num">${s.label.slice(0, 20)}</th>`; });
-      tbl += `<th class="num">Country</th><th class="num th-tip">Network${tipHtml(networkAvgHover())}</th></tr></thead><tbody>`;
-      const country = $("#cp-country").value;
+      series.filter((s) => !s.dash).forEach((s) => { tbl += `<th class="num">${s.label.slice(0, 20)}</th>`; });
+      tbl += `<th class="num">Country</th>`;
+      if (!ukcv) tbl += `<th class="num th-tip">Network${tipHtml(networkAvgHover())}</th>`;
+      tbl += `</tr></thead><tbody>`;
       const cv = countryVector(country), nv = networkVector();
+      const dealerSeries = series.filter((s) => !s.dash);
       secIds().forEach((id, i) => {
-        tbl += `<tr><td>${id}</td>`;
-        series.forEach((s) => { tbl += `<td class="num">${pct(s.values[i])}</td>`; });
-        tbl += `<td class="num">${pct(cv[i])}</td><td class="num">${pct(nv[i])}</td></tr>`;
+        tbl += `<tr><td>${id} — ${secLabel(id).slice(0, 24)}</td>`;
+        dealerSeries.forEach((s) => { tbl += `<td class="num">${pct(s.values[i])}</td>`; });
+        tbl += `<td class="num">${pct(cv[i])}</td>`;
+        if (!ukcv) tbl += `<td class="num">${pct(nv[i])}</td>`;
+        tbl += `</tr>`;
       });
       $("#compare-table").innerHTML = tbl + "</tbody></table>";
     }

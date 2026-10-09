@@ -1,0 +1,57 @@
+{
+  "generated_at": "2026-10-07T09:12:55+00:00",
+  "method": "PROXY \u2014 no-PO line share, NOT a measured EDI flag",
+  "why_proxy": "The billing extract has no order-type field. A manual order carries a customer purchase-order reference; an EDI order normally does not. The no-PO share is therefore a proxy for the automated share, not a count of EDI orders. Label it as a proxy wherever it is shown.",
+  "columns": [
+    "sold_to_sap",
+    "year",
+    "lines",
+    "no_po_lines",
+    "billed_value",
+    "no_po_value",
+    "no_po_line_pct",
+    "no_po_value_pct",
+    "distributor"
+  ],
+  "sources": [
+    "CY2023-2024.XLSX",
+    "CY2024-2025.XLSX",
+    "CY2025till31082026.XLSX",
+    "Q1FY2027.XLSX",
+    "sales_2026tillApril.XLSX"
+  ],
+  "lines_after_dedupe": 496874,
+  "by_year": [
+    {
+      "year": 2023,
+      "lines": 123610,
+      "no_po_lines": 50,
+      "no_po_line_pct": 0.0
+    },
+    {
+      "year": 2024,
+      "lines": 141823,
+      "no_po_lines": 34,
+      "no_po_line_pct": 0.0
+    },
+    {
+      "year": 2025,
+      "lines": 136501,
+      "no_po_lines": 39,
+      "no_po_line_pct": 0.0
+    },
+    {
+      "year": 2026,
+      "lines": 94940,
+      "no_po_lines": 23,
+      "no_po_line_pct": 0.0
+    }
+  ],
+  "validation": {
+    "known_edi_hint": [
+      "PETROS",
+      "PETROPOULOS"
+    ],
+    "note": "If a distributor known to be on EDI does not show a high no-PO share, the proxy is weak and must not be quoted."
+  }
+}

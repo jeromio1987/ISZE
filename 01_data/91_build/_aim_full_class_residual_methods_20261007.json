@@ -1,0 +1,433 @@
+{
+  "as_of": "2026-10-07T13:42:45.198883+00:00",
+  "shard": "C",
+  "bar": "residual methods after tranche1 cat_map proposal \u2014 inventory only, no apply",
+  "inputs": {
+    "master": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_master_v2.csv",
+    "tranche1_proposal": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\next_release_proposal_full_class_tranche1_catmap_2026-10-07.csv",
+    "desc_norm_rule": "unanimity: n_l1==1 and n_parts>=3 on known master families (export_aim_tiering_20260924/final_tier.py rail); weak: n_l1==1 and n<3",
+    "cat_near_miss_rule": "known_n>=5 and 80%<=top_share<90% (under tranche1 bar; Shard A follow-on, not EQ)"
+  },
+  "master_rows": 165310,
+  "with_family": 21045,
+  "without_family": 144265,
+  "true_blank_rows": 140138,
+  "unknown_marker_rows": 4129,
+  "tranche1_proposed_rows": 49208,
+  "residual_true_blank_after_tranche1": 90930,
+  "residual_shape": {
+    "empty_description": 89821,
+    "has_description": 1109,
+    "with_cat_l1": 90887,
+    "without_cat_l1": 43,
+    "l12m_billed_eur": 1647354.31,
+    "rows_with_l12m_bill": 158,
+    "headline": "Almost all residual blanks already have a catalogue node and an EMPTY description. Desc-norm barely applies. The real fork is softer cat_map (Shard A) vs EQ/hand on contested paths."
+  },
+  "by_method": {
+    "a_desc_norm_unanimity": {
+      "rows": 3,
+      "distinct_pn": 3,
+      "l12m_billed_eur": 0.0,
+      "rows_with_l12m_bill": 0,
+      "share_of_residual_rows": 0.0,
+      "with_cat_l1": 3,
+      "empty_desc": 0,
+      "never_billed": 3
+    },
+    "a_desc_norm_weak_n_lt3": {
+      "rows": 70,
+      "distinct_pn": 70,
+      "l12m_billed_eur": 856.71,
+      "rows_with_l12m_bill": 11,
+      "share_of_residual_rows": 0.0008,
+      "with_cat_l1": 70,
+      "empty_desc": 0,
+      "never_billed": 59
+    },
+    "a_desc_present_unseen_on_known": {
+      "rows": 1029,
+      "distinct_pn": 1029,
+      "l12m_billed_eur": 5493.9,
+      "rows_with_l12m_bill": 141,
+      "share_of_residual_rows": 0.0113,
+      "with_cat_l1": 1028,
+      "empty_desc": 0,
+      "never_billed": 888
+    },
+    "b_cat_contested_needs_eq_or_hand": {
+      "rows": 33272,
+      "distinct_pn": 33272,
+      "l12m_billed_eur": 0.0,
+      "rows_with_l12m_bill": 0,
+      "share_of_residual_rows": 0.3659,
+      "with_cat_l1": 33272,
+      "empty_desc": 33272,
+      "never_billed": 33272
+    },
+    "b_cat_review_bucket_needs_eq_or_hand": {
+      "rows": 8359,
+      "distinct_pn": 8359,
+      "l12m_billed_eur": 0.0,
+      "rows_with_l12m_bill": 0,
+      "share_of_residual_rows": 0.0919,
+      "with_cat_l1": 8359,
+      "empty_desc": 8359,
+      "never_billed": 8359
+    },
+    "b_needs_eq_epc_empty_desc_weak_cat": {
+      "rows": 37750,
+      "distinct_pn": 37750,
+      "l12m_billed_eur": 0.0,
+      "rows_with_l12m_bill": 0,
+      "share_of_residual_rows": 0.4152,
+      "with_cat_l1": 37750,
+      "empty_desc": 37750,
+      "never_billed": 37750
+    },
+    "b_needs_eq_epc_no_catalogue": {
+      "rows": 33,
+      "distinct_pn": 33,
+      "l12m_billed_eur": 0.0,
+      "rows_with_l12m_bill": 0,
+      "share_of_residual_rows": 0.0004,
+      "with_cat_l1": 0,
+      "empty_desc": 33,
+      "never_billed": 33
+    },
+    "d_non_part_junk": {
+      "rows": 167,
+      "distinct_pn": 167,
+      "l12m_billed_eur": 1641003.7,
+      "rows_with_l12m_bill": 6,
+      "share_of_residual_rows": 0.0018,
+      "with_cat_l1": 158,
+      "empty_desc": 160,
+      "never_billed": 161
+    },
+    "e_cat_path_near_miss_relax_bar": {
+      "rows": 10247,
+      "distinct_pn": 10247,
+      "l12m_billed_eur": 0.0,
+      "rows_with_l12m_bill": 0,
+      "share_of_residual_rows": 0.1127,
+      "with_cat_l1": 10247,
+      "empty_desc": 10247,
+      "never_billed": 10247
+    }
+  },
+  "method_labels_plain": {
+    "a_desc_norm_unanimity": "Same description text as known parts, all one family, >=3 examples \u2014 propose without EQ",
+    "a_desc_norm_weak_n_lt3": "Same description, one family, but fewer than 3 known examples \u2014 review, still no EQ",
+    "a_desc_present_unseen_on_known": "Has description text never seen on a known family \u2014 needs EQ or hand once",
+    "e_cat_path_near_miss_relax_bar": "Catalogue path almost meets tranche1 bar (80\u201390%) \u2014 softer cat_map, no EQ",
+    "b_cat_contested_needs_eq_or_hand": "Catalogue path split across families (50\u201380%) \u2014 EQ sample or hand",
+    "b_cat_review_bucket_needs_eq_or_hand": "Catalogue parked under Review needed / Miscellaneous \u2014 EQ or hand",
+    "b_needs_eq_epc_empty_desc_weak_cat": "No description and weak catalogue evidence \u2014 EQ/EPC",
+    "b_needs_eq_epc_no_catalogue": "No catalogue node \u2014 EQ/EPC",
+    "b_needs_eq_epc_other": "Other leftover needing more evidence",
+    "d_non_part_junk": "Rebate / freight / alpha keys \u2014 leave the parts denominator",
+    "c_unknown_markers": "Unknown / Unknown Review markers \u2014 size only, do not clear here"
+  },
+  "can_proceed_without_eq": {
+    "a_desc_norm_unanimity": {
+      "rows": 3,
+      "distinct_pn": 3,
+      "l12m_billed_eur": 0.0,
+      "rows_with_l12m_bill": 0,
+      "share_of_residual_rows": 0.0,
+      "with_cat_l1": 3,
+      "empty_desc": 0,
+      "never_billed": 3
+    },
+    "a_desc_norm_weak_n_lt3": {
+      "rows": 70,
+      "distinct_pn": 70,
+      "l12m_billed_eur": 856.71,
+      "rows_with_l12m_bill": 11,
+      "share_of_residual_rows": 0.0008,
+      "with_cat_l1": 70,
+      "empty_desc": 0,
+      "never_billed": 59
+    },
+    "d_non_part_junk": {
+      "rows": 167,
+      "distinct_pn": 167,
+      "l12m_billed_eur": 1641003.7,
+      "rows_with_l12m_bill": 6,
+      "share_of_residual_rows": 0.0018,
+      "with_cat_l1": 158,
+      "empty_desc": 160,
+      "never_billed": 161
+    },
+    "e_cat_path_near_miss_relax_bar": {
+      "rows": 10247,
+      "distinct_pn": 10247,
+      "l12m_billed_eur": 0.0,
+      "rows_with_l12m_bill": 0,
+      "share_of_residual_rows": 0.1127,
+      "with_cat_l1": 10247,
+      "empty_desc": 10247,
+      "never_billed": 10247
+    }
+  },
+  "can_proceed_without_eq_totals": {
+    "rows": 10487,
+    "l12m_billed_eur": 1641860.41
+  },
+  "requires_eq_access": {
+    "methods": [
+      "a_desc_present_unseen_on_known",
+      "b_cat_contested_needs_eq_or_hand",
+      "b_cat_review_bucket_needs_eq_or_hand",
+      "b_needs_eq_epc_empty_desc_weak_cat",
+      "b_needs_eq_epc_no_catalogue",
+      "b_needs_eq_epc_other"
+    ],
+    "rows": 80443,
+    "l12m_billed_eur": 5493.9,
+    "rows_with_l12m_bill": 141,
+    "billed_eur_only": 5493.9,
+    "never_billed_rows": 80302,
+    "existing_eq_probe_overlap_rows": 0,
+    "eq_evidence_on_disk": {
+      "validation": true,
+      "probe_pns": true,
+      "batch_tmp": true
+    },
+    "eq_evidence_paths": {
+      "validation": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_eq_hit_validation_20260917.json",
+      "probe_pns": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_eq_hit_probe_pns.json",
+      "batch_tmp": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_eq_hit_batch_tmp.json"
+    },
+    "note": "EQ / Snap-on EPC is required for the b_* slices (and unseen descriptions) before a defensible family. No live EQ session in this shard. On-disk EQ files are validation/probe only (0 residual EQ-bucket rows overlap known probe PNs)."
+  },
+  "c_unknown_markers_size_only": {
+    "rows": 4129,
+    "note": "size only \u2014 do not clear in this shard"
+  },
+  "top_desc_norm_unanimity_proposals": [
+    {
+      "desc_norm": "SUNVISOR",
+      "propose_aim_l1": "Cabin Interior",
+      "residual_rows": 2,
+      "l12m_billed_eur": 0.0,
+      "known_evidence_n": 3
+    },
+    {
+      "desc_norm": "HARNESS; CABLE,SPEED SENS0R",
+      "propose_aim_l1": "Electrical",
+      "residual_rows": 1,
+      "l12m_billed_eur": 0.0,
+      "known_evidence_n": 3
+    }
+  ],
+  "top_cat_path_near_miss": [
+    {
+      "cat_path": "Hardware & consumables > Hardware > Bolt",
+      "propose_aim_l1": "Chassis Frame",
+      "residual_rows": 3577,
+      "known_n": 452,
+      "agree_share": 0.8894,
+      "l12m_billed_eur": 0.0
+    },
+    {
+      "cat_path": "High value repair > Transmission parts > Propeller shaft / PTO",
+      "propose_aim_l1": "Driveline Axle",
+      "residual_rows": 1075,
+      "known_n": 78,
+      "agree_share": 0.859,
+      "l12m_billed_eur": 0.0
+    },
+    {
+      "cat_path": "Competitive parts > Cooling > Coolant hose / pipe",
+      "propose_aim_l1": "Cooling",
+      "residual_rows": 1002,
+      "known_n": 249,
+      "agree_share": 0.8153,
+      "l12m_billed_eur": 0.0
+    },
+    {
+      "cat_path": "Repair parts > Hydraulic / mechanical > Gear",
+      "propose_aim_l1": "Transmission",
+      "residual_rows": 930,
+      "known_n": 161,
+      "agree_share": 0.8385,
+      "l12m_billed_eur": 0.0
+    },
+    {
+      "cat_path": "Hardware & consumables > Hardware > Nut",
+      "propose_aim_l1": "Chassis Frame",
+      "residual_rows": 761,
+      "known_n": 150,
+      "agree_share": 0.8533,
+      "l12m_billed_eur": 0.0
+    },
+    {
+      "cat_path": "Competitive parts > Exhaust > Silencer / muffler",
+      "propose_aim_l1": "Intake Exhaust Emission",
+      "residual_rows": 579,
+      "known_n": 71,
+      "agree_share": 0.831,
+      "l12m_billed_eur": 0.0
+    },
+    {
+      "cat_path": "High value repair > Injectors > Injector nozzle",
+      "propose_aim_l1": "Fuel System",
+      "residual_rows": 444,
+      "known_n": 70,
+      "agree_share": 0.8857,
+      "l12m_billed_eur": 0.0
+    },
+    {
+      "cat_path": "High value repair > Transmission parts > Gear set / gear",
+      "propose_aim_l1": "Transmission",
+      "residual_rows": 439,
+      "known_n": 96,
+      "agree_share": 0.8438,
+      "l12m_billed_eur": 0.0
+    },
+    {
+      "cat_path": "Competitive parts > Cooling > Cooling fan",
+      "propose_aim_l1": "Maintenance Service",
+      "residual_rows": 381,
+      "known_n": 53,
+      "agree_share": 0.8679,
+      "l12m_billed_eur": 0.0
+    },
+    {
+      "cat_path": "Competitive parts > Cooling > Water pump",
+      "propose_aim_l1": "Cooling",
+      "residual_rows": 375,
+      "known_n": 23,
+      "agree_share": 0.8261,
+      "l12m_billed_eur": 0.0
+    },
+    {
+      "cat_path": "Competitive parts > Steering > Tie rod end",
+      "propose_aim_l1": "Steering",
+      "residual_rows": 257,
+      "known_n": 41,
+      "agree_share": 0.8537,
+      "l12m_billed_eur": 0.0
+    },
+    {
+      "cat_path": "Competitive parts > Filters > Other filter",
+      "propose_aim_l1": "Maintenance Service",
+      "residual_rows": 175,
+      "known_n": 59,
+      "agree_share": 0.8475,
+      "l12m_billed_eur": 0.0
+    },
+    {
+      "cat_path": "Repair parts > Engine parts > Engine pump",
+      "propose_aim_l1": "Lubrication",
+      "residual_rows": 139,
+      "known_n": 15,
+      "agree_share": 0.8667,
+      "l12m_billed_eur": 0.0
+    },
+    {
+      "cat_path": "Competitive parts > Clutch parts > Clutch kit",
+      "propose_aim_l1": "Clutch",
+      "residual_rows": 64,
+      "known_n": 11,
+      "agree_share": 0.8182,
+      "l12m_billed_eur": 0.0
+    },
+    {
+      "cat_path": "Competitive parts > Suspension > Stabilizer",
+      "propose_aim_l1": "Driveline Axle",
+      "residual_rows": 49,
+      "known_n": 5,
+      "agree_share": 0.8,
+      "l12m_billed_eur": 0.0
+    }
+  ],
+  "non_part_reason_breakdown": {
+    "alpha_key_no_leading_digit": 140,
+    "named_non_part_key": 9,
+    "named_rule:merchandise": 5,
+    "named_rule:core_deposit": 3,
+    "named_rule:marketing_item": 2,
+    "named_rule:service_fee": 2,
+    "zero_pad_placeholder:rebate": 1,
+    "zero_pad_placeholder:service_fee": 1,
+    "named_rule:display": 1,
+    "named_rule:demurrage": 1,
+    "named_rule:rebate": 1,
+    "named_rule:freight": 1
+  },
+  "recommended_attack_order": [
+    {
+      "order": 1,
+      "method": "d_non_part_junk",
+      "why": "Peel rebate / freight / alpha keys out of the parts denominator. Tiny row count, most of the residual billed euro.",
+      "rows": 167,
+      "l12m_billed_eur": 1641003.7,
+      "needs_eq": false
+    },
+    {
+      "order": 2,
+      "method": "e_cat_path_near_miss_relax_bar",
+      "why": "Catalogue path already leans one family at 80%\u201390% with n>=5. Same idea as tranche1, slightly softer bar. Hand to Shard A \u2014 no EQ.",
+      "rows": 10247,
+      "l12m_billed_eur": 0.0,
+      "needs_eq": false
+    },
+    {
+      "order": 3,
+      "method": "a_desc_norm_unanimity + a_desc_norm_weak_n_lt3",
+      "why": "Normalised description names one known family (unanimity n>=3, or weak n=1\u20132). Small because ~99% of residual blanks have no description text.",
+      "rows": 73,
+      "needs_eq": false
+    },
+    {
+      "order": 4,
+      "method": "b_* EQ slices with billed euro first",
+      "why": "Contested / review / weak-catalogue residual that already bills \u2014 EQ (or hand on a sample) earns its keep.",
+      "rows": 141,
+      "l12m_billed_eur": 5493.9,
+      "needs_eq": true
+    },
+    {
+      "order": 5,
+      "method": "a_desc_present_unseen_on_known",
+      "why": "Has text, but that text never appears on a known family \u2014 EQ or hand to name the family once, then reuse.",
+      "rows": 1029,
+      "needs_eq": true
+    },
+    {
+      "order": 6,
+      "method": "b_cat_contested + b_cat_review_bucket (never billed)",
+      "why": "Large empty-description pile on contested or Review-needed catalogue paths. Batch EQ / hand sampling, not a blind map.",
+      "rows": 41631,
+      "needs_eq": true
+    },
+    {
+      "order": 7,
+      "method": "b_needs_eq_epc_empty_desc_weak_cat + no_catalogue",
+      "why": "Weak or missing catalogue and no description \u2014 true EQ/EPC work. Park never-billed until a live need.",
+      "rows": 37783,
+      "needs_eq": true
+    },
+    {
+      "order": 8,
+      "method": "c_unknown_markers",
+      "why": "Separate clear-up of deliberate Unknown / Unknown Review \u2014 size only in this shard.",
+      "rows": 4129,
+      "needs_eq": false
+    }
+  ],
+  "outputs": {
+    "inventory_json": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\_aim_full_class_residual_methods_20261007.json",
+    "samples_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\_aim_full_class_residual_methods_samples_20261007.csv"
+  },
+  "apply": "NO \u2014 inventory only. Wait for Jerome OK before any release or EQ session.",
+  "notes": [
+    "Shard A owns tranche1 cat_map; residual excludes those PNs. Near-miss (e_) is flagged for Shard A, not reworked here.",
+    "Shard B owns live warehouse/backlog; this inventory is master-wide.",
+    "Unknown / Unknown Review counted under c \u2014 size only, not cleared.",
+    "89.8k of 90.9k residual blanks have empty description text on the master."
+  ]
+}

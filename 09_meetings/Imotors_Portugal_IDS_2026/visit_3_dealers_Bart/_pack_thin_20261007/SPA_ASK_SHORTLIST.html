@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>SPA ask — questions + example parts</title>
+<style>
+:root{--navy:#15233c;--terra:#c0552d;--paper:#f7f4ee;--ink:#222;--line:#cfc8bc;--muted:#5a6570;}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:var(--paper);}
+h1,h2,h3{font-family:Georgia,serif;color:var(--navy);margin:0 0 .4rem}
+.page{max-width:900px;margin:0 auto;padding:16px 18px 36px}
+.banner{background:var(--navy);color:#f7f4ee;padding:12px 14px;margin-bottom:12px}
+.banner h1{color:#f7f4ee;font-size:1.25rem}
+.banner .meta{opacity:.9;font-size:.88rem;margin-top:3px}
+.section{background:#fff;border:1px solid var(--line);padding:11px 13px;margin:10px 0}
+.section h2{font-size:1.02rem;border-bottom:2px solid var(--terra);padding-bottom:3px;margin-bottom:8px}
+.q{margin:7px 0;padding:8px 10px;background:var(--paper);border-left:3px solid var(--navy)}
+.q .n{font-weight:700;color:var(--terra);margin-right:6px}
+.q .why{font-size:.82rem;color:var(--muted);margin-top:2px}
+.ex{font-size:.82rem;color:var(--navy);margin-top:4px;padding:4px 6px;background:#eef2f7;border:1px solid #d5dde8}
+.blank{border:1px dashed var(--line);min-height:34px;background:#fff;margin-top:4px}
+.zero{display:grid;grid-template-columns:1fr auto auto auto auto;gap:3px 6px;align-items:center;font-size:.85rem;margin:3px 0}
+.zero .code{font-family:ui-monospace,Consolas,monospace;font-size:.78rem;color:var(--navy)}
+.mark{display:inline-block;width:13px;height:13px;border:1.5px solid var(--navy);vertical-align:middle;margin-right:2px}
+.legend{font-size:.78rem;color:var(--muted);margin:4px 0 8px}
+.do-not{background:#f8e8e2;border:1px solid #e0b8a8;padding:7px 9px;font-size:.86rem;margin:6px 0}
+.do-not strong{color:var(--terra)}
+table{width:100%;border-collapse:collapse;font-size:.84rem}
+th,td{border:1px solid var(--line);padding:5px 7px;text-align:left;vertical-align:top}
+th{background:var(--navy);color:#f7f4ee}
+tr:nth-child(even) td{background:#faf8f4}
+.foot{font-size:.75rem;color:var(--muted);margin-top:14px;border-top:1px solid var(--line);padding-top:7px}
+.kaizen{display:grid;grid-template-columns:2fr 1fr 1fr;gap:5px;margin-top:5px}
+.kaizen input{border:1px solid var(--line);padding:5px;width:100%}
+.intel-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media print{
+  body{background:#fff}
+  .page{max-width:none;padding:0}
+  .section,.banner{break-inside:avoid}
+}
+@media (max-width:700px){.intel-grid{grid-template-columns:1fr}}
+</style></head><body>
+<div class="page">
+  <div class="banner">
+    <h1>SPA ask — questions + example parts</h1>
+    <div class="meta">Ask list for Astara · not a closed deal · PT shop prices mostly missing</div>
+  </div>
+  <div class="do-not"><strong>Honesty:</strong> AM brand prices cover ~32% of competitive StD list €. Reference dealer = list × 1.40 × 1.275. List € lost ≠ proven lost to AM alone.</div>
+
+  <div class="section">
+    <h2>Questions first</h2>
+    <div class="q"><span class="n">S1</span>Which families will Astara propose for SPA volume?<div class="why">Clutch, brake pad/shoe, filters, DPD, body…</div><div class="blank"></div></div><div class="q"><span class="n">S2</span>Can you table Portuguese workshop / dealer buy prices on the top lines?<div class="why">AM probes on file are mostly DE/NO/UK — not PT.</div><div class="blank"></div></div><div class="q"><span class="n">S3</span>Which of these 26 are already on SPA or special terms today?<div class="why">Collect yes/no per family if not per PN.</div><div class="blank"></div></div><div class="q"><span class="n">S4</span>On near-miss lines with no AM price (exhaust pipe, DEF tank, DPD, EGR…) — do dealers buy outside?<div class="why">Intel from Mon–Tue floors.</div><div class="blank"></div></div>
+  </div>
+
+  <div class="section">
+    <h2>Example parts — dropping and expensive vs AM (26)</h2>
+    <p class="legend">Combined list € lost on hits €13,805. Use as conversation examples.</p>
+    <table><thead><tr><th>PN</th><th>Part</th><th>Family</th><th>List € lost</th><th>Ref÷AM</th></tr></thead>
+    <tbody><tr><td>8981776324</td><td>DPD ASM</td><td>Intake Exhaust Emission</td><td>€1,348</td><td>5.36</td></tr><tr><td>8975809452</td><td>BUMPER; FRT,CENTER</td><td>Accident &amp; Body</td><td>€743</td><td>8.15</td></tr><tr><td>8981032020</td><td>PANEL; DEFLECTOR</td><td>Accident &amp; Body</td><td>€1,084</td><td>4.10</td></tr><tr><td>8983355671</td><td>RADIATOR ASM</td><td>Cooling</td><td>€449</td><td>6.27</td></tr><tr><td>8982399830</td><td>FILTER ASM; FUEL</td><td>Maintenance Service</td><td>€277</td><td>9.03</td></tr><tr><td>8973873800</td><td>PANEL; DEFLECTOR</td><td>Accident &amp; Body</td><td>€306</td><td>7.83</td></tr><tr><td>8974056285</td><td>BUMPER ASM; FRT</td><td>Accident &amp; Body</td><td>€1,051</td><td>2.44</td></tr><tr><td>5876150021</td><td>FILTER; ACL</td><td>Maintenance Service</td><td>€711</td><td>2.81</td></tr><tr><td>8982488951</td><td>ROTOR; DISC BRK,FRT</td><td>Brakes</td><td>€476</td><td>3.25</td></tr><tr><td>8975056801</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td>Brakes</td><td>€740</td><td>1.89</td></tr><tr><td>8974068144</td><td>BUMPER ASM; FRT</td><td>Accident &amp; Body</td><td>€613</td><td>1.96</td></tr><tr><td>8979458412</td><td>ARM; UPR CONT</td><td>Suspension</td><td>€272</td><td>2.99</td></tr><tr><td>1476012190</td><td>CYLINDER; WHEEL,RR BRK</td><td>Wheels Hub</td><td>€1,307</td><td>1.29</td></tr><tr><td>8983894321</td><td>ARM; UPR CONT</td><td>Suspension</td><td>€239</td><td>2.44</td></tr><tr><td>5876102060</td><td>CLUTCH KIT</td><td>Clutch</td><td>€1,138</td><td>1.28</td></tr><tr><td>5876150610</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td>Brakes</td><td>€461</td><td>1.55</td></tr><tr><td>8983894341</td><td>ARM; LWR CONT</td><td>Suspension</td><td>€227</td><td>2.02</td></tr><tr><td>8983303281</td><td>BUMPER ASM; FRT</td><td>Accident &amp; Body</td><td>€388</td><td>1.44</td></tr><tr><td>8981810290</td><td>FENDER; FRT</td><td>Accident &amp; Body</td><td>€97</td><td>2.70</td></tr><tr><td>8981938690</td><td>GRILLE; RAD</td><td>Accident &amp; Body</td><td>€141</td><td>2.13</td></tr><tr><td>8980873901</td><td>SUPPORT; FRT BUMPER</td><td>Accident &amp; Body</td><td>€333</td><td>1.46</td></tr><tr><td>8981226920</td><td>PANEL ASM; FRT</td><td>Accident &amp; Body</td><td>€333</td><td>1.46</td></tr><tr><td>5876103090</td><td>CLUTCH KIT</td><td>Clutch</td><td>€345</td><td>1.36</td></tr><tr><td>8983313840</td><td>SENSOR; TEMPERATURE,DPD</td><td>Electrical</td><td>€192</td><td>1.51</td></tr><tr><td>8983313830</td><td>SENSOR; TEMPERATURE,DPD</td><td>Electrical</td><td>€376</td><td>1.20</td></tr><tr><td>8982120690</td><td>DISC; CLUTCH</td><td>Clutch</td><td>€157</td><td>1.39</td></tr></tbody></table>
+  </div>
+
+  <div class="section">
+    <h2>Near-miss — dropping, no AM price (get a quote)</h2>
+    <table><thead><tr><th>PN</th><th>Part</th><th>Family</th><th>List € lost</th></tr></thead>
+    <tbody><tr><td>8983682091</td><td>PIPE; EXH</td><td>Intake Exhaust Emission</td><td>€6,469</td></tr><tr><td>8972746690</td><td>TANK ASM; DEF</td><td>Intake Exhaust Emission</td><td>€2,199</td></tr><tr><td>8983320764</td><td>DPD ASM</td><td>Intake Exhaust Emission</td><td>€2,134</td></tr><tr><td>8981521221</td><td>COOLER; EGR</td><td>Intake Exhaust Emission</td><td>€2,089</td></tr><tr><td>8983320621</td><td>PUMP ASM; FUEL,SUPPLY</td><td>Fuel System</td><td>€1,984</td></tr><tr><td>8983300400</td><td>RAIL;COMMON</td><td>Fuel System</td><td>€1,773</td></tr><tr><td>8981017801</td><td>STEERING UNIT</td><td>Steering</td><td>€1,597</td></tr><tr><td>8975536860</td><td>BODY ASM; REAR</td><td>Accident &amp; Body</td><td>€1,460</td></tr><tr><td>8979461321</td><td>STEERING UNIT</td><td>Steering</td><td>€1,359</td></tr><tr><td>8980290621</td><td>GLASS; WINDSHIELD</td><td>Accident &amp; Body</td><td>€1,252</td></tr></tbody></table>
+  </div>
+
+  <div class="section">
+    <h2>Dashboard SPA candidates (14 unique) + PMS gaps</h2>
+    <div class="intel-grid">
+      <table><thead><tr><th>PN</th><th>Part</th><th>CY €</th><th>Δ retail</th></tr></thead><tbody><tr><td>8982447940</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td>€26,572</td><td>-71.0%</td></tr><tr><td>8983767550</td><td>ROTOR; DISC BRK,FRT</td><td>€23,702</td><td>-37.8%</td></tr><tr><td>8975056801</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td>€17,342</td><td>-59.3%</td></tr><tr><td>8982688122</td><td>PUMP ASM; DEF,DCM SPLY</td><td>€16,144</td><td>-55.8%</td></tr><tr><td>8976526220</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td>€5,478</td><td>-35.7%</td></tr><tr><td>8982318983</td><td>INJECTOR ASM; DEF DCM</td><td>€5,132</td><td>-20.6%</td></tr><tr><td>8974985741</td><td>TURBOCHARGER ASM</td><td>€4,708</td><td>-20.1%</td></tr><tr><td>8980618131</td><td>DRUM; BRK,RR</td><td>€4,616</td><td>-51.1%</td></tr><tr><td>8983288004</td><td>LAMP ASM; RR COMB</td><td>€4,358</td><td>-91.3%</td></tr><tr><td>8984890190</td><td>NOZZLE ASM; INJ</td><td>€4,319</td><td>-32.2%</td></tr><tr><td>8984865441</td><td>PUMP; WATER</td><td>€3,845</td><td>-3.0%</td></tr><tr><td>8982169210</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td>€3,283</td><td>-43.1%</td></tr><tr><td>8982488951</td><td>ROTOR; DISC BRK,FRT</td><td>€3,250</td><td>-77.5%</td></tr><tr><td>8982601090</td><td>NOZZLE ASM; INJ</td><td>€2,862</td><td>-41.3%</td></tr></tbody></table>
+      <table><thead><tr><th>Family</th><th>Capture</th><th>Gap €</th></tr></thead><tbody><tr><td>Clutch Booster</td><td>1.0%</td><td>€130,030</td></tr><tr><td>Brake Shoe</td><td>11.8%</td><td>€123,507</td></tr><tr><td>Clutch Disc</td><td>17.7%</td><td>€97,956</td></tr><tr><td>Clutch Pressure Plate</td><td>17.04%</td><td>€88,013</td></tr><tr><td>Urea (AdBlue) Filter</td><td>1.11%</td><td>€62,414</td></tr><tr><td>Brake Pad</td><td>63.57%</td><td>€51,474</td></tr><tr><td>Brake Rotor</td><td>51.47%</td><td>€50,988</td></tr><tr><td>Blower Unit Filter</td><td>24.2%</td><td>€48,659</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="foot">Sources: competitive_price_overlap 2026-10-06 · NUMBERS_LEDGER spa_candidates + pms (as_of 2026-08-19)</div>
+</div>
+</body></html>

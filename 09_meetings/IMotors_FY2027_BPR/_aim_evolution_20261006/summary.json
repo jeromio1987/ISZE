@@ -1,0 +1,152 @@
+{
+  "sold_to": 519,
+  "accessory_92_excluded": true,
+  "overlap": "2025-01-01 .. 2026-08-31",
+  "aim_release": "aim_pn_classification_release_2026-10-04.csv",
+  "price_basis": "PR00 IE40 list 2026-08-10",
+  "billing_rows_overlap": 13382,
+  "sellout_rows_overlap": 26966,
+  "billing_net_eur_overlap": 1856525.04,
+  "billing_list_eur_overlap": 1880174.94,
+  "sellout_list_eur_overlap": 2876340.43,
+  "billing_qty_overlap": 60048.0,
+  "sellout_qty_overlap": 91153.0,
+  "billing_aim_match_list_eur_pct": 99.98,
+  "sellout_aim_match_list_eur_pct": 99.99,
+  "billing_priced_qty_pct": 99.98,
+  "sellout_priced_qty_pct": 95.89,
+  "gaps": [
+    "sales_fact sold-to 519 ends 2026-08-31 \u2014 no Sep PN billing in parquet",
+    "dealer_sellout_long PORTUGAL month rows end 2026-08 \u2014 no Sep PN StD",
+    "Sep 2026 KPI StD \u20ac416.8k has no part numbers \u2192 out of AIM cuts",
+    "sold-to 92 accessory excluded",
+    "list \u20ac is ISZE list, not I-Motors net or dealer price",
+    "no dealer grain on sales to dealer"
+  ],
+  "destock_months_of_20": 9,
+  "destock_months": [
+    "2025-02",
+    "2025-09",
+    "2025-11",
+    "2026-01",
+    "2026-03",
+    "2026-05",
+    "2026-06",
+    "2026-07",
+    "2026-08"
+  ],
+  "top_std_aim_l1": [
+    {
+      "aim_l1": "Intake Exhaust Emission",
+      "std_list_eur": 431789.85,
+      "bill_list_eur": 272876.59,
+      "share_gap_pp": -0.5
+    },
+    {
+      "aim_l1": "Accident & Body",
+      "std_list_eur": 374308.96,
+      "bill_list_eur": 246662.42,
+      "share_gap_pp": 0.11
+    },
+    {
+      "aim_l1": "Brakes",
+      "std_list_eur": 249813.93,
+      "bill_list_eur": 133899.86,
+      "share_gap_pp": -1.56
+    },
+    {
+      "aim_l1": "Maintenance Service",
+      "std_list_eur": 211361.86,
+      "bill_list_eur": 128414.05,
+      "share_gap_pp": -0.52
+    },
+    {
+      "aim_l1": "Fuel System",
+      "std_list_eur": 195581.32,
+      "bill_list_eur": 117653.71,
+      "share_gap_pp": -0.54
+    },
+    {
+      "aim_l1": "Electrical",
+      "std_list_eur": 178861.45,
+      "bill_list_eur": 136898.86,
+      "share_gap_pp": 1.06
+    },
+    {
+      "aim_l1": "Steering",
+      "std_list_eur": 141142.29,
+      "bill_list_eur": 98290.78,
+      "share_gap_pp": 0.32
+    },
+    {
+      "aim_l1": "Wheels Hub",
+      "std_list_eur": 136053.84,
+      "bill_list_eur": 90215.18,
+      "share_gap_pp": 0.07
+    },
+    {
+      "aim_l1": "Engine",
+      "std_list_eur": 132618.08,
+      "bill_list_eur": 85395.58,
+      "share_gap_pp": -0.07
+    },
+    {
+      "aim_l1": "Lighting",
+      "std_list_eur": 125723.5,
+      "bill_list_eur": 93813.22,
+      "share_gap_pp": 0.62
+    }
+  ],
+  "blocks": [
+    {
+      "block": "CY2025",
+      "months": 12,
+      "bill_net_eur": 644643.08,
+      "bill_list_eur": 679289.76,
+      "std_list_eur": 1600566.72,
+      "bill_qty": 22128.0,
+      "std_qty": 51363.0,
+      "list_gap": -921276.96
+    },
+    {
+      "block": "2026_JanAug",
+      "months": 8,
+      "bill_net_eur": 1211881.96,
+      "bill_list_eur": 1200885.18,
+      "std_list_eur": 1275773.71,
+      "bill_qty": 37920.0,
+      "std_qty": 39790.0,
+      "list_gap": -74888.53
+    },
+    {
+      "block": "FY27_AprAug",
+      "months": 5,
+      "bill_net_eur": 701076.5,
+      "bill_list_eur": 685360.27,
+      "std_list_eur": 762594.6,
+      "bill_qty": 20714.0,
+      "std_qty": 24296.0,
+      "list_gap": -77234.33
+    },
+    {
+      "block": "FY26_AprAug",
+      "months": 5,
+      "bill_net_eur": 0.0,
+      "bill_list_eur": 0.0,
+      "std_list_eur": 637968.69,
+      "bill_qty": 0.0,
+      "std_qty": 20171.0,
+      "list_gap": -637968.69
+    },
+    {
+      "block": "FY26_Apr_to_Mar26",
+      "months": 12,
+      "bill_net_eur": 995839.03,
+      "bill_list_eur": 1020935.56,
+      "std_list_eur": 1716724.96,
+      "bill_qty": 32313.0,
+      "std_qty": 53340.0,
+      "list_gap": -695789.4
+    }
+  ]
+}

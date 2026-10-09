@@ -284,29 +284,9 @@ function currentMetadata(c){
     cost_basis_id:s.cost_basis_id||null,
     offer_effective_date:s.offer_effective_date||null};
 }
-function metadataLine(m){return `<p class="small meta-line" data-metadata="${esc(JSON.stringify(m))}">${esc(m.payload_version)} &middot; built ${esc(m.build_date)} &middot; list price: ${esc(m.list_price_status)} &middot; ${esc(m.cost_status)}${m.offer_effective_date?' &middot; offer from '+esc(m.offer_effective_date):''}</p>`;}
-/* UX-05. Three different questions, kept apart: is the evidence complete, has
-   a figure been technically checked, and has anyone commercially approved the
-   price. A technically checked cost does not make the evidence complete, and
-   neither of them is an approval. */
-function decisionStatus(c){
-  const pe=c.packEvidence||{},t=turboFor(c);
-  const missing=[];
-  if(!pe.costRecordPresent)missing.push('parts purchase cost');
-  if(!onwardHeld(c))missing.push('sales to dealer');
-  if(!t&&pe.listConflict)missing.push('one confirmed list price');
-  missing.push('current customer net price');
-  const acceptance=(D.packAudit||{}).acceptedStatus;
-  const rec=repo.load(c.id),st=rec&&rec.state;
-  return {
-    completeness:'Incomplete. Not held: '+missing.join(', ')+'.',
-    technical:(pe.costRecordPresent
-      ?'The parts purchase cost for '+c.pn+' is a technically checked record on the declared supplier purchase-cost basis, and the results are calculated by the checked engine.'
-      :'No technically checked parts purchase cost is held for '+c.pn+'. Revenue results are calculated by the checked engine.')
-      +' These are developer checks. '+(acceptance?'Pack acceptance: '+acceptance+'.':'No business or source acceptance is recorded.'),
-    commercial:st==='approved'
-      ?'A recorded case move puts this case at "approved". Check the move before relying on it.'
-      :'Not approved. No commercial approval is recorded for this case, and a saved revision is not an approval.'};
+function metadataLine(m){
+  const marketNote=(D.meta&&D.meta.market_path_note)||'Market prices: Eucon primary; UK eligible shop offers = 4 focus / 17 wider exact-OEM (still below the 50-row bar)';
+  return `<p class="small meta-line" data-metadata="${esc(JSON.stringify(m))}">${esc(m.payload_version)} &middot; built ${esc(m.build_date)} &middot; list price: ${esc(m.list_price_status)} &middot; ${esc(m.cost_status)}${m.offer_effective_date?' &middot; offer from '+esc(m.offer_effective_date):''} &middot; ${esc(marketNote)}</p>`;
 }
 function decisionSummary(c){
   const cmp=c.comparisons[state.compare],d=decisionStatus(c);

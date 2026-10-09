@@ -1,0 +1,61 @@
+{
+ "schema": "ship_receipt/v2",
+ "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\ISZE_Kickback_Japan_Final_2026-10-09.pptx",
+ "artifact_mtime_ms": 1791554045801,
+ "written_at": "2026-10-09T13:54:58Z",
+ "ok": true,
+ "screenshots_taken": 12,
+ "screenshots_read": 12,
+ "screenshots": [
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_final\\s01.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_final\\s02.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_final\\s03.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_final\\s04.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_final\\s05.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_final\\s06.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_final\\s07.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_final\\s08.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_final\\s09.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_final\\s10.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_final\\s11.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_final\\s12.png"
+ ],
+ "checks": [
+  {
+   "id": "exists",
+   "ok": true,
+   "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\ISZE_Kickback_Japan_Final_2026-10-09.pptx"
+  },
+  {
+   "id": "min_size",
+   "ok": true,
+   "detail": "688718 bytes, 12 slides, 16:9"
+  },
+  {
+   "id": "open_cmd",
+   "ok": true,
+   "detail": "OPEN_Kickback_Japan_Final.cmd opens this deck, CRLF"
+  },
+  {
+   "id": "visual_screenshots",
+   "ok": true,
+   "detail": "12 slides exported via PowerPoint COM at 1920x1080 and read one at a time by the building agent. Pass 1 read all 12; defects found and fixed: empty cover lower half, empty band on slide 9, chart labels touching the divider on slide 11, wrong slide reference and a label crossing the reference line on slide 4. Slides 1, 4, 9 and 11 re-read after the fix; slides 2, 3, 5-8, 10 and 12 were not changed by the fix and their pass-1 reads stand. All 15 chart PNGs read before placement."
+  },
+  {
+   "id": "figures",
+   "ok": true,
+   "detail": "year-end figures from _build/_analysis_yearend_20261009.json (sales_fact.parquet + 'Incentive FY27'); Kosha path, IBX stock days, Portugal series, family build and replenishment read from source at chart build; 225,744 and 764,436 checked against STOCK_CAMPAIGN_INSIGHTS_ALL_CUSTOMERS_20261007.md; 678,464 recomputed from replenishment_exceptions_cy2025.csv"
+  },
+  {
+   "id": "banned_words",
+   "ok": true,
+   "detail": "no sell-out/street/wallet/Book B/markup/factor/file names on slides or notes; 4 regex hits were the plain phrase 'sold to dealers'"
+  },
+  {
+   "id": "bounds",
+   "ok": true,
+   "detail": "0 shapes outside the slide"
+  }
+ ],
+ "notes": "New file; the two earlier decks in the folder were not touched."
+}

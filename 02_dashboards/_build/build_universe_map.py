@@ -493,6 +493,8 @@ def build_html(c: dict) -> str:
 
     # ---- where to look next
     nexts = [
+        ("What I built with AI", "../hub/ISZE_AI_MILESTONES.html",
+         "Every tool, finding and pack built here, as a milestone list"),
         ("The hub that indexes everything", "../hub/ISZE_OS_Hub.html",
          "How the layers connect, and where each one lives"),
         ("The operating console", "../ops/ISZE_OS_Console.html",
@@ -728,7 +730,7 @@ footer code{{font-size:.85em}}
 
   <section id="next">
     <div class="shead"><span class="n">08</span><h2>Where to look next</h2>
-      <p>Six places worth opening, and what each one is for.</p></div>
+      <p>Seven places worth opening, and what each one is for.</p></div>
     <div class="nexts">{next_html}</div>
     {missing_note}
   </section>

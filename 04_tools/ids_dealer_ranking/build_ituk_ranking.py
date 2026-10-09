@@ -6,11 +6,16 @@ Sheet2 has two dealer blocks on the same tab:
   Block 2 — names row 27, percentage row 49, points row 50
 
 Skip dealers with 0 points (did not participate). Duplicate names keep the non-zero score.
+
+Section rows A.1–H.1 sit between the name row and the total-% row. Letter groups
+(A–H) are rolled up for the UK CV dashboard (score_basis UKCV-AH). This is not
+the continental A–E / 280-point book — do not overlay network A–E on these scores.
 """
 
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -29,6 +34,22 @@ ITUK_BLOCKS = (
     (27, 49, 50),
 )
 
+SUBSEC_RE = re.compile(r"^([A-H])\.(\d+)\s*$", re.I)
+
+# Sheet2 letter rollups — English labels for shared UK CV HTML
+UKCV_SECTION_DEFS: list[dict[str, str]] = [
+    {"id": "A", "label": "A. Premises, stationery and uniforms"},
+    {"id": "B", "label": "B. Organisation and management"},
+    {"id": "C", "label": "C. Workshop and service operation"},
+    {"id": "D", "label": "D. Parts facility and operations"},
+    {"id": "E", "label": "E. New vehicle sales"},
+    {"id": "F", "label": "F. Marketing"},
+    {"id": "G", "label": "G. Standards review"},
+    {"id": "H", "label": "H. Key performance indicators"},
+]
+UKCV_SECTION_IDS = tuple(s["id"] for s in UKCV_SECTION_DEFS)
+UKCV_SCORE_BASIS = "UKCV-AH"
+
 
 def _resolve_sheet(wb, sheet_arg: str | None):
     if sheet_arg:
@@ -38,6 +59,77 @@ def _resolve_sheet(wb, sheet_arg: str | None):
     if "Sheet2" in wb.sheetnames:
         return wb["Sheet2"]
     return wb.worksheets[1]
+
+
+def _section_rows_for_block(ws, *, name_row: int, percent_row: int) -> list[tuple[int, str, float]]:
+    """Return (sheet_row, letter, max_pts) for each A.1–H.1 line in the block."""
+    out: list[tuple[int, str, float]] = []
+    for r in range(name_row + 1, percent_row):
+        ref = ws.cell(r, 1).value
+        if not ref:
+            continue
+        m = SUBSEC_RE.match(str(ref).strip())
+        if not m:
+            continue
+        letter = m.group(1).upper()
+        max_raw = ws.cell(r, 3).value
+        try:
+            max_pts = float(max_raw) if max_raw is not None else 0.0
+        except (TypeError, ValueError):
+            max_pts = 0.0
+        out.append((r, letter, max_pts))
+    return out
+
+
+def _roll_letter_sections(
+    ws,
+    *,
+    col: int,
+    section_rows: list[tuple[int, str, float]],
+) -> dict[str, dict]:
+    """Sum Sheet2 sub-rows into A–H {score, max, pct} blocks."""
+    score_sum: dict[str, float] = {sid: 0.0 for sid in UKCV_SECTION_IDS}
+    max_sum: dict[str, float] = {sid: 0.0 for sid in UKCV_SECTION_IDS}
+    seen: dict[str, bool] = {sid: False for sid in UKCV_SECTION_IDS}
+
+    for r, letter, max_pts in section_rows:
+        if letter not in score_sum:
+            continue
+        raw = ws.cell(r, col).value
+        try:
+            pts = float(raw) if raw is not None else 0.0
+        except (TypeError, ValueError):
+            pts = 0.0
+        # Zero-max lines (e.g. E.1 on Parts & Service block) do not contribute.
+        if max_pts <= 0:
+            continue
+        score_sum[letter] += pts
+        max_sum[letter] += max_pts
+        seen[letter] = True
+
+    sections: dict[str, dict] = {}
+    for sid in UKCV_SECTION_IDS:
+        mx = max_sum[sid]
+        if not seen[sid] or mx <= 0:
+            sections[sid] = {
+                "score": None,
+                "max": mx if mx > 0 else None,
+                "pct": None,
+                "fill": "not_scored",
+                "country_avg_score": None,
+                "country_avg_pct": None,
+            }
+            continue
+        sc = score_sum[sid]
+        sections[sid] = {
+            "score": sc,
+            "max": mx,
+            "pct": sc / mx,
+            "fill": "scored",
+            "country_avg_score": None,
+            "country_avg_pct": None,
+        }
+    return sections
 
 
 def _read_block(
@@ -52,6 +144,8 @@ def _read_block(
     max_pts = ws.cell(points_row, 3).value
     if not isinstance(max_pts, (int, float)) or max_pts <= 0:
         max_pts = 234
+
+    section_rows = _section_rows_for_block(ws, name_row=name_row, percent_row=percent_row)
 
     rows: list[dict] = []
     col = first_dealer_col
@@ -91,6 +185,10 @@ def _read_block(
                 "max_pts": float(max_pts),
                 "file": source_file,
                 "error": None,
+                "sections": _roll_letter_sections(
+                    ws, col=col, section_rows=section_rows
+                ),
+                "score_basis": UKCV_SCORE_BASIS,
             }
         )
         col += 2
@@ -131,6 +229,14 @@ def read_ituk_dealers(path: Path, *, sheet_name: str | None = None) -> list[dict
     ]
     wb.close()
     return _merge_dealer_rows(block_rows)
+
+
+def ituk_sections_by_name(path: Path | None = None) -> dict[str, dict]:
+    """casefold(name) → dealer row with rolled A–H sections (from Sheet2)."""
+    src = path or ITUK_INPUT
+    if not src.is_file():
+        return {}
+    return {r["name"].casefold(): r for r in read_ituk_dealers(src)}
 
 
 def main() -> int:

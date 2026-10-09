@@ -1,0 +1,195 @@
+{
+  "as_of": "2026-10-07T16:51:15.260396+00:00",
+  "apply_status": "complete",
+  "verdict": "CONFIRM \u2014 Oct4 forward-repair verified. Sample 1878148072 is Engine gasket on master and overlay; all Oct4 groups match release; eng-gasket to Transmission = 0; release vs master both-nonblank AIM differ = 0; DESC 30,653 + EQ 112 still present; DESC-applied hard holds still 0.",
+  "recommendation": "safe",
+  "worker_claimed": "Oct4 forward-repair done",
+  "independent_confirm": true,
+  "must_pass": {
+    "sample_1878148072_engine_on_master_and_overlay": true,
+    "eng_gasket_to_transmission_zero": true,
+    "oct4_match_release_master_overlay": true,
+    "release_master_both_nonblank_differ_zero": true,
+    "desc_30653_eq_112_present": true,
+    "hard_holds_desc_applied_zero": true,
+    "hard_holds_eng_gasket_zero": true
+  },
+  "sample_1878148072": {
+    "release07": "Engine > Gasket & Sealing > Gasket",
+    "master": "Engine > Gasket & Sealing > Gasket",
+    "overlay": "Engine > Gasket & Sealing > Gasket"
+  },
+  "oct4": {
+    "D2_engine_gasket_sets": {
+      "expect": "Engine > Gasket & Sealing > Gasket",
+      "release07": {
+        "n": 209,
+        "ok": 209,
+        "bad": 0,
+        "missing": 0,
+        "samples": []
+      },
+      "master": {
+        "n": 209,
+        "ok": 209,
+        "bad": 0,
+        "missing": 0,
+        "samples": []
+      },
+      "overlay": {
+        "n": 209,
+        "ok": 209,
+        "bad": 0,
+        "missing": 0,
+        "samples": []
+      }
+    },
+    "D3_evrv_valves": {
+      "expect": "Intake Exhaust Emission > EGR > EGR Component",
+      "release07": {
+        "n": 9,
+        "ok": 9,
+        "bad": 0,
+        "missing": 0,
+        "samples": []
+      },
+      "master": {
+        "n": 9,
+        "ok": 9,
+        "bad": 0,
+        "missing": 0,
+        "samples": []
+      },
+      "overlay": {
+        "n": 9,
+        "ok": 9,
+        "bad": 0,
+        "missing": 0,
+        "samples": []
+      }
+    },
+    "D4_antennas": {
+      "expect": "Electrical > Audio > Radio",
+      "release07": {
+        "n": 71,
+        "ok": 71,
+        "bad": 0,
+        "missing": 0,
+        "samples": []
+      },
+      "master": {
+        "n": 71,
+        "ok": 71,
+        "bad": 0,
+        "missing": 0,
+        "samples": []
+      },
+      "overlay": {
+        "n": 71,
+        "ok": 71,
+        "bad": 0,
+        "missing": 0,
+        "samples": []
+      }
+    },
+    "D6_def_injectors": {
+      "expect": "Intake Exhaust Emission > DEF System > DEF Injector",
+      "release07": {
+        "n": 5,
+        "ok": 5,
+        "bad": 0,
+        "missing": 0,
+        "samples": []
+      },
+      "master": {
+        "n": 5,
+        "ok": 5,
+        "bad": 0,
+        "missing": 0,
+        "samples": []
+      },
+      "overlay": {
+        "n": 5,
+        "ok": 5,
+        "bad": 0,
+        "missing": 0,
+        "samples": []
+      }
+    }
+  },
+  "coverage": {
+    "master_rows": 165422,
+    "master_with_aim": 56197,
+    "desc_tags": 30653,
+    "desc_l123_match": 30653,
+    "eq_tags": 112,
+    "eq_on_master": 112,
+    "eq_missing": 4,
+    "overlap": 0,
+    "both_nonblank_differ": 0,
+    "master_blank_release_has": 0,
+    "release_blank_master_has": 2
+  },
+  "hard_holds_master": {
+    "cyl_hd_gasket_desc_to_transmission": 79,
+    "gasket_set_to_transmission": 19,
+    "gasket_set_eng_to_transmission": 0,
+    "trans_asm_to_literature": 38,
+    "air_valve_to_steering": 6
+  },
+  "hard_holds_desc_applied": {
+    "cyl_hd_gasket_path_to_transmission": 0,
+    "gasket_set_to_transmission": 0,
+    "trans_asm_to_literature": 0,
+    "air_valve_to_steering": 0
+  },
+  "residual_master_hard_holds_outside_oct4_desc": {
+    "cyl_hd_gasket_desc_to_transmission": 79,
+    "gasket_set_to_transmission": 19,
+    "trans_asm_to_literature": 38,
+    "air_valve_to_steering": 6
+  },
+  "residual_note": "Master still has older cyl-head / non-ENG gasket-set / trans-asm / air-valve labels that were never part of the 4 Oct or DESC_PROVEN GO piles. Eng gasket and DESC-applied holds are 0. Not a leftover of the Oct4 forward-repair.",
+  "checklist": [
+    {
+      "id": "sample_1878148072",
+      "label": "1878148072 Engine gasket on master AND overlay",
+      "result": "PASS"
+    },
+    {
+      "id": "eng_gasket_trans_zero",
+      "label": "eng-gasket to Transmission = 0 on master",
+      "result": "PASS"
+    },
+    {
+      "id": "oct4_groups",
+      "label": "Oct4 gasket/EVRV/antenna/DEF match release on master+overlay",
+      "result": "PASS"
+    },
+    {
+      "id": "nonblank_differ_zero",
+      "label": "release vs master both-nonblank AIM differ = 0",
+      "result": "PASS"
+    },
+    {
+      "id": "desc_eq_present",
+      "label": "DESC 30653 + EQ 112 still present",
+      "result": "PASS"
+    },
+    {
+      "id": "hard_holds_desc_applied",
+      "label": "Hard holds 0 on DESC-applied rows",
+      "result": "PASS"
+    },
+    {
+      "id": "hard_holds_eng_gasket",
+      "label": "Hard hold eng-gasket to Transmission = 0",
+      "result": "PASS"
+    }
+  ],
+  "fails": [],
+  "mtimes": {
+    "master": "2026-10-07T18:48:07.472100",
+    "overlay": "2026-10-07T18:48:09.620423"
+  }
+}

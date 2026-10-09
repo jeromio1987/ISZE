@@ -1,0 +1,45 @@
+{
+  "schema": "ship_receipt/v2",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\ISZE_Kickback_Figures_Audit_20261007.pptx",
+  "artifact_mtime_ms": 1791363104618,
+  "written_at": "2026-10-07T08:52:46.821Z",
+  "ok": true,
+  "screenshots_taken": 11,
+  "screenshots_read": 11,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\ISZE_Kickback_Figures_Audit_20261007.pptx"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "59904 bytes"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "pptx size gate"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "screenshots_taken=11, screenshots_read=11 - rendered via PowerPoint COM and image-Read by the building agent. The writer's automatic count check covers html/pdf only, so these counts are recorded here explicitly for a .pptx."
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_figures_audit\\slide_01.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_figures_audit\\slide_02.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_figures_audit\\slide_03.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_figures_audit\\slide_04.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_figures_audit\\slide_05.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_figures_audit\\slide_06.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_figures_audit\\slide_07.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_figures_audit\\slide_08.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_figures_audit\\slide_09.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_figures_audit\\slide_10.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_figures_audit\\slide_11.png"
+  ],
+  "notes": "Visual QA counts stated explicitly because the writer's v2 count check runs only for html/pdf and records 0 for a .pptx: 11 slides rendered to PNG via PowerPoint COM (Slide.Export, 1600x900) and all 11 image-Read by the building agent, one at a time, at full resolution, twice (once on the first build and again after a corrected figure was rebuilt). taken=11 read=11. All 11 PNG paths are in the screenshots array. Build: FIGURES RETIRED - corrections audit, a separate internal deck, new filename, charcoal style matching the case deck. 11 slides: cover; how to read this; the retired-figure table in two parts; four deep dives (IBX order mix, ITUK February, stock-versus-fill, target-file rationale); the plan-count errors; which figures came from the assistant; what remains sound. Static check (qa_figures_audit_static.py) reports 0 off-slide / 0 overflow issues; deck text scanned for banned terms (sell-out / Mode A / Mode B) and returns 0 hits. It does not modify, rename or overwrite ISZE_Kickback_FY2026_Year_End_Jump_Case.pptx. Every figure was re-derived from source; the ITUK February item was corrected twice during QA. One item (the ISD 2 Oct 2026 resumption) is marked reported-not-verified because no file is on disk; all others are file-backed."
+}

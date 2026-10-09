@@ -1,0 +1,116 @@
+{
+  "as_of": "2026-10-07T14:05:53.621808+00:00",
+  "source_clean_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\next_release_proposal_full_class_tranche1_catmap_CLEAN_2026-10-07.csv",
+  "rigor_fails_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\_aim_tranche1_CLEAN_rigor_fails_20261007.csv",
+  "rigor_json": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\_aim_tranche1_CLEAN_rigor_20261007.json",
+  "safe_v2_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\next_release_proposal_full_class_tranche1_catmap_SAFE_v2_2026-10-07.csv",
+  "apply": "NO — proposal only. SAFE-v2 does not write aim_master and is not a dated release apply.",
+  "permission": "NOT_EARNED_UNTIL_JEROME_RE_READS",
+  "apply_permission_earned": false,
+  "apply_permission_sentence": "Apply permission is not earned yet — zero-checks on description leaks pass, but the blank-description path-majority tail still needs Jerome's eyes before any apply.",
+  "rows_clean": 38213,
+  "rows_safe_v2": 37807,
+  "rows_excluded_total": 406,
+  "excluded_reasons": [
+    {
+      "reason": "rigor_fail",
+      "n": 406,
+      "n_expected": 406,
+      "detail": "Every rigor_status=fail row from _aim_tranche1_CLEAN_rigor_fails_20261007.csv (teaching_bug + desc_hard + desc_noun + desc_stem + hkk; expected 406)"
+    },
+    {
+      "reason": "cyl_hd_gasket_path_to_transmission",
+      "n": 328,
+      "detail": "cat_path = Repair parts > Gaskets / seals > Cylinder head gasket AND propose_aim_l1 = Transmission"
+    },
+    {
+      "reason": "cyl_hd_gasket_desc_to_transmission",
+      "n": 285,
+      "detail": "JP/master/proposal desc matches CYL HD / HEAD GASKET / ENG gasket AND propose is Transmission (or Transmission bearings/seals/gasket)"
+    },
+    {
+      "reason": "extra_beyond_rigor_fail_pns",
+      "n": 0,
+      "detail": "Rows hit by path/desc cyl-head→Transmission rules but not already in the 406 rigor fails"
+    }
+  ],
+  "fail_leftovers_in_safe_v2": 0,
+  "rigor_pass_rows_in_safe_v2": 30653,
+  "rigor_inconclusive_rows_in_safe_v2": 7154,
+  "description_coverage": {
+    "with_description": 30653,
+    "blank_description": 7154,
+    "blank_share": 0.1892,
+    "honesty": "still path-majority for 7,154 rows without description (7,154 rigor-inconclusive kept); 30,653 rows have a description. ZKK is almost useless at this scale (rigor found 1 pure ZKK code at n≥20 / ≥80%), so blank-desc rows are catalogue-path proposals, not commodity-verified.",
+    "zkk_note": "ZKK is a Japan catalogue attribute, not an AIM family. On known master rows, only 1 ZKK code(s) reach >=80% single-family purity at n>=20. Commodity/ZKK cannot define what each part is for most of this proposal; description text is the primary rigor signal."
+  },
+  "zero_checks": {
+    "cyl_hd_gasket_desc_to_transmission": {
+      "n": 0,
+      "pass": true
+    },
+    "cyl_hd_gasket_path_to_transmission": {
+      "n": 0,
+      "pass": true
+    },
+    "gasket_set_to_transmission": {
+      "n": 0,
+      "pass": true,
+      "cat_path": "Repair parts > Gaskets / seals > Gasket set",
+      "propose_aim_l1": "Transmission"
+    },
+    "trans_asm_to_literature": {
+      "n": 0,
+      "pass": true,
+      "cat_path": "High value repair > Transmission parts > Transmission assembly",
+      "propose_aim_l1": "Literature Marketing"
+    },
+    "air_valve_to_steering": {
+      "n": 0,
+      "pass": true,
+      "cat_path": "Competitive parts > Air system > Air valve",
+      "propose_aim_l1": "Steering"
+    },
+    "any_propose_transmission": {
+      "n": 0,
+      "pass": true
+    }
+  },
+  "zero_checks_all_pass": true,
+  "by_confidence": {
+    "HIGH": 35892,
+    "MED_HIGH": 1915
+  },
+  "top_propose_l1": {
+    "Accident & Body": 13391,
+    "Electrical": 6151,
+    "Lighting": 3076,
+    "Engine": 2887,
+    "Chassis Frame": 2634,
+    "Fuel System": 2134,
+    "Intake Exhaust Emission": 1749,
+    "Wheels Hub": 1331,
+    "Brakes": 1183,
+    "Cooling": 878,
+    "Clutch": 844,
+    "Maintenance Service": 830,
+    "Suspension": 584,
+    "Cabin Interior": 113,
+    "Fluids Chemicals": 22
+  },
+  "coverage_if_safe_v2_applied": {
+    "master_rows": 165310,
+    "base_with_family": 21045,
+    "base_with_family_pct": 12.73,
+    "safe_v2_rows_added": 37807,
+    "with_family_if_applied": 58852,
+    "with_family_pct_if_applied": 35.6,
+    "without_family_if_applied": 106458,
+    "note": "Projected only — SAFE-v2 not applied to master."
+  },
+  "notes": [
+    "Built from CLEAN by dropping all 406 rigor fails plus any residual cylinder-head / CYL HD / HEAD GASKET → Transmission (incl. Transmission bearings/seals/gasket).",
+    "Prior CLEAN hard holds (gasket set→Transmission, trans asm→Literature, air valve→Steering) re-verified at zero.",
+    "Does not apply aim_master. Jerome re-permission required before any apply."
+  ]
+}

@@ -315,6 +315,9 @@ class DealerData:
     total_override: float | None = None
     # 0–1 fraction when set (ITUK consolidated: do not derive as total/280).
     total_pct_override: float | None = None
+    # UK CV Sheet2 letter rollups A–H (not continental A–E questions).
+    section_scores: dict[str, dict[str, Any]] = field(default_factory=dict)
+    score_basis: str | None = None
     error: str | None = None
 
 
@@ -620,8 +623,13 @@ def _open_eval_rows(path: Path):
 
 
 def parse_ituk_dealers(path: Path) -> list[DealerData]:
-    """ITUK consolidated workbook — totals only (no per-question breakdown)."""
-    from build_ituk_ranking import ITUK_BLOCKS, _merge_dealer_rows, _read_block
+    """ITUK consolidated workbook — totals + Sheet2 A–H section rollups (no questions)."""
+    from build_ituk_ranking import (
+        ITUK_BLOCKS,
+        UKCV_SCORE_BASIS,
+        _merge_dealer_rows,
+        _read_block,
+    )
 
     try:
         wb = load_workbook(path, read_only=True, data_only=True)
@@ -658,6 +666,8 @@ def parse_ituk_dealers(path: Path) -> list[DealerData]:
                 question_scores={},
                 total_override=float(raw),
                 total_pct_override=pct_frac,
+                section_scores=dict(row.get("sections") or {}),
+                score_basis=UKCV_SCORE_BASIS,
             )
         )
     return dealers

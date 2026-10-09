@@ -1,0 +1,340 @@
+{
+  "window": {
+    "from": "2025-09-01",
+    "to": "2026-08-31",
+    "billing_cutoff": "2026-08-31",
+    "months": 12
+  },
+  "master": {
+    "rows": 165290,
+    "distinct_pns": 165290,
+    "duplicate_pn_rows": 0
+  },
+  "totals": {
+    "eur": 33399343.81,
+    "qty": 1219773.0
+  },
+  "covered": {
+    "eur": 33069898.07,
+    "qty": 1209285.0
+  },
+  "residual": {
+    "eur": 329445.74000000005,
+    "qty": 10488.0,
+    "pns": 1679
+  },
+  "residual_top15": [
+    {
+      "pn": "8982263230",
+      "billed_eur": 19525.08,
+      "billed_qty": 225.0,
+      "desc": "REPAIR KIT; AIR DRYER",
+      "l1": "Unknown"
+    },
+    {
+      "pn": "7552498500",
+      "billed_eur": 8999.92,
+      "billed_qty": 2.0,
+      "desc": "FRAME ASM",
+      "l1": ""
+    },
+    {
+      "pn": "7552498490",
+      "billed_eur": 8999.92,
+      "billed_qty": 2.0,
+      "desc": "FRAME ASM",
+      "l1": ""
+    },
+    {
+      "pn": "7553068050",
+      "billed_eur": 7414.2,
+      "billed_qty": 2.0,
+      "desc": "CASE; RR AXLE",
+      "l1": ""
+    },
+    {
+      "pn": "8979461460",
+      "billed_eur": 6992.62,
+      "billed_qty": 110.0,
+      "desc": "HOSE; FLEX,P/S CONT VLV",
+      "l1": "Unknown Review"
+    },
+    {
+      "pn": "8982034990",
+      "billed_eur": 6850.25,
+      "billed_qty": 1.0,
+      "desc": "TRANSMISSION ASM; MANUAL",
+      "l1": ""
+    },
+    {
+      "pn": "8984818641",
+      "billed_eur": 6410.29,
+      "billed_qty": 13.0,
+      "desc": "CASE; RR AXLE",
+      "l1": "Unknown"
+    },
+    {
+      "pn": "7552623640",
+      "billed_eur": 6214.67,
+      "billed_qty": 10.0,
+      "desc": "BOX ASM; SHIFT CONT",
+      "l1": "Unknown"
+    },
+    {
+      "pn": "5876102381",
+      "billed_eur": 5109.389999999999,
+      "billed_qty": 99.0,
+      "desc": "PAD KIT; CALIPER, DISC BRK, FR",
+      "l1": "(no row on the AIM master)"
+    },
+    {
+      "pn": "8976641840",
+      "billed_eur": 4154.41,
+      "billed_qty": 14.0,
+      "desc": "FRAME; CUSHION,FRT SEAT",
+      "l1": "Unknown"
+    },
+    {
+      "pn": "8975372320",
+      "billed_eur": 3642.57,
+      "billed_qty": 1.0,
+      "desc": "TRANSMISSION ASM; AUTO",
+      "l1": "Unknown"
+    },
+    {
+      "pn": "7552029253",
+      "billed_eur": 3331.2,
+      "billed_qty": 1.0,
+      "desc": "MOTOR ASM; REAR DRIVE",
+      "l1": ""
+    },
+    {
+      "pn": "7552357310",
+      "billed_eur": 3251.26,
+      "billed_qty": 3.0,
+      "desc": "HYDRAULIC UNIT; ANTI LOCK BRK",
+      "l1": "Unknown"
+    },
+    {
+      "pn": "8984818581",
+      "billed_eur": 3190.63,
+      "billed_qty": 7.0,
+      "desc": "CASE; RR AXLE",
+      "l1": "Unknown"
+    },
+    {
+      "pn": "8983996200",
+      "billed_eur": 3173.8,
+      "billed_qty": 7.0,
+      "desc": "RAIL ASM; COMMON",
+      "l1": "Unknown"
+    }
+  ],
+  "unknown": {
+    "rows_l1_fixed": 4129,
+    "rows_plain_unknown": 3598,
+    "distinct_pns": 4129,
+    "eur": 238667.61000000002,
+    "qty": 9025.0
+  },
+  "by_distributor": [
+    {
+      "dist": "ITUK",
+      "cover_eur": 6833338.3,
+      "total_eur": 6892054.49,
+      "total_qty": 235932.0,
+      "resid_eur": 58716.19000000041,
+      "resid_pct": 0.8519403043779534,
+      "cover_pct": 99.14805969562205
+    },
+    {
+      "dist": "IUK",
+      "cover_eur": 5920469.66,
+      "total_eur": 5974922.4,
+      "total_qty": 250830.0,
+      "resid_eur": 54452.74000000022,
+      "resid_pct": 0.9113547650426426,
+      "cover_pct": 99.08864523495737
+    },
+    {
+      "dist": "UTI",
+      "cover_eur": 2981775.1,
+      "total_eur": 3030585.72,
+      "total_qty": 118810.0,
+      "resid_eur": 48810.62000000011,
+      "resid_pct": 1.6106002109717625,
+      "cover_pct": 98.38939978902825
+    },
+    {
+      "dist": "UMI",
+      "cover_eur": 2810238.76,
+      "total_eur": 2838135.68,
+      "total_qty": 83603.0,
+      "resid_eur": 27896.92000000039,
+      "resid_pct": 0.9829311613460422,
+      "cover_pct": 99.01706883865396
+    },
+    {
+      "dist": "PORTUGAL",
+      "cover_eur": 1805654.58,
+      "total_eur": 1830406.41,
+      "total_qty": 56665.0,
+      "resid_eur": 24751.82999999984,
+      "resid_pct": 1.3522587041202419,
+      "cover_pct": 98.64774129587975
+    },
+    {
+      "dist": "UKRAINE",
+      "cover_eur": 1018749.53,
+      "total_eur": 1041719.2,
+      "total_qty": 52484.0,
+      "resid_eur": 22969.669999999925,
+      "resid_pct": 2.2049771185939484,
+      "cover_pct": 97.79502288140606
+    },
+    {
+      "dist": "GERMANY",
+      "cover_eur": 2738139.46,
+      "total_eur": 2757932.81,
+      "total_qty": 78397.0,
+      "resid_eur": 19793.350000000093,
+      "resid_pct": 0.7176878975525184,
+      "cover_pct": 99.28231210244748
+    },
+    {
+      "dist": "BELGIUM",
+      "cover_eur": 2458893.88,
+      "total_eur": 2473699.1,
+      "total_qty": 81976.0,
+      "resid_eur": 14805.220000000205,
+      "resid_pct": 0.5985052911245432,
+      "cover_pct": 99.40149470887546
+    },
+    {
+      "dist": "IRELAND",
+      "cover_eur": 1018782.68,
+      "total_eur": 1029455.19,
+      "total_qty": 37433.0,
+      "resid_eur": 10672.509999999893,
+      "resid_pct": 1.0367143809338504,
+      "cover_pct": 98.96328561906616
+    },
+    {
+      "dist": "NORWAY",
+      "cover_eur": 1430025.49,
+      "total_eur": 1439927.32,
+      "total_qty": 54036.0,
+      "resid_eur": 9901.830000000075,
+      "resid_pct": 0.6876617911520753,
+      "cover_pct": 99.31233820884793
+    },
+    {
+      "dist": "SWEDEN",
+      "cover_eur": 1437520.16,
+      "total_eur": 1446440.74,
+      "total_qty": 64120.0,
+      "resid_eur": 8920.580000000075,
+      "resid_pct": 0.6167262683710136,
+      "cover_pct": 99.38327373162899
+    },
+    {
+      "dist": "CYPRUS",
+      "cover_eur": 429220.14,
+      "total_eur": 436036.24,
+      "total_qty": 20461.0,
+      "resid_eur": 6816.099999999977,
+      "resid_pct": 1.5631957563894177,
+      "cover_pct": 98.43680424361058
+    },
+    {
+      "dist": "MALTA",
+      "cover_eur": 205670.6,
+      "total_eur": 210206.79,
+      "total_qty": 7578.0,
+      "resid_eur": 4536.190000000002,
+      "resid_pct": 2.157965496737761,
+      "cover_pct": 97.84203450326224
+    },
+    {
+      "dist": "GREECE",
+      "cover_eur": 483673.62,
+      "total_eur": 487740.11,
+      "total_qty": 22753.0,
+      "resid_eur": 4066.4899999999907,
+      "resid_pct": 0.8337411495642609,
+      "cover_pct": 99.16625885043574
+    },
+    {
+      "dist": "DENMARK",
+      "cover_eur": 161388.05,
+      "total_eur": 165217.79,
+      "total_qty": 4356.0,
+      "resid_eur": 3829.74000000002,
+      "resid_pct": 2.3179949326280296,
+      "cover_pct": 97.68200506737197
+    },
+    {
+      "dist": "ARMENIA",
+      "cover_eur": 313222.02,
+      "total_eur": 317020.45,
+      "total_qty": 11510.0,
+      "resid_eur": 3798.429999999993,
+      "resid_pct": 1.198165607297571,
+      "cover_pct": 98.80183439270243
+    },
+    {
+      "dist": "KAZAKHSTAN",
+      "cover_eur": 135079.14,
+      "total_eur": 136549.89,
+      "total_qty": 7568.0,
+      "resid_eur": 1470.75,
+      "resid_pct": 1.0770788610668232,
+      "cover_pct": 98.92292113893318
+    },
+    {
+      "dist": "HUNGARY",
+      "cover_eur": 338350.65,
+      "total_eur": 339612.56,
+      "total_qty": 12010.0,
+      "resid_eur": 1261.9099999999744,
+      "resid_pct": 0.3715734188393899,
+      "cover_pct": 99.62842658116061
+    },
+    {
+      "dist": "FINLAND",
+      "cover_eur": 268717.04,
+      "total_eur": 269607.77,
+      "total_qty": 10051.0,
+      "resid_eur": 890.7300000000396,
+      "resid_pct": 0.3303799441685377,
+      "cover_pct": 99.66962005583146
+    },
+    {
+      "dist": "ROMANIA",
+      "cover_eur": 178288.14,
+      "total_eur": 179070.05,
+      "total_qty": 5571.0,
+      "resid_eur": 781.9099999999744,
+      "resid_pct": 0.4366503499607971,
+      "cover_pct": 99.5633496500392
+    },
+    {
+      "dist": "PALESTINE",
+      "cover_eur": 22680.789999999997,
+      "total_eur": 22859.86,
+      "total_qty": 698.0,
+      "resid_eur": 179.07000000000335,
+      "resid_pct": 0.7833381306797301,
+      "cover_pct": 99.21666186932026
+    },
+    {
+      "dist": "ICELAND",
+      "cover_eur": 80020.28,
+      "total_eur": 80143.24,
+      "total_qty": 2931.0,
+      "resid_eur": 122.9600000000064,
+      "resid_pct": 0.15342529201465574,
+      "cover_pct": 99.84657470798535
+    }
+  ]
+}

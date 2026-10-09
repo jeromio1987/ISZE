@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Wednesday — questions for I-Motors / Astara</title>
+<style>
+:root{--navy:#15233c;--terra:#c0552d;--paper:#f7f4ee;--ink:#222;--line:#cfc8bc;--muted:#5a6570;}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:var(--paper);}
+h1,h2,h3{font-family:Georgia,serif;color:var(--navy);margin:0 0 .4rem}
+.page{max-width:900px;margin:0 auto;padding:16px 18px 36px}
+.banner{background:var(--navy);color:#f7f4ee;padding:12px 14px;margin-bottom:12px}
+.banner h1{color:#f7f4ee;font-size:1.25rem}
+.banner .meta{opacity:.9;font-size:.88rem;margin-top:3px}
+.section{background:#fff;border:1px solid var(--line);padding:11px 13px;margin:10px 0}
+.section h2{font-size:1.02rem;border-bottom:2px solid var(--terra);padding-bottom:3px;margin-bottom:8px}
+.q{margin:7px 0;padding:8px 10px;background:var(--paper);border-left:3px solid var(--navy)}
+.q .n{font-weight:700;color:var(--terra);margin-right:6px}
+.q .why{font-size:.82rem;color:var(--muted);margin-top:2px}
+.ex{font-size:.82rem;color:var(--navy);margin-top:4px;padding:4px 6px;background:#eef2f7;border:1px solid #d5dde8}
+.blank{border:1px dashed var(--line);min-height:34px;background:#fff;margin-top:4px}
+.zero{display:grid;grid-template-columns:1fr auto auto auto auto;gap:3px 6px;align-items:center;font-size:.85rem;margin:3px 0}
+.zero .code{font-family:ui-monospace,Consolas,monospace;font-size:.78rem;color:var(--navy)}
+.mark{display:inline-block;width:13px;height:13px;border:1.5px solid var(--navy);vertical-align:middle;margin-right:2px}
+.legend{font-size:.78rem;color:var(--muted);margin:4px 0 8px}
+.do-not{background:#f8e8e2;border:1px solid #e0b8a8;padding:7px 9px;font-size:.86rem;margin:6px 0}
+.do-not strong{color:var(--terra)}
+table{width:100%;border-collapse:collapse;font-size:.84rem}
+th,td{border:1px solid var(--line);padding:5px 7px;text-align:left;vertical-align:top}
+th{background:var(--navy);color:#f7f4ee}
+tr:nth-child(even) td{background:#faf8f4}
+.foot{font-size:.75rem;color:var(--muted);margin-top:14px;border-top:1px solid var(--line);padding-top:7px}
+.kaizen{display:grid;grid-template-columns:2fr 1fr 1fr;gap:5px;margin-top:5px}
+.kaizen input{border:1px solid var(--line);padding:5px;width:100%}
+.intel-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media print{
+  body{background:#fff}
+  .page{max-width:none;padding:0}
+  .section,.banner{break-inside:avoid}
+}
+@media (max-width:700px){.intel-grid{grid-template-columns:1fr}}
+</style></head><body>
+<div class="page">
+  <div class="banner">
+    <h1>Wednesday — questions for I-Motors / Astara</h1>
+    <div class="meta">Nuno + Luís · Lisbon · Force answers, not a tour · GPS locked <b>63.3%</b></div>
+  </div>
+
+  <div class="section">
+    <h2>Sep context (Nuno KPI — use in Q1–Q2, not as the meeting)</h2>
+    <table>
+      <thead><tr><th>Month</th><th>First fill</th><th>MOS</th><th>BO lines</th><th>Sales to dealers</th><th>Stock</th></tr></thead>
+      <tbody>
+        <tr><td>Jul</td><td>83.6%</td><td>2.62</td><td>279</td><td>€393k</td><td>€544k</td></tr>
+        <tr><td>Aug</td><td><b>85.4%</b></td><td>2.20</td><td>282</td><td>€304k</td><td>€504k</td></tr>
+        <tr><td>Sep</td><td><b>81.0%</b></td><td>2.49</td><td><b>495</b></td><td>€417k</td><td>€499k</td></tr>
+      </tbody>
+    </table>
+    <p class="legend">Sep broke fill while sales to dealers rebounded (€417k vs €304k Aug). Thin stock story.</p>
+  </div>
+
+  <div class="section">
+    <h2>Force questions</h2>
+    <div class="q"><span class="n">1</span>Sep fill 81% vs Aug 85.4% — which part numbers / families drove the miss?<div class="why">Ask for top 20 by back-order age.</div><div class="ex">Example parts to probe: Start families: brakes, clutch, filters, DPD, body.</div><div class="blank"></div></div><div class="q"><span class="n">2</span>Back-order lines 495 (was 282) — temporary catch-up or structural under-stock?<div class="why">When does MOS get back to 3.0 without killing fill again?</div><div class="blank"></div></div><div class="q"><span class="n">3</span>Sales-to-dealer monthly feed — go-live date + columns?<div class="why">Need: invoice date, PN, qty; dealer code if they have it. Without dealer grain IDS visits cannot link to euros.</div><div class="blank"></div></div><div class="q"><span class="n">4</span>GPS 63.3% / PMS ~32% — do you accept these as the working FY figures?<div class="why">Locked trip figure for GPS; PMS from ledger CY2025.</div><div class="blank"></div></div><div class="q"><span class="n">5</span>Lubricants — status of central purchasing / Shell path?<div class="why">One status line.</div><div class="blank"></div></div><div class="q"><span class="n">6</span>SPA — which part families will you propose for volume?<div class="why">ISZE support examples on SPA_ASK_SHORTLIST.html — not a closed deal.</div><div class="ex">Example parts to probe: Clutch, brake pads/shoes, filters, DPD; see pocket PNs.</div><div class="blank"></div></div><div class="q"><span class="n">7</span>Luís — which of REN / IP / Lisbon / Madeira / Arval still needs an ISZE parts decision?<div class="why">Plus: named case for optional year-3 cover; who owns tender early-warning to ISZE?</div><div class="blank"></div></div><div class="q"><span class="n">8</span>IDS network Kaizen — C.4-20 workshop reporting, roadside/Allianz, AED: I-Motors standard or dealer-only?<div class="why">Bring floor notes from the three dealers.</div><div class="blank"></div></div>
+  </div>
+
+  <div class="section">
+    <h2>Pocket part / family examples (for the SPA + fill conversation)</h2>
+    <table>
+      <thead><tr><th>Part</th><th>Example PN</th><th>Why ask</th></tr></thead>
+      <tbody><tr><td>Front brake pads</td><td><code>8975056801 / 8982447940</code></td><td>Brakes — price vs independent?</td></tr><tr><td>Front brake disc</td><td><code>8982488951</code></td><td>Brakes — stock / wait / buy outside?</td></tr><tr><td>Clutch kit</td><td><code>5876102060</code></td><td>Clutch — kits vs pieces; who wins the job?</td></tr><tr><td>Clutch disc</td><td><code>8982120690</code></td><td>Clutch — genuine vs AM / Chinese?</td></tr><tr><td>Air filter</td><td><code>5876150021</code></td><td>Filters — shelf at I-Motors or outside?</td></tr><tr><td>Fuel filter</td><td><code>8982399830</code></td><td>Filters — customer price story</td></tr><tr><td>Radiator</td><td><code>8983355671</code></td><td>Cooling — where do they buy when slow?</td></tr><tr><td>DPD / DPF can</td><td><code>8981776324</code></td><td>Emission — new / clean / exchange?</td></tr></tbody>
+    </table>
+    <p class="legend">Full ask list: SPA_ASK_SHORTLIST.html in this folder.</p>
+  </div>
+
+  <div class="section intel-grid">
+    <div>
+      <h2>PMS gaps (CY2025 — euros)</h2>
+      <p class="legend">Capture 32.4% · gap €774k. Use as “which families?” not a lecture.</p>
+      <table><thead><tr><th>Family</th><th>Capture</th><th>Gap €</th></tr></thead>
+      <tbody><tr><td>Clutch Booster</td><td>1.0%</td><td>€130,030</td></tr><tr><td>Brake Shoe</td><td>11.8%</td><td>€123,507</td></tr><tr><td>Clutch Disc</td><td>17.7%</td><td>€97,956</td></tr><tr><td>Clutch Pressure Plate</td><td>17.04%</td><td>€88,013</td></tr><tr><td>Urea (AdBlue) Filter</td><td>1.11%</td><td>€62,414</td></tr><tr><td>Brake Pad</td><td>63.57%</td><td>€51,474</td></tr></tbody></table>
+    </div>
+    <div>
+      <h2>SPA support examples (CY billed)</h2>
+      <p class="legend">Astara still to propose. AM prices mostly not PT shops.</p>
+      <table><thead><tr><th>PN</th><th>Part</th><th>CY €</th></tr></thead>
+      <tbody><tr><td>8982447940</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td>€26,572</td></tr><tr><td>8983767550</td><td>ROTOR; DISC BRK,FRT</td><td>€23,702</td></tr><tr><td>8975056801</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td>€17,342</td></tr><tr><td>8982688122</td><td>PUMP ASM; DEF,DCM SPLY</td><td>€16,144</td></tr><tr><td>8976526220</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td>€5,478</td></tr><tr><td>8982318983</td><td>INJECTOR ASM; DEF DCM</td><td>€5,132</td></tr><tr><td>8974985741</td><td>TURBOCHARGER ASM</td><td>€4,708</td></tr><tr><td>8980618131</td><td>DRUM; BRK,RR</td><td>€4,616</td></tr></tbody></table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Luís R&amp;M / tenders — confirm</h2>
+    <p>200+ tender units 2026: Lisbon 29 NLR · Madeira 4 NPR · IP 96 D-Max · REN 15 D-Max + service · CV year-3 by I-Motors · Arval developing. Allianz roadside → network workshops.</p>
+    <div class="blank" style="min-height:50px"></div>
+  </div>
+
+  <div class="section">
+    <h2>July still open (tick)</h2>
+    <label><span class="mark"></span> Clutch kits vs parts</label><br>
+    <label><span class="mark"></span> Obsolete stock list</label><br>
+    <label><span class="mark"></span> EDI capabilities</label><br>
+    <label><span class="mark"></span> BCS F-series brackets</label><br>
+    <label><span class="mark"></span> Aftersales hours questionnaire</label>
+  </div>
+
+  <div class="section">
+    <h2>Leave Lisbon with</h2>
+    <div class="q"><span class="n">A</span>Dated sales-to-dealer feed commitment OR named blocker<div class="blank"></div></div>
+    <div class="q"><span class="n">B</span>Named R&amp;M / tender next step<div class="blank"></div></div>
+    <div class="q"><span class="n">C</span>SPA families Astara will propose<div class="blank"></div></div>
+    <div class="q"><span class="n">D</span>Dealer-floor intel to act on (from Mon–Tue notes)<div class="blank"></div></div>
+  </div>
+
+  <div class="foot">Sources: visit brief · Nuno Sep KPI · NUMBERS_LEDGER PMS/SPA · Luís 2 Oct · July minutes. Detail: SPA_ASK_SHORTLIST.html</div>
+</div>
+</body></html>

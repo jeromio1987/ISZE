@@ -13,7 +13,7 @@ Country-only dealer compare for ISZE / IMG colleagues. English UI.
 
 - Dealers: **44**
 - Geo pinned: 44 · missing: 0
-- Map: Leaflet + OpenStreetMap / CARTO (needs internet when opening HTML)
+- Map: bundled Leaflet + offline grid / country label layer (no external tile service)
 - **No Country filter / By country / Country radar / Changelog** — shared colleague pack
 - Benchmarks kept: dealer vs **UK CV national average**, anonymous full-network average
 

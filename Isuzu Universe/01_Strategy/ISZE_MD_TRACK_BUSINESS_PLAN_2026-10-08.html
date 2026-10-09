@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ISZE MD-track business plan (8 Oct 2026)</title>
+<style>
+:root{
+  --navy:#15233c; --navy2:#1d3054; --terra:#c0552d; --paper:#f7f4ee;
+  --ink:#222; --muted:#6b6459; --line:#d9d3c8; --band:#eef3f9;
+  --good:#1e6b4f; --amber:#a8721f; --amber-bg:#fdf3e3; --amber-bd:#e6cf9f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:14px;line-height:1.5}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:var(--navy);margin:0}
+h1{font-size:26px;letter-spacing:-.2px}
+h2{font-size:18px;margin:0 0 6px}
+h3{font-size:15px;margin:0 0 8px}
+.wrap{max-width:1120px;margin:0 auto;padding:22px 22px 56px}
+header.top{border-bottom:3px solid var(--navy);padding-bottom:14px;margin-bottom:18px}
+.sub{color:var(--muted);font-size:13px;margin-top:8px;max-width:920px}
+.badge{display:inline-block;background:var(--navy);color:var(--paper);
+  font-size:11px;letter-spacing:.6px;text-transform:uppercase;
+  padding:3px 9px;border-radius:2px;margin-right:8px}
+.badge.terra{background:var(--terra)}
+.banner{background:var(--amber-bg);border:1px solid var(--amber-bd);border-left:4px solid var(--amber);
+  padding:12px 14px;margin-bottom:16px;color:var(--ink)}
+.banner b{color:var(--navy)}
+.verdict{background:#fff;border:1px solid var(--line);border-left:4px solid var(--terra);
+  padding:14px 16px;margin-bottom:18px}
+.verdict p{margin:0;font-size:15px;line-height:1.55}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;margin-bottom:20px}
+.kpi{background:#fff;border:1px solid var(--line);padding:13px 15px;position:relative;
+  border-top:3px solid var(--navy)}
+.kpi.t{border-top-color:var(--terra)}
+.kpi.a{border-top-color:var(--amber)}
+.kpi .lab{font-size:11px;letter-spacing:.55px;text-transform:uppercase;color:var(--muted);
+  display:flex;align-items:center;gap:5px}
+.kpi .val{font-size:22px;font-weight:600;color:var(--navy);margin-top:5px;
+  font-variant-numeric:tabular-nums}
+.kpi .note{font-size:11.5px;color:var(--muted);margin-top:3px}
+.info{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;
+  border-radius:50%;background:var(--navy);color:#fff;font-size:9.5px;cursor:help;
+  position:relative;flex:0 0 auto}
+.info .tip{display:none;position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+  width:280px;background:var(--navy);color:var(--paper);font-size:12px;line-height:1.45;
+  padding:9px 11px;border-radius:3px;z-index:60;text-transform:none;letter-spacing:0;
+  font-weight:400;box-shadow:0 4px 14px rgba(0,0,0,.25);text-align:left}
+.info:hover .tip,.info:focus .tip{display:block}
+.grid{display:grid;gap:16px;margin-bottom:18px}
+.g2{grid-template-columns:1fr 1fr}
+@media(max-width:900px){.g2{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);padding:15px 16px 14px}
+.card .q{font-size:13px;color:var(--muted);margin:2px 0 12px}
+.bar-row{display:grid;grid-template-columns:180px 1fr 70px 110px;gap:8px;align-items:center;
+  margin:7px 0;font-size:12.5px}
+@media(max-width:700px){.bar-row{grid-template-columns:1fr;gap:2px}}
+.bn{color:var(--navy);font-weight:600}
+.bb{background:var(--band);height:14px;border-radius:2px;overflow:hidden}
+.bf{background:var(--terra);height:100%}
+.bv{font-variant-numeric:tabular-nums;color:var(--navy);text-align:right}
+.bno{color:var(--muted);font-size:11px}
+.mile{display:grid;grid-template-columns:120px 1fr;gap:10px;padding:10px 0;
+  border-bottom:1px solid var(--line)}
+.mile:last-child{border-bottom:0}
+.mw{font-weight:700;color:var(--terra);font-size:12.5px}
+.mt{color:var(--ink)}
+ul.clean{margin:0;padding-left:18px}
+ul.clean li{margin:5px 0}
+.ask{background:var(--navy);color:var(--paper);padding:16px 18px;margin:18px 0;
+  border-left:4px solid var(--terra)}
+.ask h2{color:var(--paper);margin-bottom:8px}
+.ask p{margin:0;font-size:14.5px;line-height:1.55}
+.foot{margin-top:28px;padding-top:12px;border-top:1px solid var(--line);
+  font-size:11.5px;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+th{background:var(--navy);color:var(--paper);font-weight:600}
+tr:nth-child(even) td{background:#fff}
+.tag{display:inline-block;font-size:10px;letter-spacing:.4px;text-transform:uppercase;
+  padding:2px 6px;border-radius:2px;background:var(--band);color:var(--navy);margin-left:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <span class="badge">Internal</span>
+  <span class="badge terra">MD-track case</span>
+  <h1>ISZE MD-track business plan</h1>
+  <p class="sub">8 October 2026 · Spine: Don't Lose the Deal (UK proof) + aftersales commercialisation ·
+  FY language · euros and %GM · Jerome's book (MIDI out unless named)</p>
+</header>
+
+<div class="banner">
+  <b>Honest frame.</b> Board-grade aftersales commercial leadership case. Not a guarantee of Managing Director — titles are a people decision.
+  The deliverable is the strongest evidence-based plan he can put in front of Dirk / Yoshimoto / board.
+</div>
+
+<div class="verdict">
+  <p><b>Verdict.</b> Own aftersales defence and price discipline for Jerome's book, with Don't Lose the Deal as the UK proof, and put a measured pilot envelope in front of Japan next week.</p>
+</div>
+
+<section class="kpis">
+<div class="kpi t"><div class="lab">ITUK support (Duncan) <span class="info" tabindex="0">i<span class="tip">Total ITUK support in Duncan's deal file Overall Summary. Fleet + three regions. Measured 8 Oct 2026.</span></span></div><div class="val">£54,922</div><div class="note">Overall Summary — Measured</div></div>
+<div class="kpi"><div class="lab">Regional cases <span class="info" tabindex="0">i<span class="tip">Regional lines with Normal DN and Offer. Plus a fleet block. Measured.</span></span></div><div class="val">218</div><div class="note">N 170 / SW 33 / SE 15</div></div>
+<div class="kpi"><div class="lab">FY27 ITUK DLOD <span class="info" tabindex="0">i<span class="tip">Signed MOA: ISZE pays ITUK EUR 30,000 if ITUK provides the activity record — no margin/%GM in the agreement. Same figure is the FY27 budget / credit-note line.</span></span></div><div class="val">€30k</div><div class="note">Budget line — Confirmed</div></div>
+<div class="kpi t"><div class="lab">Pilot envelope ask <span class="info" tabindex="0">i<span class="tip">Stretch rung B only. Next week always opens on rung A (confirm ITUK €30k). B is the proposed pilot if Japan accepts evidence rules.</span></span></div><div class="val">€70–80k</div><div class="note">ITUK + IUK + 1 market — Proposed</div></div>
+<div class="kpi a"><div class="lab">0.5% of ITUK billed <span class="info" tabindex="0">i<span class="tip">0.5% of ITUK FY2026 parts billed (€6.96M) = €34,788. Close to the existing €30k habit.</span></span></div><div class="val">€34.8k</div><div class="note">Cap arithmetic — Proposed</div></div>
+<div class="kpi a"><div class="lab">Competitor price filled <span class="info" tabindex="0">i<span class="tip">Only one regional line has Competitor Price filled. Closing this is the board-readiness gate.</span></span></div><div class="val">1 / 218</div><div class="note">Evidence gap — Measured</div></div>
+</section>
+
+<div class="grid g2">
+  <div class="card">
+    <h2>Who holds the money ask?</h2>
+    <p class="q">Cap arithmetic vs the first Japan conversation — not a spend promise</p>
+    <div class="bar-row"><div class="bn">ITUK (live / budget)</div><div class="bb"><div class="bf" style="width:18.4%"></div></div><div class="bv">€30,000</div><div class="bno">Confirmed FY27</div></div>
+<div class="bar-row"><div class="bn">IUK 0.5% (pilot)</div><div class="bb"><div class="bf" style="width:18.6%"></div></div><div class="bv">€30,242</div><div class="bno">Proposed</div></div>
+<div class="bar-row"><div class="bn">Ireland 0.5%</div><div class="bb"><div class="bf" style="width:3.5%"></div></div><div class="bv">€5,726</div><div class="bno">Third option</div></div>
+<div class="bar-row"><div class="bn">Portugal 0.5%</div><div class="bb"><div class="bf" style="width:5.7%"></div></div><div class="bv">€9,268</div><div class="bno">Third option</div></div>
+<div class="bar-row"><div class="bn">Full book 0.5% (later)</div><div class="bb"><div class="bf" style="width:100.0%"></div></div><div class="bv">€162,912</div><div class="bno">Not first ask</div></div>
+  </div>
+  <div class="card">
+    <h2>90-day proof path</h2>
+    <p class="q">What happens before anyone talks about a full-book envelope</p>
+    <div class="mile"><div class="mw">Days 0–30</div><div class="mt">Confirm €30k; harden ITUK evidence fields; one-page rules; pick or defer third market; draft Japan excerpt (he sends).</div></div>
+<div class="mile"><div class="mw">Days 31–60</div><div class="mt">IUK register live; optional no-money log in larger other markets; first monthly reconciliation pack.</div></div>
+<div class="mile"><div class="mw">Days 61–90</div><div class="mt">First ITUK win-rate readout; go/no-go on IUK spend; kill or continue third market.</div></div>
+<div class="mile"><div class="mw">FY2027 gates</div><div class="mt">Q1 evidence >80% on new cases; Q2 IUK proof; H2 save-rate method; year-end board pack or redesign.</div></div>
+  </div>
+</div>
+
+<div class="grid g2">
+  <div class="card">
+    <h2>Jerome owns</h2>
+    <p class="q">Operating ownership — the MD-track substance</p>
+    <ul class="clean"><li>Case standard, register template, monthly reconciliation</li>
+<li>ITUK harden + IUK pilot design</li>
+<li>Kill criteria and dealer caps</li>
+<li>Honest Unknowns; SPA vs Don't Lose the Deal separation in Japan story</li></ul>
+  </div>
+  <div class="card">
+    <h2>Japan / management approve</h2>
+    <p class="q">Envelope and continuity — not every median £86 line</p>
+    <ul class="clean"><li>FY27 ITUK €30k continuity</li>
+<li>Pilot envelope ~€70–80k</li>
+<li>Envelope vs per-case rule</li>
+<li>Any MIDI / full-book expansion</li></ul>
+  </div>
+</div>
+
+<div class="grid g2">
+  <div class="card">
+    <h2>Pilot stack for next week</h2>
+    <p class="q">Paste into the opex conversation — cap, not a spend promise</p>
+    <table>
+      <thead><tr><th>Line</th><th>EUR</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>ITUK FY27 Don't Lose the Deal</td><td>€30,000</td><td>Confirm continuity</td></tr>
+        <tr><td>IUK pilot (~0.5% FY billed)</td><td>~€30,200</td><td>Proposed</td></tr>
+        <tr><td>Ireland or Portugal</td><td>~€5.7–9.3k</td><td>Optional third</td></tr>
+        <tr><td><b>Pilot total</b></td><td><b>~€70–80k</b></td><td>Proposed ask</td></tr>
+        <tr><td>Full-book 0.5% later</td><td>~€163k</td><td>Not this ask</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Board measurement</h2>
+    <p class="q">How return will be counted — Unknowns stay labelled</p>
+    <ul class="clean">
+      <li><b>Save-rate</b> = won ÷ (won + lost). Unknown outcomes disclosed separately.</li>
+      <li><b>Return</b> = ISZE billed € on won linked orders × margin when known.</li>
+      <li><b>Evidence harden date</b> = 8 Oct 2026. Fill rate on new cases only; 217/218 blank backlog stays disclosed separately.</li>
+      <li><b>Evidence fill</b> — Q1 gate &gt;80% with competitor price or reason code.</li>
+      <li>No loyalty euro, no fake full-book ROI, no promotion timeline in the pack.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:18px">
+  <h2>Authority sources — money and margin layers</h2>
+  <p class="q">Signed agreement vs ISZE mail vs Duncan register — do not blend</p>
+  <table>
+    <thead><tr><th>Layer</th><th>Figure / rule</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>Signed MOA</td><td>EUR 30,000 if ITUK provides the activity record. <b>No margin / %GM</b> in the agreement.</td><td>FY26_ITUK_DLOD_2026-03.docx.pdf</td></tr>
+      <tr><td>ISZE GP on programme deals</td><td>~50%</td><td>Jerome → Yoshimoto (Mar 2026 DocuSign thread)</td></tr>
+      <tr><td>ITUK normal margin (before offer)</td><td>~47%</td><td>Duncan deal file</td></tr>
+      <tr><td>ITUK retained (after offer)</td><td>~41–43% median (avg ~41%); none below cost</td><td>Duncan deal file</td></tr>
+      <tr><td>Unit support skew</td><td>Median ~£86 · average ~£172 on £54,922 / 218 cases</td><td>Duncan deal file</td></tr>
+    </tbody>
+  </table>
+  <p class="q" style="margin-top:10px">Yoshimoto-mail ~50% is ISZE margin. Duncan ~41–43% is ITUK retained after the offer. The MOA sets only the EUR 30k + activity-record condition.</p>
+</div>
+
+<div class="card" style="margin-bottom:18px">
+  <h2>Japan ask ladder — next-week opex</h2>
+  <p class="q">Do not blur Confirmed and Proposed. Open on floor; offer stretch only with evidence rules.</p>
+  <table>
+    <thead><tr><th>Rung</th><th>On the table</th><th>Label</th><th>When</th></tr></thead>
+    <tbody>
+<tr><td><b>A — Floor</b></td><td>Confirm FY27 ITUK Don't Lose the Deal €30,000 continuity</td><td>Confirmed</td><td>Always next week if nothing else moves</td></tr>
+<tr><td><b>B — Stretch</b></td><td>Pilot envelope ~€70–80k (ITUK + IUK + optional Ireland/Portugal)</td><td>Proposed</td><td>Only if Japan accepts evidence standard + envelope delegation</td></tr>
+<tr><td><b>Out of room</b></td><td>Full-book 0.5% (~€163k) / MIDI</td><td>—</td><td>Not this meeting</td></tr>
+    </tbody>
+  </table>
+  <p class="q" style="margin-top:10px">Meeting script (Proposed): lead with A; offer B with kill criteria written down; never open with the full-book ceiling. Competitor Price today is 1/218 — backlog disclosed; gate is new cases after 8 Oct 2026.</p>
+</div>
+
+<div class="card" style="margin-bottom:18px">
+  <h2>Kill criteria</h2>
+  <p class="q">Write them down before the money leaves — expansion dies if these fire</p>
+  <ul class="clean"><li>New-case competitor evidence fill rate <50% after 60 days</li>
+<li>Top 3 dealers >50% of support with no cap response</li>
+<li>SPA double-dip not fixed in one cycle</li>
+<li>Cases without customer + reason code</li>
+<li>Full-book / MIDI push before twelve months of readout</li></ul>
+</div>
+
+<div class="card" style="margin-bottom:18px">
+  <h2>Open decisions for Jerome</h2>
+  <p class="q">Loop will stress-test; it will not invent answers</p>
+  <ul class="clean"><li>Third pilot market: Ireland, Portugal, or defer?</li>
+<li>No-money log in five larger other markets now — yes or hold?</li>
+<li>Next week Japan rung: Floor only (A / €30k), or Floor + Stretch (A+B / ~€70–80k)?</li>
+<li>When to cut a forwardable Japan page from this internal pack?</li></ul>
+</div>
+
+<div class="ask">
+  <h2>Personal ask (no title claim)</h2>
+  <p>I am asking to own aftersales competitive defence for my book: a measured UK programme already on the Pricing P&L, a pilot envelope with evidence rules, and a kill path if the data does not support expansion. I am not asking for a blank cheque or a title — I am asking for operating ownership of the instrument that sits beside SPA.</p>
+</div>
+
+<div class="card">
+  <h2>Entity discipline</h2>
+  <table>
+    <thead><tr><th>Rule</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>UTI ≠ UMI</td><td>Two Israel distributors; never blend next to IDS</td></tr>
+      <tr><td>IUK ≠ ITUK</td><td>Pickup vs truck; separate pots and registers</td></tr>
+      <tr><td>Book vs MIDI</td><td>France/Spain/Italy/Switzerland/Poland out of this pilot priority</td></tr>
+      <tr><td>SPA ≠ Don't Lose the Deal</td><td>Structure vs live competitive exception</td></tr>
+      <tr><td>Co-funding</td><td>ISZE €30k ≠ full £55k ITUK registered support — show both</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p class="foot">
+  Sources: DLOD_NETWORK_FEASIBILITY_2026-10-08 · DLOD_OTHER_DISTRIBUTORS_STUDY_2026-10-08 ·
+  Duncan DLAD workbook · distributor_dimension FY2026 billed · FY27 budget / VPACC / Pricing P&L DLOD reserve.
+  Labels: Measured / Inferred / Proposed / Unknown. Self-contained file:// pack — charts are CSS only.
+  Companion HTML launchers sit beside this file.
+</p>
+</div>
+<script type="application/json" id="payload">{"as_of": "2026-10-08", "title": "ISZE MD-track business plan", "status": "internal", "honest_frame": "Board-grade aftersales commercial leadership case. Not a guarantee of Managing Director — titles are a people decision.", "verdict": "Own aftersales defence and price discipline for Jerome's book, with Don't Lose the Deal as the UK proof, and put a measured pilot envelope in front of Japan next week.", "kpis": [{"lab": "ITUK support (Duncan)", "val": "£54,922", "note": "Overall Summary — Measured", "tip": "Total ITUK support in Duncan's deal file Overall Summary. Fleet + three regions. Measured 8 Oct 2026.", "cls": "t"}, {"lab": "Regional cases", "val": "218", "note": "N 170 / SW 33 / SE 15", "tip": "Regional lines with Normal DN and Offer. Plus a fleet block. Measured.", "cls": ""}, {"lab": "FY27 ITUK DLOD", "val": "€30k", "note": "Budget line — Confirmed", "tip": "Signed MOA: ISZE pays ITUK EUR 30,000 if ITUK provides the activity record — no margin/%GM in the agreement. Same figure is the FY27 budget / credit-note line.", "cls": ""}, {"lab": "Pilot envelope ask", "val": "€70–80k", "note": "ITUK + IUK + 1 market — Proposed", "tip": "Stretch rung B only. Next week always opens on rung A (confirm ITUK €30k). B is the proposed pilot if Japan accepts evidence rules.", "cls": "t"}, {"lab": "0.5% of ITUK billed", "val": "€34.8k", "note": "Cap arithmetic — Proposed", "tip": "0.5% of ITUK FY2026 parts billed (€6.96M) = €34,788. Close to the existing €30k habit.", "cls": "a"}, {"lab": "Competitor price filled", "val": "1 / 218", "note": "Evidence gap — Measured", "tip": "Only one regional line has Competitor Price filled. Closing this is the board-readiness gate.", "cls": "a"}], "envelope_bars": [{"name": "ITUK (live / budget)", "eur": 30000, "note": "Confirmed FY27"}, {"name": "IUK 0.5% (pilot)", "eur": 30242, "note": "Proposed"}, {"name": "Ireland 0.5%", "eur": 5726, "note": "Third option"}, {"name": "Portugal 0.5%", "eur": 9268, "note": "Third option"}, {"name": "Full book 0.5% (later)", "eur": 162912, "note": "Not first ask"}], "milestones": [{"when": "Days 0–30", "what": "Confirm €30k; harden ITUK evidence fields; one-page rules; pick or defer third market; draft Japan excerpt (he sends)."}, {"when": "Days 31–60", "what": "IUK register live; optional no-money log in larger other markets; first monthly reconciliation pack."}, {"when": "Days 61–90", "what": "First ITUK win-rate readout; go/no-go on IUK spend; kill or continue third market."}, {"when": "FY2027 gates", "what": "Q1 evidence >80% on new cases; Q2 IUK proof; H2 save-rate method; year-end board pack or redesign."}], "owns": ["Case standard, register template, monthly reconciliation", "ITUK harden + IUK pilot design", "Kill criteria and dealer caps", "Honest Unknowns; SPA vs Don't Lose the Deal separation in Japan story"], "japan_approves": ["FY27 ITUK €30k continuity", "Pilot envelope ~€70–80k", "Envelope vs per-case rule", "Any MIDI / full-book expansion"], "kill": ["New-case competitor evidence fill rate <50% after 60 days", "Top 3 dealers >50% of support with no cap response", "SPA double-dip not fixed in one cycle", "Cases without customer + reason code", "Full-book / MIDI push before twelve months of readout"], "open_decisions": ["Third pilot market: Ireland, Portugal, or defer?", "No-money log in five larger other markets now — yes or hold?", "Next week Japan rung: Floor only (A / €30k), or Floor + Stretch (A+B / ~€70–80k)?", "When to cut a forwardable Japan page from this internal pack?"], "japan_ladder": [{"rung": "A — Floor", "what": "Confirm FY27 ITUK Don't Lose the Deal €30,000 continuity", "label": "Confirmed", "when": "Always next week if nothing else moves"}, {"rung": "B — Stretch", "what": "Pilot envelope ~€70–80k (ITUK + IUK + optional Ireland/Portugal)", "label": "Proposed", "when": "Only if Japan accepts evidence standard + envelope delegation"}, {"rung": "Out of room", "what": "Full-book 0.5% (~€163k) / MIDI", "label": "—", "when": "Not this meeting"}], "md_ask": "I am asking to own aftersales competitive defence for my book: a measured UK programme already on the Pricing P&L, a pilot envelope with evidence rules, and a kill path if the data does not support expansion. I am not asking for a blank cheque or a title — I am asking for operating ownership of the instrument that sits beside SPA."}</script>
+</body>
+</html>

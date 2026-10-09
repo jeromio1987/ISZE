@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What I built with AI</title>
+<style>
+:root{
+  --navy:#15233c; --navy2:#1d3050; --terra:#c0552d; --paper:#f7f4ee; --card:#fff;
+  --ink:#232a35; --muted:#5f6b7a; --line:#dfd8cc;
+  --ok:#2f7d5b; --warn:#b07d1a; --todo:#9a3b3b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Segoe UI",-apple-system,Roboto,Arial,sans-serif;line-height:1.55;font-size:16px}
+h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif;color:var(--navy);margin:0}
+code{font-family:Consolas,"Courier New",monospace;font-size:.83em;background:#f0ece3;
+  padding:1px 5px;border-radius:3px;color:#3c4655;word-break:break-all}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px 70px}
+
+/* hero */
+.hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);color:var(--paper);
+  padding:52px 22px 44px}
+.hero .inner{max-width:1180px;margin:0 auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.19em;font-size:11.5px;color:#e8b79c;margin-bottom:12px}
+.hero h1{color:#fff;font-size:44px;line-height:1.12;letter-spacing:-.5px;margin-bottom:16px}
+.lede{font-size:18.5px;color:#dfe6ef;max-width:840px;margin:0 0 18px}
+.stamp{font-size:13px;color:#a9b8cc;border-top:1px solid #33496b;padding-top:14px;max-width:900px}
+
+/* sections */
+section{margin-top:52px}
+.shead{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--navy);
+  padding-bottom:9px;margin-bottom:26px}
+.shead .n{font-family:Georgia,serif;font-size:15px;color:var(--terra);font-weight:700}
+.shead h2{font-size:27px}
+.shead p{margin:0;color:var(--muted);font-size:14.5px;margin-left:auto;text-align:right;max-width:440px}
+
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:15px}
+.tile{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--navy);
+  border-radius:5px;padding:20px 20px 17px}
+.tileval{font-family:Georgia,serif;font-size:31px;color:var(--navy);line-height:1.1}
+.tilelab{font-weight:600;font-size:14.5px;color:var(--terra);margin:7px 0 0;
+  text-transform:uppercase;letter-spacing:.05em}
+
+/* tooltip on a counted number */
+.tip{position:relative;cursor:help;border-bottom:1px dotted #c0552d}
+.tip::after{content:attr(data-tip);position:absolute;left:0;top:1.7em;z-index:40;
+  width:270px;background:var(--navy);color:var(--paper);padding:9px 11px;border-radius:4px;
+  font-family:"Segoe UI",sans-serif;font-size:12.5px;font-weight:400;line-height:1.4;
+  text-transform:none;letter-spacing:0;opacity:0;pointer-events:none;transition:.12s;
+  border-top:3px solid var(--terra);box-shadow:0 6px 18px rgba(21,35,60,.28)}
+.tip:hover::after{opacity:1}
+
+/* milestone cards */
+.mslist{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
+.ms{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--navy);
+  border-radius:5px;padding:20px}
+.mshead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:9px}
+.mshead h3{font-size:18px;line-height:1.25}
+.msplain{margin:0 0 11px;font-size:14.5px;color:#3d4757}
+.mswhy{margin:0;font-size:14px;color:#4a4132;background:#fbf6ec;border-left:3px solid var(--terra);
+  padding:9px 12px;border-radius:0 4px 4px 0}
+.whyflag{color:var(--terra);font-weight:700}
+.msfoot{margin-top:12px;border-top:1px dashed var(--line);padding-top:11px}
+.when{display:inline-block;font-size:12px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--muted)}
+.evlinks{margin:9px 0 0;padding-left:0;list-style:none}
+.evlinks li{margin:3px 0}
+
+/* chips */
+.chip{display:inline-block;font-size:11.5px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;padding:4px 10px;border-radius:11px;white-space:nowrap}
+.chip.ok{background:#e2f0e9;color:var(--ok)}
+.chip.warn{background:#f7edd6;color:var(--warn)}
+.chip.todo{background:#f6e3e2;color:var(--todo)}
+
+/* tables */
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
+  border-radius:5px;overflow:hidden;font-size:14.5px}
+th{background:var(--navy);color:#fff;text-align:left;padding:11px 14px;font-size:12.5px;
+  text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+td{padding:11px 14px;border-top:1px solid var(--line);vertical-align:top;color:#3d4757}
+td.r{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;color:var(--navy)}
+tbody tr:nth-child(even){background:#faf7f1}
+
+.note{background:#fbf6ec;border-left:4px solid var(--terra);padding:15px 18px;
+  border-radius:0 4px 4px 0;font-size:14.5px;color:#4a4132;margin-top:20px}
+.missing{font-size:13.5px;color:var(--todo)}
+footer{margin-top:60px;border-top:2px solid var(--navy);padding-top:20px;font-size:13px;color:var(--muted)}
+footer code{font-size:.85em}
+@media (max-width:640px){
+  .hero h1{font-size:31px} .shead{flex-wrap:wrap} .shead p{margin-left:0;text-align:left}
+}
+</style>
+<script src="../_ui/isze-shell.js" defer></script>
+</head>
+<body>
+
+<header class="hero"><div class="inner">
+  <div class="eyebrow">Isuzu Universe &middot; built with AI</div>
+  <h1>What I built with AI</h1>
+  <p class="lede">Everything below was built here, on this machine, working with AI. It is grouped by the thing it changed: new tools and jobs that run on their own, findings that changed how we read the business, and the decks and packs that went out to colleagues and distributors. Each line says what it is and why it mattered. Measurement work added 7 October also appears here, including the results that came back negative.</p>
+  <div class="stamp">Built 07 October 2026, 11:39. Every counted figure on this page was read from
+  the files named beside it at build time. Nothing here changes, publishes or sends anything.</div>
+</div></header>
+
+<div class="wrap">
+
+  <div class="note"><strong>Internal only.</strong> Internal only. A few milestones touch pricing and leakage work that stays inside the company; those are named by their business meaning, without the raw figures.</div>
+
+  <section id="minute">
+    <div class="shead"><span class="n">01</span><h2>The one-minute version</h2>
+      <p>Six numbers behind the list below. Hover any number for what it counts.</p></div>
+    <div class="tiles">
+      <div class="tile money">
+        <div class="tileval"><span class="tip" data-tip="Every tool, finding and pack listed below. The list is written by hand in 00_docs/AI_MILESTONES.yaml; this page only counts and lays it out.">30</span></div>
+        <div class="tilelab">Milestones on this page</div>
+      </div>
+      <div class="tile count">
+        <div class="tileval"><span class="tip" data-tip="HTML pages counted in their folders under 02_dashboards at build time. It includes this page and the hub itself.">118</span></div>
+        <div class="tilelab">Pages that open today</div>
+      </div>
+      <div class="tile count">
+        <div class="tileval"><span class="tip" data-tip="Working pages in the local PRISM app (fleet, spend per truck, capture, mix, warranty, forecast, dealers, tenders) at build time.">19</span></div>
+        <div class="tilelab">Pages in the analytical app</div>
+      </div>
+      <div class="tile count">
+        <div class="tileval"><span class="tip" data-tip="Every part number given a family and a product form, from the classification master. This is the foundation the aftermarket pages sit on.">165,310</span></div>
+        <div class="tilelab">Part numbers classified</div>
+      </div>
+      <div class="tile count">
+        <div class="tileval"><span class="tip" data-tip="Rows joined from 9 separate findings into one queue, each carrying where its number came from. Billing read through 2026-06-30.">23,763</span></div>
+        <div class="tilelab">Open opportunities in the ledger</div>
+      </div>
+      <div class="tile count">
+        <div class="tileval"><span class="tip" data-tip="Own mailbox only, kept on this machine, bodies not stored. Counts what was promised and who was involved — it never stores the message text.">9,001</span></div>
+        <div class="tilelab">Mail interactions read locally</div>
+      </div></div>
+  </section>
+
+  
+  <section id="tools">
+    <div class="shead"><span class="n">02</span><h2>New tools and jobs</h2>
+      <p>Software and scheduled jobs that did not exist before, and that run without anyone watching them.</p></div>
+    <div class="mslist">
+      <article class="ms">
+        <div class="mshead">
+          <h3>Tender tool</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">A weekly collector that reads public tender portals across Europe and the EU-wide portal, scores each notice for relevance, and publishes them to one feed.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It turns a manual hunt for public tenders into one list, refreshed every Monday, with the repair-and-maintenance contracts already flagged.</p>
+        <div class="msfoot"><span class='when'>2026 (live weekly)</span><ul class='evlinks'><li><code>04_tools/ISZE_Tender_Monitor_Install/</code></li><li><code>01_data/14_dashboards/tender_data.json</code></li><li><code>02_dashboards/ops/ISZE_Tender_Monitor_v2.html</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Competitive price scrapers and the weekly price ledger</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">Collectors that pull competitor part prices from public shops and catalogues, and a weekly ledger that records what our own parts sell for.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It gives a repeatable read on how our prices sit against the independent market, instead of a one-off snapshot.</p>
+        <div class="msfoot"><span class='when'>2026 (live weekly)</span><ul class='evlinks'><li><code>04_tools/autodoc_scraper/refresh_and_check_drift.py</code></li><li><code>04_tools/price_ledger/build_scraped_observations.py</code></li><li><code>02_dashboards/pricing/</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>SPA application</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">A tool that gathers Special Price Agreement baskets from mail, and builds the approval pack for each offer.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It standardises how a special price offer is put together and reviewed, so the commercial case travels with the request.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>04_tools/spa_application/build_spa_application.py</code></li><li><code>04_tools/spa_application/README_SPA_basket_intake.md</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>SPA run-rate and NOx SPA optimizer</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">A run-rate view of Special Price Agreement activity, and a small optimiser that finds the break-even quantity and price per part for a NOx sensor offer.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It shows what a special price is doing to the run rate, and it puts a floor under a negotiation before it is agreed.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>02_dashboards/sales/ISZE_SPA_RunRate_UTI.html</code></li><li><code>04_tools/isze-tools/pages/5_NOx_SPA_Optimizer.py</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>PRISM analytical surface</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">A local analytics app that reads the parts business from one place: fleet in service, spend per truck, service capture, mix, warranty, forecast, dealers and tenders.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> Before this, the analysis lived in separate spreadsheets. PRISM is the one place a question can be asked across all of it.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>03_analytics/Isuzu/prism/</code></li><li><code>03_analytics/Isuzu/prism/run_prism.ps1</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Action ledger</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">One list of open commercial opportunities, joined from nine separate parts of the analysis, with the source of every row kept beside it.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It turns dozens of separate findings into a single queue of things to act on, each one traceable back to where the number came from.</p>
+        <div class="msfoot"><span class='when'>2026-08-25</span><ul class='evlinks'><li><code>01_data/00_derived/action_ledger.parquet</code></li><li><code>02_dashboards/ops/ISZE_Action_Ledger.html</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Forecast, account health and the local mail layer</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">A parts-demand forecast across hundreds of part families, an account-health signal built from order behaviour, and a local, private layer that reads the mailbox to find commitments and who is involved.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It adds the three things that were missing before: what we expect to sell, which account is slipping, and what was actually promised in writing.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>03_analytics/Isuzu/prism/pages/19_Forecast.py</code></li><li><code>03_analytics/Isuzu/prism/pages/0_Early_Warning.py</code></li><li><code>01_data/17_interactions/</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Part classification system</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">A system that gives every part number we hold a family, a product form and the vehicle bands it fits, and a frozen release with a hash so a build can be pinned to one exact version.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It is what makes any part-level answer possible: without a family on every part, a number of pieces says nothing. This is the foundation the aftermarket pages sit on.</p>
+        <div class="msfoot"><span class='when'>2026-07-02 (release frozen 2026-09-20)</span><ul class='evlinks'><li><code>03_analytics/Isuzu/prism/modules/aim_pn_classifier.py</code></li><li><code>01_data/00_derived/_releases/RELEASES.json</code></li><li><code>02_dashboards/pricing/ISZE_AIM_Truck_Catalogue_2026-09-18.html</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Fleet (UIO) and GPS engine</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">The vehicles-in-service base per market, and the spend-per-truck measure built on top of it.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It gives every other number a denominator: a gap is only meaningful against the number of trucks in service.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>06_uio/_CURRENT/</code></li><li><code>01_data/00_derived/gps_spu_by_distributor.csv</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Dealer standards (IDS) ranking and country packs</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">A per-country dealer comparison, one page per market, with a dealer map that shows each dealer&#x27;s score against the country average.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It turns the dealer assessment into something a distributor opens and can act on, country by country.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>04_tools/ids_dealer_ranking/</code></li><li><code>02_dashboards/ids/IDS_2026_dealer_compare.html</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>The operating console, the hub and this map</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">The pages that describe the workspace itself: the OS hub that indexes everything, the Universe Map, and the scheduled jobs that keep the data fresh.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It makes the whole system legible: what exists, how it connects, and what runs on its own. This page is part of that.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>02_dashboards/hub/ISZE_OS_Hub.html</code></li><li><code>02_dashboards/hub/ISZE_UNIVERSE_MAP.html</code></li><li><code>00_docs/AUTOMATION_REGISTER.md</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Mail volume measurement</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">A read-only counter that walks the mailbox and writes a monthly count of mail in and out, without ever storing a subject or a body.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It answers whether mail is actually falling, with a real count rather than a feeling. The local mailbox only holds twelve months, so the honest answer today is a baseline that grows into a year-on-year comparison from here.</p>
+        <div class="msfoot"><span class='when'>2026-10-07</span><ul class='evlinks'><li><code>04_tools/interactions/measure_mail_volume.py</code></li><li><code>01_data/17_interactions/mail_volume_monthly.csv</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Order-channel measurement and the time method</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">A first attempt to separate automated orders from manual ones using the purchase-order column, and a written method for timing a tool properly instead of guessing.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> Both are honest instruments: the order-channel proxy failed its own check and is recorded as a negative result, and the time method says plainly that no per-tool figure exists until a real task has been timed.</p>
+        <div class="msfoot"><span class='when'>2026-10-07</span><ul class='evlinks'><li><code>04_tools/interactions/measure_order_channel.py</code></li><li><code>00_docs/TIME_SAVED_MEASUREMENT.md</code></li><li><code>00_docs/AI_MEASUREMENT_REPORT_2026-10-07.md</code></li></ul></div>
+      </article></div>
+  </section>
+  <section id="insights">
+    <div class="shead"><span class="n">03</span><h2>Findings that changed the picture</h2>
+      <p>These are not files. They are the moments the numbers told us something we did not already know, and changed a decision.</p></div>
+    <div class="mslist">
+      <article class="ms">
+        <div class="mshead">
+          <h3>The size of the uncovered service opportunity</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">A way to measure, per market, what the vehicles in service would spend on parts if every one bought at the planning rate, and what share of that we actually reach.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It gave the aftermarket case a ceiling and a gap in euros, on a fleet denominator, so the opportunity could be sized instead of asserted.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>01_data/00_derived/wallet_waterfall.csv</code></li><li><code>01_data/00_derived/pms_opportunity_matrix.csv</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Warranty belongs on its own line</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">Warranty claim euros sit inside parts billed, so billed and sales to dealer do not match until warranty is separated out.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It explained why the UK pickup numbers looked like a shortfall, when part of it was warranty treatment, not lost sales.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>01_data/00_derived/distributor_warranty_expense_fiscal.csv</code></li><li><code>03_analytics/Isuzu/prism/pages/20_Warranty.py</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>BVP is not the aftermarket</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">Best Value Parts is Isuzu&#x27;s own budget range. Choosing it keeps the sale inside, at a lower margin; it is not the same as losing the sale to a true independent competitor.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It stopped an internal mix question being reported as external competition, which would have sent the wrong response.</p>
+        <div class="msfoot"><span class='when'>2026-07-01</span><ul class='evlinks'><li><code>05_memory/projects/aftermarket-intelligence.md</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>UTI and UMI split by the right key; IUK is not ITUK</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">Two Israel distributors and two UK entities share similar names. Splitting by the selling account (sold-to), not by payer name, keeps them apart.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It corrected figures that had been quietly blended, and it is now a standing rule on every Israel and UK chart.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>03_analytics/Isuzu/prism/modules/data_prep.py</code></li><li><code>05_memory/projects/aftermarket-intelligence.md</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Measured mileage replaces the flat assumption</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">For the UK pickup fleet, real odometer readings were used to measure annual distance, instead of assuming one flat number for every vehicle.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It corrected a demand base that had been overstated, which changes how the UK service gap reads.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>03_analytics/Isuzu/pms-pilot/</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Parts billed with no list price, and the list-coverage fix</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">Some parts were billed without a usable list price, which made them invisible to margin. A new price-list pull closed most of that gap.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It brought almost all billed parts back into margin and price analysis, and it named the small leftover honestly instead of hiding it.</p>
+        <div class="msfoot"><span class='when'>2026-08-11</span><ul class='evlinks'><li><code>01_data/00_derived/no_pr00_gap_cy2025_ranked.meta.json</code></li><li><code>01_data/01_Pricing/</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>The price revision, measured</h3>
+          <span class="chip warn">Internal only</span>
+        </div>
+        <p class="msplain">The filed price change was measured across the whole book, and split by market and by source region.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It replaced &quot;we think prices went up about right&quot; with one measured number for the whole book, so the revision could be reviewed as a fact.</p>
+        <div class="msfoot"><span class='when'>2026-09-19</span><ul class='evlinks'><li><code>00_docs/roadmaps/pricing.md</code></li><li><code>03_analytics/isze_pricing/</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Sales-to-dealer visibility grew, market by market</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">Sales from distributor to dealer were added for more markets over the year, so the share of the book we can see at dealer level climbed.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It moved the conversation from what we billed to what actually moved at the dealer, in the markets where we now have the data.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>00_docs/roadmaps/ai_sales_intelligence.md</code></li><li><code>02_dashboards/ids/IDS_2026_dealer_compare.html</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Mail is being counted, and the twelve-month wall</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">Mail in and out is now counted by month from the mailbox itself: about 2,000 messages in and a few hundred out in a typical month, read through seven October days.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It replaced &quot;it feels quieter&quot; with a number. It also found the wall: the mailbox keeps only twelve months, so a last-year comparison cannot be built from history — it has to be accumulated forward from this baseline.</p>
+        <div class="msfoot"><span class='when'>2026-10-07</span><ul class='evlinks'><li><code>01_data/17_interactions/mail_volume_monthly.csv</code></li><li><code>00_docs/AI_MEASUREMENT_REPORT_2026-10-07.md</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Sizing the repair-and-maintenance tender channel</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">The tender feed was read for repair-and-maintenance contracts and sized for parts, separately from vehicle tenders.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It said plainly what the channel is worth in parts, so it is treated as a relationship play rather than a parts-revenue play.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>00_docs/REVIEW_EXEC_AFTERSALES_PAPER_20260915.md</code></li><li><code>01_data/14_dashboards/tender_data.json</code></li></ul></div>
+      </article></div>
+  </section>
+  <section id="packs">
+    <div class="shead"><span class="n">04</span><h2>Decks and packs handed over</h2>
+      <p>What was written and built for colleagues, management and distributors.</p></div>
+    <div class="mslist">
+      <article class="ms">
+        <div class="mshead">
+          <h3>Executive aftersales paper</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">A single paper that makes the aftermarket opportunity case: where the gap is by category, what margin and warranty do to it, and which levers are ready.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It gave one place where the opportunity, the evidence and the asks stand together, for management.</p>
+        <div class="msfoot"><span class='when'>2026-09</span><ul class='evlinks'><li><code>02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html</code></li><li><code>00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Consolidated pricing policy paper</h3>
+          <span class="chip warn">Internal only</span>
+        </div>
+        <p class="msplain">One document that consolidates the pricing programme: how prices are set, how they are reviewed, and where the open decisions are.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It replaced a scatter of earlier papers with one current position on pricing.</p>
+        <div class="msfoot"><span class='when'>2026-10-02</span><ul class='evlinks'><li><code>02_dashboards/pricing/ISZE_Pricing_Policy_Paper_2026-10-02.html</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Boardroom parts performance deck</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">A boardroom-style presentation on parts performance: who we are, then the spend, capture and mix story, built to a high presentation standard.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It put our numbers into a form that can be presented upward without rework.</p>
+        <div class="msfoot"><span class='when'>2026-09-19</span><ul class='evlinks'><li><code>01_data/90_INBOX/data_join_questions/ISZE_Parts_Performance_Boardroom.pptx</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Sales reviews and operating dashboards, one per market</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">A sales review and an operating dashboard for each distributor market, built on the same method so they can be read side by side.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It made the distributor conversation consistent: the same cuts, the same definitions, market after market.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>09_meetings/</code></li><li><code>04_tools/db_sales_review/</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Business performance reviews</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">Deeper per-market business reviews, for Denmark, Portugal (I-Motors) and the FY27 cycle, following the group&#x27;s own review format.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It carried the same measured story into the formal annual review with each market.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>09_meetings/DENMARK_FY2027_BPR/</code></li><li><code>09_meetings/IMotors_FY2027_BPR/</code></li><li><code>09_meetings/PORTUGAL_BPR_FY2027_to_Aug_2026/</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>IDS 2026 country packs</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">The dealer-standard country packs, one per market, with the comparison and the dealer map, in the version the group agreed.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It delivered the dealer assessment to each country in a form they can open and use.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>09_meetings/IDS_2026_Country_Packs_v1.4/</code></li><li><code>02_dashboards/ids/</code></li></ul></div>
+      </article>
+      <article class="ms">
+        <div class="mshead">
+          <h3>Corporate profile and presentation style work</h3>
+          <span class="chip ok">Live</span>
+        </div>
+        <p class="msplain">A refreshed company profile and a set of presentation styles explored for how our packs look.</p>
+        <p class="mswhy"><span class="whyflag">Why it mattered:</span> It gave the outward-facing material a current, consistent look, and a place to keep the house style.</p>
+        <div class="msfoot"><span class='when'>2026</span><ul class='evlinks'><li><code>05_memory/projects/isze-corporate-presentations-20260919.md</code></li><li><code>01_data/Presentaion style/</code></li></ul></div>
+      </article></div>
+  </section>
+
+  <section id="tally">
+    <div class="shead"><span class="n">&middot;</span><h2 style="font-size:21px">Where the pages live</h2>
+      <p>Counted in the folders at build time, so the tally moves on its own.</p></div>
+    <table>
+      <thead><tr><th>Folder</th><th style="text-align:right">Pages</th><th>What it holds</th></tr></thead>
+      <tbody><tr><td><code>sales</code></td><td class='r'>32</td><td>Sales and aftersales views</td></tr><tr><td><code>pricing</code></td><td class='r'>29</td><td>Price lists, price revision, scraped prices</td></tr><tr><td><code>ids</code></td><td class='r'>27</td><td>Dealer standards, one page per country</td></tr><tr><td><code>ops</code></td><td class='r'>10</td><td>Operating console and registers</td></tr><tr><td><code>hub</code></td><td class='r'>9</td><td>The hub pages that index everything</td></tr><tr><td><code>fleet</code></td><td class='r'>6</td><td>Vehicles in service</td></tr><tr><td><code>bi</code></td><td class='r'>4</td><td>Business intelligence</td></tr><tr><td><code>gps</code></td><td class='r'>1</td><td>Spend per truck</td></tr></tbody>
+    </table>
+    <div class="note"><strong>How to read this page.</strong> The words are hand-written in
+    <code>00_docs/AI_MILESTONES.yaml</code>; the numbers are read from disk when the page is built.
+    A line added to the register shows up here on the next build. Say the change, rebuild, and it
+    is current. One evidence folder is named for the dealer-sales data it holds
+    (<code>01_data/05_Dealer_sellout/</code>); it is quoted once, in this footnote,
+    because it is the real folder name.
+    </div>
+  </section>
+
+  <footer>
+    <p>Counted at build time from: the classification master (<code>aim_master_v2.csv</code>);
+    the HTML pages under <code>02_dashboards/</code>; the working pages under
+    <code>03_analytics/Isuzu/prism/pages/</code>; the action ledger
+    (<code>action_ledger.meta.json</code>); and the local interaction layer
+    (<code>01_data/17_interactions/</code>). Written source: <code>00_docs/AI_MILESTONES.yaml</code>.</p>
+    <p>This page is a description. It changes nothing, publishes nothing and sends nothing.</p>
+  </footer>
+
+</div>
+</body>
+</html>

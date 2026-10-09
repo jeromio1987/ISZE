@@ -1,0 +1,136 @@
+{
+  "as_of": "2026-10-07T13:41:45.521799+00:00",
+  "source_proposal_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\next_release_proposal_full_class_tranche1_catmap_2026-10-07.csv",
+  "findings_json": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\_aim_tranche1_findings_20261007.json",
+  "clean_proposal_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\next_release_proposal_full_class_tranche1_catmap_CLEAN_2026-10-07.csv",
+  "apply": "NO — proposal only. CLEAN subset for Jerome OK before any dated release. Does not write aim_master.",
+  "rows_before": 49208,
+  "rows_after": 38213,
+  "rows_excluded": 10995,
+  "excluded_paths": [
+    {
+      "cat_path": "Repair parts > Gaskets / seals > Gasket set",
+      "propose_aim_l1": "Transmission",
+      "n": 6550,
+      "n_expected_from_findings": 6550,
+      "agree_share": 1.0,
+      "confidence": "HIGH",
+      "reasons": [
+        "engine gasket language on 4 rows but family=Transmission (contradicts Jerome 2026-10-04 Engine > Gasket & Sealing > Gasket for ENG gasket sets)"
+      ],
+      "hold_class": "hard_hold"
+    },
+    {
+      "cat_path": "Accident parts > Body parts > Body structure",
+      "propose_aim_l1": "Chassis Frame",
+      "n": 1788,
+      "n_expected_from_findings": 1788,
+      "agree_share": 0.9462,
+      "confidence": "MED_HIGH",
+      "reasons": [
+        "large volume (1,788) below 95% agreement"
+      ],
+      "hold_class": "thin_agreement_large_volume"
+    },
+    {
+      "cat_path": "Accident parts > Body parts > Glass / window",
+      "propose_aim_l1": "Accident & Body",
+      "n": 1100,
+      "n_expected_from_findings": 1100,
+      "agree_share": 0.9135,
+      "confidence": "MED_HIGH",
+      "reasons": [
+        "large volume (1,100) below 95% agreement"
+      ],
+      "hold_class": "thin_agreement_large_volume"
+    },
+    {
+      "cat_path": "Repair parts > Electrical sensors > Relay / solenoid / fuse",
+      "propose_aim_l1": "Electrical",
+      "n": 576,
+      "n_expected_from_findings": 576,
+      "agree_share": 0.9,
+      "confidence": "MED_HIGH",
+      "reasons": [
+        "relay/solenoid/fuse path at floor agreement 90%"
+      ],
+      "hold_class": "thin_agreement_large_volume"
+    },
+    {
+      "cat_path": "Competitive parts > Clutch parts > Clutch disc",
+      "propose_aim_l1": "Clutch",
+      "n": 521,
+      "n_expected_from_findings": 521,
+      "agree_share": 0.9,
+      "confidence": "MED_HIGH",
+      "reasons": [
+        "competitive clutch disc at only 90% agreement"
+      ],
+      "hold_class": "thin_agreement_large_volume"
+    },
+    {
+      "cat_path": "Competitive parts > Air system > Air valve",
+      "propose_aim_l1": "Steering",
+      "n": 241,
+      "n_expected_from_findings": 241,
+      "agree_share": 0.9355,
+      "confidence": "MED_HIGH",
+      "reasons": [
+        "air-system valves mapped to Steering — commercially doubtful"
+      ],
+      "hold_class": "hard_hold"
+    },
+    {
+      "cat_path": "High value repair > Transmission parts > Transmission assembly",
+      "propose_aim_l1": "Literature Marketing",
+      "n": 219,
+      "n_expected_from_findings": 219,
+      "agree_share": 0.9268,
+      "confidence": "MED_HIGH",
+      "reasons": [
+        "assembly/hardware language (1) at least as strong as literature language (0)",
+        "transmission-assembly catalogue path mapped to Literature Marketing"
+      ],
+      "hold_class": "hard_hold"
+    }
+  ],
+  "hard_hold_rows": 7010,
+  "thin_agreement_large_volume_rows": 3985,
+  "by_confidence_clean": {
+    "HIGH": 36295,
+    "MED_HIGH": 1918
+  },
+  "top_propose_l1_clean": {
+    "Accident & Body": 13392,
+    "Electrical": 6168,
+    "Lighting": 3100,
+    "Engine": 2889,
+    "Chassis Frame": 2634,
+    "Fuel System": 2137,
+    "Intake Exhaust Emission": 1749,
+    "Wheels Hub": 1331,
+    "Brakes": 1183,
+    "Cooling": 879,
+    "Maintenance Service": 858,
+    "Clutch": 844,
+    "Suspension": 584,
+    "Transmission": 328,
+    "Cabin Interior": 115,
+    "Fluids Chemicals": 22
+  },
+  "coverage_if_clean_applied": {
+    "master_rows": 165310,
+    "base_with_family": 21045,
+    "base_with_family_pct": 12.73,
+    "clean_rows_added": 38213,
+    "with_family_if_applied": 59258,
+    "with_family_pct_if_applied": 35.85,
+    "without_family_if_applied": 106052,
+    "note": "Projected only — CLEAN not applied to master."
+  },
+  "notes": [
+    "Excludes all 7 Shard A flagged cat_path×propose_aim_l1 pairs (3 hard holds + 4 thin-agreement 90–95% large-volume).",
+    "Original tranche1 CSV untouched.",
+    "Matches findings unflagged_clean_rows=38213."
+  ]
+}

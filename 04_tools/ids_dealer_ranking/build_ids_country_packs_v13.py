@@ -112,13 +112,76 @@ def slug_country(country: str) -> str:
 
 
 def filter_country_payload(full: dict[str, Any], country: str) -> dict[str, Any]:
-    """Keep one country; retain full-network averages as anonymous benchmark."""
+    """Keep one country; retain full-network averages as anonymous benchmark.
+
+    UK CV (ITUK) uses its own A–H checklist — keep only those section defs,
+    drop continental question catalogue, and do not stamp A–E network section
+    averages onto dealer shells.
+    """
     network = full.get("network") or {}
     dealers = [d for d in full.get("dealers") or [] if d.get("country") == country]
-    for d in dealers:
-        for sid, sec in (d.get("sections") or {}).items():
-            if isinstance(sec, dict):
-                sec["network_avg_pct"] = (network.get("sections_pct") or {}).get(sid)
+    ukcv = country == "UK CV" or any(
+        d.get("score_basis") == "UKCV-AH" or d.get("_ukcv_sections") for d in dealers
+    )
+
+    if ukcv:
+        # Restore A–H sections stashed when the full network payload was multi-country.
+        for d in dealers:
+            stashed = d.pop("_ukcv_sections", None)
+            if stashed:
+                d["sections"] = stashed
+                d["totals_only"] = False
+                d["score_basis"] = "UKCV-AH"
+            for sid, sec in (d.get("sections") or {}).items():
+                if isinstance(sec, dict):
+                    sec["network_avg_pct"] = None
+        used_ids = []
+        for d in dealers:
+            for sid, sec in (d.get("sections") or {}).items():
+                if (
+                    isinstance(sec, dict)
+                    and sec.get("pct") is not None
+                    and sid not in used_ids
+                ):
+                    used_ids.append(sid)
+        # Stable A–H order when present
+        order = [s for s in "ABCDEFGH" if s in used_ids]
+        # Always use Sheet2 A–H labels for UK CV (not continental A–E wording).
+        label_map: dict[str, str] = {}
+        try:
+            from build_ituk_ranking import UKCV_SECTION_DEFS
+
+            for s in UKCV_SECTION_DEFS:
+                label_map[s["id"]] = s["label"]
+        except Exception:
+            for s in full.get("sections") or []:
+                if isinstance(s, dict) and s.get("id"):
+                    label_map.setdefault(str(s["id"]), str(s.get("label") or s["id"]))
+        sections = [
+            {"id": sid, "label": label_map.get(sid) or sid} for sid in (order or used_ids)
+        ]
+        questions: list[Any] = []
+        scope_bench = (
+            "UK CV national average on ITUK A–H checklist "
+            "(not continental A–E network)"
+        )
+        # Slim network object: keep total_pct for optional total-Δ tip, clear sections
+        network = {
+            **network,
+            "sections_pct": {sid: None for sid in (order or used_ids)},
+            "avg_hover": (
+                "UK CV uses ITUK’s own A–H checklist (max 234/224). "
+                "Continental A–E section network averages do not apply."
+            ),
+        }
+    else:
+        for d in dealers:
+            for sid, sec in (d.get("sections") or {}).items():
+                if isinstance(sec, dict):
+                    sec["network_avg_pct"] = (network.get("sections_pct") or {}).get(sid)
+        sections = full.get("sections") or []
+        questions = full.get("questions") or []
+        scope_bench = "Full IDS 2026 network average (anonymous)"
 
     profiles = full.get("country_profiles") or {}
     profile = profiles.get(country) or {
@@ -130,8 +193,8 @@ def filter_country_payload(full: dict[str, Any], country: str) -> dict[str, Any]
 
     return {
         "countries": [country],
-        "sections": full.get("sections") or [],
-        "questions": full.get("questions") or [],
+        "sections": sections,
+        "questions": questions,
         "dealers": dealers,
         "dealer_count": len(dealers),
         "country_count": 1,
@@ -142,7 +205,7 @@ def filter_country_payload(full: dict[str, Any], country: str) -> dict[str, Any]
         "scope": {
             "label": f"{country} only",
             "audience": "ISZE / IMG colleagues",
-            "network_benchmark": "Full IDS 2026 network average (anonymous)",
+            "network_benchmark": scope_bench,
             "network_dealer_count": network.get("dealer_count"),
         },
     }
@@ -477,19 +540,8 @@ def build_one(
         raise RuntimeError(f"No dealers for {country}")
 
     qa_errors = validate_dashboard_payload(payload)
-    totals_only_n = sum(1 for d in payload["dealers"] if d.get("totals_only"))
-    # UK CV (ITUK) result report is totals-only in extract — still ship map + totals.
-    allow_totals_only = totals_only_n == len(payload["dealers"]) and all(
-        d.get("total_pct") is not None for d in payload["dealers"]
-    )
-    if qa_errors and not skip_qa and not allow_totals_only:
+    if qa_errors and not skip_qa:
         raise RuntimeError(f"QA failed for {country}: {qa_errors}")
-    if qa_errors and allow_totals_only:
-        print(
-            f"WARN {country}: totals-only extract — shipping map/totals pack "
-            f"(QA notes: {len(qa_errors)})",
-            flush=True,
-        )
 
     geo_counts = attach_geo_to_dealers(payload["dealers"], allow_country_centre=True)
     payload["geo"] = geo_counts

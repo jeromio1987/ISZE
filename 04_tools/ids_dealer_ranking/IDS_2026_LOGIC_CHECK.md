@@ -45,7 +45,7 @@ python build_ids_dashboard.py
 | Petros | `Petros/` | `..._Petros.xls` | |
 | RSA | `RSA/` | `..._RSA.xls` | |
 | IUK | `IUK/` | `..._IUK.xls` | |
-| ITUK | `ITUK/` | `..._ITUK.xls` | **Totals only** — no A–E detail rows filled |
+| ITUK | `ITUK/` | `..._UK CV.xls` | **Own A–H checklist** (Sheet2, max 234/224). Result `.xls` still totals-only on A–E rows; dashboard enrich reads Sheet2 A.1–H.1 rollups (`score_basis` `UKCV-AH`). **Within-UK-CV compare only** — do not overlay continental A–E network sections. |
 | Israel | `Israel/` | `..._Israel.xls` | |
 | Malta | `Gasanzammit/` | `..._Malta.xls` | |
 | Cyprus | `Loutsios/` | `..._Cyprus.xls` | |
@@ -196,7 +196,7 @@ Automated: `ids_report_qa.py`
 | P3 | No dealer score > max on any question row | |
 | P4 | Skipped files: `*ranking*`, `*met grafiek*`, `~$*`, Romania 2025 aggregate | |
 
-**ITUK exception:** Detail rows (15+) empty; only row 13 totals populated from consolidated workbook.
+**ITUK exception:** Detail rows (15+) in the result `.xls` stay empty (DK A–E template). Totals on row 13 use `total_pct_override` (not ÷280). Dashboard / country pack enrich A–H section % from `IDS ITUK self evaluations.xlsx` Sheet2 via `ids_report_extract._enrich_ukcv_from_sheet2`. Valid compare = dealer vs dealer / vs UK CV national average on A–H. Invalid = A–H vs continental A–E section network.
 
 ---
 

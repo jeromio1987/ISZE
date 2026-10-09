@@ -89,7 +89,8 @@ try {
       ForEach-Object {
         [pscustomobject]@{
           Name       = ($_.TaskName -replace '^\\', '').Trim()
-          Action     = ($_.'Task To Run').Trim()
+          # Windowless tasks run pythonw.exe run_hidden.pyw "<script>"; the script is the last quoted path.
+          Action     = (($_.'Task To Run').Trim() -replace '^.*run_hidden\.pyw"?\s+"?([^"]+)"?$', '$1')
           LastResult = ($_.'Last Result').Trim()
           NextRun    = ($_.'Next Run Time').Trim()
           State      = ($_.'Scheduled Task State').Trim()

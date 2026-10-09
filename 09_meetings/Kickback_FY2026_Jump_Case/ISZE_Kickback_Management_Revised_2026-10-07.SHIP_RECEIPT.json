@@ -1,0 +1,77 @@
+{
+  "schema": "ship_receipt/v2",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\ISZE_Kickback_Management_Revised_2026-10-07.pptx",
+  "artifact_mtime_ms": 1791377606917,
+  "artifact_bytes": 123410,
+  "artifact_sha256": "314eda638ab877d9afdd4faf17199f1ca31877eacdd586f8f883f2c752e3f54c",
+  "written_at": "2026-10-07T12:52:00Z",
+  "ok": true,
+  "screenshots_taken": 17,
+  "screenshots_read": 17,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\ISZE_Kickback_Management_Revised_2026-10-07.pptx"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "123,410 bytes"
+    },
+    {
+      "id": "zip_package_valid",
+      "ok": true,
+      "detail": "zipfile.testzip() returns None; all parts present"
+    },
+    {
+      "id": "opens_in_powerpoint_com",
+      "ok": true,
+      "detail": "PowerPoint COM Presentations.Open succeeded and Slide.Export produced every PNG"
+    },
+    {
+      "id": "text_read_back",
+      "ok": true,
+      "detail": "slide 9 text re-opened with python-pptx after the build and shows the euro wording and values"
+    },
+    {
+      "id": "euro_basis_recomputed",
+      "ok": true,
+      "detail": "median ISZE net billed price per part number over 538,346 positive billing lines, 26,293 part numbers; IUK +16.94%, Ireland -0.24%, Portugal +25.20%"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "screenshots_taken=17, screenshots_read=17 - rendered via PowerPoint COM and image-Read by the building agent one at a time at full resolution. The changed slide was read closely."
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_01.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_02.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_03.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_04.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_05.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_06.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_07.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_08.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_09.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_10.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_11.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_12.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_13.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_14.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_15.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_16.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Kickback_FY2026_Jump_Case\\_qa_euro_mgmt\\slide_17.png"
+  ],
+  "backup": "_build/_backup/euro_fix_20261007/ISZE_Kickback_Management_Revised_2026-10-07.pre-euro-20261007-144919.pptx",
+  "old_new": {
+    "table header": "'Feb + Mar vs own run rate' -> 'Feb + Mar sales to dealer vs its own run (EUR)'",
+    "IUK": "+3% (pieces) -> +16.9% (EUR), reading 'Close to its own run rate' -> 'Above its own run rate'",
+    "Ireland": "-2% (pieces) -> -0.2% (EUR), reading 'Slightly below its own run rate' -> 'Close to its own run rate'",
+    "Portugal": "+20% (pieces) -> +25.2% (EUR)",
+    "source line": "now states the euro basis and its caveat"
+  },
+  "role": "the 17-slide management deck; slide 9 corrected in place, every other shape left as it was",
+  "notes": "Sales-to-dealer movement is now measured in EUR, not pieces. Root cause fixed in the builder: _build/build_kickback_jump_case.py load_sellout() previously read the dealer files with usecols limited to period/period_grain/qty and so could only produce a unit ratio; it now reads part_number as well and values each line at the median ISZE net billed price per part number (the method already used by _eurostd_20261007_build.py and _analyze_stock_d_20261007.py, reused not invented). The euro figure is the dealer's volume measured at OUR prices, not the distributor's selling price, which is not on file: the direction of the movement is the reading, a level against our own billing is a price-ladder difference and not a margin. The corrected v2 deck (ISZE_Kickback_Management_Revised_v2_2026-10-07.pptx), which had the slide deleted, was NOT touched. The six archive copies under _build/_backup were NOT touched. Visual QA: every slide of each deck was rendered to PNG via PowerPoint COM (Slide.Export, 1600x900) and every PNG was image-Read by this agent, one at a time, at full resolution. Both .pptx packages validate as zips and both opened without repair in PowerPoint COM."
+}

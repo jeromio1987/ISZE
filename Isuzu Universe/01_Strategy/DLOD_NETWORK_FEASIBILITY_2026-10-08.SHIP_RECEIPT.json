@@ -1,0 +1,30 @@
+{
+  "schema": "ship_receipt/v2",
+  "ok": true,
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\01_Strategy\\DLOD_NETWORK_FEASIBILITY_2026-10-08.html",
+  "launcher": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\01_Strategy\\OPEN_DLOD_NETWORK_FEASIBILITY_2026-10-08.cmd",
+  "artifact_mtime_ms": 1791461258810,
+  "mtime_iso": "2026-10-08T12:07:38.810Z",
+  "size_bytes": 227808,
+  "written_at": "2026-10-08T12:13:25Z",
+  "as_of": "2026-10-08",
+  "screenshots_taken": 2,
+  "screenshots_read": 2,
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\01_Strategy\\_qa\\DLOD_NETWORK_FEASIBILITY_2026-10-08_viewport.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\01_Strategy\\_qa\\DLOD_NETWORK_FEASIBILITY_2026-10-08_full.png"
+  ],
+  "checks": [
+    {"id": "exists", "ok": true, "detail": "HTML + OPEN cmd present"},
+    {"id": "open_cmd", "ok": true, "detail": "CRLF; start sibling DLOD_NETWORK_FEASIBILITY_2026-10-08.html"},
+    {"id": "self_contained", "ok": true, "detail": "no CDN/external script; Chart.js inlined (~201KB); payload application/json"},
+    {"id": "no_fetch", "ok": true, "detail": "fetch() count 0"},
+    {"id": "programme_name", "ok": true, "detail": "Don't Lose the Deal in title/header; Deal of the Day count 0"},
+    {"id": "hero_kpis", "ok": true, "detail": "GBP 54,922; 218; EUR 30,000; 1/218; EUR 70-80k painted in headless Chrome"},
+    {"id": "charts", "ok": true, "detail": "3 canvas Chart.js charts after paint"},
+    {"id": "readiness_table", "ok": true, "detail": "scorecard tbody 12 rows; envTable 19 rows after JS paint"},
+    {"id": "amber_unknowns", "ok": true, "detail": "Competitor-proof gap amber + Unknowns section (10 items)"},
+    {"id": "visual_screenshots", "ok": true, "detail": "taken=2 read=2 by agent image-Read (viewport + full)"}
+  ],
+  "note": "Internal Don't Lose the Deal network feasibility HTML; paint verified via headless Chrome dump-dom + screenshots."
+}

@@ -1,0 +1,74 @@
+{
+  "artifact": "02_dashboards/hub/ISZE_AI_MILESTONES.html",
+  "artifact_abs": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\hub\\ISZE_AI_MILESTONES.html",
+  "built_by": "02_dashboards/_build/build_ai_milestones.py",
+  "built_at_local": "2026-10-07 09:40",
+  "artifact_bytes": 35840,
+  "ok": true,
+  "schema": "v2",
+  "purpose": "What was built here with AI, as a milestone list: new tools and jobs, findings that changed the picture, and the decks and packs handed over. Words are hand-written; counted figures are read from disk at build time.",
+  "data_sources_read_at_build": [
+    "00_docs/AI_MILESTONES.yaml (the hand-written register: 30 milestones in 3 groups)",
+    "01_data/00_derived/aim_master_v2.csv (165,310 part numbers classified)",
+    "02_dashboards/*/*.html (118 pages counted across sales/pricing/ids/ops/hub/fleet/bi/gps)",
+    "03_analytics/Isuzu/prism/pages/*.py (19 working pages)",
+    "01_data/00_derived/action_ledger.meta.json (23,763 open rows, 9 adapters, billing through 2026-06-30)",
+    "01_data/17_interactions/*.parquet (9,001 interactions, own mailbox only)"
+  ],
+  "measurement_additions_2026_10_07": [
+    "04_tools/interactions/measure_mail_volume.py + 01_data/17_interactions/mail_volume_monthly.csv — 13-month read-only mail count (2,000/month in, few hundred out); mailbox keeps only 12 months so no last-year pair exists",
+    "04_tools/interactions/measure_order_channel.py — order-channel (EDI) proxy, NEGATIVE result: the PO column is populated on 99.97% of lines, so it does not separate EDI from manual",
+    "00_docs/TIME_SAVED_MEASUREMENT.md — time method and log, no per-tool figure until a real task is timed",
+    "00_docs/AI_MEASUREMENT_REPORT_2026-10-07.md — the report text"
+  ],
+  "static_checks": {
+    "milestone_cards": 30,
+    "status_chips": 30,
+    "headline_tiles": 6,
+    "hover_tooltips": 6,
+    "sections": 5,
+    "table_rows": 9,
+    "nan_literal": false,
+    "fetch_calls": 0,
+    "cdn_refs": 0,
+    "http_refs": 0,
+    "missing_source_banner": false,
+    "quoted_file_name_footnote": "01_data/05_Dealer_sellout/ — quoted once, in the closing note, per isze-spoken-labels.mdc"
+  },
+  "language_check": {
+    "tool": "04_tools/workspace/check_spoken_labels.ps1",
+    "mode": "-AllowFileNames (footnote quote permitted once)",
+    "violations": 0,
+    "advisories": 0,
+    "file_name_quotes_passed": 1,
+    "result": "SPOKEN_LABELS_CHECK: CLEAN"
+  },
+  "visual_checks": {
+    "engine": "headless Chrome, file:// open, no server",
+    "screenshots_taken": 5,
+    "screenshots_read": 5,
+    "read_by": "the agent that built it",
+    "band_detail": "hero (1280x1000), full page (1280x5200), nav bar (1400x150), rebuilt Universe Map (1280x1200), plus an earlier pass",
+    "blank_panels": 0,
+    "clipped_text": 0,
+    "white_on_pale_headers": 0,
+    "print_pdf": "02_dashboards/hub/_qa_ai_milestones/03_print.pdf"
+  },
+  "wired_in": [
+    "02_dashboards/_ui/isze-shell.js — nav entry 'What I built' added, so the page appears on every hub page (Home, Where we stand, The whole picture, Dashboard Index, Mission Control, Project Hub, AI Ops)",
+    "02_dashboards/_build/build_universe_map.py — 'Where to look next' card added; Universe Map rebuilt so the link is live"
+  ],
+  "launcher": {
+    "path": "02_dashboards/hub/OPEN_ISZE_AI_MILESTONES.cmd",
+    "line_ending": "CRLF",
+    "user_open": "cmd-only (not auto-started)"
+  },
+  "known_failures_not_caused_by_this_build": [
+    "ship_gate_check.ps1 still exits 1 on verify_tier_a_html_json.py for 02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html (retired stub). This is the already-recorded D26 item in 00_docs/ISZE_ROADMAP.md and DECISIONS.md; it is not caused by, and was not touched by, this build. verify_aftermarket_bi_command_center.py, verify_action_ledger.py and verify_os_hub.py all pass in the same run."
+  ],
+  "not_done": [
+    "Not synced to 07_deploy and not published. No push, no mail.",
+    "No entry added to 00_docs/ISZE_ROADMAP.md, CHANGELOG.md or DECISIONS.md — those are separate, explicit edits.",
+    "The register was written on 2026-10-07; the words are Jerome's to keep editing in 00_docs/AI_MILESTONES.yaml."
+  ]
+}

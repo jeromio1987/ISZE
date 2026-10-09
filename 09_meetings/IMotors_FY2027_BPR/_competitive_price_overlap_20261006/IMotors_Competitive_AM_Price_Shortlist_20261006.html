@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>I-Motors Portugal — competitive parts vs aftermarket brand prices</title>
+<style>
+:root {
+  --ink:#1a2332; --muted:#5c6b7a; --paper:#f6f3ee; --card:#fff;
+  --navy:#15233c; --terra:#c0552d; --line:#d9d2c5; --ok:#2f6b4f; --bad:#9b2c2c;
+  --serif:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,serif;
+  --sans:"Segoe UI",system-ui,sans-serif;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink); font:15px/1.55 var(--sans); }
+.wrap { max-width:1240px; margin:0 auto; padding:28px 22px 80px; }
+header.hero {
+  background:linear-gradient(145deg,#15233c 0%,#243b5c 55%,#3a2a22 100%);
+  color:#f7f4ee; border-radius:18px; padding:34px; margin-bottom:22px;
+  box-shadow:0 18px 40px rgba(21,35,60,.22);
+}
+.kicker { letter-spacing:.12em; text-transform:uppercase; font-size:11px; opacity:.75; }
+h1 { font-family:var(--serif); font-weight:600; font-size:clamp(1.45rem,3vw,2.05rem); margin:10px 0 12px; line-height:1.18; }
+.lede { font-size:1.05rem; max-width:72ch; opacity:.93; }
+.meta { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.chip { background:rgba(247,244,238,.1); border:1px solid rgba(247,244,238,.22); padding:6px 10px; border-radius:999px; font-size:12px; }
+.grid { display:grid; gap:14px; }
+.g4 { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.g5 { grid-template-columns:repeat(5,minmax(0,1fr)); }
+@media (max-width:1100px) { .g4, .g5 { grid-template-columns:1fr 1fr; } }
+@media (max-width:640px) { .g4, .g5 { grid-template-columns:1fr; } }
+.kpi { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; }
+.kpi .lbl { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+.kpi .val { font-family:var(--serif); font-size:1.65rem; margin-top:4px; color:var(--navy); }
+.kpi .note { font-size:12px; color:var(--muted); margin-top:6px; }
+.kpi.warn { border-color:#e2c089; background:#fff9ef; }
+.kpi.ok { border-color:#b7d3c3; background:#f3faf6; }
+.kpi.bad { border-color:#e2b0b0; background:#fff5f5; }
+section { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px; margin:16px 0; }
+section h2 { font-family:var(--serif); font-size:1.35rem; margin:0 0 8px; color:var(--navy); }
+section h3 { font-size:1.02rem; margin:16px 0 8px; color:var(--navy); }
+.prose { max-width:78ch; }
+.prose p { margin:0 0 12px; }
+.callout { border-left:4px solid var(--terra); background:#faf6f2; padding:12px 14px; border-radius:0 10px 10px 0; margin:14px 0; }
+.callout.navy { border-left-color:var(--navy); background:#f3f6fa; }
+.callout.warn { border-left-color:#c9a227; background:#fff9ef; }
+.bar-row { display:grid; grid-template-columns:160px 1fr 170px; gap:10px; align-items:center; margin:7px 0; }
+@media (max-width:700px) { .bar-row { grid-template-columns:1fr; gap:2px; } }
+.bar-lab { font-size:12.5px; }
+.bar-track { background:#ece7de; height:12px; border-radius:999px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:999px; background:linear-gradient(90deg,var(--navy),var(--terra)); }
+.bar-fill.ok { background:var(--ok); }
+.bar-fill.navy { background:var(--navy); }
+.bar-val { font-variant-numeric:tabular-nums; font-size:12px; text-align:right; color:var(--muted); }
+table { width:100%; border-collapse:collapse; font-size:12.5px; }
+th, td { padding:8px 7px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+th { font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:#f7f4ee; background:var(--navy); position:sticky; top:0; z-index:1; }
+tbody tr:nth-child(even) { background:#faf8f4; }
+tbody tr:hover { background:#f3eee6; }
+tbody tr.supply-hit { background:#fff8f2; }
+tbody tr.supply-hit:nth-child(even) { background:#fff3ea; }
+.num { font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap; }
+.mono { font-family:Consolas,"Cascadia Mono",monospace; font-size:11.5px; }
+.sub { font-size:11px; color:var(--muted); }
+.toc { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 8px; }
+.toc a { color:var(--navy); text-decoration:none; background:#eef2f7; border:1px solid #d5deea; padding:6px 10px; border-radius:999px; font-size:12px; }
+.footer { color:var(--muted); font-size:12px; margin-top:28px; max-width:85ch; }
+.tag { display:inline-block; font-size:11px; padding:2px 7px; border-radius:6px; background:#eef2f7; color:var(--navy); }
+.tag.bad { background:#f8e0e0; color:#7a2222; }
+.tag.warn { background:#f7ecd0; color:#6a5210; }
+.tag.supply { margin:3px 4px 0 0; font-weight:600; }
+.tag.supply.open { background:#f3d9c8; color:#7a3418; }
+.tag.supply.bo { background:#dde8f5; color:#1e3a5f; }
+.marks { margin-top:4px; }
+.brands { font-size:11.5px; color:var(--muted); max-width:240px; }
+.scroll { overflow:auto; }
+.two { display:grid; grid-template-columns:1.05fr .95fr; gap:18px; }
+@media (max-width:960px) { .two { grid-template-columns:1fr; } }
+.footnote { font-size:11.5px; color:var(--muted); margin-top:10px; }
+.ok { color:var(--ok); }
+ul { margin:8px 0 0 18px; padding:0; }
+ul li { margin:6px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="kicker">I-Motors · Portugal · competitive parts · aftermarket brand prices · 6 Oct 2026</div>
+  <h1>Competitive sales to dealer is rising overall — the interesting hits are parts that are dropping and still expensive vs other aftermarket brands</h1>
+  <p class="lede">Primary lens: Blue Print, Bosch, Delphi, Febi, Herth+Buss and similar brand prices in the price ledger. OEM peer / grey import is secondary and does not gate this shortlist. Aftermarket brand prices cover only about 32% of Competitive-parts sales-to-dealer list € in CY2025 — treat hits as evidence where the join exists. Shortlist rows that are still open on our sales orders to I-Motors (sold-to 519), or that showed on Nuno’s BO extract earlier in 2026, are marked in the table.</p>
+  <div class="meta">
+    <span class="chip">AM brand cover: 31.7% of CY2025 competitive StD list €</span>
+    <span class="chip">Shortlist hits: 26 PNs · €13,805 list € lost</span>
+    <span class="chip">Supply marks: 9 of 26 (open 4 · earlier BO 5)</span>
+    <span class="chip">Competitive StD FY Apr–Aug: +23.1%</span>
+    <span class="chip">Sales to dealer through 2026-08</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <a href="#verdict">Verdict</a>
+  <a href="#direction">Basket direction</a>
+  <a href="#shortlist">Shortlist</a>
+  <a href="#near-miss">Near-misses</a>
+  <a href="#limits">Limits</a>
+</nav>
+
+<section id="verdict">
+  <h2>1. Verdict</h2>
+  <div class="prose">
+    <p>At basket level, Competitive parts sales to dealer (list €) is <strong>up</strong>, not down: FY Apr–Aug €263,192 → €324,107 (+23.1%). The contested AIM families move the same way. So the commercial story is not “competitive is collapsing” — it is a short list of part numbers that are both losing sales-to-dealer list € and sitting well above the aftermarket brand median on our reference dealer price.</p>
+    <p>Rule for a hit: sales to dealer list € dropping (FY Apr–Aug −15%+ or CY run-rate −20%+) <em>and</em> our reference dealer price more than 10% above the aftermarket brand median on that part (or its genuine/BVP pair). Ranked by impact = list € lost × overprice gap ratio. Combined list € lost on the 26 hits: <strong>€13,805</strong>.</p>
+    <p>Of those 26 hits, <strong>9</strong> also sit on supply stress we can name from our books: <strong>4</strong> still open on our sales orders to I-Motors (sold-to 519, EXPORT 6 Oct), and <strong>5</strong> only on Nuno’s BO extract earlier in 2026 (Jan–Aug tabs; Sep+ empty in the 29-Sep file). The other <strong>17</strong> have neither mark — price pressure without a current open-order / earlier-BO flag.</p>
+  </div>
+  <div class="callout warn">
+    <strong>Coverage caveat:</strong> only 120 Competitive part numbers have an aftermarket brand price (31.7% of CY2025 competitive sales-to-dealer list € — €209,925 of €663,174). Most observed brand prices are DE / NO / UK listings, not Portuguese workshop purchase prices.
+  </div>
+</section>
+
+<div class="grid g5" style="margin:16px 0">
+  <div class="kpi ok"><div class="lbl">Competitive StD FY Apr–Aug</div><div class="val">+23.1%</div><div class="note">€263,192 → €324,107 list €</div></div>
+  <div class="kpi warn"><div class="lbl">AM brand coverage</div><div class="val">32%</div><div class="note">of CY2025 competitive StD list €</div></div>
+  <div class="kpi bad"><div class="lbl">Shortlist hits</div><div class="val">26</div><div class="note">dropping + expensive vs AM brands</div></div>
+  <div class="kpi"><div class="lbl">List € lost on hits</div><div class="val">€13,805</div><div class="note">working cut · impact-ranked</div></div>
+  <div class="kpi warn"><div class="lbl">Open / earlier BO</div><div class="val">4 / 5</div><div class="note">9 of 26 shortlist PNs marked</div></div>
+</div>
+
+<section id="direction">
+  <h2>2. Basket direction — sales to dealer list €</h2>
+  <p class="prose">List € = qty × ISZE list (same basis as the AIM evolution pack). Pieces are not the KPI here.</p>
+  <div class="two" style="margin-top:12px">
+    <div>
+      <h3>Competitive parts (catalogue L1)</h3>
+      <div class="bar-row"><div class="bar-lab">CY2025</div><div class="bar-track"><div class="bar-fill navy" style="width:82.6%"></div></div><div class="bar-val">€663,174</div></div>
+      <div class="bar-row"><div class="bar-lab">2026 Jan–Aug</div><div class="bar-track"><div class="bar-fill navy" style="width:66.7%"></div></div><div class="bar-val">€535,078 <span class="sub">(8 mo)</span></div></div>
+      <div class="bar-row"><div class="bar-lab">FY26 Apr–Aug</div><div class="bar-track"><div class="bar-fill" style="width:32.8%"></div></div><div class="bar-val">€263,192</div></div>
+      <div class="bar-row"><div class="bar-lab">FY27 Apr–Aug</div><div class="bar-track"><div class="bar-fill ok" style="width:40.4%"></div></div><div class="bar-val">€324,107 · +23.1%</div></div>
+      <p class="footnote">Annualised 2026 Jan–Aug vs CY2025: +21.0% on list €.</p>
+    </div>
+    <div>
+      <h3>All three baskets (FY Apr–Aug)</h3>
+      <div class="bar-row"><div class="bar-lab">Competitive parts<div class="sub">FY26</div></div><div class="bar-track"><div class="bar-fill navy" style="width:32.8%"></div></div><div class="bar-val">€263,192</div></div>
+<div class="bar-row"><div class="bar-lab"><div class="sub">FY27 · +23.1%</div></div><div class="bar-track"><div class="bar-fill ok" style="width:40.4%"></div></div><div class="bar-val">€324,107</div></div><div class="bar-row"><div class="bar-lab">Contested AIM L1 basket<div class="sub">FY26</div></div><div class="bar-track"><div class="bar-fill navy" style="width:27.6%"></div></div><div class="bar-val">€221,454</div></div>
+<div class="bar-row"><div class="bar-lab"><div class="sub">FY27 · +19.9%</div></div><div class="bar-track"><div class="bar-fill ok" style="width:33.1%"></div></div><div class="bar-val">€265,629</div></div><div class="bar-row"><div class="bar-lab">Union<div class="sub">FY26</div></div><div class="bar-track"><div class="bar-fill navy" style="width:45.8%"></div></div><div class="bar-val">€367,668</div></div>
+<div class="bar-row"><div class="bar-lab"><div class="sub">FY27 · +15.0%</div></div><div class="bar-track"><div class="bar-fill ok" style="width:52.7%"></div></div><div class="bar-val">€422,921</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="shortlist">
+  <h2>3. End-goal shortlist — dropping and expensive vs aftermarket brands</h2>
+  <p class="prose">Reference dealer price = ISZE list × 1.40 × 1.275 (standard channel dials). Index = reference dealer price ÷ aftermarket brand median. Index above 1.10 means we look expensive on this working signal. Actual Portugal %GM may differ.</p>
+  <div class="callout navy">
+    <strong>Supply marks (Lisbon-readable):</strong>
+    <span class="tag supply open">Open on our order</span> = still open on our sales orders to I-Motors (sold-to 519, EXPORT 6 Oct 2026).
+    <span class="tag supply bo">Earlier BO 2026</span> = appeared on Nuno’s Backordered-lines extract in at least one populated 2026 month (Jan–Aug; Sep+ tabs empty in the 29-Sep file).
+    Count for the room: <strong>4</strong> open now, <strong>5</strong> earlier BO only, <strong>17</strong> neither. Two open PNs also had BO earlier (wheel cylinder <span class="mono">1476012190</span>, front brake disc <span class="mono">8982488951</span>) — both tags show.
+  </div>
+  <h3>Top 10 by impact</h3>
+  <div class="bar-row">
+<div class="bar-lab">DPD ASM<div class="sub mono">8981776324</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:100.0%"></div></div>
+<div class="bar-val">€1,348 lost · 5.36×</div>
+</div><div class="bar-row">
+<div class="bar-lab">BUMPER; FRT,CENTER<div class="sub mono">8975809452</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:90.4%"></div></div>
+<div class="bar-val">€743 lost · 8.15×</div>
+</div><div class="bar-row">
+<div class="bar-lab">PANEL; DEFLECTOR<div class="sub mono">8981032020</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:57.1%"></div></div>
+<div class="bar-val">€1,084 lost · 4.10×</div>
+</div><div class="bar-row">
+<div class="bar-lab">RADIATOR ASM<div class="sub mono">8983355671</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:40.3%"></div></div>
+<div class="bar-val">€449 lost · 6.27×</div>
+</div><div class="bar-row">
+<div class="bar-lab">FILTER ASM; FUEL<div class="sub mono">8982399830</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:37.8%"></div></div>
+<div class="bar-val">€277 lost · 9.03×</div>
+</div><div class="bar-row">
+<div class="bar-lab">PANEL; DEFLECTOR<div class="sub mono">8973873800</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:35.6%"></div></div>
+<div class="bar-val">€306 lost · 7.83×</div>
+</div><div class="bar-row">
+<div class="bar-lab">BUMPER ASM; FRT<div class="sub mono">8974056285</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:25.8%"></div></div>
+<div class="bar-val">€1,051 lost · 2.44×</div>
+</div><div class="bar-row">
+<div class="bar-lab">FILTER; ACL<div class="sub mono">5876150021</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:21.9%"></div></div>
+<div class="bar-val">€711 lost · 2.81×</div>
+</div><div class="bar-row">
+<div class="bar-lab">ROTOR; DISC BRK,FRT<div class="sub mono">8982488951 · Open on our order / Earlier BO 2026</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:18.2%"></div></div>
+<div class="bar-val">€476 lost · 3.25×</div>
+</div><div class="bar-row">
+<div class="bar-lab">PAD KIT; CALIPER,DISC BRK,FR<div class="sub mono">8975056801</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:11.2%"></div></div>
+<div class="bar-val">€740 lost · 1.89×</div>
+</div>
+  <h3 style="margin-top:22px">Full shortlist (26 part numbers)</h3>
+  <div class="scroll">
+  <table>
+    <thead><tr>
+      <th>#</th><th>Part · supply mark</th><th>Family</th><th>StD list € (FY Apr–Aug)</th><th>List € lost</th>
+      <th>Our ref. dealer €</th><th>AM brand median €</th><th>Index</th><th>Brands (sample)</th>
+    </tr></thead>
+    <tbody>
+<tr class="">
+<td class="num">1</td>
+<td><strong>DPD ASM</strong><div class="sub mono">8981776324</div><span class="sub">—</span></td>
+<td>Intake Exhaust Emission<div class="sub">DPF/DPD</div></td>
+<td class="num">€1,348 → €0<div class="sub">-100.0% FY Apr–Aug</div></td>
+<td class="num">€1,348</td>
+<td class="num">€2,406.77</td>
+<td class="num">€449.00</td>
+<td class="num"><span class="tag bad">5.36×</span></td>
+<td class="brands">Ahg, Greencar Automotive, Kamoka, Vegaz</td>
+</tr><tr class="">
+<td class="num">2</td>
+<td><strong>BUMPER; FRT,CENTER</strong><div class="sub mono">8975809452</div><span class="sub">—</span></td>
+<td>Accident &amp; Body<div class="sub">Panels</div></td>
+<td class="num">€1,115 → €372<div class="sub">-66.7% FY Apr–Aug</div></td>
+<td class="num">€743</td>
+<td class="num">€663.54</td>
+<td class="num">€81.41</td>
+<td class="num"><span class="tag bad">8.15×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="">
+<td class="num">3</td>
+<td><strong>PANEL; DEFLECTOR</strong><div class="sub mono">8981032020</div><span class="sub">—</span></td>
+<td>Accident &amp; Body<div class="sub">Panels</div></td>
+<td class="num">€1,084 → €0<div class="sub">-100.0% FY Apr–Aug</div></td>
+<td class="num">€1,084</td>
+<td class="num">€483.93</td>
+<td class="num">€118.17</td>
+<td class="num"><span class="tag bad">4.10×</span></td>
+<td class="brands">Blic, Easy Part France</td>
+</tr><tr class="">
+<td class="num">4</td>
+<td><strong>RADIATOR ASM</strong><div class="sub mono">8983355671</div><span class="sub">—</span></td>
+<td>Cooling<div class="sub">Radiator</div></td>
+<td class="num">€1,348 → €899<div class="sub">-33.3% FY Apr–Aug</div></td>
+<td class="num">€449</td>
+<td class="num">€802.04</td>
+<td class="num">€127.93</td>
+<td class="num"><span class="tag bad">6.27×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="">
+<td class="num">5</td>
+<td><strong>FILTER ASM; FUEL</strong><div class="sub mono">8982399830</div><span class="sub">—</span></td>
+<td>Maintenance Service<div class="sub">Filters (unspecified)</div></td>
+<td class="num">€277 → €0<div class="sub">-100.0% FY Apr–Aug</div></td>
+<td class="num">€277</td>
+<td class="num">€98.76</td>
+<td class="num">€10.94</td>
+<td class="num"><span class="tag bad">9.03×</span></td>
+<td class="brands">AMC Filter, Bogap, Bosch, Eurorepar, HERTH+BUSS JAKOPARTS, Hella…</td>
+</tr><tr class="">
+<td class="num">6</td>
+<td><strong>PANEL; DEFLECTOR</strong><div class="sub mono">8973873800</div><span class="sub">—</span></td>
+<td>Accident &amp; Body<div class="sub">Panels</div></td>
+<td class="num">€306 → €0<div class="sub">-100.0% FY Apr–Aug</div></td>
+<td class="num">€306</td>
+<td class="num">€546.57</td>
+<td class="num">€69.78</td>
+<td class="num"><span class="tag bad">7.83×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="">
+<td class="num">7</td>
+<td><strong>BUMPER ASM; FRT</strong><div class="sub mono">8974056285</div><span class="sub">—</span></td>
+<td>Accident &amp; Body<div class="sub">Bumpers</div></td>
+<td class="num">€1,401 → €350<div class="sub">-75.0% FY Apr–Aug</div></td>
+<td class="num">€1,051</td>
+<td class="num">€312.54</td>
+<td class="num">€127.93</td>
+<td class="num"><span class="tag bad">2.44×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="">
+<td class="num">8</td>
+<td><strong>FILTER; ACL</strong><div class="sub mono">5876150021</div><span class="sub">—</span></td>
+<td>Maintenance Service<div class="sub">Air Filter</div></td>
+<td class="num">€711 → €0<div class="sub">-100.0% FY Apr–Aug</div></td>
+<td class="num">€711</td>
+<td class="num">€23.08</td>
+<td class="num">€8.22</td>
+<td class="num"><span class="tag bad">2.81×</span></td>
+<td class="brands">BLUE PRINT, Febi, Febi Bilstein, Wilmink Group (BLUE PRINT), Wilmink Group (Febi)</td>
+</tr><tr class="supply-hit">
+<td class="num">9</td>
+<td><strong>ROTOR; DISC BRK,FRT</strong><div class="sub mono">8982488951</div><div class="marks"><span class="tag supply open">Open on our order</span><span class="tag supply bo">Earlier BO 2026</span></div></td>
+<td>Brakes<div class="sub">Discs &amp; Drums</div></td>
+<td class="num">€1,112 → €635<div class="sub">-42.9% FY Apr–Aug</div></td>
+<td class="num">€476</td>
+<td class="num">€283.51</td>
+<td class="num">€87.22</td>
+<td class="num"><span class="tag bad">3.25×</span></td>
+<td class="brands">BLUE PRINT, Febi</td>
+</tr><tr class="">
+<td class="num">10</td>
+<td><strong>PAD KIT; CALIPER,DISC BRK,FRT</strong><div class="sub mono">8975056801</div><span class="sub">—</span></td>
+<td>Brakes<div class="sub">Pads &amp; Shoes</div></td>
+<td class="num">€4,935 → €4,195<div class="sub">-15.0% FY Apr–Aug</div></td>
+<td class="num">€740</td>
+<td class="num">€146.82</td>
+<td class="num">€77.65</td>
+<td class="num"><span class="tag bad">1.89×</span></td>
+<td class="brands">BLUE PRINT, Febi, Febi Bilstein, Herth+Buss Jakoparts, KGK (Febi), Meca (R Brake)…</td>
+</tr><tr class="supply-hit">
+<td class="num">11</td>
+<td><strong>BUMPER ASM; FRT</strong><div class="sub mono">8974068144</div><div class="marks"><span class="tag supply bo">Earlier BO 2026</span></div></td>
+<td>Accident &amp; Body<div class="sub">Bumpers</div></td>
+<td class="num">€1,379 → €766<div class="sub">-44.4% FY Apr–Aug</div></td>
+<td class="num">€613</td>
+<td class="num">€273.46</td>
+<td class="num">€139.56</td>
+<td class="num"><span class="tag bad">1.96×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="">
+<td class="num">12</td>
+<td><strong>ARM; UPR CONT</strong><div class="sub mono">8979458412</div><span class="sub">—</span></td>
+<td>Suspension<div class="sub">Suspension Arm</div></td>
+<td class="num">€272 → €0<div class="sub">-100.0% FY Apr–Aug</div></td>
+<td class="num">€272</td>
+<td class="num">€243.06</td>
+<td class="num">€81.41</td>
+<td class="num"><span class="tag bad">2.99×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="supply-hit">
+<td class="num">13</td>
+<td><strong>CYLINDER; WHEEL,RR BRK</strong><div class="sub mono">1476012190</div><div class="marks"><span class="tag supply open">Open on our order</span><span class="tag supply bo">Earlier BO 2026</span></div></td>
+<td>Wheels Hub<div class="sub">Wheel Rim</div></td>
+<td class="num">€871 → €871<div class="sub">0.0% FY Apr–Aug</div></td>
+<td class="num">€1,307</td>
+<td class="num">€388.83</td>
+<td class="num">€302.37</td>
+<td class="num"><span class="tag bad">1.29×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="">
+<td class="num">14</td>
+<td><strong>ARM; UPR CONT</strong><div class="sub mono">8983894321</div><span class="sub">—</span></td>
+<td>Suspension<div class="sub">Suspension Arm</div></td>
+<td class="num">€358 → €358<div class="sub">0.0% FY Apr–Aug</div></td>
+<td class="num">€239</td>
+<td class="num">€212.99</td>
+<td class="num">€87.22</td>
+<td class="num"><span class="tag bad">2.44×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="">
+<td class="num">15</td>
+<td><strong>CLUTCH KIT</strong><div class="sub mono">5876102060</div><span class="sub">—</span></td>
+<td>Clutch<div class="sub">Clutch Kit</div></td>
+<td class="num">€1,951 → €813<div class="sub">-58.3% FY Apr–Aug</div></td>
+<td class="num">€1,138</td>
+<td class="num">€290.28</td>
+<td class="num">€226.78</td>
+<td class="num"><span class="tag bad">1.28×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="">
+<td class="num">16</td>
+<td><strong>PAD KIT; CALIPER,DISC BRK,FRT</strong><div class="sub mono">5876150610</div><span class="sub">—</span></td>
+<td>Brakes<div class="sub">Pads &amp; Shoes</div></td>
+<td class="num">€1,036 → €576<div class="sub">-44.4% FY Apr–Aug</div></td>
+<td class="num">€461</td>
+<td class="num">€102.78</td>
+<td class="num">€66.28</td>
+<td class="num"><span class="tag bad">1.55×</span></td>
+<td class="brands">Blue Print, Febi Bilstein</td>
+</tr><tr class="supply-hit">
+<td class="num">17</td>
+<td><strong>ARM; LWR CONT</strong><div class="sub mono">8983894341</div><div class="marks"><span class="tag supply bo">Earlier BO 2026</span></div></td>
+<td>Suspension<div class="sub">Suspension Arm</div></td>
+<td class="num">€302 → €302<div class="sub">-0.0% FY Apr–Aug</div></td>
+<td class="num">€227</td>
+<td class="num">€269.57</td>
+<td class="num">€133.74</td>
+<td class="num"><span class="tag bad">2.02×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="">
+<td class="num">18</td>
+<td><strong>BUMPER ASM; FRT</strong><div class="sub mono">8983303281</div><span class="sub">—</span></td>
+<td>Accident &amp; Body<div class="sub">Bumpers</div></td>
+<td class="num">€388 → €0<div class="sub">-100.0% FY Apr–Aug</div></td>
+<td class="num">€388</td>
+<td class="num">€231.03</td>
+<td class="num">€160.73</td>
+<td class="num"><span class="tag bad">1.44×</span></td>
+<td class="brands">Diederichs, HD Karosserieteile, Klokkerholm</td>
+</tr><tr class="">
+<td class="num">19</td>
+<td><strong>FENDER; FRT</strong><div class="sub mono">8981810290</div><span class="sub">—</span></td>
+<td>Accident &amp; Body<div class="sub">Panels</div></td>
+<td class="num">€290 → €193<div class="sub">-33.3% FY Apr–Aug</div></td>
+<td class="num">€97</td>
+<td class="num">€172.50</td>
+<td class="num">€63.96</td>
+<td class="num"><span class="tag bad">2.70×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="">
+<td class="num">20</td>
+<td><strong>GRILLE; RAD</strong><div class="sub mono">8981938690</div><span class="sub">—</span></td>
+<td>Accident &amp; Body<div class="sub">Panels</div></td>
+<td class="num">€282 → €141<div class="sub">-50.0% FY Apr–Aug</div></td>
+<td class="num">€141</td>
+<td class="num">€251.65</td>
+<td class="num">€118.23</td>
+<td class="num"><span class="tag bad">2.13×</span></td>
+<td class="brands">Diederichs, HD Karosserieteile</td>
+</tr><tr class="supply-hit">
+<td class="num">21</td>
+<td><strong>SUPPORT; FRT BUMPER</strong><div class="sub mono">8980873901</div><div class="marks"><span class="tag supply bo">Earlier BO 2026</span></div></td>
+<td>Accident &amp; Body<div class="sub">Panels</div></td>
+<td class="num">€667 → €333<div class="sub">-50.0% FY Apr–Aug</div></td>
+<td class="num">€333</td>
+<td class="num">€85.00</td>
+<td class="num">€58.15</td>
+<td class="num"><span class="tag bad">1.46×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="supply-hit">
+<td class="num">22</td>
+<td><strong>PANEL ASM; FRT</strong><div class="sub mono">8981226920</div><div class="marks"><span class="tag supply open">Open on our order</span></div></td>
+<td>Accident &amp; Body<div class="sub">Panels</div></td>
+<td class="num">€1,332 → €999<div class="sub">-25.0% FY Apr–Aug</div></td>
+<td class="num">€333</td>
+<td class="num">€297.17</td>
+<td class="num">€203.52</td>
+<td class="num"><span class="tag bad">1.46×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="">
+<td class="num">23</td>
+<td><strong>CLUTCH KIT</strong><div class="sub mono">5876103090</div><span class="sub">—</span></td>
+<td>Clutch<div class="sub">Clutch Kit</div></td>
+<td class="num">€345 → €0<div class="sub">-100.0% FY Apr–Aug</div></td>
+<td class="num">€345</td>
+<td class="num">€307.50</td>
+<td class="num">€226.78</td>
+<td class="num"><span class="tag bad">1.36×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="supply-hit">
+<td class="num">24</td>
+<td><strong>SENSOR; TEMPERATURE,DPD</strong><div class="sub mono">8983313840</div><div class="marks"><span class="tag supply bo">Earlier BO 2026</span></div></td>
+<td>Electrical<div class="sub">Instruments</div></td>
+<td class="num">€319 → €128<div class="sub">-60.0% FY Apr–Aug</div></td>
+<td class="num">€192</td>
+<td class="num">€114.04</td>
+<td class="num">€75.59</td>
+<td class="num"><span class="tag bad">1.51×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="supply-hit">
+<td class="num">25</td>
+<td><strong>SENSOR; TEMPERATURE,DPD</strong><div class="sub mono">8983313830</div><div class="marks"><span class="tag supply open">Open on our order</span></div></td>
+<td>Electrical<div class="sub">Instruments</div></td>
+<td class="num">€564 → €188<div class="sub">-66.7% FY Apr–Aug</div></td>
+<td class="num">€376</td>
+<td class="num">€111.79</td>
+<td class="num">€93.03</td>
+<td class="num"><span class="tag bad">1.20×</span></td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr class="supply-hit">
+<td class="num">26</td>
+<td><strong>DISC; CLUTCH</strong><div class="sub mono">8982120690</div><div class="marks"><span class="tag supply bo">Earlier BO 2026</span></div></td>
+<td>Clutch<div class="sub">Disc</div></td>
+<td class="num">€472 → €314<div class="sub">-33.3% FY Apr–Aug</div></td>
+<td class="num">€157</td>
+<td class="num">€280.67</td>
+<td class="num">€202.17</td>
+<td class="num"><span class="tag bad">1.39×</span></td>
+<td class="brands">Ashika, BLUE PRINT, DT, EXEDY Clutch Europe, Frankberg, HERTH+BUSS JAKOPARTS…</td>
+</tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="footnote">AM brand prices are Eucon / KS observations (mostly DE/NO/UK). Where the Brands cell shows <em>KS International (no brand on listing)</em>, the price ledger has a KS shop observation with no competitor brand filled on the row. OEM peer median is available in the source CSV as a secondary column only. Open-order € in the embedded payload is from EXPORT only — Nuno BO euros are not reprinted here.</p>
+</section>
+
+<section id="near-miss">
+  <h2>4. Near-misses</h2>
+  <div class="two">
+    <div>
+      <h3>Dropping, but no aftermarket brand price</h3>
+      <p class="prose">Priority to get a brand quote — these lose sales-to-dealer list € but we cannot price-check them yet. Showing top 15 of 261.</p>
+      <div class="scroll">
+      <table>
+        <thead><tr><th>Part</th><th>Family</th><th>List € lost</th><th>FY chg</th><th>CY run-rate</th><th>Status</th></tr></thead>
+        <tbody>
+<tr>
+<td><strong>PIPE; EXH</strong><div class="sub mono">8983682091</div></td>
+<td>Intake Exhaust Emission<div class="sub">Exhaust</div></td>
+<td class="num">€6,469</td>
+<td class="num">-83.3%</td>
+<td class="num">-35.7%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr><tr>
+<td><strong>TANK ASM; DEF</strong><div class="sub mono">8972746690</div></td>
+<td>Intake Exhaust Emission<div class="sub">DEF System</div></td>
+<td class="num">€2,199</td>
+<td class="num">-50.0%</td>
+<td class="num">0.0%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr><tr>
+<td><strong>DPD ASM</strong><div class="sub mono">8983320764</div></td>
+<td>Intake Exhaust Emission<div class="sub">DPF/DPD</div></td>
+<td class="num">€2,134</td>
+<td class="num">—</td>
+<td class="num">-100.0%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr><tr>
+<td><strong>COOLER; EGR</strong><div class="sub mono">8981521221</div></td>
+<td>Intake Exhaust Emission<div class="sub">EGR</div></td>
+<td class="num">€2,089</td>
+<td class="num">-75.0%</td>
+<td class="num">-42.3%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr><tr>
+<td><strong>PUMP ASM; FUEL,SUPPLY</strong><div class="sub mono">8983320621</div></td>
+<td>Fuel System<div class="sub">Fuel Pump</div></td>
+<td class="num">€1,984</td>
+<td class="num">-100.0%</td>
+<td class="num">-70.0%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr><tr>
+<td><strong>RAIL;COMMON</strong><div class="sub mono">8983300400</div></td>
+<td>Fuel System<div class="sub">Fuel Rail</div></td>
+<td class="num">€1,773</td>
+<td class="num">-42.9%</td>
+<td class="num">-6.7%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr><tr>
+<td><strong>STEERING UNIT</strong><div class="sub mono">8981017801</div></td>
+<td>Steering<div class="sub">Steering Gear</div></td>
+<td class="num">€1,597</td>
+<td class="num">—</td>
+<td class="num">-100.0%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr><tr>
+<td><strong>BODY ASM; REAR</strong><div class="sub mono">8975536860</div></td>
+<td>Accident &amp; Body<div class="sub">Panels</div></td>
+<td class="num">€1,460</td>
+<td class="num">-100.0%</td>
+<td class="num">-100.0%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr><tr>
+<td><strong>STEERING UNIT</strong><div class="sub mono">8979461321</div></td>
+<td>Steering<div class="sub">Steering Gear</div></td>
+<td class="num">€1,359</td>
+<td class="num">0.0%</td>
+<td class="num">-40.0%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr><tr>
+<td><strong>GLASS; WINDSHIELD</strong><div class="sub mono">8980290621</div></td>
+<td>Accident &amp; Body<div class="sub">Glass</div></td>
+<td class="num">€1,252</td>
+<td class="num">-57.1%</td>
+<td class="num">+9.1%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr><tr>
+<td><strong>STEERING UNIT</strong><div class="sub mono">8979461301</div></td>
+<td>Steering<div class="sub">Steering Gear</div></td>
+<td class="num">€1,117</td>
+<td class="num">-100.0%</td>
+<td class="num">-100.0%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr><tr>
+<td><strong>SPRING ASM; LEAF,RR</strong><div class="sub mono">8983922341</div></td>
+<td>Suspension<div class="sub">Leaf Springs</div></td>
+<td class="num">€1,098</td>
+<td class="num">-100.0%</td>
+<td class="num">-53.8%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr><tr>
+<td><strong>HYDRAULIC UNIT; ANTI LOCK BRK</strong><div class="sub mono">8983297210</div></td>
+<td>Brakes<div class="sub">ABS Control</div></td>
+<td class="num">€1,074</td>
+<td class="num">—</td>
+<td class="num">-100.0%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr><tr>
+<td><strong>BOOSTER ASM; CLU</strong><div class="sub mono">1318005651</div></td>
+<td>Clutch<div class="sub">Release System</div></td>
+<td class="num">€1,048</td>
+<td class="num">-100.0%</td>
+<td class="num">-100.0%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr><tr>
+<td><strong>SENSOR ASM; DEF TANK</strong><div class="sub mono">8983615741</div></td>
+<td>Intake Exhaust Emission<div class="sub">DEF System</div></td>
+<td class="num">€1,042</td>
+<td class="num">-100.0%</td>
+<td class="num">-100.0%</td>
+<td><span class="tag warn">No AM brand price</span></td>
+</tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div>
+      <h3>Expensive vs AM brands, but StD growing</h3>
+      <p class="prose">Price pressure signal, not volume loss yet. Showing top 12 of 25.</p>
+      <div class="scroll">
+      <table>
+        <thead><tr><th>Part</th><th>Family</th><th>Ref. dealer €</th><th>AM median €</th><th>Index</th><th>FY StD</th><th>Brands</th></tr></thead>
+        <tbody>
+<tr>
+<td><strong>ELEMENT KIT; FUEL FILTER</strong><div class="sub mono">5876150240</div></td>
+<td>Maintenance Service<div class="sub">Fuel Filter</div></td>
+<td class="num">€16.15</td>
+<td class="num">€5.81</td>
+<td class="num"><span class="tag bad">2.78×</span></td>
+<td class="num ok">+45.6%</td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr>
+<td><strong>PAD KIT; CALIPER,DISC BRK,FRT</strong><div class="sub mono">8982169220</div></td>
+<td>Brakes<div class="sub">Pads &amp; Shoes</div></td>
+<td class="num">€144.58</td>
+<td class="num">€55.40</td>
+<td class="num"><span class="tag bad">2.61×</span></td>
+<td class="num ok">+15.4%</td>
+<td class="brands">ABS, Blue Print, Delphi, Febi Bilstein, Ferodo, Hella…</td>
+</tr><tr>
+<td><strong>ROTOR; DISC BRK,FRT</strong><div class="sub mono">8979488071</div></td>
+<td>Brakes<div class="sub">Discs &amp; Drums</div></td>
+<td class="num">€161.49</td>
+<td class="num">€63.02</td>
+<td class="num"><span class="tag bad">2.56×</span></td>
+<td class="num ok">+100.0%</td>
+<td class="brands">ABS, Ashika, BLUE PRINT, Brembo, Hella Pagid, DON…</td>
+</tr><tr>
+<td><strong>PAD KIT; CALIPER,DISC BRK,FRT</strong><div class="sub mono">8982447940</div></td>
+<td>Brakes<div class="sub">Pads &amp; Shoes</div></td>
+<td class="num">€159.06</td>
+<td class="num">€64.59</td>
+<td class="num"><span class="tag bad">2.46×</span></td>
+<td class="num ok">+43.5%</td>
+<td class="brands">BLUE PRINT, Febi, Ferodo, Textar</td>
+</tr><tr>
+<td><strong>ARM; UPR CONT</strong><div class="sub mono">8983894311</div></td>
+<td>Suspension<div class="sub">Suspension Arm</div></td>
+<td class="num">€212.99</td>
+<td class="num">€87.22</td>
+<td class="num"><span class="tag bad">2.44×</span></td>
+<td class="num ok">0.0%</td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr>
+<td><strong>ARM; LWR CONT</strong><div class="sub mono">8983894331</div></td>
+<td>Suspension<div class="sub">Suspension Arm</div></td>
+<td class="num">€269.57</td>
+<td class="num">€133.74</td>
+<td class="num"><span class="tag bad">2.02×</span></td>
+<td class="num ok">0.0%</td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr>
+<td><strong>PUMP ASM; DEF,DCM SPLY</strong><div class="sub mono">8982688122</div></td>
+<td>Intake Exhaust Emission<div class="sub">DEF System</div></td>
+<td class="num">€1,984.97</td>
+<td class="num">€1,017.76</td>
+<td class="num"><span class="tag bad">1.95×</span></td>
+<td class="num ok">+16.7%</td>
+<td class="brands">Bosch</td>
+</tr><tr>
+<td><strong>DRUM; BRK,RR</strong><div class="sub mono">8980618131</div></td>
+<td>Brakes<div class="sub">Discs &amp; Drums</div></td>
+<td class="num">€129.39</td>
+<td class="num">€67.50</td>
+<td class="num"><span class="tag bad">1.92×</span></td>
+<td class="num ok">+283.3%</td>
+<td class="brands">ABE, ABS, BLUE PRINT, Delphi, Febi, Pagid…</td>
+</tr><tr>
+<td><strong>JOINT ASM; BALL,LWR CONT ARM</strong><div class="sub mono">8980058750</div></td>
+<td>Suspension<div class="sub">Suspension Arm</div></td>
+<td class="num">€54.21</td>
+<td class="num">€28.55</td>
+<td class="num"><span class="tag bad">1.90×</span></td>
+<td class="num ok">+20.0%</td>
+<td class="brands">555, Ackoja, Aisin, Ashika, BLUE PRINT, CTR…</td>
+</tr><tr>
+<td><strong>CALIPER; FRT DISC BRK</strong><div class="sub mono">8984893180</div></td>
+<td>Brakes<div class="sub">Caliper</div></td>
+<td class="num">€157.65</td>
+<td class="num">€87.22</td>
+<td class="num"><span class="tag bad">1.81×</span></td>
+<td class="num ok">0.0%</td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr><tr>
+<td><strong>CLUTCH KIT</strong><div class="sub mono">5876102320</div></td>
+<td>Clutch<div class="sub">Clutch Kit</div></td>
+<td class="num">€347.52</td>
+<td class="num">€193.78</td>
+<td class="num"><span class="tag bad">1.79×</span></td>
+<td class="num ok">+112.5%</td>
+<td class="brands">BLUE PRINT, Exedy</td>
+</tr><tr>
+<td><strong>GRILLE; RAD</strong><div class="sub mono">8974072913</div></td>
+<td>Accident &amp; Body<div class="sub">Panels</div></td>
+<td class="num">€228.32</td>
+<td class="num">€127.93</td>
+<td class="num"><span class="tag bad">1.78×</span></td>
+<td class="num ok">0.0%</td>
+<td class="brands">KS International (no brand on listing)</td>
+</tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="limits">
+  <h2>5. What this does not prove</h2>
+  <ul>
+    <li>That Portuguese workshops pay the Eucon/KS listing — those are foreign aftermarket observations.</li>
+    <li>That list € lost is all lost to aftermarket brands (stock, campaigns, and mix also move the line).</li>
+    <li>That every Competitive part is overpriced — most have no brand price on file.</li>
+    <li>OEM peer / Amayama grey as a substitute for aftermarket brand competition (kept in the full table as a secondary column only).</li>
+    <li>That an “Earlier BO 2026” mark equals a current fill-rate miss — Nuno’s Sep/Oct+ BO tabs were empty in the 29-Sep file; open-order marks use our 6 Oct EXPORT only.</li>
+  </ul>
+  <div class="callout navy">
+    <strong>Method note:</strong> Competitive = catalogue L1 “Competitive parts” (AIM remaps into Brakes / Suspension / …). Contested AIM L1 basket = Accident &amp; Body, Brakes, Clutch, Maintenance Service, Suspension. Sales to dealer from Portugal MONTH files through 2026-08 (no Sep PN grain). List from PR00 IE40. Supply marks join shortlist PNs to EXPORT sold-to 519 and Nuno Backordered lines 2026.
+  </div>
+</section>
+
+<p class="footer">Source folder computed 2026-10-06 · shortlist_dropping_and_overpriced_vs_am.csv · shortlist_bo_open_marks.csv · near_miss_*.csv · basket_std_period_compare.csv · summary.json · Self-contained page (no fetch). Reference dealer price uses ×1.40 × 1.275 (= ×1.785) — spoken as reference dealer price / channel %GM, not as the working label.</p>
+</div>
+<script type="application/json" id="payload">{"as_of": "2026-10-06", "distributor": "I-Motors Portugal", "coverage_share_cy2025": 0.3165460833838204, "shortlist_hit_pns": 26, "shortlist_std_list_lost_sum": 13804.54, "supply_marks": {"open_now_pns": 4, "earlier_bo_only_pns": 5, "either_pns": 9, "neither_pns": 17, "sources": {"open_orders": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\_imotors_bo_compare_20261006\\EXPORT_ISZE_Order_20261006.xlsx", "nuno_bo": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\_nuno_backordered_lines_20261006\\20260929_1531_Nuno_Backordered lines 2026.xlsx", "sold_to": "519"}}, "basket": [{"basket": "Competitive parts (catalogue L1)", "n_pn": "1924", "std_qty_CY2025": "17156.0", "std_list_eur_CY2025": "663173.74", "std_qty_CY2026_JanAug": "12922.0", "std_list_eur_CY2026_JanAug": "535077.6399999999", "std_qty_FY26_AprAug": "6689.0", "std_list_eur_FY26_AprAug": "263191.57", "std_qty_FY27_AprAug": "7913.0", "std_list_eur_FY27_AprAug": "324107.07999999996", "std_qty_clean_Oct25_Aug26": "17391.0", "std_list_eur_clean_Oct25_Aug26": "711910.62", "qty_runrate_2026_vs_CY2025_pct": "12.980881324318027", "list_runrate_2026_vs_CY2025_pct": "21.02657442377014", "qty_FY27_vs_FY26_AprAug_pct": "18.298699357153538", "list_FY27_vs_FY26_AprAug_pct": "23.144932035627107"}, {"basket": "Contested AIM L1 basket", "n_pn": "2137", "std_qty_CY2025": "19248.0", "std_list_eur_CY2025": "540074.8", "std_qty_CY2026_JanAug": "14835.0", "std_list_eur_CY2026_JanAug": "437950.35", "std_qty_FY26_AprAug": "7630.0", "std_list_eur_FY26_AprAug": "221454.13", "std_qty_FY27_AprAug": "8855.0", "std_list_eur_FY27_AprAug": "265629.45", "std_qty_clean_Oct25_Aug26": "19830.0", "std_list_eur_clean_Oct25_Aug26": "572691.85", "qty_runrate_2026_vs_CY2025_pct": "15.609413965087281", "list_runrate_2026_vs_CY2025_pct": "21.63602615785811", "qty_FY27_vs_FY26_AprAug_pct": "16.055045871559635", "list_FY27_vs_FY26_AprAug_pct": "19.94784202037687"}, {"basket": "Union (competitive OR contested)", "n_pn": "3485", "std_qty_CY2025": "24146.0", "std_list_eur_CY2025": "897063.5", "std_qty_CY2026_JanAug": "18256.0", "std_list_eur_CY2026_JanAug": "704710.46", "std_qty_FY26_AprAug": "9627.0", "std_list_eur_FY26_AprAug": "367668.21", "std_qty_FY27_AprAug": "10874.0", "std_list_eur_FY27_AprAug": "422920.86000000004", "std_qty_clean_Oct25_Aug26": "24495.0", "std_list_eur_clean_Oct25_Aug26": "933689.03", "qty_runrate_2026_vs_CY2025_pct": "13.410088627515936", "list_runrate_2026_vs_CY2025_pct": "17.83621672267348", "qty_FY27_vs_FY26_AprAug_pct": "12.95315259166927", "list_FY27_vs_FY26_AprAug_pct": "15.027856229397706"}], "shortlist": [{"pn": "8981776324", "description": "DPD ASM", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Exhaust", "aim_l1": "Intake Exhaust Emission", "aim_l2": "DPF/DPD", "list_eur_unit": "1348.33", "ref_dealer_eur": "2406.7690499999994", "am_price_min_eur": "374.94", "am_price_median_eur": "449.0", "am_price_max_eur": "1309.17", "am_n_obs": "9.0", "am_brands": "Ahg, Greencar Automotive, Kamoka, Vegaz", "am_sources": "eucon_crossref, eucon_online_2025", "am_countries": "DE, NO", "am_price_types": "aftermarket_rrp, online_median", "am_price_via": "direct", "am_xref_pn": "8981776324", "index_ref_vs_am_median": "5.360287416481068", "index_list_vs_am_median": "3.0029621380846323", "index_ref_vs_am_min": "6.419077852456391", "overprice_gap_eur_per_pc": "1957.7690499999994", "overprice_ratio_gap": "4.360287416481068", "std_list_CY2025": "2696.66", "std_list_CY2026_JanAug": "0.0", "std_list_FY26_AprAug": "1348.33", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "1.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "-100.0", "list_chg_cy_runrate_pct": "-100.0", "std_list_lost": "1348.33", "impact_score": "5879.106332263918", "oem_peer_median_eur": "2500.41", "oem_peer_n_obs": "3.0", "oem_peer_sources": "ks, ks_gen", "brands_display": "Ahg, Greencar Automotive, Kamoka, Vegaz", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "8975809452", "description": "BUMPER; FRT,CENTER", "scope_tag": "contested_aim_only", "catalog_l1": "Accident parts", "catalog_l2": "Body parts", "aim_l1": "Accident & Body", "aim_l2": "Panels", "list_eur_unit": "371.73", "ref_dealer_eur": "663.5380499999999", "am_price_min_eur": "81.41", "am_price_median_eur": "81.41", "am_price_max_eur": "81.41", "am_n_obs": "1.0", "am_brands": "", "am_sources": "ks", "am_countries": "UK", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8975809452", "index_ref_vs_am_median": "8.150571797076525", "index_list_vs_am_median": "4.5661466650288665", "index_ref_vs_am_min": "8.150571797076525", "overprice_gap_eur_per_pc": "582.1280499999999", "overprice_ratio_gap": "7.150571797076525", "std_list_CY2025": "1486.92", "std_list_CY2026_JanAug": "371.73", "std_list_FY26_AprAug": "1115.19", "std_list_FY27_AprAug": "371.73", "std_qty_FY26_AprAug": "3.0", "std_qty_FY27_AprAug": "1.0", "list_chg_fy_pct": "-66.66666666666666", "list_chg_cy_runrate_pct": "-62.5", "std_list_lost": "743.46", "impact_score": "5316.164108254514", "oem_peer_median_eur": "565.72", "oem_peer_n_obs": "3.0", "oem_peer_sources": "amayama, ks", "brands_display": "KS International (no brand on listing)", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "8981032020", "description": "PANEL; DEFLECTOR", "scope_tag": "contested_aim_only", "catalog_l1": "Accident parts", "catalog_l2": "Body parts", "aim_l1": "Accident & Body", "aim_l2": "Panels", "list_eur_unit": "271.11", "ref_dealer_eur": "483.93134999999995", "am_price_min_eur": "105.97", "am_price_median_eur": "118.17", "am_price_max_eur": "266.46", "am_n_obs": "7.0", "am_brands": "Blic, Easy Part France", "am_sources": "eucon_crossref, eucon_march_2024", "am_countries": "DE, NO", "am_price_types": "aftermarket_retail, online_median", "am_price_via": "direct", "am_xref_pn": "8981032020", "index_ref_vs_am_median": "4.09521325209444", "index_list_vs_am_median": "2.2942371160192945", "index_ref_vs_am_min": "4.566682551665565", "overprice_gap_eur_per_pc": "365.76134999999994", "overprice_ratio_gap": "3.0952132520944398", "std_list_CY2025": "1626.66", "std_list_CY2026_JanAug": "0.0", "std_list_FY26_AprAug": "1084.44", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "4.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "-100.0", "list_chg_cy_runrate_pct": "-100.0", "std_list_lost": "1084.44", "impact_score": "3356.5730591012943", "oem_peer_median_eur": "617.375", "oem_peer_n_obs": "2.0", "oem_peer_sources": "amayama", "brands_display": "Blic, Easy Part France", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "8983355671", "description": "RADIATOR ASM", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Cooling", "aim_l1": "Cooling", "aim_l2": "Radiator", "list_eur_unit": "449.32", "ref_dealer_eur": "802.0361999999999", "am_price_min_eur": "127.93", "am_price_median_eur": "127.93", "am_price_max_eur": "127.93", "am_n_obs": "1.0", "am_brands": "", "am_sources": "ks", "am_countries": "UK", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8983355671", "index_ref_vs_am_median": "6.269336355819588", "index_list_vs_am_median": "3.5122332525599935", "index_ref_vs_am_min": "6.269336355819588", "overprice_gap_eur_per_pc": "674.1062", "overprice_ratio_gap": "5.269336355819588", "std_list_CY2025": "2695.92", "std_list_CY2026_JanAug": "1347.96", "std_list_FY26_AprAug": "1347.96", "std_list_FY27_AprAug": "898.64", "std_qty_FY26_AprAug": "3.0", "std_qty_FY27_AprAug": "2.0", "list_chg_fy_pct": "-33.333333333333336", "list_chg_cy_runrate_pct": "-25.0", "std_list_lost": "449.32000000000005", "impact_score": "2367.6182113968575", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": "", "brands_display": "KS International (no brand on listing)", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "8982399830", "description": "FILTER ASM; FUEL", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Filters", "aim_l1": "Maintenance Service", "aim_l2": "Filters (unspecified)", "list_eur_unit": "55.33", "ref_dealer_eur": "98.76404999999998", "am_price_min_eur": "7.55", "am_price_median_eur": "10.94", "am_price_max_eur": "44.29", "am_n_obs": "41.0", "am_brands": "AMC Filter, Bogap, Bosch, Eurorepar, HERTH+BUSS JAKOPARTS, Hella, Hengst, Hengst Filter, Herth+Buss Jakoparts, KGK (Bosch), Kavo Parts, LUCAS Filters, Lucas, Meca (KAVO PARTS), Misfat, Motaquip, Motrio, NDS (Bosch), Sorensen (Bosch), Valeo, Wilmink Group (Valeo)", "am_sources": "eucon_crossref, eucon_online_2025", "am_countries": "DE, DK, NO, PT, SE", "am_price_types": "aftermarket_rrp, online_median", "am_price_via": "direct", "am_xref_pn": "8982399830", "index_ref_vs_am_median": "9.027792504570384", "index_list_vs_am_median": "5.057586837294333", "index_ref_vs_am_min": "13.081331125827813", "overprice_gap_eur_per_pc": "87.82404999999999", "overprice_ratio_gap": "8.027792504570384", "std_list_CY2025": "940.61", "std_list_CY2026_JanAug": "0.0", "std_list_FY26_AprAug": "276.65", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "5.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "-100.0", "list_chg_cy_runrate_pct": "-100.0", "std_list_lost": "276.65", "impact_score": "2220.8887963893962", "oem_peer_median_eur": "98.85", "oem_peer_n_obs": "1.0", "oem_peer_sources": "ks_gen", "brands_display": "AMC Filter, Bogap, Bosch, Eurorepar, HERTH+BUSS JAKOPARTS, Hella…", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "8973873800", "description": "PANEL; DEFLECTOR", "scope_tag": "contested_aim_only", "catalog_l1": "Accident parts", "catalog_l2": "Body parts", "aim_l1": "Accident & Body", "aim_l2": "Panels", "list_eur_unit": "306.2", "ref_dealer_eur": "546.5669999999999", "am_price_min_eur": "69.78", "am_price_median_eur": "69.78", "am_price_max_eur": "69.78", "am_n_obs": "1.0", "am_brands": "", "am_sources": "ks", "am_countries": "UK", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8973873800", "index_ref_vs_am_median": "7.832717110920033", "index_list_vs_am_median": "4.388076812840355", "index_ref_vs_am_min": "7.832717110920033", "overprice_gap_eur_per_pc": "476.7869999999999", "overprice_ratio_gap": "6.832717110920033", "std_list_CY2025": "306.2", "std_list_CY2026_JanAug": "306.2", "std_list_FY26_AprAug": "306.2", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "1.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "-100.0", "list_chg_cy_runrate_pct": "50.0", "std_list_lost": "306.2", "impact_score": "2092.177979363714", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": "", "brands_display": "KS International (no brand on listing)", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "8974056285", "description": "BUMPER ASM; FRT", "scope_tag": "contested_aim_only", "catalog_l1": "Accident parts", "catalog_l2": "Body parts", "aim_l1": "Accident & Body", "aim_l2": "Bumpers", "list_eur_unit": "175.09", "ref_dealer_eur": "312.53565", "am_price_min_eur": "127.93", "am_price_median_eur": "127.93", "am_price_max_eur": "127.93", "am_n_obs": "3.0", "am_brands": "", "am_sources": "ks, ks_am", "am_countries": "UK", "am_price_types": "aftermarket_retail, aftermarket_trade", "am_price_via": "direct", "am_xref_pn": "8974056285", "index_ref_vs_am_median": "2.443020792620964", "index_list_vs_am_median": "1.368639099507543", "index_ref_vs_am_min": "2.443020792620964", "overprice_gap_eur_per_pc": "184.60564999999997", "overprice_ratio_gap": "1.4430207926209642", "std_list_CY2025": "2626.35", "std_list_CY2026_JanAug": "700.36", "std_list_FY26_AprAug": "1400.72", "std_list_FY27_AprAug": "350.18", "std_qty_FY26_AprAug": "8.0", "std_qty_FY27_AprAug": "2.0", "list_chg_fy_pct": "-75.0", "list_chg_cy_runrate_pct": "-60.0", "std_list_lost": "1050.54", "impact_score": "1515.9510634800276", "oem_peer_median_eur": "461.27", "oem_peer_n_obs": "7.0", "oem_peer_sources": "amayama, ks, ks_gen", "brands_display": "KS International (no brand on listing)", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "5876150021", "description": "FILTER; ACL", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Filters", "aim_l1": "Maintenance Service", "aim_l2": "Air Filter", "list_eur_unit": "12.93", "ref_dealer_eur": "23.080049999999996", "am_price_min_eur": "6.09", "am_price_median_eur": "8.22", "am_price_max_eur": "48.47", "am_n_obs": "15.0", "am_brands": "BLUE PRINT, Blue Print, Febi, Febi Bilstein, Wilmink Group (BLUE PRINT), Wilmink Group (Febi)", "am_sources": "eucon_crossref, eucon_march_2024, eucon_online_2025", "am_countries": "DE, NO", "am_price_types": "aftermarket_retail, aftermarket_rrp, online_median", "am_price_via": "direct", "am_xref_pn": "5876150021", "index_ref_vs_am_median": "2.807791970802919", "index_list_vs_am_median": "1.572992700729927", "index_ref_vs_am_min": "3.789827586206896", "overprice_gap_eur_per_pc": "14.860049999999996", "overprice_ratio_gap": "1.8077919708029189", "std_list_CY2025": "1603.32", "std_list_CY2026_JanAug": "0.0", "std_list_FY26_AprAug": "711.15", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "55.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "-100.0", "list_chg_cy_runrate_pct": "-100.0", "std_list_lost": "711.15", "impact_score": "1285.6112600364957", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": "", "brands_display": "BLUE PRINT, Febi, Febi Bilstein, Wilmink Group (BLUE PRINT), Wilmink Group (Febi)", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "8982488951", "description": "ROTOR; DISC BRK,FRT", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Brake parts", "aim_l1": "Brakes", "aim_l2": "Discs & Drums", "list_eur_unit": "158.83", "ref_dealer_eur": "283.51155", "am_price_min_eur": "63.34", "am_price_median_eur": "87.22", "am_price_max_eur": "111.1", "am_n_obs": "2.0", "am_brands": "BLUE PRINT, Febi", "am_sources": "eucon_survey_2023", "am_countries": "UK", "am_price_types": "survey_list, survey_workshop", "am_price_via": "direct", "am_xref_pn": "8982488951", "index_ref_vs_am_median": "3.2505337078651686", "index_list_vs_am_median": "1.8210272873194224", "index_ref_vs_am_min": "4.476026997158193", "overprice_gap_eur_per_pc": "196.29155", "overprice_ratio_gap": "2.2505337078651686", "std_list_CY2025": "2541.28", "std_list_CY2026_JanAug": "1588.3000000000002", "std_list_FY26_AprAug": "1111.81", "std_list_FY27_AprAug": "635.32", "std_qty_FY26_AprAug": "7.0", "std_qty_FY27_AprAug": "4.0", "list_chg_fy_pct": "-42.85714285714285", "list_chg_cy_runrate_pct": "-6.25", "std_list_lost": "476.4899999999999", "impact_score": "1072.3568064606739", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": "", "brands_display": "BLUE PRINT, Febi", "supply_labels": ["Open on our order", "Earlier BO 2026"], "open_on_our_order": true, "earlier_bo_2026": false, "bo_months": "2026-02", "open_eur": 635.32}, {"pn": "8975056801", "description": "PAD KIT; CALIPER,DISC BRK,FRT", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Brake parts", "aim_l1": "Brakes", "aim_l2": "Pads & Shoes", "list_eur_unit": "82.25", "ref_dealer_eur": "146.81624999999997", "am_price_min_eur": "46.87", "am_price_median_eur": "77.65", "am_price_max_eur": "219.3", "am_n_obs": "17.0", "am_brands": "BLUE PRINT, Blue Print, Febi, Febi Bilstein, Herth+Buss Jakoparts, KGK (Febi), Meca (R Brake), Metelli, Triscan, Wilmink Group (BLUE PRINT), Wilmink Group (Febi)", "am_sources": "eucon_crossref, eucon_online_2025", "am_countries": "DE, NO, SE", "am_price_types": "aftermarket_rrp, online_median", "am_price_via": "direct", "am_xref_pn": "8975056801", "index_ref_vs_am_median": "1.890743721828718", "index_list_vs_am_median": "1.0592401802962008", "index_ref_vs_am_min": "3.132414124173245", "overprice_gap_eur_per_pc": "69.16624999999996", "overprice_ratio_gap": "0.890743721828718", "std_list_CY2025": "10528.0", "std_list_CY2026_JanAug": "8389.5", "std_list_FY26_AprAug": "4935.0", "std_list_FY27_AprAug": "4194.75", "std_qty_FY26_AprAug": "60.0", "std_qty_FY27_AprAug": "51.0", "list_chg_fy_pct": "-15.0", "list_chg_cy_runrate_pct": "19.53125", "std_list_lost": "740.25", "impact_score": "659.3730400837085", "oem_peer_median_eur": "200.675", "oem_peer_n_obs": "4.0", "oem_peer_sources": "amayama", "brands_display": "BLUE PRINT, Febi, Febi Bilstein, Herth+Buss Jakoparts, KGK (Febi), Meca (R Brake)…", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "8974068144", "description": "BUMPER ASM; FRT", "scope_tag": "contested_aim_only", "catalog_l1": "Accident parts", "catalog_l2": "Body parts", "aim_l1": "Accident & Body", "aim_l2": "Bumpers", "list_eur_unit": "153.2", "ref_dealer_eur": "273.46199999999993", "am_price_min_eur": "139.56", "am_price_median_eur": "139.56", "am_price_max_eur": "139.56", "am_n_obs": "3.0", "am_brands": "", "am_sources": "ks, ks_am", "am_countries": "UK", "am_price_types": "aftermarket_retail, aftermarket_trade", "am_price_via": "direct", "am_xref_pn": "8974068144", "index_ref_vs_am_median": "1.9594582975064483", "index_list_vs_am_median": "1.0977357408999713", "index_ref_vs_am_min": "1.9594582975064483", "overprice_gap_eur_per_pc": "133.90199999999993", "overprice_ratio_gap": "0.9594582975064483", "std_list_CY2025": "3676.7999999999997", "std_list_CY2026_JanAug": "1838.3999999999999", "std_list_FY26_AprAug": "1378.8", "std_list_FY27_AprAug": "766.0", "std_qty_FY26_AprAug": "9.0", "std_qty_FY27_AprAug": "5.0", "list_chg_fy_pct": "-44.44444444444444", "list_chg_cy_runrate_pct": "-25.0", "std_list_lost": "612.8", "impact_score": "587.9560447119514", "oem_peer_median_eur": "494.48", "oem_peer_n_obs": "7.0", "oem_peer_sources": "amayama, ks, ks_gen", "brands_display": "KS International (no brand on listing)", "supply_labels": ["Earlier BO 2026"], "open_on_our_order": false, "earlier_bo_2026": true, "bo_months": "2026-02;2026-03", "open_eur": 0.0}, {"pn": "8979458412", "description": "ARM; UPR CONT", "scope_tag": "contested_aim_only", "catalog_l1": "Repair parts", "catalog_l2": "Hydraulic / mechanical", "aim_l1": "Suspension", "aim_l2": "Suspension Arm", "list_eur_unit": "136.17", "ref_dealer_eur": "243.06344999999993", "am_price_min_eur": "81.41", "am_price_median_eur": "81.41", "am_price_max_eur": "81.41", "am_n_obs": "1.0", "am_brands": "", "am_sources": "ks", "am_countries": "UK", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8979458412", "index_ref_vs_am_median": "2.9856706792777294", "index_list_vs_am_median": "1.672644638250829", "index_ref_vs_am_min": "2.9856706792777294", "overprice_gap_eur_per_pc": "161.65344999999994", "overprice_ratio_gap": "1.9856706792777294", "std_list_CY2025": "408.51", "std_list_CY2026_JanAug": "0.0", "std_list_FY26_AprAug": "272.34", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "2.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "-100.0", "list_chg_cy_runrate_pct": "-100.0", "std_list_lost": "272.34", "impact_score": "540.7775527944968", "oem_peer_median_eur": "320.46", "oem_peer_n_obs": "2.0", "oem_peer_sources": "amayama", "brands_display": "KS International (no brand on listing)", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "1476012190", "description": "CYLINDER; WHEEL,RR BRK", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Brake parts", "aim_l1": "Wheels Hub", "aim_l2": "Wheel Rim", "list_eur_unit": "217.83", "ref_dealer_eur": "388.82654999999994", "am_price_min_eur": "302.37", "am_price_median_eur": "302.37", "am_price_max_eur": "302.37", "am_n_obs": "3.0", "am_brands": "", "am_sources": "ks, ks_am", "am_countries": "UK", "am_price_types": "aftermarket_retail, aftermarket_trade", "am_price_via": "direct", "am_xref_pn": "1476012190", "index_ref_vs_am_median": "1.2859296557198132", "index_list_vs_am_median": "0.7204087707113801", "index_ref_vs_am_min": "1.2859296557198132", "overprice_gap_eur_per_pc": "86.45654999999994", "overprice_ratio_gap": "0.2859296557198132", "std_list_CY2025": "4574.43", "std_list_CY2026_JanAug": "2178.3", "std_list_FY26_AprAug": "871.32", "std_list_FY27_AprAug": "871.32", "std_qty_FY26_AprAug": "4.0", "std_qty_FY27_AprAug": "4.0", "list_chg_fy_pct": "0.0", "list_chg_cy_runrate_pct": "-28.57142857142857", "std_list_lost": "1306.98", "impact_score": "373.7043414326815", "oem_peer_median_eur": "267.78", "oem_peer_n_obs": "6.0", "oem_peer_sources": "amayama", "brands_display": "KS International (no brand on listing)", "supply_labels": ["Open on our order", "Earlier BO 2026"], "open_on_our_order": true, "earlier_bo_2026": false, "bo_months": "2026-02", "open_eur": 653.49}, {"pn": "8983894321", "description": "ARM; UPR CONT", "scope_tag": "contested_aim_only", "catalog_l1": "Repair parts", "catalog_l2": "Hydraulic / mechanical", "aim_l1": "Suspension", "aim_l2": "Suspension Arm", "list_eur_unit": "119.32", "ref_dealer_eur": "212.98619999999994", "am_price_min_eur": "87.22", "am_price_median_eur": "87.22", "am_price_max_eur": "87.22", "am_n_obs": "1.0", "am_brands": "", "am_sources": "ks", "am_countries": "UK", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8983894321", "index_ref_vs_am_median": "2.441942215088282", "index_list_vs_am_median": "1.3680348543911947", "index_ref_vs_am_min": "2.441942215088282", "overprice_gap_eur_per_pc": "125.76619999999994", "overprice_ratio_gap": "1.441942215088282", "std_list_CY2025": "954.56", "std_list_CY2026_JanAug": "477.28", "std_list_FY26_AprAug": "357.96", "std_list_FY27_AprAug": "357.96", "std_qty_FY26_AprAug": "3.0", "std_qty_FY27_AprAug": "3.0", "list_chg_fy_pct": "0.0", "list_chg_cy_runrate_pct": "-25.0", "std_list_lost": "238.64", "impact_score": "344.10509020866755", "oem_peer_median_eur": "180.26", "oem_peer_n_obs": "1.0", "oem_peer_sources": "ks", "brands_display": "KS International (no brand on listing)", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "5876102060", "description": "CLUTCH KIT", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Clutch parts", "aim_l1": "Clutch", "aim_l2": "Clutch Kit", "list_eur_unit": "162.62", "ref_dealer_eur": "290.27669999999995", "am_price_min_eur": "226.78", "am_price_median_eur": "226.78", "am_price_max_eur": "226.78", "am_n_obs": "2.0", "am_brands": "", "am_sources": "ks", "am_countries": "UK", "am_price_types": "aftermarket_retail", "am_price_via": "via_genuine_pair", "am_xref_pn": "8972553130", "index_ref_vs_am_median": "1.2799925037481257", "index_list_vs_am_median": "0.7170826351530117", "index_ref_vs_am_min": "1.2799925037481257", "overprice_gap_eur_per_pc": "63.49669999999995", "overprice_ratio_gap": "0.2799925037481257", "std_list_CY2025": "4228.12", "std_list_CY2026_JanAug": "1788.8200000000002", "std_list_FY26_AprAug": "1951.44", "std_list_FY27_AprAug": "813.1", "std_qty_FY26_AprAug": "12.0", "std_qty_FY27_AprAug": "5.0", "list_chg_fy_pct": "-58.333333333333336", "list_chg_cy_runrate_pct": "-36.53846153846153", "std_list_lost": "1138.3400000000001", "impact_score": "318.72666671664143", "oem_peer_median_eur": "437.53", "oem_peer_n_obs": "4.0", "oem_peer_sources": "amayama", "brands_display": "KS International (no brand on listing)", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "5876150610", "description": "PAD KIT; CALIPER,DISC BRK,FRT", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Brake parts", "aim_l1": "Brakes", "aim_l2": "Pads & Shoes", "list_eur_unit": "57.58", "ref_dealer_eur": "102.78029999999998", "am_price_min_eur": "58.74", "am_price_median_eur": "66.28", "am_price_max_eur": "75.3", "am_n_obs": "8.0", "am_brands": "Blue Print, Febi Bilstein", "am_sources": "eucon_march_2024", "am_countries": "DE, NO", "am_price_types": "aftermarket_retail", "am_price_via": "via_genuine_pair", "am_xref_pn": "8975056800", "index_ref_vs_am_median": "1.5506985515992755", "index_list_vs_am_median": "0.8687386843693421", "index_ref_vs_am_min": "1.7497497446373846", "overprice_gap_eur_per_pc": "36.50029999999998", "overprice_ratio_gap": "0.5506985515992755", "std_list_CY2025": "2072.88", "std_list_CY2026_JanAug": "1151.6", "std_list_FY26_AprAug": "1036.44", "std_list_FY27_AprAug": "575.8000000000001", "std_qty_FY26_AprAug": "18.0", "std_qty_FY27_AprAug": "10.0", "list_chg_fy_pct": "-44.44444444444444", "list_chg_cy_runrate_pct": "-16.666666666666675", "std_list_lost": "460.64", "impact_score": "253.67378080869025", "oem_peer_median_eur": "157.34", "oem_peer_n_obs": "4.0", "oem_peer_sources": "amayama", "brands_display": "Blue Print, Febi Bilstein", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "8983894341", "description": "ARM; LWR CONT", "scope_tag": "contested_aim_only", "catalog_l1": "Repair parts", "catalog_l2": "Hydraulic / mechanical", "aim_l1": "Suspension", "aim_l2": "Suspension Arm", "list_eur_unit": "151.02", "ref_dealer_eur": "269.5707", "am_price_min_eur": "133.74", "am_price_median_eur": "133.74", "am_price_max_eur": "133.74", "am_n_obs": "1.0", "am_brands": "", "am_sources": "ks", "am_countries": "UK", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8983894341", "index_ref_vs_am_median": "2.015632570659488", "index_list_vs_am_median": "1.1292059219380888", "index_ref_vs_am_min": "2.015632570659488", "overprice_gap_eur_per_pc": "135.83069999999998", "overprice_ratio_gap": "1.0156325706594882", "std_list_CY2025": "906.12", "std_list_CY2026_JanAug": "453.06000000000006", "std_list_FY26_AprAug": "302.04", "std_list_FY27_AprAug": "302.03999999999996", "std_qty_FY26_AprAug": "2.0", "std_qty_FY27_AprAug": "2.0", "list_chg_fy_pct": "-1.8819831433190307e-14", "list_chg_cy_runrate_pct": "-24.99999999999999", "std_list_lost": "226.52999999999986", "impact_score": "230.07124623149372", "oem_peer_median_eur": "449.2", "oem_peer_n_obs": "3.0", "oem_peer_sources": "amayama, ks", "brands_display": "KS International (no brand on listing)", "supply_labels": ["Earlier BO 2026"], "open_on_our_order": false, "earlier_bo_2026": true, "bo_months": "2026-06", "open_eur": 0.0}, {"pn": "8983303281", "description": "BUMPER ASM; FRT", "scope_tag": "contested_aim_only", "catalog_l1": "Accident parts", "catalog_l2": "Body parts", "aim_l1": "Accident & Body", "aim_l2": "Bumpers", "list_eur_unit": "129.43", "ref_dealer_eur": "231.03255", "am_price_min_eur": "82.45", "am_price_median_eur": "160.73", "am_price_max_eur": "203.5", "am_n_obs": "7.0", "am_brands": "Diederichs, HD Karosserieteile, Klokkerholm", "am_sources": "eucon_march_2024", "am_countries": "DE, NO", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8983303281", "index_ref_vs_am_median": "1.4373953213463573", "index_list_vs_am_median": "0.8052634853480994", "index_ref_vs_am_min": "2.8020927835051546", "overprice_gap_eur_per_pc": "70.30255", "overprice_ratio_gap": "0.4373953213463573", "std_list_CY2025": "1035.44", "std_list_CY2026_JanAug": "0.0", "std_list_FY26_AprAug": "388.29", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "3.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "-100.0", "list_chg_cy_runrate_pct": "-100.0", "std_list_lost": "388.29", "impact_score": "169.83622932557708", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": "", "brands_display": "Diederichs, HD Karosserieteile, Klokkerholm", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "8981810290", "description": "FENDER; FRT", "scope_tag": "contested_aim_only", "catalog_l1": "Accident parts", "catalog_l2": "Body parts", "aim_l1": "Accident & Body", "aim_l2": "Panels", "list_eur_unit": "96.64", "ref_dealer_eur": "172.50239999999997", "am_price_min_eur": "63.96", "am_price_median_eur": "63.96", "am_price_max_eur": "63.96", "am_n_obs": "5.0", "am_brands": "", "am_sources": "ks, ks_am", "am_countries": "UK", "am_price_types": "aftermarket_retail, aftermarket_trade", "am_price_via": "direct", "am_xref_pn": "8981810290", "index_ref_vs_am_median": "2.697035647279549", "index_list_vs_am_median": "1.5109443402126328", "index_ref_vs_am_min": "2.697035647279549", "overprice_gap_eur_per_pc": "108.54239999999996", "overprice_ratio_gap": "1.6970356472795491", "std_list_CY2025": "386.56", "std_list_CY2026_JanAug": "289.92", "std_list_FY26_AprAug": "289.92", "std_list_FY27_AprAug": "193.28", "std_qty_FY26_AprAug": "3.0", "std_qty_FY27_AprAug": "2.0", "list_chg_fy_pct": "-33.333333333333336", "list_chg_cy_runrate_pct": "12.5", "std_list_lost": "96.64000000000001", "impact_score": "164.00152495309567", "oem_peer_median_eur": "222.54", "oem_peer_n_obs": "4.0", "oem_peer_sources": "amayama", "brands_display": "KS International (no brand on listing)", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "8981938690", "description": "GRILLE; RAD", "scope_tag": "contested_aim_only", "catalog_l1": "Accident parts", "catalog_l2": "Body parts", "aim_l1": "Accident & Body", "aim_l2": "Panels", "list_eur_unit": "140.98", "ref_dealer_eur": "251.64929999999993", "am_price_min_eur": "113.75", "am_price_median_eur": "118.235", "am_price_max_eur": "147.8", "am_n_obs": "4.0", "am_brands": "Diederichs, HD Karosserieteile", "am_sources": "eucon_march_2024", "am_countries": "DE, NO", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8981938690", "index_ref_vs_am_median": "2.128382458662832", "index_list_vs_am_median": "1.1923711253013067", "index_ref_vs_am_min": "2.2123015384615377", "overprice_gap_eur_per_pc": "133.4142999999999", "overprice_ratio_gap": "1.128382458662832", "std_list_CY2025": "422.93999999999994", "std_list_CY2026_JanAug": "140.98", "std_list_FY26_AprAug": "281.96", "std_list_FY27_AprAug": "140.98", "std_qty_FY26_AprAug": "2.0", "std_qty_FY27_AprAug": "1.0", "list_chg_fy_pct": "-50.0", "list_chg_cy_runrate_pct": "-50.0", "std_list_lost": "140.98", "impact_score": "159.07935902228604", "oem_peer_median_eur": "345.54", "oem_peer_n_obs": "2.0", "oem_peer_sources": "amayama", "brands_display": "Diederichs, HD Karosserieteile", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "8980873901", "description": "SUPPORT; FRT BUMPER", "scope_tag": "contested_aim_only", "catalog_l1": "Accident parts", "catalog_l2": "Body parts", "aim_l1": "Accident & Body", "aim_l2": "Panels", "list_eur_unit": "47.62", "ref_dealer_eur": "85.00169999999999", "am_price_min_eur": "58.15", "am_price_median_eur": "58.15", "am_price_max_eur": "58.15", "am_n_obs": "2.0", "am_brands": "", "am_sources": "ks, ks_am", "am_countries": "UK", "am_price_types": "aftermarket_retail, aftermarket_trade", "am_price_via": "direct", "am_xref_pn": "8980873901", "index_ref_vs_am_median": "1.461766122098022", "index_list_vs_am_median": "0.8189165950128977", "index_ref_vs_am_min": "1.461766122098022", "overprice_gap_eur_per_pc": "26.851699999999987", "overprice_ratio_gap": "0.46176612209802204", "std_list_CY2025": "952.4", "std_list_CY2026_JanAug": "476.2", "std_list_FY26_AprAug": "666.68", "std_list_FY27_AprAug": "333.34", "std_qty_FY26_AprAug": "14.0", "std_qty_FY27_AprAug": "7.0", "list_chg_fy_pct": "-50.0", "list_chg_cy_runrate_pct": "-25.0", "std_list_lost": "333.34", "impact_score": "153.92511914015466", "oem_peer_median_eur": "121.74", "oem_peer_n_obs": "2.0", "oem_peer_sources": "amayama", "brands_display": "KS International (no brand on listing)", "supply_labels": ["Earlier BO 2026"], "open_on_our_order": false, "earlier_bo_2026": true, "bo_months": "2026-03;2026-06", "open_eur": 0.0}, {"pn": "8981226920", "description": "PANEL ASM; FRT", "scope_tag": "contested_aim_only", "catalog_l1": "Accident parts", "catalog_l2": "Body parts", "aim_l1": "Accident & Body", "aim_l2": "Panels", "list_eur_unit": "166.48", "ref_dealer_eur": "297.1667999999999", "am_price_min_eur": "203.52", "am_price_median_eur": "203.52", "am_price_max_eur": "203.52", "am_n_obs": "3.0", "am_brands": "", "am_sources": "ks, ks_am", "am_countries": "UK", "am_price_types": "aftermarket_retail, aftermarket_trade", "am_price_via": "direct", "am_xref_pn": "8981226920", "index_ref_vs_am_median": "1.4601356132075467", "index_list_vs_am_median": "0.818003144654088", "index_ref_vs_am_min": "1.4601356132075467", "overprice_gap_eur_per_pc": "93.6467999999999", "overprice_ratio_gap": "0.4601356132075467", "std_list_CY2025": "3829.04", "std_list_CY2026_JanAug": "2497.2", "std_list_FY26_AprAug": "1331.84", "std_list_FY27_AprAug": "998.8799999999999", "std_qty_FY26_AprAug": "8.0", "std_qty_FY27_AprAug": "6.0", "list_chg_fy_pct": "-25.000000000000007", "list_chg_cy_runrate_pct": "-2.1739130434782705", "std_list_lost": "332.96000000000004", "impact_score": "153.20675377358478", "oem_peer_median_eur": "381.815", "oem_peer_n_obs": "6.0", "oem_peer_sources": "amayama", "brands_display": "KS International (no brand on listing)", "supply_labels": ["Open on our order"], "open_on_our_order": true, "earlier_bo_2026": false, "bo_months": "", "open_eur": 499.44}, {"pn": "5876103090", "description": "CLUTCH KIT", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Clutch parts", "aim_l1": "Clutch", "aim_l2": "Clutch Kit", "list_eur_unit": "172.27", "ref_dealer_eur": "307.50194999999997", "am_price_min_eur": "226.78", "am_price_median_eur": "226.78", "am_price_max_eur": "226.78", "am_n_obs": "2.0", "am_brands": "", "am_sources": "ks", "am_countries": "UK", "am_price_types": "aftermarket_retail", "am_price_via": "via_genuine_pair", "am_xref_pn": "8972553130", "index_ref_vs_am_median": "1.355948275862069", "index_list_vs_am_median": "0.7596348884381339", "index_ref_vs_am_min": "1.355948275862069", "overprice_gap_eur_per_pc": "80.72194999999996", "overprice_ratio_gap": "0.3559482758620689", "std_list_CY2025": "689.08", "std_list_CY2026_JanAug": "0.0", "std_list_FY26_AprAug": "344.54", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "2.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "-100.0", "list_chg_cy_runrate_pct": "-100.0", "std_list_lost": "344.54", "impact_score": "122.63841896551723", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": "", "brands_display": "KS International (no brand on listing)", "supply_labels": [], "open_on_our_order": false, "earlier_bo_2026": false, "bo_months": "", "open_eur": 0.0}, {"pn": "8983313840", "description": "SENSOR; TEMPERATURE,DPD", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Exhaust", "aim_l1": "Electrical", "aim_l2": "Instruments", "list_eur_unit": "63.89", "ref_dealer_eur": "114.04364999999999", "am_price_min_eur": "75.59", "am_price_median_eur": "75.59", "am_price_max_eur": "75.59", "am_n_obs": "1.0", "am_brands": "", "am_sources": "ks", "am_countries": "UK", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8983313840", "index_ref_vs_am_median": "1.508713454160603", "index_list_vs_am_median": "0.8452176213784892", "index_ref_vs_am_min": "1.508713454160603", "overprice_gap_eur_per_pc": "38.45364999999998", "overprice_ratio_gap": "0.5087134541606031", "std_list_CY2025": "702.79", "std_list_CY2026_JanAug": "511.12", "std_list_FY26_AprAug": "319.45", "std_list_FY27_AprAug": "127.78", "std_qty_FY26_AprAug": "5.0", "std_qty_FY27_AprAug": "2.0", "list_chg_fy_pct": "-60.0", "list_chg_cy_runrate_pct": "9.090909090909104", "std_list_lost": "191.67", "impact_score": "97.5051077589628", "oem_peer_median_eur": "187.42", "oem_peer_n_obs": "3.0", "oem_peer_sources": "amayama, ks", "brands_display": "KS International (no brand on listing)", "supply_labels": ["Earlier BO 2026"], "open_on_our_order": false, "earlier_bo_2026": true, "bo_months": "2026-05", "open_eur": 0.0}, {"pn": "8983313830", "description": "SENSOR; TEMPERATURE,DPD", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Exhaust", "aim_l1": "Electrical", "aim_l2": "Instruments", "list_eur_unit": "62.63", "ref_dealer_eur": "111.79454999999999", "am_price_min_eur": "75.59", "am_price_median_eur": "93.035", "am_price_max_eur": "110.48", "am_n_obs": "2.0", "am_brands": "", "am_sources": "ks", "am_countries": "UK", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8983313830", "index_ref_vs_am_median": "1.2016397054871821", "index_list_vs_am_median": "0.6731875100768528", "index_ref_vs_am_min": "1.4789595184548219", "overprice_gap_eur_per_pc": "18.75954999999999", "overprice_ratio_gap": "0.20163970548718213", "std_list_CY2025": "876.82", "std_list_CY2026_JanAug": "563.6700000000001", "std_list_FY26_AprAug": "563.6700000000001", "std_list_FY27_AprAug": "187.89000000000001", "std_qty_FY26_AprAug": "9.0", "std_qty_FY27_AprAug": "3.0", "list_chg_fy_pct": "-66.66666666666667", "list_chg_cy_runrate_pct": "-3.57142857142857", "std_list_lost": "375.7800000000001", "impact_score": "75.77216852797332", "oem_peer_median_eur": "195.17", "oem_peer_n_obs": "3.0", "oem_peer_sources": "amayama, ks", "brands_display": "KS International (no brand on listing)", "supply_labels": ["Open on our order"], "open_on_our_order": true, "earlier_bo_2026": false, "bo_months": "", "open_eur": 250.52}, {"pn": "8982120690", "description": "DISC; CLUTCH", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Clutch parts", "aim_l1": "Clutch", "aim_l2": "Disc", "list_eur_unit": "157.24", "ref_dealer_eur": "280.67339999999996", "am_price_min_eur": "27.11", "am_price_median_eur": "202.17", "am_price_max_eur": "1048.84", "am_n_obs": "83.0", "am_brands": "Ashika, BLUE PRINT, Blue Print, DT, EXEDY Clutch Europe, Frankberg, HERTH+BUSS JAKOPARTS, Iap Quality Parts, JapKo, Japanparts, LUK, Meca (LUK), Mekonomen (LUK), NDS (LUK), Rymec, Schaeffler Luk, Sorensen (LUK), Wilmink Group (LUK)", "am_sources": "eucon_crossref, eucon_march_2024, eucon_online_2025", "am_countries": "DE, NO, PT, SE", "am_price_types": "aftermarket_retail, aftermarket_rrp, online_median", "am_price_via": "direct", "am_xref_pn": "8982120690", "index_ref_vs_am_median": "1.3883039026561803", "index_list_vs_am_median": "0.7777612900034625", "index_ref_vs_am_min": "10.353131685724824", "overprice_gap_eur_per_pc": "78.50339999999997", "overprice_ratio_gap": "0.3883039026561803", "std_list_CY2025": "2201.36", "std_list_CY2026_JanAug": "471.72", "std_list_FY26_AprAug": "471.72", "std_list_FY27_AprAug": "314.48", "std_qty_FY26_AprAug": "3.0", "std_qty_FY27_AprAug": "2.0", "list_chg_fy_pct": "-33.33333333333333", "list_chg_cy_runrate_pct": "-67.85714285714286", "std_list_lost": "157.24", "impact_score": "61.05690565365779", "oem_peer_median_eur": "398.895", "oem_peer_n_obs": "4.0", "oem_peer_sources": "amayama", "brands_display": "Ashika, BLUE PRINT, DT, EXEDY Clutch Europe, Frankberg, HERTH+BUSS JAKOPARTS…", "supply_labels": ["Earlier BO 2026"], "open_on_our_order": false, "earlier_bo_2026": true, "bo_months": "2026-05", "open_eur": 0.0}], "near_miss_dropping_no_am_top15": [{"pn": "8983682091", "description": "PIPE; EXH", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Exhaust", "aim_l1": "Intake Exhaust Emission", "aim_l2": "Exhaust", "list_eur_unit": "1293.76", "ref_dealer_eur": "2309.3615999999997", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "9056.32", "std_list_CY2026_JanAug": "3881.2799999999997", "std_list_FY26_AprAug": "7762.5599999999995", "std_list_FY27_AprAug": "1293.76", "std_qty_FY26_AprAug": "6.0", "std_qty_FY27_AprAug": "1.0", "list_chg_fy_pct": "-83.33333333333333", "list_chg_cy_runrate_pct": "-35.71428571428571", "std_list_lost": "6468.799999999999", "impact_score": "", "oem_peer_median_eur": "1947.99", "oem_peer_n_obs": "3.0", "oem_peer_sources": "ks, ks_gen"}, {"pn": "8972746690", "description": "TANK ASM; DEF", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Exhaust", "aim_l1": "Intake Exhaust Emission", "aim_l2": "DEF System", "list_eur_unit": "1099.27", "ref_dealer_eur": "1962.1969499999996", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "9893.43", "std_list_CY2026_JanAug": "6595.62", "std_list_FY26_AprAug": "4397.08", "std_list_FY27_AprAug": "2198.54", "std_qty_FY26_AprAug": "4.0", "std_qty_FY27_AprAug": "2.0", "list_chg_fy_pct": "-50.0", "list_chg_cy_runrate_pct": "0.0", "std_list_lost": "2198.54", "impact_score": "", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": ""}, {"pn": "8983320764", "description": "DPD ASM", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Exhaust", "aim_l1": "Intake Exhaust Emission", "aim_l2": "DPF/DPD", "list_eur_unit": "2133.68", "ref_dealer_eur": "3808.6187999999993", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "2133.68", "std_list_CY2026_JanAug": "0.0", "std_list_FY26_AprAug": "0.0", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "0.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "", "list_chg_cy_runrate_pct": "-100.0", "std_list_lost": "2133.68", "impact_score": "", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": ""}, {"pn": "8981521221", "description": "COOLER; EGR", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Exhaust", "aim_l1": "Intake Exhaust Emission", "aim_l2": "EGR", "list_eur_unit": "348.21", "ref_dealer_eur": "621.5548499999999", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "4526.73", "std_list_CY2026_JanAug": "1741.05", "std_list_FY26_AprAug": "2785.68", "std_list_FY27_AprAug": "696.42", "std_qty_FY26_AprAug": "8.0", "std_qty_FY27_AprAug": "2.0", "list_chg_fy_pct": "-75.0", "list_chg_cy_runrate_pct": "-42.3076923076923", "std_list_lost": "2089.2599999999998", "impact_score": "", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": ""}, {"pn": "8983320621", "description": "PUMP ASM; FUEL,SUPPLY", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Fuel system", "aim_l1": "Fuel System", "aim_l2": "Fuel Pump", "list_eur_unit": "991.81", "ref_dealer_eur": "1770.3808499999996", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "4959.049999999999", "std_list_CY2026_JanAug": "991.81", "std_list_FY26_AprAug": "1983.62", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "2.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "-100.0", "list_chg_cy_runrate_pct": "-70.0", "std_list_lost": "1983.62", "impact_score": "", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": ""}, {"pn": "8983300400", "description": "RAIL;COMMON", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Fuel system", "aim_l1": "Fuel System", "aim_l2": "Fuel Rail", "list_eur_unit": "197.04", "ref_dealer_eur": "351.7163999999999", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "8866.8", "std_list_CY2026_JanAug": "5517.12", "std_list_FY26_AprAug": "4137.84", "std_list_FY27_AprAug": "2364.48", "std_qty_FY26_AprAug": "21.0", "std_qty_FY27_AprAug": "12.0", "list_chg_fy_pct": "-42.85714285714286", "list_chg_cy_runrate_pct": "-6.666666666666654", "std_list_lost": "1773.3600000000001", "impact_score": "", "oem_peer_median_eur": "507.44", "oem_peer_n_obs": "4.0", "oem_peer_sources": "amayama"}, {"pn": "8981017801", "description": "STEERING UNIT", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Steering", "aim_l1": "Steering", "aim_l2": "Steering Gear", "list_eur_unit": "798.43", "ref_dealer_eur": "1425.1975499999996", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "1596.86", "std_list_CY2026_JanAug": "0.0", "std_list_FY26_AprAug": "0.0", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "0.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "", "list_chg_cy_runrate_pct": "-100.0", "std_list_lost": "1596.86", "impact_score": "", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": ""}, {"pn": "8975536860", "description": "BODY ASM; REAR", "scope_tag": "contested_aim_only", "catalog_l1": "Accident parts", "catalog_l2": "Body parts", "aim_l1": "Accident & Body", "aim_l2": "Panels", "list_eur_unit": "1459.97", "ref_dealer_eur": "2606.04645", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "1459.97", "std_list_CY2026_JanAug": "0.0", "std_list_FY26_AprAug": "1459.97", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "1.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "-100.0", "list_chg_cy_runrate_pct": "-100.0", "std_list_lost": "1459.97", "impact_score": "", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": ""}, {"pn": "8979461321", "description": "STEERING UNIT", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Steering", "aim_l1": "Steering", "aim_l2": "Steering Gear", "list_eur_unit": "679.28", "ref_dealer_eur": "1212.5147999999997", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "3396.3999999999996", "std_list_CY2026_JanAug": "1358.56", "std_list_FY26_AprAug": "679.28", "std_list_FY27_AprAug": "679.28", "std_qty_FY26_AprAug": "1.0", "std_qty_FY27_AprAug": "1.0", "list_chg_fy_pct": "0.0", "list_chg_cy_runrate_pct": "-39.99999999999999", "std_list_lost": "1358.5599999999997", "impact_score": "", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": ""}, {"pn": "8980290621", "description": "GLASS; WINDSHIELD", "scope_tag": "contested_aim_only", "catalog_l1": "Accident parts", "catalog_l2": "Body parts", "aim_l1": "Accident & Body", "aim_l2": "Glass", "list_eur_unit": "313.12", "ref_dealer_eur": "558.9191999999999", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "3444.32", "std_list_CY2026_JanAug": "2504.96", "std_list_FY26_AprAug": "2191.84", "std_list_FY27_AprAug": "939.36", "std_qty_FY26_AprAug": "7.0", "std_qty_FY27_AprAug": "3.0", "list_chg_fy_pct": "-57.14285714285714", "list_chg_cy_runrate_pct": "9.090909090909083", "std_list_lost": "1252.48", "impact_score": "", "oem_peer_median_eur": "919.1800000000001", "oem_peer_n_obs": "4.0", "oem_peer_sources": "amayama"}, {"pn": "8979461301", "description": "STEERING UNIT", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Steering", "aim_l1": "Steering", "aim_l2": "Steering Gear", "list_eur_unit": "558.62", "ref_dealer_eur": "997.1366999999998", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "1117.24", "std_list_CY2026_JanAug": "0.0", "std_list_FY26_AprAug": "1117.24", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "2.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "-100.0", "list_chg_cy_runrate_pct": "-100.0", "std_list_lost": "1117.24", "impact_score": "", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": ""}, {"pn": "8983922341", "description": "SPRING ASM; LEAF,RR", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Suspension", "aim_l1": "Suspension", "aim_l2": "Leaf Springs", "list_eur_unit": "121.97", "ref_dealer_eur": "217.71644999999995", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "1585.61", "std_list_CY2026_JanAug": "487.88", "std_list_FY26_AprAug": "1097.73", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "9.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "-100.0", "list_chg_cy_runrate_pct": "-53.846153846153854", "std_list_lost": "1097.73", "impact_score": "", "oem_peer_median_eur": "423.28", "oem_peer_n_obs": "7.0", "oem_peer_sources": "amayama, ks, ks_gen"}, {"pn": "8983297210", "description": "HYDRAULIC UNIT; ANTI LOCK BRK", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Brake parts", "aim_l1": "Brakes", "aim_l2": "ABS Control", "list_eur_unit": "1074.23", "ref_dealer_eur": "1917.5005499999997", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "1074.23", "std_list_CY2026_JanAug": "0.0", "std_list_FY26_AprAug": "0.0", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "0.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "", "list_chg_cy_runrate_pct": "-100.0", "std_list_lost": "1074.23", "impact_score": "", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": ""}, {"pn": "1318005651", "description": "BOOSTER ASM; CLU", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Clutch parts", "aim_l1": "Clutch", "aim_l2": "Release System", "list_eur_unit": "349.23", "ref_dealer_eur": "623.37555", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "698.46", "std_list_CY2026_JanAug": "0.0", "std_list_FY26_AprAug": "1047.69", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "3.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "-100.0", "list_chg_cy_runrate_pct": "-100.0", "std_list_lost": "1047.69", "impact_score": "", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": ""}, {"pn": "8983615741", "description": "SENSOR ASM; DEF TANK", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Exhaust", "aim_l1": "Intake Exhaust Emission", "aim_l2": "DEF System", "list_eur_unit": "347.43", "ref_dealer_eur": "620.1625499999999", "am_price_min_eur": "", "am_price_median_eur": "", "am_price_max_eur": "", "am_n_obs": "", "am_brands": "", "am_sources": "", "am_countries": "", "am_price_types": "", "am_price_via": "", "am_xref_pn": "", "index_ref_vs_am_median": "", "index_list_vs_am_median": "", "index_ref_vs_am_min": "", "overprice_gap_eur_per_pc": "0.0", "overprice_ratio_gap": "", "std_list_CY2025": "1737.15", "std_list_CY2026_JanAug": "0.0", "std_list_FY26_AprAug": "1042.29", "std_list_FY27_AprAug": "0.0", "std_qty_FY26_AprAug": "3.0", "std_qty_FY27_AprAug": "0.0", "list_chg_fy_pct": "-100.0", "list_chg_cy_runrate_pct": "-100.0", "std_list_lost": "1042.29", "impact_score": "", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": ""}], "near_miss_overpriced_growing_top12": [{"pn": "5876150240", "description": "ELEMENT KIT; FUEL FILTER", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Filters", "aim_l1": "Maintenance Service", "aim_l2": "Fuel Filter", "list_eur_unit": "9.05", "ref_dealer_eur": "16.154249999999998", "am_price_min_eur": "5.81", "am_price_median_eur": "5.81", "am_price_max_eur": "11.63", "am_n_obs": "5.0", "am_brands": "", "am_sources": "ks, ks_am", "am_countries": "UK", "am_price_types": "aftermarket_retail, aftermarket_trade", "am_price_via": "via_genuine_pair", "am_xref_pn": "8981941190", "index_ref_vs_am_median": "2.7804216867469878", "index_list_vs_am_median": "1.557659208261618", "index_ref_vs_am_min": "2.7804216867469878", "overprice_gap_eur_per_pc": "10.344249999999999", "overprice_ratio_gap": "1.7804216867469878", "std_list_CY2025": "2108.65", "std_list_CY2026_JanAug": "1674.2500000000002", "std_list_FY26_AprAug": "814.5", "std_list_FY27_AprAug": "1185.5500000000002", "std_qty_FY26_AprAug": "90.0", "std_qty_FY27_AprAug": "131.0", "list_chg_fy_pct": "45.55555555555558", "list_chg_cy_runrate_pct": "19.09871244635195", "std_list_lost": "0.0", "impact_score": "0.0", "oem_peer_median_eur": "18.14", "oem_peer_n_obs": "6.0", "oem_peer_sources": "amayama"}, {"pn": "8982169220", "description": "PAD KIT; CALIPER,DISC BRK,FRT", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Brake parts", "aim_l1": "Brakes", "aim_l2": "Pads & Shoes", "list_eur_unit": "81.0", "ref_dealer_eur": "144.58499999999998", "am_price_min_eur": "6.58", "am_price_median_eur": "55.4", "am_price_max_eur": "123.07", "am_n_obs": "49.0", "am_brands": "ABS, Blue Print, Delphi, Febi Bilstein, Ferodo, Hella, Hella Pagid, Herth+Buss Jakoparts, Kavo Parts, Mintex, Red Line, SWAG, Textar", "am_sources": "eucon_march_2024", "am_countries": "DE, NO", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8982169220", "index_ref_vs_am_median": "2.6098375451263536", "index_list_vs_am_median": "1.4620938628158846", "index_ref_vs_am_min": "21.973404255319146", "overprice_gap_eur_per_pc": "89.18499999999997", "overprice_ratio_gap": "1.6098375451263536", "std_list_CY2025": "5103.0", "std_list_CY2026_JanAug": "3807.0", "std_list_FY26_AprAug": "2106.0", "std_list_FY27_AprAug": "2430.0", "std_qty_FY26_AprAug": "26.0", "std_qty_FY27_AprAug": "30.0", "list_chg_fy_pct": "15.384615384615385", "list_chg_cy_runrate_pct": "11.904761904761907", "std_list_lost": "0.0", "impact_score": "0.0", "oem_peer_median_eur": "226.35", "oem_peer_n_obs": "4.0", "oem_peer_sources": "amayama"}, {"pn": "8979488071", "description": "ROTOR; DISC BRK,FRT", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Brake parts", "aim_l1": "Brakes", "aim_l2": "Discs & Drums", "list_eur_unit": "90.47", "ref_dealer_eur": "161.48894999999996", "am_price_min_eur": "12.7", "am_price_median_eur": "63.019999999999996", "am_price_max_eur": "484.28", "am_n_obs": "146.0", "am_brands": "ABS, Ashika, BLUE PRINT, BLUE PRINT, Brembo, Hella Pagid, Blue Print, Brembo, DON, Delphi, Don, Eurobrake, Febi, Febi Bilstein, Ferodo, Fremax, Gocore, HERTH+BUSS JAKOPARTS, Hella, Hella Pagid, Herth+Buss Jakoparts, Iap Quality Parts, JapKo, Japanparts, KGK (Brembo), KGK (Hella Pagid), Kavo Parts, L", "am_sources": "eucon_crossref, eucon_march_2024, eucon_online_2025, eucon_survey_2023", "am_countries": "DE, DK, NO, PT, SE, UK", "am_price_types": "aftermarket_retail, aftermarket_rrp, online_median, survey_list, survey_workshop", "am_price_via": "direct", "am_xref_pn": "8979488071", "index_ref_vs_am_median": "2.5625031735956836", "index_list_vs_am_median": "1.4355760076166297", "index_ref_vs_am_min": "12.715665354330707", "overprice_gap_eur_per_pc": "98.46894999999996", "overprice_ratio_gap": "1.5625031735956836", "std_list_CY2025": "542.8199999999999", "std_list_CY2026_JanAug": "542.8199999999999", "std_list_FY26_AprAug": "90.47", "std_list_FY27_AprAug": "180.94", "std_qty_FY26_AprAug": "1.0", "std_qty_FY27_AprAug": "2.0", "list_chg_fy_pct": "100.0", "list_chg_cy_runrate_pct": "50.0", "std_list_lost": "0.0", "impact_score": "0.0", "oem_peer_median_eur": "269.05", "oem_peer_n_obs": "4.0", "oem_peer_sources": "amayama"}, {"pn": "8982447940", "description": "PAD KIT; CALIPER,DISC BRK,FRT", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Brake parts", "aim_l1": "Brakes", "aim_l2": "Pads & Shoes", "list_eur_unit": "89.11", "ref_dealer_eur": "159.06134999999998", "am_price_min_eur": "45.84", "am_price_median_eur": "64.59", "am_price_max_eur": "83.34", "am_n_obs": "2.0", "am_brands": "BLUE PRINT, Febi, Ferodo, Textar", "am_sources": "eucon_survey_2023", "am_countries": "UK", "am_price_types": "survey_list, survey_workshop", "am_price_via": "direct", "am_xref_pn": "8982447940", "index_ref_vs_am_median": "2.4626312122619596", "index_list_vs_am_median": "1.379625328998297", "index_ref_vs_am_min": "3.4699247382198943", "overprice_gap_eur_per_pc": "94.47134999999997", "overprice_ratio_gap": "1.4626312122619596", "std_list_CY2025": "15683.36", "std_list_CY2026_JanAug": "13633.83", "std_list_FY26_AprAug": "5524.82", "std_list_FY27_AprAug": "7930.79", "std_qty_FY26_AprAug": "62.0", "std_qty_FY27_AprAug": "89.0", "list_chg_fy_pct": "43.5483870967742", "list_chg_cy_runrate_pct": "30.39772727272727", "std_list_lost": "0.0", "impact_score": "0.0", "oem_peer_median_eur": "244.38", "oem_peer_n_obs": "4.0", "oem_peer_sources": "amayama"}, {"pn": "8983894311", "description": "ARM; UPR CONT", "scope_tag": "contested_aim_only", "catalog_l1": "Repair parts", "catalog_l2": "Hydraulic / mechanical", "aim_l1": "Suspension", "aim_l2": "Suspension Arm", "list_eur_unit": "119.32", "ref_dealer_eur": "212.98619999999994", "am_price_min_eur": "87.22", "am_price_median_eur": "87.22", "am_price_max_eur": "87.22", "am_n_obs": "1.0", "am_brands": "", "am_sources": "ks", "am_countries": "UK", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8983894311", "index_ref_vs_am_median": "2.441942215088282", "index_list_vs_am_median": "1.3680348543911947", "index_ref_vs_am_min": "2.441942215088282", "overprice_gap_eur_per_pc": "125.76619999999994", "overprice_ratio_gap": "1.441942215088282", "std_list_CY2025": "596.5999999999999", "std_list_CY2026_JanAug": "715.92", "std_list_FY26_AprAug": "238.64", "std_list_FY27_AprAug": "238.64", "std_qty_FY26_AprAug": "2.0", "std_qty_FY27_AprAug": "2.0", "list_chg_fy_pct": "0.0", "list_chg_cy_runrate_pct": "80.0", "std_list_lost": "0.0", "impact_score": "0.0", "oem_peer_median_eur": "180.26", "oem_peer_n_obs": "1.0", "oem_peer_sources": "ks"}, {"pn": "8983894331", "description": "ARM; LWR CONT", "scope_tag": "contested_aim_only", "catalog_l1": "Repair parts", "catalog_l2": "Hydraulic / mechanical", "aim_l1": "Suspension", "aim_l2": "Suspension Arm", "list_eur_unit": "151.02", "ref_dealer_eur": "269.5707", "am_price_min_eur": "133.74", "am_price_median_eur": "133.74", "am_price_max_eur": "133.74", "am_n_obs": "1.0", "am_brands": "", "am_sources": "ks", "am_countries": "UK", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8983894331", "index_ref_vs_am_median": "2.015632570659488", "index_list_vs_am_median": "1.1292059219380888", "index_ref_vs_am_min": "2.015632570659488", "overprice_gap_eur_per_pc": "135.83069999999998", "overprice_ratio_gap": "1.0156325706594882", "std_list_CY2025": "604.08", "std_list_CY2026_JanAug": "604.08", "std_list_FY26_AprAug": "151.02", "std_list_FY27_AprAug": "151.02", "std_qty_FY26_AprAug": "1.0", "std_qty_FY27_AprAug": "1.0", "list_chg_fy_pct": "0.0", "list_chg_cy_runrate_pct": "50.0", "std_list_lost": "0.0", "impact_score": "0.0", "oem_peer_median_eur": "385.69", "oem_peer_n_obs": "3.0", "oem_peer_sources": "amayama, ks"}, {"pn": "8982688122", "description": "PUMP ASM; DEF,DCM SPLY", "scope_tag": "competitive_catalog", "catalog_l1": "Competitive parts", "catalog_l2": "Exhaust", "aim_l1": "Intake Exhaust Emission", "aim_l2": "DEF System", "list_eur_unit": "1112.03", "ref_dealer_eur": "1984.9735499999997", "am_price_min_eur": "871.98", "am_price_median_eur": "1017.765", "am_price_max_eur": "1163.55", "am_n_obs": "2.0", "am_brands": "Bosch", "am_sources": "eucon_survey_2023", "am_countries": "UK", "am_price_types": "survey_list, survey_workshop", "am_price_via": "direct", "am_xref_pn": "8982688122", "index_ref_vs_am_median": "1.950326008459713", "index_list_vs_am_median": "1.0926196125824723", "index_ref_vs_am_min": "2.2763980251840636", "overprice_gap_eur_per_pc": "967.2085499999997", "overprice_ratio_gap": "0.9503260084597129", "std_list_CY2025": "15568.42", "std_list_CY2026_JanAug": "10008.27", "std_list_FY26_AprAug": "6672.179999999999", "std_list_FY27_AprAug": "7784.21", "std_qty_FY26_AprAug": "6.0", "std_qty_FY27_AprAug": "7.0", "list_chg_fy_pct": "16.66666666666668", "list_chg_cy_runrate_pct": "-3.57142857142857", "std_list_lost": "556.0149999999994", "impact_score": "528.3955155937267", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": ""}, {"pn": "8980618131", "description": "DRUM; BRK,RR", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Brake parts", "aim_l1": "Brakes", "aim_l2": "Discs & Drums", "list_eur_unit": "72.49", "ref_dealer_eur": "129.39464999999996", "am_price_min_eur": "16.76", "am_price_median_eur": "67.5", "am_price_max_eur": "247.72", "am_n_obs": "133.0", "am_brands": "ABE, ABS, BLUE PRINT, BLUE PRINT, Delphi, Febi, Pagid, TRW, Blue Print, Borg Amp Beck, Borg Beck, Delphi, F Becker, Febi, Febi Bilstein, Ferodo, HERTH+BUSS JAKOPARTS, Hella, Hella Pagid, Herth+Buss Jakoparts, Iap Quality Parts, KGK (NK), KGK (TRISCAN), Kavo Parts, Maxgear, Mintex, NDS (NK), NK, Pagi", "am_sources": "eucon_crossref, eucon_march_2024, eucon_online_2025, eucon_survey_2023", "am_countries": "DE, DK, NO, PT, SE, UK", "am_price_types": "aftermarket_retail, aftermarket_rrp, online_median, survey_list, survey_workshop", "am_price_via": "direct", "am_xref_pn": "8980618131", "index_ref_vs_am_median": "1.916957777777777", "index_list_vs_am_median": "1.073925925925926", "index_ref_vs_am_min": "7.720444510739854", "overprice_gap_eur_per_pc": "61.894649999999956", "overprice_ratio_gap": "0.9169577777777771", "std_list_CY2025": "2102.21", "std_list_CY2026_JanAug": "5146.79", "std_list_FY26_AprAug": "869.8799999999999", "std_list_FY27_AprAug": "3334.54", "std_qty_FY26_AprAug": "12.0", "std_qty_FY27_AprAug": "46.0", "list_chg_fy_pct": "283.33333333333337", "list_chg_cy_runrate_pct": "267.24137931034477", "std_list_lost": "0.0", "impact_score": "0.0", "oem_peer_median_eur": "", "oem_peer_n_obs": "", "oem_peer_sources": ""}, {"pn": "8980058750", "description": "JOINT ASM; BALL,LWR CONT ARM", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Suspension", "aim_l1": "Suspension", "aim_l2": "Suspension Arm", "list_eur_unit": "30.37", "ref_dealer_eur": "54.210449999999994", "am_price_min_eur": "15.11", "am_price_median_eur": "28.55", "am_price_max_eur": "203.26", "am_n_obs": "85.0", "am_brands": "555, Ackoja, Aisin, Ashika, BLUE PRINT, Blue Print, CTR, Corteco, DYS, Delphi, FAI Auto Parts, Febest, Febi, Febi Bilstein, GSP Automotive, HERTH+BUSS JAKOPARTS, Herth+Buss Jakoparts, JapKo, Japanparts, KGK (Sidem), KYB, Kavo Parts, Mapco, Meca (Meyle Products), Mekonomen (Meyle Products), Meyle, Me", "am_sources": "eucon_crossref, eucon_online_2025, ks_crossref", "am_countries": "DE, DK, NO, PT, SE, UK", "am_price_types": "aftermarket_retail, aftermarket_rrp, online_median", "am_price_via": "direct", "am_xref_pn": "8980058750", "index_ref_vs_am_median": "1.8987898423817862", "index_list_vs_am_median": "1.0637478108581435", "index_ref_vs_am_min": "3.5877200529450692", "overprice_gap_eur_per_pc": "25.660449999999994", "overprice_ratio_gap": "0.8987898423817862", "std_list_CY2025": "1123.69", "std_list_CY2026_JanAug": "789.62", "std_list_FY26_AprAug": "455.55", "std_list_FY27_AprAug": "546.6600000000001", "std_qty_FY26_AprAug": "15.0", "std_qty_FY27_AprAug": "18.0", "list_chg_fy_pct": "20.000000000000014", "list_chg_cy_runrate_pct": "5.405405405405417", "std_list_lost": "0.0", "impact_score": "0.0", "oem_peer_median_eur": "61.05", "oem_peer_n_obs": "15.0", "oem_peer_sources": "amayama, ks, ks_gen"}, {"pn": "8984893180", "description": "CALIPER; FRT DISC BRK", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Brake parts", "aim_l1": "Brakes", "aim_l2": "Caliper", "list_eur_unit": "88.32", "ref_dealer_eur": "157.65119999999996", "am_price_min_eur": "87.22", "am_price_median_eur": "87.22", "am_price_max_eur": "87.22", "am_n_obs": "2.0", "am_brands": "", "am_sources": "ks", "am_countries": "UK", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8984893180", "index_ref_vs_am_median": "1.8075120385232741", "index_list_vs_am_median": "1.0126117862875486", "index_ref_vs_am_min": "1.8075120385232741", "overprice_gap_eur_per_pc": "70.43119999999996", "overprice_ratio_gap": "0.8075120385232741", "std_list_CY2025": "706.56", "std_list_CY2026_JanAug": "618.24", "std_list_FY26_AprAug": "529.92", "std_list_FY27_AprAug": "529.92", "std_qty_FY26_AprAug": "6.0", "std_qty_FY27_AprAug": "6.0", "list_chg_fy_pct": "0.0", "list_chg_cy_runrate_pct": "31.25000000000002", "std_list_lost": "0.0", "impact_score": "0.0", "oem_peer_median_eur": "225.67", "oem_peer_n_obs": "6.0", "oem_peer_sources": "amayama, ks"}, {"pn": "5876102320", "description": "CLUTCH KIT", "scope_tag": "competitive_catalog+contested_aim", "catalog_l1": "Competitive parts", "catalog_l2": "Clutch parts", "aim_l1": "Clutch", "aim_l2": "Clutch Kit", "list_eur_unit": "194.69", "ref_dealer_eur": "347.52164999999997", "am_price_min_eur": "104.67", "am_price_median_eur": "193.78", "am_price_max_eur": "226.78", "am_n_obs": "6.0", "am_brands": "BLUE PRINT, Exedy", "am_sources": "eucon_survey_2023, ks", "am_countries": "UK", "am_price_types": "aftermarket_retail, survey_list, survey_workshop", "am_price_via": "via_genuine_pair", "am_xref_pn": "1313100120", "index_ref_vs_am_median": "1.7933824440086694", "index_list_vs_am_median": "1.0046960470636805", "index_ref_vs_am_min": "3.3201648036686726", "overprice_gap_eur_per_pc": "153.74164999999996", "overprice_ratio_gap": "0.7933824440086694", "std_list_CY2025": "4088.49", "std_list_CY2026_JanAug": "4477.87", "std_list_FY26_AprAug": "1557.52", "std_list_FY27_AprAug": "3309.7299999999996", "std_qty_FY26_AprAug": "8.0", "std_qty_FY27_AprAug": "17.0", "list_chg_fy_pct": "112.49999999999997", "list_chg_cy_runrate_pct": "64.2857142857143", "std_list_lost": "0.0", "impact_score": "0.0", "oem_peer_median_eur": "523.59", "oem_peer_n_obs": "4.0", "oem_peer_sources": "amayama"}, {"pn": "8974072913", "description": "GRILLE; RAD", "scope_tag": "contested_aim_only", "catalog_l1": "Accident parts", "catalog_l2": "Body parts", "aim_l1": "Accident & Body", "aim_l2": "Panels", "list_eur_unit": "127.91", "ref_dealer_eur": "228.31934999999996", "am_price_min_eur": "127.93", "am_price_median_eur": "127.93", "am_price_max_eur": "127.93", "am_n_obs": "1.0", "am_brands": "", "am_sources": "ks", "am_countries": "UK", "am_price_types": "aftermarket_retail", "am_price_via": "direct", "am_xref_pn": "8974072913", "index_ref_vs_am_median": "1.7847209411396854", "index_list_vs_am_median": "0.9998436645040255", "index_ref_vs_am_min": "1.7847209411396854", "overprice_gap_eur_per_pc": "100.38934999999995", "overprice_ratio_gap": "0.7847209411396854", "std_list_CY2025": "511.64", "std_list_CY2026_JanAug": "639.55", "std_list_FY26_AprAug": "255.82", "std_list_FY27_AprAug": "255.82", "std_qty_FY26_AprAug": "2.0", "std_qty_FY27_AprAug": "2.0", "list_chg_fy_pct": "0.0", "list_chg_cy_runrate_pct": "87.5", "std_list_lost": "0.0", "impact_score": "0.0", "oem_peer_median_eur": "209.34", "oem_peer_n_obs": "5.0", "oem_peer_sources": "amayama, ks"}], "gaps": ["Aftermarket brand prices cover only a minority of Portugal competitive StD PNs (see coverage share).", "Observed prices are DE/NO/UK IAM listings, not Portuguese dealer purchase prices.", "Price tiers mixed (retail / RRP / trade / online median) — never average across types into one 'true' price; we use median of available AM obs per PN as a working signal.", "Reference dealer price uses the standard channel dials (×1.40 × 1.275); I-Motors actual %GM may differ.", "genuine_bvp_crossref expands a few PNs but most competitive StD still has no AM observation.", "Sep 2026 StD KPI euros have no PN grain — out of this cut.", "List € is ISZE list × qty, not I-Motors net to dealer."]}</script>
+</body>
+</html>

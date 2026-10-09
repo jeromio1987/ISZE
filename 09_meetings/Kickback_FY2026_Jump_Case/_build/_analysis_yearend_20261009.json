@@ -1,0 +1,285 @@
+{
+ "sources": {
+  "billing": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\sales_fact.parquet",
+  "plan": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\11_planning\\budget_per_DB_reviewed_24042026.xlsx 'Incentive FY27'",
+  "billing_range": [
+   "2023-01-03",
+   "2026-08-31"
+  ]
+ },
+ "febmar_share_9dist": {
+  "FY2024": 18.7,
+  "FY2025": 17.3,
+  "FY2026": 18.6
+ },
+ "febmar_share_even": 16.7,
+ "febmar_share_per_db": {
+  "IUK": {
+   "FY2024": 21.2,
+   "FY2025": 15.6,
+   "FY2026": 19.1
+  },
+  "UMI": {
+   "FY2024": 19.8,
+   "FY2025": 20.8,
+   "FY2026": 13.1
+  },
+  "UTI": {
+   "FY2024": 12.9,
+   "FY2025": 13.9,
+   "FY2026": 13.9
+  },
+  "Germany": {
+   "FY2024": 18.7,
+   "FY2025": 15.1,
+   "FY2026": 21.8
+  },
+  "Benelux": {
+   "FY2024": 17.1,
+   "FY2025": 22.0,
+   "FY2026": 25.9
+  },
+  "Portugal": {
+   "FY2024": 17.7,
+   "FY2025": 16.5,
+   "FY2026": 20.6
+  },
+  "Sweden": {
+   "FY2024": 24.1,
+   "FY2025": 18.2,
+   "FY2026": 22.1
+  },
+  "Norway": {
+   "FY2024": 20.6,
+   "FY2025": 18.5,
+   "FY2026": 17.9
+  },
+  "Ireland": {
+   "FY2024": 17.6,
+   "FY2025": 21.1,
+   "FY2026": 16.5
+  },
+  "ITUK": {
+   "FY2024": 15.2,
+   "FY2025": 12.7,
+   "FY2026": 25.9
+  }
+ },
+ "febmar_share_10_incl_ituk": {
+  "FY2024": 17.8,
+  "FY2025": 16.5,
+  "FY2026": 20.3
+ },
+ "pace": {
+  "IUK": {
+   "plan_fy26": 5400732.93,
+   "apr_jan": 4895266.91,
+   "pace_pct_of_10m_plan": 108.8,
+   "needed_feb_mar": 505466.02,
+   "bought_feb_mar": 1153042.06,
+   "fy26_billed": 6048308.97,
+   "vs_plan_eur": 647576.04,
+   "vs_plan_pct": 12.0
+  },
+  "UMI": {
+   "plan_fy26": 2712620.03,
+   "apr_jan": 2676380.31,
+   "pace_pct_of_10m_plan": 118.4,
+   "needed_feb_mar": 36239.72,
+   "bought_feb_mar": 403298.03,
+   "fy26_billed": 3079678.34,
+   "vs_plan_eur": 367058.31,
+   "vs_plan_pct": 13.5
+  },
+  "UTI": {
+   "plan_fy26": 2926229.1,
+   "apr_jan": 2793355.85,
+   "pace_pct_of_10m_plan": 114.6,
+   "needed_feb_mar": 132873.25,
+   "bought_feb_mar": 449184.03,
+   "fy26_billed": 3242539.88,
+   "vs_plan_eur": 316310.78,
+   "vs_plan_pct": 10.8
+  },
+  "Germany": {
+   "plan_fy26": 2589508.79,
+   "apr_jan": 2135617.75,
+   "pace_pct_of_10m_plan": 99.0,
+   "needed_feb_mar": 453891.04,
+   "bought_feb_mar": 596332.38,
+   "fy26_billed": 2731950.13,
+   "vs_plan_eur": 142441.34,
+   "vs_plan_pct": 5.5
+  },
+  "Benelux": {
+   "plan_fy26": 2221673.78,
+   "apr_jan": 1632748.25,
+   "pace_pct_of_10m_plan": 88.2,
+   "needed_feb_mar": 588925.53,
+   "bought_feb_mar": 570364.23,
+   "fy26_billed": 2203112.48,
+   "vs_plan_eur": -18561.3,
+   "vs_plan_pct": -0.8
+  },
+  "Portugal": {
+   "plan_fy26": 1720718.56,
+   "apr_jan": 1471624.6,
+   "pace_pct_of_10m_plan": 102.6,
+   "needed_feb_mar": 249093.96,
+   "bought_feb_mar": 381988.82,
+   "fy26_billed": 1853613.42,
+   "vs_plan_eur": 132894.86,
+   "vs_plan_pct": 7.7
+  },
+  "Sweden": {
+   "plan_fy26": 1303970.95,
+   "apr_jan": 1120047.0,
+   "pace_pct_of_10m_plan": 103.1,
+   "needed_feb_mar": 183923.95,
+   "bought_feb_mar": 318379.16,
+   "fy26_billed": 1438426.16,
+   "vs_plan_eur": 134455.21,
+   "vs_plan_pct": 10.3
+  },
+  "Norway": {
+   "plan_fy26": 1546292.13,
+   "apr_jan": 1357454.53,
+   "pace_pct_of_10m_plan": 105.3,
+   "needed_feb_mar": 188837.6,
+   "bought_feb_mar": 296184.59,
+   "fy26_billed": 1653639.12,
+   "vs_plan_eur": 107346.99,
+   "vs_plan_pct": 6.9
+  },
+  "Ireland": {
+   "plan_fy26": 1160592.75,
+   "apr_jan": 956116.66,
+   "pace_pct_of_10m_plan": 98.9,
+   "needed_feb_mar": 204476.09,
+   "bought_feb_mar": 189140.04,
+   "fy26_billed": 1145256.7,
+   "vs_plan_eur": -15336.05,
+   "vs_plan_pct": -1.3
+  },
+  "ITUK": {
+   "plan_fy26": 6551118.88,
+   "apr_jan": 5155239.59,
+   "pace_pct_of_10m_plan": 94.4,
+   "needed_feb_mar": 1395879.29,
+   "bought_feb_mar": 1802285.71,
+   "fy26_billed": 6957525.3,
+   "vs_plan_eur": 406406.42,
+   "vs_plan_pct": 6.2
+  }
+ },
+ "ahead_at_january": [
+  "IUK",
+  "UMI",
+  "UTI",
+  "Portugal",
+  "Sweden",
+  "Norway"
+ ],
+ "short_at_year_end": [
+  "Benelux",
+  "Ireland"
+ ],
+ "march_split_per_working_day": {
+  "IUK": {
+   "per_wd_before": 25041,
+   "per_wd_after": 24073,
+   "after_higher": false
+  },
+  "UMI": {
+   "per_wd_before": 10127,
+   "per_wd_after": 7334,
+   "after_higher": false
+  },
+  "UTI": {
+   "per_wd_before": 10285,
+   "per_wd_after": 8056,
+   "after_higher": false
+  },
+  "Germany": {
+   "per_wd_before": 9023,
+   "per_wd_after": 16953,
+   "after_higher": true
+  },
+  "Benelux": {
+   "per_wd_before": 11669,
+   "per_wd_after": 16693,
+   "after_higher": true
+  },
+  "Portugal": {
+   "per_wd_before": 9097,
+   "per_wd_after": 8379,
+   "after_higher": false
+  },
+  "Sweden": {
+   "per_wd_before": 3792,
+   "per_wd_after": 10723,
+   "after_higher": true
+  },
+  "Norway": {
+   "per_wd_before": 5035,
+   "per_wd_after": 12153,
+   "after_higher": true
+  },
+  "Ireland": {
+   "per_wd_before": 4766,
+   "per_wd_after": 4041,
+   "after_higher": false
+  },
+  "ITUK": {
+   "per_wd_before": 57456,
+   "per_wd_after": 32574,
+   "after_higher": false
+  }
+ },
+ "apr_may_2026_pct_of_fy26_month_avg": {
+  "IUK": 128,
+  "UMI": 92,
+  "UTI": 74,
+  "Germany": 91,
+  "Benelux": 98,
+  "Portugal": 94,
+  "Sweden": 103,
+  "Norway": 81,
+  "Ireland": 91,
+  "ITUK": 81
+ },
+ "benelux_monthly_2025": {
+  "2025-03": 235237,
+  "2025-04": 63482,
+  "2025-05": 62166,
+  "2025-06": 219795,
+  "2025-07": 249587
+ },
+ "febmar_vs_own_run_billing_and_std": {
+  "IUK": {
+   "months_covered": 12,
+   "usable": true,
+   "billing_febmar_vs_run_pct": 17.8,
+   "std_febmar_vs_run_pct": 16.9
+  },
+  "Ireland": {
+   "months_covered": 12,
+   "usable": true,
+   "billing_febmar_vs_run_pct": -1.1,
+   "std_febmar_vs_run_pct": -0.2
+  },
+  "Portugal": {
+   "months_covered": 12,
+   "usable": true,
+   "billing_febmar_vs_run_pct": 29.8,
+   "std_febmar_vs_run_pct": 25.2
+  },
+  "ITUK": {
+   "months_covered": 12,
+   "usable": true,
+   "billing_febmar_vs_run_pct": 74.8,
+   "std_febmar_vs_run_pct": 29.1
+  }
+ },
+ "std_valuation": "dealer volume x median ISZE net billed price per part number"
+}

@@ -44,6 +44,41 @@ OUT_HTML = os.path.join(HUB, "ISZE_UNIVERSE_BOARD.html")
 OUT_CMD = os.path.join(HUB, "OPEN_ISZE_UNIVERSE_BOARD.cmd")
 OUT_JSON = os.path.join(ROOT, "01_data", "00_derived", "universe_board_state.json")
 
+# STALE_BOARD_BANNER_2026-10-07
+# Amber notice injected until pillar scores are re-run against Oct U-wave reality.
+STALE_BOARD_NOTICE_HTML = (
+    '<div class="stale-banner" role="status" '
+    'style="background:#7a2e0e;color:#f7f4ee;padding:14px 20px;'
+    'font:15px/1.45 Georgia,serif;border-bottom:4px solid #c0552d;">'
+    '<strong>STALE SCORES — check the Oct status note.</strong> '
+    'Live status: 00_docs/UNIVERSE_U1_U26_STATUS_2026-10-07.md '
+    'and OPEN_ISZE_UNIVERSE_MAP.cmd. Set SHOW_STALE_BOARD_BANNER = False '
+    'only after a deliberate re-score.'
+    '</div>'
+)
+SHOW_STALE_BOARD_BANNER = False  # cleared 2026-10-07: accuracy sample restored + board re-scored
+
+# MARKET_GAP_BANNER_2026-10-07
+# Honest market state: Eucon primary; focus eligible 58 (met 50-row bar); wider exact-OEM 162 / 41 PNs (met 50-row bar).
+# Wider path: KS PDP OE Pass3 + prior + focus close + KS mainland £10 + Omega UK Free Economy £0 / VAT incl 20%.
+SHOW_MARKET_GAP_BANNER = True
+MARKET_GAP_NOTICE_HTML = (
+    '<div class="market-gap-banner" role="status" '
+    'style="background:#f7edd6;color:#3d2a12;padding:14px 20px;'
+    'font:15px/1.45 Georgia,serif;border-bottom:4px solid #c0552d;">'
+    '<strong>Market prices: mostly Eucon.</strong> '
+    'Competitor shop scrape: focus cut (oil filter + brake pad) = <strong>58</strong> offers '
+    '(above the 50-row bar); '
+    'wider UK exact-OEM = <strong>162</strong> offers / <strong>41</strong> PNs '
+    '(well above the 50-row bar) after KS PDP OE Equivalent Part Number upgrades '
+    '(Pass 3 + prior + focus close), KS mainland £10 path, and Omega UK Free Economy £0 from Store API '
+    '(VAT incl 20%). '
+    'Market comparisons still use Eucon where those exist. '
+    'Do not treat silent or unmatched shop prices as comparable. '
+    'Detail: 00_docs/UNIVERSE_UK_KS_FOCUS_CLOSE_2026-10-07.md'
+    '</div>'
+)
+
 NOTES: list[str] = []
 NOT_TESTABLE: list[str] = []
 
@@ -427,11 +462,18 @@ def build_pillars(F: dict) -> list[dict]:
                     "tests": ("Fifty classified part numbers drawn by billed euro on a fixed seed; a named "
                               "reader compares each part's billed description with the family it carries; "
                               "at least 90% must agree and every disagreement must be listed."),
-                    "reason": (f"{F['sample_l1']} of {F['sample_n']} agree at family level "
-                               f"({F['sample_l1'] / F['sample_n'] * 100:.0f}%), above the 90% bar; the three "
-                               "disagreements are named with their part numbers and euro. Group agrees on "
-                               f"{F['sample_l2']} and leaf on {F['sample_l3']}, which is where the coarser "
-                               "call sits."),
+                    "reason": (
+                        (f"{F['sample_l1']} of {F['sample_n']} agree at family level "
+                         f"({F['sample_l1'] / F['sample_n'] * 100:.0f}%), "
+                         f"{'above' if F['sample_l1'] / F['sample_n'] >= 0.90 else 'below'} the 90% bar; "
+                         f"{len(F['sample_bad'])} disagreement(s) named with part numbers and euro. "
+                         f"Group agrees on {F['sample_l2']} and leaf on {F['sample_l3']}, which is where "
+                         "the coarser call sits.")
+                        if F["sample_n"] else
+                        ("The 50-part accuracy sample file "
+                         "(`01_data/91_build/_aim_accuracy_sample_20260924.csv`) is not on disk, so this "
+                         "condition cannot be re-measured. Score 0 until the sample is restored.")
+                    ),
                 },
                 {
                     "label": "One named, approved, frozen release",
@@ -1023,7 +1065,15 @@ def build_html(F: dict, pillars: list[dict]) -> str:
         f"<td class='nowrap'>{esc(b)}</td><td>{esc(c)}</td></tr>" for a, b, c in opens)
 
     big = "; ".join(f"{r['pn']} EUR {r['billed_eur']:,.0f} ({r['desc']})" for r in F["cov_big"][:9])
-    bad_pns = ", ".join(r["part_number"] for r in F["sample_bad"])
+    bad_pns = ", ".join(r["part_number"] for r in F["sample_bad"]) if F["sample_n"] else "n/a — sample file missing"
+    if F["sample_n"]:
+        sample_agree_cell = (
+            f"{F['sample_l1']} of {F['sample_n']} = "
+            f"{F['sample_l1'] / F['sample_n'] * 100:.0f}%; "
+            f"group {F['sample_l2']}, leaf {F['sample_l3']}"
+        )
+    else:
+        sample_agree_cell = "sample file missing — not re-measured"
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -1250,8 +1300,8 @@ footer{{margin-top:56px;border-top:2px solid var(--navy);padding-top:20px;font-s
         <tr><td>Billed parts euro with a family</td><td class="nowrap">{F['cov_pct']:.2f}% ({F['cov_window'].get('from', '?')} to {F['cov_window'].get('to', '?')})</td><td><code>sales_fact.parquet</code> + <code>aim_master_v2.csv</code></td></tr>
         <tr><td>Parts above EUR 5,000 with no family</td><td class="nowrap">{len(F['cov_big'])} named: {esc(big)}</td><td><code>_aim_coverage_measure_20260924.json</code></td></tr>
         <tr><td>Unclassified parts euro, twelve months</td><td class="nowrap">EUR {F['coverage'].get('residual', {}).get('eur', 0):,.0f} on {F['coverage'].get('residual', {}).get('pns', 0):,} part numbers</td><td><code>_aim_coverage_measure_20260924.json</code></td></tr>
-        <tr><td>Family agreement on the 50-part sample</td><td class="nowrap">{F['sample_l1']} of {F['sample_n']} = {F['sample_l1'] / F['sample_n'] * 100:.0f}%; group {F['sample_l2']}, leaf {F['sample_l3']}</td><td><code>_aim_accuracy_sample_20260924.csv</code></td></tr>
-        <tr><td>The three family disagreements</td><td class="nowrap">{esc(bad_pns)}</td><td><code>_aim_accuracy_sample_20260924.csv</code></td></tr>
+        <tr><td>Family agreement on the 50-part sample</td><td class="nowrap">{esc(sample_agree_cell)}</td><td><code>_aim_accuracy_sample_20260924.csv</code></td></tr>
+        <tr><td>The family disagreements</td><td class="nowrap">{esc(bad_pns)}</td><td><code>_aim_accuracy_sample_20260924.csv</code></td></tr>
         <tr><td>Classification gate</td><td class="nowrap">{F['gate_pass']} of {F['gate_pass'] + F['gate_fail']} pass, verdict {esc(F['gate_verdict'])}</td><td><code>aim_classification_gate.json</code></td></tr>
         <tr><td>Approved classification release</td><td class="nowrap">{esc((F['approved_releases'][0]['release_id'] if F['approved_releases'] else 'none'))}, {F['release_sha_ok'] and 'hash matches' or 'no hash match'}, approved {esc(F['approved_releases'][0].get('approved_on', ''))} by {esc(F['approved_releases'][0].get('approved_by', ''))}</td><td><code>_releases/RELEASES.json</code></td></tr>
         <tr><td>Live public tenders watched</td><td class="nowrap">{F['tender_rows']}, of which {F['tender_rm']} R&amp;M and {F['tender_rm_open']} with a deadline still ahead</td><td><code>tender_data.json</code> ({esc(F['tender_generated'])})</td></tr>
@@ -1292,6 +1342,10 @@ def main() -> int:
     pillars = build_pillars(F)
 
     html = build_html(F, pillars)
+    if SHOW_STALE_BOARD_BANNER and "stale-banner" not in html:
+        html = html.replace("<body>", "<body>\n" + STALE_BOARD_NOTICE_HTML, 1)
+    if SHOW_MARKET_GAP_BANNER and "market-gap-banner" not in html:
+        html = html.replace("<body>", "<body>\n" + MARKET_GAP_NOTICE_HTML, 1)
     with io.open(OUT_HTML, "w", encoding="utf-8") as fh:
         fh.write(html)
 
@@ -1309,6 +1363,19 @@ def main() -> int:
         "headline": "0 of 5 tools a distributor can open. Roadmap: stage 1 complete.",
         "tools_open_to_a_distributor": 0,
         "tools_total": len(TOOLS),
+        "stale": bool(SHOW_STALE_BOARD_BANNER),
+        "market_gap_banner": bool(SHOW_MARKET_GAP_BANNER),
+        "market_path": "eucon_primary_focus58_wider162_uk_shop",
+        "eligible_shop_offers_uk_focus": 58,
+        "eligible_shop_offers_uk_wider_exact": 162,
+        "eligible_shop_pns_uk_wider_exact": 41,
+        "live_status_doc": "00_docs/UNIVERSE_U1_U26_STATUS_2026-10-07.md",
+        "market_disclosure_doc": "00_docs/UNIVERSE_MARKET_EUCON_EMPTY_SCRAPE_DISCLOSURE_2026-10-07.md",
+        "stale_reason": (
+            "" if not SHOW_STALE_BOARD_BANNER else
+            ("Board scores need an intentional re-measure after Oct U-waves; "
+             "see live_status_doc while SHOW_STALE_BOARD_BANNER is True.")
+        ),
         "pillars": [
             {"key": p["key"], "name": p["name"], "points": p["points"], "out_of": p["out_of"],
              "pct": p["pct"], "met": p["met"], "half": p["half"], "not_met": p["none"],

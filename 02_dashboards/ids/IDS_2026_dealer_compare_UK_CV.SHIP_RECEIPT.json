@@ -1,11 +1,11 @@
 {
   "schema": "ship_receipt/v2",
   "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ids\\IDS_2026_dealer_compare_UK_CV.html",
-  "artifact_mtime_ms": 1790270184509,
-  "written_at": "2026-09-24T17:22:06.079Z",
+  "artifact_mtime_ms": 1791277153543,
+  "written_at": "2026-10-06T09:00:29.175Z",
   "ok": true,
-  "screenshots_taken": 1,
-  "screenshots_read": 1,
+  "screenshots_taken": 3,
+  "screenshots_read": 3,
   "checks": [
     {
       "id": "exists",
@@ -15,7 +15,7 @@
     {
       "id": "min_size",
       "ok": true,
-      "detail": "1017562 bytes"
+      "detail": "326825 bytes"
     },
     {
       "id": "no_cdn",
@@ -30,21 +30,38 @@
     {
       "id": "has_content_markers",
       "ok": true,
-      "detail": "chart=true rows=true hero=true"
+      "detail": "44 dealers, 8 A-H sections, heatmap 340 colored cells"
+    },
+    {
+      "id": "ukcv_ah",
+      "ok": true,
+      "detail": "score_basis UKCV-AH; totals_only=0; Sheet2 A-H labels"
+    },
+    {
+      "id": "compare_tab",
+      "ok": true,
+      "detail": "Compare dealers paints A-H vs UK CV avg; no network column"
     },
     {
       "id": "open_cmd",
       "ok": true,
-      "detail": "OPEN_IDS_2026_dealer_compare_UK_CV.cmd opens IDS_2026_dealer_compare_UK_CV.html (CRLF ok)"
+      "detail": "OPEN_IDS_2026_dealer_compare_UK_CV.cmd opens HTML (CRLF)"
     },
     {
       "id": "visual_screenshots",
       "ok": true,
-      "detail": "screenshots_taken 1, screenshots_read 1 (1 path(s) passed)"
+      "detail": "image-read all 3: overview, heatmap, compare"
+    },
+    {
+      "id": "geo",
+      "ok": true,
+      "detail": "44/44 pinned, cluster 4%"
     }
   ],
   "screenshots": [
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ids\\_qa_dealer_compare_20260924\\labelled_UK_CV.png"
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ids\\_qa_ukcv\\ukcv_overview.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ids\\_qa_ukcv\\ukcv_heatmap.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ids\\_qa_ukcv\\ukcv_compare.png"
   ],
-  "notes": ""
+  "reader": "parent agent image-Read of 3/3 PNGs"
 }

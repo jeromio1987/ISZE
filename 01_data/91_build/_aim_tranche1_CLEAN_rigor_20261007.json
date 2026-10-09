@@ -1,0 +1,89 @@
+{
+  "as_of": "2026-10-07T14:01:01.483106+00:00",
+  "verdict": "FAIL",
+  "permission": "NOT_EARNED",
+  "permission_sentence_for_jerome": "No \u2014 not for the full CLEAN 38,213: cylinder-head gaskets are still proposed as Transmission (328 rows), the same engine-gasket teaching error Shard A only held on the gasket-set path.",
+  "proposal_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\next_release_proposal_full_class_tranche1_catmap_CLEAN_2026-10-07.csv",
+  "apply": "NO \u2014 rigor gate only; did not write aim_master or release CSV",
+  "rows_checked": 38213,
+  "grain": "per_row (with path-level teaching-bug and systematic-rate rollups)",
+  "pass": 30653,
+  "fail": 406,
+  "inconclusive": 7154,
+  "fail_rate_all": 0.01062,
+  "fail_rate_described": 0.0117,
+  "safe_to_apply_count": 30653,
+  "safe_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\_aim_tranche1_CLEAN_rigor_SAFE_20261007.csv",
+  "fails_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\_aim_tranche1_CLEAN_rigor_fails_20261007.csv",
+  "by_reason": {
+    "no_description_no_strong_commodity_signal": 7154,
+    "teaching_bug": 328,
+    "desc_hard": 285,
+    "desc_noun": 55,
+    "desc_stem_majority": 22,
+    "hkk_majority": 1
+  },
+  "teaching_bugs": {
+    "engine_gasket_to_transmission": 0,
+    "cyl_head_gasket_to_transmission": 328,
+    "trans_asm_to_literature": 0,
+    "air_valve_to_steering": 0
+  },
+  "teaching_bugs_total": 328,
+  "systematic_family_errors": [
+    {
+      "propose_aim_l1": "Transmission",
+      "described_n": 285,
+      "fail_n": 285,
+      "fail_rate": 1.0
+    }
+  ],
+  "systematic_path_errors": [
+    {
+      "cat_path": "Repair parts > Gaskets / seals > Cylinder head gasket",
+      "propose_aim_l1": "Transmission",
+      "described_n": 285,
+      "fail_n": 285,
+      "fail_rate": 1.0
+    }
+  ],
+  "coverage": {
+    "rows_checked": 38213,
+    "grain": "per_row",
+    "master_join_hit": 246,
+    "jp_desc_hit": 30999,
+    "unified_desc_hit": 31016,
+    "unified_desc_blank": 7197,
+    "zkk_filled": 30999,
+    "hkk_filled": 30999,
+    "zkk_majority_codes_usable": 1,
+    "hkk_majority_codes_usable": 23,
+    "zkk_rows_checked_against_majority": 296,
+    "hkk_rows_checked_against_majority": 3097,
+    "desc_noun_or_hard_scored": 19735,
+    "desc_stem_checked": 7473,
+    "pr00_join_hit": 38213,
+    "note_zkk": "ZKK is a Japan catalogue attribute, not an AIM family. On known master rows, only 1 ZKK code(s) reach >=80% single-family purity at n>=20. Commodity/ZKK cannot define what each part is for most of this proposal; description text is the primary rigor signal."
+  },
+  "price_fail_count": 0,
+  "pn_length_fail_count": 0,
+  "pn_prefix_outlier_count": 0,
+  "zkk_conflict_count": 0,
+  "hkk_conflict_count": 1,
+  "checks_performed": [
+    "description_noun_fit (JP+master+proposal)",
+    "description_stem_majority_vs_known",
+    "description_hard_teaching_patterns",
+    "pn_length_and_prefix_outlier",
+    "price_absurdity_vs_desc_and_family",
+    "zkk_hkk_majority_where_pure",
+    "teaching_bug_path_leak_reverify",
+    "blank_desc_without_commodity_signal -> inconclusive"
+  ],
+  "headline_defect": {
+    "cat_path": "Repair parts > Gaskets / seals > Cylinder head gasket",
+    "propose_aim_l1": "Transmission",
+    "n": 328,
+    "note": "Should have been hard-held with gasket set; JP desc GASKET; CYL HD is Engine gasket language."
+  }
+}

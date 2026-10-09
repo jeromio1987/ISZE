@@ -1,0 +1,439 @@
+# What I built with AI — the milestone register
+#
+# Hand-maintained source of truth for the "What I built with AI" page
+# (02_dashboards/hub/ISZE_AI_MILESTONES.html). Edited by hand, like
+# ISZE_OS_DATA_MAP.yaml. The builder reads this file and renders one page.
+#
+# Rules for editing:
+#   - One entry per thing that actually happened, newest milestone not required
+#     at the top — the page groups by "group", not by date.
+#   - "plain" = what it is, in one sentence a colleague could read out loud.
+#   - "why"   = why it mattered, in one sentence. This is the milestone, not the file.
+#   - "state" is one of: live | pilot | internal | done | on_paper
+#   - "evidence" = real repo paths. Leave blank rather than guess.
+#   - No euro figure on this page for internal-only pricing and leakage work.
+#
+# Counted figures on the page (part numbers classified, live pages, PRISM pages,
+# open opportunities) are READ FROM DISK at build time, not typed here.
+
+title: What I built with AI
+subtitle: A milestone list, from the local map onward
+
+intro: >
+  Everything below was built here, on this machine, working with AI. It is grouped
+  by the thing it changed: new tools and jobs that run on their own, findings that
+  changed how we read the business, and the decks and packs that went out to
+  colleagues and distributors. Each line says what it is and why it mattered.
+  Measurement work added 7 October also appears here, including the results that
+  came back negative.
+
+internal_note: >
+  Internal only. A few milestones touch pricing and leakage work that stays inside
+  the company; those are named by their business meaning, without the raw figures.
+
+groups:
+  - id: tools
+    label: New tools and jobs
+    blurb: Software and scheduled jobs that did not exist before, and that run without anyone watching them.
+    items:
+      - title: Tender tool
+        when: 2026 (live weekly)
+        state: live
+        plain: >
+          A weekly collector that reads public tender portals across Europe and the EU-wide
+          portal, scores each notice for relevance, and publishes them to one feed.
+        why: >
+          It turns a manual hunt for public tenders into one list, refreshed every Monday,
+          with the repair-and-maintenance contracts already flagged.
+        evidence:
+          - 04_tools/ISZE_Tender_Monitor_Install/
+          - 01_data/14_dashboards/tender_data.json
+          - 02_dashboards/ops/ISZE_Tender_Monitor_v2.html
+
+      - title: Competitive price scrapers and the weekly price ledger
+        when: 2026 (live weekly)
+        state: live
+        plain: >
+          Collectors that pull competitor part prices from public shops and catalogues, and a
+          weekly ledger that records what our own parts sell for.
+        why: >
+          It gives a repeatable read on how our prices sit against the independent market,
+          instead of a one-off snapshot.
+        evidence:
+          - 04_tools/autodoc_scraper/refresh_and_check_drift.py
+          - 04_tools/price_ledger/build_scraped_observations.py
+          - 02_dashboards/pricing/
+
+      - title: SPA application
+        when: 2026
+        state: live
+        plain: >
+          A tool that gathers Special Price Agreement baskets from mail, and builds the
+          approval pack for each offer.
+        why: >
+          It standardises how a special price offer is put together and reviewed, so the
+          commercial case travels with the request.
+        evidence:
+          - 04_tools/spa_application/build_spa_application.py
+          - 04_tools/spa_application/README_SPA_basket_intake.md
+
+      - title: SPA run-rate and NOx SPA optimizer
+        when: 2026
+        state: live
+        plain: >
+          A run-rate view of Special Price Agreement activity, and a small optimiser that finds
+          the break-even quantity and price per part for a NOx sensor offer.
+        why: >
+          It shows what a special price is doing to the run rate, and it puts a floor under
+          a negotiation before it is agreed.
+        evidence:
+          - 02_dashboards/sales/ISZE_SPA_RunRate_UTI.html
+          - 04_tools/isze-tools/pages/5_NOx_SPA_Optimizer.py
+
+      - title: PRISM analytical surface
+        when: 2026
+        state: live
+        plain: >
+          A local analytics app that reads the parts business from one place: fleet in service,
+          spend per truck, service capture, mix, warranty, forecast, dealers and tenders.
+        why: >
+          Before this, the analysis lived in separate spreadsheets. PRISM is the one place a
+          question can be asked across all of it.
+        evidence:
+          - 03_analytics/Isuzu/prism/
+          - 03_analytics/Isuzu/prism/run_prism.ps1
+
+      - title: Action ledger
+        when: 2026-08-25
+        state: live
+        plain: >
+          One list of open commercial opportunities, joined from nine separate parts of the
+          analysis, with the source of every row kept beside it.
+        why: >
+          It turns dozens of separate findings into a single queue of things to act on, each
+          one traceable back to where the number came from.
+        evidence:
+          - 01_data/00_derived/action_ledger.parquet
+          - 02_dashboards/ops/ISZE_Action_Ledger.html
+
+      - title: Forecast, account health and the local mail layer
+        when: 2026
+        state: live
+        plain: >
+          A parts-demand forecast across hundreds of part families, an account-health signal
+          built from order behaviour, and a local, private layer that reads the mailbox to
+          find commitments and who is involved.
+        why: >
+          It adds the three things that were missing before: what we expect to sell, which
+          account is slipping, and what was actually promised in writing.
+        evidence:
+          - 03_analytics/Isuzu/prism/pages/19_Forecast.py
+          - 03_analytics/Isuzu/prism/pages/0_Early_Warning.py
+          - 01_data/17_interactions/
+
+      - title: Part classification system
+        when: 2026-07-02 (release frozen 2026-09-20)
+        state: live
+        plain: >
+          A system that gives every part number we hold a family, a product form and the
+          vehicle bands it fits, and a frozen release with a hash so a build can be pinned
+          to one exact version.
+        why: >
+          It is what makes any part-level answer possible: without a family on every part,
+          a number of pieces says nothing. This is the foundation the aftermarket pages sit on.
+        evidence:
+          - 03_analytics/Isuzu/prism/modules/aim_pn_classifier.py
+          - 01_data/00_derived/_releases/RELEASES.json
+          - 02_dashboards/pricing/ISZE_AIM_Truck_Catalogue_2026-09-18.html
+
+      - title: Fleet (UIO) and GPS engine
+        when: 2026
+        state: live
+        plain: >
+          The vehicles-in-service base per market, and the spend-per-truck measure built on
+          top of it.
+        why: >
+          It gives every other number a denominator: a gap is only meaningful against the
+          number of trucks in service.
+        evidence:
+          - 06_uio/_CURRENT/
+          - 01_data/00_derived/gps_spu_by_distributor.csv
+
+      - title: Dealer standards (IDS) ranking and country packs
+        when: 2026
+        state: live
+        plain: >
+          A per-country dealer comparison, one page per market, with a dealer map that shows
+          each dealer's score against the country average.
+        why: >
+          It turns the dealer assessment into something a distributor opens and can act on,
+          country by country.
+        evidence:
+          - 04_tools/ids_dealer_ranking/
+          - 02_dashboards/ids/IDS_2026_dealer_compare.html
+
+      - title: The operating console, the hub and this map
+        when: 2026
+        state: live
+        plain: >
+          The pages that describe the workspace itself: the OS hub that indexes everything,
+          the Universe Map, and the scheduled jobs that keep the data fresh.
+        why: >
+          It makes the whole system legible: what exists, how it connects, and what runs
+          on its own. This page is part of that.
+        evidence:
+          - 02_dashboards/hub/ISZE_OS_Hub.html
+          - 02_dashboards/hub/ISZE_UNIVERSE_MAP.html
+          - 00_docs/AUTOMATION_REGISTER.md
+
+      - title: Mail volume measurement
+        when: 2026-10-07
+        state: live
+        plain: >
+          A read-only counter that walks the mailbox and writes a monthly count of mail in and
+          out, without ever storing a subject or a body.
+        why: >
+          It answers whether mail is actually falling, with a real count rather than a feeling.
+          The local mailbox only holds twelve months, so the honest answer today is a baseline
+          that grows into a year-on-year comparison from here.
+        evidence:
+          - 04_tools/interactions/measure_mail_volume.py
+          - 01_data/17_interactions/mail_volume_monthly.csv
+
+      - title: Order-channel measurement and the time method
+        when: 2026-10-07
+        state: live
+        plain: >
+          A first attempt to separate automated orders from manual ones using the purchase-order
+          column, and a written method for timing a tool properly instead of guessing.
+        why: >
+          Both are honest instruments: the order-channel proxy failed its own check and is
+          recorded as a negative result, and the time method says plainly that no per-tool figure
+          exists until a real task has been timed.
+        evidence:
+          - 04_tools/interactions/measure_order_channel.py
+          - 00_docs/TIME_SAVED_MEASUREMENT.md
+          - 00_docs/AI_MEASUREMENT_REPORT_2026-10-07.md
+
+  - id: insights
+    label: Findings that changed the picture
+    blurb: These are not files. They are the moments the numbers told us something we did not already know, and changed a decision.
+    items:
+      - title: The size of the uncovered service opportunity
+        when: 2026
+        state: live
+        plain: >
+          A way to measure, per market, what the vehicles in service would spend on parts if
+          every one bought at the planning rate, and what share of that we actually reach.
+        why: >
+          It gave the aftermarket case a ceiling and a gap in euros, on a fleet denominator,
+          so the opportunity could be sized instead of asserted.
+        evidence:
+          - 01_data/00_derived/wallet_waterfall.csv
+          - 01_data/00_derived/pms_opportunity_matrix.csv
+
+      - title: Warranty belongs on its own line
+        when: 2026
+        state: live
+        plain: >
+          Warranty claim euros sit inside parts billed, so billed and sales to dealer do not
+          match until warranty is separated out.
+        why: >
+          It explained why the UK pickup numbers looked like a shortfall, when part of it was
+          warranty treatment, not lost sales.
+        evidence:
+          - 01_data/00_derived/distributor_warranty_expense_fiscal.csv
+          - 03_analytics/Isuzu/prism/pages/20_Warranty.py
+
+      - title: BVP is not the aftermarket
+        when: 2026-07-01
+        state: live
+        plain: >
+          Best Value Parts is Isuzu's own budget range. Choosing it keeps the sale inside, at
+          a lower margin; it is not the same as losing the sale to a true independent competitor.
+        why: >
+          It stopped an internal mix question being reported as external competition, which
+          would have sent the wrong response.
+        evidence:
+          - 05_memory/projects/aftermarket-intelligence.md
+
+      - title: UTI and UMI split by the right key; IUK is not ITUK
+        when: 2026
+        state: live
+        plain: >
+          Two Israel distributors and two UK entities share similar names. Splitting by the
+          selling account (sold-to), not by payer name, keeps them apart.
+        why: >
+          It corrected figures that had been quietly blended, and it is now a standing rule on
+          every Israel and UK chart.
+        evidence:
+          - 03_analytics/Isuzu/prism/modules/data_prep.py
+          - 05_memory/projects/aftermarket-intelligence.md
+
+      - title: Measured mileage replaces the flat assumption
+        when: 2026
+        state: live
+        plain: >
+          For the UK pickup fleet, real odometer readings were used to measure annual distance,
+          instead of assuming one flat number for every vehicle.
+        why: >
+          It corrected a demand base that had been overstated, which changes how the UK service
+          gap reads.
+        evidence:
+          - 03_analytics/Isuzu/pms-pilot/
+
+      - title: Parts billed with no list price, and the list-coverage fix
+        when: 2026-08-11
+        state: live
+        plain: >
+          Some parts were billed without a usable list price, which made them invisible to
+          margin. A new price-list pull closed most of that gap.
+        why: >
+          It brought almost all billed parts back into margin and price analysis, and it
+          named the small leftover honestly instead of hiding it.
+        evidence:
+          - 01_data/00_derived/no_pr00_gap_cy2025_ranked.meta.json
+          - 01_data/01_Pricing/
+
+      - title: The price revision, measured
+        when: 2026-09-19
+        state: internal
+        plain: >
+          The filed price change was measured across the whole book, and split by market and
+          by source region.
+        why: >
+          It replaced "we think prices went up about right" with one measured number for the
+          whole book, so the revision could be reviewed as a fact.
+        evidence:
+          - 00_docs/roadmaps/pricing.md
+          - 03_analytics/isze_pricing/
+
+      - title: Sales-to-dealer visibility grew, market by market
+        when: 2026
+        state: live
+        plain: >
+          Sales from distributor to dealer were added for more markets over the year, so the
+          share of the book we can see at dealer level climbed.
+        why: >
+          It moved the conversation from what we billed to what actually moved at the dealer,
+          in the markets where we now have the data.
+        evidence:
+          - 00_docs/roadmaps/ai_sales_intelligence.md
+          - 02_dashboards/ids/IDS_2026_dealer_compare.html
+
+      - title: Mail is being counted, and the twelve-month wall
+        when: 2026-10-07
+        state: live
+        plain: >
+          Mail in and out is now counted by month from the mailbox itself: about 2,000 messages
+          in and a few hundred out in a typical month, read through seven October days.
+        why: >
+          It replaced "it feels quieter" with a number. It also found the wall: the mailbox keeps
+          only twelve months, so a last-year comparison cannot be built from history — it has to
+          be accumulated forward from this baseline.
+        evidence:
+          - 01_data/17_interactions/mail_volume_monthly.csv
+          - 00_docs/AI_MEASUREMENT_REPORT_2026-10-07.md
+
+      - title: Sizing the repair-and-maintenance tender channel
+        when: 2026
+        state: live
+        plain: >
+          The tender feed was read for repair-and-maintenance contracts and sized for parts,
+          separately from vehicle tenders.
+        why: >
+          It said plainly what the channel is worth in parts, so it is treated as a relationship
+          play rather than a parts-revenue play.
+        evidence:
+          - 00_docs/REVIEW_EXEC_AFTERSALES_PAPER_20260915.md
+          - 01_data/14_dashboards/tender_data.json
+
+  - id: packs
+    label: Decks and packs handed over
+    blurb: What was written and built for colleagues, management and distributors.
+    items:
+      - title: Executive aftersales paper
+        when: 2026-09
+        state: live
+        plain: >
+          A single paper that makes the aftermarket opportunity case: where the gap is by
+          category, what margin and warranty do to it, and which levers are ready.
+        why: >
+          It gave one place where the opportunity, the evidence and the asks stand together,
+          for management.
+        evidence:
+          - 02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html
+          - 00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md
+
+      - title: Consolidated pricing policy paper
+        when: 2026-10-02
+        state: internal
+        plain: >
+          One document that consolidates the pricing programme: how prices are set, how they
+          are reviewed, and where the open decisions are.
+        why: >
+          It replaced a scatter of earlier papers with one current position on pricing.
+        evidence:
+          - 02_dashboards/pricing/ISZE_Pricing_Policy_Paper_2026-10-02.html
+
+      - title: Boardroom parts performance deck
+        when: 2026-09-19
+        state: live
+        plain: >
+          A boardroom-style presentation on parts performance: who we are, then the spend,
+          capture and mix story, built to a high presentation standard.
+        why: >
+          It put our numbers into a form that can be presented upward without rework.
+        evidence:
+          - 01_data/90_INBOX/data_join_questions/ISZE_Parts_Performance_Boardroom.pptx
+
+      - title: Sales reviews and operating dashboards, one per market
+        when: 2026
+        state: live
+        plain: >
+          A sales review and an operating dashboard for each distributor market, built on the
+          same method so they can be read side by side.
+        why: >
+          It made the distributor conversation consistent: the same cuts, the same definitions,
+          market after market.
+        evidence:
+          - 09_meetings/
+          - 04_tools/db_sales_review/
+
+      - title: Business performance reviews
+        when: 2026
+        state: live
+        plain: >
+          Deeper per-market business reviews, for Denmark, Portugal (I-Motors) and the FY27
+          cycle, following the group's own review format.
+        why: >
+          It carried the same measured story into the formal annual review with each market.
+        evidence:
+          - 09_meetings/DENMARK_FY2027_BPR/
+          - 09_meetings/IMotors_FY2027_BPR/
+          - 09_meetings/PORTUGAL_BPR_FY2027_to_Aug_2026/
+
+      - title: IDS 2026 country packs
+        when: 2026
+        state: live
+        plain: >
+          The dealer-standard country packs, one per market, with the comparison and the dealer
+          map, in the version the group agreed.
+        why: >
+          It delivered the dealer assessment to each country in a form they can open and use.
+        evidence:
+          - 09_meetings/IDS_2026_Country_Packs_v1.4/
+          - 02_dashboards/ids/
+
+      - title: Corporate profile and presentation style work
+        when: 2026
+        state: live
+        plain: >
+          A refreshed company profile and a set of presentation styles explored for how our
+          packs look.
+        why: >
+          It gave the outward-facing material a current, consistent look, and a place to keep
+          the house style.
+        evidence:
+          - 05_memory/projects/isze-corporate-presentations-20260919.md
+          - 01_data/Presentaion style/

@@ -1,0 +1,41 @@
+{
+  "as_of": "2026-10-07T13:35:42.572294+00:00",
+  "bar": "all parts need a full AIM family (Jerome 2026-10-07)",
+  "master_rows": 165310,
+  "with_family": 21045,
+  "without_family": 144265,
+  "true_blank_rows": 140138,
+  "unknown_marker_rows": 4129,
+  "tranche1_proposed_rows": 49208,
+  "tranche1_share_of_true_blank": 0.3511,
+  "distinct_cat_maps": 59,
+  "by_confidence": {
+    "HIGH": 42845,
+    "MED_HIGH": 6363
+  },
+  "top_propose_l1": {
+    "Accident & Body": 14492,
+    "Transmission": 6878,
+    "Electrical": 6744,
+    "Chassis Frame": 4422,
+    "Lighting": 3100,
+    "Engine": 2889,
+    "Fuel System": 2137,
+    "Intake Exhaust Emission": 1749,
+    "Clutch": 1365,
+    "Wheels Hub": 1331,
+    "Brakes": 1183,
+    "Cooling": 879,
+    "Maintenance Service": 858,
+    "Suspension": 584,
+    "Steering": 241
+  },
+  "proposal_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\next_release_proposal_full_class_tranche1_catmap_2026-10-07.csv",
+  "apply": "NO \u2014 proposal only. Wait for Jerome OK before a dated release.",
+  "still_true_blank_after_tranche1": 90930,
+  "notes": [
+    "Almost all blanks already have a catalogue node; this maps catalogue path to AIM family.",
+    "Remaining blanks need description rules, EQ-Hit, or hand review.",
+    "Does not touch Unknown / Unknown Review \u2014 those stay a separate clear-up."
+  ]
+}
