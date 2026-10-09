@@ -1,0 +1,191 @@
+/* Film B - "Your month with ISZE". Distributor-facing. Shared language only. A twelve-month ring (FY2028) is the stage. */
+const NAVY='#15233c',TERRA='#c0552d',PAPER='#f7f4ee',INK='#222',SOFT='#ece7dc',MID='#cfc8b8',GREEN='#3f8f6b',AMBER='#c98f1f',GREY='#7b8798';
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const seg=(t,a,b)=>ease(clamp((t-a)/(b-a)));
+const lerp=(a,b,k)=>a+(b-a)*k;
+function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);}
+function T(s,x,y,o={}){const{size=20,fam='Segoe UI',wt='400',col=INK,al='left',a=1}=o;ctx.save();ctx.globalAlpha*=a;ctx.font=`${wt} ${size}px ${fam}`;ctx.fillStyle=col;ctx.textAlign=al;ctx.fillText(s,x,y);ctx.restore();}
+function wrap(s,x,y,maxw,lh,o){ctx.save();ctx.font=`${o.wt||'400'} ${o.size||20}px ${o.fam||'Segoe UI'}`;const ws=s.split(' ');let line='',yy=y;const out=[];ws.forEach(w=>{const tr=(line+' '+w).trim();if(ctx.measureText(tr).width>maxw){out.push(line);line=w;}else line=tr;});out.push(line);ctx.restore();out.forEach((l,i)=>T(l,x,y+i*lh,o));return out.length;}
+function pill(s,x,y,col,tc,size=17,a=1,al='center'){ctx.save();ctx.globalAlpha*=a;ctx.font=`600 ${size}px Segoe UI`;const w=ctx.measureText(s).width+28;const x0=al==='center'?x-w/2:x;rr(x0,y-size-3,w,size+15,(size+15)/2);ctx.fillStyle=col;ctx.fill();ctx.fillStyle=tc||PAPER;ctx.textAlign='left';ctx.fillText(s,x0+14,y+1);ctx.restore();return w;}
+
+const MONTHS=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+const RC={x:330,y:395,ro:235,ri:140};
+function ang(i){return -Math.PI/2+i*(Math.PI*2/12);}
+function arc(i,r0,r1,fill,gap=.025){const a0=ang(i)+gap,a1=ang(i+1)-gap;ctx.beginPath();ctx.arc(RC.x,RC.y,r1,a0,a1);ctx.arc(RC.x,RC.y,r0,a1,a0,true);ctx.closePath();ctx.fillStyle=fill;ctx.fill();}
+
+/* state of each month on the ring */
+function monthFill(t){
+  const f=[];
+  for(let i=0;i<12;i++){f.push(0);}
+  f[0]=seg(t,10.2,11.2);                         /* first file docks */
+  if(t>=66){ for(let i=0;i<12;i++) f[i]=Math.max(f[i],seg(t,66+i*.32,66.6+i*.32)); }
+  return f;
+}
+function drawRing(t){
+  const k=seg(t,5.2,6.6), f=monthFill(t);
+  ctx.save();ctx.globalAlpha=k;
+  /* quarter tints */
+  const qc=['#f1e3d9','#e6ebf3','#f1e3d9','#e6ebf3'];
+  for(let q=0;q<4;q++){ctx.beginPath();ctx.arc(RC.x,RC.y,RC.ro+14,ang(q*3),ang(q*3+3));ctx.arc(RC.x,RC.y,RC.ri-14,ang(q*3+3),ang(q*3),true);ctx.closePath();ctx.fillStyle=qc[q];ctx.fill();}
+  for(let i=0;i<12;i++){
+    arc(i,RC.ri,RC.ro,'#e2dac8');
+    if(f[i]>0){ctx.save();ctx.globalAlpha*=f[i];arc(i,RC.ri,RC.ro,TERRA);ctx.restore();}
+    const am=(ang(i)+ang(i+1))/2, lx=RC.x+Math.cos(am)*(RC.ro+34), ly=RC.y+Math.sin(am)*(RC.ro+34)+6;
+    T(MONTHS[i],lx,ly,{al:'center',size:16,col:f[i]>.5?TERRA:GREY,wt:f[i]>.5?'700':'400'});
+  }
+  /* quarter labels inside */
+  for(let q=0;q<4;q++){const am=(ang(q*3)+ang(q*3+3))/2,x=RC.x+Math.cos(am)*(RC.ri-40),y=RC.y+Math.sin(am)*(RC.ri-40)+6;T('Q'+(q+1),x,y,{al:'center',size:18,col:GREY,wt:'600'});}
+  /* quarter-1 glow in scene 5 */
+  const g=seg(t,53.5,55)*(1-seg(t,64.5,65.5));
+  if(g>0){ctx.save();ctx.globalAlpha=g*.9;ctx.lineWidth=7;ctx.strokeStyle=NAVY;ctx.beginPath();ctx.arc(RC.x,RC.y,RC.ro+4,ang(0),ang(3));ctx.stroke();ctx.restore();}
+  /* the file docks in April: a soft pulse while the story runs */
+  const pu=seg(t,11.2,12)*(1-seg(t,52,53));
+  if(pu>0){ctx.save();ctx.globalAlpha=pu*(.25+.25*Math.sin(t*3));ctx.lineWidth=9;ctx.strokeStyle=TERRA;ctx.beginPath();ctx.arc(RC.x,RC.y,RC.ro+6,ang(0)+.03,ang(1)-.03);ctx.stroke();ctx.restore();}
+  /* centre */
+  T('FY2028',RC.x,RC.y-4,{al:'center',size:34,fam:'Georgia',wt:'700',col:NAVY});
+  T('Apr 2027 to Mar 2028',RC.x,RC.y+24,{al:'center',size:15,col:GREY});
+  ctx.restore();
+}
+
+/* generic helpers for the right panel */
+const PX=700;
+function head(n,s,t0,t1){const k=seg(t,t0,t0+.7)*(1-seg(t,t1-.5,t1));return k;}
+let t=0;
+function heading(num,text,k){ctx.save();ctx.globalAlpha=k;T(num,PX,150,{size:60,fam:'Georgia',col:TERRA,wt:'700'});wrap(text,PX+62,128,470,34,{size:28,fam:'Georgia',wt:'700',col:NAVY});ctx.restore();}
+function fileCard(x,y,k,label){ctx.save();ctx.translate(x,y);ctx.scale(k,k);rr(-80,-52,160,104,10);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=MID;ctx.lineWidth=2;ctx.stroke();T(label||'',-68,-26,{size:14,col:NAVY,wt:'700'});ctx.fillStyle=MID;for(let r=0;r<4;r++)for(let c=0;c<4;c++)ctx.fillRect(-68+c*32,-8+r*15,24,6);ctx.restore();}
+
+/* scene 1 */
+function s1(){
+  const k=seg(t,6,7)*(1-seg(t,16,17));if(k<=0)return;
+  heading('1','Once a month you send us one file',k);
+  ctx.save();ctx.globalAlpha=k;
+  const cols=['dealer','part number','quantity','month'];
+  cols.forEach((c,i)=>{const q=seg(t,7.2+i*.45,7.8+i*.45);pill(c,PX+(i%2)*170,232+Math.floor(i/2)*46,NAVY,PAPER,18,q,'left');});
+  wrap('Which dealer sold which part, how many, and in which month.',PX,340,520,28,{size:20,col:INK,a:seg(t,9.4,10)});
+  const fk=seg(t,10,11.3), x=lerp(PX+440,RC.x+Math.cos(ang(0)+.26)*188,fk);
+  const y=lerp(260,RC.y+Math.sin(ang(0)+.26)*188,fk);
+  if(t>7.6&&t<11.3)fileCard(x,y,lerp(1,.3,fk),'2027-04');
+  /* what stays out */
+  const o=seg(t,12.6,13.4);
+  T('Stays out of the file',PX,400,{size:18,col:GREY,wt:'600',a:o});
+  ['prices','customer names','chassis numbers'].forEach((c,i)=>{const q=seg(t,13+i*.45,13.6+i*.45);const w=pill(c,PX+[0,100,265][i],440,SOFT,GREY,18,q,'left');
+    if(q>.8){ctx.save();ctx.strokeStyle=TERRA;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(PX+[0,100,265][i]+8,440-6);ctx.lineTo(PX+[0,100,265][i]+w-8,440-6);ctx.stroke();ctx.restore();}});
+  wrap('A file that carries them is sent back, not trimmed.',PX,500,520,28,{size:20,a:seg(t,15,15.7)});
+  ctx.restore();
+}
+/* scene 2 */
+function s2(){
+  const k=seg(t,17,18)*(1-seg(t,26.2,27));if(k<=0)return;
+  heading('2','Send it within ten working days after month-end',k);
+  ctx.save();ctx.globalAlpha=k;
+  T('month-end',PX,230,{size:16,col:GREY});
+  for(let i=0;i<10;i++){const q=seg(t,18.6+i*.5,19.2+i*.5);rr(PX+i*52,250,44,60,8);ctx.fillStyle=SOFT;ctx.fill();
+    if(q>0){ctx.save();ctx.globalAlpha*=q;rr(PX+i*52,250,44,60,8);ctx.fillStyle=i<9?'#d9e8df':GREEN;ctx.fill();ctx.restore();}
+    T(String(i+1),PX+i*52+22,287,{al:'center',size:20,col:q>.5?NAVY:GREY,wt:'600'});}
+  T('working days',PX,336,{size:16,col:GREY});
+  const b=seg(t,24,24.8);pill('ON TIME',PX+10,410,GREEN,PAPER,22,b,'left');
+  wrap('The receipt says whether your file arrived on time. Files on time is one of the quarterly conditions.',PX,470,520,28,{size:19,a:seg(t,24.4,25.2)});
+  ctx.restore();
+}
+/* scene 3 */
+function s3(){
+  const k=seg(t,27,28)*(1-seg(t,39.2,40));if(k<=0)return;
+  heading('3','You always get a receipt',k);
+  ctx.save();ctx.globalAlpha=k;
+  [['Accepted',GREEN],['Accepted with warnings',AMBER],['Not accepted',TERRA]].forEach((o,i)=>{const q=seg(t,28.2+i*.5,28.8+i*.5);pill(o[0],PX+[0,125,365][i],205,o[1],PAPER,17,q,'left');});
+  /* sample receipt */
+  const r=seg(t,30.5,31.6);
+  if(r>0){ctx.save();ctx.globalAlpha*=r;rr(PX,250,330,170,12);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=MID;ctx.lineWidth=2;ctx.stroke();
+    T('Receipt, version 1',PX+18,282,{size:16,col:NAVY,wt:'700'});
+    pill('NOT ACCEPTED',PX+18,316,TERRA,PAPER,14,1,'left');
+    wrap('A price column was found. Remove it and send the file again as version 2.',PX+18,346,296,22,{size:15});ctx.restore();}
+  const ar=seg(t,33,33.8);
+  if(ar>0){ctx.save();ctx.globalAlpha*=ar;ctx.strokeStyle=NAVY;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(PX+345,335);ctx.lineTo(PX+395,335);ctx.lineTo(PX+385,326);ctx.moveTo(PX+395,335);ctx.lineTo(PX+385,344);ctx.stroke();ctx.restore();}
+  const r2=seg(t,33.6,34.6);
+  if(r2>0){ctx.save();ctx.globalAlpha*=r2;rr(PX+410,250,150,170,12);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=MID;ctx.lineWidth=2;ctx.stroke();
+    T('Version 2',PX+426,282,{size:16,col:NAVY,wt:'700'});pill('ACCEPTED',PX+426,316,GREEN,PAPER,14,1,'left');T('on time',PX+426,346,{size:15,col:GREY});ctx.restore();}
+  wrap('Every receipt says what to correct and how to send it again. A corrected file replaces the earlier version. The history stays.',PX,480,540,28,{size:19,a:seg(t,36,36.8)});
+  ctx.restore();
+}
+/* scene 4 */
+function s4(){
+  const k=seg(t,40,41)*(1-seg(t,52.2,53));if(k<=0)return;
+  heading('4','Every month you get your return',k);
+  ctx.save();ctx.globalAlpha=k;
+  const px=PX, py=190, pw=270, ph=340;
+  const rise=seg(t,41,42.3);
+  rr(px,py+(1-rise)*40,pw,ph,12);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=MID;ctx.lineWidth=2;ctx.stroke();
+  T('Your monthly return',px+18,py+36+(1-rise)*40,{size:19,fam:'Georgia',col:NAVY,wt:'700'});
+  const rows=[['Billed and sold on',43],['Genuine and BVP mix',44],['Maintenance parts covered',45],['IDS position',46]];
+  rows.forEach((r,i)=>{const q=seg(t,r[1],r[1]+.7), yy=py+62+i*66;ctx.save();ctx.globalAlpha*=q;
+    T(r[0],px+18,yy+14,{size:14,col:INK,wt:'600'});
+    ctx.fillStyle=TERRA;ctx.fillRect(px+18,yy+24,(110+i*20)*q,10);
+    ctx.fillStyle=SOFT;ctx.fillRect(px+18,yy+40,170,6);
+    const av=seg(t,46.6+i*.2,47.2+i*.2);ctx.globalAlpha*=av;ctx.fillStyle=NAVY;ctx.fillRect(px+152,yy+19,3,26);
+    ctx.restore();});
+  const av=seg(t,46.6,47.4);
+  if(av>0){T('| anonymous network average',px,py+ph+24,{size:14,col:NAVY,a:av});}
+  const tx=seg(t,47.4,48.2);
+  ctx.save();ctx.globalAlpha=tx;
+  wrap('Your own figures, beside an anonymous network average.',PX+300,250,250,28,{size:20,col:INK});
+  T('No ranking.',PX+300,350,{size:22,wt:'700',col:NAVY});
+  wrap('No other distributor is named.',PX+300,384,250,28,{size:22,wt:'700',col:NAVY});
+  ctx.restore();
+  wrap('Each distributor sees only its own files and its own return.',PX+300,470,250,26,{size:17,col:GREY,a:seg(t,49.6,50.4)});
+  ctx.restore();
+  /* return leaves the ring toward the panel */
+  const fl=seg(t,40.4,42);
+  if(fl>0&&fl<1){fileCard(lerp(RC.x+150,PX+150,fl),lerp(RC.y-170,py+120,fl),lerp(.3,.9,fl),'');}
+}
+/* scene 5 */
+function s5(){
+  const k=seg(t,53,54)*(1-seg(t,65,66));if(k<=0)return;
+  heading('5','Every quarter we check seven conditions',k);
+  ctx.save();ctx.globalAlpha=k;
+  const C=['Sales-to-dealer files arrive on time','The files pass the quality checks','Dealer detail is in the file (from the third quarter)','The dealer list is current (within 12 months)','Monthly KPIs are received','IDS assessments reach 70% of dealers, if a round was planned','Mandatory training is completed'];
+  C.forEach((c,i)=>{const q=seg(t,55+i*.6,55.6+i*.6), y=200+i*44;ctx.save();ctx.globalAlpha*=q;
+    ctx.beginPath();ctx.arc(PX+14,y-6,13,0,7);ctx.fillStyle=GREEN;ctx.fill();T('✓',PX+14,y,{al:'center',size:17,col:PAPER,wt:'700'});
+    wrap(c,PX+38,y,520,20,{size:17});ctx.restore();});
+  const n=seg(t,60,60.8);
+  T('No IDS round planned counts as not applicable, never as a failure.',PX,531,{size:16,col:AMBER,wt:'600',a:n});
+  wrap('The answer is one of: eligible; not eligible, with the reasons; manual review; or exempt, with a written reason.',PX,566,540,24,{size:17,a:seg(t,62,62.8)});
+  ctx.restore();
+}
+/* scene 6 */
+function s6(){
+  const k=seg(t,66,67);if(k<=0)return;
+  ctx.save();ctx.globalAlpha=k;
+  T('The calendar',PX,150,{size:34,fam:'Georgia',col:NAVY,wt:'700'});
+  [['January to March 2027','Trial months, to practise the process before the programme starts.',TERRA,70.2],['1 April 2027','The programme starts (FY2028).',NAVY,71.4],['End of June 2027','First quarterly check of the conditions.',GREEN,72.6]].forEach((e,i)=>{
+    const q=seg(t,e[3],e[3]+.8), y=225+i*104;ctx.save();ctx.globalAlpha*=q;
+    ctx.fillStyle=e[2];ctx.fillRect(PX,y-22,6,72);T(e[0],PX+22,y,{size:22,wt:'700',col:e[2]});wrap(e[1],PX+22,y+28,500,24,{size:18});ctx.restore();});
+  ctx.restore();
+  /* centre text */
+  const c=seg(t,69,70);
+  if(c>0){ctx.save();ctx.globalAlpha=c;ctx.fillStyle=PAPER;ctx.beginPath();ctx.arc(RC.x,RC.y,RC.ri-16,0,7);ctx.fill();
+    T('One file',RC.x,RC.y-6,{al:'center',size:26,fam:'Georgia',wt:'700',col:NAVY});T('a month',RC.x,RC.y+24,{al:'center',size:26,fam:'Georgia',wt:'700',col:TERRA});ctx.restore();}
+}
+
+function titleScene(){
+  const k=seg(t,.5,1.6)*(1-seg(t,5.2,6));
+  ctx.save();ctx.globalAlpha=k;
+  T('EXCELLENCE PARTNER PROGRAMME',W/2,H/2-70,{al:'center',size:20,col:TERRA,wt:'700'});
+  T('Your month with ISZE',W/2,H/2+4,{al:'center',size:68,fam:'Georgia',wt:'700',col:NAVY});
+  T('How sales-to-dealer reporting works, from file to return',W/2,H/2+52,{al:'center',size:22,col:GREY});
+  ctx.restore();
+}
+
+function draw(tt){
+  t=tt;ctx.clearRect(0,0,W,H);ctx.fillStyle=PAPER;ctx.fillRect(0,0,W,H);
+  /* ring slides left a little when panels appear */
+  titleScene();drawRing(t);s1();s2();s3();s4();s5();s6();
+  /* draft mark */
+  const d=seg(t,6,7)*(1-seg(t,75.2,76));
+  ctx.save();ctx.globalAlpha=d;
+  T('DRAFT FOR DISCUSSION',W-40,40,{al:'right',size:14,col:TERRA,wt:'700'});
+  T('Terms are to be agreed with each distributor.',W-40,60,{al:'right',size:13,col:GREY});
+  ctx.restore();
+  const f=seg(t,75,76);if(f>0){ctx.fillStyle='rgba(247,244,238,'+f+')';ctx.fillRect(0,0,W,H);}
+}
+const TOTAL=76,FILM_TITLE='Your month with ISZE - distributor draft';
