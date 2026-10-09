@@ -297,7 +297,7 @@ De samenhang met Isuzu Universe, welke data het belangrijkst is en plan B staan 
 Nog open:
 
 1. **Wat vraagt de kickback vandaag precies aan data?** Nodig om niveau 1 er duidelijk boven te leggen.
-2. **Waarom staat er geen sales-to-dealer-bestand in de workspace** voor Duitsland, Benelux, Zweden, Noorwegen en UMI, terwijl dat in hun kickback zit?
+2. ~~Waarom staat er geen sales-to-dealer-bestand in de workspace voor Duitsland, Benelux, Zweden, Noorwegen en UMI?~~ **Gecorrigeerd:** Duitsland stuurt volgens de notulen van augustus 2026 sinds mei 2025 maandelijks door; het register in de workspace is niet bijgewerkt. Voor Benelux, Zweden, Noorwegen en UMI is de stand onbekend (white paper, hoofdstuk 3).
 
 ---
 

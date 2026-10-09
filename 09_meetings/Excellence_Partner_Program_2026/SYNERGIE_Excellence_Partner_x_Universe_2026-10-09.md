@@ -5,6 +5,8 @@
 
 ---
 
+> **Correctie, 9 oktober 2026 (later).** Eerder stond hier dat er voor Duitsland, Benelux, Zweden, Noorwegen en UMI geen sales-to-dealer-bestand bestaat. Dat klopt alleen voor het **register in de workspace**. In de notulen van de sales reviews van augustus 2026 staat dat Duitsland (ISD) sinds mei 2025 maandelijks onderdeelnummer, aantal en datum doorstuurt, en dat Griekenland, Isuzu UK pickup, Ierland en Portugal maandelijkse bestanden zonder prijzen hebben toegezegd. Voor Benelux, Zweden, Noorwegen en UMI weten we het niet. Het register loopt dus achter op de praktijk. Zie hoofdstuk 3 van het white paper.
+
 ## 0. Mijn advies in het kort
 
 **Niet kiezen tussen de twee, maar ze in elkaar schuiven.** Excellence wordt de voordeur, en Universe de machinekamer erachter.
