@@ -1,0 +1,54 @@
+{
+  "schema": "ship_receipt/v2",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\01_Strategy\\DLOD_OTHER_DISTRIBUTORS_STUDY_2026-10-08.html",
+  "artifact_mtime_ms": 1791466675068,
+  "written_at": "2026-10-08T13:38:08.697Z",
+  "ok": true,
+  "screenshots_taken": 5,
+  "screenshots_read": 5,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\01_Strategy\\DLOD_OTHER_DISTRIBUTORS_STUDY_2026-10-08.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "248931 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=true"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN_DLOD_OTHER_DISTRIBUTORS_STUDY_2026-10-08.cmd opens DLOD_OTHER_DISTRIBUTORS_STUDY_2026-10-08.html (CRLF ok)"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "screenshots_taken 5, screenshots_read 5 (5 path(s) passed)"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\01_Strategy\\_qa\\other_dbs\\d01.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\01_Strategy\\_qa\\other_dbs\\d02.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\01_Strategy\\_qa\\other_dbs\\d03.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\01_Strategy\\_qa\\other_dbs\\d04.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\01_Strategy\\_qa\\other_dbs\\d05.png"
+  ],
+  "notes": "Internal study page. 5 desktop slices of the final build taken and image-read one by one. Also checked in the in-app browser at 375px: no horizontal overflow, tooltip, chart labels, 12 phone screenshots read. Slider maths cross-checked against model.json (central 22,023; with retention 56,619). _verify_study.py 14 of 14 PASS."
+}
