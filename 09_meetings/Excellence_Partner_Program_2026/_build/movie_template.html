@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Excellence Partner Movie</title>
+<style>
+:root{--bg:#1b1e21;--panel:#24282C;--ink:#fff;--muted:#aab1b8;--red:#D71920}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px Arial,Helvetica,sans-serif}
+.wrap{max-width:1280px;margin:0 auto;padding:16px}
+#stage{width:100%;display:block;background:var(--panel);border-radius:10px}
+.ctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+button{font:inherit;background:#2f343a;color:#fff;border:1px solid #444b52;border-radius:6px;padding:8px 14px;cursor:pointer}
+button:hover{border-color:var(--red)}
+input[type=range]{flex:1;min-width:200px;accent-color:var(--red)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.chip{font-size:13px;padding:5px 10px}
+.time{color:var(--muted);min-width:90px;text-align:right}
+.note{color:var(--muted);font-size:12.5px;margin-top:10px;max-width:980px}
+body.rec .ctl,body.rec .chips,body.rec .note{display:none}
+body.rec .wrap{padding:0;max-width:none}
+body.rec #stage{border-radius:0}
+</style></head>
+<body>
+<div class="wrap">
+<svg id="stage" viewBox="0 0 1280 720" role="img" aria-label="Animated explanation of the Excellence Partner Program cost and return"></svg>
+<div class="ctl">
+  <button id="play">Pause</button><button id="restart">Restart</button>
+  <input id="scrub" type="range" min="0" max="90" step="0.05" value="0" aria-label="Position">
+  <span class="time" id="time">0:00 / 1:30</span>
+</div>
+<div class="chips" id="chips"></div>
+<div class="note">Internal draft, 9 October 2026. Euros, fiscal years, stock orders only. Costs are arithmetic on FY2026 billing; the benefit scenarios are assumptions, not measured results. Built from Excellence_Partner_ROI_Model_2026-10-09.xlsx.</div>
+</div>
+<script id="data" type="application/json">__DATA__</script>
+<script>
+(function(){
+var D=JSON.parse(document.getElementById('data').textContent);
+var W=1280,H=720,TOTAL=90;
+var C={bg:'#24282C',panel:'#2f343a',ink:'#ffffff',mut:'#aab1b8',red:'#D71920',amber:'#E6A23C',green:'#4CAF7A',blue:'#7f9dc0',grid:'#3d444b'};
+var SCENES=[[0,6,'Intro'],[6,22,'Who joins'],[22,36,'Five ways to pay'],[36,52,'Progressive ladder'],[52,68,'Does it pay back?'],[68,80,'Universe on top'],[80,90,'What we need']];
+function clamp(x){return x<0?0:x>1?1:x}
+function ease(x){x=clamp(x);return x*x*(3-2*x)}
+function seg(t,a,b){return ease((t-a)/(b-a))}
+function lerp(a,b,x){return a+(b-a)*x}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function T(x,y,s,sz,col,anc,wt,op){return '<text x="'+x+'" y="'+y+'" font-size="'+(sz||20)+'" fill="'+(col||C.ink)+'" text-anchor="'+(anc||'start')+'" font-weight="'+(wt||400)+'" opacity="'+(op==null?1:op)+'" font-family="Arial,Helvetica,sans-serif">'+esc(s)+'</text>'}
+function R(x,y,w,h,f,op,rx){return '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+Math.max(w,0).toFixed(1)+'" height="'+Math.max(h,0).toFixed(1)+'" fill="'+f+'" opacity="'+(op==null?1:op)+'" rx="'+(rx||0)+'"/>'}
+function L(x1,y1,x2,y2,col,w,dash,op){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+col+'" stroke-width="'+(w||1)+'"'+(dash?' stroke-dasharray="'+dash+'"':'')+' opacity="'+(op==null?1:op)+'"/>'}
+function CI(cx,cy,r,f,op,st){return '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="'+Math.max(r,0).toFixed(1)+'" fill="'+f+'" opacity="'+(op==null?1:op)+'"'+(st?' stroke="'+st+'" stroke-width="2"':'')+'/>'}
+function eur(v){var a=Math.abs(v),s=v<0?'−':'';if(a>=1e6)return s+'€'+(a/1e6).toFixed(2)+'M';return s+'€'+Math.round(a/1e3)+'k'}
+function pct(v,d){return (v*100).toFixed(d==null?1:d)+'%'}
+function head(t,title,sub){var o=seg(t,0,.6);return T(60,72,title,34,C.ink,'start',700,o)+(sub?T(60,104,sub,19,C.mut,'start',400,o):'')}
+function cap(t,a,b,s){var o=Math.min(seg(t,a,a+.6),1-seg(t,b-.5,b));return o>0?'<rect x="0" y="650" width="1280" height="70" fill="#1b1e21" opacity="'+(.75*o)+'"/>'+T(60,692,s,22,C.ink,'start',400,o):''}
+function sceneIdx(t){for(var i=0;i<SCENES.length;i++){if(t<SCENES[i][1])return i}return SCENES.length-1}
+
+/* ---------- scene 1 */
+function s1(t){
+  var o='';o+=R(60,200,8,150,C.red,seg(t,0,.8));
+  o+=T(90,240,'Excellence Partner Program',54,C.ink,'start',700,seg(t,.2,1.2));
+  o+=T(90,300,'What does it cost, and what must it earn?',34,C.ink,'start',400,seg(t,1,2));
+  o+=T(90,350,'19 distributors · stock orders only · FY2026 data · euros',22,C.mut,'start',400,seg(t,2,3));
+  o+=T(90,640,'Internal draft · 9 October 2026',20,C.mut,'start',400,seg(t,3,4));
+  return o}
+
+/* ---------- scene 2 */
+var pos=[];(function(){var n=D.dist.length,cols=7;for(var i=0;i<n;i++){var r=Math.floor(i/cols),c=i%cols;pos.push([110+c*105+(r%2)*40,190+r*130])}})();
+function s2(t){
+  var o=head(t,'Who joins, year by year','Bubble size = billed FY2026 · amber = level 1 (−2.5%) · red = level 2 (−5%)');
+  var yr=t<11?0:t<16?1:2, T0=[6.5,11.5,16.5];
+  var years=['FY2028','FY2029','FY2030'];
+  for(var i=0;i<D.dist.length;i++){
+    var d=D.dist[i],p=pos[i],r=6+Math.sqrt(d.billed)/58;r=Math.min(r,46);
+    o+=CI(p[0],p[1],r,'none',.5,C.grid);
+    var lv=0,ap=0;
+    for(var k=0;k<3;k++){var a=seg(t,T0[k],T0[k]+1.2);if(d.lv[k]>0){lv=d.lv[k];ap=a}else if(a>0&&k>0&&lv>0){}}
+    // level at current time: use latest started year
+    var cur=-1;for(var k2=0;k2<3;k2++){if(t>=T0[k2])cur=k2}
+    if(cur>=0&&d.lv[cur]>0){var first=-1;for(var k3=0;k3<3;k3++){if(d.lv[k3]>0){first=k3;break}}
+      var a2=seg(t,T0[Math.max(first,0)],T0[Math.max(first,0)]+1.2);o+=CI(p[0],p[1],r*a2,d.lv[cur]==2?C.red:C.amber,.95)}
+    o+=T(p[0],p[1]+r+18,d.name,13,C.mut,'middle',400,.9);
+  }
+  var cur2=-1;for(var k4=0;k4<3;k4++){if(t>=T0[k4])cur2=k4}
+  var n=0,cost=0,n0=0,c0=0;
+  if(cur2>=0){n=D.parts[cur2];cost=D.deck[cur2]}
+  var prevN=cur2>0?D.parts[cur2-1]:0,prevC=cur2>0?D.deck[cur2-1]:0;
+  var f=cur2>=0?seg(t,T0[cur2],T0[cur2]+2):0;
+  var nv=Math.round(lerp(prevN,n,f)),cv=lerp(prevC,cost,f);
+  var X=860;
+  o+=R(X,150,360,430,C.panel,1,10);
+  o+=T(X+24,190,cur2>=0?years[cur2]:'',26,C.red,'start',700);
+  o+=T(X+24,236,nv+' distributors',30,C.ink,'start',700);
+  o+=T(X+24,270,'discount per year, deck design',16,C.mut);
+  o+=T(X+24,318,eur(cv),44,C.ink,'start',700);
+  var bx=X+40,by=380,bh=170,mx=1000000;
+  o+=R(bx,by,60,bh,'#3a4047',1,4);
+  var h=bh*cv/mx;o+=R(bx,by+bh-h,60,h,C.red,1,4);
+  var ly=by+bh-bh*D.rebate/mx;o+=L(bx-10,ly,bx+300,ly,C.amber,2,'6 4');
+  o+=T(bx+80,ly-6,'rebates paid today '+eur(D.rebate),16,C.amber);
+  o+=T(bx+80,ly+16,'(FY2026, all incentives)',14,C.mut);
+  if(cur2>=0){var m=cv/D.rebate;o+=T(bx+80,by+bh-8,m.toFixed(1)+'× today',22,C.ink,'start',700)}
+  o+=cap(t,7,21.5,'The plan starts with the 7 distributors that already send data, and grows to 19.');
+  return o}
+
+/* ---------- scene 3 */
+function s3(t){
+  var o=head(t,'Five ways to pay for the same 19 distributors','Discount cost per year in year 3 (FY2030)');
+  var x0=470,x1=1010,mx=1000000,y0=170,rh=78;
+  for(var g=0;g<=4;g++){var gx=x0+(x1-x0)*g/4;o+=L(gx,150,gx,560,C.grid,1);o+=T(gx,585,g==0?'€0':eur(g*250000),15,C.mut,'middle')}
+  for(var i=0;i<D.designs.length;i++){
+    var d=D.designs[i],a=seg(t,1+i*1.4,2.4+i*1.4),y=y0+i*rh;
+    o+=T(x0-16,y+30,d.name,19,C.ink,'end',700,Math.max(a,.15));
+    o+=T(x0-16,y+52,d.sub,14,C.mut,'end',400,Math.max(a,.15));
+    var w=(x1-x0)*d.y3/mx*a;
+    o+=R(x0,y+10,w,40,i==2?C.amber:(i==3?C.red:(i==1?C.green:C.blue)),1,4);
+    if(a>.5)o+=T(x0+w+10,y+38,eur(d.y3*a/Math.max(a,1e-6))+'  ('+(d.y3/D.rebate).toFixed(1)+'× today)',17,C.ink,'start',700,seg(t,1.8+i*1.4,2.6+i*1.4));
+  }
+  var lx=x0+(x1-x0)*D.rebate/mx;o+=L(lx,150,lx,560,C.amber,2,'6 4');o+=T(lx+6,146,'rebates paid today '+eur(D.rebate),15,C.amber);
+  o+=cap(t,8,35.5,'The deck design costs more than twice what ISZE pays in rebates today. Smaller hybrids stay near it.');
+  return o}
+
+/* ---------- scene 4 */
+function bonus(g,p,lv){var b1=p.l1,b2=p.l2,r=lv==1?p.r1:p.r2,flat=lv==1?p.f1:p.f2;if(g<=0)return flat;
+  var a=Math.min(g,b1),b=Math.max(0,Math.min(g,b2)-b1),c=Math.max(0,g-b2);return flat+r[0]*a+r[1]*b+r[2]*c}
+function tier(g){var q=D.tier;return g<q.t[0]?q.r[0]:g<q.t[1]?q.r[1]:g<q.t[2]?q.r[2]:q.r[3]}
+function s4(t){
+  var o=head(t,'The progressive ladder','Reward as % of last year\'s stock orders, by the distributor\'s own growth in stock orders');
+  var X0=110,X1=1160,Y0=560,Y1=170,gmin=-0.10,gmax=0.20,rmax=0.07;
+  function px(g){return X0+(X1-X0)*(g-gmin)/(gmax-gmin)}
+  function py(r){return Y0-(Y0-Y1)*r/rmax}
+  for(var r=0;r<=7;r+=1){o+=L(X0,py(r/100),X1,py(r/100),C.grid,1);o+=T(X0-10,py(r/100)+5,r+'%',15,C.mut,'end')}
+  for(var g=-10;g<=20;g+=5){o+=T(px(g/100),Y0+26,(g>0?'+':'')+g+'%',15,C.mut,'middle')}
+  o+=T((X0+X1)/2,Y0+52,'growth of the distributor\'s stock orders vs last year',16,C.mut,'middle');
+  // luck density
+  var dens='';var mu=D.mu,sg=D.sigma,pk=1/(sg*Math.sqrt(2*Math.PI));
+  for(var k=0;k<=60;k++){var g2=gmin+(gmax-gmin)*k/60,v=Math.exp(-0.5*Math.pow((g2-mu)/sg,2));dens+=(k?' L ':'M ')+px(g2).toFixed(1)+' '+(Y0-60*v).toFixed(1)}
+  o+='<path d="'+dens+' L '+px(gmax)+' '+Y0+' L '+px(gmin)+' '+Y0+' Z" fill="#ffffff" opacity="'+(.10*seg(t,.5,2))+'"/>';
+  o+=T(px(-.095),Y0-72,'faint shape = where distributors land in a normal year',14,C.mut,'start',400,seg(t,1,2));
+  var prog=seg(t,1.5,10);var gcut=gmin+(gmax-gmin)*prog;
+  function curve(fn,col,w,lab,lx,ly,step,anc){var p='',first=true;for(var k=0;k<=300;k++){var g3=gmin+(gmax-gmin)*k/300;if(g3>gcut)break;var y=py(fn(g3));if(step&&k>0){}p+=(first?'M ':' L ')+px(g3).toFixed(1)+' '+y.toFixed(1);first=false}
+    var s='<path d="'+p+'" fill="none" stroke="'+col+'" stroke-width="'+w+'" stroke-linejoin="round"/>';
+    if(prog>.95)s+=T(lx,ly,lab,17,col,anc||'start',700,seg(t,10,11));return s}
+  o+=curve(function(g){return D.deckRate},C.mut,3,'Deck: flat 2.5% on all stock orders',px(-.095),py(D.deckRate)-10);
+  o+=curve(tier,C.blue,3,'Tiered: all stock orders, jumps at each limit',px(.2),py(.05)-12,true,'end');
+  o+=curve(function(g){return bonus(g,D.hy[0],1)},C.amber,4,'Hybrid small (level 1)',px(.2),py(bonus(.2,D.hy[0],1))-14,false,'end');
+  o+=curve(function(g){return bonus(g,D.hy[1],1)},C.red,4,'Hybrid bigger (level 1)',px(.2),py(bonus(.2,D.hy[1],1))-14,false,'end');
+  // planned growth marker
+  var mo=seg(t,10,11);o+=L(px(mu),Y1,px(mu),Y0,'#ffffff',1.5,'4 4',.5*mo);o+=T(px(mu)+6,Y1+16,'planned growth +5%',15,C.ink,'start',400,mo);
+  o+=cap(t,2,15.5,'Hybrids: each growth band pays a higher rate, only on the growth inside that band. Tiers pay on everything.');
+  o+=cap(t,15.5,17,'');
+  return o}
+
+/* ---------- scene 5 */
+function s5(t){
+  var o=head(t,'Does it pay back over three years?','Net result per design · dot = Base · line = Low to High · my assumptions, not measured results');
+  var x0=520,x1=1190,vmin=-2000000,vmax=1000000,y0=160,rh=84;
+  function px(v){return x0+(x1-x0)*(v-vmin)/(vmax-vmin)}
+  for(var v=vmin;v<=vmax;v+=500000){o+=L(px(v),150,px(v),580,C.grid,1);o+=T(px(v),602,v===0?'€0':eur(v),14,C.mut,'middle')}
+  o+=L(px(0),150,px(0),580,'#ffffff',2,null,.7);
+  for(var i=0;i<D.designs.length;i++){
+    var d=D.designs[i],a=seg(t,1+i*1.5,2.6+i*1.5),y=y0+i*rh;
+    o+=T(x0-16,y+30,d.name,19,C.ink,'end',700,Math.max(a,.15));
+    o+=T(x0-16,y+52,'needs +'+pct(d.be)+' extra sales',14,C.mut,'end',400,Math.max(a,.15));
+    var lo=d.net[0]*a,mid=d.net[1]*a,hi=d.net[2]*a;
+    o+=R(Math.min(px(0),px(mid)),y+14,Math.abs(px(mid)-px(0)),30,mid>=0?C.green:C.red,.85,3);
+    o+=L(px(lo),y+29,px(hi),y+29,C.ink,3,null,a);
+    o+=CI(px(mid),y+29,7,C.ink,a);
+    if(a>.8)o+=T(px(Math.max(mid,hi,0))+14,y+36,eur(d.net[1]),17,C.ink,'start',700,seg(t,2.2+i*1.5,3+i*1.5));
+  }
+  o+=cap(t,9,15.5,'Only the growth-only design pays back in all cases, and it gives a flat distributor no reason to take part.');
+  return o}
+
+/* ---------- scene 6 */
+function s6(t){
+  var o=head(t,'Isuzu Universe on top','Cash it would add, and the actions it needs to earn it back');
+  var u=D.univ;
+  o+=R(60,150,520,420,C.panel,1,10);
+  o+=T(84,190,'Universe cash per year',24,C.ink,'start',700);
+  var parts=[['Campaign support',u.camp,C.red],['Dealer enablement',u.enab,C.amber],['Independent evaluation',u.eval,C.blue]];
+  var yy=220;parts.forEach(function(p,i){var a=seg(t,1+i*.8,2.2+i*.8);o+=T(84,yy+26,p[0],18,C.mut);o+=R(280,yy+8,260*p[1]/50000*a,26,p[2],1,3);o+=T(284+260*p[1]/50000*a,yy+28,eur(p[1]),16,C.ink);yy+=64});
+  o+=T(84,470,'Total '+eur(u.cash)+' a year',30,C.ink,'start',700,seg(t,3.5,4.5));
+  o+=T(84,506,'about '+u.be+' qualifying actions a year to cover it',18,C.mut,'start',400,seg(t,4,5));
+  o+=T(84,534,'at €2,500 contribution each (Universe\'s own hypothetical)',16,C.mut,'start',400,seg(t,4,5));
+  o+=R(620,150,600,420,C.panel,1,10);
+  o+=T(644,190,'Universe net result over 3 years',24,C.ink,'start',700);
+  var sc=['Low','Base','High'];
+  var zx=930,sc2=300/260000;
+  o+=L(zx,230,zx,545,'#ffffff',2,null,.7);
+  for(var i=0;i<3;i++){var a2=seg(t,3+i*1,4.4+i*1),v=u.net[i]*a2,y=240+i*100;
+    o+=T(644,y+16,sc[i]+': '+u.act[i]+' qualifying actions/yr',17,C.mut);
+    var w=v*sc2;o+=R(Math.min(zx,zx+w),y+30,Math.abs(w),34,v>=0?C.green:C.red,.9,3);
+    o+=T(w>=0?zx+w+10:zx+10,y+55,eur(u.net[i]),18,C.ink,'start',700,a2)}
+  o+=cap(t,6,11.5,'Universe comes with its own caveat: no realised return is evidenced. Its cash adds to the Excellence cost.');
+  return o}
+
+/* ---------- scene 7 */
+function s7(t){
+  var o=head(t,'What this means for the decision');
+  var cards=[['1','The discount buys participation, not a proven return','Even the best case depends on extra sales nobody has measured. Say so first.'],
+             ['2','Ask for a cost ceiling and a measured pilot','A few distributors in, comparable ones out, same measure, agreed in advance.'],
+             ['3','Close three gaps before going to management','Kickback terms (20% of rebates, about '+eur(D.atstake)+', is tied to the data), the incentive sheet, and the intake build with Bart.']];
+  cards.forEach(function(c,i){var a=seg(t,.6+i*1.2,1.8+i*1.2),y=150+i*150;
+    o+=R(60,y,1160,126,C.panel,a,10);o+=CI(110,y+63,28,C.red,a);o+=T(110,y+73,c[0],30,C.ink,'middle',700,a);
+    o+=T(170,y+52,c[1],26,C.ink,'start',700,a);o+=T(170,y+88,c[2],18,C.mut,'start',400,a)});
+  return o}
+
+var FN=[s1,s2,s3,s4,s5,s6,s7];
+var stage=document.getElementById('stage');
+function render(t){
+  t=Math.max(0,Math.min(TOTAL,t));var i=sceneIdx(t),sc=SCENES[i],lt=t-sc[0];
+  var o='<rect width="1280" height="720" fill="'+C.bg+'"/>'+FN[i](lt);
+  // scene progress line
+  o+=R(0,716,1280*t/TOTAL,4,C.red,1);
+  stage.innerHTML=o;
+  var m=Math.floor(t/60),s=Math.floor(t%60);document.getElementById('time').textContent=m+':'+(s<10?'0':'')+s+' / 1:30';
+  document.getElementById('scrub').value=t;
+  var ch=document.querySelectorAll('.chip');for(var k=0;k<ch.length;k++){ch[k].style.borderColor=k===i?C.red:'#444b52'}
+}
+window.__render=render;
+var q=new URLSearchParams(location.search);
+if(q.get('rec')){document.body.classList.add('rec')}
+var chips=document.getElementById('chips');
+SCENES.forEach(function(sc,i){var b=document.createElement('button');b.className='chip';b.textContent=sc[2];b.onclick=function(){t=sc[0];render(t)};chips.appendChild(b)});
+var t=q.get('t')?parseFloat(q.get('t')):0,playing=!q.get('t'),last=null;
+function loop(ts){if(playing){if(last!=null){t+=(ts-last)/1000;if(t>=TOTAL){t=TOTAL;playing=false;document.getElementById('play').textContent='Play again'}}render(t)}last=ts;requestAnimationFrame(loop)}
+document.getElementById('play').onclick=function(){if(t>=TOTAL){t=0}playing=!playing;this.textContent=playing?'Pause':'Play'};
+document.getElementById('restart').onclick=function(){t=0;playing=true;document.getElementById('play').textContent='Pause';render(0)};
+document.getElementById('scrub').oninput=function(){t=parseFloat(this.value);render(t)};
+render(t);requestAnimationFrame(loop);
+})();
+</script></body></html>
