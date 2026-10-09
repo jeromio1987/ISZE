@@ -74,6 +74,15 @@ o = pd.read_csv(HERE / "order_mix_fy2026.csv", index_col=0)
 w = pd.read_csv(ROOT / "01_data/00_derived/wallet_waterfall.csv")
 w25 = w[w.year == 2025].set_index("distributor_code").uncaptured_eur
 
+# Rebate credit lines ("Rebate Material") booked FY2026 (1 Apr 2025 - 31 Mar 2026), per distributor.
+_sf = pd.read_parquet(ROOT / "01_data/00_derived/sales_fact.parquet")
+_sf["billing_date"] = pd.to_datetime(_sf["billing_date"])
+_dim = pd.read_csv(ROOT / "01_data/00_derived/distributor_dimension.csv")
+_map = dict(zip(_dim.sold_to_sap, _dim.distributor_code.fillna(_dim.network_role)))
+_rb = _sf[(_sf.part_number.astype(str).str.upper() == "REBATE")
+          & (_sf.billing_date >= "2025-04-01") & (_sf.billing_date < "2026-04-01")]
+REBATE = _rb.assign(db=_rb.sold_to_sap.map(_map)).groupby("db").net_sales_value.sum().abs().round(0).to_dict()
+
 LABEL = {
     "ITUK": "Isuzu Truck UK", "IUK": "Isuzu UK pickup", "UTI": "UTI (Israel trucks)", "UMI": "UMI (Israel light commercial)",
     "GERMANY": "Germany", "BELGIUM": "Benelux", "PORTUGAL": "Portugal", "NORWAY": "Norway", "SWEDEN": "Sweden",
@@ -107,12 +116,12 @@ rows = [
     (5, "Discount, level 2 (stock orders)", 0.05, PCT, "Proposal in the deck: 5% on stock orders", None),
     (6, "Gross margin on billed parts", 0.468, PCT,
      "INDICATIVE. SAP cost vs billed, Q1 FY2027 (Apr–Jun 2026), 01_data/00_derived/q1fy2027_export_with_saty.csv. One quarter; SAP cost not complete for every line.", None),
-    (7, "Programme running cost per year (€)", 100000, EUR,
-     "PLACEHOLDER = Universe 3.0 recommended route (€100k). Replace with real internal time, IMG support, training, award.", YELLOW),
-    (8, "One-off build cost in year 1 (€)", 0, EUR,
-     "NOT KNOWN. Network developer to estimate intake channel, checks, SAP condition, quarterly report. Leave 0 = result is too favourable.", YELLOW),
+    (7, "Programme running cost per year, extra cash (€)", 0, EUR,
+     "Jerome 9 Oct 2026: no running cost. Built and run by Jerome, Bart Symons and AI. Internal time is NOT costed; management may ask.", None),
+    (8, "One-off build cost in year 1, extra cash (€)", 0, EUR,
+     "Same: built in-house with AI. Change if an external developer, licences or hosting are needed.", None),
     (9, "Other benefits per year at full ramp (€)", 0, EUR,
-     "Fill in only what can be defended, e.g. air-freight saved when rush orders move to stock orders. No data in workspace yet.", YELLOW),
+     "Left at zero on purpose. Air-freight saving from rush orders moving to stock orders is excluded (Jerome 9 Oct 2026: look at stock orders only); it stays an unpriced upside.", None),
     (10, "Price-revision value per year (€)", 682000, EUR,
      "Midpoint of +5% option: €638k (forecast weights) to €726k (last-12-months). DECISION_MEMO_PRICE_ADJUSTMENT_20260916 via Universe term sheet §2.", None),
     (11, "In-scope billed FY2026 (€)", "=Distributors!C24", EUR, "Link. 19 distributors, CIS markets excluded.", None),
@@ -144,10 +153,30 @@ for i, (nme, u, p, n) in enumerate(scen):
     put(wi, f"B{r}", u, BLUE, PCT, YELLOW)
     put(wi, f"C{r}", p, BLUE, PCT, YELLOW)
     put(wi, f"D{r}", n, wrap=True)
+hdr(wi, 29, ["Design choices", "Value", "Rate on stock orders", "Note"])
+put(wi, "A30", "Design shown on Plan_ROI (1 deck flat · 2 growth only · 3 hybrid · 4 tiered)")
+put(wi, "B30", 3, BLUE, "0", YELLOW)
+put(wi, "A31", "Spread of yearly stock-order growth between distributors (σ)")
+put(wi, "B31", 0.138, BLUE, PCT)
+put(wi, "D31", "Observed FY2026 vs FY2025 spread of billing growth, 12 larger distributors (Evidence sheet). Luck decides much of a tier.", wrap=True)
+put(wi, "A32", "Tiered design 4: rate on ALL stock orders, by the distributor's own growth in stock orders", BOLD)
+for r, lab, thr, rate in [(33, "Tier 1: growth below", 0.0, 0.01), (34, "Tier 2: growth below", 0.05, 0.02),
+                          (35, "Tier 3: growth below", 0.10, 0.035)]:
+    put(wi, f"A{r}", lab)
+    put(wi, f"B{r}", thr, BLUE, PCT)
+    put(wi, f"C{r}", rate, BLUE, PCT)
+put(wi, "A36", "Tier 4: growth above the tier-3 limit")
+put(wi, "C36", 0.05, BLUE, PCT)
+put(wi, "A37", "Expected rate on stock orders if growth is as planned, with the spread above", BOLD)
+mu, sg = "$B$12", "$B$31"
+put(wi, "B37", f"=C33*NORMDIST(B33,{mu},{sg},TRUE)+C34*(NORMDIST(B34,{mu},{sg},TRUE)-NORMDIST(B33,{mu},{sg},TRUE))"
+    f"+C35*(NORMDIST(B35,{mu},{sg},TRUE)-NORMDIST(B34,{mu},{sg},TRUE))+C36*(1-NORMDIST(B35,{mu},{sg},TRUE))", BLACK, PCT2)
+put(wi, "D33", "Tier limits and rates are design choices to test in the pilot, not proposals.", wrap=True)
 put(wi, "A27", "Colour code: blue = typed input · black = formula · green = link to another sheet · yellow = key assumption or missing number.", BLACK)
 widths(wi, {"A": 58, "B": 22, "C": 60, "D": 50})
 for r in range(4, 17):
     wi.row_dimensions[r].height = 30
+wi.row_dimensions[31].height = 30
 wi.row_dimensions[22].height = 45
 
 # ------------------------------------------------------------------ Distributors
@@ -156,7 +185,8 @@ put(wd, "A1", "Distributors in scope (19, CIS excluded) and the illustrative par
 put(wd, "A2", "Levels: 0 = not in · 1 = level 1 (-2.5%) · 2 = level 2 (-5%). Years: FY2028, FY2029, FY2030. Plan is illustrative; edit the blue level cells.", BLACK)
 hdr(wd, 4, ["Code", "Distributor", "Billed FY2026 (€)", "Stock orders FY2026 (€)", "Stock-order share", "Kickback today",
             "Sales to dealer today", "Uncaptured wallet 2025 (€, modelled ceiling)", "Level Y1", "Level Y2", "Level Y3",
-            "Billed of participants Y1 (€)", "Y2 (€)", "Y3 (€)", "Discount cost Y1 (€)", "Y2 (€)", "Y3 (€)"])
+            "Billed of participants Y1 (€)", "Y2 (€)", "Y3 (€)", "Discount cost Y1 (€)", "Y2 (€)", "Y3 (€)",
+            "Rebate credits booked FY2026 (€)", "Rebate as % of billed"])
 for i, code in enumerate(ORDER):
     r = 5 + i
     put(wd, f"A{r}", code, BLUE)
@@ -176,23 +206,26 @@ for i, code in enumerate(ORDER):
         put(wd, f"{col}{r}", f"=IF({lv}{r}>0,C{r},0)", BLACK, EUR)
     for col, lv in zip("OPQ", "IJK"):
         put(wd, f"{col}{r}", f"=D{r}*IF({lv}{r}=1,Inputs!$B$4,IF({lv}{r}=2,Inputs!$B$5,0))", BLACK, EUR)
+    put(wd, f"R{r}", int(REBATE.get(code, 0)), BLUE, EUR)
+    put(wd, f"S{r}", f"=IFERROR(R{r}/C{r},0)", BLACK, PCT)
 put(wd, "A24", "Total", BOLD)
-for col in "CDHLMNOPQ":
+put(wd, "S24", "=IFERROR(R24/C24,0)", BOLD, PCT)
+for col in "CDHLMNOPQR":
     put(wd, f"{col}24", f"=SUM({col}5:{col}23)", BOLD, EUR)
 put(wd, "E24", "=IFERROR(D24/C24,0)", BOLD, PCT)
 put(wd, "A26", "Sources: billed and stock orders = sales_fact.parquet, FY2026 (1 Apr 2025 – 31 Mar 2026), credit notes, transport and rebates excluded, via _build/order_mix_and_discount_cost.py. "
     "Uncaptured wallet = wallet_waterfall.csv, 2025 — a ceiling built on target spend per truck, NOT recoverable sales (FACTS.md). Kickback list = 01_data/91_build/build_gps_kickback_proposal.py. "
-    "Sales to dealer today = register in 01_data/DATA_MANIFEST.md §05.", BLACK, wrap=True)
-wd.merge_cells("A26:Q26")
+    "Sales to dealer today = register in 01_data/DATA_MANIFEST.md §05. Rebate credits = billing lines 'Rebate Material', FY2026, sales_fact.parquet: kickback and other incentives mixed (ITUK includes the €30k defence-programme credit). The workbook with the incentive sheet (budget_per_DB_reviewed_24042026.xlsx) is not in the workspace.", BLACK, wrap=True)
+wd.merge_cells("A26:S26")
 wd.row_dimensions[26].height = 55
 widths(wd, {"A": 12, "B": 28, "C": 16, "D": 16, "E": 11, "F": 10, "G": 22, "H": 20, "I": 8, "J": 8, "K": 8,
-            "L": 16, "M": 14, "N": 14, "O": 16, "P": 14, "Q": 14})
+            "L": 16, "M": 14, "N": 14, "O": 16, "P": 14, "Q": 14, "R": 18, "S": 12})
 wd.row_dimensions[4].height = 58
 wd.freeze_panes = "C5"
 
 # ------------------------------------------------------------------ Plan ROI
 wp = wb.create_sheet("Plan_ROI")
-put(wp, "A1", "Plan: cost, benefit and net result per year (deck design: flat discount on all stock orders)", TITLE)
+put(wp, "A1", "Plan: cost, benefit and net result per year for the design chosen on Inputs B30", TITLE)
 hdr(wp, 3, ["", "Year 1 FY2028", "Year 2 FY2029", "Year 3 FY2030", "3-year total"])
 cols = ["B", "C", "D"]
 dist_bill = dict(zip(cols, "LMN"))
@@ -200,7 +233,7 @@ dist_cost = dict(zip(cols, "OPQ"))
 lvl_col = dict(zip(cols, "IJK"))
 ramp_row = dict(zip(cols, (18, 19, 20)))
 
-labels = {4: "Participating distributors", 5: "Billed of participants, FY2026 base (€)", 6: "Discount cost (€)",
+labels = {4: "Participating distributors", 5: "Billed of participants, FY2026 base (€)", 6: "Discount cost, chosen design (€)",
           7: "Programme running cost (€)", 8: "One-off build cost (€)", 9: "Total cost (€)",
           10: "Discount cost as % of participants' billed", 11: "Margin on an extra € billed, after the discount", 12: "Ramp-up"}
 for r, t in labels.items():
@@ -208,7 +241,7 @@ for r, t in labels.items():
 for c in cols:
     put(wp, f"{c}4", f'=COUNTIF(Distributors!{lvl_col[c]}5:{lvl_col[c]}23,">0")', GREEN, "0")
     put(wp, f"{c}5", f"=Distributors!{dist_bill[c]}24", GREEN, EUR)
-    put(wp, f"{c}6", f"=Distributors!{dist_cost[c]}24", GREEN, EUR)
+    put(wp, f"{c}6", f"=INDEX(Design_variants!{c}$10:{c}$13,Inputs!$B$30)", GREEN, EUR)
     put(wp, f"{c}7", "=Inputs!$B$7", GREEN, EUR)
     put(wp, f"{c}8", "=Inputs!$B$8" if c == "B" else 0, GREEN if c == "B" else BLACK, EUR)
     put(wp, f"{c}9", f"=SUM({c}6:{c}8)", BOLD, EUR)
@@ -261,59 +294,76 @@ widths(wp, {"A": 70, "B": 17, "C": 17, "D": 17, "E": 17})
 
 # ------------------------------------------------------------------ Variants
 wv = wb.create_sheet("Design_variants")
-put(wv, "A1", "Same participants (Year 3), three ways to pay — which design earns its money back", TITLE)
-hdr(wv, 3, ["", "V1 Deck: flat on all stock orders", "V2 Growth only: on stock orders above FY2026", "V3 Hybrid: small flat + growth bonus"])
-put(wv, "A4", "Stock orders of level-1 participants (€)")
-put(wv, "A5", "Stock orders of level-2 participants (€)")
-put(wv, "A6", "Billed of participants (€)")
-put(wv, "B4", "=SUMPRODUCT(Distributors!$D$5:$D$23*(Distributors!$K$5:$K$23=1))", GREEN, EUR)
-put(wv, "B5", "=SUMPRODUCT(Distributors!$D$5:$D$23*(Distributors!$K$5:$K$23=2))", GREEN, EUR)
-put(wv, "B6", "=Distributors!N24", GREEN, EUR)
-for c in "CD":
-    for r in (4, 5, 6):
-        put(wv, f"{c}{r}", f"=$B{r}", BLACK, EUR)
-put(wv, "A8", "Discount cost per year (€)")
-put(wv, "B8", "=B4*Inputs!$B$4+B5*Inputs!$B$5", BLACK, EUR)
-put(wv, "C8", "=(C4*Inputs!$B$4+C5*Inputs!$B$5)*Inputs!$B$12", BLACK, EUR)
-put(wv, "D8", "=D4*Inputs!$B$13+D5*Inputs!$B$14+(D4*Inputs!$B$15+D5*Inputs!$B$16)*Inputs!$B$12", BLACK, EUR)
-put(wv, "A9", "Programme running cost per year (€)")
-put(wv, "A10", "Total cost per year (€)")
-put(wv, "A11", "Discount cost as % of participants' billed")
-put(wv, "A12", "Margin on an extra € billed, after the discount")
-put(wv, "A13", "Extra sales needed to break even (growth as only benefit, €)")
-put(wv, "A14", "… as % of participants' billed")
-put(wv, "A15", "Reward for a participant whose stock orders stay flat")
+put(wv, "A1", "Four ways to pay for the same participants — cost, result and break-even", TITLE)
+hdr(wv, 3, ["Per year", "Year 1 FY2028", "Year 2 FY2029", "Year 3 FY2030", "3-year total"])
+put(wv, "A4", "Billed of participants, FY2026 base (€)")
+put(wv, "A5", "Stock orders of level-1 participants (€)")
+put(wv, "A6", "Stock orders of level-2 participants (€)")
+put(wv, "A7", "Stock orders of all participants (€)")
+put(wv, "A8", "Ramp-up of benefits")
+for c, bc, lc in zip("BCD", "LMN", "IJK"):
+    put(wv, f"{c}4", f"=Distributors!{bc}24", GREEN, EUR)
+    put(wv, f"{c}5", f"=SUMPRODUCT(Distributors!$D$5:$D$23*(Distributors!{lc}$5:{lc}$23=1))", GREEN, EUR)
+    put(wv, f"{c}6", f"=SUMPRODUCT(Distributors!$D$5:$D$23*(Distributors!{lc}$5:{lc}$23=2))", GREEN, EUR)
+    put(wv, f"{c}7", f"={c}5+{c}6", BLACK, EUR)
+put(wv, "B8", "=Inputs!$B$18", GREEN, PCT)
+put(wv, "C8", "=Inputs!$B$19", GREEN, PCT)
+put(wv, "D8", "=Inputs!$B$20", GREEN, PCT)
+hdr(wv, 9, ["Discount cost per year (€)", "Year 1", "Year 2", "Year 3", "3-year total"])
+names = ["1  Deck: flat on all stock orders", "2  Growth only: on stock orders above FY2026",
+         "3  Hybrid: small flat + bonus on growth", "4  Tiered: rate on all stock orders by own growth"]
+for k, nme in enumerate(names):
+    put(wv, f"A{10+k}", nme)
 for c in "BCD":
-    put(wv, f"{c}9", "=Inputs!$B$7", GREEN, EUR)
-    put(wv, f"{c}10", f"={c}8+{c}9", BOLD, EUR)
-    put(wv, f"{c}11", f"=IFERROR({c}8/{c}6,0)", BLACK, PCT2)
-    put(wv, f"{c}12", f"=Inputs!$B$6-{c}11", BLACK, PCT)
-    put(wv, f"{c}13", f"=IFERROR({c}10/{c}12,0)", BLACK, EUR)
-    put(wv, f"{c}14", f"=IFERROR({c}13/{c}6,0)", BOLD, PCT)
-put(wv, "B15", "Full discount (-2.5% / -5%)", BLACK, wrap=True)
-put(wv, "C15", "None", BLACK)
-put(wv, "D15", "Small flat part only", BLACK, wrap=True)
-put(wv, "A17", "What each design does for the real goal (more distributors taking part):", BOLD)
-put(wv, "A18", "V1 is the strongest hook for participation but pays mostly for volume that was coming anyway. "
-    "V2 almost always pays back but gives a flat or shrinking distributor no reason to send data. "
-    "V3 keeps a visible reward for taking part and links the bigger part to growth. Growth cost in V2 and V3 assumes stock orders grow at the planned rate (Inputs B12).", BLACK, wrap=True)
-wv.merge_cells("A18:D18")
-wv.row_dimensions[18].height = 60
-widths(wv, {"A": 62, "B": 28, "C": 28, "D": 28})
-wv.row_dimensions[3].height = 45
+    put(wv, f"{c}10", f"={c}5*Inputs!$B$4+{c}6*Inputs!$B$5", BLACK, EUR)
+    put(wv, f"{c}11", f"=({c}5*Inputs!$B$4+{c}6*Inputs!$B$5)*Inputs!$B$12", BLACK, EUR)
+    put(wv, f"{c}12", f"={c}5*Inputs!$B$13+{c}6*Inputs!$B$14+({c}5*Inputs!$B$15+{c}6*Inputs!$B$16)*Inputs!$B$12", BLACK, EUR)
+    put(wv, f"{c}13", f"={c}7*Inputs!$B$37", BLACK, EUR)
+for r in range(10, 14):
+    put(wv, f"E{r}", f"=SUM(B{r}:D{r})", BOLD, EUR)
+hdr(wv, 15, ["Total cost per year, incl. running and build (€)", "Year 1", "Year 2", "Year 3", "3-year total"])
+for k, nme in enumerate(names):
+    r = 16 + k
+    put(wv, f"A{r}", nme)
+    put(wv, f"B{r}", f"=B{10+k}+Inputs!$B$7+Inputs!$B$8", BLACK, EUR)
+    put(wv, f"C{r}", f"=C{10+k}+Inputs!$B$7", BLACK, EUR)
+    put(wv, f"D{r}", f"=D{10+k}+Inputs!$B$7", BLACK, EUR)
+    put(wv, f"E{r}", f"=SUM(B{r}:D{r})", BOLD, EUR)
+hdr(wv, 21, ["Result by design, 3 years (€)", "3-year cost", "Net, Low", "Net, Base", "Net, High", "Break-even extra sales, year 3 (% of billed)", "Reward for a participant whose stock orders stay flat"])
+flat = ["Full discount (-2.5% / -5%)", "None", "Small flat part only", "Tier 1 rate only"]
+for k, nme in enumerate(names):
+    r = 22 + k
+    put(wv, f"A{r}", nme)
+    put(wv, f"B{r}", f"=E{16+k}", BLACK, EUR)
+    for col, srow in zip("CDE", (23, 24, 25)):
+        put(wv, f"{col}{r}",
+            f"=Inputs!$B${srow}*SUMPRODUCT($B$8:$D$8,$B$4:$D$4*Inputs!$B$6-B{10+k}:D{10+k})"
+            f"+Inputs!$C${srow}*Inputs!$B$10*SUMPRODUCT($B$8:$D$8,$B$4:$D$4)/Inputs!$B$11"
+            f"+Inputs!$B$9*SUM($B$8:$D$8)-$B{r}", BOLD, EUR)
+    put(wv, f"F{r}", f"=IFERROR(D{16+k}/($D$4*Inputs!$B$6-D{10+k}),0)", BOLD, PCT)
+    put(wv, f"G{r}", flat[k], BLACK, wrap=True)
+put(wv, "A27", "What each design does for the real goal (more distributors taking part):", BOLD)
+put(wv, "A28", "1 is the strongest hook but pays mostly for volume that was coming anyway. 2 almost always pays back but gives a flat or shrinking distributor no reason to send data. "
+    "3 keeps a visible reward for taking part and links the larger part to growth, paid only on the increase. "
+    "4 is progressive in the usual sense (higher rate for higher growth) but pays on ALL stock orders, and with a normal yearly spread of about 14% between distributors, a large part of who lands in which tier is luck, so it pays out on noise. "
+    "Designs 2 to 4 assume stock orders grow at the planned rate (Inputs B12).", BLACK, wrap=True)
+wv.merge_cells("A28:G28")
+wv.row_dimensions[28].height = 85
+widths(wv, {"A": 62, "B": 18, "C": 18, "D": 18, "E": 18, "F": 24, "G": 30})
+wv.row_dimensions[21].height = 45
 
 # ------------------------------------------------------------------ Sensitivity
 wsn = wb.create_sheet("Sensitivity")
-put(wsn, "A1", "Net result per year at full ramp (Year 3 participants), growth as the only benefit", TITLE)
+put(wsn, "A1", "Net result per year at full ramp (year-3 participants), extra sales as the only benefit", TITLE)
 put(wsn, "A2", "Rows: extra sales beyond plan as % of participants' billed. Negative = the programme costs more than it earns.", BLACK)
-hdr(wsn, 4, ["Extra sales vs plan", "V1 Deck", "V2 Growth only", "V3 Hybrid"])
+hdr(wsn, 4, ["Extra sales vs plan", "1 Deck", "2 Growth only", "3 Hybrid", "4 Tiered"])
 for i, u in enumerate([0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.08, 0.10]):
     r = 5 + i
     put(wsn, f"A{r}", u, BLUE, PCT)
-    for c in "BCD":
-        put(wsn, f"{c}{r}", f"=$A{r}*Design_variants!{c}$6*Design_variants!{c}$12-Design_variants!{c}$10", BLACK, EUR)
-put(wsn, "A15", "Cell colours are not used on purpose: read the sign. The break-even row for each design is on Design_variants.", BLACK)
-widths(wsn, {"A": 24, "B": 18, "C": 18, "D": 18})
+    for k, c in enumerate("BCDE"):
+        put(wsn, f"{c}{r}", f"=$A{r}*(Design_variants!$D$4*Inputs!$B$6-Design_variants!$D${10+k})-Design_variants!$D${16+k}", BLACK, EUR)
+put(wsn, "A15", "Break-even per design is on Design_variants. Read the sign: no colours on purpose.", BLACK)
+widths(wsn, {"A": 24, "B": 18, "C": 18, "D": 18, "E": 18})
 
 # ------------------------------------------------------------------ Evidence
 we = wb.create_sheet("Evidence")
@@ -349,44 +399,44 @@ for r in range(4, 14):
 
 # ------------------------------------------------------------------ Summary (first)
 ws = wb.create_sheet("Summary", 0)
-put(ws, "A1", "Excellence Partner Program — return on investment, first model", TITLE)
-put(ws, "A2", "Internal draft · 9 October 2026 · euros per fiscal year · edit Inputs and Distributors, everything else recalculates", BLACK)
-hdr(ws, 4, ["", "Low", "Base", "High"])
-rowsS = [
-    (5, "3-year cost (€)", "=Plan_ROI!E9", "=Plan_ROI!E9", "=Plan_ROI!E9", EUR),
-    (6, "3-year benefit (€)", f"=Plan_ROI!E{blocks['Low']+5}", f"=Plan_ROI!E{blocks['Base']+5}", f"=Plan_ROI!E{blocks['High']+5}", EUR),
-    (7, "3-year net result (€)", f"=Plan_ROI!E{blocks['Low']+6}", f"=Plan_ROI!E{blocks['Base']+6}", f"=Plan_ROI!E{blocks['High']+6}", EUR),
-    (8, "Return on cost (net ÷ cost)", f"=Plan_ROI!E{blocks['Low']+7}", f"=Plan_ROI!E{blocks['Base']+7}", f"=Plan_ROI!E{blocks['High']+7}", PCT),
-]
-for r, lab, a, b, c, fmt in rowsS:
-    put(ws, f"A{r}", lab, BOLD if r in (7, 8) else BLACK)
-    for col, f in zip("BCD", (a, b, c)):
-        put(ws, f"{col}{r}", f, GREEN, fmt)
-put(ws, "A9", "Verdict on these assumptions")
-for col in "BCD":
-    put(ws, f"{col}9", f'=IF({col}7>0,"pays back","does not pay back")', BOLD)
-hdr(ws, 11, ["Break-even, deck design (year 3, full ramp)", "", "", ""])
-put(ws, "A12", "Extra sales beyond plan needed, as % of participants' billed")
-put(ws, "B12", f"=Plan_ROI!D{be+2}", GREEN, PCT)
-put(ws, "A13", "… with the growth-only design (V2)")
-put(ws, "B13", "=Design_variants!C14", GREEN, PCT)
-put(ws, "A14", "… with the hybrid design (V3)")
-put(ws, "B14", "=Design_variants!D14", GREEN, PCT)
-put(ws, "A15", "Year-3 discount cost, deck design (€)")
-put(ws, "B15", "=Plan_ROI!D6", GREEN, EUR)
-hdr(ws, 17, ["What is missing before this can go to management", "", "", ""])
+put(ws, "A1", "Excellence Partner Program — return on investment, model v2", TITLE)
+put(ws, "A2", "Internal draft · 9 October 2026 · euros · stock orders only · no extra running cost · edit Inputs and Distributors, the rest recalculates", BLACK)
+hdr(ws, 4, ["Design (same participants, 3 years)", "3-year cost", "Net result, Low", "Net result, Base", "Net result, High", "Extra sales needed to break even in year 3 (% of billed)"])
+for k, nme in enumerate(names):
+    r = 5 + k
+    put(ws, f"A{r}", nme)
+    for col, src in zip("BCDEF", "BCDEF"):
+        put(ws, f"{col}{r}", f"=Design_variants!{src}{22+k}", GREEN, PCT if col == "F" else EUR)
+put(ws, "A9", "Low / Base / High are my assumptions for extra sales (0.5% / 1.5% / 3% of participants' billed) and price-decision value; no measured uplift exists. See Evidence.", BLACK, wrap=True)
+ws.merge_cells("A9:F9")
+ws.row_dimensions[9].height = 30
+hdr(ws, 11, ["What the discount is worth next to the incentives already paid", "", "", "", "", ""])
+put(ws, "A12", "Rebate credits already booked in FY2026, all distributors in scope (€)")
+put(ws, "B12", "=Distributors!R24", GREEN, EUR)
+put(ws, "A13", "… as % of their billed")
+put(ws, "B13", "=Distributors!S24", GREEN, PCT)
+put(ws, "A14", "Year-3 discount, deck design (€)")
+put(ws, "B14", "=Design_variants!D10", GREEN, EUR)
+put(ws, "A15", "… times the rebates paid today")
+put(ws, "B15", "=IFERROR(B14/B12,0)", BOLD, '0.0"x"')
+put(ws, "A16", "Year-3 discount, hybrid design (€)")
+put(ws, "B16", "=Design_variants!D12", GREEN, EUR)
+put(ws, "A17", "… times the rebates paid today")
+put(ws, "B17", "=IFERROR(B16/B12,0)", BOLD, '0.0"x"')
+hdr(ws, 19, ["Still open before this goes to management", "", "", "", "", ""])
 miss = [
-    "Real running cost and one-off build cost (yellow cells on Inputs): network developer, IMG support, training, award.",
-    "A defendable benefit. No measured uplift exists; the three scenarios are assumptions. A pilot with comparable distributors outside the programme would produce the first measurement.",
-    "Air freight and handling cost of rush and VOR orders, to value the move to stock orders. Not in the workspace.",
-    "Kickback size per distributor, to see what is already paid for the same data.",
+    "A defendable benefit. No measured uplift exists; Low/Base/High are assumptions. A pilot with comparable distributors outside the programme gives the first measurement.",
+    "Share of the rebates that is tied to sales-to-dealer data today. Universe papers say 20% of the incentive; not confirmed. The incentive sheet (budget_per_DB_reviewed_24042026.xlsx) is not in the workspace.",
+    "Internal time of Jerome and Bart Symons is not costed (no extra cash). Management may want it shown.",
+    "Excluded on purpose: air-freight saving from rush orders moving to stock orders (stock orders only).",
 ]
 for i, t in enumerate(miss):
-    put(ws, f"A{18+i}", f"{i+1}. {t}", BLACK, wrap=True)
-    ws.merge_cells(f"A{18+i}:D{18+i}")
-    ws.row_dimensions[18 + i].height = 32
-put(ws, "A23", "Sheets: Inputs · Distributors (plan per distributor) · Plan_ROI (cost, benefit, net) · Design_variants · Sensitivity · Evidence.", BLACK)
-widths(ws, {"A": 72, "B": 18, "C": 18, "D": 18})
+    put(ws, f"A{20+i}", f"{i+1}. {t}", BLACK, wrap=True)
+    ws.merge_cells(f"A{20+i}:F{20+i}")
+    ws.row_dimensions[20 + i].height = 32
+put(ws, "A25", "Sheets: Inputs · Distributors (plan per distributor) · Plan_ROI (detail for the design chosen on Inputs B30) · Design_variants · Sensitivity · Evidence.", BLACK)
+widths(ws, {"A": 66, "B": 18, "C": 18, "D": 18, "E": 18, "F": 26})
+ws.row_dimensions[4].height = 45
 
 for sh in wb.worksheets:
     sh.sheet_view.showGridLines = False
