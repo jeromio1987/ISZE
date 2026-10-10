@@ -21,7 +21,7 @@ Prepared by the ISZE parts-sales team with AI assistance. For management decisio
 | Parts billed to the 19 distributors in scope, FY2026 | €31.78M, of which stock orders €22.38M (70.4%) | `sales_fact.parquet` **[M]** |
 | Share of that billing that sits with the nine distributors that have a kickback | 71.7% (74.1% of stock orders) | same, with the list of nine from the first paper **[M]** |
 | Rebate credits booked in FY2026 | €430,030, of which €288,030 to eight of the nine kickback distributors and €142,000 to Isuzu Truck UK, which has no kickback | same **[M]** |
-| What the data condition puts at risk today, if it is 20% of the kickback | about €57,600 a year (not €86,000, see 2.4) | arithmetic on the line above; the 20% and the contract are not in the workspace **[U]** |
+| What the data condition puts at risk today, if it is 20% of the kickback | about €57,600 a year (not €86,000, see 2.4) | arithmetic on the line above; the 20% is Jerome's confirmed figure, the contract text is not in the workspace **[I]** |
 | Distributors with a sales-to-dealer file in the workspace for FY2026 | 5 of 19, holding 55.3% of billing; only 3 of the 9 kickback distributors | `billed_vs_std_warranty_fy2026.csv` **[M]** |
 | Universe's own score for the chance a distributor joins as designed | 55 out of 100 (dealer: 45) | Universe 3.0, chapter 8; a judgement, not a measurement **[M]** |
 
@@ -69,7 +69,7 @@ Three points in earlier notes of ours are corrected or settled here. The first c
 
 1. **The money at risk for data is about €57,600, not €86,000.** The first paper took 20% of all €430,030 of rebate credits. But €142,000 of that is Isuzu Truck UK, which has no kickback; its credit includes €30,000 for the dealer-defence programme. The kickback distributors received €288,030. Twenty percent of that is €57,606. Ireland is on the list of nine kickback distributors, but no rebate credit line for Ireland appears in FY2026 billing. Why is not known. **[M]/[I]**
 2. **The workspace register is out of date, not the field.** The workspace holds a FY2026 sales-to-dealer file for five distributors. The August 2026 sales-review minutes record monthly files from Germany since May 2025 and agreements from Portugal, Greece and Ireland. Both statements can be true. The first job of this route is to find out which. **[M]**
-3. **The kickback condition has two parts, and both descriptions were right.** The Universe 3.0 paper says a share of the rebate is tied to a major-KPI submission. The Universe Yellow Paper and Jerome describe it as tied to sales-to-dealer information. Jerome confirmed on 10 October 2026 that both statements hold. What is still not known is how the share divides between the two parts, and whether it is 20% in total; the contract text is not in the workspace. **[M]/[U]**
+3. **The kickback condition has two parts, and both descriptions were right.** The Universe 3.0 paper says a share of the rebate is tied to a major-KPI submission. The Universe Yellow Paper and Jerome describe it as tied to sales-to-dealer information. Jerome confirmed on 10 October 2026 that both statements hold. He also confirmed the share of 20% in total and asked us to take it as given. The contract text is not in the workspace, and how the share divides between the two parts is not known. **[I]/[U]**
 
 ---
 
@@ -114,7 +114,7 @@ The billing ledger carries credit lines labelled "Rebate Material". In FY2026 th
 
 The budget workbook that splits the kickback from other incentives is not in the workspace. The ITUK credit includes the €30,000 dealer-defence credit. **[M]**
 
-Jerome states that the kickback is normally described as carrying a 20% share tied to the data. At the €288,030 the kickback distributors actually received, that is **about €57,600** for all of them, or **€3,400 to €19,000 each** (Isuzu UK pickup the largest at €19,000, then Norway at €9,400). It is 0.18% of billing. If the 20% covers both the KPI submission and the sales-to-dealer file, the part tied to sales to dealer alone is smaller than €57,600. If the 20% is wrong, so is every figure in the next chapter that rests on it. **[I]/[U]**
+Jerome confirmed on 10 October 2026 that the data carries a 20% share of the kickback and asked us to take it as given. At the €288,030 the kickback distributors actually received, that is **about €57,600** for all of them, or **€3,400 to €19,000 each** (Isuzu UK pickup the largest at €19,000, then Norway at €9,400). It is 0.18% of billing. The 20% covers both the KPI submission and the sales-to-dealer file, so the part tied to sales to dealer alone is smaller than €57,600; how it divides is not known. **[I]/[U]**
 
 {{CHART:stake}}
 
@@ -345,7 +345,7 @@ If the trial shows that distributors send the minimum and nothing else, or that 
 1. **Approve the Universe route as the base route for FY2028.**
    *What it does:* it commits ISZE to ask for the data standard, return a monthly review and recognise participants, with no new discount. *Why:* it gives ISZE a way to start in April 2027 whatever happens to the discount. *Euro effect:* no new cash; the credits already paid (€430,030 in FY2026) continue. *Our recommendation:* yes, and run the January to March 2027 trial under it.
 2. **Authorise rewriting the data condition in the kickback for FY2028.**
-   *What it does:* it ties the data share (20% if that is the share; it covers the KPI submission and the sales-to-dealer file) to the written data standard, checked every quarter. *Why:* today the condition buys a file, not a good file. *Euro effect:* none on the amount; at stake is about €57,600 a year in total. *Needs:* the contract text and Japan's agreement. *Our recommendation:* yes, once Move 1 shows what the current condition has delivered.
+   *What it does:* it ties the data share (20%, as Jerome confirmed; it covers the KPI submission and the sales-to-dealer file) to the written data standard, checked every quarter. *Why:* today the condition buys a file, not a good file. *Euro effect:* none on the amount; at stake is about €57,600 a year in total. *Needs:* the contract text and Japan's agreement. *Our recommendation:* yes, once Move 1 shows what the current condition has delivered.
 3. **Approve recognition at the European aftersales meeting, without a discount.**
    *What it does:* it names the distributors that meet the standard, without a ranking. *Why:* it is the only reward available at no cash cost. *Our recommendation:* yes, with IMG.
 4. **Do not fund the €100,000 Universe route yet.**
@@ -357,7 +357,7 @@ If the trial shows that distributors send the minimum and nothing else, or that 
 
 | # | Item | Needed from |
 |---|---|---|
-| 1 | Kickback contract text; how the data share divides between the KPI submission and the sales-to-dealer file; whether the total share is 20% | Jerome |
+| 1 | Kickback contract text; how the 20% data share divides between the KPI submission and the sales-to-dealer file | Jerome |
 | 2 | The incentive budget sheet, to separate kickback from other credits; why Ireland shows no credit line | Planning |
 | 3 | Which distributors already send monthly files and in what shape; update the register of files we hold | Sales review team |
 | 4 | Japan's position on rewriting the data condition | Jerome, Japan |

@@ -98,7 +98,7 @@ def chart_stake():
         else:
             o += T(x0, y + 18, "no credit line in FY2026 billing", 11.5, GREY)
     o += T(x0, top + rh * len(rows) + 40, f"All together: {eur(N['kickback_20pct'])} a year if the data share is 20%. The first paper's {eur(N['all_credit_20pct'])} counted Isuzu Truck UK's credit too.", 12, NAVY, "start", 700)
-    return fig(o + "</svg>", "What the data condition puts at risk for each kickback distributor (20% of the FY2026 credit)", "Source: rebate credit lines in <code>sales_fact.parquet</code>. The 20% share and the contract are not in the workspace and are unconfirmed.")
+    return fig(o + "</svg>", "What the data condition puts at risk for each kickback distributor (20% of the FY2026 credit)", "Source: rebate credit lines in <code>sales_fact.parquet</code>. The 20% is Jerome's confirmed figure; the contract text is not in the workspace.")
 
 
 def chart_build():
