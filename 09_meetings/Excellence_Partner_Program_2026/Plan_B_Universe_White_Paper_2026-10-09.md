@@ -30,7 +30,7 @@ Prepared by the ISZE parts-sales team with AI assistance. For management decisio
 **What we recommend.**
 
 1. **Approve the Universe route as the base route for FY2028** at no new cash, and run the January to March 2027 trial under it. **[P]**
-2. **Authorise ISZE to rewrite the data condition in the kickback** for FY2028 so that it is paid on a written data standard, checked every quarter, instead of on a one-off submission. This needs the contract text and Japan's agreement, neither of which is in the workspace. **[P]**
+2. **Authorise ISZE to rewrite the data condition in the kickback** for FY2028 so that both parts of it, the KPI submission and the sales-to-dealer file, are paid on a written data standard checked every quarter, instead of on a one-off submission. This needs the contract text and Japan's agreement, neither of which is in the workspace. **[P]**
 3. **Approve recognition without a discount:** a named place in the programme and a short award session at the European aftersales meeting, with IMG in support. **[P]**
 4. **Hold the €100,000 Universe cash route back** until the trial shows that distributors take part and a campaign can be named. At that point it is a separate, small decision with its own hurdle (chapter 7). **[P]**
 5. **Name the people who answer.** Universe fails on the response, not on the data. Without a named owner and time for the monthly return, the route does not start (chapter 11). **[P]**
@@ -69,7 +69,7 @@ Three points in earlier notes of ours are corrected or settled here. The first c
 
 1. **The money at risk for data is about €57,600, not €86,000.** The first paper took 20% of all €430,030 of rebate credits. But €142,000 of that is Isuzu Truck UK, which has no kickback; its credit includes €30,000 for the dealer-defence programme. The kickback distributors received €288,030. Twenty percent of that is €57,606. Ireland is on the list of nine kickback distributors, but no rebate credit line for Ireland appears in FY2026 billing. Why is not known. **[M]/[I]**
 2. **The workspace register is out of date, not the field.** The workspace holds a FY2026 sales-to-dealer file for five distributors. The August 2026 sales-review minutes record monthly files from Germany since May 2025 and agreements from Portugal, Greece and Ireland. Both statements can be true. The first job of this route is to find out which. **[M]**
-3. **The kickback condition is described in two ways.** The Universe 3.0 paper says a share of the rebate is tied to a major-KPI submission. The Universe Yellow Paper and Jerome describe it as tied to sales-to-dealer information. Only the contract can settle which. **[U]**
+3. **The kickback condition has two parts, and both descriptions were right.** The Universe 3.0 paper says a share of the rebate is tied to a major-KPI submission. The Universe Yellow Paper and Jerome describe it as tied to sales-to-dealer information. Jerome confirmed on 10 October 2026 that both statements hold. What is still not known is how the share divides between the two parts, and whether it is 20% in total; the contract text is not in the workspace. **[M]/[U]**
 
 ---
 
@@ -114,7 +114,7 @@ The billing ledger carries credit lines labelled "Rebate Material". In FY2026 th
 
 The budget workbook that splits the kickback from other incentives is not in the workspace. The ITUK credit includes the €30,000 dealer-defence credit. **[M]**
 
-Jerome states that the kickback is normally described as carrying a 20% share tied to the data. At the €288,030 the kickback distributors actually received, that is **about €57,600** for all of them, or **€3,400 to €19,000 each** (Isuzu UK pickup the largest at €19,000, then Norway at €9,400). It is 0.18% of billing. If the 20% is wrong, so is every figure in the next chapter that rests on it. **[I]/[U]**
+Jerome states that the kickback is normally described as carrying a 20% share tied to the data. At the €288,030 the kickback distributors actually received, that is **about €57,600** for all of them, or **€3,400 to €19,000 each** (Isuzu UK pickup the largest at €19,000, then Norway at €9,400). It is 0.18% of billing. If the 20% covers both the KPI submission and the sales-to-dealer file, the part tied to sales to dealer alone is smaller than €57,600. If the 20% is wrong, so is every figure in the next chapter that rests on it. **[I]/[U]**
 
 {{CHART:stake}}
 
@@ -172,7 +172,7 @@ Three things are not asked: selling prices, margins, customer names, chassis num
 
 ### Move 3. Tighten the condition where one exists
 
-For the nine kickback distributors, the proposal is to write the data condition into the kickback for FY2028 as a standard checked every quarter, with the share unchanged. The test is a quality standard (complete, on time, per dealer, declared), never a count of rows. This needs three things we do not have: the contract text, the incentive budget sheet (`budget_per_DB_reviewed_24042026.xlsx`), and Japan's approval, since bonuses follow Japan's approval and are scaled to targets. **[P]/[U]**
+For the nine kickback distributors, the proposal is to write both parts of the data condition (the KPI submission and the sales-to-dealer file) into the kickback for FY2028 as a standard checked every quarter, with the share unchanged. The test is a quality standard (complete, on time, per dealer, declared), never a count of rows. This needs three things we do not have: the contract text, the incentive budget sheet (`budget_per_DB_reviewed_24042026.xlsx`), and Japan's approval, since bonuses follow Japan's approval and are scaled to targets. **[P]/[U]**
 
 ### Move 4. Ask the other ten, formally, and give something back
 
@@ -345,7 +345,7 @@ If the trial shows that distributors send the minimum and nothing else, or that 
 1. **Approve the Universe route as the base route for FY2028.**
    *What it does:* it commits ISZE to ask for the data standard, return a monthly review and recognise participants, with no new discount. *Why:* it gives ISZE a way to start in April 2027 whatever happens to the discount. *Euro effect:* no new cash; the credits already paid (€430,030 in FY2026) continue. *Our recommendation:* yes, and run the January to March 2027 trial under it.
 2. **Authorise rewriting the data condition in the kickback for FY2028.**
-   *What it does:* it ties the 20% share (if that is the share) to the written data standard, checked every quarter. *Why:* today the condition buys a file, not a good file. *Euro effect:* none on the amount; at stake is about €57,600 a year in total. *Needs:* the contract text and Japan's agreement. *Our recommendation:* yes, once Move 1 shows what the current condition has delivered.
+   *What it does:* it ties the data share (20% if that is the share; it covers the KPI submission and the sales-to-dealer file) to the written data standard, checked every quarter. *Why:* today the condition buys a file, not a good file. *Euro effect:* none on the amount; at stake is about €57,600 a year in total. *Needs:* the contract text and Japan's agreement. *Our recommendation:* yes, once Move 1 shows what the current condition has delivered.
 3. **Approve recognition at the European aftersales meeting, without a discount.**
    *What it does:* it names the distributors that meet the standard, without a ranking. *Why:* it is the only reward available at no cash cost. *Our recommendation:* yes, with IMG.
 4. **Do not fund the €100,000 Universe route yet.**
@@ -357,7 +357,7 @@ If the trial shows that distributors send the minimum and nothing else, or that 
 
 | # | Item | Needed from |
 |---|---|---|
-| 1 | Kickback contract text and the actual wording of the data condition (submission or sales to dealer); whether the share is 20% | Jerome |
+| 1 | Kickback contract text; how the data share divides between the KPI submission and the sales-to-dealer file; whether the total share is 20% | Jerome |
 | 2 | The incentive budget sheet, to separate kickback from other credits; why Ireland shows no credit line | Planning |
 | 3 | Which distributors already send monthly files and in what shape; update the register of files we hold | Sales review team |
 | 4 | Japan's position on rewriting the data condition | Jerome, Japan |

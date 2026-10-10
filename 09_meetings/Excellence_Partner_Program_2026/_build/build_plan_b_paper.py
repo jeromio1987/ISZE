@@ -292,7 +292,18 @@ print(OUT_HTML, f"{OUT_HTML.stat().st_size/1e3:.0f} KB")
 if "--no-pdf" in sys.argv:
     sys.exit(0)
 
-subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={OUT_PDF}", OUT_HTML.as_uri()], check=True, capture_output=True, timeout=120)
+import tempfile
+
+try:
+    OUT_PDF.unlink(missing_ok=True)  # a silent Chrome no-op must not leave a stale PDF behind
+except PermissionError:  # the old PDF is open in a viewer: write beside it, never overwrite silently
+    OUT_PDF = PACK / f"{STEM}.NEW.pdf"
+    OUT_PDF.unlink(missing_ok=True)
+    print("old PDF is open in a viewer; writing", OUT_PDF.name)
+profile = tempfile.mkdtemp(prefix="chrome_planb_")  # a fresh profile: with the default one a running Chrome swallows the print
+subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", f"--user-data-dir={profile}", f"--print-to-pdf={OUT_PDF}", OUT_HTML.as_uri()],
+               check=True, capture_output=True, timeout=120)
+assert OUT_PDF.exists(), "Chrome wrote no PDF"
 import fitz
 
 QA.mkdir(exist_ok=True)
