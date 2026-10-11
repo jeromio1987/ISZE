@@ -1,0 +1,40 @@
+# 12  Three part categories inside the held service parts
+s = blank(prs)
+frame(s, "Held service parts: three categories", "Inside the held service parts, filters follow the factory increase and brake discs stay",
+      wide=True,
+      subtitle="Service parts are kept at today's price in eight markets. Three categories inside them were looked at "
+               "separately. The figures in this presentation include these positions.",
+      source="Euro per category from the workbook (what each hold is worth; 7,396 part and market lines still held, "
+             f"{k(REC['given_up'])}). Filters: {k(HELD['filters_eur'])}, released from the hold.",
+      page=nxt())
+rows = [["Part category", "Proposal", "Why", "In the figures"],
+        ["Filters", "Follow the factory (IML/IMIT) increase, like other parts.",
+         "A filter is a small, routine purchase. Keeping it flat does little for the customer and costs us the increase.",
+         f"{k(HELD['filters_eur'])} is no longer held. The held total is {k(REC['given_up'])} instead of "
+         f"{k(HELD['all_if_held_eur'])}, and the extra on repair and body parts falls from +{REC['t_off_2oct'] * 100:.1f} to "
+         f"+{REC['t_off'] * 100:.1f} points."],
+        ["Brake discs and drums", "Stay at today's price in the eight markets, like the 29 pad kits.",
+         "Aftermarket alternatives, and eight distributors we spoke to this summer said brake parts are too expensive "
+         "(Germany already quotes a rotor at about €80 against about €100 through us).",
+         f"{k(HELD['discs_drums_eur'])}, held, inside the {k(REC['given_up'])}."],
+        ["Intake, exhaust and emission parts", "Open: we have no proposal yet. For decision (page 13).",
+         "Particulate filter assemblies, turbochargers, EGR valves and exhaust pipes. Held in the figures until decided.",
+         f"{k(HELD['intake_exhaust_emission_eur'])}, held, inside the {k(REC['given_up'])}."]]
+colors = {(1, 1): AMBER, (2, 1): AMBER, (3, 1): AMBER}
+table(s, 0.25, 2.15, 12.83, rows, [2.3, 3.0, 4.2, 3.3], row_h=1.12, head_h=0.38, size=10.5, head_size=8.5,
+      aligns=["l", "l", "l", "l"], colors=colors, name="table_changes")
+band(s, 0.25, 6.05, 12.83, 0.75, [[("What does not change: ", {"bold": True}),
+                                  ("the +5.0% target; the 29 pad kits at today's price (€109k, main front kit would "
+                                   "otherwise rise about 17%); the Israel proposals; and the recovery on repair and body "
+                                   "parts with no alternative found.", {})]], size=11)
+notes(s, f"Worth of each hold from the workbook's table 'What each hold is worth': filters €{HELD['filters_eur']:,.0f} (now "
+         f"released), brake discs and drums €{HELD['discs_drums_eur']:,.0f}, intake, exhaust and emission "
+         f"€{HELD['intake_exhaust_emission_eur']:,.0f}. All holds if filters were held as well: €{HELD['all_if_held_eur']:,.0f}; "
+         f"now €{HELD['given_up_eur']:,.0f}. With filters released the extra falls from "
+         f"{REC['t_off_2oct'] * 100:.2f} to {REC['t_off'] * 100:.2f} points and the recovery from €396,568 to "
+         f"€{REC['recovered']:,.0f}; the total stays €{SM['step_eur']:,.0f} (+5.00%). Jerome settled the filter and "
+         "brake-disc positions on 11 October; to management they are proposals. Pad-kit rationale: analysis section 4; "
+         "summer brake complaints as on page 7. The comparison of three recovery options on page 8 for the two options "
+         "not proposed is as calculated on 2 October, with filters held.")
+
+# =====================================================================================

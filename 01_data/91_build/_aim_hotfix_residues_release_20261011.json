@@ -1,0 +1,53 @@
+{
+  "generated": "2026-10-11T17:56:14+00:00",
+  "built_by": "01_data/91_build/_aim_hotfix_residues_release_20261011.py",
+  "release_id": "2026-10-11",
+  "status": "APPROVED",
+  "base_release": "2026-10-07",
+  "base_sha256": "aba81764e9aa3defaaa1636a9dfd13c520aadb4dfc2879e318f5c4e390010210",
+  "sha256": "d9b26b0124bacadcece437f665fc673e32b70d2087d78aa0884ea6615369f605",
+  "rows": 165055,
+  "counts": {
+    "cyl_hd_gasket": 79,
+    "trans_asm": 38,
+    "turbo_water": 1,
+    "turbo_kit": 1
+  },
+  "targets": {
+    "cyl_hd_gasket": [
+      "Engine",
+      "Gasket & Sealing",
+      "Gasket"
+    ],
+    "trans_asm": [
+      "Transmission",
+      "Case",
+      "Case Cover"
+    ],
+    "turbo_water": [
+      "Intake Exhaust Emission",
+      "Turbo",
+      "Turbocharger"
+    ],
+    "turbo_kit": [
+      "Intake Exhaust Emission",
+      "Turbo",
+      "Turbocharger"
+    ]
+  },
+  "change_log": "aim_pn_classification_release_2026-10-11.changes.csv",
+  "change_log_rows": 278,
+  "parts_touched": 119,
+  "backups": {
+    "release_base": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\aim_pn_classification_release_2026-10-07.csv.bak_pre_hotfix_20261011_20261011_195606",
+    "master": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_master_v2.csv.bak_pre_hotfix_20261011_20261011_195606",
+    "live": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_pn_classification_20260920.csv.bak_pre_hotfix_20261011_20261011_195606",
+    "releases_json": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\RELEASES.json.bak_pre_hotfix_20261011_20261011_195606"
+  },
+  "zero_checks": {
+    "cyl_hd_gasket_to_transmission": 0,
+    "trans_asm_to_literature": 0,
+    "turbo_water_not_turbo": 0,
+    "turbo_kit_not_turbo": 0
+  }
+}

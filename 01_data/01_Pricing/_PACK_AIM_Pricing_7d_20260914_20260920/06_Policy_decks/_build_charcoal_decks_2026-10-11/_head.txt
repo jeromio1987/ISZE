@@ -1,0 +1,44 @@
+"""Parts price revision presentation, charcoal look (11 Oct 2026).
+
+Content = the pricing analysis of 2 October 2026, written as a proposal to management (nothing is shown as decided). Figures come from pricing_numbers.json (recomputed from the +5% workbook with the market
+layer where marked) or from the paper (reported, not recomputed). Shared wording: 'parts category', never the
+internal classification name; no personal names; no factors, only margin points and euro.
+
+Output: 06_Policy_decks/ISZE_Pricing_Revision_Management_CHARCOAL_2026-10-11.pptx
+"""
+import json
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from charcoal_lib import *  # noqa: E402,F401,F403
+
+N = json.loads((HERE / "pricing_numbers.json").read_text(encoding="utf-8"))
+OUT = HERE.parent / "ISZE_Pricing_Revision_Management_CHARCOAL_2026-10-11.pptx"
+SM, REC, HELD, GA, MA = N["summary"], N["reconciliation"], N["held"], N["group_avg"], N["market_avg"]
+P = N["paper"]
+DR = N["dealer_response"]
+MT = {m["code"]: m for m in N["market_table"]}
+HB = N["held_by_market"]
+BASE = REC["base"]
+GRAY = rgb("7A7A7A")
+SRC = "ISZE pricing analysis, 2 October 2026; +5% workbook with the market layer (4 October 2026), reproduced on 11 October."
+
+prs = new_deck()
+page = [0]
+
+
+def nxt():
+    page[0] += 1
+    return page[0]
+
+
+def k(v):
+    return f"€{v / 1e3:,.0f}k"
+
+
+def m_(v, d=2):
+    return f"€{v / 1e6:.{d}f}M"
+
+

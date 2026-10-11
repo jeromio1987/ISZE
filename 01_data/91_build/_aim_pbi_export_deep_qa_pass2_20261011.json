@@ -1,0 +1,1683 @@
+{
+  "started_utc": "2026-10-11T17:47:15.251287+00:00",
+  "checks": {
+    "master_l1_fixed": {
+      "differ_rows": 12,
+      "differ_pns": 6,
+      "sample": [
+        {
+          "pn": "0362304120",
+          "description": "SCREW; CONT UNIT",
+          "aim_level_1": "Chassis Frame",
+          "aim_l1_fixed": "Unknown"
+        },
+        {
+          "pn": "0380505120",
+          "description": "SCREW; STRG COWL",
+          "aim_level_1": "Chassis Frame",
+          "aim_l1_fixed": "Unknown"
+        },
+        {
+          "pn": "0410108250",
+          "description": "STUD; INL MANIF",
+          "aim_level_1": "Chassis Frame",
+          "aim_l1_fixed": "Unknown"
+        },
+        {
+          "pn": "0440110250",
+          "description": "STUD; EXH PIPE",
+          "aim_level_1": "Chassis Frame",
+          "aim_l1_fixed": "Unknown"
+        },
+        {
+          "pn": "0721805200",
+          "description": "SCREW; CLUSTER POCKET",
+          "aim_level_1": "Chassis Frame",
+          "aim_l1_fixed": "Unknown"
+        },
+        {
+          "pn": "0916146200",
+          "description": "WASHER; PL,S/ABS,LWR",
+          "aim_level_1": "Chassis Frame",
+          "aim_l1_fixed": "Unknown"
+        }
+      ],
+      "ok": true,
+      "note": "Only hardware rows where export filled Chassis Frame and master still Unknown are expected"
+    },
+    "export_vs_class": {
+      "differ_pns": 6,
+      "sample": [
+        {
+          "pn": "0362304120",
+          "description": "SCREW; CONT UNIT",
+          "path": "Chassis Frame > Mounting Hardware > Bolt",
+          "path_c": "Unknown > Unknown > Unknown"
+        },
+        {
+          "pn": "0380505120",
+          "description": "SCREW; STRG COWL",
+          "path": "Chassis Frame > Mounting Hardware > Bolt",
+          "path_c": "Unknown > Unknown > Unknown"
+        },
+        {
+          "pn": "0410108250",
+          "description": "STUD; INL MANIF",
+          "path": "Chassis Frame > Mounting Hardware > Bolt",
+          "path_c": "Unknown > Unknown > Unknown"
+        },
+        {
+          "pn": "0440110250",
+          "description": "STUD; EXH PIPE",
+          "path": "Chassis Frame > Mounting Hardware > Bolt",
+          "path_c": "Unknown > Unknown > Unknown"
+        },
+        {
+          "pn": "0721805200",
+          "description": "SCREW; CLUSTER POCKET",
+          "path": "Chassis Frame > Mounting Hardware > Bolt",
+          "path_c": "Unknown > Unknown > Unknown"
+        },
+        {
+          "pn": "0916146200",
+          "description": "WASHER; PL,S/ABS,LWR",
+          "path": "Chassis Frame > Mounting Hardware > Bolt",
+          "path_c": "Unknown > Unknown > Unknown"
+        }
+      ],
+      "ok": true
+    },
+    "residuals_vs_sep21": {
+      "cyl_hd_gasket_trans_new": 79,
+      "cyl_hd_gasket_trans_old": 81,
+      "cyl_identical_set": false,
+      "cyl_eur_new": 44765.47,
+      "trans_asm_lit_new": 38,
+      "trans_asm_lit_old": 38,
+      "lit_identical_set": true,
+      "lit_eur_new": 273276.74000000005,
+      "ok": false,
+      "note": "These old misfiles were NOT introduced by Oct-7; same PN sets as Sep-21"
+    },
+    "eng_gasket_sets": {
+      "new_l1": [
+        [
+          "Engine",
+          208
+        ]
+      ],
+      "old_l1": [
+        [
+          "Transmission",
+          207
+        ]
+      ],
+      "new_trans": 0,
+      "old_trans": 207,
+      "ok": true
+    },
+    "antenna": {
+      "n": 53,
+      "new_l1": [
+        [
+          "Electrical",
+          43
+        ],
+        [
+          "Cabin Interior",
+          4
+        ],
+        [
+          "Unknown",
+          3
+        ],
+        [
+          "Chassis Frame",
+          3
+        ]
+      ],
+      "old_l1": [
+        [
+          "Unknown",
+          22
+        ],
+        [
+          "Electrical",
+          22
+        ],
+        [
+          "Cabin Interior",
+          4
+        ],
+        [
+          "Chassis Frame",
+          3
+        ]
+      ]
+    },
+    "evrv": {
+      "n": 7,
+      "new_l1": [
+        [
+          "Intake Exhaust Emission",
+          7
+        ]
+      ],
+      "old_l1": [
+        [
+          "Steering",
+          7
+        ]
+      ]
+    },
+    "def_inj": {
+      "n": 7,
+      "new_l1": [
+        [
+          "Intake Exhaust Emission",
+          6
+        ],
+        [
+          "Fuel System",
+          1
+        ]
+      ],
+      "old_l1": [
+        [
+          "Fuel System",
+          5
+        ]
+      ]
+    },
+    "path_changes": {
+      "total": 1081,
+      "gasket_engine_fix": 207,
+      "other": 874,
+      "other_eur": 1206048.96,
+      "top_other_pairs": [
+        {
+          "n": 54,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Accident & Body > Panels > Panel"
+        },
+        {
+          "n": 37,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Transmission > Geartrain > Gear"
+        },
+        {
+          "n": 36,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Electrical > Control Units > Control Unit"
+        },
+        {
+          "n": 31,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Accident & Body > Trim > Trim"
+        },
+        {
+          "n": 28,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Cabin Interior > HVAC Filters > HVAC"
+        },
+        {
+          "n": 24,
+          "old": "Unknown Review > Unclassified > To Review",
+          "new": "Brakes > Hydraulic > Brake Pipe"
+        },
+        {
+          "n": 22,
+          "old": "Unknown Review > Unclassified > To Review",
+          "new": "Steering > Gear > Steering Gear"
+        },
+        {
+          "n": 21,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Engine > Mounting > Engine Mount"
+        },
+        {
+          "n": 21,
+          "old": "Electrical > Instruments > Instrument Cluster",
+          "new": "Electrical > Audio > Radio"
+        },
+        {
+          "n": 20,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Cooling > Radiator > Radiator Assembly"
+        },
+        {
+          "n": 19,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Cabin Interior > Seat > Seat Cushion"
+        },
+        {
+          "n": 18,
+          "old": "Unknown Review > Unclassified > To Review",
+          "new": "Intake Exhaust Emission > Air Intake > Air Duct"
+        },
+        {
+          "n": 18,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Cabin Interior > Dashboard & Controls > Knob"
+        },
+        {
+          "n": 17,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Suspension > Suspension Arm > Ball Joint"
+        },
+        {
+          "n": 17,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Accident & Body > Wiper & Washer > Wiper Blade"
+        },
+        {
+          "n": 17,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Electrical > Audio > Radio"
+        },
+        {
+          "n": 17,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Steering > Gear > Steering Gear"
+        },
+        {
+          "n": 17,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Transmission > Case > Case Cover"
+        },
+        {
+          "n": 15,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Cooling > Cooling Hoses & Pipes > Water Pipe"
+        },
+        {
+          "n": 15,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Electrical > Harness & Connectors > Terminal"
+        },
+        {
+          "n": 14,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Clutch > Clutch Kit > Clutch Kit"
+        },
+        {
+          "n": 14,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Driveline Axle > Axle Shaft > Axle Shaft"
+        },
+        {
+          "n": 13,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Driveline Axle > Final Drive > Final Drive Asm"
+        },
+        {
+          "n": 13,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Cabin Interior > HVAC Filters > Heater Core"
+        },
+        {
+          "n": 13,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Transmission > Shift Mechanism > Shift Fork"
+        },
+        {
+          "n": 12,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Chassis Frame > Side Rail & Crossmember > Frame"
+        },
+        {
+          "n": 12,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Brakes > Hydraulic > Brake Pipe"
+        },
+        {
+          "n": 11,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Intake Exhaust Emission > Air Intake > Air Duct"
+        },
+        {
+          "n": 10,
+          "old": "Unknown > Unknown > Unknown",
+          "new": "Engine > Cylinder Head > Head Cover"
+        },
+        {
+          "n": 10,
+          "old": "Accident & Body > Panels > Panel",
+          "new": "Accident & Body > Complete Assembly > Cab Assembly"
+        }
+      ],
+      "regressions_gasket_into_trans": 0
+    },
+    "top_fills": {
+      "n_filled_blank_to_aim": 31216,
+      "top120": [
+        {
+          "pn": "8979053430",
+          "description": "3 VER; RECLINING",
+          "path": "Cabin Interior > Seat > Seat Cushion",
+          "eur": 207.82
+        },
+        {
+          "pn": "1312110191",
+          "description": "COVER; CLU",
+          "path": "Clutch > Pressure Plate > Pressure Plate",
+          "eur": 136.94
+        },
+        {
+          "pn": "7552060320",
+          "description": "PACKING; MANIFOLD",
+          "path": "Engine > Cylinder Head > Head Cover",
+          "eur": 68.82
+        },
+        {
+          "pn": "8973586990",
+          "description": "PIPE ASM; WATER,TURBOCHARGER RETURN",
+          "path": "Fuel System > Filtration > Sedimenter",
+          "eur": 67.54
+        },
+        {
+          "pn": "1318111550",
+          "description": "SHELL; CYL,CLU BOOSTER",
+          "path": "Clutch > Release System > Pivot",
+          "eur": 64.32
+        },
+        {
+          "pn": "8983569990",
+          "description": "COVER ASM; MIXER UPR RH",
+          "path": "Intake Exhaust Emission > Exhaust > Exhaust Pipe",
+          "eur": 54.6
+        },
+        {
+          "pn": "8971677700",
+          "description": "JOINT; JAW,CLU M/CYL",
+          "path": "Brakes > Hydraulic > Brake Pipe",
+          "eur": 43.99
+        },
+        {
+          "pn": "8983516631",
+          "description": "BRACKET; STAY",
+          "path": "Chassis Frame > Crossmember & Brackets > Bracket",
+          "eur": 39.52
+        },
+        {
+          "pn": "8982708832",
+          "description": "PIPE ASM; FUEL",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 38.36
+        },
+        {
+          "pn": "8980456810",
+          "description": "HOSE; FLEX,PIPE TO COOLER",
+          "path": "Cooling > Radiator > Radiator Assembly",
+          "eur": 34.03
+        },
+        {
+          "pn": "8983419590",
+          "description": "PLATE; BRAKE",
+          "path": "Transmission > Case > Case Cover",
+          "eur": 33.84
+        },
+        {
+          "pn": "5876150320",
+          "description": "SHIM KIT; BRAKE PAD, FRT",
+          "path": "Brakes > Pads & Shoes > Brake Pad Kit",
+          "eur": 33.2
+        },
+        {
+          "pn": "1474590132",
+          "description": "CONNECTOR; AIR TANK",
+          "path": "Brakes > Hydraulic > Brake Hose",
+          "eur": 25.68
+        },
+        {
+          "pn": "8971816200",
+          "description": "SWITCH; 4WD,TRANSFER",
+          "path": "Electrical > Switch Relay Fuse > Switch",
+          "eur": 22.96
+        },
+        {
+          "pn": "8980003460",
+          "description": "METAL; BALANCE SHAFT",
+          "path": "Engine > Internal Rotating > Crankshaft",
+          "eur": 22.96
+        },
+        {
+          "pn": "8978266820",
+          "description": "DEADENER; FLOOR PANEL",
+          "path": "Accident & Body > Panels > Panel",
+          "eur": 20.58
+        },
+        {
+          "pn": "7552060300",
+          "description": "PACKING; MANIFOLD",
+          "path": "Engine > Cylinder Head > Head Cover",
+          "eur": 20.16
+        },
+        {
+          "pn": "8981188790",
+          "description": "BRACKET; STAY",
+          "path": "Chassis Frame > Crossmember & Brackets > Bracket",
+          "eur": 19.36
+        },
+        {
+          "pn": "8983516621",
+          "description": "BRACKET; STAY",
+          "path": "Chassis Frame > Crossmember & Brackets > Bracket",
+          "eur": 18.74
+        },
+        {
+          "pn": "1482191490",
+          "description": "SILENCER; RELAY VALVE",
+          "path": "Intake Exhaust Emission > Air Intake > Air Duct",
+          "eur": 17.12
+        },
+        {
+          "pn": "8981188800",
+          "description": "BRACKET; STAY",
+          "path": "Chassis Frame > Crossmember & Brackets > Bracket",
+          "eur": 15.22
+        },
+        {
+          "pn": "8970347460",
+          "description": "SPRING; STRUT TO SHOE,PARKING BRAKE",
+          "path": "Brakes > Pads & Shoes > Brake Shoe",
+          "eur": 10.8
+        },
+        {
+          "pn": "8978415710",
+          "description": "FINISHER; BLISTER FENDER",
+          "path": "Accident & Body > Panels > Fender",
+          "eur": 7.73
+        },
+        {
+          "pn": "8978415720",
+          "description": "FINISHER; BLISTER FENDER",
+          "path": "Accident & Body > Panels > Fender",
+          "eur": 7.73
+        },
+        {
+          "pn": "1097601191",
+          "description": "END; ROD,RH",
+          "path": "Transmission > Shift Mechanism > Shift Fork",
+          "eur": 6.08
+        },
+        {
+          "pn": "8980384500",
+          "description": "INSERT; INST PANEL",
+          "path": "Accident & Body > Panels > Panel",
+          "eur": 3.7
+        },
+        {
+          "pn": "8980278020",
+          "description": "COVER; DUST,RR COVER",
+          "path": "Transmission > Case > Case Cover",
+          "eur": 2.97
+        },
+        {
+          "pn": "8974107360",
+          "description": "JOINT; JAW,HOOK TO HOOK",
+          "path": "Chassis Frame > Crossmember & Brackets > Bracket",
+          "eur": 2.06
+        },
+        {
+          "pn": "8972400560",
+          "description": "GASKET; RUBBER",
+          "path": "Intake Exhaust Emission > Air Intake > Air Duct",
+          "eur": 1.41
+        },
+        {
+          "pn": "1090001050",
+          "description": "PLUG; PARTIAL OIL FILTER",
+          "path": "Maintenance Service > Oil Filter > Oil Filter Element",
+          "eur": 1.05
+        },
+        {
+          "pn": "0011543000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0011563000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0011583000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0011593000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0011600000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0011603000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0011623000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0012094400",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0012543000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0012563000",
+          "description": "HOSE; FLEX,TRAILER SERVICE",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0012583000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0012593000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0012600000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0012603000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0012623000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0012624100",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0014583000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0015081800",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0015593000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0015630000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0016583000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0016623000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0017553000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0018080700",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0018083500",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0018125200",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0018621250",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0028140900",
+          "description": "",
+          "path": "Intake Exhaust Emission > Turbo > Turbocharger",
+          "eur": 0.0
+        },
+        {
+          "pn": "0028141100",
+          "description": "",
+          "path": "Intake Exhaust Emission > Turbo > Turbocharger",
+          "eur": 0.0
+        },
+        {
+          "pn": "0035091400",
+          "description": "",
+          "path": "Intake Exhaust Emission > Turbo > Turbocharger",
+          "eur": 0.0
+        },
+        {
+          "pn": "0036091000",
+          "description": "HOSE; RUBBER,TURBOCHARGER OUTL",
+          "path": "Intake Exhaust Emission > Turbo > Turbocharger",
+          "eur": 0.0
+        },
+        {
+          "pn": "0036091500",
+          "description": "",
+          "path": "Intake Exhaust Emission > Turbo > Turbocharger",
+          "eur": 0.0
+        },
+        {
+          "pn": "0045303000",
+          "description": "",
+          "path": "Electrical > Switch Relay Fuse > Switch",
+          "eur": 0.0
+        },
+        {
+          "pn": "0047513000",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0208006180",
+          "description": "",
+          "path": "Accident & Body > Panels > Fender",
+          "eur": 0.0
+        },
+        {
+          "pn": "0238514400",
+          "description": "",
+          "path": "Maintenance Service > Oil Filter > Oil Filter Element",
+          "eur": 0.0
+        },
+        {
+          "pn": "0280108120",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0280112250",
+          "description": "",
+          "path": "Accident & Body > Panels > Bumper",
+          "eur": 0.0
+        },
+        {
+          "pn": "0280208120",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0280510800",
+          "description": "",
+          "path": "Chassis Frame > Mounting Hardware > Bolt",
+          "eur": 0.0
+        },
+        {
+          "pn": "0280608000",
+          "description": "",
+          "path": "Cooling > Thermostat & Control > Thermostat",
+          "eur": 0.0
+        },
+        {
+          "pn": "0280806400",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0280806800",
+          "description": "",
+          "path": "Intake Exhaust Emission > EGR > EGR Component",
+          "eur": 0.0
+        },
+        {
+          "pn": "0280810000",
+          "description": "",
+          "path": "Electrical > Charging > Alternator/Generator",
+          "eur": 0.0
+        },
+        {
+          "pn": "0280810120",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0281512800",
+          "description": "",
+          "path": "Clutch > Pressure Plate > Pressure Plate",
+          "eur": 0.0
+        },
+        {
+          "pn": "0281560140",
+          "description": "BOLT; OIL FILTER",
+          "path": "Maintenance Service > Oil Filter > Oil Filter Element",
+          "eur": 0.0
+        },
+        {
+          "pn": "0281812800",
+          "description": "",
+          "path": "Clutch > Pressure Plate > Pressure Plate",
+          "eur": 0.0
+        },
+        {
+          "pn": "0281812900",
+          "description": "",
+          "path": "Clutch > Pressure Plate > Pressure Plate",
+          "eur": 0.0
+        },
+        {
+          "pn": "0288006140",
+          "description": "",
+          "path": "Accident & Body > Panels > Fender",
+          "eur": 0.0
+        },
+        {
+          "pn": "0288816250",
+          "description": "",
+          "path": "Clutch > Pressure Plate > Pressure Plate",
+          "eur": 0.0
+        },
+        {
+          "pn": "0402108600",
+          "description": "",
+          "path": "Intake Exhaust Emission > EGR > EGR Component",
+          "eur": 0.0
+        },
+        {
+          "pn": "0491408200",
+          "description": "",
+          "path": "Intake Exhaust Emission > EGR > EGR Component",
+          "eur": 0.0
+        },
+        {
+          "pn": "0500010200",
+          "description": "",
+          "path": "Lighting > Lighting > Lamp",
+          "eur": 0.0
+        },
+        {
+          "pn": "0500408400",
+          "description": "",
+          "path": "Clutch > Release System > Pivot",
+          "eur": 0.0
+        },
+        {
+          "pn": "0500408700",
+          "description": "",
+          "path": "Maintenance Service > Oil Filter > Oil Filter Element",
+          "eur": 0.0
+        },
+        {
+          "pn": "0501008450",
+          "description": "",
+          "path": "Accident & Body > Mirrors > Mirror",
+          "eur": 0.0
+        },
+        {
+          "pn": "0505406140",
+          "description": "",
+          "path": "Electrical > Control Units > Control Unit",
+          "eur": 0.0
+        },
+        {
+          "pn": "0505408400",
+          "description": "",
+          "path": "Clutch > Release System > Pivot",
+          "eur": 0.0
+        },
+        {
+          "pn": "0505408700",
+          "description": "",
+          "path": "Maintenance Service > Oil Filter > Oil Filter Element",
+          "eur": 0.0
+        },
+        {
+          "pn": "0506408450",
+          "description": "",
+          "path": "Accident & Body > Mirrors > Mirror",
+          "eur": 0.0
+        },
+        {
+          "pn": "0507408700",
+          "description": "",
+          "path": "Maintenance Service > Oil Filter > Oil Filter Element",
+          "eur": 0.0
+        },
+        {
+          "pn": "0520008250",
+          "description": "",
+          "path": "Lighting > Lamps > Rear Combination Lamp",
+          "eur": 0.0
+        },
+        {
+          "pn": "0583108500",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0583308500",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "0593110300",
+          "description": "",
+          "path": "Maintenance Service > Oil Filter > Oil Filter Element",
+          "eur": 0.0
+        },
+        {
+          "pn": "0593310300",
+          "description": "",
+          "path": "Maintenance Service > Oil Filter > Oil Filter Element",
+          "eur": 0.0
+        },
+        {
+          "pn": "0711804120",
+          "description": "",
+          "path": "Lighting > Lamps > Rear Combination Lamp",
+          "eur": 0.0
+        },
+        {
+          "pn": "0711904160",
+          "description": "SCREW; LENS TO BODY",
+          "path": "Lighting > Lighting > Lamp",
+          "eur": 0.0
+        },
+        {
+          "pn": "0712404120",
+          "description": "",
+          "path": "Lighting > Lamps > Rear Combination Lamp",
+          "eur": 0.0
+        },
+        {
+          "pn": "0712804120",
+          "description": "",
+          "path": "Lighting > Lamps > Rear Combination Lamp",
+          "eur": 0.0
+        },
+        {
+          "pn": "0741604250",
+          "description": "",
+          "path": "Electrical > Control Units > Control Unit",
+          "eur": 0.0
+        },
+        {
+          "pn": "0743354160",
+          "description": "",
+          "path": "Lighting > Lighting > Lamp",
+          "eur": 0.0
+        },
+        {
+          "pn": "0911904350",
+          "description": "",
+          "path": "Lighting > Lighting > Lamp",
+          "eur": 0.0
+        },
+        {
+          "pn": "0953255860",
+          "description": "",
+          "path": "Fuel System > Fuel Lines & Hoses > Fuel Hose",
+          "eur": 0.0
+        },
+        {
+          "pn": "1090001990",
+          "description": "",
+          "path": "Maintenance Service > Oil Filter > Oil Filter Element",
+          "eur": 0.0
+        },
+        {
+          "pn": "1090001991",
+          "description": "",
+          "path": "Maintenance Service > Oil Filter > Oil Filter Element",
+          "eur": 0.0
+        },
+        {
+          "pn": "1090006040",
+          "description": "",
+          "path": "Accident & Body > Panels > Bumper",
+          "eur": 0.0
+        },
+        {
+          "pn": "1090200590",
+          "description": "",
+          "path": "Maintenance Service > Oil Filter > Oil Filter Element",
+          "eur": 0.0
+        },
+        {
+          "pn": "1090300250",
+          "description": "",
+          "path": "Accident & Body > Panels > Panel",
+          "eur": 0.0
+        },
+        {
+          "pn": "1090300730",
+          "description": "BOLT",
+          "path": "Electrical > Lighting > Lamp",
+          "eur": 0.0
+        },
+        {
+          "pn": "1090300760",
+          "description": "",
+          "path": "Accident & Body > Panels > Panel",
+          "eur": 0.0
+        },
+        {
+          "pn": "1090300840",
+          "description": "",
+          "path": "Accident & Body > Panels > Panel",
+          "eur": 0.0
+        },
+        {
+          "pn": "1090600050",
+          "description": "",
+          "path": "Accident & Body > Panels > Bumper",
+          "eur": 0.0
+        },
+        {
+          "pn": "1090600051",
+          "description": "",
+          "path": "Accident & Body > Panels > Bumper",
+          "eur": 0.0
+        },
+        {
+          "pn": "1090600101",
+          "description": "",
+          "path": "Accident & Body > Panels > Bumper",
+          "eur": 0.0
+        },
+        {
+          "pn": "1091000410",
+          "description": "",
+          "path": "Intake Exhaust Emission > Turbo > Turbocharger",
+          "eur": 0.0
+        },
+        {
+          "pn": "1093020420",
+          "description": "",
+          "path": "Intake Exhaust Emission > Turbo > Turbocharger",
+          "eur": 0.0
+        },
+        {
+          "pn": "1093021670",
+          "description": "",
+          "path": "Intake Exhaust Emission > Turbo > Turbocharger",
+          "eur": 0.0
+        },
+        {
+          "pn": "1093021671",
+          "description": "",
+          "path": "Intake Exhaust Emission > Turbo > Turbocharger",
+          "eur": 0.0
+        }
+      ],
+      "suspect_in_top120": [
+        {
+          "pn": "8983419590",
+          "description": "PLATE; BRAKE",
+          "path": "Transmission > Case > Case Cover",
+          "eur": 33.84,
+          "rule": "\\bBRAKE\\b|PAD;|SHOE"
+        }
+      ],
+      "suspect_n": 1,
+      "ok": true
+    },
+    "random_other_changes_80": [
+      {
+        "pn": "7552825890",
+        "description": "CAB ASM; SERVICE,WO/ELEC",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Accident & Body > Complete Assembly > Cab Assembly",
+        "eur": 23110.72
+      },
+      {
+        "pn": "8979474030",
+        "description": "ADJUSTER; RR BRK",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Brakes > Disc & Drum > Brake Drum",
+        "eur": 5480.1
+      },
+      {
+        "pn": "8972582390",
+        "description": "BEARING; PILOT",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Engine > Internal Rotating > Crankshaft",
+        "eur": 3986.65
+      },
+      {
+        "pn": "8973798260",
+        "description": "RETAINER; CR/SHF",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Engine > Timing Drive > Timing Gear",
+        "eur": 3825.19
+      },
+      {
+        "pn": "8975043572",
+        "description": "MASTER VAC ASM; BRK",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Brakes > Booster & Control > Brake Valve",
+        "eur": 3507.42
+      },
+      {
+        "pn": "8981917912",
+        "description": "MASTER VAC ASM; BRK",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Brakes > Booster & Control > Brake Valve",
+        "eur": 2641.1
+      },
+      {
+        "pn": "8984876350",
+        "description": "ROD; ANTENNA",
+        "path_o": "Electrical > Instruments > Instrument Cluster",
+        "path_n": "Electrical > Audio > Radio",
+        "eur": 2366.16
+      },
+      {
+        "pn": "8983696571",
+        "description": "MOLDING; ROOF",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Accident & Body > Trim > Trim",
+        "eur": 2081.35
+      },
+      {
+        "pn": "8982284660",
+        "description": "HOSE; FLEX,P/S CONT VLV",
+        "path_o": "Unknown Review > Unclassified > To Review",
+        "path_n": "Steering > Gear > Steering Gear",
+        "eur": 1643.47
+      },
+      {
+        "pn": "8973816031",
+        "description": "GUIDE; BRIDGE",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Engine > Cylinder Head > Head Cover",
+        "eur": 1566.22
+      },
+      {
+        "pn": "8972630350",
+        "description": "COVER; BRK PEDAL",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Brakes > Actuation > Brake Assembly",
+        "eur": 1356.76
+      },
+      {
+        "pn": "8977918600",
+        "description": "INJECTOR ASM; DEF DCM",
+        "path_o": "Fuel System > Fuel Control > Injector",
+        "path_n": "Intake Exhaust Emission > DEF System > DEF Injector",
+        "eur": 1289.21
+      },
+      {
+        "pn": "8973714472",
+        "description": "GUIDE; FAN",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Cooling > Radiator > Radiator Assembly",
+        "eur": 1010.53
+      },
+      {
+        "pn": "8974928000",
+        "description": "PIPE; OIL,P/S UNIT TO OIL TANK",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Steering > Gear > Steering Gear",
+        "eur": 988.11
+      },
+      {
+        "pn": "8983964220",
+        "description": "GUIDE; AIR",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Accident & Body > Panels > Grille",
+        "eur": 932.22
+      },
+      {
+        "pn": "8982030970",
+        "description": "HOUSING; CLU",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Transmission > Case > Case Cover",
+        "eur": 913.21
+      },
+      {
+        "pn": "8981429620",
+        "description": "LIGHTER; CIGAR",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Electrical > Control Units > Control Unit",
+        "eur": 904.65
+      },
+      {
+        "pn": "8982415692",
+        "description": "MODULATOR; RR",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Intake Exhaust Emission > Air Intake > Air Duct",
+        "eur": 834.7
+      },
+      {
+        "pn": "8980700800",
+        "description": "HORN; HIGH NOTE",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Electrical > Harness & Connectors > Terminal",
+        "eur": 710.96
+      },
+      {
+        "pn": "8979069143",
+        "description": "BACK ASM; SEAT",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Cabin Interior > Seat > Seat Cushion",
+        "eur": 679.54
+      },
+      {
+        "pn": "8983324550",
+        "description": "BLOWER ASM",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Cabin Interior > HVAC Filters > HVAC",
+        "eur": 556.4
+      },
+      {
+        "pn": "8944721180",
+        "description": "COLLAR; DIST, COLLAPSIBLE",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Driveline Axle > Final Drive > Final Drive Asm",
+        "eur": 537.08
+      },
+      {
+        "pn": "8983980830",
+        "description": "COLLAR; DIST,COLLAPSIBLE",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Driveline Axle > Final Drive > Final Drive Asm",
+        "eur": 486.14
+      },
+      {
+        "pn": "8980236910",
+        "description": "FASTENER",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Accident & Body > Panels > Panel",
+        "eur": 454.04
+      },
+      {
+        "pn": "8982788691",
+        "description": "HOSE; CONNECTING",
+        "path_o": "Unknown Review > Unclassified > To Review",
+        "path_n": "Intake Exhaust Emission > Air Intake > Air Duct",
+        "eur": 442.02
+      },
+      {
+        "pn": "8981042347",
+        "description": "RECESS; FUEL FILLER NECK,RR BO",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Accident & Body > Panels > Panel",
+        "eur": 390.05
+      },
+      {
+        "pn": "8980278330",
+        "description": "DRIVER; SCREW",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Tools Equipment > Workshop Tools > Tool",
+        "eur": 374.55
+      },
+      {
+        "pn": "8982312981",
+        "description": "PIPE; OIL,P/S UNIT TO OIL TANK",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Steering > Gear > Steering Gear",
+        "eur": 318.43
+      },
+      {
+        "pn": "8979026431",
+        "description": "HOUSING; SW",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Electrical > Control Units > Control Unit",
+        "eur": 296.09
+      },
+      {
+        "pn": "8974646032",
+        "description": "RETAINER; SUNSHADE",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Cabin Interior > Interior Trim > Sun Visor",
+        "eur": 278.36
+      },
+      {
+        "pn": "8979461512",
+        "description": "PIPE; OIL,P/S UNIT TO OIL TANK",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Steering > Gear > Steering Gear",
+        "eur": 275.32
+      },
+      {
+        "pn": "8981479450",
+        "description": "CAP; VLV STEM END",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Engine > Valve Train > Camshaft",
+        "eur": 270.53
+      },
+      {
+        "pn": "8982502500",
+        "description": "COLLAR; SPLIT",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Engine > Valve Train > Camshaft",
+        "eur": 263.98
+      },
+      {
+        "pn": "8975556820",
+        "description": "GUIDE; FAN",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Cooling > Radiator > Radiator Assembly",
+        "eur": 250.52
+      },
+      {
+        "pn": "8980220250",
+        "description": "HORN; LOW NOTE",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Electrical > Harness & Connectors > Terminal",
+        "eur": 250.18
+      },
+      {
+        "pn": "8974655040",
+        "description": "ANTENNA",
+        "path_o": "Electrical > Instruments > Instrument Cluster",
+        "path_n": "Electrical > Audio > Radio",
+        "eur": 242.71
+      },
+      {
+        "pn": "8973296270",
+        "description": "CLIP; HOSE",
+        "path_o": "Unknown Review > Unclassified > To Review",
+        "path_n": "Electrical > Control Units > Control Unit",
+        "eur": 218.62
+      },
+      {
+        "pn": "8981132442",
+        "description": "BRACE; RR BODY",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Accident & Body > Panels > Panel",
+        "eur": 217.67
+      },
+      {
+        "pn": "8980045072",
+        "description": "HOUSING; CLU",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Transmission > Case > Case Cover",
+        "eur": 211.99
+      },
+      {
+        "pn": "8973302070",
+        "description": "FAN; COOLING",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Cooling > Thermostat & Control > Thermostat",
+        "eur": 195.37
+      },
+      {
+        "pn": "8973600540",
+        "description": "CLIP; FLEX HOSE,FRT BRK",
+        "path_o": "Unknown Review > Unclassified > To Review",
+        "path_n": "Brakes > Hydraulic > Brake Pipe",
+        "eur": 159.99
+      },
+      {
+        "pn": "8976647880",
+        "description": "FAN; COOLING",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Cooling > Thermostat & Control > Thermostat",
+        "eur": 133.18
+      },
+      {
+        "pn": "8983204150",
+        "description": "HOSE; CONN",
+        "path_o": "Unknown Review > Unclassified > To Review",
+        "path_n": "Intake Exhaust Emission > Air Intake > Air Duct",
+        "eur": 132.54
+      },
+      {
+        "pn": "8980788110",
+        "description": "LINK; FRT WIPER",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Accident & Body > Wiper & Washer > Wiper Blade",
+        "eur": 126.0
+      },
+      {
+        "pn": "8972531090",
+        "description": "BEARING; NEEDLE",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Transmission > Case > Case Cover",
+        "eur": 124.59
+      },
+      {
+        "pn": "8974919541",
+        "description": "TANK; SURGE,RAD",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Cooling > Cooling Hoses & Pipes > Water Pipe",
+        "eur": 120.91
+      },
+      {
+        "pn": "8981784962",
+        "description": "HOSE; RUBBER",
+        "path_o": "Unknown Review > Unclassified > To Review",
+        "path_n": "Intake Exhaust Emission > Exhaust > Exhaust Pipe",
+        "eur": 109.15
+      },
+      {
+        "pn": "8981316280",
+        "description": "PULLEY; FAN DRIVE",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Engine > Internal Rotating > Crankshaft",
+        "eur": 100.35
+      },
+      {
+        "pn": "8973601120",
+        "description": "PIN; RR SPR",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Suspension > Suspension Arm > Ball Joint",
+        "eur": 64.87
+      },
+      {
+        "pn": "8973653740",
+        "description": "PLUG; OIL DRAIN",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Transmission > Case > Case Cover",
+        "eur": 57.43
+      },
+      {
+        "pn": "8982031910",
+        "description": "INSERT; SYN,LOW & 2ND",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Transmission > Geartrain > Gear",
+        "eur": 56.66
+      },
+      {
+        "pn": "8980537700",
+        "description": "LINK; FRT WIPER",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Accident & Body > Wiper & Washer > Wiper Blade",
+        "eur": 55.5
+      },
+      {
+        "pn": "8976587120",
+        "description": "HOSE; RUBBER,SENSOR",
+        "path_o": "Unknown Review > Unclassified > To Review",
+        "path_n": "Electrical > Control Units > Control Unit",
+        "eur": 53.36
+      },
+      {
+        "pn": "8972115640",
+        "description": "ANTENNA ASM",
+        "path_o": "Electrical > Instruments > Instrument Cluster",
+        "path_n": "Electrical > Audio > Radio",
+        "eur": 45.44
+      },
+      {
+        "pn": "8978551510",
+        "description": "LINK; FRT WIPER",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Accident & Body > Wiper & Washer > Wiper Blade",
+        "eur": 38.39
+      },
+      {
+        "pn": "8980317970",
+        "description": "SHEET",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Accident & Body > Mirrors > Mirror",
+        "eur": 37.03
+      },
+      {
+        "pn": "8974034110",
+        "description": "RETAINER; CARPET",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Accident & Body > Panels > Panel",
+        "eur": 34.46
+      },
+      {
+        "pn": "8972115650",
+        "description": "ANTENNA",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Electrical > Audio > Radio",
+        "eur": 33.43
+      },
+      {
+        "pn": "1491678570",
+        "description": "PIPE; OIL,RR BRK",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Brakes > Disc & Drum > Brake Drum",
+        "eur": 26.66
+      },
+      {
+        "pn": "8982489783",
+        "description": "HOSE; RUBBER,PIPE TO PIPE",
+        "path_o": "Unknown Review > Unclassified > To Review",
+        "path_n": "Intake Exhaust Emission > Turbo > Turbocharger",
+        "eur": 16.48
+      },
+      {
+        "pn": "8942395010",
+        "description": "COLLAR; SPLIT",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Engine > Valve Train > Camshaft",
+        "eur": 16.4
+      },
+      {
+        "pn": "8980745902",
+        "description": "PIPE; HTR",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Cabin Interior > HVAC Filters > Heater Core",
+        "eur": 16.34
+      },
+      {
+        "pn": "8974169972",
+        "description": "COVER; HINGE",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Cabin Interior > Seat > Seat Back",
+        "eur": 11.34
+      },
+      {
+        "pn": "8978463200",
+        "description": "HOSE; VACUUM",
+        "path_o": "Unknown Review > Unclassified > To Review",
+        "path_n": "Cooling > Cooling Hoses & Pipes > Water Pipe",
+        "eur": 10.22
+      },
+      {
+        "pn": "8982229940",
+        "description": "PIPE; AIR,FLEX HOSE TO CLU BOOSTER",
+        "path_o": "Unknown Review > Unclassified > To Review",
+        "path_n": "Clutch > Release System > Slave Cylinder",
+        "eur": 6.42
+      },
+      {
+        "pn": "8942493470",
+        "description": "BUFFER; RAD,UPR",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Cooling > Radiator > Radiator Assembly",
+        "eur": 3.08
+      },
+      {
+        "pn": "8983525130",
+        "description": "SHIM; OUTPUT SHAFT",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Transmission > Geartrain > Gear",
+        "eur": 2.83
+      },
+      {
+        "pn": "8979472440",
+        "description": "CLIP; HOSE,FILLER NECK",
+        "path_o": "Unknown Review > Unclassified > To Review",
+        "path_n": "Fuel System > Tank & Supply > Fuel Tank",
+        "eur": 1.62
+      },
+      {
+        "pn": "1313423350",
+        "description": "SHAFT; CLU",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Clutch > Clutch Kit > Clutch Kit",
+        "eur": 0.0
+      },
+      {
+        "pn": "8941578871",
+        "description": "RUBBER; CUSHION,CAB MTG",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Suspension > Bushings > Rubber Mount",
+        "eur": 0.0
+      },
+      {
+        "pn": "8970691071",
+        "description": "ANTENNA",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Electrical > Audio > Radio",
+        "eur": 0.0
+      },
+      {
+        "pn": "8973627280",
+        "description": "BEARING; NEEDLE,5TH",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Transmission > Geartrain > Gear",
+        "eur": 0.0
+      },
+      {
+        "pn": "8980425220",
+        "description": "PANEL; CAB BACK",
+        "path_o": "Accident & Body > Panels > Panel",
+        "path_n": "Accident & Body > Complete Assembly > Cab Assembly",
+        "eur": 0.0
+      },
+      {
+        "pn": "8982410222",
+        "description": "BOX ASM; SHIFT CONT",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Transmission > Shift Mechanism > Shift Fork",
+        "eur": 0.0
+      },
+      {
+        "pn": "8971316784",
+        "description": "STOPPER; TAIL GATE LINK,RR BODY",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Accident & Body > Panels > Door",
+        "eur": 0.0
+      },
+      {
+        "pn": "8980115942",
+        "description": "PANEL; CAB BACK",
+        "path_o": "Accident & Body > Panels > Panel",
+        "path_n": "Accident & Body > Complete Assembly > Cab Assembly",
+        "eur": 0.0
+      },
+      {
+        "pn": "8981158070",
+        "description": "CLIP; FILLER HOSE",
+        "path_o": "Unknown Review > Unclassified > To Review",
+        "path_n": "Fuel System > Tank & Supply > Fuel Tank",
+        "eur": 0.0
+      },
+      {
+        "pn": "8982603180",
+        "description": "CHANNEL; GLASS RUN,FRT",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Accident & Body > Panels > Door",
+        "eur": 0.0
+      },
+      {
+        "pn": "8982845430",
+        "description": "TUBE ASM; DEF DCM",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Intake Exhaust Emission > DEF System > DEF Tank",
+        "eur": 0.0
+      },
+      {
+        "pn": "8981415211",
+        "description": "AXLE; FRT",
+        "path_o": "Unknown > Unknown > Unknown",
+        "path_n": "Driveline Axle > Axle Shaft > Axle Shaft",
+        "eur": 0.0
+      }
+    ],
+    "random_other_change_score": {
+      "sample": 80,
+      "from_unknown_or_review": 74,
+      "no_keyword_conflict": 6,
+      "keyword_conflict": 0,
+      "conflict_rows": [],
+      "ok": true
+    },
+    "leading_zeros": {
+      "class_leading_zero_pns": 1609,
+      "present_in_export_via_zfill": 1609,
+      "missing": 0,
+      "export_raw_leading_zero_rows": 312,
+      "ok": true,
+      "note": "Export may store without leading zero string; zfill join must still cover class 0-keys"
+    },
+    "lost_aim": {
+      "n": 0,
+      "ok": true
+    }
+  },
+  "all_ok_flags": {
+    "master_l1_fixed": true,
+    "export_vs_class": true,
+    "residuals_vs_sep21": false,
+    "eng_gasket_sets": true,
+    "top_fills": true,
+    "random_other_change_score": true,
+    "leading_zeros": true,
+    "lost_aim": true
+  },
+  "pass2_verdict": "PASS_WITH_KNOWN_RESIDUALS",
+  "better_and_not_worse": false,
+  "finished_utc": "2026-10-11T17:47:19.107501+00:00"
+}

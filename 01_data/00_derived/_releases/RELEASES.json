@@ -102,7 +102,7 @@
       "release_id": "2026-10-07",
       "path": "aim_pn_classification_release_2026-10-07.csv",
       "sha256": "aba81764e9aa3defaaa1636a9dfd13c520aadb4dfc2879e318f5c4e390010210",
-      "status": "APPROVED",
+      "status": "SUPERSEDED",
       "rows": 165055,
       "rows_note": "data rows, header excluded",
       "base_release": "2026-10-04",
@@ -111,7 +111,25 @@
       "notes": "Cut 2026-10-07 from approved 2026-10-04. Change log aim_pn_classification_release_2026-10-07.changes.csv. No new AIM labels. EQ overnight labels remapped onto existing leaves. Release id: 2026-10-07 not taken, date alone.",
       "approved_by": "Jerome",
       "approved_on": "2026-10-07",
-      "approved_note": "Jerome GO in chat on 2026-10-07: apply DESC_PROVEN (~30,653) and EQ_PROVEN (~116) as a dated release. sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-07.gate.json): 18 checks pass, release_approved PENDING, 0 fail. Supersedes 2026-10-04 in the same edit. Master sync: aim_master_v2.csv AIM fills for DESC + append EQ mapped rows (see _aim_apply_proven_20261007.md)."
+      "approved_note": "Jerome GO in chat on 2026-10-07: apply DESC_PROVEN (~30,653) and EQ_PROVEN (~116) as a dated release. sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-07.gate.json): 18 checks pass, release_approved PENDING, 0 fail. Supersedes 2026-10-04 in the same edit. Master sync: aim_master_v2.csv AIM fills for DESC + append EQ mapped rows (see _aim_apply_proven_20261007.md).",
+      "superseded_by": "2026-10-11",
+      "superseded_on": "2026-10-11",
+      "superseded_note": "Superseded when Jerome asked to hotfix cyl-head gasket / transmission-ASM / turbo water+kit residues on 2026-10-11."
+    },
+    {
+      "release_id": "2026-10-11",
+      "path": "aim_pn_classification_release_2026-10-11.csv",
+      "sha256": "d9b26b0124bacadcece437f665fc673e32b70d2087d78aa0884ea6615369f605",
+      "status": "APPROVED",
+      "rows": 165055,
+      "rows_note": "data rows, header excluded",
+      "base_release": "2026-10-07",
+      "source": "release 2026-10-07 + hotfix: cyl-head gasket\u2192Engine gasket; transmission ASM\u2190Literature\u2192Transmission Case; turbo water return + turbo kit\u2192Turbocharger",
+      "recommendation": "Jerome chat 2026-10-11: fix QA residues and new draft for Bart/PBI",
+      "notes": "No new AIM labels. Change log aim_pn_classification_release_2026-10-11.changes.csv. Counts: {'cyl_hd_gasket': 79, 'trans_asm': 38, 'turbo_water': 1, 'turbo_kit': 1}",
+      "approved_by": "Jerome",
+      "approved_on": "2026-10-11",
+      "approved_note": "Jerome asked in chat 2026-10-11 to fix the QA residues (cyl-head gasket under Transmission, transmission ASM under Literature, turbo water return, turbo kit) and write a new Bart draft."
     }
   ]
 }
