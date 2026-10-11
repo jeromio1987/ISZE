@@ -1,0 +1,678 @@
+{
+ "summary": {
+  "k": 0.905428526628485,
+  "k_factory_only": 0.831927689445221,
+  "step_eur": 1629792.6315,
+  "parts": 15273,
+  "parts_at_zero": 207,
+  "eur_at_zero": 3319219.5300000003,
+  "median_move": 0.0635096083095235,
+  "p90_move": 0.07257873153585173,
+  "max_move": 1.9341532879341476,
+  "recipe_check": 0.05961599453926434,
+  "pad_kits": 29,
+  "pad_kits_billed": 1178671.08,
+  "margin_pts_proposal": -0.005025859083890212,
+  "revenue_none": 1629792.6315,
+  "revenue_central": 1353805.4703286935,
+  "revenue_stress": 218494.64823763692,
+  "full_factory_eur": 1959055.64,
+  "scaled_eur": 1773784.86
+ },
+ "dealer_response": {
+  "pooled": {
+   "n": 5785,
+   "beta_dlp": -0.1584,
+   "se_dlp": 0.23
+  },
+  "iuk_beta": -1.0805,
+  "iuk_se": 0.4586,
+  "iuk_ci95": 0.9,
+  "iuk_units_change": -0.0649,
+  "invoice_check_median_list": 0.117
+ },
+ "reconciliation": {
+  "own_total": 1629792.631499988,
+  "given_up": 388914.4090566539,
+  "ceiling_cut": 7653.818279883287,
+  "recovered": 396568.2273365385,
+  "base": 32595852.629999764,
+  "t_off": 0.03726553578503877,
+  "t_on": 0.048373697707719286,
+  "rec_repair_off": 252972.46763233244,
+  "rec_repair_on": 252889.18558495224,
+  "rec_body_off": 143595.75970420663,
+  "rec_body_on": 143679.04175158736,
+  "rec_service": 0,
+  "rec_iuk_off": 91064.86151340292,
+  "rec_iuk_on": 0,
+  "pn_extra_off": 8446,
+  "pn_extra_on": 8062
+ },
+ "market_table": [
+  {
+   "market": "UK trucks distributor (ITUK)",
+   "code": "ITUK",
+   "billed": 6249953.729999989,
+   "own": 0.05050453774770113,
+   "given_up": 0,
+   "service": 0,
+   "israel": 0,
+   "ceiling_cut": 3029.7487929085337,
+   "recovered": 49168.48255929152,
+   "decided": 0.05788678980261086
+  },
+  {
+   "market": "Isuzu UK, D-Max (IUK)",
+   "code": "IUK",
+   "billed": 6229276.699999995,
+   "own": 0.0505400894038399,
+   "given_up": 147777.7273368489,
+   "service": 147777.7273368489,
+   "israel": 0,
+   "ceiling_cut": 592.6581505538671,
+   "recovered": 91064.86151340292,
+   "decided": 0.04134070290460156
+  },
+  {
+   "market": "Israel trucks distributor (UTI)",
+   "code": "UTI",
+   "billed": 3400405.3899999955,
+   "own": 0.047288166054506676,
+   "given_up": 8484.325773075645,
+   "service": 0,
+   "israel": 8484.325773075645,
+   "ceiling_cut": 1265.1122476053888,
+   "recovered": 35522.11837446437,
+   "decided": 0.05486746246121642
+  },
+  {
+   "market": "Germany",
+   "code": "GERMANY",
+   "billed": 2679181.860000008,
+   "own": 0.048529395123572655,
+   "given_up": 60063.18586664833,
+   "service": 60063.18586664833,
+   "israel": 0,
+   "ceiling_cut": 256.2938211946392,
+   "recovered": 37464.52331178085,
+   "decided": 0.03999882214631982
+  },
+  {
+   "market": "Israel D-Max distributor (UMI)",
+   "code": "UMI",
+   "billed": 2429159.9599999944,
+   "own": 0.050837584941399235,
+   "given_up": 85091.08681084707,
+   "service": 65193.3773075763,
+   "israel": 19897.709503270773,
+   "ceiling_cut": 0,
+   "recovered": 16946.873190327435,
+   "decided": 0.022785001026538517
+  },
+  {
+   "market": "Belgium",
+   "code": "BELGIUM",
+   "billed": 2399159.909999995,
+   "own": 0.05408794041905974,
+   "given_up": 45161.27849287067,
+   "service": 45161.27849287067,
+   "israel": 0,
+   "ceiling_cut": 397.90807984152076,
+   "recovered": 45000.99608092725,
+   "decided": 0.05385527960747376
+  },
+  {
+   "market": "Portugal",
+   "code": "PORTUGAL",
+   "billed": 1810033.2299999977,
+   "own": 0.051322737381405636,
+   "given_up": 0,
+   "service": 0,
+   "israel": 0,
+   "ceiling_cut": 217.15334891990875,
+   "recovered": 21318.66312411352,
+   "decided": 0.06298081604286408
+  },
+  {
+   "market": "Norway",
+   "code": "NORWAY",
+   "billed": 1422630.5600000012,
+   "own": 0.046979244285805445,
+   "given_up": 24492.40750679736,
+   "service": 24492.40750679736,
+   "israel": 0,
+   "ceiling_cut": 140.65415308085412,
+   "recovered": 23873.781665666487,
+   "decided": 0.0464455287762696
+  },
+  {
+   "market": "Sweden",
+   "code": "SWEDEN",
+   "billed": 1284581.9900000007,
+   "own": 0.05150037425812702,
+   "given_up": 0,
+   "service": 0,
+   "israel": 0,
+   "ceiling_cut": 207.77410229622026,
+   "recovered": 24741.300234110055,
+   "decided": 0.07059882521166548
+  },
+  {
+   "market": "Ireland",
+   "code": "IRELAND",
+   "billed": 1077304.0999999978,
+   "own": 0.05245799585944511,
+   "given_up": 0,
+   "service": 0,
+   "israel": 0,
+   "ceiling_cut": 413.0653964257791,
+   "recovered": 12279.294401388697,
+   "decided": 0.06347273998319151
+  },
+  {
+   "market": "Ukraine",
+   "code": "UKRAINE",
+   "billed": 1024780.4500000001,
+   "own": 0.05080479224737467,
+   "given_up": 0,
+   "service": 0,
+   "israel": 0,
+   "ceiling_cut": 921.7095697711295,
+   "recovered": 7980.287040233662,
+   "decided": 0.057692684644680456
+  },
+  {
+   "market": "Greece",
+   "code": "GREECE",
+   "billed": 490467.70999999996,
+   "own": 0.05028210423826554,
+   "given_up": 0,
+   "service": 0,
+   "israel": 0,
+   "ceiling_cut": 28.031437306029726,
+   "recovered": 6558.395181791172,
+   "decided": 0.06359666829893548
+  },
+  {
+   "market": "Cyprus",
+   "code": "CYPRUS",
+   "billed": 407939.2900000002,
+   "own": 0.04928597843460193,
+   "given_up": 9069.938612482347,
+   "service": 9069.938612482347,
+   "israel": 0,
+   "ceiling_cut": 30.70408977183088,
+   "recovered": 6057.714448406646,
+   "decided": 0.041826711018002935
+  },
+  {
+   "market": "Hungary",
+   "code": "HUNGARY",
+   "billed": 328543.2499999994,
+   "own": 0.04291647757887704,
+   "given_up": 5325.225296854987,
+   "service": 5325.225296854987,
+   "israel": 0,
+   "ceiling_cut": 54.28972234793815,
+   "recovered": 4631.876169724526,
+   "decided": 0.04064085983455143
+  },
+  {
+   "market": "Armenia",
+   "code": "ARMENIA",
+   "billed": 271906.51999999996,
+   "own": 0.034128071919984654,
+   "given_up": 0,
+   "service": 0,
+   "israel": 0,
+   "ceiling_cut": 0,
+   "recovered": 0,
+   "decided": 0.034128071919984654
+  },
+  {
+   "market": "Finland",
+   "code": "FINLAND",
+   "billed": 266507.21000000037,
+   "own": 0.052631821408995444,
+   "given_up": 0,
+   "service": 0,
+   "israel": 0,
+   "ceiling_cut": 28.3244004378521,
+   "recovered": 4452.067350974204,
+   "decided": 0.06923078303009525
+  },
+  {
+   "market": "Malta",
+   "code": "MALTA",
+   "billed": 202020.30999999985,
+   "own": 0.05517322610086207,
+   "given_up": 3449.2333602271638,
+   "service": 3449.2333602271638,
+   "israel": 0,
+   "ceiling_cut": 18.14471582585781,
+   "recovered": 3458.8670365420658,
+   "decided": 0.05513109647780115
+  },
+  {
+   "market": "Romania",
+   "code": "ROMANIA",
+   "billed": 176929.6099999997,
+   "own": 0.04164197086072853,
+   "given_up": 0,
+   "service": 0,
+   "israel": 0,
+   "ceiling_cut": 14.589874447840316,
+   "recovered": 1998.6893119447495,
+   "decided": 0.05285603185084157
+  },
+  {
+   "market": "Denmark",
+   "code": "DENMARK",
+   "billed": 161597.2799999999,
+   "own": 0.05035450997300524,
+   "given_up": 0,
+   "service": 0,
+   "israel": 0,
+   "ceiling_cut": 18.401156030012036,
+   "recovered": 2354.4208993737157,
+   "decided": 0.06481032100734763
+  },
+  {
+   "market": "Kazakhstan",
+   "code": "KAZAKHSTAN",
+   "billed": 159124.10000000003,
+   "own": 0.03360994899807311,
+   "given_up": 0,
+   "service": 0,
+   "israel": 0,
+   "ceiling_cut": 0,
+   "recovered": 0,
+   "decided": 0.03360994899807311
+  },
+  {
+   "market": "Iceland",
+   "code": "ICELAND",
+   "billed": 82258.71000000004,
+   "own": 0.05578290656480843,
+   "given_up": 0,
+   "service": 0,
+   "israel": 0,
+   "ceiling_cut": 7.007674112330153,
+   "recovered": 1399.1155356260297,
+   "decided": 0.07270643796365617
+  },
+  {
+   "market": "Palestine",
+   "code": "PALESTINE",
+   "billed": 42090.76000000002,
+   "own": 0.04780750028426035,
+   "given_up": 0,
+   "service": 0,
+   "israel": 0,
+   "ceiling_cut": 12.247547005752228,
+   "recovered": 295.8999064493013,
+   "decided": 0.05454656509191763
+  }
+ ],
+ "group_avg": {
+  "body": {
+   "billed": 4639123.83,
+   "own": 0.06452793151675633,
+   "decided": 0.0917485614891748,
+   "exempt": 0.09176651359617435
+  },
+  "repair": {
+   "billed": 8801950.47,
+   "own": 0.060469848798083904,
+   "decided": 0.08736784757850033,
+   "exempt": 0.08735838580662778
+  },
+  "service": {
+   "billed": 19154778.33,
+   "own": 0.04167038317539598,
+   "decided": 0.022717685319768994,
+   "exempt": 0.022717685319768994
+  }
+ },
+ "market_avg": {
+  "ARMENIA": {
+   "billed": 271906.52,
+   "own": 0.034128071919984695,
+   "decided": 0.034128071919984695,
+   "exempt": 0.034128071919984695
+  },
+  "BELGIUM": {
+   "billed": 2399159.91,
+   "own": 0.05408794041905956,
+   "decided": 0.05385527960747369,
+   "exempt": 0.05944638608665405
+  },
+  "CYPRUS": {
+   "billed": 407939.29,
+   "own": 0.04928597843460198,
+   "decided": 0.041826711018002984,
+   "exempt": 0.04625308489262467
+  },
+  "DENMARK": {
+   "billed": 161597.28,
+   "own": 0.05035450997300525,
+   "decided": 0.06481032100734758,
+   "exempt": 0.06915327161175719
+  },
+  "FINLAND": {
+   "billed": 266507.21,
+   "own": 0.05263182140899555,
+   "decided": 0.06923078303009525,
+   "exempt": 0.07421030433753702
+  },
+  "GERMANY": {
+   "billed": 2679181.86,
+   "own": 0.048529395123572815,
+   "decided": 0.03999882214631993,
+   "exempt": 0.04416706341571337
+  },
+  "GREECE": {
+   "billed": 490467.71,
+   "own": 0.0502821042382655,
+   "decided": 0.06359666829893557,
+   "exempt": 0.06758252786575246
+  },
+  "HUNGARY": {
+   "billed": 328543.25,
+   "own": 0.04291647757887696,
+   "decided": 0.04064085983455137,
+   "exempt": 0.04484327759729683
+  },
+  "ICELAND": {
+   "billed": 82258.71,
+   "own": 0.055782906564808526,
+   "decided": 0.07270643796365614,
+   "exempt": 0.07777642112075232
+  },
+  "IRELAND": {
+   "billed": 1077304.1,
+   "own": 0.052457995859445,
+   "decided": 0.06347273998319142,
+   "exempt": 0.06687032185938435
+  },
+  "ITUK": {
+   "billed": 6249953.73,
+   "own": 0.05050453774770115,
+   "decided": 0.05788678980261084,
+   "exempt": 0.06023180053792692
+  },
+  "IUK": {
+   "billed": 6229276.7,
+   "own": 0.05054008940383983,
+   "decided": 0.041340702904601505,
+   "exempt": 0.026721852932276
+  },
+  "KAZAKHSTAN": {
+   "billed": 159124.1,
+   "own": 0.03360994899807312,
+   "decided": 0.03360994899807312,
+   "exempt": 0.03360994899807312
+  },
+  "MALTA": {
+   "billed": 202020.31,
+   "own": 0.05517322610086205,
+   "decided": 0.05513109647780113,
+   "exempt": 0.06023466166578551
+  },
+  "NORWAY": {
+   "billed": 1422630.56,
+   "own": 0.04697924428580549,
+   "decided": 0.04644552877626962,
+   "exempt": 0.05144776176759342
+  },
+  "PALESTINE": {
+   "billed": 42090.76,
+   "own": 0.047807500284260375,
+   "decided": 0.05454656509191766,
+   "exempt": 0.05664209031399204
+  },
+  "PORTUGAL": {
+   "billed": 1810033.23,
+   "own": 0.05132273738140569,
+   "decided": 0.06298081604286407,
+   "exempt": 0.06649163351493784
+  },
+  "ROMANIA": {
+   "billed": 176929.61,
+   "own": 0.04164197086072847,
+   "decided": 0.05285603185084149,
+   "exempt": 0.05622331472834124
+  },
+  "SWEDEN": {
+   "billed": 1284581.99,
+   "own": 0.05150037425812709,
+   "decided": 0.07059882521166554,
+   "exempt": 0.07633993064643585
+  },
+  "UKRAINE": {
+   "billed": 1024780.45,
+   "own": 0.05080479224737473,
+   "decided": 0.05769268464468045,
+   "exempt": 0.0600139378319639
+  },
+  "UMI": {
+   "billed": 2429159.96,
+   "own": 0.050837584941399144,
+   "decided": 0.022785001026538458,
+   "exempt": 0.02486454590778625
+  },
+  "UTI": {
+   "billed": 3400405.39,
+   "own": 0.04728816605450658,
+   "decided": 0.05486746246121631,
+   "exempt": 0.05798135050096797
+  }
+ },
+ "held": {
+  "rows": 7833,
+  "given_up_eur": 388914.41,
+  "filters_eur": 26030.33,
+  "discs_drums_eur": 51875.11,
+  "intake_exhaust_emission_eur": 92749.36
+ },
+ "held_by_market": {
+  "BELGIUM": {
+   "service": 45161.28,
+   "body_collision": 0.0,
+   "lighting": 0.0
+  },
+  "CYPRUS": {
+   "service": 9069.94,
+   "body_collision": 0.0,
+   "lighting": 0.0
+  },
+  "GERMANY": {
+   "service": 60063.19,
+   "body_collision": 0.0,
+   "lighting": 0.0
+  },
+  "HUNGARY": {
+   "service": 5325.23,
+   "body_collision": 0.0,
+   "lighting": 0.0
+  },
+  "IUK": {
+   "service": 147777.73,
+   "body_collision": 0.0,
+   "lighting": 0.0
+  },
+  "MALTA": {
+   "service": 3449.23,
+   "body_collision": 0.0,
+   "lighting": 0.0
+  },
+  "NORWAY": {
+   "service": 24492.41,
+   "body_collision": 0.0,
+   "lighting": 0.0
+  },
+  "UMI": {
+   "service": 65193.38,
+   "body_collision": 15463.14,
+   "lighting": 4434.57
+  },
+  "UTI": {
+   "service": 0.0,
+   "body_collision": 0.0,
+   "lighting": 8484.33
+  }
+ },
+ "paper": {
+  "iml_imit": {
+   "all": 6.0,
+   "service": 5.5,
+   "repair": 6.6,
+   "body": 7.0,
+   "japan": 6.2,
+   "thailand": 6.3,
+   "previous_sep_2025": 3.2,
+   "billed_service_m": 19.2,
+   "billed_repair_m": 8.8,
+   "billed_body_m": 4.6,
+   "src": "paper section 2"
+  },
+  "waterfall_to_5pct_k": {
+   "pad_kits": -109,
+   "categories_lost": -56,
+   "uk_web_shops": 21,
+   "src": "paper section 2"
+  },
+  "typical_part": {
+   "median_pct": 6.4,
+   "p90_pct": 7.3,
+   "above_15pct_parts": 99,
+   "src": "paper section 4"
+  },
+  "service_share_2025_pct": {
+   "IUK": 17,
+   "ITUK": 51,
+   "UTI": 55,
+   "UMI": 21,
+   "GERMANY": 14,
+   "BELGIUM": 26,
+   "PORTUGAL": 30,
+   "NORWAY": 27,
+   "SWEDEN": 24,
+   "IRELAND": "100*",
+   "CYPRUS": 50,
+   "HUNGARY": 19,
+   "MALTA": 33,
+   "src": "paper section 5; network 28% in 2025"
+  },
+  "three_ways_k": {
+   "a_spread": {
+    "service": 137.023,
+    "repair": 167.961,
+    "body": 91.583,
+    "cap": 56
+   },
+   "b_decided": {
+    "service": 0.0,
+    "repair": 252.972,
+    "body": 143.596,
+    "cap": 5
+   },
+   "c_weighted": {
+    "service": 90.683,
+    "repair": 199.856,
+    "body": 106.029,
+    "cap": 8
+   },
+   "src": "paper section 6; decided way checked against the workbook"
+  },
+  "typical_extra_part": {
+   "decided_pct": 10.1,
+   "before_pct": 6.3,
+   "dmax_avg_pct": 4.8,
+   "truck_avg_pct": 5.8,
+   "dmax_before_pct": 5.1,
+   "truck_before_pct": 5.2,
+   "src": "paper section 6"
+  },
+  "evidence_pct": [
+   [
+    "Order lines and order type",
+    100.0,
+    "sufficient"
+   ],
+   [
+    "Vehicle line (D-Max or truck)",
+    97.7,
+    "sufficient"
+   ],
+   [
+    "Dealer response to the April 2026 rise",
+    73.7,
+    "partial: a flag only"
+   ],
+   [
+    "Genuine Isuzu sold outside our network",
+    50.4,
+    "partial: one main source"
+   ],
+   [
+    "Any competitor evidence",
+    24.5,
+    "too thin to prove no alternative"
+   ],
+   [
+    "Aftermarket shop price",
+    21.0,
+    "partial: top sellers only"
+   ],
+   [
+    "Competitor part number, confirmed or likely",
+    15.4,
+    "thin"
+   ]
+  ],
+  "outside_prices": {
+   "aftermarket_median_index": 0.56,
+   "aftermarket_parts": 266,
+   "aftermarket_weighted_index": 0.44,
+   "genuine_outside_median_index": 1.17,
+   "genuine_outside_parts": 1167,
+   "genuine_outside_main_source": 1093,
+   "src": "paper section 8 (index on a provisional reference dealer price)"
+  },
+  "israel": {
+   "total_loss_pct": 60,
+   "constructive_from_pct": "50 to 55",
+   "verified_up_to_t": 3.5,
+   "panels_billed_jan_aug_2025": 165232,
+   "panels_billed_jan_aug_2026": 135548,
+   "panels_change_pct": -18.0,
+   "backorder_weeks": "4 to 16",
+   "backorder_median_weeks": 13,
+   "panels_increase_kept_eur": 13795,
+   "dmax_body_light_given_up_k": 20,
+   "trucks_lighting_given_up_k": 8,
+   "src": "paper sections 9 and 10"
+  },
+  "terms_outside_list": {
+   "halve_gap_stock_k": 452,
+   "one_point_stock_discount_k": 213,
+   "urgent_plus2_k": 93,
+   "urgent_plus1_k": 46,
+   "src": "paper section 11, calendar 2025 order lines at the 2025 list"
+  },
+  "n_series": {
+   "part_numbers": 826,
+   "ever_billed": 135,
+   "in_base": 14,
+   "in_base_eur": 660,
+   "src": "paper section 12"
+  },
+  "leasing_open": {
+   "increase_at_stake_k": 65,
+   "service_billed_m": 1.48,
+   "src": "paper section 14"
+  }
+ }
+}
