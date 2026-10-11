@@ -1,0 +1,356 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Partner Intake, Phase 0 — technical specification</title><style>:root{--ink:#1d2124;--mut:#5f676e;--line:#dfe2e5;--panel:#f4f5f6;--red:#D71920;--navy:#15233C}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);font:15.5px/1.6 Arial,Helvetica,sans-serif}
+header{background:#24282C;color:#fff;padding:36px 28px}header .in{max-width:1180px;margin:0 auto}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#ff6b70;font-weight:700}
+h1{font-size:34px;margin:8px 0}header p{margin:0;color:#c9ced3;max-width:800px}
+.layout{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:240px minmax(0,1fr);gap:36px;padding:24px 28px}.layout>*{min-width:0}
+nav{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;font-size:13px}
+nav a{display:block;color:var(--ink);text-decoration:none;padding:4px 0 4px 10px;border-left:2px solid var(--line)}nav a:hover{color:var(--red);border-left-color:var(--red)}
+main h2{font-size:23px;margin:42px 0 10px;padding-top:10px;border-top:2px solid var(--ink)}main h3{font-size:17px;color:var(--navy)}
+main p,main li{max-width:860px}code{font-size:12.5px;background:var(--panel);padding:1px 5px;border-radius:4px}
+pre{background:var(--panel);padding:12px;border-radius:8px;overflow-x:auto;font-size:12.5px}pre code{background:none;padding:0}
+.tablewrap{overflow-x:auto;margin:14px 0 20px;border:1px solid var(--line);border-radius:8px}table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:7px 9px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}th{background:var(--panel)}tr:last-child td{border-bottom:none}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;border-radius:4px;padding:0 5px;color:#fff;line-height:16px}.tM{background:#2e7d4f}.tI{background:#4f6d8f}.tA{background:#b26a00}.tP{background:#6b4fa0}.tU{background:#8a9096}
+@media screen and (max-width:900px){.layout{grid-template-columns:1fr;padding:16px}nav{position:static;max-height:none}}
+@media print{nav{display:none}.layout{grid-template-columns:1fr;padding:0}header{background:#fff;color:#000;padding:20px 0}header p{color:#333}main h2{break-after:avoid}.tablewrap,pre{break-inside:avoid}body{font-size:11.5px}}</style></head><body>
+<header><div class="in"><div class="eyebrow">Internal draft v1 · 9 October 2026</div><h1>Partner Intake, Phase 0 — technical specification</h1><p>Technical white paper for the developer and for Cursor. The build brief for the early, file-based part of the Excellence Partner Program.</p></div></header>
+<div class="layout"><nav><a href="#1-purpose-and-scope">1. Purpose and scope</a><a href="#2-principles">2. Principles</a><a href="#3-architecture">3. Architecture</a><a href="#4-data-standard-the-contract-p">4. Data standard (the contract) [P]</a><a href="#5-validation-rules">5. Validation rules</a><a href="#6-file-lifecycle-and-the-ledger">6. File lifecycle and the ledger</a><a href="#7-receipts">7. Receipts</a><a href="#8-reconciliation-with-billing">8. Reconciliation with billing</a><a href="#9-quarterly-eligibility">9. Quarterly eligibility</a><a href="#10-discount-proposal-no-posting">10. Discount proposal (no posting)</a><a href="#11-monthly-return">11. Monthly return</a><a href="#12-monitoring-internal">12. Monitoring (internal)</a><a href="#13-dealer-identity">13. Dealer identity</a><a href="#14-security-and-privacy">14. Security and privacy</a><a href="#15-test-strategy">15. Test strategy</a><a href="#16-build-order">16. Build order</a><a href="#17-open-decisions-u">17. Open decisions [U]</a><a href="#18-glossary">18. Glossary</a></nav><main><p><strong>Technical white paper for the developer and for Cursor</strong> · internal draft v1 · 9 October 2026
+Companion to <code>Excellence_Partner_White_Paper_2026-10-09</code> (the case) and <code>ROI model</code>. This document is the build brief: what to make, in what shape, with which rules, and how to know it works.</p>
+<hr />
+<h2 id="1-purpose-and-scope">1. Purpose and scope</h2>
+<p>The Excellence Partner Program starts on 1 April 2027 (FY2028). It needs five things to exist by then, without a server, a sign-in or a platform: a way to <strong>receive</strong> monthly sales-to-dealer files, a <strong>validator</strong> that checks them against the data standard, a <strong>ledger</strong> that remembers what arrived and which version is active, an <strong>eligibility job</strong> that applies the gates every quarter, and a <strong>monthly return</strong> that goes back to each distributor. This is Phase 0. Everything runs on files, scripts and the existing PRISM data layer.</p>
+<p><strong>Out of scope for Phase 0:</strong> a web upload, sign-in, a hosted service, SAP posting (the job produces a proposal file; people post it), anything that handles prices, customer names or chassis numbers, and the value of air freight. <strong>Never:</strong> send mail, ship, deploy or overwrite a versioned deliverable without an explicit instruction (workspace rule <code>isze-no-ship-without-ok</code>).</p>
+<p>Evidence labels used below: <span class="tag tM">M</span> measured in the workspace, <span class="tag tP">P</span> proposal, <span class="tag tU">U</span> unknown and to be decided.</p>
+<h2 id="2-principles">2. Principles</h2>
+<ol>
+<li><strong>Reuse, do not rebuild.</strong> The canonical long format, the adapters <code>01_data/91_build/normalize_dealer_sellout_*.py</code> and the loader <code>03_analytics/Isuzu/prism/modules/dealer_sales_loader.py</code> already exist <span class="tag tM">M</span>. New code produces files in that format and calls those loaders.</li>
+<li><strong>Raw is immutable.</strong> A received file is never edited. Corrections arrive as a new version.</li>
+<li><strong>Absence is a source gap, never weak sales.</strong> The validator and every report say so.</li>
+<li><strong>Price-free by design.</strong> A file that carries prices is rejected, not trimmed.</li>
+<li><strong>Every state change is logged,</strong> with who, when, what and why.</li>
+<li><strong>Plain language to distributors.</strong> Receipts and returns are shared documents: roles not names, "sales to dealer", no internal nicknames.</li>
+<li><strong>Fiscal years.</strong> FY2028 starts 1 April 2027.</li>
+</ol>
+<h2 id="3-architecture">3. Architecture</h2>
+<pre><code>distributor ──► 01_data/90_INBOX/partner_intake/&lt;DB&gt;/            (drop; unsorted)
+                    │  intake.py: identify, hash, copy
+                    ▼
+01_data/12_raw/dealer_sales/&lt;DB&gt;/&lt;period&gt;/&lt;file&gt;__v&lt;n&gt;           (immutable raw)
+                    │  validator: rules V001…V018 → receipt
+                    ▼
+01_data/00_derived/partner_intake/ledger.parquet                 (state of every file)
+01_data/00_derived/partner_intake/receipts/&lt;DB&gt;/&lt;period&gt;_v&lt;n&gt;.json|.md
+                    │  accept: pass → normalise via adapter
+                    ▼
+01_data/00_derived/dealer_sellout_long_&lt;DB&gt;_CY&lt;yyyy&gt;.csv         (canonical long; existing)
+                    │  reconcile.py / eligibility.py / returns.py / monitor.py
+                    ▼
+01_data/00_derived/partner_intake/eligibility_&lt;FYQ&gt;.csv, discount_proposal_&lt;FYQ&gt;.csv
+09_meetings/…/returns/&lt;DB&gt;/&lt;period&gt;.html   (draft, not shipped)
+</code></pre>
+<p>Code lives in <code>04_tools/partner_intake/</code> (package, CLI, tests). Configuration lives in <code>04_tools/partner_intake/config/partner_program.yaml</code>. Folder names follow <code>paths.yaml</code>; use <code>04_tools/_shared/paths.py</code>, never hard-coded drive paths.</p>
+<h2 id="4-data-standard-the-contract-p">4. Data standard (the contract) [P]</h2>
+<p>One file per distributor per calendar month. CSV (UTF-8) or Excel (first sheet is data; an optional sheet <code>control</code> carries the coverage declaration). One row per dealer, site, part and period.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Required</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>distributor_id</code></td>
+<td>yes</td>
+<td>ISZE distributor code (PRISM <code>distributor_code</code>); must equal the drop folder</td>
+</tr>
+<tr>
+<td><code>dealer_id</code></td>
+<td>yes from quarter 3, else target</td>
+<td>Stable code; never reused; <code>ALL</code> allowed only while per-dealer detail is not yet a condition</td>
+</tr>
+<tr>
+<td><code>site_id</code></td>
+<td>no</td>
+<td>Where a dealer has several sites</td>
+</tr>
+<tr>
+<td><code>part_number</code></td>
+<td>yes</td>
+<td>Isuzu part number as sold; normalised to 10 digits where numeric</td>
+</tr>
+<tr>
+<td><code>quantity</code></td>
+<td>yes</td>
+<td>Units; negative for returns and corrections</td>
+</tr>
+<tr>
+<td><code>period</code></td>
+<td>yes</td>
+<td><code>YYYY-MM</code>; equals the file's reporting month</td>
+</tr>
+<tr>
+<td><code>transaction_date</code></td>
+<td>no</td>
+<td>ISO date; must fall inside <code>period</code></td>
+</tr>
+<tr>
+<td><code>transaction_type</code></td>
+<td>no</td>
+<td><code>sale</code>, <code>return</code>, <code>credit</code>, <code>correction</code></td>
+</tr>
+<tr>
+<td><code>record_id</code></td>
+<td>no</td>
+<td>Stable line id, for matching corrections</td>
+</tr>
+<tr>
+<td><code>file_version</code></td>
+<td>yes</td>
+<td>Integer; a resubmission increments</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Control record</strong> (<code>&lt;file&gt;.control.json</code> or sheet <code>control</code>): <code>dealer_sites_included</code> (int), <code>known_exclusions</code> (text), <code>first_date</code>, <code>last_date</code>, <code>returns_included</code> (bool), <code>full_range</code> (bool), <code>changes_affecting_comparison</code> (text). A file without a complete control record fails V010.</p>
+<p><strong>Forbidden content:</strong> any column or value that is a selling price, margin, customer name, VIN or chassis number, person name or workshop order. Detected by name (V003) and by pattern (V018).</p>
+<h2 id="5-validation-rules">5. Validation rules</h2>
+<p>Severity: <strong>E</strong> error (file not accepted), <strong>W</strong> warning (accepted, flagged), <strong>I</strong> information.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Sev</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V001</td>
+<td>E</td>
+<td>File readable, UTF-8 (CSV) or valid workbook; at least one data row</td>
+</tr>
+<tr>
+<td>V002</td>
+<td>E</td>
+<td>All required columns present (header match is case-insensitive; the alias table in config maps known native names)</td>
+</tr>
+<tr>
+<td>V003</td>
+<td>E</td>
+<td>No forbidden column (price, prijs, preis, prix, margin, marge, customer, klant, vin, chassis, …); list in config</td>
+</tr>
+<tr>
+<td>V004</td>
+<td>E</td>
+<td><code>period</code> is <code>YYYY-MM</code>, one value per file, equal to the month in the file name or control record</td>
+</tr>
+<tr>
+<td>V005</td>
+<td>E / W</td>
+<td>Invalid part numbers: share above 5% is E, any share above 0 is W; invalid rows are listed with row numbers; accessory or alphanumeric codes go to a sidecar and stay visible (as the Romania adapter does)</td>
+</tr>
+<tr>
+<td>V006</td>
+<td>E</td>
+<td><code>quantity</code> numeric on every row. Zero rows W. Negative without <code>transaction_type</code> return/credit/correction W</td>
+</tr>
+<tr>
+<td>V007</td>
+<td>E</td>
+<td>No exact duplicate key (<code>dealer_id</code>, <code>site_id</code>, <code>part_number</code>, <code>period</code>, <code>record_id</code>)</td>
+</tr>
+<tr>
+<td>V008</td>
+<td>W / E</td>
+<td><code>dealer_id</code> not in the distributor's dealer list: share above 0 W, above 10% E</td>
+</tr>
+<tr>
+<td>V009</td>
+<td>E from Q3</td>
+<td>A current dealer list exists (updated in the last 12 months)</td>
+</tr>
+<tr>
+<td>V010</td>
+<td>E</td>
+<td>Control record present and complete</td>
+</tr>
+<tr>
+<td>V011</td>
+<td>I</td>
+<td>Timeliness: received within 10 working days after month-end (calendar of working days in config); result <code>ON_TIME</code> or <code>LATE</code> with days late</td>
+</tr>
+<tr>
+<td>V012</td>
+<td>W</td>
+<td>Total quantity deviates more than 50% from the mean of the previous three accepted months</td>
+</tr>
+<tr>
+<td>V013</td>
+<td>W</td>
+<td>Number of active dealers drops more than 20% against the previous month</td>
+</tr>
+<tr>
+<td>V014</td>
+<td>I / E</td>
+<td>Per-dealer detail present (<code>dealer_id</code> is not blank or <code>ALL</code>): I until quarter 3, E from quarter 3</td>
+</tr>
+<tr>
+<td>V015</td>
+<td>W</td>
+<td><code>transaction_date</code> outside <code>period</code></td>
+</tr>
+<tr>
+<td>V016</td>
+<td>E</td>
+<td><code>distributor_id</code> equals the drop folder; UTI and UMI are never merged; IUK and ITUK never merged</td>
+</tr>
+<tr>
+<td>V017</td>
+<td>W</td>
+<td>Mixed encodings, trailing blanks, leading-zero loss in <code>part_number</code> (the raw value is kept in <code>part_number_raw</code>)</td>
+</tr>
+<tr>
+<td>V018</td>
+<td>E</td>
+<td>Pattern check for hidden price columns: numeric column with currency-like decimals whose name is unknown, flagged for review and held</td>
+</tr>
+</tbody>
+</table></div>
+<p>Thresholds live in <code>partner_program.yaml</code>, not in code.</p>
+<h2 id="6-file-lifecycle-and-the-ledger">6. File lifecycle and the ledger</h2>
+<p>States: <code>RECEIVED → VALIDATED_PASS | VALIDATED_FAIL → ACCEPTED → SUPERSEDED</code>.</p>
+<ul>
+<li>A new version of the same distributor and period supersedes the previous accepted version. The original stays on disk and in the ledger; downstream results that changed are listed in the receipt.</li>
+<li>A <code>VALIDATED_FAIL</code> file never reaches the canonical long format.</li>
+<li>Identical re-imports (same SHA-256) add no activity and do not create a version.</li>
+<li>Annual control rows are never added to monthly rows, and national controls are never added to dealer detail (the loader already refuses; keep it that way).</li>
+</ul>
+<p>Ledger columns (parquet): <code>file_id</code>, <code>distributor_code</code>, <code>period</code>, <code>version</code>, <code>sha256</code>, <code>received_at</code>, <code>state</code>, <code>ontime</code>, <code>days_late</code>, <code>n_rows</code>, <code>n_dealers</code>, <code>errors</code>, <code>warnings</code>, <code>accepted_at</code>, <code>superseded_by</code>, <code>source_path</code>, <code>canonical_path</code>, <code>note</code>.</p>
+<h2 id="7-receipts">7. Receipts</h2>
+<p>Every file gets a receipt, machine-readable (JSON) and readable (Markdown). The receipt is a <strong>shared</strong> document: it names roles, not people.</p>
+<p>Content: file name and version, period, received date, <code>ON_TIME</code>/<code>LATE</code>, result (<code>ACCEPTED</code>, <code>ACCEPTED WITH WARNINGS</code>, <code>NOT ACCEPTED</code>), counts (rows, dealers, parts), each finding with rule id, plain-language message, row numbers, and <strong>what to correct and how to resubmit</strong>; and a coverage summary (what the declaration says, and what ISZE does not know).</p>
+<h2 id="8-reconciliation-with-billing">8. Reconciliation with billing</h2>
+<p>Monthly, per distributor: sales-to-dealer quantity valued at ISZE's billed average price per part against ISZE billing for the same months, with <strong>warranty shown apart</strong> as the BI framework requires. Output: three lines (we billed, warranty, sales to dealer) and the stock movement after warranty, never read as lost sales. Tolerance configurable. Use <code>03_analytics/Isuzu/prism/scripts/build_billed_vs_std_warranty_fy.py</code> as the pattern <span class="tag tM">M</span>; parquet only, never raw billing extracts.</p>
+<h2 id="9-quarterly-eligibility">9. Quarterly eligibility</h2>
+<p>For each distributor in scope and each fiscal quarter, evaluate the gates and write <code>eligibility_&lt;FY&gt;Q&lt;n&gt;.csv</code> plus a Markdown evidence file.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Test</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G1 Sales to dealer on time</td>
+<td>All three monthly files of the quarter accepted and <code>ON_TIME</code> (a single <code>LATE</code> file of up to 5 days is tolerated once per year [P])</td>
+</tr>
+<tr>
+<td>G2 Quality</td>
+<td>No unresolved error; warning rate within threshold</td>
+</tr>
+<tr>
+<td>G3 Dealer detail</td>
+<td><code>dealer_id</code> populated on at least the configured share of rows (from quarter 3 of the programme)</td>
+</tr>
+<tr>
+<td>G4 Dealer list</td>
+<td>Current within 12 months</td>
+</tr>
+<tr>
+<td>G5 KPIs</td>
+<td>Monthly KPI file received for all three months (the KPI intake is a separate source; this gate reads its status)</td>
+</tr>
+<tr>
+<td>G6 IDS</td>
+<td>If an IDS round was planned for the distributor: at least 70% of its dealers assessed. If none was planned: <code>NOT_APPLICABLE</code>, never a failure</td>
+</tr>
+<tr>
+<td>G7 Training</td>
+<td>From April 2027: mandatory trainings completed by the named staff (register read from a CSV maintained by ISZE)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Result per distributor: <code>ELIGIBLE</code>, <code>NOT_ELIGIBLE</code> (with the failing gates), <code>MANUAL_REVIEW</code>, or <code>EXEMPT</code> with a written reason. A manual override file (<code>overrides.csv</code>: distributor, quarter, decision, reason, approver, date) is read last and is the only way to change a result. Nothing is posted anywhere.</p>
+<h2 id="10-discount-proposal-no-posting">10. Discount proposal (no posting)</h2>
+<p>For each <code>ELIGIBLE</code> distributor, compute the proposed credit for the quarter from billing parquet: discountable base = stock-order (SOR) lines of the quarter, warranty lines excluded <strong>[U: confirm with SAP owners]</strong>, capped at 120% of the trailing four-quarter average <span class="tag tP">P</span>. Rates and bands come from <code>partner_program.yaml</code>. The default design is "hybrid small": flat 0.5% (level 1) and 1.0% (level 2) on the base, plus a progressive bonus on stock-order growth against the same quarter last year: level 1 at 2%, 3%, 5% and level 2 at 4%, 6%, 10% for growth of 0–5%, 5–10% and above 10%, each rate on the stock orders inside its band <span class="tag tP">P</span>. Output <code>discount_proposal_&lt;FY&gt;Q&lt;n&gt;.csv</code> with the arithmetic shown per distributor. A credit note, not an invoice condition, is the recommended route <strong>[P, decision open]</strong>.</p>
+<h2 id="11-monthly-return">11. Monthly return</h2>
+<p>Per distributor, per month, a self-contained HTML page in the format of the existing one-pagers (<code>Isuzu Universe/02_Atlas/DISTRIBUTOR_ONE_PAGERS_2026-09/</code>): what ISZE billed and what was sold on, genuine and BVP mix in euros, maintenance-parts coverage, IDS position, and per dealer once detail exists. Own figures beside an anonymous network average. <strong>No ranking</strong> of distributors or dealers. No other distributor is named. Draft only; people send it.</p>
+<h2 id="12-monitoring-internal">12. Monitoring (internal)</h2>
+<p>One internal page: files due, received, late, invalid; share of distributors with per-dealer detail; quarter-end share of stock orders (31.8% in FY2026 against 25% if even <span class="tag tM">M</span>) as the forward-buying alarm; order-type shift (stock, rush, VOR) per distributor and quarter.</p>
+<h2 id="13-dealer-identity">13. Dealer identity</h2>
+<p>A table <code>dealer_identity</code> with history: <code>dealer_id</code>, <code>distributor_code</code>, <code>name_in_sales_file</code>, <code>name_in_ids</code>, <code>sap_customer_no</code>, <code>site_id</code>, <code>valid_from</code>, <code>valid_to</code>, <code>status</code>, <code>match_method</code>, <code>match_score</code>, <code>approved_by</code>. Matching is proposed, never auto-approved. The ITUK 2025 file (64 dealer names) against the IDS list (44 names) is the first test: 16 match exactly, about 34 overlap strongly, about 20 have no plausible match <span class="tag tM">M</span>.</p>
+<h2 id="14-security-and-privacy">14. Security and privacy</h2>
+<p>Price-free and free of customer names, chassis numbers and personal data by construction. Dealer names are company names. Files are still commercially sensitive: encrypt in transit and at rest where the storage allows, keep the access list short, log access, never copy files into shared repositories, never commit raw files (<code>.gitignore</code> the drop and raw folders), never paste file contents into chat. Each distributor sees only its own files and returns.</p>
+<h2 id="15-test-strategy">15. Test strategy</h2>
+<ul>
+<li><strong>Synthetic fixtures only</strong> in the repository: small generated CSV/XLSX per rule (one passing file and one failing file for each rule), plus a three-distributor, twelve-month data set with known totals.</li>
+<li><strong>Golden receipts:</strong> the exact receipt text for a failing fixture is a test.</li>
+<li><strong>Property tests:</strong> re-importing the same file twice never changes the ledger; superseding keeps the original.</li>
+<li><strong>Reconciliation test:</strong> a fixture where billing and sales to dealer are known; the three lines and the stock movement must match to the euro.</li>
+<li><strong>No real distributor data in tests.</strong> A test that needs real data is skipped unless an environment variable points at the authorised folder.</li>
+<li>Run the existing PRISM suite before and after; it must stay green.</li>
+</ul>
+<h2 id="16-build-order">16. Build order</h2>
+<ol>
+<li>Schema, rules, validator and receipts (prompt P01).</li>
+<li>Intake, ledger and versioning (P02).</li>
+<li>Feed status ledger and register refresh (P03).</li>
+<li>Reconciliation to billing (P04).</li>
+<li>Eligibility and discount proposal (P05).</li>
+<li>Monthly return (P06).</li>
+<li>Monitoring page (P07).</li>
+<li>Dealer identity (P08).</li>
+</ol>
+<p>Items 1–3 are needed for the January–March 2027 no-discount trial; items 4–6 for the first quarterly check at the end of June 2027.</p>
+<h2 id="17-open-decisions-u">17. Open decisions [U]</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Decision</th>
+<th>Needed from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Credit note or invoice condition</td>
+<td>Finance</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Is warranty inside stock-order lines, and is it excluded from the base</td>
+<td>SAP owners</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Meaning of order type PRD (11.6% of FY2026 billing)</td>
+<td>SAP owners</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Storage for the drop (shared folder, SFTP, other) and who holds the access list</td>
+<td>IT</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Which distributors already send files and in what shape; update the register</td>
+<td>Sales review team</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Where the KPI file lands and in what format (gate G5)</td>
+<td>Jerome</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Training register format and owner (gate G7)</td>
+<td>IMG / ISZE</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="18-glossary">18. Glossary</h2>
+<p>Sales to dealer: what a distributor sells on to its dealers (part, quantity, no prices). Stock order (SOR): the replenishment order type. Canonical long: the shared table format in <code>DEALER_SELL_OUT.md</code>. Receipt: the answer sent for every file. Gate: a yes/no condition for level 1. FY2028: 1 April 2027 – 31 March 2028.</p></main></div></body></html>

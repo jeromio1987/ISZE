@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which trial feeds have an accepted file?</title>
+<style>
+  :root {
+    --navy: #15233c;
+    --terracotta: #c0552d;
+    --paper: #f7f4ee;
+    --ink: #222;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", system-ui, sans-serif;
+    line-height: 1.45;
+  }
+  header {
+    background: var(--navy);
+    color: var(--paper);
+    padding: 28px 40px 22px;
+  }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: normal;
+    font-size: 32px;
+    line-height: 1.2;
+    margin: 0 0 8px;
+    color: var(--paper);
+  }
+  header p {
+    margin: 0;
+    color: var(--paper);
+    max-width: 40rem;
+  }
+  .banner {
+    margin: 24px 40px 0;
+    padding: 12px 16px;
+    background: #f3e6df;
+    color: var(--ink);
+    border-left: 4px solid var(--terracotta);
+  }
+  table {
+    width: calc(100% - 80px);
+    margin: 20px 40px 40px;
+    border-collapse: collapse;
+    background: var(--paper);
+  }
+  th {
+    background: var(--navy);
+    color: var(--paper);
+    text-align: left;
+    font-weight: 600;
+    padding: 10px 12px;
+  }
+  td {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 10px 12px;
+    border-bottom: 1px solid #e4dfd6;
+    vertical-align: top;
+  }
+  td.status { font-weight: 600; }
+  td.status.accepted { color: var(--navy); }
+  td.status.not-accepted { color: var(--terracotta); }
+  td.status.no-file { color: var(--ink); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Which trial feeds have an accepted file?</h1>
+  <p>Internal trial. One row per made-up distributor code. File acceptance only.</p>
+</header>
+<div class="banner">made-up rows, not live feeds</div>
+<table>
+  <thead>
+    <tr>
+      <th>Distributor</th>
+      <th>Latest period</th>
+      <th>Status</th>
+      <th>Accepted months in a row</th>
+      <th>Last receipt outcome</th>
+    </tr>
+  </thead>
+  <tbody>
+<tr><td>DEMO-A</td><td>2026-09</td><td class="status accepted">accepted</td><td>3</td><td>Accepted. The file was kept.</td></tr>
+<tr><td>DEMO-B</td><td>2026-09</td><td class="status not-accepted">not accepted</td><td>0</td><td>Not accepted. Remove the price column and resend.</td></tr>
+<tr><td>DEMO-C</td><td>—</td><td class="status no-file">no file yet</td><td>0</td><td>No file yet, so there is no receipt.</td></tr>
+  </tbody>
+</table>
+<script type="application/json" id="payload">[{"distributor": "DEMO-A", "latest_period": "2026-09", "status": "accepted", "accepted_months_in_a_row": 3, "last_receipt_outcome": "Accepted. The file was kept."}, {"distributor": "DEMO-B", "latest_period": "2026-09", "status": "not accepted", "accepted_months_in_a_row": 0, "last_receipt_outcome": "Not accepted. Remove the price column and resend."}, {"distributor": "DEMO-C", "latest_period": "—", "status": "no file yet", "accepted_months_in_a_row": 0, "last_receipt_outcome": "No file yet, so there is no receipt."}]</script>
+</body>
+</html>

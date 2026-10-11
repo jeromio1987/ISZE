@@ -1,0 +1,1407 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Excellence Partner Program</title><style>
+:root{--bg:#ffffff;--panel:#f4f5f6;--ink:#1d2124;--muted:#5f676e;--line:#dfe2e5;--red:#D71920;--navy:#15233C;
+--terra:#C0552D;--char:#24282C;--ok:#2e7d4f;--warn:#b26a00;--bar2:#8a9096;--bar3:#4f6d8f;--hdr-ink:#ffffff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#16191c;--panel:#1f2327;--ink:#e8eaec;
+--muted:#9aa3ab;--line:#30363b;--char:#0f1113;--ok:#5fbf86;--warn:#e0a040;--bar2:#6f777e;--bar3:#7f9dc0}}
+:root[data-theme="dark"]{--bg:#16191c;--panel:#1f2327;--ink:#e8eaec;--muted:#9aa3ab;--line:#30363b;--char:#0f1113;
+--ok:#5fbf86;--warn:#e0a040;--bar2:#6f777e;--bar3:#7f9dc0}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Arial,Helvetica,sans-serif}
+header.top{background:var(--char);color:var(--hdr-ink);padding:28px 24px 22px}
+header.top .wrap{max-width:1240px;margin:0 auto}
+header.top .eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#ff6b70;font-weight:700}
+header.top h1{margin:6px 0 6px;font-size:30px;line-height:1.2}
+header.top p{margin:0;color:#c9ced3;max-width:860px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;max-width:1240px;margin:18px auto 0}
+.kpi{background:#2f343a;border-radius:8px;padding:12px 14px}
+.kpi b{display:block;font-size:24px;color:#fff}
+.kpi span{font-size:12.5px;color:#c9ced3}
+.layout{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:270px minmax(0,1fr);gap:32px;padding:24px}
+.layout>*{min-width:0}
+nav.toc{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;font-size:13.5px}
+nav.toc summary{cursor:pointer;font-weight:700;font-size:13px;margin-bottom:4px}
+nav.toc h4{margin:14px 0 6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--red)}
+nav.toc a{display:block;color:var(--ink);text-decoration:none;padding:3px 0 3px 10px;border-left:2px solid var(--line)}
+nav.toc a:hover{border-left-color:var(--red);color:var(--red)}
+.themebtn{margin-top:16px;font:inherit;font-size:12.5px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:6px 10px;cursor:pointer}
+main section.doc{margin-bottom:56px}
+.partlabel{display:inline-block;background:var(--red);color:#fff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:4px}
+main h2{font-size:22px;margin:36px 0 10px;padding-top:6px;border-top:1px solid var(--line)}
+main h3{font-size:17px;margin:24px 0 8px;color:var(--navy)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) main h3{color:#9fb6d8}}
+:root[data-theme="dark"] main h3{color:#9fb6d8}
+main p,main li{max-width:880px}
+main code{font-size:12.5px;background:var(--panel);padding:1px 5px;border-radius:4px;word-break:break-all}
+main hr{display:none}
+.tablewrap{overflow-x:auto;margin:12px 0 18px;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--panel);font-weight:700}
+tr:last-child td{border-bottom:none}
+td:has(> strong:only-child){}
+figure.chart{margin:16px 0 22px;padding:16px 18px;background:var(--panel);border-radius:10px;max-width:880px}
+figcaption{margin-bottom:12px;font-size:14px}
+.muted{color:var(--muted)}
+.source{font-size:12px;color:var(--muted);margin:10px 0 0}
+.hb{position:relative}
+.hb-row{display:grid;grid-template-columns:200px minmax(0,1fr);gap:10px;align-items:center;margin:5px 0}
+.hb-label{font-size:13px;text-align:right}
+.hb-track{position:relative;height:20px;display:flex;align-items:center}
+.hb-bar{height:16px;border-radius:3px;background:var(--bar2);min-width:2px}
+.hb-bar.pass{background:var(--ok)}.hb-bar.fail{background:var(--bar2)}
+.hb-bar.c1{background:var(--red)}.hb-bar.c2{background:var(--terra)}.hb-bar.c3{background:var(--bar3)}
+.hb-val{margin-left:5px;padding:0 3px;font-size:12.5px;white-space:nowrap;position:relative;z-index:3;background:var(--panel);border-radius:3px}
+.hb-row{position:relative;z-index:1}.hb-threshold{z-index:2}.hb.cost .hb-band{z-index:0}
+.hb-threshold{position:absolute;top:0;bottom:0;left:calc(210px + (100% - 210px) * var(--thr) / 100);border-left:2px dashed var(--red);pointer-events:none}
+.hb-threshold span{position:absolute;top:-18px;left:-14px;font-size:11px;color:var(--red);font-weight:700}
+.hb.cost .hb-band{position:absolute;top:0;bottom:0;left:calc(210px + (100% - 210px) * var(--bl) / 100);width:calc((100% - 210px) * var(--bw) / 100);
+background:repeating-linear-gradient(45deg,rgba(215,25,32,.14) 0 6px,transparent 6px 12px);border-left:1px solid rgba(215,25,32,.5);border-right:1px solid rgba(215,25,32,.5)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:12.5px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legend i.c1{background:var(--red)}.legend i.c2{background:var(--terra)}.legend i.c3{background:var(--bar3)}
+.cov-row{display:grid;grid-template-columns:minmax(0,1.6fr) 80px 170px minmax(0,1.2fr);gap:10px;align-items:center;padding:5px 0;border-bottom:1px solid var(--line);font-size:13px}
+.cov-row:last-child{border-bottom:none}
+.cov-kb{font-size:11.5px;color:var(--muted)}
+.cov-pill{font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;text-align:center}
+.cov-pill.dealer{background:var(--ok);color:#fff}.cov-pill.netwerk{background:var(--warn);color:#fff}.cov-pill.geen{background:var(--line);color:var(--ink)}
+footer{max-width:1240px;margin:0 auto;padding:0 24px 40px;font-size:12px;color:var(--muted)}
+@media (max-width:900px){.layout{grid-template-columns:1fr;padding:16px}nav.toc{position:static;max-height:none}
+.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}header.top{padding:22px 16px}header.top h1{font-size:24px}
+.hb-row{grid-template-columns:110px minmax(0,1fr)}.hb-label{font-size:12px}
+.hb-threshold{left:calc(120px + (100% - 120px) * var(--thr) / 100)}
+.hb.cost .hb-band{left:calc(120px + (100% - 120px) * var(--bl) / 100);width:calc((100% - 120px) * var(--bw) / 100)}
+.cov-row{grid-template-columns:minmax(0,1fr) auto;}.cov-kb,.cov-note{grid-column:1 / -1}}
+@media print{nav.toc,.themebtn{display:none}.layout{grid-template-columns:1fr}}
+</style></head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="eyebrow">Intern · draft · 9 oktober 2026</div>
+  <h1>Isuzu Excellence Partner Program — analyse en uitwerking</h1>
+  <p>Het voorstel getoetst aan de data in de workspace, bijgesteld na de antwoorden van 9 oktober, en hoe het samen met Isuzu Universe kan werken. Bedragen per jaar, op stockorders FY2026 (1 april 2025 – 31 maart 2026), zonder de CIS-markten.</p>
+  <div class="kpis"><div class="kpi"><b>€335k</b><span>niveau 1, realistisch jaar 1</span></div><div class="kpi"><b>€560k</b><span>niveau 1, als alle 19 meedoen</span></div><div class="kpi"><b>€1,12M</b><span>niveau 2, als alle 19 het halen</span></div><div class="kpi"><b>1 van 7</b><span>distributeurs met sales to dealer levert per dealer</span></div></div>
+</div></header>
+<div class="layout">
+  <nav class="toc" aria-label="Inhoud"><details id="tocd" open><summary>Inhoud</summary><h4><a href="#analyse" style="border:none;padding:0;color:inherit">Deel 1 · Het programma</a></h4><a href="#analyse-0-oordeel-in-het-kort-bijgesteld-9-oktober-na-feedback">0. Oordeel in het kort (bijgesteld 9 oktober, na feedback)</a><a href="#analyse-1-wat-het-deck-voorstelt">1. Wat het deck voorstelt</a><a href="#analyse-2-wat-sterk-is">2. Wat sterk is</a><a href="#analyse-3-toetsing-aan-de-data-kan-elk-criterium-vandaag-gemeten-wor">3. Toetsing aan de data: kan elk criterium vandaag gemeten worden?</a><a href="#analyse-4-wat-de-korting-kost">4. Wat de korting kost</a><a href="#analyse-5-zwaktes-in-het-ontwerp-van-de-scorekaart">5. Zwaktes in het ontwerp van de scorekaart</a><a href="#analyse-6-hoe-het-verder-uit-te-werken">6. Hoe het verder uit te werken</a><a href="#analyse-7-open-vragen">7. Open vragen</a><a href="#analyse-8-kleine-correcties-aan-het-deck-als-het-gedeeld-wordt">8. Kleine correcties aan het deck (als het gedeeld wordt)</a><a href="#analyse-bronnen">Bronnen</a><h4><a href="#synergie" style="border:none;padding:0;color:inherit">Deel 2 · Samen met Universe</a></h4><a href="#synergie-0-mijn-advies-in-het-kort">0. Mijn advies in het kort</a><a href="#synergie-1-wat-ik-heb-doorgenomen">1. Wat ik heb doorgenomen</a><a href="#synergie-2-twee-projecten-elk-met-de-zwakte-die-het-andere-oplost">2. Twee projecten, elk met de zwakte die het andere oplost</a><a href="#synergie-3-waar-we-vandaag-staan-met-de-data">3. Waar we vandaag staan met de data</a><a href="#synergie-4-welke-data-het-belangrijkst-is-en-hoe-ze-tot-meer-omzet-le">4. Welke data het belangrijkst is — en hoe ze tot meer omzet leidt</a><a href="#synergie-5-het-programma-als-n-geheel">5. Het programma als één geheel</a><a href="#synergie-6-waar-de-twee-botsen-en-hoe-je-dat-oplost">6. Waar de twee botsen, en hoe je dat oplost</a><a href="#synergie-7-kosten-naast-elkaar">7. Kosten naast elkaar</a><a href="#synergie-8-wat-ik-nu-zou-doen">8. Wat ik nu zou doen</a><a href="#synergie-bronnen">Bronnen</a></details><button class="themebtn" id="themebtn" type="button">Donker thema</button></nav>
+  <main><section class="doc" id="analyse"><span class="partlabel">Deel 1 · Het programma</span><p><strong>Status:</strong> interne analyse, draft v2 (bijgesteld na feedback: doel = deelname) · vervolg: <code>SYNERGIE_Excellence_Partner_x_Universe_2026-10-09.md</code> · <strong>Datum:</strong> 9 oktober 2026 · <strong>Basis:</strong> deck <em>Isuzu Excellence Partner Program</em> (13 slides, voorstel, niet goedgekeurd) getoetst aan de data en documenten in deze workspace.
+<strong>Periode:</strong> fiscaal jaar. FY2026 = 1 april 2025 – 31 maart 2026. FY2027 = 1 april 2026 – 31 maart 2027.
+<strong>Cijfers:</strong> verificatierapport groen (24 sep 2026, 164 pass / 1 warn / 0 fail). Elk getal hieronder heeft een bron; indicatieve getallen staan als zodanig gemarkeerd.</p>
+<hr />
+<h2 id="analyse-0-oordeel-in-het-kort-bijgesteld-9-oktober-na-feedback">0. Oordeel in het kort (bijgesteld 9 oktober, na feedback)</h2>
+<p><strong>Bijstelling.</strong> In de eerste versie las ik de korting als een beloning voor groei. Dat is niet het doel. Het doel is <strong>meer distributeurs aan boord krijgen</strong>: data aanleveren, trainingen volgen, IDS uitvoeren, KPI's rapporteren. Distributeurs zijn onafhankelijk en voeren meerdere merken. ISZE kan als OEM wat vragen, maar weinig afdwingen. Een korting van 2,5% en 5% op stockorders is dan een redelijke hefboom: het enige wat ISZE echt kan doen, is medewerking de moeite waard maken. Dat aanvaard ik, en de rest van deze analyse is daarop bijgesteld.</p>
+<p><strong>Beslist door Jerome (9 oktober):</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Vraag</th>
+<th>Antwoord</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Waarop geldt de korting?</td>
+<td>Alleen op stockorders (SOR)</td>
+</tr>
+<tr>
+<td>Kickback?</td>
+<td>Het programma vervangt de kickback niet; het komt erbovenop</td>
+</tr>
+<tr>
+<td>Eigenaar?</td>
+<td>ISZE (parts sales) — het is ons concept; IMG ondersteunt, onder meer voor IDS</td>
+</tr>
+<tr>
+<td>Welke distributeurs?</td>
+<td>In principe allemaal; de CIS-markten (Oekraïne, Armenië, Kazachstan) mogen erbuiten vallen</td>
+</tr>
+<tr>
+<td>Budgetplafond?</td>
+<td>Nee</td>
+</tr>
+<tr>
+<td>Trainingscurriculum klaar tegen april 2027?</td>
+<td>Ja</td>
+</tr>
+</tbody>
+</table></div>
+<p>Wat dat verandert:</p>
+<ol>
+<li><strong>De lat van 85 op 100 werkt tegen het doel.</strong> Met een IDS-netwerkgemiddelde van 81% en een trainingsprogramma dat pas in april 2027 start, haalt vandaag bijna niemand 85 punten. Een programma dat iedereen aan boord wil, mag de instap niet zo hoog leggen. <strong>Voorstel: twee niveaus met elk hun eigen soort criteria</strong> (§6). Niveau 1 (−2,5%) is "aan boord": een korte checklist van medewerking die ISZE zelf kan controleren. Niveau 2 (−5%) is "excellence": medewerking plus resultaat.</li>
+<li><strong>De korting moet aan blijven staan zolang de medewerking loopt, en stoppen als die stopt.</strong> Met een jaarstatus houdt de distributeur de korting twaalf maanden, ook als de data na drie maanden stopt. Per kwartaal toetsen is het enige echte drukmiddel dat ISZE heeft (§6.2).</li>
+<li><strong>De kost blijft wat ze is, maar de vraag verandert.</strong> Zonder de CIS-markten gaat het om 19 distributeurs met €22,4M stockorders in FY2026. Als ze allemaal niveau 1 halen, kost het <strong>€560k per jaar</strong>; als ze allemaal niveau 2 halen <strong>€1,12M</strong>. Er is geen plafond, dus dit is het maximum dat ISZE moet kunnen dragen. De vraag is dan niet "verdient de korting zich terug in volume", maar "is deze medewerking €560k per jaar waard". Dat is een managementkeuze. De workspace kan de waarde van de data niet in euro uitdrukken; ik kan wel tonen wat er vandaag ontbreekt (§3).</li>
+<li><strong>De kickback blijft en het programma komt erbovenop.</strong> Voor de 9 kickback-distributeurs (UK pickup, UTI, UMI, Duitsland, Benelux, Portugal, Zweden, Noorwegen, Ierland) betekent dat: als ze meedoen, betaalt ISZE €415k (niveau 1) tot €830k (niveau 2) per jaar bovenop de kickback. Om te vermijden dat ISZE twee keer betaalt voor hetzelfde bestand, moet de data-voorwaarde van het programma duidelijk méér vragen dan wat de kickback vandaag vraagt (zie §6.3). De 10 distributeurs zonder kickback (ITUK en 9 kleinere) hebben vandaag geen enkele prikkel; daar zit de grootste winst in "meer aan boord".</li>
+</ol>
+<p>Wat blijft staan uit de eerste versie: veel criteria zijn vandaag niet meetbaar (fill rate bij PT/HU/CY, IDS bij onder meer Duitsland en Ierland), IDS is een zelfevaluatie en mag niet de toegang tot de korting bepalen, en een korting op de factuur moet in SAP apart herkenbaar zijn, anders vertekent ze de GPS- en %GM-cijfers.</p>
+<p><strong>Mijn aanbeveling nu:</strong> de korting houden zoals voorgesteld (−2,5% / −5%, alleen op stockorders), maar niveau 1 bouwen als een korte, controleerbare medewerkingschecklist met toetsing per kwartaal, waarin de verplichte trainingen vanaf april 2027 meetellen. Van januari tot maart 2027 proefdraaien met 3 à 4 distributeurs, niveau 1 starten op 1 april 2027 (begin FY2028) en niveau 2 na het eerste volle jaar.</p>
+<hr />
+<h2 id="analyse-1-wat-het-deck-voorstelt">1. Wat het deck voorstelt</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Inhoud</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Doel</td>
+<td>Van losse initiatieven naar één kwaliteitsstandaard voor het Europese distributeursnetwerk</td>
+</tr>
+<tr>
+<td>Drie dimensies</td>
+<td>Verplichte voorwaarden · prestatiecriteria tegen doelen · verbetering t.o.v. vorig jaar</td>
+</tr>
+<tr>
+<td>Zeven pijlers (100 punten)</td>
+<td>Dealer standards 20 · Parts performance 20 · Training 15 · Digitalisering 15 · Kaizen 15 · Aftersales 10 · Samenwerking &amp; rapportering 5</td>
+</tr>
+<tr>
+<td>Poorten</td>
+<td>Alle verplichte trainingen · volledige IDS-evaluatie · maandelijkse KPI/SPI-rapportering · Kaizen-plan met bewijs · geen kritieke compliance- of veiligheidsissues</td>
+</tr>
+<tr>
+<td>Niveaus</td>
+<td>&lt; 84 Development Partner · 85–94 Excellence Partner (2,5% korting op stock) · 95–100 Outstanding (5% korting op stock)</td>
+</tr>
+<tr>
+<td>Spelregels</td>
+<td>Doelen aangepast aan de markt · alleen beoordelen wat de distributeur zelf in de hand heeft · status voor één jaar</td>
+</tr>
+<tr>
+<td>Volgende stappen</td>
+<td>Criteria valideren → markt-doelen en bewijsbronnen → poorten en eigenaarschap → pilot → lancering met award</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="analyse-2-wat-sterk-is">2. Wat sterk is</h2>
+<ul>
+<li><strong>Het past in wat ISZE al wil.</strong> De MTBP-pijlers met IMG noemen letterlijk genuine-aandeel met fill rate, sales to dealer en MOS als distributeur-KPI's, R&amp;M, en een parts-trainingscurriculum met als einddoel een parts competition. Het actieplan FY2027 heeft er aparte rijen voor: IDS (rij 67–72, inclusief "Award"), DB training (23–26), parts competition (27–33), genuine share inclusief "Decide kickback (or not)" (34–51), KPI (52–53) en de jaarlijkse incentive (7–8). Het programma is de paraplu die deze rijen nog mist.</li>
+<li><strong>Poorten vóór punten.</strong> "Sterke verkoop compenseert geen ontbrekende training of standaarden" is het juiste principe; anders wint gewoon de grootste distributeur.</li>
+<li><strong>Het onderscheid met de parts competition</strong> (slide 12) is helder: een competitie beloont de winnaar, een status beloont iedereen die de lat haalt. Die twee naast elkaar houden is verstandig.</li>
+<li><strong>Eerlijkheid wordt expliciet genoemd</strong> (slide 10): markt-aangepaste doelen en het scheiden van wat de distributeur zelf in de hand heeft van wat bij ISZE, Japan of derden ligt. Dat is precies de discussie die distributeurs anders zelf zullen openen.</li>
+<li><strong>Jaarlijkse herbeoordeling</strong> voorkomt dat een status een verworven recht wordt.</li>
+</ul>
+<hr />
+<h2 id="analyse-3-toetsing-aan-de-data-kan-elk-criterium-vandaag-gemeten-wor">3. Toetsing aan de data: kan elk criterium vandaag gemeten worden?</h2>
+<h3 id="analyse-3-1-ids-de-zwaarste-pijler-is-een-zelfevaluatie">3.1 IDS — de zwaarste pijler is een zelfevaluatie</h3>
+<p>IDS 2026, gemiddelde totaalscore per distributeurnetwerk (bron: IDS 2026-rapporten, studie van 24 juli 2026, schoon: Benelux-dubbeltelling en lege MIDI-dossiers eruit). Netwerkgemiddelde <strong>81,1%</strong> over 480 gescoorde dealers.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Distributeur</th>
+<th style="text-align: right;">Dealers</th>
+<th style="text-align: right;">IDS-gemiddelde</th>
+<th style="text-align: center;">≥ 85%?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Malta (GasanZammit)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">89,3%</td>
+<td style="text-align: center;">ja</td>
+</tr>
+<tr>
+<td>Portugal</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">86,8%</td>
+<td style="text-align: center;">ja</td>
+</tr>
+<tr>
+<td>Hongarije</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">86,4%</td>
+<td style="text-align: center;">ja</td>
+</tr>
+<tr>
+<td>Isuzu Truck UK</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">83,8%</td>
+<td style="text-align: center;">nee (alleen totalen, geen detail)</td>
+</tr>
+<tr>
+<td>Noorwegen</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">82,8%</td>
+<td style="text-align: center;">nee</td>
+</tr>
+<tr>
+<td>Isuzu UK pickup</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">82,0%</td>
+<td style="text-align: center;">nee</td>
+</tr>
+<tr>
+<td>Denemarken</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">81,3%</td>
+<td style="text-align: center;">nee</td>
+</tr>
+<tr>
+<td>UMI (Israël, alleen UMI-netwerk)</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">80,1%</td>
+<td style="text-align: center;">nee</td>
+</tr>
+<tr>
+<td>Roemenië</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">80,0%</td>
+<td style="text-align: center;">nee</td>
+</tr>
+<tr>
+<td>België</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">78,6%</td>
+<td style="text-align: center;">nee</td>
+</tr>
+<tr>
+<td>Nederland</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">76,1%</td>
+<td style="text-align: center;">nee</td>
+</tr>
+<tr>
+<td>Cyprus</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">75,0%</td>
+<td style="text-align: center;">nee</td>
+</tr>
+<tr>
+<td>Griekenland (Petros)</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">73,8%</td>
+<td style="text-align: center;">nee</td>
+</tr>
+<tr>
+<td><strong>Geen IDS 2026</strong></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: center;">Duitsland, Ierland, UTI, Zweden, Finland, IJsland en de CIS-markten</td>
+</tr>
+</tbody>
+</table></div>
+<figure class="chart">
+  <figcaption><strong>IDS 2026 — gemiddelde score per distributeurnetwerk</strong><span class="muted"> · tussen haakjes: aantal dealers · lijn = drempel 85% · as begint bij 70%</span></figcaption>
+  <div class="hb" style="--thr:68.18">
+    <div class="hb-row"><div class="hb-label">Malta <span class="muted">(1)</span></div><div class="hb-track"><div class="hb-bar pass" style="width:87.7%"></div><span class="hb-val">89,3%</span></div></div><div class="hb-row"><div class="hb-label">Portugal <span class="muted">(16)</span></div><div class="hb-track"><div class="hb-bar pass" style="width:76.3%"></div><span class="hb-val">86,8%</span></div></div><div class="hb-row"><div class="hb-label">Hongarije <span class="muted">(19)</span></div><div class="hb-track"><div class="hb-bar pass" style="width:74.6%"></div><span class="hb-val">86,4%</span></div></div><div class="hb-row"><div class="hb-label">Isuzu Truck UK <span class="muted">(44)</span></div><div class="hb-track"><div class="hb-bar fail" style="width:62.9%"></div><span class="hb-val">83,8%</span></div></div><div class="hb-row"><div class="hb-label">Noorwegen <span class="muted">(38)</span></div><div class="hb-track"><div class="hb-bar fail" style="width:58.1%"></div><span class="hb-val">82,8%</span></div></div><div class="hb-row"><div class="hb-label">Isuzu UK pickup <span class="muted">(45)</span></div><div class="hb-track"><div class="hb-bar fail" style="width:54.7%"></div><span class="hb-val">82,0%</span></div></div><div class="hb-row"><div class="hb-label">Denemarken <span class="muted">(20)</span></div><div class="hb-track"><div class="hb-bar fail" style="width:51.1%"></div><span class="hb-val">81,3%</span></div></div><div class="hb-row"><div class="hb-label">UMI <span class="muted">(29)</span></div><div class="hb-track"><div class="hb-bar fail" style="width:46.0%"></div><span class="hb-val">80,1%</span></div></div><div class="hb-row"><div class="hb-label">Roemenië <span class="muted">(15)</span></div><div class="hb-track"><div class="hb-bar fail" style="width:45.5%"></div><span class="hb-val">80,0%</span></div></div><div class="hb-row"><div class="hb-label">België <span class="muted">(34)</span></div><div class="hb-track"><div class="hb-bar fail" style="width:39.2%"></div><span class="hb-val">78,6%</span></div></div><div class="hb-row"><div class="hb-label">Nederland <span class="muted">(9)</span></div><div class="hb-track"><div class="hb-bar fail" style="width:27.8%"></div><span class="hb-val">76,1%</span></div></div><div class="hb-row"><div class="hb-label">Cyprus <span class="muted">(1)</span></div><div class="hb-track"><div class="hb-bar fail" style="width:22.7%"></div><span class="hb-val">75,0%</span></div></div><div class="hb-row"><div class="hb-label">Griekenland <span class="muted">(34)</span></div><div class="hb-track"><div class="hb-bar fail" style="width:17.4%"></div><span class="hb-val">73,8%</span></div></div>
+    <div class="hb-threshold"><span>85%</span></div>
+  </div>
+  <p class="source">Bron: IDS 2026, studie 24 juli 2026. Zelfevaluatie; Isuzu Truck UK alleen totalen. Geen IDS: Duitsland, Ierland, UTI, Zweden, Finland, IJsland, CIS.</p>
+</figure>
+
+<p>Wat dit betekent:</p>
+<ul>
+<li>Met de lat van 85% halen vandaag <strong>3 distributeurs</strong> het IDS-criterium, waarvan twee met samen 2 dealers. De grote markten zitten tussen 80% en 84%.</li>
+<li><strong>Een hele reeks distributeurs zou op de poort "volledige IDS-evaluatie" meteen afvallen</strong>, waaronder Duitsland (€2,7M) en Ierland (€1,1M), simpelweg omdat IDS daar niet liep. Dat is geen prestatie van de distributeur maar van de IDS-planning.</li>
+<li><strong>IDS is zelfevaluatie.</strong> De parsing-regels in de IDS-logic-check tonen hoeveel interpretatie er al nodig is (lege cellen, "1" op een vraag van 3 punten, Franse rubrieken). Bij ITUK zijn alleen de totalen bekend. Zodra er korting aan hangt, stijgt de druk om hoog te scoren.</li>
+<li><strong>Geen aangetoond verband met parts-omzet.</strong> De correlatiescan van 10 augustus 2026 vond geen verdedigbaar verband tussen IDS en parts; de secties B–E bewegen als één factor. Portugal scoort hoog op IDS maar heeft een laag genuine-aandeel in euro (42%); Israël (UMI) idem (18%). Een hoge IDS-score zegt dus niet dat de parts-business goed draait.</li>
+<li>IDS-secties A (gebouwen), B, C (service) en E (voertuigverkoop) gaan niet over parts. Een programma van de parts-afdeling dat 20 punten plus een poort op de volledige IDS-score zet, beloont dingen buiten het eigen domein. Dat kan een bewuste keuze zijn, maar dan moet IMG mee-eigenaar zijn.</li>
+</ul>
+<h3 id="analyse-3-2-fill-rate-en-mos">3.2 Fill rate en MOS</h3>
+<p>Bron: KPI-master (eerste fill rate, gemiddelde van de beschikbare maanden).</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Distributeur</th>
+<th style="text-align: right;">Fill rate</th>
+<th style="text-align: right;">MOS (dagen)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UMI</td>
+<td style="text-align: right;">97,0%</td>
+<td style="text-align: right;">147</td>
+</tr>
+<tr>
+<td>Noorwegen</td>
+<td style="text-align: right;">95,9%</td>
+<td style="text-align: right;">98</td>
+</tr>
+<tr>
+<td>Isuzu Truck UK</td>
+<td style="text-align: right;">94,9%</td>
+<td style="text-align: right;">138</td>
+</tr>
+<tr>
+<td>Isuzu UK pickup</td>
+<td style="text-align: right;">93,8%</td>
+<td style="text-align: right;">75</td>
+</tr>
+<tr>
+<td>Roemenië</td>
+<td style="text-align: right;">88,5%</td>
+<td style="text-align: right;">120</td>
+</tr>
+<tr>
+<td>Malta</td>
+<td style="text-align: right;">87,7%</td>
+<td style="text-align: right;">116</td>
+</tr>
+<tr>
+<td>België (IBX)</td>
+<td style="text-align: right;">84,5%</td>
+<td style="text-align: right;">47</td>
+</tr>
+<tr>
+<td>Griekenland (Petros)</td>
+<td style="text-align: right;">60,0%</td>
+<td style="text-align: right;">60</td>
+</tr>
+<tr>
+<td>Portugal, Hongarije, Cyprus</td>
+<td style="text-align: right;">geen rij</td>
+<td style="text-align: right;">geen rij</td>
+</tr>
+</tbody>
+</table></div>
+<p>Twee problemen. Ten eerste ontbreekt de data juist bij twee van de drie distributeurs die op IDS wel slagen. Ten tweede hangt fill rate deels af van ISZE zelf: als Japan of Thailand niet levert, daalt de fill rate van de distributeur. Slide 10 erkent dat, maar er is nog geen regel die het oplost. Een distributeur die 147 dagen stock aanhoudt (UMI) scoort makkelijk hoog op fill rate — fill rate zonder MOS ernaast beloont overstock.</p>
+<h3 id="analyse-3-3-overzicht-per-criterium">3.3 Overzicht per criterium</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Pijler</th>
+<th>Criterium in het deck</th>
+<th>Vandaag meetbaar?</th>
+<th>Bron / opmerking</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>70% IDS-deelname, ≥ 85% gemiddelde</td>
+<td>Deels</td>
+<td>IDS 2026; 9 distributeurs zonder IDS; zelfevaluatie</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Sales-to-dealer-data</td>
+<td>Deels</td>
+<td>Bestaat voor 5: UK pickup, UK truck, Ierland, UTI, Griekenland</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Branding en zichtbaarheid</td>
+<td>Niet als cijfer</td>
+<td>Zit deels in IDS sectie A</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Parts-doelen gehaald</td>
+<td><strong>Ja</strong></td>
+<td>Herzien businessplan FY2027 per distributeur (€35,28M netwerk, 24 april 2026) + billing</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Fill rate</td>
+<td>Deels</td>
+<td>KPI-master; gaten bij PT, HU, CY</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Genuine/BVP-groei</td>
+<td><strong>Ja</strong></td>
+<td>Billing, mix in euro</td>
+</tr>
+<tr>
+<td>2</td>
+<td>"Actieve business development"</td>
+<td>Niet objectief</td>
+<td>Heeft een rubriek nodig</td>
+</tr>
+<tr>
+<td>3</td>
+<td>≥ 90% trainingsvoltooiing</td>
+<td><strong>Nee, vanaf april 2027 wel</strong></td>
+<td>Curriculum is "started" (rij 23); klaar tegen april 2027 (bevestigd 9 okt)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>EQ-Hit-gebruik, EDI, juiste ordertypes</td>
+<td>Deels</td>
+<td>Ordertypes uit billing <strong>ja</strong>; EQ-Hit-logins en EDI-status niet in de workspace</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Kaizen-plan, ≥ 3 acties, IDS-opvolging</td>
+<td>Deels</td>
+<td>IDS-feedbacksheet v0.4 heeft een opvolgkader (Greece eerst), nog niet uitgerold</td>
+</tr>
+<tr>
+<td>6</td>
+<td>R&amp;M, extended warranty, roadside</td>
+<td>Ja/nee-vraag</td>
+<td>Loopt bij ITUK; I-Motors en Ierland in opstart</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Tijdige KPI/SPI-rapportering</td>
+<td>Deels</td>
+<td>KPI-matrix "started and in progress" (rij 52)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Conclusie: van de 100 punten zijn er vandaag ruwweg 30 à 40 objectief te scoren uit bestaande data (parts-doelen, genuine/BVP in euro, ordertypes, deels fill rate en IDS). De rest vraagt nog een definitie, een bron of een programma dat eerst moet bestaan.</p>
+<hr />
+<h2 id="analyse-4-wat-de-korting-kost">4. Wat de korting kost</h2>
+<h3 id="analyse-4-1-wat-korting-op-stock-raakt">4.1 Wat "korting op stock" raakt</h3>
+<p>FY2026, gefactureerd per ordertype (billing, credit notes en transport eruit). Netwerk: <strong>€33,2M</strong> gefactureerd, waarvan <strong>€23,5M stockorders (SOR, 71%)</strong>.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Distributeur</th>
+<th style="text-align: right;">Gefactureerd FY2026</th>
+<th style="text-align: right;">Stockorder-aandeel</th>
+<th style="text-align: right;">Stockorders €</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Isuzu Truck UK</td>
+<td style="text-align: right;">€6,81M</td>
+<td style="text-align: right;">67%</td>
+<td style="text-align: right;">€4,54M</td>
+</tr>
+<tr>
+<td>Isuzu UK pickup</td>
+<td style="text-align: right;">€5,95M</td>
+<td style="text-align: right;">62%</td>
+<td style="text-align: right;">€3,68M</td>
+</tr>
+<tr>
+<td>UTI</td>
+<td style="text-align: right;">€3,21M</td>
+<td style="text-align: right;">78%</td>
+<td style="text-align: right;">€2,51M</td>
+</tr>
+<tr>
+<td>UMI</td>
+<td style="text-align: right;">€3,00M</td>
+<td style="text-align: right;">88%</td>
+<td style="text-align: right;">€2,65M</td>
+</tr>
+<tr>
+<td>Duitsland</td>
+<td style="text-align: right;">€2,70M</td>
+<td style="text-align: right;">64%</td>
+<td style="text-align: right;">€1,72M</td>
+</tr>
+<tr>
+<td>België</td>
+<td style="text-align: right;">€2,18M</td>
+<td style="text-align: right;">52%</td>
+<td style="text-align: right;">€1,14M</td>
+</tr>
+<tr>
+<td>Portugal</td>
+<td style="text-align: right;">€1,83M</td>
+<td style="text-align: right;">83%</td>
+<td style="text-align: right;">€1,52M</td>
+</tr>
+<tr>
+<td>Noorwegen</td>
+<td style="text-align: right;">€1,48M</td>
+<td style="text-align: right;">91%</td>
+<td style="text-align: right;">€1,34M</td>
+</tr>
+<tr>
+<td>Zweden</td>
+<td style="text-align: right;">€1,31M</td>
+<td style="text-align: right;">80%</td>
+<td style="text-align: right;">€1,05M</td>
+</tr>
+<tr>
+<td>Ierland</td>
+<td style="text-align: right;">€1,12M</td>
+<td style="text-align: right;">87%</td>
+<td style="text-align: right;">€0,98M</td>
+</tr>
+<tr>
+<td>Griekenland</td>
+<td style="text-align: right;">€0,47M</td>
+<td style="text-align: right;">31%</td>
+<td style="text-align: right;">€0,15M</td>
+</tr>
+<tr>
+<td>Hongarije</td>
+<td style="text-align: right;">€0,35M</td>
+<td style="text-align: right;">85%</td>
+<td style="text-align: right;">€0,30M</td>
+</tr>
+<tr>
+<td>Malta</td>
+<td style="text-align: right;">€0,20M</td>
+<td style="text-align: right;">94%</td>
+<td style="text-align: right;">€0,19M</td>
+</tr>
+<tr>
+<td>Roemenië, Kazachstan, IJsland</td>
+<td style="text-align: right;">€0,44M</td>
+<td style="text-align: right;"><strong>0%</strong></td>
+<td style="text-align: right;">€0</td>
+</tr>
+</tbody>
+</table></div>
+<p>Roemenië, Kazachstan en IJsland bestellen alles als spoedorder. Een stockkorting levert hen niets op, tenzij ze hun bestelgedrag omgooien — wat operationeel misschien wenselijk is, maar dan moet dat het doel zijn, niet een bijwerking.</p>
+<h3 id="analyse-4-2-marge">4.2 Marge</h3>
+<p>Indicatieve brutomarge van ISZE op basis van de SAP-kost in de Q1 FY2027-export (april–juni 2026): <strong>46,8%</strong> over alles, <strong>45,9% op stockorders</strong>, 54,1% op VOR en 49,0% op spoed. Dit is een momentopname van één kwartaal en de SAP-kost is niet overal volledig (bij smeermiddelen zat de kickback bijvoorbeeld niet in de kost), dus lees het als orde van grootte.</p>
+<p>Dat stockorders de laagste marge hebben, betekent dat een korting bovenop het goedkoopste kanaal komt. En als distributeurs VOR-orders naar stock verschuiven om korting te krijgen, verliest ISZE daar nog eens marge.</p>
+<h3 id="analyse-4-3-scenario-s">4.3 Scenario's</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th style="text-align: right;">Stockorders FY2026</th>
+<th style="text-align: right;">Kost bij 2,5%</th>
+<th style="text-align: right;">Kost bij 5%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alleen wie vandaag IDS ≥ 85% haalt (Portugal, Hongarije, Malta)</td>
+<td style="text-align: right;">€2,0M</td>
+<td style="text-align: right;">€50k</td>
+<td style="text-align: right;">€100k</td>
+</tr>
+<tr>
+<td>De vier grootste (ITUK, UK pickup, UTI, UMI)</td>
+<td style="text-align: right;">€13,4M</td>
+<td style="text-align: right;">€335k</td>
+<td style="text-align: right;">€669k</td>
+</tr>
+<tr>
+<td>Alle distributeurs</td>
+<td style="text-align: right;">€23,5M</td>
+<td style="text-align: right;">€588k</td>
+<td style="text-align: right;">€1.175k</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Terugverdienen:</strong> om dezelfde marge in euro te houden moeten de stockorders van een gekwalificeerde distributeur <strong>+5,8%</strong> stijgen bij 2,5% korting, en <strong>+12,2%</strong> bij 5%. Het businessplan FY2027 groeit het netwerk met ongeveer 5% (€34,9M zonder MIDI en IMG, tegenover €33,2M gefactureerd in FY2026). Met andere woorden: bij 2,5% volstaat zelfs de volledige geplande groei niet om de korting terug te verdienen, en die groei stond al in het plan zonder korting. Bij 5% is meer dan het dubbele nodig.</p>
+<h3 id="analyse-4-4-samenhang-met-prijs-en-inkoop">4.4 Samenhang met prijs en inkoop</h3>
+<ul>
+<li>De prijsherziening die nu op tafel ligt is <strong>+5% per onderdeel</strong>. Een Outstanding Partner met 5% stockkorting krijgt die verhoging in feite volledig terug — en dat zijn net de beste distributeurs, die het minst prijsgevoelig zijn.</li>
+<li>De inkoopkorting van Japan ging op 5 januari 2026 van 62,0% naar 67,3%; de marge op de yen-basisprijs zakte daardoor van 38,0% naar 32,7%. Een nieuwe structurele korting naar distributeurs komt bovenop een marge die al onder druk staat.</li>
+</ul>
+<h3 id="analyse-4-5-bijwerkingen-om-te-voorkomen">4.5 Bijwerkingen om te voorkomen</h3>
+<ul>
+<li><strong>Meeneemeffect:</strong> het grootste deel van de korting gaat naar volume dat toch al kwam.</li>
+<li><strong>Voorraad naar voren halen:</strong> als de korting per jaar geldt, zal een distributeur vlak voor het einde van zijn statusjaar extra stock inslaan.</li>
+<li><strong>Vertekening van de eigen cijfers:</strong> een korting op de factuur verlaagt het gefactureerde bedrag. Dan daalt bij de beste distributeurs het GPS-cijfer (gefactureerd ÷ potentieel van de vloot) en vertekent de %GM-analyse op de prijslijst. Een bonus als creditnota aan het einde van het jaar heeft dat probleem niet: rebates zitten al buiten de parts-basis.</li>
+<li><strong>Twee keer betalen:</strong> zie §5.2.</li>
+</ul>
+<hr />
+<h3 id="analyse-4-6-kost-als-prijs-voor-medewerking-bijgesteld">4.6 Kost als prijs voor medewerking (bijgesteld)</h3>
+<p>Als het doel deelname is, is de juiste vergelijking niet het volume maar de groep die je aan boord wilt krijgen.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Groep</th>
+<th style="text-align: right;">Gefactureerd FY2026</th>
+<th style="text-align: right;">Stockorders</th>
+<th style="text-align: right;">−2,5%</th>
+<th style="text-align: right;">−5%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>9 kickback-distributeurs (UK pickup, UTI, UMI, Duitsland, Benelux, Portugal, Zweden, Noorwegen, Ierland)</td>
+<td style="text-align: right;">€22,8M</td>
+<td style="text-align: right;">€16,6M</td>
+<td style="text-align: right;">€415k</td>
+<td style="text-align: right;">€830k</td>
+</tr>
+<tr>
+<td>Isuzu Truck UK (bewust nooit in de kickback)</td>
+<td style="text-align: right;">€6,8M</td>
+<td style="text-align: right;">€4,5M</td>
+<td style="text-align: right;">€114k</td>
+<td style="text-align: right;">€227k</td>
+</tr>
+<tr>
+<td>12 overige distributeurs (waarvan 3 CIS)</td>
+<td style="text-align: right;">€3,6M</td>
+<td style="text-align: right;">€2,4M</td>
+<td style="text-align: right;">€59k</td>
+<td style="text-align: right;">€119k</td>
+</tr>
+<tr>
+<td>CIS-markten (Oekraïne, Armenië, Kazachstan)</td>
+<td style="text-align: right;">€1,4M</td>
+<td style="text-align: right;">€1,1M</td>
+<td style="text-align: right;">€28k</td>
+<td style="text-align: right;">€56k</td>
+</tr>
+<tr>
+<td><strong>Alle</strong></td>
+<td style="text-align: right;"><strong>€33,2M</strong></td>
+<td style="text-align: right;"><strong>€23,5M</strong></td>
+<td style="text-align: right;"><strong>€588k</strong></td>
+<td style="text-align: right;"><strong>€1.175k</strong></td>
+</tr>
+<tr>
+<td><strong>Alle zonder CIS (scope volgens beslissing)</strong></td>
+<td style="text-align: right;"><strong>€31,8M</strong></td>
+<td style="text-align: right;"><strong>€22,4M</strong></td>
+<td style="text-align: right;"><strong>€560k</strong></td>
+<td style="text-align: right;"><strong>€1.119k</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>Drie dingen vallen op:</p>
+<ul>
+<li><strong>Bij de kleine distributeurs is de wortel klein.</strong> 2,5% op stockorders is per jaar €4,6k voor Malta, €3,7k voor Griekenland (dat maar 31% als stockorder bestelt) en €2,4k voor Denemarken. Of dat genoeg is om maandelijks data aan te leveren, hangt af van hoeveel werk die aanlevering voor hen is. Voor deze groep kan een praktisch voordeel (bv. gratis transport op stockorders) zwaarder wegen dan het percentage.</li>
+<li><strong>Roemenië en IJsland bestellen niets als stockorder.</strong> De korting geldt alleen op stockorders, dus zolang ze dat zo houden, levert het programma hen niets op. Dat moet in het gesprek met hen expliciet gezegd worden: meedoen loont pas als ze naar weekelijkse stockorders overschakelen. Voor ISZE is dat op zich goed, want stockorders zijn makkelijker te plannen en te leveren dan spoed- en VOR-orders.</li>
+<li><strong>De korting duwt naar stockorders.</strong> Dat is een voordeel voor het magazijn en de planning naar Japan en Thailand. Het nadeel is dat de marge op VOR-orders hoger ligt (54% tegenover 46%, indicatief); als distributeurs VOR naar stock verschuiven, kost dat ISZE ook marge.</li>
+</ul>
+<hr />
+<h2 id="analyse-5-zwaktes-in-het-ontwerp-van-de-scorekaart">5. Zwaktes in het ontwerp van de scorekaart</h2>
+<h3 id="analyse-5-1-de-score-zelf">5.1 De score zelf</h3>
+<ol>
+<li><strong>De lat van 85 laat weinig ruimte.</strong> Wie 15 punten mist, valt af. Met een IDS-netwerkgemiddelde van 81% en een trainingsprogramma dat pas in april 2027 start, zullen in jaar 1 weinig of geen distributeurs slagen. Dat kan bewust zijn (exclusief), maar dan moet het zo gecommuniceerd worden, anders demotiveert het.</li>
+<li><strong>Prestatie weegt maar 20 op 100.</strong> Een distributeur waarvan de parts-omzet daalt, kan nog altijd Excellence Partner worden als de rest goed is. Voor een programma van de parts-afdeling met een financiële beloning is dat te licht.</li>
+<li><strong>Dubbeltelling.</strong> IDS telt in pijler 1, in pijler 5 (opvolging IDS-bevindingen) en in een poort. Genuine/BVP staat in pijler 2 én pijler 6. EQ-Hit en EDI staan in pijler 3 (training) én pijler 4 (gebruik).</li>
+<li><strong>Klein tegenover groot.</strong> Malta en Cyprus hebben één dealer: 100% IDS-deelname en een opvolgplan zijn daar makkelijk. Isuzu UK pickup heeft 45 dealers. Absolute drempels bevoordelen kleine distributeurs op de nalevingspijlers; een korting in procent bevoordeelt grote distributeurs in euro (57% van de stockorders zit bij vier distributeurs).</li>
+<li><strong>Veel ja/nee- en "actief"-criteria zonder schaal</strong> ("actieve business development", "constructieve samenwerking"). Elk criterium heeft een vaste schaal nodig (bv. 0 / 50 / 100% van de punten) met het bewijs dat daarvoor nodig is.</li>
+<li><strong>Inconsistenties:</strong> slide 5 vraagt 70% IDS-deelname, slide 8 een volledige IDS-evaluatie. "Geen kritieke compliance- of veiligheidsissues" is niet gedefinieerd. De niveaus laten een gat tussen 84 en 85.</li>
+<li><strong>Wat de distributeur niet in de hand heeft</strong> (achterstanden uit Japan, ISZE-leverbetrouwbaarheid) staat als principe op slide 10, maar zit nog niet in een regel. Voorstel: fill rate van de distributeur alleen scoren op onderdelen die ISZE zelf op tijd leverde, of corrigeren met de ISZE-servicegraad naar die distributeur.</li>
+</ol>
+<h3 id="analyse-5-2-overlap-met-bestaande-beloningen">5.2 Overlap met bestaande beloningen</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Bestaand</th>
+<th>Wat het beloont</th>
+<th>Overlap met het programma</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kickback (9 distributeurs: UK pickup, UTI, UMI, Duitsland, Benelux, Portugal, Zweden, Noorwegen, Ierland), FY27-voorstel +1,5 procentpunt GPS-stretch</td>
+<td>Groei t.o.v. potentieel; deels gekoppeld aan het aanleveren van sales-to-dealer-data</td>
+<td>Pijler 1 (sales-to-dealer) en pijler 2 (groei). De precieze voorwaarden van de kickback staan nergens in de workspace — dat moet eerst op tafel.</td>
+</tr>
+<tr>
+<td>Jaarlijkse incentive (MOU, actieplan rij 7–8)</td>
+<td>Volgens de MOU</td>
+<td>Onbekend zonder de MOU</td>
+</tr>
+<tr>
+<td>Campagnes (rem, filters, carrosserie, BVP, emissie) en SPA's</td>
+<td>Prijs op specifieke onderdelen</td>
+<td>Pijler 2 en 6</td>
+</tr>
+<tr>
+<td>Steun voor stock-scrap (€80k–140k per distributeur in het actieplan)</td>
+<td>Opruimen van oude stock</td>
+<td>Raakt dezelfde stockrelatie</td>
+</tr>
+<tr>
+<td>Parts competition (rij 27–33, haalbaarheidsstudie incl. enquête over incentive nog niet gestart)</td>
+<td>Winnaar onder de distributeurs</td>
+<td>Slide 12 onderscheidt ze goed; budget en criteria moeten wel op elkaar afgestemd worden</td>
+</tr>
+</tbody>
+</table></div>
+<p>Zonder één overzicht van alle beloningen per distributeur weet niemand meer wat een distributeur in totaal van ISZE krijgt, en betaalt ISZE meerdere keren voor dezelfde groei. <strong>Voorstel: één incentive-architectuur</strong>, waarin de kickback, de jaarlijkse incentive en het Excellence-programma als lagen boven elkaar staan, met per laag een ander doel.</p>
+<h3 id="analyse-5-3-juridisch">5.3 Juridisch</h3>
+<p>Kortingen voor distributeurs moeten in de EU gebaseerd zijn op objectieve, transparante en niet-discriminerende criteria, die vooraf bekend en voor iedereen gelijk zijn. In de aftermarket voor motorvoertuigen kijkt de Europese Commissie daar strenger naar (merkgebonden onderdelen), en het VK en Israël hebben elk hun eigen kader. Kwalitatieve criteria zijn verdedigbaar; kortingen die vooral loyaliteit of exclusiviteit belonen, liggen gevoeliger. Ik ben geen jurist: laat het definitieve reglement nalezen door legal vóór het naar distributeurs gaat.</p>
+<hr />
+<h2 id="analyse-6-hoe-het-verder-uit-te-werken">6. Hoe het verder uit te werken</h2>
+<h3 id="analyse-6-1-ontwerpprincipes-bijgesteld">6.1 Ontwerpprincipes (bijgesteld)</h3>
+<ol>
+<li><strong>Instap laag, top hoog.</strong> Niveau 1 moet haalbaar zijn voor elke distributeur die wil meewerken; niveau 2 is voor wie ook resultaat levert.</li>
+<li><strong>Niveau 1 gaat alleen over dingen die ISZE zelf kan controleren.</strong> Geen zelfevaluatie, geen interpretatie: de data kwam binnen of niet, op tijd of niet, volledig of niet.</li>
+<li><strong>Toetsing per kwartaal.</strong> De korting geldt in het kwartaal na een kwartaal waarin aan de voorwaarden is voldaan. Stopt de medewerking, dan stopt de korting een kwartaal later. Dat is het drukmiddel dat ISZE zonder afdwingen heeft.</li>
+<li><strong>Geef iets terug met de data.</strong> Een distributeur die maandelijks data stuurt en er niets van terugziet, stuurt na een jaar het minimum. Elke distributeur krijgt een maandelijkse vergelijking terug (zijn dealers, zijn mix, zijn plaats in het netwerk). Dat is de tweede reden om mee te doen, naast de korting.</li>
+<li><strong>De korting moet in SAP herkenbaar zijn.</strong> Een eigen conditie op de factuur, zodat de korting zichtbaar is voor de distributeur, maar GPS, %GM en de prijslijstanalyse ze kunnen terugrekenen.</li>
+<li><strong>Elk criterium heeft zes velden:</strong> definitie, bron, eigenaar, frequentie, bewijs, schaal.</li>
+</ol>
+<h3 id="analyse-6-2-twee-niveaus">6.2 Twee niveaus</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th></th>
+<th><strong>Niveau 1 — Partner (−2,5% op stockorders)</strong></th>
+<th><strong>Niveau 2 — Excellence Partner (−5% op stockorders)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Doel</td>
+<td>Aan boord: medewerking die ISZE niet kan afdwingen</td>
+<td>Medewerking plus resultaat</td>
+</tr>
+<tr>
+<td>Voorwaarden</td>
+<td>1. Sales-to-dealer-data elke maand, per dealer en per onderdeelnummer, binnen 10 werkdagen na het einde van de maand, met geldige onderdeelnummers en alle dealers erin · 2. Maandelijkse KPI-rapportering (fill rate, MOS, stockwaarde, achterstanden) op tijd · 3. IDS-ronde uitgevoerd waar IMG die plande, met minstens 70% van de dealers · 4. Verplichte trainingen (EQ-Hit, EDI &amp; ordertypes, Parts Business Manual – Foundation) gevolgd door de aangeduide medewerkers; het curriculum draait vanaf april 2027</td>
+<td>Alles van niveau 1, plus een score van minstens 85 op 100 op het resultaat: parts-omzet t.o.v. businessplan · genuine-aandeel in euro niet gedaald · IDS-verbetering en gesloten verbeteracties · Kaizen-plan met gesloten acties · R&amp;M / extended warranty stap voor stap</td>
+</tr>
+<tr>
+<td>Gemeten door</td>
+<td>ISZE parts sales, uit wat binnenkomt (ontvangstdatum, volledigheid)</td>
+<td>ISZE parts sales (billing, businessplan); IMG ondersteunt voor IDS</td>
+</tr>
+<tr>
+<td>Toetsing</td>
+<td>Per kwartaal</td>
+<td>Per jaar, met de jaarscore als status voor het volgende jaar; niveau 1 blijft per kwartaal gelden</td>
+</tr>
+<tr>
+<td>Kost als iedereen het haalt (zonder CIS)</td>
+<td>€560k per jaar</td>
+<td>€1.119k per jaar (het is 5% in plaats van 2,5%, niet erbij)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Het puntenmodel uit het deck (zeven pijlers, 100 punten) blijft bruikbaar, maar dan alleen voor niveau 2, met de aanpassingen uit §5.1: prestatie zwaarder, geen dubbele tellingen, en IDS als verbetering in plaats van als absolute zelfscore.</p>
+<h3 id="analyse-6-3-programma-bovenop-de-kickback-zo-voorkom-je-dat-isze-twe">6.3 Programma bovenop de kickback: zo voorkom je dat ISZE twee keer betaalt</h3>
+<p>De kickback blijft bestaan en het programma komt erbovenop. Dan is de enige verdediging tegen dubbel betalen dat de twee iets verschillends vragen. Een deel van de kickback is vandaag al gekoppeld aan sales-to-dealer-data; de precieze voorwaarden staan niet in de workspace. Voorstel:</p>
+<ul>
+<li><strong>Leg de kickback-voorwaarde en de niveau-1-voorwaarde naast elkaar</strong> vóór het reglement vastligt. Wat de kickback al vraagt, kan niet nog eens de korting opleveren.</li>
+<li><strong>Niveau 1 vraagt dus meer dan het bestand dat vandaag binnenkomt</strong>: maandelijks in plaats van op afroep, per dealer en per onderdeelnummer, binnen 10 werkdagen, met alle dealers en geldige onderdeelnummers, plus de maandelijkse KPI's en de trainingen. Het verschil tussen "een bestand" en "een bruikbaar bestand" is precies wat de korting koopt.</li>
+<li><strong>ITUK doet mee</strong> (in principe alle distributeurs), ook al zit ITUK bewust niet in de kickback. ITUK is de grootste stockorder-klant (€4,5M), dus €114k op niveau 1 en €227k op niveau 2.</li>
+</ul>
+<h3 id="analyse-6-4-tijdlijn">6.4 Tijdlijn</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Wanneer</th>
+<th>Wat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Okt – nov 2026</td>
+<td>Management beslist over de open vragen in §7. Eigenaar benoemen. Koppelen aan de bestaande rijen in het actieplan (7–8, 23–33, 50–53, 67–72) in plaats van er een nieuw spoor naast te zetten.</td>
+</tr>
+<tr>
+<td>Dec 2026 – jan 2027</td>
+<td>Scorekaart v2 met de zes velden per criterium. Overzicht van alle bestaande beloningen per distributeur. Legal leest het reglement.</td>
+</tr>
+<tr>
+<td>Jan – mrt 2027</td>
+<td><strong>Proefdraaien van niveau 1</strong> met 3 à 4 distributeurs, zonder korting: komt de data elke maand op tijd en volledig binnen, en wat sturen we terug? Voorstel: Griekenland (geen kickback, sales-to-dealer-data bestaat al), Hongarije of Malta (klein, geen kickback), Isuzu UK pickup (groot, kickback, data bestaat). Tegelijk een <strong>schaduwscore van niveau 2</strong> op FY2027-data.</td>
+</tr>
+<tr>
+<td>April 2027</td>
+<td>Reglement naar alle distributeurs. <strong>Niveau 1 start op 1 april 2027</strong>; de eerste korting volgt in het kwartaal juli–september 2027, na een eerste kwartaal met correcte aanlevering.</td>
+</tr>
+<tr>
+<td>FY2028 (apr 2027 – mrt 2028)</td>
+<td>Eerste meetjaar voor niveau 2. Tussentijdse stand in oktober 2027.</td>
+</tr>
+<tr>
+<td>Voorjaar 2028</td>
+<td>Score niveau 2 definitief, award op de Europese aftersales-meeting, −5% vanaf FY2029 voor wie het haalt.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="analyse-6-5-wat-ik-in-de-workspace-kan-voorbereiden">6.5 Wat ik in de workspace kan voorbereiden</h3>
+<ul>
+<li><strong>Een schaduwscorekaart</strong> uit de bestaande data (billing, businessplan FY2027, IDS 2026, KPI-master, ordertypes), voor alle distributeurs, met per criterium "gemeten / ontbreekt". Dan zien we meteen hoe de score verdeeld valt.</li>
+<li><strong>Een kostensimulator</strong> per distributeur voor niveau 1 en 2, met en zonder de kickback-distributeurs, op FY2026 en het businessplan FY2027.</li>
+<li><strong>Een eerste opzet van de maandelijkse terugkoppeling</strong> naar een distributeur, op basis van de vergelijkingen die al bestaan voor de vijf distributeurs met sales-to-dealer-data.</li>
+<li><strong>Een criteriawoordenboek</strong> (de zes velden per criterium) als basis voor het reglement.</li>
+<li><strong>Een aangepaste versie van het deck</strong> voor management, met de kostenpagina en de tijdlijn erbij.</li>
+</ul>
+<p>Het rekenscript achter de cijfers in §4 staat in <code>_build/order_mix_and_discount_cost.py</code>; de tabel per distributeur in <code>_build/order_mix_fy2026.csv</code>.</p>
+<hr />
+<h2 id="analyse-7-open-vragen">7. Open vragen</h2>
+<p>Beantwoord op 9 oktober: korting alleen op stockorders · bovenop de kickback · ISZE eigenaar, IMG ondersteunt · alle distributeurs, CIS mag erbuiten · geen plafond · training klaar in april 2027 · "meer klanten aan boord" = de distributeurs · sales to dealer moet erin.</p>
+<p>De samenhang met Isuzu Universe, welke data het belangrijkst is en plan B staan in <strong><code>SYNERGIE_Excellence_Partner_x_Universe_2026-10-09.md</code></strong>.</p>
+<p>Nog open:</p>
+<ol>
+<li><strong>Wat vraagt de kickback vandaag precies aan data?</strong> Nodig om niveau 1 er duidelijk boven te leggen.</li>
+<li>~~Waarom staat er geen sales-to-dealer-bestand in de workspace voor Duitsland, Benelux, Zweden, Noorwegen en UMI?~~ <strong>Gecorrigeerd:</strong> Duitsland stuurt volgens de notulen van augustus 2026 sinds mei 2025 maandelijks door; het register in de workspace is niet bijgewerkt. Voor Benelux, Zweden, Noorwegen en UMI is de stand onbekend (white paper, hoofdstuk 3).</li>
+</ol>
+<hr />
+<h2 id="analyse-8-kleine-correcties-aan-het-deck-als-het-gedeeld-wordt">8. Kleine correcties aan het deck (als het gedeeld wordt)</h2>
+<ul>
+<li>Slide 3: "Demonstratable" → "Demonstrable".</li>
+<li>Slide 9: "&lt; 84" → "0–84" (nu valt 84 tussen twee niveaus); "2,5%" → "2.5%" in een Engelstalig deck; "Excellence Outstanding Performance Partner" → bv. "Outstanding Partner".</li>
+<li>Slide 5 en 8 zeggen verschillende dingen over IDS (70% deelname tegenover volledige evaluatie). Kies er één.</li>
+<li>Slide 8: "critical compliance or safety issues" definiëren of schrappen.</li>
+<li>Taal voor externe versies: geen interne bijnamen, geen persoonsnamen, alleen rollen — het deck doet dat al goed.</li>
+</ul>
+<hr />
+<h2 id="analyse-bronnen">Bronnen</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Wat</th>
+<th>Waar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IDS per distributeur, correlaties, fill rate, MOS</td>
+<td><code>01_data/08_Distributor/IDS_2026/reports/kaizen_db_posture/study_payload.json</code>, <code>kaizen_ids/study_payload.json</code></td>
+</tr>
+<tr>
+<td>IDS-logica en zelfevaluatie-regels</td>
+<td><code>04_tools/ids_dealer_ranking/IDS_2026_LOGIC_CHECK.md</code></td>
+</tr>
+<tr>
+<td>IDS: geen verband met parts-omzet</td>
+<td><code>05_memory/projects/ids-db-leverage-os.md</code> §5</td>
+</tr>
+<tr>
+<td>Ordertypes FY2026</td>
+<td><code>01_data/00_derived/sales_fact.parquet</code> + <code>distributor_dimension.csv</code> (script in <code>_build/</code>)</td>
+</tr>
+<tr>
+<td>Indicatieve brutomarge</td>
+<td><code>01_data/00_derived/q1fy2027_export_with_saty.csv</code> (SAP-kost, Q1 FY2027)</td>
+</tr>
+<tr>
+<td>Businessplan FY2027 per distributeur</td>
+<td><code>bp_fy27_reviewed.json</code> (herzien 24 april 2026)</td>
+</tr>
+<tr>
+<td>Kickback-distributeurs</td>
+<td><code>01_data/91_build/build_gps_kickback_proposal.py</code>, <code>01_data/91_build/GPS_FILE_LINEAGE.md</code></td>
+</tr>
+<tr>
+<td>Kickback-voorwaarden niet in de workspace</td>
+<td><code>Isuzu Universe/01_Strategy/Universe_Yellow_Paper_COMPLETE_DRAFT_2026-09-21.md</code> §D2</td>
+</tr>
+<tr>
+<td>Actieplan FY2027</td>
+<td><code>01_data/00_derived/vpacc_fy2027_action_plan_july.parquet</code>, <code>00_docs/FY2027_ACTION_CREDIT_MAP.md</code></td>
+</tr>
+<tr>
+<td>MTBP-pijlers, prijsbeleid per markt</td>
+<td><code>05_memory/projects/isze-corporate-presentations-20260919.md</code></td>
+</tr>
+<tr>
+<td>Japanse inkoopkorting 67,3%</td>
+<td><code>DECISIONS.md</code></td>
+</tr>
+<tr>
+<td>Eerder voorstel scorekaart ("niet bouwen zonder expliciete opdracht")</td>
+<td><code>DECISIONS.md</code>, 18 aug 2026, punt 5</td>
+</tr>
+</tbody>
+</table></div></section><section class="doc" id="synergie"><span class="partlabel">Deel 2 · Samen met Universe</span><p><strong>Status:</strong> interne analyse, draft · <strong>Datum:</strong> 9 oktober 2026 · <strong>Hoort bij:</strong> <code>ANALYSE_Excellence_Partner_Program_2026-10-09.md</code>
+<strong>Vraag van Jerome:</strong> het programma overlapt met Universe. Waar zitten de synergieën? Moeten we alles naar Excellence verschuiven en Universe ("tools maken en zo de data afdwingen") als plan B houden voor als management de korting niet goedkeurt? En welke data is het belangrijkst?</p>
+<hr />
+<blockquote>
+<p><strong>Correctie, 9 oktober 2026 (later).</strong> Eerder stond hier dat er voor Duitsland, Benelux, Zweden, Noorwegen en UMI geen sales-to-dealer-bestand bestaat. Dat klopt alleen voor het <strong>register in de workspace</strong>. In de notulen van de sales reviews van augustus 2026 staat dat Duitsland (ISD) sinds mei 2025 maandelijks onderdeelnummer, aantal en datum doorstuurt, en dat Griekenland, Isuzu UK pickup, Ierland en Portugal maandelijkse bestanden zonder prijzen hebben toegezegd. Voor Benelux, Zweden, Noorwegen en UMI weten we het niet. Het register loopt dus achter op de praktijk. Zie hoofdstuk 3 van het white paper.</p>
+</blockquote>
+<h2 id="synergie-0-mijn-advies-in-het-kort">0. Mijn advies in het kort</h2>
+<p><strong>Niet kiezen tussen de twee, maar ze in elkaar schuiven.</strong> Excellence wordt de voordeur, en Universe de machinekamer erachter.</p>
+<ul>
+<li><strong>Excellence Partner</strong> is wat management en distributeurs te zien krijgen. Het is een herkenbaar partnerprogramma met een status en een korting. Het geeft de distributeur een <strong>reden om mee te doen</strong>. Dat is precies wat Universe mist: Universe scoort zichzelf op 55 van de 100 voor de kans dat een distributeur meedoet zoals ontworpen, en op 35 voor de kans dat hij meer deelt dan het huidige rapport.</li>
+<li><strong>Universe</strong> levert drie dingen die Excellence mist: <strong>de datastandaard</strong> (die is al volledig uitgeschreven), <strong>de analyses en wat we teruggeven</strong> (de distributeur-one-pagers bestaan al voor 19 markten), en <strong>de spelregels</strong> die voorkomen dat het programma als controle van ISZE aanvoelt. Zonder dat koopt Excellence met de korting alleen het minimale bestand. Dat waarschuwt Universe zelf: "a file sent to satisfy a condition is the minimum that satisfies the condition".</li>
+</ul>
+<p><strong>Wat je wel kan parkeren: het platformdeel van Universe</strong> — een gedeelde app met login, een backend en de €300k-route. Dat bestaat vandaag niet. Er is geen server, geen echte login (geparkeerd tot IT erbij komt), en de laatste acceptatietesten (ACCEPT-04 tot 08) wachten op echte deelnemers. De analyses en documenten werken nu al zonder platform, als bestanden die we per distributeur maken en doorsturen.</p>
+<p><strong>Over plan B: tools kunnen geen data afdwingen.</strong> Een tool trekt aan, maar dwingt niets af. Als management de korting niet goedkeurt, is het realistische plan B daarom: de bestaande kickback-voorwaarde aanscherpen tot dezelfde datastandaard, plus de Universe-terugkoppeling als reden om goed aan te leveren. Dat kost niets extra, maar levert ook minder deelname op (§7).</p>
+<p><strong>Over de belangrijkste data: sales to dealer per dealer, per onderdeel, per maand, zonder prijzen.</strong> Daarnaast eenmalig een dealerlijst gekoppeld aan het klantnummer, en maandelijks fill rate en openstaande backorders. In §4 leg ik uit welke analyse dat mogelijk maakt en hoe die tot meer omzet leidt.</p>
+<hr />
+<h2 id="synergie-1-wat-ik-heb-doorgenomen">1. Wat ik heb doorgenomen</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Bron</th>
+<th>Wat ik eruit haal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Universe 3.0 (23 sep), white paper, Yellow Paper v0.5, mapindex</td>
+<td>Vijf tools, scope-afbakening, budgetroutes €0 / €100k / €300k, deelnamescores, spelregels ("do not")</td>
+</tr>
+<tr>
+<td>Value-exchange model (21 sep)</td>
+<td>Deelname per niveau 0–4, de regel "als je X geeft, krijg je Y, waarmee je Z beslist", wat we niet moeten vragen</td>
+</tr>
+<tr>
+<td>Commercial participation model</td>
+<td><strong>Minimale datastandaard voor sales to dealer</strong>, kickback als startmotor, "20% van de incentive hangt eraan"</td>
+</tr>
+<tr>
+<td>Pilot evidence pack (21 sep)</td>
+<td>Datamatrix per distributeur, het uitgewerkte luchtfiltervoorbeeld bij ITUK, de lijst met ontbrekende gegevens</td>
+</tr>
+<tr>
+<td>€300k term sheet, DLOD-uitrol (23 sep)</td>
+<td>Geen bewezen rendement; DLOD Route A €90k; de prijsherziening als vergelijkingspunt</td>
+</tr>
+<tr>
+<td>Universe-software (05_AIM_Universe) + roadmap</td>
+<td>Interne component, geen backend, 90 van 96 taken geverifieerd, niets uitgerold</td>
+</tr>
+<tr>
+<td>Atlas: distributeur-one-pagers (sep 2026)</td>
+<td>Bestaand terugkoppelformaat per distributeur</td>
+</tr>
+<tr>
+<td>Sales-to-dealer-register, de aangeleverde bestanden, de regel voor sales to dealer</td>
+<td>Wie levert wat, op welk detailniveau</td>
+</tr>
+<tr>
+<td>Data-map Isuzu OS, BI-bouwlijst</td>
+<td>Wat we hebben, wat ontbreekt, wat geblokkeerd is</td>
+</tr>
+<tr>
+<td>IDS 2026, KPI-master, actieplan FY2027, kickbackvoorstel FY27</td>
+<td>Zie de eerste analyse</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="synergie-2-twee-projecten-elk-met-de-zwakte-die-het-andere-oplost">2. Twee projecten, elk met de zwakte die het andere oplost</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Excellence Partner Program</th>
+<th>Isuzu Universe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Waar het om draait</td>
+<td>Distributeurs aan boord krijgen met status en korting</td>
+<td>Distributeurs en dealers tools geven die ze willen gebruiken, en in ruil betere data verdienen</td>
+</tr>
+<tr>
+<td>Hefboom</td>
+<td>Geld (−2,5% / −5% op stockorders) en erkenning</td>
+<td>Wat de deelnemer terugkrijgt (analyse, uitleg, verdediging)</td>
+</tr>
+<tr>
+<td>Sterk</td>
+<td>Eenvoudig te begrijpen voor management en distributeurs; een echte prikkel; vanaf april 2027 haalbaar zonder IT</td>
+<td>Datastandaard, analysemethode, spelregels en terugkoppeling zijn uitgewerkt en op echte cijfers getest</td>
+</tr>
+<tr>
+<td>Zwak</td>
+<td>Betaalt voor naleving, niet voor kwaliteit; er komt niets terug, dus de distributeur levert het minimum; IDS is een zelfscore</td>
+<td>Geen echte reden voor de tweede stap (deelnamescore 45–55); geen platform; budget tot €100–300k; niets bij een echte deelnemer getest</td>
+</tr>
+<tr>
+<td>Wat het andere project levert</td>
+<td>Universe levert de standaard, de terugkoppeling en de spelregels</td>
+<td>Excellence levert de reden om mee te doen en een kader dat management kent</td>
+</tr>
+</tbody>
+</table></div>
+<p>Universe zegt het zelf, in het participation model: <strong>"The kickback is the ignition mechanism, not the end-state."</strong> Excellence is een sterkere versie van die startmotor. Het einddoel van Universe blijft wel geldig: een distributeur die ook zonder korting zou blijven aanleveren, omdat hij er zelf iets aan heeft.</p>
+<hr />
+<h2 id="synergie-3-waar-we-vandaag-staan-met-de-data">3. Waar we vandaag staan met de data</h2>
+<h3 id="synergie-3-1-sales-to-dealer">3.1 Sales to dealer</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Distributeur</th>
+<th>Kickback?</th>
+<th>Sales to dealer in de workspace</th>
+<th>Per dealer?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Isuzu Truck UK</td>
+<td>nee</td>
+<td>2023–2026</td>
+<td><strong>Alleen 2025 (64 dealers)</strong>; 2023, 2024 en 2026 alleen als netwerktotaal</td>
+</tr>
+<tr>
+<td>Isuzu UK pickup</td>
+<td>ja</td>
+<td>2025 + 2026 tot juli</td>
+<td>nee, netwerktotaal</td>
+</tr>
+<tr>
+<td>Ierland</td>
+<td>ja</td>
+<td>2025 + 2026 tot juli</td>
+<td>nee</td>
+</tr>
+<tr>
+<td>UTI</td>
+<td>ja</td>
+<td>2025 (feb–jul ontbreekt) + 2026</td>
+<td>nee</td>
+</tr>
+<tr>
+<td>Portugal</td>
+<td>ja</td>
+<td>2025 + 2026</td>
+<td>nee</td>
+</tr>
+<tr>
+<td>Griekenland</td>
+<td>nee</td>
+<td>2025</td>
+<td>nee</td>
+</tr>
+<tr>
+<td>Roemenië</td>
+<td>nee</td>
+<td>2026 jan–aug (na formele vraag van 15 sep 2026)</td>
+<td>nee</td>
+</tr>
+<tr>
+<td>Duitsland, Benelux, Zweden, Noorwegen, UMI</td>
+<td><strong>ja</strong></td>
+<td><strong>geen</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Cyprus, Hongarije, Finland, Malta, Denemarken, IJsland, Palestina</td>
+<td>nee</td>
+<td>geen</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<figure class="chart">
+  <figcaption><strong>Sales to dealer: wat er vandaag binnenkomt</strong><span class="muted"> · per distributeur, beste beschikbare detailniveau</span></figcaption>
+  <div class="cov"><div class="cov-row"><div class="cov-name">Isuzu Truck UK</div><div class="cov-kb"></div><div class="cov-pill dealer">per dealer</div><div class="cov-note muted">alleen 2025 per dealer (64)</div></div><div class="cov-row"><div class="cov-name">Isuzu UK pickup</div><div class="cov-kb">kickback</div><div class="cov-pill netwerk">netwerktotaal</div><div class="cov-note muted"></div></div><div class="cov-row"><div class="cov-name">Ierland</div><div class="cov-kb">kickback</div><div class="cov-pill netwerk">netwerktotaal</div><div class="cov-note muted"></div></div><div class="cov-row"><div class="cov-name">UTI</div><div class="cov-kb">kickback</div><div class="cov-pill netwerk">netwerktotaal</div><div class="cov-note muted"></div></div><div class="cov-row"><div class="cov-name">Portugal</div><div class="cov-kb">kickback</div><div class="cov-pill netwerk">netwerktotaal</div><div class="cov-note muted"></div></div><div class="cov-row"><div class="cov-name">Griekenland</div><div class="cov-kb"></div><div class="cov-pill netwerk">netwerktotaal</div><div class="cov-note muted"></div></div><div class="cov-row"><div class="cov-name">Roemenië</div><div class="cov-kb"></div><div class="cov-pill netwerk">netwerktotaal</div><div class="cov-note muted">na formele vraag, sep 2026</div></div><div class="cov-row"><div class="cov-name">Duitsland</div><div class="cov-kb">kickback</div><div class="cov-pill geen">niets in de workspace</div><div class="cov-note muted"></div></div><div class="cov-row"><div class="cov-name">Benelux</div><div class="cov-kb">kickback</div><div class="cov-pill geen">niets in de workspace</div><div class="cov-note muted"></div></div><div class="cov-row"><div class="cov-name">Zweden</div><div class="cov-kb">kickback</div><div class="cov-pill geen">niets in de workspace</div><div class="cov-note muted"></div></div><div class="cov-row"><div class="cov-name">Noorwegen</div><div class="cov-kb">kickback</div><div class="cov-pill geen">niets in de workspace</div><div class="cov-note muted"></div></div><div class="cov-row"><div class="cov-name">UMI</div><div class="cov-kb">kickback</div><div class="cov-pill geen">niets in de workspace</div><div class="cov-note muted"></div></div><div class="cov-row"><div class="cov-name">Cyprus, Hongarije, Finland, Malta, Denemarken, IJsland, Palestina</div><div class="cov-kb"></div><div class="cov-pill geen">niets in de workspace</div><div class="cov-note muted"></div></div></div>
+  <p class="source">Bron: sales-to-dealer-register en de genormaliseerde bestanden per distributeur, oktober 2026.</p>
+</figure>
+
+<p>Wat dit zegt:</p>
+<ul>
+<li><strong>Per dealer hebben we één jaar van één distributeur.</strong> Zonder dealerniveau kunnen we per onderdeel alleen zeggen wat het hele netwerk van een distributeur verkocht. Daarmee zie je niet welke dealer een probleem heeft.</li>
+<li><strong>Zelfs ITUK viel in 2026 terug naar een netwerktotaal.</strong> Het bestand met dealerdetail was eenmalig. Zonder een vaste afspraak blijft het niet komen.</li>
+<li><strong>Van de 9 kickback-distributeurs staat er voor 5 geen enkel bestand in de workspace</strong> (Duitsland, Benelux, Zweden, Noorwegen, UMI), terwijl 20% van hun kickback volgens de Universe-papers aan die aanlevering hangt. Ofwel komt het bestand niet, ofwel komt het wel maar bereikt het deze workspace niet. Dat moet je eerst nagaan: als de huidige voorwaarde niet wordt opgevolgd, zal een nieuwe voorwaarde dat ook niet worden.</li>
+<li><strong>Vragen werkt soms.</strong> Roemenië leverde binnen twee dagen na je formele vraag acht maanden aan.</li>
+</ul>
+<h3 id="synergie-3-2-andere-data">3.2 Andere data</h3>
+<ul>
+<li><strong>Maandelijkse KPI's</strong> (fill rate, MOS): rijen voor 10 distributeurs in de KPI-master; Portugal, Hongarije en Cyprus ontbreken.</li>
+<li><strong>Backorders</strong>: alleen Ierland (40 wekelijkse overzichten, oktober 2025 – augustus 2026).</li>
+<li><strong>Dealerlijst gekoppeld aan klantnummer</strong>: bestaat nergens. Bij ITUK komen maar 16 van de 44 IDS-namen exact overeen met de 64 namen in het sales-to-dealer-bestand.</li>
+<li><strong>Wagenpark per dealer</strong>: bestaat nergens. Het wagenpark stopt overal op landniveau.</li>
+</ul>
+<hr />
+<h2 id="synergie-4-welke-data-het-belangrijkst-is-en-hoe-ze-tot-meer-omzet-le">4. Welke data het belangrijkst is — en hoe ze tot meer omzet leidt</h2>
+<p>Je zegt het zelf: data moet zorgen voor betere analyses, en die moeten de omzet doen stijgen. Daarom heb ik de data gerangschikt op twee dingen: wat de analyse ermee oplevert voor de verkoop, en hoeveel werk het de distributeur kost.</p>
+<h3 id="synergie-1-sales-to-dealer-per-dealer-per-onderdeel-per-maand-zonder-">1. Sales to dealer per dealer, per onderdeel, per maand — zonder prijzen</h3>
+<p>Dit is de belangrijkste. Het maakt vijf dingen mogelijk die we vandaag niet of slecht kunnen:</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Analyse</th>
+<th>Wat het oplevert voor de verkoop</th>
+<th>Voorbeeld uit de workspace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Echte vraag scheiden van stockbewegingen</td>
+<td>Weten of een daling verloren verkoop is of afbouw van voorraad, voor we een actie starten</td>
+<td>Isuzu UK pickup: wat we factureerden ≈ sales to dealer (€6,0M); het gat in GPS was €1,34M garantie, geen verloren verkoop</td>
+</tr>
+<tr>
+<td>Per dealer zien waar genuine of BVP niet gekocht wordt</td>
+<td>Gerichte campagnes en SPA's per dealer in plaats van per land</td>
+<td>ITUK luchtfilters: 17 van de 64 dealers kochten een ander onderdeelnummer; met prijsvergelijking (onze dealerprijs €49,98 tegenover €35,10 voor niet-genuine) wordt dat een gesprek over het argument, niet over de prijs</td>
+</tr>
+<tr>
+<td>Prijsreactie meten van distributeur naar dealer</td>
+<td><strong>Rechtstreeks voor jouw prijsherzieningen</strong>: sinds 11 augustus 2026 is beslist dat de prijsreactie alleen op het niveau distributeur → dealer gemeten mag worden, en daarvoor zijn twee opeenvolgende jaren nodig</td>
+<td>Vandaag geblokkeerd: nergens twee jaar data</td>
+</tr>
+<tr>
+<td>Voorspellen dichter bij de echte vraag</td>
+<td>Betere stockorders naar Japan en Thailand (35–65 dagen levertijd)</td>
+<td>De huidige basisvoorspelling heeft een mediane fout (WAPE) van 49%; dat sales to dealer dit verbetert is te verwachten, maar nog niet gemeten</td>
+</tr>
+<tr>
+<td>Koppeling met IDS per dealer</td>
+<td>Verbeteracties per dealer met commerciële onderbouwing</td>
+<td>Wacht op de dealerlijst (punt 2)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Waarom zonder prijzen:</strong> dat haalt het grootste bezwaar van de distributeur weg (zijn marge), en we hebben de prijzen niet nodig. Waarde berekenen we zelf met onze eigen gefactureerde prijs. Universe heeft dit al zo vastgelegd.</p>
+<h3 id="synergie-2-eenmalig-een-dealerlijst-dealer-id-vestiging-locatie-en-kl">2. Eenmalig een dealerlijst: dealer-ID, vestiging, locatie en klantnummer, en die bijhouden</h3>
+<p>Dit kost het minste werk en levert het meeste op. Zonder deze lijst kan niet per dealer berekend worden hoeveel van wat ISZE factureert doorverkocht wordt (bij ITUK geven alle 65.619 regels "niet berekenbaar"), en kan IDS niet aan de verkoopcijfers gekoppeld worden.</p>
+<h3 id="synergie-3-maandelijks-fill-rate-mos-en-openstaande-backorders-per-on">3. Maandelijks: fill rate, MOS en openstaande backorders per onderdeel</h3>
+<p>Dit maakt het verschil tussen "de dealer kocht niet" en "de distributeur kon niet leveren". Zonder die info lees je een leveringsprobleem als een verkoopprobleem, en dat wil de distributeur zelf ook niet. Ierland toont dat het formaat al bestaat.</p>
+<h3 id="synergie-4-optioneel-alleen-als-het-een-concrete-vraag-beantwoordt">4. Optioneel, alleen als het een concrete vraag beantwoordt</h3>
+<p>Redenen bij verloren verkoop, gemiddelde kilometers per modelgroep (bij ITUK al voorbereid, maar nooit verstuurd), en stock per onderdeel. Volgens de Universe-regel vraag je dit pas wanneer je kan zeggen: "als je ons X geeft, krijg je Y, en daarmee beslis je Z."</p>
+<h3 id="synergie-niet-vragen">Niet vragen</h3>
+<p>Verkoopprijzen, marges, klantnamen, chassisnummers en werkplaatsorders. Het kost vertrouwen, we hebben het niet nodig, en bij prijzen is er een mededingingsrisico.</p>
+<hr />
+<h2 id="synergie-5-het-programma-als-n-geheel">5. Het programma als één geheel</h2>
+<h3 id="synergie-5-1-niveau-1-partner-2-5-op-stockorders-getoetst-per-kwartaa">5.1 Niveau 1 — Partner (−2,5% op stockorders), getoetst per kwartaal</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Wat de distributeur doet</th>
+<th>Standaard (overgenomen uit Universe)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sales to dealer, maandelijks</td>
+<td>Distributeur-ID · dealer-ID · vestigings-ID · Isuzu-onderdeelnummer · aantal (ook negatief bij retours) · datum of maand · soort transactie · regel-ID · rapportageperiode · versie · <strong>verklaring van wat erin zit</strong> (aantal dealers, wat uitgesloten is). Binnen 10 werkdagen na het einde van de maand. Zonder prijzen. Het Excel-formaat is vrij, de inhoud niet.</td>
+</tr>
+<tr>
+<td>Dealerlijst</td>
+<td>Eén keer, daarna bijhouden. Gesloten of hernoemde dealers houden hun ID.</td>
+</tr>
+<tr>
+<td>Maandelijkse KPI's</td>
+<td>Fill rate, MOS, stockwaarde en openstaande backorders per onderdeel</td>
+</tr>
+<tr>
+<td>IDS</td>
+<td>De ronde uitgevoerd waar ISZE en IMG die plannen, met minstens 70% van de dealers</td>
+</tr>
+<tr>
+<td>Training</td>
+<td>Verplichte trainingen gevolgd (vanaf april 2027)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Wat de distributeur terugkrijgt, elke maand:</strong> een overzicht van zijn eigen netwerk in het formaat van de bestaande one-pagers (wat we factureerden en wat doorverkocht werd, genuine/BVP, dekking van onderhoudsonderdelen, IDS). Zodra het dealerdetail binnenkomt, ook per dealer. Het overzicht toont alleen de cijfers van de distributeur zelf, naast een anoniem netwerkgemiddelde.</p>
+<p><strong>Waarin dit verschilt van de kickback:</strong> de kickback vraagt vandaag een bestand. Niveau 1 vraagt een <strong>bruikbaar</strong> bestand: per dealer, maandelijks, op tijd, met een verklaring van wat erin zit, plus de dealerlijst. Zo betaalt ISZE niet twee keer voor hetzelfde.</p>
+<h3 id="synergie-5-2-niveau-2-excellence-partner-5-op-stockorders-getoetst-pe">5.2 Niveau 2 — Excellence Partner (−5% op stockorders), getoetst per jaar</h3>
+<p>Alles van niveau 1, plus minstens 85 op 100 op resultaat:</p>
+<ul>
+<li>parts-omzet tegenover het businessplan;</li>
+<li>genuine-aandeel in euro niet gedaald;</li>
+<li>verbeteracties afgesloten (IDS-opvolging, zoals de IDS Development Studio van Universe het beschrijft);</li>
+<li><strong>elke maand één afgesproken actie met eigenaar en datum</strong>, en de opvolging ervan (het derde punt uit de "minimum viable exchange" van Universe);</li>
+<li>een stap vooruit in R&amp;M of extended warranty.</li>
+</ul>
+<h3 id="synergie-5-3-wat-partners-extra-krijgen-zonder-dat-de-gewone-service-">5.3 Wat partners extra krijgen, zonder dat de gewone service afhankelijk wordt</h3>
+<p>Universe heeft extra programma's die geen gewone service zijn. Daarin kunnen partners voorrang krijgen:</p>
+<ul>
+<li>campagnesteun op extra volume boven een basislijn (Universe stelt €60–90k voor, met een minimum van €150k aan in aanmerking komende facturatie);</li>
+<li>DLOD-steun bij concurrerende offertes (Route A: drie markten, €90k);</li>
+<li>het tenderkader;</li>
+<li>analyses op aanvraag (bv. een studie naar beschikbaarheid, als de distributeur zijn stock deelt).</li>
+</ul>
+<p>De gewone service (levertermijnen, BVP-alternatieven, offertes, gewone ondersteuning) blijft voor iedereen gelijk. Dat is een harde regel uit Universe en ze moet ook in het reglement van Excellence staan.</p>
+<hr />
+<h2 id="synergie-6-waar-de-twee-botsen-en-hoe-je-dat-oplost">6. Waar de twee botsen, en hoe je dat oplost</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Universe zegt</th>
+<th>Excellence doet</th>
+<th>Oplossing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Betaal niet per record of per veld; tel geen uploads als deelname</td>
+<td>Betaalt voor aanleveren</td>
+<td>Betalen voor het halen van een <strong>kwaliteitsstandaard per kwartaal</strong> (volledig, per dealer, op tijd, met verklaring), niet voor het aantal regels. Op niveau 2 telt wat er met de data gebeurt (acties), niet de upload.</td>
+</tr>
+<tr>
+<td>Geen publieke rangschikking van dealers, geen nalevingsscore op IDS</td>
+<td>Jaarstatus, award, IDS in de score</td>
+<td>Geen rangschikking van distributeurs: wie het niveau haalt, krijgt het, zonder 1-2-3. IDS telt als opvolging, niet als absolute zelfscore. Dealers worden nooit gerangschikt.</td>
+</tr>
+<tr>
+<td>De gewone service hangt nooit af van wat iemand aanlevert</td>
+<td>Development Partners krijgen geen korting</td>
+<td>Korting en extra programma's zijn geen gewone service. De gewone service staat expliciet in het reglement als gelijk voor iedereen.</td>
+</tr>
+<tr>
+<td>Benader nooit rechtstreeks een dealer</td>
+<td>—</td>
+<td>Alles loopt via de distributeur; ISZE stuurt de terugkoppeling naar de distributeur.</td>
+</tr>
+<tr>
+<td>Budget van €100k tot €300k, zonder bewezen rendement</td>
+<td>Tot €560k (niveau 1) of €1,12M (niveau 2), zonder plafond</td>
+<td>Zie §7: realistisch jaar 1 ligt lager, maar management zal het naast de prijsherziening leggen.</td>
+</tr>
+<tr>
+<td>Stoptest: als de prikkel wegvalt, blijft men dan aanleveren?</td>
+<td>—</td>
+<td>Overnemen als succesmaatstaf van Excellence: komen er verbeteringen of extra gegevens die niet verplicht waren?</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="synergie-7-kosten-naast-elkaar">7. Kosten naast elkaar</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Wat</th>
+<th style="text-align: right;">Bedrag per jaar</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Excellence niveau 1, iedereen zonder CIS</td>
+<td style="text-align: right;">tot €560k</td>
+<td>voorstel</td>
+</tr>
+<tr>
+<td>Excellence niveau 2, iedereen zonder CIS</td>
+<td style="text-align: right;">tot €1,12M</td>
+<td>voorstel</td>
+</tr>
+<tr>
+<td><strong>Excellence niveau 1, realistisch jaar 1</strong> (de 7 distributeurs die vandaag al sales to dealer leveren: ITUK, Isuzu UK pickup, UTI, Ierland, Portugal, Griekenland, Roemenië — als ze er dealerdetail aan toevoegen)</td>
+<td style="text-align: right;"><strong>€335k</strong></td>
+<td>schatting op stockorders FY2026</td>
+</tr>
+<tr>
+<td>Universe, budgetroute</td>
+<td style="text-align: right;">€100k (aanbevolen), plafond €300k</td>
+<td>voorstel, niet goedgekeurd</td>
+</tr>
+<tr>
+<td>DLOD Route A</td>
+<td style="text-align: right;">±€90k</td>
+<td>voorstel</td>
+</tr>
+<tr>
+<td>Ter vergelijking: prijsherziening +5%</td>
+<td style="text-align: right;">+€638k tot +€726k aan opbrengst</td>
+<td>lopende beslissing</td>
+</tr>
+</tbody>
+</table></div>
+<figure class="chart">
+  <figcaption><strong>Kost per jaar naast elkaar</strong><span class="muted"> · gearceerde band = wat de prijsherziening +5% opbrengt (€638k–€726k)</span></figcaption>
+  <div class="hb cost" style="--bl:53.17;--bw:7.33">
+    <div class="hb-band"></div>
+    <div class="hb-row"><div class="hb-label">Niveau 1, realistisch jaar 1</div><div class="hb-track"><div class="hb-bar c1" style="width:27.9%"></div><span class="hb-val">€335k</span></div></div><div class="hb-row"><div class="hb-label">Niveau 1, alle 19 distributeurs</div><div class="hb-track"><div class="hb-bar c2" style="width:46.6%"></div><span class="hb-val">€560k</span></div></div><div class="hb-row"><div class="hb-label">Niveau 2, alle 19 distributeurs</div><div class="hb-track"><div class="hb-bar c2" style="width:93.3%"></div><span class="hb-val">€1,12M</span></div></div><div class="hb-row"><div class="hb-label">Universe, aanbevolen route</div><div class="hb-track"><div class="hb-bar c3" style="width:8.3%"></div><span class="hb-val">€100k</span></div></div><div class="hb-row"><div class="hb-label">Universe, plafond</div><div class="hb-track"><div class="hb-bar c3" style="width:25.0%"></div><span class="hb-val">€300k</span></div></div><div class="hb-row"><div class="hb-label">DLOD Route A</div><div class="hb-track"><div class="hb-bar c3" style="width:7.5%"></div><span class="hb-val">€90k</span></div></div>
+  </div>
+  <div class="legend"><span><i class="c1"></i>Excellence, realistisch</span><span><i class="c2"></i>Excellence, maximum</span><span><i class="c3"></i>Universe-voorstellen</span></div>
+  <p class="source">Bron: stockorders FY2026 per distributeur (CIS uitgesloten); Universe 3.0 §9; DLOD-uitrol §7; €300k term sheet §2.</p>
+</figure>
+
+<p><strong>Eerlijk gezegd:</strong> als iedereen niveau 1 haalt, geeft Excellence ongeveer 80% terug van wat de prijsherziening van +5% opbrengt. Management zal die twee naast elkaar leggen. Twee argumenten helpen. Ten eerste komt niet iedereen meteen aan boord: in jaar 1 is ±€335k realistischer. Ten tweede is de korting gekoppeld aan data die de prijsherziening zelf beter maakt (de prijsreactie meten, §4).</p>
+<h3 id="synergie-plan-b-als-management-de-korting-niet-goedkeurt">Plan B — als management de korting niet goedkeurt</h3>
+<ol>
+<li><strong>De bestaande kickback-voorwaarde aanscherpen</strong> tot de standaard van niveau 1, voor de 9 kickback-distributeurs, te beginnen bij de 5 waarvoor geen bestand in de workspace staat. Kost €0 extra. Het vraagt wel dat je de voorwaarden van de kickback kan aanpassen.</li>
+<li><strong>Een formele vraag met iets terug</strong> voor ITUK, Griekenland en Roemenië (en daarna de anderen): de maandelijkse terugkoppeling als tegenprestatie. Roemenië bewijst dat dit kan werken.</li>
+<li><strong>Status en award zonder korting.</strong> Erkenning op de Europese aftersales-meeting, met IMG ter ondersteuning. Dat is zwakker, maar niet niets.</li>
+<li><strong>Universe-tools als aantrekking</strong>, niet als afdwinging. Universe schat zelf in dat dit zonder extra prikkel maar matig werkt (55 voor meedoen, 35 voor meer delen dan nu).</li>
+</ol>
+<p>Wat ik <strong>niet</strong> zou doen: plan B bouwen rond "tools die data afdwingen". Een tool dwingt niets af, en het platform waarop zo'n tool moet draaien, bestaat niet.</p>
+<hr />
+<h2 id="synergie-8-wat-ik-nu-zou-doen">8. Wat ik nu zou doen</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Stap</th>
+<th>Wie</th>
+<th>Waarom eerst</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nagaan waarom er voor Duitsland, Benelux, Zweden, Noorwegen en UMI geen sales-to-dealer-bestand is, terwijl het in hun kickback zit</td>
+<td>Jerome</td>
+<td>Als de huidige voorwaarde niet opgevolgd wordt, moet dat eerst opgelost of verklaard zijn</td>
+</tr>
+<tr>
+<td>De voorwaarden van de kickback (en de jaarlijkse incentive-MOU) naast niveau 1 leggen</td>
+<td>Jerome levert ze aan, ik vergelijk</td>
+<td>Om niet twee keer te betalen</td>
+</tr>
+<tr>
+<td>De vraag aan ITUK versturen (kilometers per modelgroep, dealerlijst met klantnummer)</td>
+<td>Jerome</td>
+<td>Al voorbereid en nooit verstuurd; het is de goedkoopste stap met het meeste effect</td>
+</tr>
+<tr>
+<td>De datastandaard op één pagina zetten voor distributeurs (Engels, gedeeld)</td>
+<td>Ik</td>
+<td>Zelfde tekst voor Excellence én Universe</td>
+</tr>
+<tr>
+<td>Een controle per distributeur: wie haalt niveau 1 vandaag al, en wat ontbreekt er</td>
+<td>Ik, uit het register</td>
+<td>Toont management de realistische kost van jaar 1</td>
+</tr>
+<tr>
+<td>Het deck aanvullen met de dia's "wat we vragen / wat je terugkrijgt", de kosten en plan B</td>
+<td>Ik, na jouw akkoord</td>
+<td>Voor de managementbeslissing</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="synergie-bronnen">Bronnen</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Wat</th>
+<th>Waar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Universe 3.0, deelnamescores, spelregels, budget</td>
+<td><code>Isuzu Universe/01_Strategy/ISUZU_UNIVERSE_3_0_2026-09-23.md</code> §4, §8, §9</td>
+</tr>
+<tr>
+<td>Value-exchange model, niveaus 0–4, wat niet vragen</td>
+<td><code>Isuzu Universe/01_Strategy/UNIVERSE_VALUE_EXCHANGE_MODEL_2026-09-21.md</code></td>
+</tr>
+<tr>
+<td>Minimale datastandaard, kickback = 20%</td>
+<td><code>Isuzu Universe/01_Strategy/Universe_Commercial_Participation_Model.md</code></td>
+</tr>
+<tr>
+<td>Datamatrix, luchtfiltervoorbeeld, vraag aan ITUK niet verstuurd</td>
+<td><code>Isuzu Universe/01_Strategy/UNIVERSE_PILOT_EVIDENCE_PACK_2026-09-21.md</code> §3, §5, §8</td>
+</tr>
+<tr>
+<td>€300k, prijsherziening +5%</td>
+<td><code>Isuzu Universe/01_Strategy/UNIVERSE_300K_GUARANTEE_TERM_SHEET_2026-09-21.md</code> §2</td>
+</tr>
+<tr>
+<td>DLOD Route A</td>
+<td><code>Isuzu Universe/01_Strategy/DLOD_NETWORK_ROLLOUT_2026-09-23.md</code> §7</td>
+</tr>
+<tr>
+<td>Stand van de Universe-software</td>
+<td><code>00_docs/ISZE_ROADMAP.md</code> (Universe engineering programme), <code>Isuzu Universe/05_AIM_Universe/README.md</code></td>
+</tr>
+<tr>
+<td>Distributeur-one-pagers</td>
+<td><code>Isuzu Universe/02_Atlas/DISTRIBUTOR_ONE_PAGERS_2026-09/</code></td>
+</tr>
+<tr>
+<td>Sales-to-dealer-bestanden en standaardregel</td>
+<td><code>01_data/00_derived/dealer_sellout_long_*.csv</code>, <code>03_analytics/Isuzu/prism/data/dealer_sales/DEALER_SELL_OUT.md</code>, <code>01_data/DATA_MANIFEST.md</code> §05</td>
+</tr>
+<tr>
+<td>Wat we hebben en wat ontbreekt</td>
+<td><code>00_docs/ISZE_OS_DATA_MAP.yaml</code>, <code>00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md</code></td>
+</tr>
+<tr>
+<td>Prijsreactie alleen distributeur → dealer</td>
+<td><code>DECISIONS.md</code>, 11 augustus 2026</td>
+</tr>
+<tr>
+<td>Kosten per distributeur</td>
+<td><code>_build/order_mix_fy2026.csv</code></td>
+</tr>
+</tbody>
+</table></div></section></main>
+</div>
+<footer>Gebouwd uit de twee analysebestanden in deze map met <code>_build/build_html.py</code>. Cijfers: verificatierapport groen (24 sep 2026). Geen externe bestanden nodig.</footer>
+<script>
+(function(){var d=document.getElementById('tocd');if(d&&window.innerWidth<900)d.removeAttribute('open')})();
+(function(){var b=document.getElementById('themebtn');if(!b)return;var r=document.documentElement;
+function cur(){return r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
+function lab(){b.textContent=cur()==='dark'?'Licht thema':'Donker thema'}
+try{var s=localStorage.getItem('iepp-theme');if(s)r.setAttribute('data-theme',s)}catch(e){}
+lab();b.addEventListener('click',function(){var n=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',n);
+try{localStorage.setItem('iepp-theme',n)}catch(e){}lab()})})();
+</script>
+</body></html>

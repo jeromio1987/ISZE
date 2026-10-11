@@ -1,0 +1,1837 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Excellence Partner Program — white paper</title><style>
+:root{--ink:#1d2124;--mut:#5f676e;--line:#dfe2e5;--panel:#f4f5f6;--red:#D71920;--navy:#15233C;--bg:#fff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15.5px/1.6 Arial,Helvetica,sans-serif}
+header.cover{background:#24282C;color:#fff;padding:44px 28px 36px}
+header.cover .in{max-width:1180px;margin:0 auto}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#ff6b70;font-weight:700}
+header.cover h1{font-size:38px;line-height:1.15;margin:8px 0 8px}
+header.cover p{margin:0;color:#c9ced3;max-width:800px;font-size:17px}
+.layout{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:240px minmax(0,1fr);gap:36px;padding:24px 28px}
+.layout>*{min-width:0}
+nav.toc{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;font-size:13px}
+nav.toc a{display:block;color:var(--ink);text-decoration:none;padding:4px 0 4px 10px;border-left:2px solid var(--line)}
+nav.toc a:hover{border-left-color:var(--red);color:var(--red)}
+main h2{font-size:25px;margin:48px 0 10px;padding-top:10px;border-top:2px solid var(--ink)}
+main h3{font-size:18px;margin:26px 0 8px;color:var(--navy)}
+main p,main li{max-width:860px}
+main code{font-size:12.5px;background:var(--panel);padding:1px 5px;border-radius:4px;word-break:break-all}
+main hr{border:none;border-top:1px solid var(--line);margin:26px 0}
+.tablewrap{overflow-x:auto;margin:14px 0 20px;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:7px 9px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--panel);font-weight:700}tr:last-child td{border-bottom:none}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;border-radius:4px;padding:0 5px;margin:0 2px;vertical-align:1px;color:#fff;line-height:16px}
+.tM{background:#2e7d4f}.tI{background:#4f6d8f}.tA{background:#b26a00}.tP{background:#6b4fa0}.tU{background:#8a9096}
+figure.chart{margin:18px 0 24px;padding:14px 16px;background:var(--panel);border-radius:10px;max-width:900px}
+figure.chart svg{width:100%;height:auto;display:block}
+figcaption{font-size:13.5px;margin:0 0 10px}
+.source{font-size:11.5px;color:var(--mut);margin:8px 0 0}
+.muted{color:var(--mut)}
+.cov-row{display:grid;grid-template-columns:minmax(0,1.5fr) 70px 140px minmax(0,1.3fr);gap:8px;align-items:center;padding:4px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.cov-row:last-child{border-bottom:none}
+.pill{font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 8px;text-align:center;color:#fff}
+.pill.dealer{background:#2e7d4f}.pill.net{background:#b26a00}.pill.reg{background:#6b4fa0}.pill.none{background:#c9ced3;color:#1d2124}
+footer{max-width:1180px;margin:0 auto;padding:0 28px 40px;font-size:12px;color:var(--mut)}
+@media screen and (max-width:900px){.layout{grid-template-columns:1fr;padding:16px}nav.toc{position:static;max-height:none}header.cover h1{font-size:28px}
+.cov-row{grid-template-columns:minmax(0,1fr) auto}.cov-row div:nth-child(2),.cov-row div:nth-child(4){grid-column:1/-1}}
+@media print{body{font-size:11.5px}nav.toc{display:none}.layout{grid-template-columns:1fr;padding:0}header.cover{padding:24px 0;background:#fff;color:#000}
+header.cover p{color:#333}main h2{break-after:avoid;margin-top:28px}figure.chart,.tablewrap{break-inside:avoid}.tag{border:1px solid #888}}
+</style></head><body>
+<header class="cover"><div class="in"><div class="eyebrow">Internal draft v1 · 9 October 2026</div>
+<h1>Isuzu Excellence Partner Program</h1>
+<p>The case, the economics and the design. For management decision and for the developer. Euros, fiscal years, stock orders only. Claims are labelled <span class="tag tM">M</span> measured <span class="tag tI">I</span> inferred <span class="tag tA">A</span> assumption <span class="tag tP">P</span> proposal <span class="tag tU">U</span> unknown.</p></div></header>
+<div class="layout"><nav class="toc" aria-label="Contents"><a href="#1-executive-summary">1. Executive summary</a><a href="#2-purpose-scope-and-how-to-read-this-paper">2. Purpose, scope and how to read this paper</a><a href="#3-the-problem">3. The problem</a><a href="#4-the-proposal-as-received">4. The proposal as received</a><a href="#5-the-design">5. The design</a><a href="#6-the-economics">6. The economics</a><a href="#7-can-the-return-be-proven">7. Can the return be proven?</a><a href="#8-excellence-partner-and-isuzu-universe-together">8. Excellence Partner and Isuzu Universe together</a><a href="#9-implementation-and-technical-requirements">9. Implementation and technical requirements</a><a href="#10-risks">10. Risks</a><a href="#11-decisions-open-items-and-stop-conditions">11. Decisions, open items and stop conditions</a><a href="#appendix-a-data-standard-for-sales-to-dealer-proposal">Appendix A. Data standard for sales to dealer (proposal)</a><a href="#appendix-b-level-2-scorecard-criteria-and-the-six-fields">Appendix B. Level 2 scorecard: criteria and the six fields</a><a href="#appendix-c-model-structure-formulas-and-assumptions">Appendix C. Model: structure, formulas and assumptions</a><a href="#appendix-d-evidence-per-distributor">Appendix D. Evidence per distributor</a><a href="#appendix-e-requirements-for-the-developer">Appendix E. Requirements for the developer</a><a href="#appendix-f-glossary">Appendix F. Glossary</a><a href="#appendix-g-sources-read-and-what-was-not-read">Appendix G. Sources read, and what was not read</a><a href="#appendix-h-the-prompt">Appendix H. The prompt</a></nav><main><p>Prepared by the ISZE parts-sales team (Jerome, Bart Symons) with AI assistance. For management decision and for the developer who builds what the programme needs. Language rules, sources and the prompt that produced this paper are in the appendices.</p>
+<hr />
+<h2 id="1-executive-summary">1. Executive summary</h2>
+<p><strong>The decision.</strong> Management is asked to approve three things: the concept of an Excellence Partner Program for independent, multi-brand distributors; a cost ceiling per year; and a staged start on 1 April 2027 (the first day of FY2028), released stage by stage on measured indicators. It is not asked to approve a proven return, because none can be shown today.</p>
+<p><strong>What the programme is.</strong> ISZE offers distributors a discount on <strong>stock orders only</strong> in return for taking part: sending monthly sales-to-dealer data and KPIs, running the dealer-standards round (IDS), and following the trainings. Level 1, Partner, is about −2.5% on stock orders. Level 2, Excellence Partner, is about −5% and adds a result score. Eligibility is checked every quarter, and the discount code is then set in SAP. It comes on top of the kickback that exists today. Distributors are independent and sell several brands, so ISZE cannot force them; the discount is the one lever it has. <span class="tag tP">P</span></p>
+<p><strong>Four numbers that decide the case.</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Number</th>
+<th style="text-align: right;">Value</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stock orders of the 19 distributors in scope, FY2026</td>
+<td style="text-align: right;">€22.4M of €31.8M billed (70%)</td>
+<td><code>sales_fact.parquet</code> <span class="tag tM">M</span></td>
+</tr>
+<tr>
+<td>Cost of the discount as the deck proposes it, year 3, all 19 in</td>
+<td style="text-align: right;">€0.93M a year, 2.2 times the €0.43M of rebates paid today</td>
+<td>model, rebate credits in billing <span class="tag tM">M</span><span class="tag tP">P</span></td>
+</tr>
+<tr>
+<td>Extra sales the deck design must create to pay for itself</td>
+<td style="text-align: right;">6.7% of the participants' billing, on top of a plan that already grows about 5%</td>
+<td>model <span class="tag tI">I</span></td>
+</tr>
+<tr>
+<td>Normal year-to-year swing in a distributor's billing</td>
+<td style="text-align: right;">±14% to ±26%</td>
+<td><code>gps_clean_all_fy_v2.csv</code> <span class="tag tM">M</span></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>What this means.</strong> The discount as written in the deck does not pay for itself on any benefit assumption we can defend, and the benefit cannot be proven inside three years, because a distributor's own yearly movement is several times larger than the effect the programme could cause. The honest framing is that the discount <strong>buys participation</strong>, and participation is what makes ISZE's analysis possible. That is a cost-of-capability decision, not a return-on-investment decision, and management should be shown it as one.</p>
+<p><strong>What we recommend.</strong></p>
+<ol>
+<li><strong>Approve the concept, with a progressive "small hybrid" instead of the flat discount.</strong> A small flat part (0.5% level 1, 1% level 2) keeps a visible reward for taking part; a progressive bonus on growth only (bands of 0–5%, 5–10% and above 10%, each paying a higher rate on the stock orders inside that band) links most of the money to results. Year-3 cost is €0.29M, 0.7 times today's rebates; break-even is 2.0% extra sales. <span class="tag tP">P</span></li>
+<li><strong>Set a cost ceiling and release it in stages:</strong> up to €150k in FY2028, €350k in FY2029, €400k in FY2030, each year released only when the previous year met its measured indicators (chapter 11). <span class="tag tP">P</span></li>
+<li><strong>Start with the seven distributors that already send data,</strong> run a no-discount trial with three or four of them in January–March 2027, and launch level 1 on 1 April 2027. Level 2 follows after the first full year. <span class="tag tP">P</span></li>
+<li><strong>Make the data standard part of the offer.</strong> Price-free sales to dealer per dealer and per part, monthly within ten working days, with a declaration of what the file contains. Without that standard, the discount buys the minimum file. <span class="tag tP">P</span></li>
+<li><strong>Measure what can be measured.</strong> Sales uplift cannot be proven statistically (chapter 7). Measure data quality, dealer coverage, mix, order-type shift, and evidence of decisions taken on the data, and run dealer-level or part-family experiments where the data allows it. <span class="tag tP">P</span></li>
+</ol>
+<p><strong>What is not known.</strong> There is no measured uplift from data sharing anywhere in the workspace; the Low, Base and High benefit cases are our assumptions. The contract text of the kickback and the budget workbook with its incentive sheet are not in the workspace. The cost of internal time is not counted. Air-freight savings from moving rush orders to stock orders are left out on purpose. A legal review has not been done.</p>
+<p><strong>Companion material.</strong> The ROI model (Excel, live formulas), the 90-second film and the earlier analyses sit in the same folder. They agree with this paper; where an earlier analysis said otherwise, chapter 3 and appendix G say what changed.</p>
+<hr />
+<h2 id="2-purpose-scope-and-how-to-read-this-paper">2. Purpose, scope and how to read this paper</h2>
+<h3 id="2-1-purpose">2.1 Purpose</h3>
+<p>Two readers use this paper. Management needs enough to decide, and enough to defend the decision to Japan and to distributors. The developer needs to know what has to exist by April 2027 and why. Chapters 1–8 and 10–11 are for the first reader; chapter 9 and appendices A, B and E are for the second.</p>
+<h3 id="2-2-scope">2.2 Scope</h3>
+<p>In scope: the 19 distributors outside the CIS markets, parts only, stock orders only, euros, fiscal years. FY2026 is 1 April 2025 – 31 March 2026. FY2027 is 1 April 2026 – 31 March 2027. The programme's first year is FY2028 (1 April 2027 – 31 March 2028). Out of scope: Ukraine, Armenia and Kazakhstan; MIDI markets; rush and VOR orders; accessories; the value of air freight; the kickback's own terms.</p>
+<p>UTI and UMI are never blended. Isuzu UK pickup (IUK) and Isuzu Truck UK (ITUK) are never blended. Ireland is not IUK.</p>
+<h3 id="2-3-evidence-labels">2.3 Evidence labels</h3>
+<p>Every substantive claim carries one of five labels, borrowed from the discipline used in the Universe papers.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Label</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="tag tM">M</span> measured</td>
+<td>Counted in a named source file</td>
+</tr>
+<tr>
+<td><span class="tag tI">I</span> inferred</td>
+<td>A conclusion drawn from measured data; the reasoning is shown</td>
+</tr>
+<tr>
+<td><span class="tag tA">A</span> assumption</td>
+<td>A value we chose; it is not evidence, and the paper says what changes if it is wrong</td>
+</tr>
+<tr>
+<td><span class="tag tP">P</span> proposal</td>
+<td>A design or decision not yet taken</td>
+</tr>
+<tr>
+<td><span class="tag tU">U</span> unknown</td>
+<td>Recorded as unknown, not filled with a guess</td>
+</tr>
+</tbody>
+</table></div>
+<p>An unlabelled number is an error in this paper and should be read as one.</p>
+<h3 id="2-4-what-this-paper-corrects">2.4 What this paper corrects</h3>
+<p>Two earlier statements by the same team are corrected here. First, an earlier synergy note said no sales-to-dealer file exists for Germany, Benelux, Sweden, Norway and UMI. That described the <strong>workspace register</strong>, not reality: the August 2026 sales-review minutes record that Germany (ISD) sends part number, quantity and date monthly since May 2025, and that Greece, IUK, Ireland and Portugal agreed to monthly feeds without prices. The register is out of date; chapter 3 sets out what is known and unknown. Second, the first version of the ROI model assumed a €100,000 running cost; that is set to zero because the programme is built and run in-house, and the paper states the cost of internal time as not counted.</p>
+<hr />
+<h2 id="3-the-problem">3. The problem</h2>
+<h3 id="3-1-a-weak-lever-on-independent-distributors">3.1 A weak lever on independent distributors</h3>
+<p>ISZE sells parts to distributors that are independent businesses and sell several brands. A distributor can order Isuzu parts, buy from an aftermarket supplier, or do both, and it decides what to stock, what to push at its dealers, and what to report. ISZE can ask for data, and for part of the distributors it ties a share of the rebate to it. It cannot require good data, correct data or timely data in any way that a distributor cannot satisfy at minimum effort. Universe's own papers put it precisely: a file sent to satisfy a condition is the minimum that satisfies that condition.</p>
+<h3 id="3-2-what-the-data-is-for">3.2 What the data is for</h3>
+<p>ISZE sees what it bills to a distributor. It does not see what the distributor sells on. Without sales to dealer, ISZE cannot tell stock movement from lost sales, cannot see which dealer or which part family is weak, cannot measure how price changes reach the dealer, and plans stock orders to Japan and Thailand on what distributors ordered, not on what dealers bought. The decision of 11 August 2026 allows price reaction to be measured only from distributor to dealer, and only with two years of data; today that is not possible anywhere. <span class="tag tM">M</span> (<code>DECISIONS.md</code>).</p>
+<p>One example from the workspace shows what the data changes. For Isuzu UK pickup in FY2026, ISZE billed €5.95M and sales to dealer was €5.98M. The gap in the GPS figure was not destocking: €1.34M of the billing was warranty. Read without sales to dealer, that year looks like a decline; read with it, it is not. <span class="tag tM">M</span> (<code>billed_vs_std_warranty_fy2026.csv</code>).</p>
+<h3 id="3-3-what-isze-has-today">3.3 What ISZE has today</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Distributor</th>
+<th>Kickback today</th>
+<th>Sales to dealer in the workspace</th>
+<th>What the sales-review minutes say (Aug 2026)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Isuzu Truck UK</td>
+<td>no</td>
+<td>Per dealer, 2025 only (64 dealers, 224,001 units); 2023, 2024 and 2026 are network totals</td>
+<td>not in the minutes read</td>
+</tr>
+<tr>
+<td>Isuzu UK pickup</td>
+<td>yes</td>
+<td>Network total, 2025 and 2026 to July</td>
+<td>Automated monthly feed, part number and quantity, no customer or price, from January 2025</td>
+</tr>
+<tr>
+<td>Ireland</td>
+<td>yes</td>
+<td>Network total, 2025 and 2026 to July</td>
+<td>Sent to 20 Nov 2025; to resend and continue monthly</td>
+</tr>
+<tr>
+<td>UTI</td>
+<td>yes</td>
+<td>Network total, 2025 (Feb–Jul missing) and 2026</td>
+<td>not in the minutes read</td>
+</tr>
+<tr>
+<td>Portugal</td>
+<td>yes</td>
+<td>Network total, 2025 and 2026</td>
+<td>Agreed in principle (29 Jul 2026), once the extraction is confirmed</td>
+</tr>
+<tr>
+<td>Greece</td>
+<td>no</td>
+<td>Network total, 2025</td>
+<td>Agreed ask: part number, quantity and date, no prices, monthly, from January 2025 if possible</td>
+</tr>
+<tr>
+<td>Romania</td>
+<td>no</td>
+<td>Network total, 2026 January–August</td>
+<td>Sent after the formal request of 15 Sep 2026</td>
+</tr>
+<tr>
+<td>Germany</td>
+<td>yes</td>
+<td><strong>Nothing in the register</strong></td>
+<td>Monthly from May 2025: part number, quantity, date</td>
+</tr>
+<tr>
+<td>Benelux, Sweden, Norway, UMI</td>
+<td>yes</td>
+<td>Nothing in the register</td>
+<td><span class="tag tU">U</span> not in the minutes read</td>
+</tr>
+<tr>
+<td>Cyprus, Hungary, Finland, Malta, Denmark, Iceland, Palestine</td>
+<td>no</td>
+<td>Nothing</td>
+<td><span class="tag tU">U</span></td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tM">M</span> for the workspace columns (<code>dealer_sellout_long_*.csv</code>, <code>DATA_MANIFEST.md</code> §05); <span class="tag tM">M</span> for the minutes (<code>05_memory/briefs/sales_reviews_Koen_2026-08-05_06.md</code>, <code>MINUTES_ISZE_Astara_Portugal_2026-07-29.md</code>).</p>
+<figure class="chart"><div class="cov"><div class="cov-row"><div>Isuzu Truck UK</div><div class="muted"></div><div class="pill dealer">per dealer</div><div class="muted">2025 only, 64 dealers</div></div><div class="cov-row"><div>Isuzu UK pickup</div><div class="muted">kickback</div><div class="pill net">network total</div><div class="muted">automated monthly feed agreed</div></div><div class="cov-row"><div>Ireland</div><div class="muted">kickback</div><div class="pill net">network total</div><div class="muted">sent to Nov 2025, monthly to follow</div></div><div class="cov-row"><div>UTI</div><div class="muted">kickback</div><div class="pill net">network total</div><div class="muted"></div></div><div class="cov-row"><div>Portugal</div><div class="muted">kickback</div><div class="pill net">network total</div><div class="muted">agreed in principle, Jul 2026</div></div><div class="cov-row"><div>Greece</div><div class="muted"></div><div class="pill net">network total</div><div class="muted">monthly feed agreed</div></div><div class="cov-row"><div>Romania</div><div class="muted"></div><div class="pill net">network total</div><div class="muted">after formal request, Sep 2026</div></div><div class="cov-row"><div>Germany</div><div class="muted">kickback</div><div class="pill reg">not in register</div><div class="muted">monthly since May 2025 per minutes</div></div><div class="cov-row"><div>Benelux</div><div class="muted">kickback</div><div class="pill none">nothing on file</div><div class="muted">unknown</div></div><div class="cov-row"><div>Sweden</div><div class="muted">kickback</div><div class="pill none">nothing on file</div><div class="muted">unknown</div></div><div class="cov-row"><div>Norway</div><div class="muted">kickback</div><div class="pill none">nothing on file</div><div class="muted">unknown</div></div><div class="cov-row"><div>UMI</div><div class="muted">kickback</div><div class="pill none">nothing on file</div><div class="muted">unknown</div></div><div class="cov-row"><div>Cyprus, Hungary, Finland, Malta, Denmark, Iceland, Palestine</div><div class="muted"></div><div class="pill none">nothing on file</div><div class="muted">unknown</div></div></div><figcaption><b>Sales to dealer: what is on file, and what the field says</b> · best detail per distributor</figcaption><p class="source">Source: sales-to-dealer register and long files; August 2026 sales-review minutes. ‘Not in register’ means the minutes record a feed that the workspace does not hold.</p></figure>
+<p>Three things follow. <span class="tag tI">I</span></p>
+<ol>
+<li><strong>Per dealer, ISZE has one year of one distributor.</strong> Everything else is a total for the whole network of a distributor, which cannot show which dealer or which part family is weak.</li>
+<li><strong>ITUK shows the risk of a one-off file.</strong> The 2025 file had dealer detail; the 2026 file fell back to a network total. Dealer detail is not yet a habit anywhere.</li>
+<li><strong>The register does not reflect the field.</strong> Several distributors have agreed to monthly feeds that are not yet in the workspace. Closing that gap costs nothing and should come before any discount is promised.</li>
+</ol>
+<h3 id="3-4-the-kickback-today">3.4 The kickback today</h3>
+<p>The billing ledger carries credit lines labelled "Rebate Material". In FY2026 they total <strong>€430,030</strong>, 1.35% of the €31.8M billed to the distributors in scope. <span class="tag tM">M</span> (<code>sales_fact.parquet</code>).</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Distributor</th>
+<th style="text-align: right;">Rebate credits FY2026</th>
+<th style="text-align: right;">As % of billed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Isuzu Truck UK</td>
+<td style="text-align: right;">€142,000</td>
+<td style="text-align: right;">2.1%</td>
+</tr>
+<tr>
+<td>Isuzu UK pickup</td>
+<td style="text-align: right;">€95,000</td>
+<td style="text-align: right;">1.6%</td>
+</tr>
+<tr>
+<td>Norway</td>
+<td style="text-align: right;">€47,136</td>
+<td style="text-align: right;">3.2%</td>
+</tr>
+<tr>
+<td>UTI</td>
+<td style="text-align: right;">€34,000</td>
+<td style="text-align: right;">1.1%</td>
+</tr>
+<tr>
+<td>Germany</td>
+<td style="text-align: right;">€29,600</td>
+<td style="text-align: right;">1.1%</td>
+</tr>
+<tr>
+<td>Benelux</td>
+<td style="text-align: right;">€25,200</td>
+<td style="text-align: right;">1.2%</td>
+</tr>
+<tr>
+<td>Portugal</td>
+<td style="text-align: right;">€20,000</td>
+<td style="text-align: right;">1.1%</td>
+</tr>
+<tr>
+<td>UMI</td>
+<td style="text-align: right;">€20,000</td>
+<td style="text-align: right;">0.7%</td>
+</tr>
+<tr>
+<td>Sweden</td>
+<td style="text-align: right;">€17,094</td>
+<td style="text-align: right;">1.3%</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td style="text-align: right;"><strong>€430,030</strong></td>
+<td style="text-align: right;"><strong>1.35%</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>These lines mix the kickback with other incentives: ITUK's €142,000 includes the €30,000 credit of the dealer-defence programme. The budget workbook with its incentive sheet (<code>budget_per_DB_reviewed_24042026.xlsx</code>) is not in the workspace, so the split cannot be made. The sales-review minutes add that bonuses follow Japan's approval and are scaled to targets; one distributor's bonus is quoted at about €37,000 with a stretch of +1.8% above base. <span class="tag tM">M</span></p>
+<p>Jerome states that the kickback is normally described as carrying a 20% share tied to sales-to-dealer data. At €430,030 that is <strong>about €86,000</strong> a year that ISZE already puts at risk to obtain the data. The contract text is not in the workspace, so this is stated, not verified. <span class="tag tU">U</span></p>
+<p>Distributors that do not provide the data are due to lose the kickback; that condition is still being communicated to them. The Excellence programme is the carrot that goes with that stick.</p>
+<h3 id="3-5-how-big-the-prize-is">3.5 How big the prize is</h3>
+<p>Three numbers set the size, and none is a forecast.</p>
+<ul>
+<li>Network parts billed in calendar 2025 were €30.8M against a modelled target spend per truck of €54.4M, a GPS of 56.5%. The €24.0M difference is a ceiling, not recoverable sales. <span class="tag tM">M</span> (<code>wallet_waterfall.csv</code>, <code>FACTS.md</code>)</li>
+<li>The modelled revenue gap in service parts (PMS) in 2025 is €20.1M across 18 distributors; the same caveat applies. <span class="tag tM">M</span></li>
+<li>The price revision of +5% is worth €638,000 to €726,000 a year, depending on the weighting. <span class="tag tM">M</span> (<code>UNIVERSE_300K_GUARANTEE_TERM_SHEET_2026-09-21.md</code> §2)</li>
+</ul>
+<p>A programme that raised capture by one percentage point of the €24.0M ceiling would add €240,000 in billing. That is the order of magnitude, and it is the reason the case rests on participation and not on promised euros.</p>
+<hr />
+<h2 id="4-the-proposal-as-received">4. The proposal as received</h2>
+<h3 id="4-1-what-the-deck-proposes">4.1 What the deck proposes</h3>
+<p>The deck "Isuzu Excellence Partner Program" has 13 slides. It builds one recognition model on seven pillars worth 100 points: dealer standards and brand representation (20), parts business performance (20), training and knowledge (15), digitalisation (15), Kaizen (15), customer support and aftersales (10), collaboration and reporting (5). Five mandatory gates (all mandatory trainings; a complete IDS evaluation of the network; monthly KPI and SPI reporting; a documented Kaizen plan with evidence; no critical compliance or safety issue) must all be met, and the score must be at least 85. Below 84 a distributor is a Development Partner. From 85 to 94 it is an Excellence Partner with 2.5% off stock. From 95 to 100 it is an Outstanding Performance Partner with 5% off stock. Targets are market-adjusted, the assessment separates what the distributor controls from what ISZE or Japan controls, and status is reassessed every year. A parts competition rewards winners; the partner status rewards every distributor that qualifies. All criteria are proposals pending ISZE approval.</p>
+<h3 id="4-2-what-is-strong">4.2 What is strong</h3>
+<ul>
+<li>It joins things that run separately today: IDS (action-plan rows 67–72), distributor training (23–26), the parts competition (27–33), genuine share (34–51), KPI (52–53) and the yearly incentive (7–8). <span class="tag tM">M</span> (<code>vpacc_fy2027_action_plan_july.parquet</code>)</li>
+<li>Gates come before points. Strong sales cannot make up for missing training or standards.</li>
+<li>It separates a competition from a status. A status that every distributor can earn is a better tool for broad participation.</li>
+<li>It names fairness: targets set per market, controllable outcomes separate from the rest, yearly reassessment.</li>
+</ul>
+<h3 id="4-3-what-does-not-work-yet">4.3 What does not work yet</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Evidence</th>
+<th>Consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>The 85-point bar excludes the people we want to attract</strong></td>
+<td>IDS network average 81.1%; three distributors at or above 85% today (Malta 89.3%, Portugal 86.8%, Hungary 86.4%)</td>
+<td>In year 1 almost nobody qualifies. A programme meant to bring distributors in must have an entrance they can reach.</td>
+</tr>
+<tr>
+<td><strong>IDS is a self-assessment</strong></td>
+<td>Parsing rules in <code>IDS_2026_LOGIC_CHECK.md</code>; ITUK has totals only; August 2026 scan found no defensible link between IDS score and parts sales</td>
+<td>Tying money to a score the distributor writes invites a higher score. IDS must count as improvement and follow-up, not as a raw score.</td>
+</tr>
+<tr>
+<td><strong>IDS did not run everywhere</strong></td>
+<td>No IDS 2026 for Germany, Ireland, UTI, Sweden, Finland, Iceland; none for the CIS markets</td>
+<td>A gate of "complete IDS evaluation" fails Germany (€2.7M billed) and Ireland (€1.1M) because of ISZE's planning, not their performance.</td>
+</tr>
+<tr>
+<td><strong>Parts performance weighs only 20 of 100</strong></td>
+<td></td>
+<td>A distributor with falling parts sales can reach Excellence.</td>
+</tr>
+<tr>
+<td><strong>Double counting</strong></td>
+<td>IDS in pillar 1, pillar 5 and a gate; genuine/BVP in pillars 2 and 6; EQ-Hit and EDI in pillars 3 and 4</td>
+<td>A criterion should score once.</td>
+</tr>
+<tr>
+<td><strong>Training did not exist</strong></td>
+<td>Curriculum "started" (row 23); contents, trial and rollout not yet started</td>
+<td>Resolved by the decision that it is ready in April 2027.</td>
+</tr>
+<tr>
+<td><strong>Several criteria have no scale</strong></td>
+<td>"Active business development", "constructive cooperation"</td>
+<td>Each criterion needs a definition, source, owner, frequency, evidence and scale (appendix B).</td>
+</tr>
+<tr>
+<td><strong>Inconsistencies</strong></td>
+<td>Slide 5 says 70% IDS participation, slide 8 a complete IDS evaluation; 84–85 gap between levels; "critical compliance" undefined</td>
+<td>Corrections listed in appendix B.</td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tM">M</span><span class="tag tI">I</span> from the deck, <code>study_payload.json</code> files and the action plan.</p>
+<h3 id="4-4-fill-rate-and-stock-cover">4.4 Fill rate and stock cover</h3>
+<p>Fill rate and months of stock (MOS) are the two operational KPIs the deck uses. First fill rate, average of available months: UMI 97.0%, Norway 95.9%, ITUK 94.9%, IUK 93.8%, Romania 88.5%, Malta 87.7%, Benelux 84.5%, Greece 60.0%. Portugal, Hungary and Cyprus have no KPI row. MOS runs from 47 days (Benelux) to 147 days (UMI). <span class="tag tM">M</span> (<code>kaizen_db_posture/study_payload.json</code>). Two cautions. A high fill rate with 147 days of stock rewards overstock. And part of a distributor's fill rate depends on ISZE's own supply from Japan and Thailand, which the deck acknowledges but does not yet turn into a rule.</p>
+<hr />
+<h2 id="5-the-design">5. The design</h2>
+<p>The concept is settled by Jerome's decisions of 9 October 2026: the discount applies to stock orders only; it comes on top of the kickback; it is ISZE's concept with IMG in support; all distributors in principle, CIS out; no budget ceiling set by management yet; training ready by April 2027; no extra cash running cost. What follows is the design we propose within that concept. <span class="tag tP">P</span></p>
+<h3 id="5-1-two-levels-with-different-jobs">5.1 Two levels with different jobs</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Level 1, Partner</th>
+<th>Level 2, Excellence Partner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Purpose</td>
+<td>Be in: take part in what ISZE cannot force</td>
+<td>Be good: take part and deliver a result</td>
+</tr>
+<tr>
+<td>Discount on stock orders</td>
+<td>Small flat part plus progressive bonus on growth (see 6.2)</td>
+<td>Larger flat part plus larger progressive bonus</td>
+</tr>
+<tr>
+<td>Measured by</td>
+<td>ISZE, from what arrives: dates, completeness, validity</td>
+<td>ISZE (billing, business plan) with IMG support for IDS</td>
+</tr>
+<tr>
+<td>Checked</td>
+<td>Every quarter</td>
+<td>Every year; level 1 conditions keep being checked every quarter</td>
+</tr>
+<tr>
+<td>Entry</td>
+<td>Gates only, no score</td>
+<td>Level 1 plus a score of at least 85 on results</td>
+</tr>
+</tbody>
+</table></div>
+<p>The point of the two levels is that the entrance is reachable. A distributor that sends clean data, reports its KPIs, completes the IDS round that ISZE planned for it and follows the trainings is in. Only then does a result score decide who earns the larger reward.</p>
+<h3 id="5-2-level-1-the-gates">5.2 Level 1: the gates</h3>
+<p>All four must be met in the quarter checked.</p>
+<ol>
+<li><strong>Sales to dealer, monthly.</strong> One file per month in the data standard (appendix A), received within ten working days after month-end, covering all dealers, price-free, with a declaration of what it contains. For the first two quarters per-dealer detail is a target; from the third it is a condition.</li>
+<li><strong>Dealer list, once and then kept up to date.</strong> Dealer identifier, site identifier, name, location and the SAP customer number where one exists. Closed or renamed dealers keep their identifier.</li>
+<li><strong>KPIs, monthly.</strong> First fill rate, MOS, stock value and open back orders by part.</li>
+<li><strong>IDS and trainings.</strong> The IDS round that ISZE and IMG planned for that distributor, with at least 70% of its dealers; the mandatory trainings followed by the named staff (from April 2027).</li>
+</ol>
+<p>What the distributor can count on: if ISZE has not planned IDS for a distributor, that is not held against it.</p>
+<h3 id="5-3-level-2-the-result-score">5.3 Level 2: the result score</h3>
+<p>A distributor at level 1 enters the result score, 100 points, 85 to qualify. The deck's seven pillars are kept in the sense that every one of them is either a gate or a scored block, but each criterion counts once.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Block</th>
+<th style="text-align: right;">Points</th>
+<th>What</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parts performance</td>
+<td style="text-align: right;">35</td>
+<td>Parts sales against the reviewed business plan (20); genuine share in euros not lower than last year (10); fill rate corrected for ISZE's own supply, with MOS as a limit (5)</td>
+<td>Billing, business plan, KPI file</td>
+</tr>
+<tr>
+<td>Dealer network</td>
+<td style="text-align: right;">20</td>
+<td>IDS improvement since the last round (10); share of dealers with closed improvement actions (10)</td>
+<td>IDS, follow-up sheet</td>
+</tr>
+<tr>
+<td>Knowledge and digital</td>
+<td style="text-align: right;">20</td>
+<td>Right order types, stock against rush (5); EDI or equivalent active (5); training passed on to dealers (10)</td>
+<td>Billing, ISZE IT, training register</td>
+</tr>
+<tr>
+<td>Kaizen</td>
+<td style="text-align: right;">15</td>
+<td>Yearly plan with at least three actions, owner, date and evidence, scored on closed actions</td>
+<td>Kaizen template (to build)</td>
+</tr>
+<tr>
+<td>Aftersales and collaboration</td>
+<td style="text-align: right;">10</td>
+<td>R&amp;M, extended warranty and roadside, step by step; one agreed action per review with its follow-up</td>
+<td>Distributor reporting</td>
+</tr>
+</tbody>
+</table></div>
+<p>IDS counts as improvement and follow-up, not as an absolute self-score. A sample of dealers can be visited by IMG; where the visited score differs strongly from the self-score, the visited score counts. <span class="tag tP">P</span></p>
+<h3 id="5-4-the-data-standard">5.4 The data standard</h3>
+<p>The mandatory data stays narrow and price-free. It says what part moved, to which authorised dealer, when and in what quantity. It does not try to rebuild the distributor's ERP. The full specification is appendix A; the principles are these.</p>
+<ul>
+<li><strong>Identifiers matter more than extra fields.</strong> A dealer must not appear as three different names in three months. The distributor keeps the dealer identity; ISZE keeps the mapping across periods.</li>
+<li><strong>Coverage is declared, not guessed.</strong> Each file carries a small control record: number of dealer sites, known exclusions, first and last date, whether returns are included, whether the full range is covered, and any change that affects comparison with earlier months. Missing data is a source gap, never a weak result.</li>
+<li><strong>Corrections are visible.</strong> A period can be resubmitted; the original is kept and the new version marked active.</li>
+<li><strong>Not asked:</strong> selling prices, margins, customer names, chassis numbers, workshop orders, dealer stock. These cost trust, are not needed, and prices raise a competition-law risk. Further data is invited, not required, and only when ISZE can say what it returns (chapter 8).</li>
+</ul>
+<h3 id="5-5-what-the-distributor-gets-back">5.5 What the distributor gets back</h3>
+<p>Participation is only kept if it pays back in the same month. Each month the distributor receives, in the format of the existing distributor one-pagers: what ISZE billed and what was sold on; the genuine and BVP mix in euros; maintenance-parts coverage; IDS position; and, once dealer detail arrives, the same per dealer. It shows the distributor's own figures beside an anonymous network average. There is no ranking of distributors and no ranking of dealers. A distributor can correct what it reads, and a correction replaces its predecessor with the change visible. <span class="tag tP">P</span> (<code>Universe_Commercial_Participation_Model.md</code>, <code>UNIVERSE_VALUE_EXCHANGE_MODEL_2026-09-21.md</code>).</p>
+<h3 id="5-6-the-quarterly-check-and-the-sap-condition">5.6 The quarterly check and the SAP condition</h3>
+<p>Every quarter a job reads what arrived, applies the gates, and produces an eligibility table per distributor: gate by gate, with the evidence. Jerome approves the table; exceptions are written down with a reason. The result becomes a discount code in SAP for the following quarter. A distributor that stops meeting a gate loses the discount from the next quarter, which is the one pressure ISZE can apply without forcing anything.</p>
+<p>One decision is open: whether the discount is an invoice condition (the net price falls) or a credit note after the quarter (the list price stays). The cost is the same. The effect on reporting is not: an invoice condition lowers billed euros and therefore GPS and the %GM reading of the price list; a credit note leaves them intact and follows how rebates are already treated, outside the parts base. We recommend the credit note. <span class="tag tP">P</span></p>
+<h3 id="5-7-guards-against-gaming">5.7 Guards against gaming</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Guard <span class="tag tP">P</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Forward buying: a distributor stocks up before a quarter ends</td>
+<td>Discount applies to stock orders up to 120% of the trailing four-quarter average; the quarter-end share of stock orders is monitored (31.8% in FY2026 against 25% if even) <span class="tag tM">M</span></td>
+</tr>
+<tr>
+<td>Returns after the discount</td>
+<td>A credit note within 90 days reverses the discount on those lines</td>
+</tr>
+<tr>
+<td>Moving rush or VOR orders to stock orders only for the discount</td>
+<td>Rush and VOR margin is higher (49.0% and 54.1% against 45.9% for stock orders <span class="tag tM">M</span>, Q1 FY2027 SAP cost, one quarter); track the shift in order mix per quarter</td>
+</tr>
+<tr>
+<td>Inflated IDS self-scores</td>
+<td>IDS counts as improvement and follow-up; sample visits</td>
+</tr>
+<tr>
+<td>A file that satisfies the format but carries no information</td>
+<td>Validation checks (appendix E): dealer coverage, valid part numbers, reconciliation to billing within a tolerance</td>
+</tr>
+<tr>
+<td>Warranty in the base</td>
+<td>Warranty lines excluded from the discountable base; to confirm with SAP owners <span class="tag tU">U</span></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-8-rules-of-conduct-and-competition-law">5.8 Rules of conduct and competition law</h3>
+<p>The Universe papers set conduct rules that this programme adopts: no exclusivity in exchange for information, no price coordination between distributors, no resale-price instruction, no direct approach to a dealer without the distributor, no public league table. The discount is not a condition on ordinary service: delivery times, BVP availability, quotations and standard support stay equal for every distributor. That sentence belongs in the written rules of the programme.</p>
+<p><strong>Legal position.</strong> The EU motor-vehicle block exemption (Regulation 461/2010) was extended by Regulation 2023/822 to 31 May 2028, and the Commission began its evaluation on 18 January 2024. Quantity rebates tied only to volume are not in themselves treated as abusive under the case law the research found (Post Danmark II); loyalty-inducing rebates by a dominant firm are treated far more strictly, and effects are assessed on all circumstances, including the criteria that govern the grant. Our design pays on stock orders and on growth, and requires data and standards that are objective, announced in advance and the same for every distributor; it contains no exclusivity or share-of-purchase condition. Whether ISZE is dominant in any relevant market, how the UK, Norwegian, Israeli and other non-EU regimes apply, and what the 2022 vertical guidelines say on non-linear pricing were <strong>not read</strong> and are <span class="tag tU">U</span>. Nothing here is legal advice. Legal must review the written rules before they reach a distributor. (Sources: appendix G.)</p>
+<hr />
+<h2 id="6-the-economics">6. The economics</h2>
+<h3 id="6-1-the-base-we-calculate-on">6.1 The base we calculate on</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th style="text-align: right;">Value</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Billed to the 19 distributors in scope, FY2026</td>
+<td style="text-align: right;">€31.78M</td>
+<td><code>sales_fact.parquet</code>, credit notes, transport and rebates excluded <span class="tag tM">M</span></td>
+</tr>
+<tr>
+<td>of which stock orders (SaTy SOR)</td>
+<td style="text-align: right;">€22.38M, 70.4%</td>
+<td>same <span class="tag tM">M</span></td>
+</tr>
+<tr>
+<td>other order types</td>
+<td style="text-align: right;">production-type PRD 11.6%, VOR 11.4%, rush 6.3%</td>
+<td>same <span class="tag tM">M</span>; the meaning of PRD could not be confirmed <span class="tag tU">U</span></td>
+</tr>
+<tr>
+<td>Share of the four largest in stock orders (ITUK, IUK, UTI, UMI)</td>
+<td style="text-align: right;">60%</td>
+<td>same <span class="tag tM">M</span></td>
+</tr>
+<tr>
+<td>Gross margin on billed, Q1 FY2027</td>
+<td style="text-align: right;">46.8% (stock orders 45.9%)</td>
+<td><code>q1fy2027_export_with_saty.csv</code>, SAP cost, one quarter <span class="tag tM">M</span>, indicative</td>
+</tr>
+<tr>
+<td>Rebate credits booked FY2026</td>
+<td style="text-align: right;">€430,030 (1.35% of billed)</td>
+<td>billing lines <span class="tag tM">M</span></td>
+</tr>
+<tr>
+<td>Plan growth, reviewed business plan FY2027 against FY2026 billed</td>
+<td style="text-align: right;">about +4.7%</td>
+<td><code>bp_fy27_reviewed.json</code> <span class="tag tM">M</span></td>
+</tr>
+</tbody>
+</table></div>
+<p>The 46.8% rests on one quarter and on a SAP cost that is not complete for every line; treat it as indicative.</p>
+<h3 id="6-2-five-ways-to-pay">6.2 Five ways to pay</h3>
+<p>All five are modelled on the same participation plan: seven distributors in year 1 (FY2028), thirteen in year 2, nineteen in year 3, with level 2 for some from year 2. The plan is illustrative and editable in the model. <span class="tag tA">A</span></p>
+<ol>
+<li><strong>Deck:</strong> a flat 2.5% (level 1) or 5% (level 2) on all stock orders.</li>
+<li><strong>Growth only:</strong> the same rates, only on stock orders above last year's.</li>
+<li><strong>Hybrid small:</strong> flat 0.5% / 1.0% on all stock orders, plus a progressive bonus on growth. Each band pays a higher rate, and only on the stock orders inside that band, like tax brackets. Level 1 pays 2%, 3% and 5% for growth of 0–5%, 5–10% and above 10%; level 2 pays 4%, 6% and 10%.</li>
+<li><strong>Hybrid bigger:</strong> flat 1.5% / 3.0%, bonus rates 3%, 5%, 8% (level 1) and 5%, 8%, 12% (level 2).</li>
+<li><strong>Tiered:</strong> a rate on <strong>all</strong> stock orders that steps up with the distributor's own growth: 1% below 0%, 2% to 5%, 3.5% to 10%, 5% above.</li>
+</ol>
+<figure class="chart"><svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif" role="img"><line x1="70" y1="340.0" x2="860" y2="340.0" stroke="#e6e8ea"/><text x="62" y="344.0" font-size="12" fill="#8a9096" text-anchor="end" font-weight="400">0%</text><line x1="70" y1="295.7142857142857" x2="860" y2="295.7142857142857" stroke="#e6e8ea"/><text x="62" y="299.7142857142857" font-size="12" fill="#8a9096" text-anchor="end" font-weight="400">1%</text><line x1="70" y1="251.42857142857144" x2="860" y2="251.42857142857144" stroke="#e6e8ea"/><text x="62" y="255.42857142857144" font-size="12" fill="#8a9096" text-anchor="end" font-weight="400">2%</text><line x1="70" y1="207.14285714285717" x2="860" y2="207.14285714285717" stroke="#e6e8ea"/><text x="62" y="211.14285714285717" font-size="12" fill="#8a9096" text-anchor="end" font-weight="400">3%</text><line x1="70" y1="162.85714285714286" x2="860" y2="162.85714285714286" stroke="#e6e8ea"/><text x="62" y="166.85714285714286" font-size="12" fill="#8a9096" text-anchor="end" font-weight="400">4%</text><line x1="70" y1="118.57142857142858" x2="860" y2="118.57142857142858" stroke="#e6e8ea"/><text x="62" y="122.57142857142858" font-size="12" fill="#8a9096" text-anchor="end" font-weight="400">5%</text><line x1="70" y1="74.28571428571433" x2="860" y2="74.28571428571433" stroke="#e6e8ea"/><text x="62" y="78.28571428571433" font-size="12" fill="#8a9096" text-anchor="end" font-weight="400">6%</text><line x1="70" y1="30.0" x2="860" y2="30.0" stroke="#e6e8ea"/><text x="62" y="34.0" font-size="12" fill="#8a9096" text-anchor="end" font-weight="400">7%</text><text x="70.0" y="362" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">-10%</text><text x="201.66666666666666" y="362" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">-5%</text><text x="333.3333333333333" y="362" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">0%</text><text x="465.0" y="362" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">+5%</text><text x="596.6666666666666" y="362" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">+10%</text><text x="728.3333333333333" y="362" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">+15%</text><text x="860.0" y="362" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">+20%</text><text x="465.0" y="386" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">growth of the distributor&#x27;s stock orders against last year</text><polygon points="70.0,309.5 83.2,308.3 96.3,307.1 109.5,305.9 122.7,304.7 135.8,303.5 149.0,302.3 162.2,301.1 175.3,300.0 188.5,298.8 201.7,297.7 214.8,296.6 228.0,295.5 241.2,294.5 254.3,293.5 267.5,292.6 280.7,291.6 293.8,290.8 307.0,290.0 320.2,289.2 333.3,288.5 346.5,287.8 359.7,287.3 372.8,286.7 386.0,286.3 399.2,285.9 412.3,285.6 425.5,285.3 438.7,285.1 451.8,285.0 465.0,285.0 478.2,285.0 491.3,285.1 504.5,285.3 517.7,285.6 530.8,285.9 544.0,286.3 557.2,286.7 570.3,287.3 583.5,287.8 596.7,288.5 609.8,289.2 623.0,290.0 636.2,290.8 649.3,291.6 662.5,292.6 675.7,293.5 688.8,294.5 702.0,295.5 715.2,296.6 728.3,297.7 741.5,298.8 754.7,300.0 767.8,301.1 781.0,302.3 794.2,303.5 807.3,304.7 820.5,305.9 833.7,307.1 846.8,308.3 860.0,309.5 860.0,340 70.0,340" fill="#1d2124" opacity=".07"/><text x="78" y="42" font-size="11" fill="#8a9096" text-anchor="start" font-weight="400">grey shape: where distributors land in a normal year</text><path d="M70.0,229.3 L72.6,229.3 L75.3,229.3 L77.9,229.3 L80.5,229.3 L83.2,229.3 L85.8,229.3 L88.4,229.3 L91.1,229.3 L93.7,229.3 L96.3,229.3 L99.0,229.3 L101.6,229.3 L104.2,229.3 L106.9,229.3 L109.5,229.3 L112.1,229.3 L114.8,229.3 L117.4,229.3 L120.0,229.3 L122.7,229.3 L125.3,229.3 L127.9,229.3 L130.6,229.3 L133.2,229.3 L135.8,229.3 L138.5,229.3 L141.1,229.3 L143.7,229.3 L146.4,229.3 L149.0,229.3 L151.6,229.3 L154.3,229.3 L156.9,229.3 L159.5,229.3 L162.2,229.3 L164.8,229.3 L167.4,229.3 L170.1,229.3 L172.7,229.3 L175.3,229.3 L178.0,229.3 L180.6,229.3 L183.2,229.3 L185.9,229.3 L188.5,229.3 L191.1,229.3 L193.8,229.3 L196.4,229.3 L199.0,229.3 L201.7,229.3 L204.3,229.3 L206.9,229.3 L209.6,229.3 L212.2,229.3 L214.8,229.3 L217.5,229.3 L220.1,229.3 L222.7,229.3 L225.4,229.3 L228.0,229.3 L230.6,229.3 L233.3,229.3 L235.9,229.3 L238.5,229.3 L241.2,229.3 L243.8,229.3 L246.4,229.3 L249.1,229.3 L251.7,229.3 L254.3,229.3 L257.0,229.3 L259.6,229.3 L262.2,229.3 L264.9,229.3 L267.5,229.3 L270.1,229.3 L272.8,229.3 L275.4,229.3 L278.0,229.3 L280.7,229.3 L283.3,229.3 L285.9,229.3 L288.6,229.3 L291.2,229.3 L293.8,229.3 L296.5,229.3 L299.1,229.3 L301.7,229.3 L304.4,229.3 L307.0,229.3 L309.6,229.3 L312.3,229.3 L314.9,229.3 L317.5,229.3 L320.2,229.3 L322.8,229.3 L325.4,229.3 L328.1,229.3 L330.7,229.3 L333.3,229.3 L336.0,229.3 L338.6,229.3 L341.2,229.3 L343.9,229.3 L346.5,229.3 L349.1,229.3 L351.8,229.3 L354.4,229.3 L357.0,229.3 L359.7,229.3 L362.3,229.3 L364.9,229.3 L367.6,229.3 L370.2,229.3 L372.8,229.3 L375.5,229.3 L378.1,229.3 L380.7,229.3 L383.4,229.3 L386.0,229.3 L388.6,229.3 L391.3,229.3 L393.9,229.3 L396.5,229.3 L399.2,229.3 L401.8,229.3 L404.4,229.3 L407.1,229.3 L409.7,229.3 L412.3,229.3 L415.0,229.3 L417.6,229.3 L420.2,229.3 L422.9,229.3 L425.5,229.3 L428.1,229.3 L430.8,229.3 L433.4,229.3 L436.0,229.3 L438.7,229.3 L441.3,229.3 L443.9,229.3 L446.6,229.3 L449.2,229.3 L451.8,229.3 L454.5,229.3 L457.1,229.3 L459.7,229.3 L462.4,229.3 L465.0,229.3 L467.6,229.3 L470.3,229.3 L472.9,229.3 L475.5,229.3 L478.2,229.3 L480.8,229.3 L483.4,229.3 L486.1,229.3 L488.7,229.3 L491.3,229.3 L494.0,229.3 L496.6,229.3 L499.2,229.3 L501.9,229.3 L504.5,229.3 L507.1,229.3 L509.8,229.3 L512.4,229.3 L515.0,229.3 L517.7,229.3 L520.3,229.3 L522.9,229.3 L525.6,229.3 L528.2,229.3 L530.8,229.3 L533.5,229.3 L536.1,229.3 L538.7,229.3 L541.4,229.3 L544.0,229.3 L546.6,229.3 L549.3,229.3 L551.9,229.3 L554.5,229.3 L557.2,229.3 L559.8,229.3 L562.4,229.3 L565.1,229.3 L567.7,229.3 L570.3,229.3 L573.0,229.3 L575.6,229.3 L578.2,229.3 L580.9,229.3 L583.5,229.3 L586.1,229.3 L588.8,229.3 L591.4,229.3 L594.0,229.3 L596.7,229.3 L599.3,229.3 L601.9,229.3 L604.6,229.3 L607.2,229.3 L609.8,229.3 L612.5,229.3 L615.1,229.3 L617.7,229.3 L620.4,229.3 L623.0,229.3 L625.6,229.3 L628.3,229.3 L630.9,229.3 L633.5,229.3 L636.2,229.3 L638.8,229.3 L641.4,229.3 L644.1,229.3 L646.7,229.3 L649.3,229.3 L652.0,229.3 L654.6,229.3 L657.2,229.3 L659.9,229.3 L662.5,229.3 L665.1,229.3 L667.8,229.3 L670.4,229.3 L673.0,229.3 L675.7,229.3 L678.3,229.3 L680.9,229.3 L683.6,229.3 L686.2,229.3 L688.8,229.3 L691.5,229.3 L694.1,229.3 L696.7,229.3 L699.4,229.3 L702.0,229.3 L704.6,229.3 L707.3,229.3 L709.9,229.3 L712.5,229.3 L715.2,229.3 L717.8,229.3 L720.4,229.3 L723.1,229.3 L725.7,229.3 L728.3,229.3 L731.0,229.3 L733.6,229.3 L736.2,229.3 L738.9,229.3 L741.5,229.3 L744.1,229.3 L746.8,229.3 L749.4,229.3 L752.0,229.3 L754.7,229.3 L757.3,229.3 L759.9,229.3 L762.6,229.3 L765.2,229.3 L767.8,229.3 L770.5,229.3 L773.1,229.3 L775.7,229.3 L778.4,229.3 L781.0,229.3 L783.6,229.3 L786.3,229.3 L788.9,229.3 L791.5,229.3 L794.2,229.3 L796.8,229.3 L799.4,229.3 L802.1,229.3 L804.7,229.3 L807.3,229.3 L810.0,229.3 L812.6,229.3 L815.2,229.3 L817.9,229.3 L820.5,229.3 L823.1,229.3 L825.8,229.3 L828.4,229.3 L831.0,229.3 L833.7,229.3 L836.3,229.3 L838.9,229.3 L841.6,229.3 L844.2,229.3 L846.8,229.3 L849.5,229.3 L852.1,229.3 L854.7,229.3 L857.4,229.3 L860.0,229.3" fill="none" stroke="#8a9096" stroke-width="2.5" stroke-linejoin="round"/><text x="83.16666666666667" y="221.28571428571428" font-size="12" fill="#8a9096" text-anchor="start" font-weight="700">Deck: flat 2.5% on all stock orders</text><path d="M70.0,295.7 L72.6,295.7 L75.3,295.7 L77.9,295.7 L80.5,295.7 L83.2,295.7 L85.8,295.7 L88.4,295.7 L91.1,295.7 L93.7,295.7 L96.3,295.7 L99.0,295.7 L101.6,295.7 L104.2,295.7 L106.9,295.7 L109.5,295.7 L112.1,295.7 L114.8,295.7 L117.4,295.7 L120.0,295.7 L122.7,295.7 L125.3,295.7 L127.9,295.7 L130.6,295.7 L133.2,295.7 L135.8,295.7 L138.5,295.7 L141.1,295.7 L143.7,295.7 L146.4,295.7 L149.0,295.7 L151.6,295.7 L154.3,295.7 L156.9,295.7 L159.5,295.7 L162.2,295.7 L164.8,295.7 L167.4,295.7 L170.1,295.7 L172.7,295.7 L175.3,295.7 L178.0,295.7 L180.6,295.7 L183.2,295.7 L185.9,295.7 L188.5,295.7 L191.1,295.7 L193.8,295.7 L196.4,295.7 L199.0,295.7 L201.7,295.7 L204.3,295.7 L206.9,295.7 L209.6,295.7 L212.2,295.7 L214.8,295.7 L217.5,295.7 L220.1,295.7 L222.7,295.7 L225.4,295.7 L228.0,295.7 L230.6,295.7 L233.3,295.7 L235.9,295.7 L238.5,295.7 L241.2,295.7 L243.8,295.7 L246.4,295.7 L249.1,295.7 L251.7,295.7 L254.3,295.7 L257.0,295.7 L259.6,295.7 L262.2,295.7 L264.9,295.7 L267.5,295.7 L270.1,295.7 L272.8,295.7 L275.4,295.7 L278.0,295.7 L280.7,295.7 L283.3,295.7 L285.9,295.7 L288.6,295.7 L291.2,295.7 L293.8,295.7 L296.5,295.7 L299.1,295.7 L301.7,295.7 L304.4,295.7 L307.0,295.7 L309.6,295.7 L312.3,295.7 L314.9,295.7 L317.5,295.7 L320.2,295.7 L322.8,295.7 L325.4,295.7 L328.1,295.7 L330.7,295.7 L333.3,251.4 L336.0,251.4 L338.6,251.4 L341.2,251.4 L343.9,251.4 L346.5,251.4 L349.1,251.4 L351.8,251.4 L354.4,251.4 L357.0,251.4 L359.7,251.4 L362.3,251.4 L364.9,251.4 L367.6,251.4 L370.2,251.4 L372.8,251.4 L375.5,251.4 L378.1,251.4 L380.7,251.4 L383.4,251.4 L386.0,251.4 L388.6,251.4 L391.3,251.4 L393.9,251.4 L396.5,251.4 L399.2,251.4 L401.8,251.4 L404.4,251.4 L407.1,251.4 L409.7,251.4 L412.3,251.4 L415.0,251.4 L417.6,251.4 L420.2,251.4 L422.9,251.4 L425.5,251.4 L428.1,251.4 L430.8,251.4 L433.4,251.4 L436.0,251.4 L438.7,251.4 L441.3,251.4 L443.9,251.4 L446.6,251.4 L449.2,251.4 L451.8,251.4 L454.5,251.4 L457.1,251.4 L459.7,251.4 L462.4,251.4 L465.0,185.0 L467.6,185.0 L470.3,185.0 L472.9,185.0 L475.5,185.0 L478.2,185.0 L480.8,185.0 L483.4,185.0 L486.1,185.0 L488.7,185.0 L491.3,185.0 L494.0,185.0 L496.6,185.0 L499.2,185.0 L501.9,185.0 L504.5,185.0 L507.1,185.0 L509.8,185.0 L512.4,185.0 L515.0,185.0 L517.7,185.0 L520.3,185.0 L522.9,185.0 L525.6,185.0 L528.2,185.0 L530.8,185.0 L533.5,185.0 L536.1,185.0 L538.7,185.0 L541.4,185.0 L544.0,185.0 L546.6,185.0 L549.3,185.0 L551.9,185.0 L554.5,185.0 L557.2,185.0 L559.8,185.0 L562.4,185.0 L565.1,185.0 L567.7,185.0 L570.3,185.0 L573.0,185.0 L575.6,185.0 L578.2,185.0 L580.9,185.0 L583.5,185.0 L586.1,185.0 L588.8,185.0 L591.4,185.0 L594.0,185.0 L596.7,118.6 L599.3,118.6 L601.9,118.6 L604.6,118.6 L607.2,118.6 L609.8,118.6 L612.5,118.6 L615.1,118.6 L617.7,118.6 L620.4,118.6 L623.0,118.6 L625.6,118.6 L628.3,118.6 L630.9,118.6 L633.5,118.6 L636.2,118.6 L638.8,118.6 L641.4,118.6 L644.1,118.6 L646.7,118.6 L649.3,118.6 L652.0,118.6 L654.6,118.6 L657.2,118.6 L659.9,118.6 L662.5,118.6 L665.1,118.6 L667.8,118.6 L670.4,118.6 L673.0,118.6 L675.7,118.6 L678.3,118.6 L680.9,118.6 L683.6,118.6 L686.2,118.6 L688.8,118.6 L691.5,118.6 L694.1,118.6 L696.7,118.6 L699.4,118.6 L702.0,118.6 L704.6,118.6 L707.3,118.6 L709.9,118.6 L712.5,118.6 L715.2,118.6 L717.8,118.6 L720.4,118.6 L723.1,118.6 L725.7,118.6 L728.3,118.6 L731.0,118.6 L733.6,118.6 L736.2,118.6 L738.9,118.6 L741.5,118.6 L744.1,118.6 L746.8,118.6 L749.4,118.6 L752.0,118.6 L754.7,118.6 L757.3,118.6 L759.9,118.6 L762.6,118.6 L765.2,118.6 L767.8,118.6 L770.5,118.6 L773.1,118.6 L775.7,118.6 L778.4,118.6 L781.0,118.6 L783.6,118.6 L786.3,118.6 L788.9,118.6 L791.5,118.6 L794.2,118.6 L796.8,118.6 L799.4,118.6 L802.1,118.6 L804.7,118.6 L807.3,118.6 L810.0,118.6 L812.6,118.6 L815.2,118.6 L817.9,118.6 L820.5,118.6 L823.1,118.6 L825.8,118.6 L828.4,118.6 L831.0,118.6 L833.7,118.6 L836.3,118.6 L838.9,118.6 L841.6,118.6 L844.2,118.6 L846.8,118.6 L849.5,118.6 L852.1,118.6 L854.7,118.6 L857.4,118.6 L860.0,118.6" fill="none" stroke="#4f6d8f" stroke-width="2.5" stroke-linejoin="round"/><text x="860.0" y="110.57142857142858" font-size="12" fill="#4f6d8f" text-anchor="end" font-weight="700">Tiered: all stock orders, jumps at each limit</text><path d="M70.0,273.6 L72.6,273.6 L75.3,273.6 L77.9,273.6 L80.5,273.6 L83.2,273.6 L85.8,273.6 L88.4,273.6 L91.1,273.6 L93.7,273.6 L96.3,273.6 L99.0,273.6 L101.6,273.6 L104.2,273.6 L106.9,273.6 L109.5,273.6 L112.1,273.6 L114.8,273.6 L117.4,273.6 L120.0,273.6 L122.7,273.6 L125.3,273.6 L127.9,273.6 L130.6,273.6 L133.2,273.6 L135.8,273.6 L138.5,273.6 L141.1,273.6 L143.7,273.6 L146.4,273.6 L149.0,273.6 L151.6,273.6 L154.3,273.6 L156.9,273.6 L159.5,273.6 L162.2,273.6 L164.8,273.6 L167.4,273.6 L170.1,273.6 L172.7,273.6 L175.3,273.6 L178.0,273.6 L180.6,273.6 L183.2,273.6 L185.9,273.6 L188.5,273.6 L191.1,273.6 L193.8,273.6 L196.4,273.6 L199.0,273.6 L201.7,273.6 L204.3,273.6 L206.9,273.6 L209.6,273.6 L212.2,273.6 L214.8,273.6 L217.5,273.6 L220.1,273.6 L222.7,273.6 L225.4,273.6 L228.0,273.6 L230.6,273.6 L233.3,273.6 L235.9,273.6 L238.5,273.6 L241.2,273.6 L243.8,273.6 L246.4,273.6 L249.1,273.6 L251.7,273.6 L254.3,273.6 L257.0,273.6 L259.6,273.6 L262.2,273.6 L264.9,273.6 L267.5,273.6 L270.1,273.6 L272.8,273.6 L275.4,273.6 L278.0,273.6 L280.7,273.6 L283.3,273.6 L285.9,273.6 L288.6,273.6 L291.2,273.6 L293.8,273.6 L296.5,273.6 L299.1,273.6 L301.7,273.6 L304.4,273.6 L307.0,273.6 L309.6,273.6 L312.3,273.6 L314.9,273.6 L317.5,273.6 L320.2,273.6 L322.8,273.6 L325.4,273.6 L328.1,273.6 L330.7,273.6 L333.3,273.6 L336.0,273.4 L338.6,273.3 L341.2,273.2 L343.9,273.0 L346.5,272.9 L349.1,272.8 L351.8,272.6 L354.4,272.5 L357.0,272.4 L359.7,272.2 L362.3,272.1 L364.9,272.0 L367.6,271.8 L370.2,271.7 L372.8,271.6 L375.5,271.4 L378.1,271.3 L380.7,271.2 L383.4,271.0 L386.0,270.9 L388.6,270.8 L391.3,270.6 L393.9,270.5 L396.5,270.4 L399.2,270.2 L401.8,270.1 L404.4,270.0 L407.1,269.9 L409.7,269.7 L412.3,269.6 L415.0,269.5 L417.6,269.3 L420.2,269.2 L422.9,269.1 L425.5,268.9 L428.1,268.8 L430.8,268.7 L433.4,268.5 L436.0,268.4 L438.7,268.3 L441.3,268.1 L443.9,268.0 L446.6,267.9 L449.2,267.7 L451.8,267.6 L454.5,267.5 L457.1,267.3 L459.7,267.2 L462.4,267.1 L465.0,266.9 L467.6,266.7 L470.3,266.5 L472.9,266.3 L475.5,266.0 L478.2,265.8 L480.8,265.6 L483.4,265.4 L486.1,265.2 L488.7,264.9 L491.3,264.7 L494.0,264.5 L496.6,264.3 L499.2,264.1 L501.9,263.8 L504.5,263.6 L507.1,263.4 L509.8,263.2 L512.4,262.9 L515.0,262.7 L517.7,262.5 L520.3,262.3 L522.9,262.1 L525.6,261.8 L528.2,261.6 L530.8,261.4 L533.5,261.2 L536.1,260.9 L538.7,260.7 L541.4,260.5 L544.0,260.3 L546.6,260.1 L549.3,259.8 L551.9,259.6 L554.5,259.4 L557.2,259.2 L559.8,259.0 L562.4,258.7 L565.1,258.5 L567.7,258.3 L570.3,258.1 L573.0,257.9 L575.6,257.6 L578.2,257.4 L580.9,257.2 L583.5,257.0 L586.1,256.7 L588.8,256.5 L591.4,256.3 L594.0,256.1 L596.7,255.9 L599.3,255.5 L601.9,255.1 L604.6,254.8 L607.2,254.4 L609.8,254.1 L612.5,253.7 L615.1,253.4 L617.7,253.0 L620.4,252.7 L623.0,252.3 L625.6,252.0 L628.3,251.6 L630.9,251.3 L633.5,250.9 L636.2,250.5 L638.8,250.2 L641.4,249.8 L644.1,249.5 L646.7,249.1 L649.3,248.8 L652.0,248.4 L654.6,248.1 L657.2,247.7 L659.9,247.4 L662.5,247.0 L665.1,246.6 L667.8,246.3 L670.4,245.9 L673.0,245.6 L675.7,245.2 L678.3,244.9 L680.9,244.5 L683.6,244.2 L686.2,243.8 L688.8,243.5 L691.5,243.1 L694.1,242.7 L696.7,242.4 L699.4,242.0 L702.0,241.7 L704.6,241.3 L707.3,241.0 L709.9,240.6 L712.5,240.3 L715.2,239.9 L717.8,239.6 L720.4,239.2 L723.1,238.9 L725.7,238.5 L728.3,238.1 L731.0,237.8 L733.6,237.4 L736.2,237.1 L738.9,236.7 L741.5,236.4 L744.1,236.0 L746.8,235.7 L749.4,235.3 L752.0,235.0 L754.7,234.6 L757.3,234.2 L759.9,233.9 L762.6,233.5 L765.2,233.2 L767.8,232.8 L770.5,232.5 L773.1,232.1 L775.7,231.8 L778.4,231.4 L781.0,231.1 L783.6,230.7 L786.3,230.3 L788.9,230.0 L791.5,229.6 L794.2,229.3 L796.8,228.9 L799.4,228.6 L802.1,228.2 L804.7,227.9 L807.3,227.5 L810.0,227.2 L812.6,226.8 L815.2,226.5 L817.9,226.1 L820.5,225.7 L823.1,225.4 L825.8,225.0 L828.4,224.7 L831.0,224.3 L833.7,224.0 L836.3,223.6 L838.9,223.3 L841.6,222.9 L844.2,222.6 L846.8,222.2 L849.5,221.8 L852.1,221.5 L854.7,221.1 L857.4,220.8 L860.0,220.4" fill="none" stroke="#D71920" stroke-width="3" stroke-linejoin="round"/><text x="860.0" y="210.42857142857144" font-size="12" fill="#D71920" text-anchor="end" font-weight="700">Hybrid bigger (level 1)</text><path d="M70.0,317.9 L72.6,317.9 L75.3,317.9 L77.9,317.9 L80.5,317.9 L83.2,317.9 L85.8,317.9 L88.4,317.9 L91.1,317.9 L93.7,317.9 L96.3,317.9 L99.0,317.9 L101.6,317.9 L104.2,317.9 L106.9,317.9 L109.5,317.9 L112.1,317.9 L114.8,317.9 L117.4,317.9 L120.0,317.9 L122.7,317.9 L125.3,317.9 L127.9,317.9 L130.6,317.9 L133.2,317.9 L135.8,317.9 L138.5,317.9 L141.1,317.9 L143.7,317.9 L146.4,317.9 L149.0,317.9 L151.6,317.9 L154.3,317.9 L156.9,317.9 L159.5,317.9 L162.2,317.9 L164.8,317.9 L167.4,317.9 L170.1,317.9 L172.7,317.9 L175.3,317.9 L178.0,317.9 L180.6,317.9 L183.2,317.9 L185.9,317.9 L188.5,317.9 L191.1,317.9 L193.8,317.9 L196.4,317.9 L199.0,317.9 L201.7,317.9 L204.3,317.9 L206.9,317.9 L209.6,317.9 L212.2,317.9 L214.8,317.9 L217.5,317.9 L220.1,317.9 L222.7,317.9 L225.4,317.9 L228.0,317.9 L230.6,317.9 L233.3,317.9 L235.9,317.9 L238.5,317.9 L241.2,317.9 L243.8,317.9 L246.4,317.9 L249.1,317.9 L251.7,317.9 L254.3,317.9 L257.0,317.9 L259.6,317.9 L262.2,317.9 L264.9,317.9 L267.5,317.9 L270.1,317.9 L272.8,317.9 L275.4,317.9 L278.0,317.9 L280.7,317.9 L283.3,317.9 L285.9,317.9 L288.6,317.9 L291.2,317.9 L293.8,317.9 L296.5,317.9 L299.1,317.9 L301.7,317.9 L304.4,317.9 L307.0,317.9 L309.6,317.9 L312.3,317.9 L314.9,317.9 L317.5,317.9 L320.2,317.9 L322.8,317.9 L325.4,317.9 L328.1,317.9 L330.7,317.9 L333.3,317.9 L336.0,317.8 L338.6,317.7 L341.2,317.6 L343.9,317.5 L346.5,317.4 L349.1,317.3 L351.8,317.2 L354.4,317.1 L357.0,317.1 L359.7,317.0 L362.3,316.9 L364.9,316.8 L367.6,316.7 L370.2,316.6 L372.8,316.5 L375.5,316.4 L378.1,316.4 L380.7,316.3 L383.4,316.2 L386.0,316.1 L388.6,316.0 L391.3,315.9 L393.9,315.8 L396.5,315.7 L399.2,315.6 L401.8,315.6 L404.4,315.5 L407.1,315.4 L409.7,315.3 L412.3,315.2 L415.0,315.1 L417.6,315.0 L420.2,314.9 L422.9,314.8 L425.5,314.8 L428.1,314.7 L430.8,314.6 L433.4,314.5 L436.0,314.4 L438.7,314.3 L441.3,314.2 L443.9,314.1 L446.6,314.0 L449.2,314.0 L451.8,313.9 L454.5,313.8 L457.1,313.7 L459.7,313.6 L462.4,313.5 L465.0,313.4 L467.6,313.3 L470.3,313.2 L472.9,313.0 L475.5,312.9 L478.2,312.8 L480.8,312.6 L483.4,312.5 L486.1,312.4 L488.7,312.2 L491.3,312.1 L494.0,312.0 L496.6,311.8 L499.2,311.7 L501.9,311.6 L504.5,311.4 L507.1,311.3 L509.8,311.2 L512.4,311.0 L515.0,310.9 L517.7,310.8 L520.3,310.6 L522.9,310.5 L525.6,310.4 L528.2,310.2 L530.8,310.1 L533.5,310.0 L536.1,309.8 L538.7,309.7 L541.4,309.6 L544.0,309.4 L546.6,309.3 L549.3,309.2 L551.9,309.0 L554.5,308.9 L557.2,308.8 L559.8,308.6 L562.4,308.5 L565.1,308.4 L567.7,308.2 L570.3,308.1 L573.0,308.0 L575.6,307.8 L578.2,307.7 L580.9,307.6 L583.5,307.4 L586.1,307.3 L588.8,307.2 L591.4,307.1 L594.0,306.9 L596.7,306.8 L599.3,306.6 L601.9,306.3 L604.6,306.1 L607.2,305.9 L609.8,305.7 L612.5,305.5 L615.1,305.2 L617.7,305.0 L620.4,304.8 L623.0,304.6 L625.6,304.4 L628.3,304.1 L630.9,303.9 L633.5,303.7 L636.2,303.5 L638.8,303.2 L641.4,303.0 L644.1,302.8 L646.7,302.6 L649.3,302.4 L652.0,302.1 L654.6,301.9 L657.2,301.7 L659.9,301.5 L662.5,301.2 L665.1,301.0 L667.8,300.8 L670.4,300.6 L673.0,300.4 L675.7,300.1 L678.3,299.9 L680.9,299.7 L683.6,299.5 L686.2,299.3 L688.8,299.0 L691.5,298.8 L694.1,298.6 L696.7,298.4 L699.4,298.1 L702.0,297.9 L704.6,297.7 L707.3,297.5 L709.9,297.3 L712.5,297.0 L715.2,296.8 L717.8,296.6 L720.4,296.4 L723.1,296.2 L725.7,295.9 L728.3,295.7 L731.0,295.5 L733.6,295.3 L736.2,295.1 L738.9,294.8 L741.5,294.6 L744.1,294.4 L746.8,294.2 L749.4,293.9 L752.0,293.7 L754.7,293.5 L757.3,293.3 L759.9,293.1 L762.6,292.8 L765.2,292.6 L767.8,292.4 L770.5,292.2 L773.1,291.9 L775.7,291.7 L778.4,291.5 L781.0,291.3 L783.6,291.1 L786.3,290.8 L788.9,290.6 L791.5,290.4 L794.2,290.2 L796.8,290.0 L799.4,289.7 L802.1,289.5 L804.7,289.3 L807.3,289.1 L810.0,288.9 L812.6,288.6 L815.2,288.4 L817.9,288.2 L820.5,288.0 L823.1,287.7 L825.8,287.5 L828.4,287.3 L831.0,287.1 L833.7,286.9 L836.3,286.6 L838.9,286.4 L841.6,286.2 L844.2,286.0 L846.8,285.8 L849.5,285.5 L852.1,285.3 L854.7,285.1 L857.4,284.9 L860.0,284.6" fill="none" stroke="#E6A23C" stroke-width="3" stroke-linejoin="round"/><text x="860.0" y="274.64285714285717" font-size="12" fill="#E6A23C" text-anchor="end" font-weight="700">Hybrid small (level 1)</text><line x1="465.0" y1="30" x2="465.0" y2="340" stroke="#1d2124" stroke-dasharray="4 4" opacity=".5"/><text x="470.0" y="42" font-size="11" fill="#1d2124" text-anchor="start" font-weight="400">planned growth +5%</text></svg><figcaption><b>Reward as % of last year's stock orders, by the distributor's own growth</b> · level 1</figcaption><p class="source">Source: ROI model, Inputs. The hybrids pay each band's rate only on the growth inside that band; tiered pays one rate on everything.</p></figure>
+<p>The chart shows why design 5 is not what it seems. It pays on everything, with a jump at each limit, so a distributor whose growth lands just above a limit earns a lot more than one just below. Between distributors the yearly growth differs by about 14 percentage points (chapter 7); where a distributor lands is therefore partly luck, and the programme would pay out on noise.</p>
+<h3 id="6-3-cost">6.3 Cost</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Design</th>
+<th style="text-align: right;">Year 1 FY2028</th>
+<th style="text-align: right;">Year 2 FY2029</th>
+<th style="text-align: right;">Year 3 FY2030</th>
+<th style="text-align: right;">3 years</th>
+<th style="text-align: right;">Year 3 against rebates today</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 Deck</td>
+<td style="text-align: right;">€335k</td>
+<td style="text-align: right;">€783k</td>
+<td style="text-align: right;">€933k</td>
+<td style="text-align: right;">€2.05M</td>
+<td style="text-align: right;">2.2×</td>
+</tr>
+<tr>
+<td>2 Growth only</td>
+<td style="text-align: right;">€17k</td>
+<td style="text-align: right;">€39k</td>
+<td style="text-align: right;">€47k</td>
+<td style="text-align: right;">€103k</td>
+<td style="text-align: right;">0.1×</td>
+</tr>
+<tr>
+<td>3 Hybrid small</td>
+<td style="text-align: right;">€106k</td>
+<td style="text-align: right;">€247k</td>
+<td style="text-align: right;">€295k</td>
+<td style="text-align: right;">€648k</td>
+<td style="text-align: right;">0.7×</td>
+</tr>
+<tr>
+<td>4 Hybrid bigger</td>
+<td style="text-align: right;">€263k</td>
+<td style="text-align: right;">€594k</td>
+<td style="text-align: right;">€702k</td>
+<td style="text-align: right;">€1.56M</td>
+<td style="text-align: right;">1.6×</td>
+</tr>
+<tr>
+<td>5 Tiered</td>
+<td style="text-align: right;">€392k</td>
+<td style="text-align: right;">€632k</td>
+<td style="text-align: right;">€656k</td>
+<td style="text-align: right;">€1.68M</td>
+<td style="text-align: right;">1.5×</td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tP">P</span> for all rows; the cost is arithmetic on FY2026 stock orders. The growth-based designs (2–5) assume stock orders grow at the planned rate and measure growth year on year. Cost excludes internal time and any build cost, both set to zero by decision.</p>
+<figure class="chart"><svg viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif" role="img"><line x1="270.0" y1="20" x2="270.0" y2="270" stroke="#e6e8ea"/><text x="270.0" y="292" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">€0</text><line x1="392.5" y1="20" x2="392.5" y2="270" stroke="#e6e8ea"/><text x="392.5" y="292" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">€250k</text><line x1="515.0" y1="20" x2="515.0" y2="270" stroke="#e6e8ea"/><text x="515.0" y="292" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">€500k</text><line x1="637.5" y1="20" x2="637.5" y2="270" stroke="#e6e8ea"/><text x="637.5" y="292" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">€750k</text><line x1="760.0" y1="20" x2="760.0" y2="270" stroke="#e6e8ea"/><text x="760.0" y="292" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">€1.00M</text><text x="258" y="48" font-size="14" fill="#1d2124" text-anchor="end" font-weight="700">1 Deck</text><rect x="270" y="30" width="457.4" height="28" fill="#4f6d8f" rx="3"/><text x="735.3708265" y="49" font-size="13" fill="#1d2124" text-anchor="start" font-weight="700">€933k (2.2× today)</text><text x="258" y="96" font-size="14" fill="#1d2124" text-anchor="end" font-weight="700">2 Growth only</text><rect x="270" y="78" width="22.9" height="28" fill="#2e7d4f" rx="3"/><text x="300.868541325" y="97" font-size="13" fill="#1d2124" text-anchor="start" font-weight="700">€47k (0.1× today)</text><text x="258" y="144" font-size="14" fill="#1d2124" text-anchor="end" font-weight="700">3 Hybrid small</text><rect x="270" y="126" width="144.5" height="28" fill="#E6A23C" rx="3"/><text x="422.4502445045125" y="145" font-size="13" fill="#1d2124" text-anchor="start" font-weight="700">€295k (0.7× today)</text><text x="258" y="192" font-size="14" fill="#1d2124" text-anchor="end" font-weight="700">4 Hybrid bigger</text><rect x="270" y="174" width="343.8" height="28" fill="#D71920" rx="3"/><text x="621.8314975180152" y="193" font-size="13" fill="#1d2124" text-anchor="start" font-weight="700">€702k (1.6× today)</text><text x="258" y="240" font-size="14" fill="#1d2124" text-anchor="end" font-weight="700">5 Tiered</text><rect x="270" y="222" width="321.3" height="28" fill="#8a9096" rx="3"/><text x="599.2510295973941" y="241" font-size="13" fill="#1d2124" text-anchor="start" font-weight="700">€656k (1.5× today)</text><line x1="480.7147" y1="14" x2="480.7147" y2="272" stroke="#E6A23C" stroke-width="2" stroke-dasharray="6 4"/><text x="485.7147" y="12" font-size="12" fill="#E6A23C" text-anchor="start" font-weight="700">rebates paid today €430k</text></svg><figcaption><b>Discount cost per year in year 3 (FY2030), five designs, same 19 distributors</b></figcaption><p class="source">Source: ROI model, Design_variants; rebate credits from billing FY2026.</p></figure>
+<p>Against the €430,030 of rebates paid today, the deck design costs 2.2 times as much in year 3; the small hybrid 0.7 times; the bigger hybrid 1.6 times. At the share Jerome states as tied to the data (20%, about €86,000), the small hybrid's year-3 cost is 3.4 times what ISZE puts at risk today for the data.</p>
+<h3 id="6-4-benefits-and-why-they-are-assumptions">6.4 Benefits and why they are assumptions</h3>
+<p>There are three channels, and all three are <span class="tag tA">A</span>.</p>
+<ol>
+<li><strong>Extra sales beyond plan.</strong> Participants buy more than they would have, because better analysis gives better campaigns, better ranges and better Genuine/BVP positioning. Low, Base and High are 0.5%, 1.5% and 3% of the participants' billing in a year at full effect, ramped to 25% in year 1, 60% in year 2 and 100% in year 3. The margin on an extra euro is 46.8% minus the discount cost rate of the design chosen.</li>
+<li><strong>Better price decisions.</strong> The value of the +5% price revision is €638,000–€726,000 a year (midpoint €682,000). Better dealer-level evidence might raise the quality of the next revision; Low, Base and High attribute 0%, 5% and 10% of its value to better data, in proportion to participants' share of billing. Price reaction can be measured only from distributor to dealer and needs two years; the benefit starts late.</li>
+<li><strong>Other.</strong> Left at zero: air-freight savings, stock-scrap avoidance and forecast improvements have no evidence in the workspace, and stock orders alone are the scope.</li>
+</ol>
+<p>What exists as evidence is thin. Distributors that send sales-to-dealer data today grew <strong>less</strong> than the others (4.4% a year against 10.2%, FY2024–FY2026), which proves nothing in either direction because the groups differ. ITUK's oil-filter capture moved from 56% to 79% between 2024 and 2025 without any programme (<code>FACTS.md</code> §1b), which shows that capture moves a lot on its own. <span class="tag tM">M</span></p>
+<h3 id="6-5-result">6.5 Result</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Design</th>
+<th style="text-align: right;">3-year cost</th>
+<th style="text-align: right;">Net, Low</th>
+<th style="text-align: right;">Net, Base</th>
+<th style="text-align: right;">Net, High</th>
+<th style="text-align: right;">Extra sales to break even (year 3)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 Deck</td>
+<td style="text-align: right;">€2.05M</td>
+<td style="text-align: right;">−€1.93M</td>
+<td style="text-align: right;">−€1.63M</td>
+<td style="text-align: right;">−€1.20M</td>
+<td style="text-align: right;">+6.7%</td>
+</tr>
+<tr>
+<td>2 Growth only</td>
+<td style="text-align: right;">€103k</td>
+<td style="text-align: right;">€26k</td>
+<td style="text-align: right;">€342k</td>
+<td style="text-align: right;">€786k</td>
+<td style="text-align: right;">+0.3%</td>
+</tr>
+<tr>
+<td>3 Hybrid small</td>
+<td style="text-align: right;">€648k</td>
+<td style="text-align: right;">−€521k</td>
+<td style="text-align: right;">−€209k</td>
+<td style="text-align: right;">€229k</td>
+<td style="text-align: right;">+2.0%</td>
+</tr>
+<tr>
+<td>4 Hybrid bigger</td>
+<td style="text-align: right;">€1.56M</td>
+<td style="text-align: right;">−€1.44M</td>
+<td style="text-align: right;">−€1.13M</td>
+<td style="text-align: right;">−€702k</td>
+<td style="text-align: right;">+5.0%</td>
+</tr>
+<tr>
+<td>5 Tiered</td>
+<td style="text-align: right;">€1.68M</td>
+<td style="text-align: right;">−€1.56M</td>
+<td style="text-align: right;">−€1.25M</td>
+<td style="text-align: right;">−€823k</td>
+<td style="text-align: right;">+4.6%</td>
+</tr>
+</tbody>
+</table></div>
+<figure class="chart"><svg viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif" role="img"><line x1="290.0" y1="20" x2="290.0" y2="330" stroke="#e6e8ea"/><text x="290.0" y="352" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">−€2.00M</text><line x1="385.0" y1="20" x2="385.0" y2="330" stroke="#e6e8ea"/><text x="385.0" y="352" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">−€1.50M</text><line x1="480.0" y1="20" x2="480.0" y2="330" stroke="#e6e8ea"/><text x="480.0" y="352" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">−€1.00M</text><line x1="575.0" y1="20" x2="575.0" y2="330" stroke="#e6e8ea"/><text x="575.0" y="352" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">−€500k</text><line x1="670.0" y1="20" x2="670.0" y2="330" stroke="#e6e8ea"/><text x="670.0" y="352" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">€0</text><line x1="765.0" y1="20" x2="765.0" y2="330" stroke="#e6e8ea"/><text x="765.0" y="352" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">€500k</text><line x1="860.0" y1="20" x2="860.0" y2="330" stroke="#e6e8ea"/><text x="860.0" y="352" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">€1.00M</text><line x1="670.0" y1="20" x2="670.0" y2="330" stroke="#1d2124" stroke-width="1.5"/><text x="278" y="48" font-size="14" fill="#1d2124" text-anchor="end" font-weight="700">1 Deck</text><text x="278" y="64" font-size="11" fill="#8a9096" text-anchor="end" font-weight="400">break-even +6.7%</text><rect x="360.7" y="30" width="309.3" height="26" fill="#D71920" opacity=".85" rx="3"/><line x1="303.4" y1="43" x2="441.1" y2="43" stroke="#1d2124" stroke-width="2.5"/><circle cx="360.7" cy="43" r="6" fill="#1d2124"/><text x="682.0" y="49" font-size="13" fill="#1d2124" text-anchor="start" font-weight="700">−€1.63M</text><text x="278" y="108" font-size="14" fill="#1d2124" text-anchor="end" font-weight="700">2 Growth only</text><text x="278" y="124" font-size="11" fill="#8a9096" text-anchor="end" font-weight="400">break-even +0.3%</text><rect x="670.0" y="90" width="64.9" height="26" fill="#2e7d4f" opacity=".85" rx="3"/><line x1="674.9" y1="103" x2="819.3" y2="103" stroke="#1d2124" stroke-width="2.5"/><circle cx="734.9" cy="103" r="6" fill="#1d2124"/><text x="831.3473333744491" y="109" font-size="13" fill="#1d2124" text-anchor="start" font-weight="700">€342k</text><text x="278" y="168" font-size="14" fill="#1d2124" text-anchor="end" font-weight="700">3 Hybrid small</text><text x="278" y="184" font-size="11" fill="#8a9096" text-anchor="end" font-weight="400">break-even +2.0%</text><rect x="630.2" y="150" width="39.8" height="26" fill="#D71920" opacity=".85" rx="3"/><line x1="570.9" y1="163" x2="713.5" y2="163" stroke="#1d2124" stroke-width="2.5"/><circle cx="630.2" cy="163" r="6" fill="#1d2124"/><text x="725.5019677471437" y="169" font-size="13" fill="#1d2124" text-anchor="start" font-weight="700">−€209k</text><text x="278" y="228" font-size="14" fill="#1d2124" text-anchor="end" font-weight="700">4 Hybrid bigger</text><text x="278" y="244" font-size="11" fill="#8a9096" text-anchor="end" font-weight="400">break-even +5.0%</text><rect x="455.3" y="210" width="214.7" height="26" fill="#D71920" opacity=".85" rx="3"/><line x1="397.3" y1="223" x2="536.7" y2="223" stroke="#1d2124" stroke-width="2.5"/><circle cx="455.3" cy="223" r="6" fill="#1d2124"/><text x="682.0" y="229" font-size="13" fill="#1d2124" text-anchor="start" font-weight="700">−€1.13M</text><text x="278" y="288" font-size="14" fill="#1d2124" text-anchor="end" font-weight="700">5 Tiered</text><text x="278" y="304" font-size="11" fill="#8a9096" text-anchor="end" font-weight="400">break-even +4.6%</text><rect x="432.3" y="270" width="237.7" height="26" fill="#D71920" opacity=".85" rx="3"/><line x1="374.2" y1="283" x2="513.7" y2="283" stroke="#1d2124" stroke-width="2.5"/><circle cx="432.3" cy="283" r="6" fill="#1d2124"/><text x="682.0" y="289" font-size="13" fill="#1d2124" text-anchor="start" font-weight="700">−€1.25M</text></svg><figcaption><b>Net result over three years by design</b> · dot = Base case · line = Low to High</figcaption><p class="source">Source: ROI model, Design_variants. Low, Base and High are our assumptions, not measured results.</p></figure>
+<p>Reading it. <span class="tag tI">I</span></p>
+<ul>
+<li>The <strong>deck design</strong> loses €1.2M to €1.9M over three years in every case. It needs extra sales of 6.7% of the participants' billing in year 3, on top of a plan that already grows 4.7%.</li>
+<li><strong>Growth only</strong> pays back in all three cases, with a break-even of 0.3%. It gives a distributor whose stock orders stay flat no reason to send data, which defeats the purpose.</li>
+<li><strong>Hybrid small</strong> pays back in the High case and loses €0.2M in the Base case, with a break-even of 2.0%. It keeps a visible reward for taking part.</li>
+<li><strong>Hybrid bigger</strong> and <strong>tiered</strong> lose in every case.</li>
+<li>The result is more sensitive to the design of the discount than to the benefit assumptions. Moving from the deck design to the small hybrid improves the Base case by €1.4M; moving from the Low to the High benefit case improves it by about €0.7M.</li>
+</ul>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th style="text-align: right;">Extra sales beyond plan</th>
+<th style="text-align: right;">1 Deck</th>
+<th style="text-align: right;">2 Growth only</th>
+<th style="text-align: right;">3 Hybrid small</th>
+<th style="text-align: right;">4 Hybrid bigger</th>
+<th style="text-align: right;">5 Tiered</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;">−€933k</td>
+<td style="text-align: right;">−€47k</td>
+<td style="text-align: right;">−€295k</td>
+<td style="text-align: right;">−€702k</td>
+<td style="text-align: right;">−€656k</td>
+</tr>
+<tr>
+<td style="text-align: right;">1%</td>
+<td style="text-align: right;">−€794k</td>
+<td style="text-align: right;">€102k</td>
+<td style="text-align: right;">−€149k</td>
+<td style="text-align: right;">−€560k</td>
+<td style="text-align: right;">−€513k</td>
+</tr>
+<tr>
+<td style="text-align: right;">2%</td>
+<td style="text-align: right;">−€655k</td>
+<td style="text-align: right;">€250k</td>
+<td style="text-align: right;">−€3k</td>
+<td style="text-align: right;">−€418k</td>
+<td style="text-align: right;">−€371k</td>
+</tr>
+<tr>
+<td style="text-align: right;">3%</td>
+<td style="text-align: right;">−€515k</td>
+<td style="text-align: right;">€398k</td>
+<td style="text-align: right;">€143k</td>
+<td style="text-align: right;">−€277k</td>
+<td style="text-align: right;">−€229k</td>
+</tr>
+<tr>
+<td style="text-align: right;">4%</td>
+<td style="text-align: right;">−€376k</td>
+<td style="text-align: right;">€546k</td>
+<td style="text-align: right;">€288k</td>
+<td style="text-align: right;">−€135k</td>
+<td style="text-align: right;">−€87k</td>
+</tr>
+<tr>
+<td style="text-align: right;">5%</td>
+<td style="text-align: right;">−€236k</td>
+<td style="text-align: right;">€695k</td>
+<td style="text-align: right;">€434k</td>
+<td style="text-align: right;">€7k</td>
+<td style="text-align: right;">€55k</td>
+</tr>
+<tr>
+<td style="text-align: right;">6%</td>
+<td style="text-align: right;">−€97k</td>
+<td style="text-align: right;">€843k</td>
+<td style="text-align: right;">€580k</td>
+<td style="text-align: right;">€149k</td>
+<td style="text-align: right;">€197k</td>
+</tr>
+<tr>
+<td style="text-align: right;">8%</td>
+<td style="text-align: right;">€182k</td>
+<td style="text-align: right;">€1.14M</td>
+<td style="text-align: right;">€872k</td>
+<td style="text-align: right;">€432k</td>
+<td style="text-align: right;">€482k</td>
+</tr>
+<tr>
+<td style="text-align: right;">10%</td>
+<td style="text-align: right;">€461k</td>
+<td style="text-align: right;">€1.44M</td>
+<td style="text-align: right;">€1.16M</td>
+<td style="text-align: right;">€716k</td>
+<td style="text-align: right;">€766k</td>
+</tr>
+</tbody>
+</table></div>
+<p>Net result per year at full effect, year-3 participants, extra sales as the only benefit. Negative: the programme costs more than it earns.</p>
+<h3 id="6-6-isuzu-universe-on-top">6.6 Isuzu Universe on top</h3>
+<p>Universe proposes cash inside its €100,000 route (Universe 3.0 §4.5): campaign support €35,000–€50,000, dealer enablement €15,000–€25,000 and independent evaluation €10,000–€15,000. We took the midpoints, €75,000 a year, €225,000 over three years. The DLOD defence programme (about €90,000 for three markets, a separate costed design) is left in the model at zero. Universe's own hurdle is arithmetic on a hypothetical €2,500 contribution per qualifying action: about 30 qualifying actions a year to cover €75,000. With 10, 25 and 50 actions a year (our assumption, below Universe's own break-even of about 40 at €100,000) the three-year net of Universe alone is −€179,000, −€109,000 and +€6,000. Together with the small hybrid, the Base case is −€319,000. Universe says itself that no realised return is evidenced. Some of the extra sales counted on the Excellence side and the campaign contribution counted here may be the same euros. <span class="tag tA">A</span></p>
+<h3 id="6-7-what-is-not-counted">6.7 What is not counted</h3>
+<p>Internal time of the team; air-freight cost of rush and VOR orders; the value of the data standard, the IDS Studio, tender support and PRISM as tools; any effect on kickback compliance; any loss of share to other brands if the programme does not exist; legal and IT security costs. The last two are not small and are named so that nobody assumes they were zero.</p>
+<hr />
+<h2 id="7-can-the-return-be-proven">7. Can the return be proven?</h2>
+<p><strong>Short answer: not by sales, within three years, with the distributors we have.</strong> The reason is arithmetic, not pessimism.</p>
+<h3 id="7-1-how-much-a-distributor-moves-by-itself">7.1 How much a distributor moves by itself</h3>
+<p>For the twelve larger distributors with three full years of billing (Israel excluded because UTI and UMI changed split), billing growth was:</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">FY2025 vs FY2024</th>
+<th style="text-align: right;">FY2026 vs FY2025</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Median</td>
+<td style="text-align: right;">+8.5%</td>
+<td style="text-align: right;">+1.1%</td>
+</tr>
+<tr>
+<td>Spread between distributors (standard deviation)</td>
+<td style="text-align: right;">25.5%</td>
+<td style="text-align: right;">13.8%</td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tM">M</span> (<code>gps_clean_all_fy_v2.csv</code>). The correlation between a distributor's growth in the two years is −0.11: a distributor that grew fast one year is not more likely to grow fast the next. There is no persistence that a comparison could use to remove noise. Part of the movement is warranty, campaign stock builds and system changes (for example Greece's SAP go-live in 2026), none of which is the programme.</p>
+<h3 id="7-2-what-a-pilot-could-detect">7.2 What a pilot could detect</h3>
+<p>If we compared participating with non-participating distributors over one year, the smallest effect that could be told from noise (80% power, 5% significance) is roughly 2.8 times the standard error, which is the spread times the square root of 2 over the number per group:</p>
+<figure class="chart"><svg viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif" role="img"><line x1="90" y1="270.0" x2="860" y2="270.0" stroke="#e6e8ea"/><text x="82" y="274.0" font-size="12" fill="#8a9096" text-anchor="end" font-weight="400">0%</text><line x1="90" y1="216.66666666666669" x2="860" y2="216.66666666666669" stroke="#e6e8ea"/><text x="82" y="220.66666666666669" font-size="12" fill="#8a9096" text-anchor="end" font-weight="400">10%</text><line x1="90" y1="163.33333333333334" x2="860" y2="163.33333333333334" stroke="#e6e8ea"/><text x="82" y="167.33333333333334" font-size="12" fill="#8a9096" text-anchor="end" font-weight="400">20%</text><line x1="90" y1="110.0" x2="860" y2="110.0" stroke="#e6e8ea"/><text x="82" y="114.0" font-size="12" fill="#8a9096" text-anchor="end" font-weight="400">30%</text><line x1="90" y1="56.666666666666686" x2="860" y2="56.666666666666686" stroke="#e6e8ea"/><text x="82" y="60.666666666666686" font-size="12" fill="#8a9096" text-anchor="end" font-weight="400">40%</text><text x="186.25" y="296" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">4 per group</text><rect x="134.25" y="124.3" width="48" height="145.7" fill="#E6A23C" rx="2"/><text x="158.25" y="119.27943453307626" font-size="12" fill="#1d2124" text-anchor="middle" font-weight="700">27%</text><rect x="188.25" y="53.5" width="48" height="216.5" fill="#D71920" rx="2"/><text x="212.25" y="48.53104405275826" font-size="12" fill="#1d2124" text-anchor="middle" font-weight="700">41%</text><text x="378.75" y="296" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">6 per group</text><rect x="326.75" y="151.0" width="48" height="119.0" fill="#E6A23C" rx="2"/><text x="350.75" y="146.01965652540193" font-size="12" fill="#1d2124" text-anchor="middle" font-weight="700">22%</text><rect x="380.75" y="93.3" width="48" height="176.7" fill="#D71920" rx="2"/><text x="404.75" y="88.25383759208259" font-size="12" fill="#1d2124" text-anchor="middle" font-weight="700">33%</text><text x="571.25" y="296" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">8 per group</text><rect x="519.25" y="167.0" width="48" height="103.0" fill="#E6A23C" rx="2"/><text x="543.25" y="161.95999999999998" font-size="12" fill="#1d2124" text-anchor="middle" font-weight="700">19%</text><rect x="573.25" y="116.9" width="48" height="153.1" fill="#D71920" rx="2"/><text x="597.25" y="111.93333333333334" font-size="12" fill="#1d2124" text-anchor="middle" font-weight="700">29%</text><text x="763.75" y="296" font-size="12" fill="#8a9096" text-anchor="middle" font-weight="400">9 per group (the most 19 allow)</text><rect x="711.75" y="172.9" width="48" height="97.1" fill="#E6A23C" rx="2"/><text x="735.75" y="167.8529563553842" font-size="12" fill="#1d2124" text-anchor="middle" font-weight="700">18%</text><rect x="765.75" y="125.7" width="48" height="144.3" fill="#D71920" rx="2"/><text x="789.75" y="120.68736270183882" font-size="12" fill="#1d2124" text-anchor="middle" font-weight="700">27%</text><line x1="90" y1="254.0" x2="860" y2="254.0" stroke="#2e7d4f" stroke-width="2" stroke-dasharray="6 4"/><rect x="90" y="312" width="12" height="12" fill="#E6A23C"/><text x="108" y="323" font-size="12" fill="#1d2124" text-anchor="start" font-weight="400">spread 13.8% (FY2026)</text><rect x="350" y="312" width="12" height="12" fill="#D71920"/><text x="368" y="323" font-size="12" fill="#1d2124" text-anchor="start" font-weight="400">spread 20.5% (two-year pooled)</text><line x1="610" y1="318" x2="638" y2="318" stroke="#2e7d4f" stroke-width="2" stroke-dasharray="6 4"/><text x="644" y="323" font-size="12" fill="#1d2124" text-anchor="start" font-weight="400">effect in the High case: 3%</text></svg><figcaption><b>Smallest effect a one-year comparison between distributors could detect</b> (80% power, 5% significance)</figcaption><p class="source">Source: gps_clean_all_fy_v2.csv, FY2025 and FY2026, twelve larger distributors; MDE ≈ 2.8 × spread × √(2 ÷ n).</p></figure>
+<p>With eight distributors in each group the smallest effect that can be detected is 19% of billing if the spread is as low as in FY2026, and 29% at the two-year pooled spread. The effects in the Low, Base and High cases are 0.5% to 3%. <strong>A one-year comparison between distributors cannot confirm a return of the size that decides whether the programme pays.</strong> <span class="tag tI">I</span></p>
+<h3 id="7-3-what-can-be-measured-instead">7.3 What can be measured instead</h3>
+<ol>
+<li><strong>Process indicators</strong>, which move quickly and can be checked every quarter: share of files on time; share of dealers identified; share of valid part numbers; reconciliation of sales to dealer against billing; number of distributors with per-dealer detail; share of IDS actions closed.</li>
+<li><strong>Mix and order behaviour:</strong> genuine and BVP share in euros; the share of stock orders against rush and VOR; quarter-end concentration of stock orders (the forward-buying alarm).</li>
+<li><strong>Decisions taken on the data</strong>, logged with owner, date and the scope they touch. The test borrowed from Universe's stop condition: can a participant name a decision the data changed?</li>
+<li><strong>Experiments below the distributor.</strong> A campaign or a price test can be run on half of a distributor's dealers, or on half of a part family, and read against the other half over the same months. With dealer-level data, the number of units is large and the noise much lower than between distributors. This is where return can be shown, and it needs per-dealer data first. The ITUK 2025 file (64 dealers, 5,559 part numbers) is the only existing base; how large the noise is at dealer level is unknown until a second year exists. <span class="tag tU">U</span></li>
+<li><strong>Additional-only baselines.</strong> For any campaign or concession, measure contribution against a documented baseline on the same scope before, during and after, including returns. This is Universe's own rule and it applies here.</li>
+</ol>
+<h3 id="7-4-what-this-means-for-the-decision">7.4 What this means for the decision</h3>
+<p>Management cannot be shown a proven return, and should not be shown an invented one. It can be shown a bounded cost, a mechanism that pays for itself at a stated threshold, indicators that tell within two quarters whether the mechanism works, and stop conditions (chapter 11). That is a smaller promise and a more defensible one.</p>
+<hr />
+<h2 id="8-excellence-partner-and-isuzu-universe-together">8. Excellence Partner and Isuzu Universe together</h2>
+<h3 id="8-1-why-they-belong-together">8.1 Why they belong together</h3>
+<p>Universe asks distributors for data and returns analysis, tools and rules. Excellence gives distributors a reason to take part. Universe scores its own chance that a distributor joins as designed at 55 out of 100, and that it shares more than today's report at 35. Excellence addresses exactly that gap. In the other direction, Excellence on its own pays for compliance: the distributor sends the minimum and receives nothing of its own. Universe supplies the data standard, the return and the rules. <span class="tag tM">M</span> (<code>ISUZU_UNIVERSE_3_0_2026-09-23.md</code> §8).</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Excellence Partner</th>
+<th>Universe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Strength</td>
+<td>Simple to explain; a real incentive; can start in April 2027 without IT</td>
+<td>A written data standard; analysis tested on real numbers; rules that stop it feeling like surveillance</td>
+</tr>
+<tr>
+<td>Weakness</td>
+<td>Pays for compliance, not quality; nothing comes back</td>
+<td>No reason for a second step; no platform; nothing tested with a real participant</td>
+</tr>
+<tr>
+<td>Gives the other</td>
+<td>A reason to take part</td>
+<td>The standard, the return and the rules</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-2-what-to-merge-and-what-to-park">8.2 What to merge and what to park</h3>
+<p>Merge: the data standard, the monthly return, the conduct rules, the "ask only what you can return" test, and the stop condition. Park: the platform part of Universe (a shared application with sign-in, a server and the €300,000 route). There is no server, real sign-in is parked until IT is involved, and the acceptance tasks still wait for real participants. The analysis and documents work without a platform, as files made per distributor. <span class="tag tM">M</span> (<code>00_docs/ISZE_ROADMAP.md</code>, Universe engineering programme).</p>
+<h3 id="8-3-where-they-conflict">8.3 Where they conflict</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Universe says</th>
+<th>Excellence does</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Do not pay per record or per field; do not count uploads as participation</td>
+<td>Pays for taking part</td>
+<td>Pay for meeting a quality standard per quarter (complete, per dealer, on time, declared), never for the number of rows; at level 2 count what happens with the data</td>
+</tr>
+<tr>
+<td>No ranking of dealers, no compliance scorecard on IDS</td>
+<td>A yearly status and an award, IDS in the score</td>
+<td>No ranking of distributors either; status without a 1-2-3; IDS as improvement; dealers never ranked</td>
+</tr>
+<tr>
+<td>Ordinary service never depends on contribution</td>
+<td>Development partners get no discount</td>
+<td>Discount and extra programmes are not ordinary service; the written rules say ordinary service is equal for all</td>
+</tr>
+<tr>
+<td>Never approach a dealer directly</td>
+<td></td>
+<td>All through the distributor</td>
+</tr>
+<tr>
+<td>Budget €100,000–€300,000, no evidenced return</td>
+<td>Up to €1.1M a year in the deck design</td>
+<td>Use the small hybrid and staged ceilings (chapters 6 and 11)</td>
+</tr>
+<tr>
+<td>If the incentive disappeared tomorrow, would they still send?</td>
+<td></td>
+<td>Adopt as the success test of Excellence</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-4-plan-b-if-management-does-not-approve-the-discount">8.4 Plan B if management does not approve the discount</h3>
+<ol>
+<li>Tighten the existing kickback condition to the data standard, starting with the distributors already on it. Cost: nothing extra; needs the kickback terms to be adjustable.</li>
+<li>A formal request with a monthly return in exchange. Romania sent eight months two days after Jerome's formal request of 15 September 2026.</li>
+<li>Status and an award at the European aftersales meeting, without a discount, with IMG in support.</li>
+<li>Universe tools as the attraction, not as enforcement. Universe's own estimate is modest without an extra incentive.</li>
+</ol>
+<p>What we would not do is build Plan B on tools that force data. A tool cannot force anything, and the platform such a tool needs does not exist.</p>
+<hr />
+<h2 id="9-implementation-and-technical-requirements">9. Implementation and technical requirements</h2>
+<h3 id="9-1-timeline-to-1-april-2027-and-after">9.1 Timeline to 1 April 2027 and after</h3>
+<figure class="chart"><svg viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif" role="img"><text x="265.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Oct</text><text x="296.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Nov</text><text x="327.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Dec</text><text x="358.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Jan</text><text x="389.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Feb</text><text x="420.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Mar</text><text x="451.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Apr</text><text x="482.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">May</text><text x="513.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Jun</text><text x="544.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Jul</text><text x="575.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Aug</text><text x="606.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Sep</text><text x="637.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Oct</text><text x="668.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Nov</text><text x="699.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Dec</text><text x="730.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Jan</text><text x="761.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Feb</text><text x="792.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Mar</text><text x="823.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">Apr</text><text x="854.5" y="18" font-size="11" fill="#8a9096" text-anchor="middle" font-weight="400">May</text><text x="296.5" y="34" font-size="11" fill="#1d2124" text-anchor="middle" font-weight="700">2026</text><text x="498" y="34" font-size="11" fill="#1d2124" text-anchor="middle" font-weight="700">2027</text><text x="777" y="34" font-size="11" fill="#1d2124" text-anchor="middle" font-weight="700">2028</text><text x="242" y="62" font-size="12" fill="#1d2124" text-anchor="end" font-weight="400">Management paper, concept and ceiling</text><rect x="250" y="46" width="62.0" height="20" fill="#D71920" rx="3"/><text x="242" y="93" font-size="12" fill="#1d2124" text-anchor="end" font-weight="400">Legal review, written rules, register update</text><rect x="281" y="77" width="62.0" height="20" fill="#4f6d8f" rx="3"/><text x="242" y="124" font-size="12" fill="#1d2124" text-anchor="end" font-weight="400">Phase 0: intake, validator, report</text><rect x="312" y="108" width="93.0" height="20" fill="#E6A23C" rx="3"/><text x="242" y="155" font-size="12" fill="#1d2124" text-anchor="end" font-weight="400">No-discount trial, 3–4 distributors</text><rect x="343" y="139" width="93.0" height="20" fill="#2e7d4f" rx="3"/><text x="242" y="186" font-size="12" fill="#1d2124" text-anchor="end" font-weight="400">SAP condition, trainings ready</text><rect x="405" y="170" width="31.0" height="20" fill="#4f6d8f" rx="3"/><text x="242" y="217" font-size="12" fill="#1d2124" text-anchor="end" font-weight="400">Level 1 live (FY2028)</text><rect x="436" y="201" width="403.0" height="20" fill="#D71920" rx="3"/><text x="242" y="248" font-size="12" fill="#1d2124" text-anchor="end" font-weight="400">Quarterly checks</text><rect x="498" y="232" width="341.0" height="20" fill="#8a9096" rx="3"/><text x="242" y="279" font-size="12" fill="#1d2124" text-anchor="end" font-weight="400">Phase 1 decision, if indicators say so</text><rect x="591" y="263" width="93.0" height="20" fill="#E6A23C" rx="3"/><text x="242" y="310" font-size="12" fill="#1d2124" text-anchor="end" font-weight="400">Level 2 assessment and award</text><rect x="777" y="294" width="62.0" height="20" fill="#2e7d4f" rx="3"/><line x1="436" y1="40" x2="436" y2="325" stroke="#1d2124" stroke-dasharray="4 3"/><text x="440" y="328" font-size="12" fill="#1d2124" text-anchor="start" font-weight="700">1 April 2027</text></svg><figcaption><b>Timeline, October 2026 to May 2028</b></figcaption><p class="source">Source: chapter 9 of this paper; owners and dates are proposals.</p></figure>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>When</th>
+<th>What</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Oct–Nov 2026</td>
+<td>Management paper; concept and ceiling decision; confirm kickback terms and get the incentive sheet</td>
+<td>Jerome</td>
+</tr>
+<tr>
+<td>Nov–Dec 2026</td>
+<td>Legal review of the written rules; data standard v1 to the distributors that already agreed to feeds; update the register with feeds already received</td>
+<td>Jerome, with legal</td>
+</tr>
+<tr>
+<td>Dec 2026–Feb 2027</td>
+<td>Phase 0 intake and validator; dashboard of received files; eligibility job in draft</td>
+<td>Developer, with AI</td>
+</tr>
+<tr>
+<td>Jan–Mar 2027</td>
+<td>No-discount trial with three or four distributors: do clean per-dealer files arrive monthly, and what do we send back? Shadow level 2 score on FY2027 data</td>
+<td>Jerome, Bart Symons</td>
+</tr>
+<tr>
+<td>Mar 2027</td>
+<td>Written rules final; SAP condition set up; trainings ready</td>
+<td>Jerome, SAP owners, IMG</td>
+</tr>
+<tr>
+<td>1 Apr 2027</td>
+<td>Programme starts (FY2028), level 1</td>
+<td>Jerome</td>
+</tr>
+<tr>
+<td>End Jun 2027</td>
+<td>First quarterly check; first discount for the quarter after a clean first quarter</td>
+<td>Jerome</td>
+</tr>
+<tr>
+<td>Oct 2027, Jan 2028</td>
+<td>Second and third checks; mid-year review against the indicators</td>
+<td>Jerome</td>
+</tr>
+<tr>
+<td>Apr–May 2028</td>
+<td>Level 2 assessed on FY2028; award at the European aftersales meeting</td>
+<td>Jerome, IMG</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="9-2-what-the-developer-needs-to-build">9.2 What the developer needs to build</h3>
+<p>Detailed requirements are in appendix E. In short, in two phases so that April 2027 does not depend on a platform.</p>
+<p><strong>Phase 0, by 1 April 2027: files, a validator and a report.</strong> A secure drop per distributor (a shared folder or equivalent with separate access per distributor); a validator that checks every file against the data standard and sends a receipt with what passed and what did not; storage with versions; the existing sales-to-dealer pipeline in <code>12_raw/dealer_sales</code> and the canonical long format as the target; a quarterly eligibility job that produces the table the discount code is set from; a monthly return per distributor in the existing one-pager format.</p>
+<p><strong>Phase 1, after the first two quarters, if the indicators say so:</strong> a web upload with sign-in; a dealer-identity service; the monthly return as a page; case records for decisions taken on the data. Sign-in and hosting need IT and cannot be assumed.</p>
+<h3 id="9-3-interfaces-and-dependencies">9.3 Interfaces and dependencies</h3>
+<ul>
+<li><strong>SAP:</strong> a discount condition per distributor and quarter, or a credit-note job (chapter 5.6). Owner and effort <span class="tag tU">U</span>.</li>
+<li><strong>Existing pipeline:</strong> PRISM loaders already read the canonical long format; a fix in 2026 stopped them summing year totals and monthly rows twice. Reuse, do not rebuild.</li>
+<li><strong>Billing reconciliation:</strong> monthly sales to dealer against billing for the same months, with warranty shown apart, as the BI framework requires.</li>
+<li><strong>IDS follow-up sheet:</strong> the pull scaffold of the 0.4 feedback sheet is empty today and is the natural base for the follow-up score.</li>
+</ul>
+<hr />
+<h2 id="10-risks">10. Risks</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Risk</th>
+<th>Likelihood</th>
+<th>Impact</th>
+<th>Mitigation</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Distributors take the discount and send the minimum</td>
+<td>high</td>
+<td>high</td>
+<td>Quality standard, not row counts; monthly return; per-dealer detail a condition from quarter three</td>
+<td>Jerome</td>
+</tr>
+<tr>
+<td>2</td>
+<td>The discount costs more than any benefit</td>
+<td>high on the deck design</td>
+<td>high</td>
+<td>Small hybrid; staged ceilings; stop conditions</td>
+<td>Jerome</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Management wants a return figure that does not exist</td>
+<td>high</td>
+<td>medium</td>
+<td>Present as cost of capability with indicators, not as ROI; this paper</td>
+<td>Jerome</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Forward buying at quarter end</td>
+<td>medium</td>
+<td>medium</td>
+<td>120% cap on discountable stock; quarter-end monitor</td>
+<td>Jerome</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Competition-law challenge</td>
+<td>low–medium, <span class="tag tU">U</span></td>
+<td>high</td>
+<td>Objective rules announced beforehand, no exclusivity or share condition, legal review</td>
+<td>Legal</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Overlap with the kickback pays twice</td>
+<td>medium</td>
+<td>medium</td>
+<td>Level 1 asks more than the kickback does today; read the kickback terms first</td>
+<td>Jerome</td>
+</tr>
+<tr>
+<td>7</td>
+<td>IDS self-scores inflate</td>
+<td>medium</td>
+<td>low</td>
+<td>Improvement not score; sample visits</td>
+<td>IMG</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Dealer data is poor or incomplete</td>
+<td>high at first</td>
+<td>medium</td>
+<td>Declared coverage; validator; gaps treated as source gaps, not weak sales</td>
+<td>Developer</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Sign-in, hosting and IT security are not available</td>
+<td>medium</td>
+<td>medium</td>
+<td>Phase 0 runs on files; Phase 1 only with IT</td>
+<td>Developer</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Small distributors earn too little to bother</td>
+<td>medium</td>
+<td>low</td>
+<td>Practical benefits (for example free transport on stock orders) rather than a percentage</td>
+<td>Jerome</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Romania, Iceland and others order nothing as stock orders and gain nothing</td>
+<td>certain</td>
+<td>low</td>
+<td>Tell them; moving to stock orders is itself good for planning</td>
+<td>Jerome</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Discount distorts GPS and the %GM reading</td>
+<td>medium</td>
+<td>medium</td>
+<td>Credit note, not invoice price</td>
+<td>Jerome, finance</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Internal time of the team is not enough</td>
+<td>medium</td>
+<td>high</td>
+<td>The programme is the team's second project beside Universe; name the time and drop what does not return</td>
+<td>Jerome</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="11-decisions-open-items-and-stop-conditions">11. Decisions, open items and stop conditions</h2>
+<h3 id="11-1-decisions-requested">11.1 Decisions requested</h3>
+<ol>
+<li>Approve the concept and the two levels. <span class="tag tP">P</span></li>
+<li>Approve the small hybrid as the design to start with, and the staged ceiling of up to €150k in FY2028, €350k in FY2029 and €400k in FY2030.</li>
+<li>Approve the no-discount trial in January–March 2027 and the launch of level 1 on 1 April 2027.</li>
+<li>Confirm that the discount is paid as a credit note per quarter and that SAP sets it up.</li>
+<li>Confirm that Universe's platform is parked and its data standard, return and rules are adopted.</li>
+</ol>
+<h3 id="11-2-release-conditions-year-by-year">11.2 Release conditions, year by year</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Release</th>
+<th>Condition, measured by ISZE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FY2028 (€150k)</td>
+<td>Concept approved; legal review done; written rules sent</td>
+</tr>
+<tr>
+<td>FY2029 (€350k)</td>
+<td>At least six of the seven first distributors delivered three consecutive clean monthly files; per-dealer detail from at least four; quarter-end share of stock orders not above 33%; at least two decisions per participating distributor logged with scope</td>
+</tr>
+<tr>
+<td>FY2030 (€400k)</td>
+<td>Per-dealer detail from at least eight distributors; at least one dealer-level or part-family experiment read against a control; no forward-buying signal; the Low-case threshold (2.0% extra sales for the small hybrid) judged plausible on that evidence</td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="tag tP">P</span> The thresholds are proposals to be agreed.</p>
+<h3 id="11-3-stop-conditions">11.3 Stop conditions</h3>
+<p>The programme stops, or goes back to Plan B, if after two eligible quarters fewer than half of the first distributors deliver clean files, or if no participant can name a decision the data changed, or if a legal or confidentiality weakness is found that cannot be closed. It does not broaden the population to look for a better result.</p>
+<h3 id="11-4-open-items">11.4 Open items</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Item</th>
+<th>Needed from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>The kickback terms and the 20% share tied to data</td>
+<td>Jerome, contract text</td>
+</tr>
+<tr>
+<td>2</td>
+<td>The incentive sheet (<code>budget_per_DB_reviewed_24042026.xlsx</code>), to split kickback from other incentives</td>
+<td>Planning</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Which distributors already send monthly files; update the register</td>
+<td>Sales review team</td>
+</tr>
+<tr>
+<td>4</td>
+<td>What order type PRD is; whether discountable base excludes warranty</td>
+<td>SAP owners</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Credit note or invoice condition</td>
+<td>Finance</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Whether ISZE is dominant in any relevant market; non-EU regimes; the 2022 vertical guidelines on non-linear pricing</td>
+<td>Legal</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Cost of internal time, if management wants it shown</td>
+<td>Jerome</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Air-freight and handling cost of rush and VOR orders, if the shift to stock orders is ever to be valued</td>
+<td>Logistics</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="11-5-what-would-change-the-recommendation">11.5 What would change the recommendation</h3>
+<p>Evidence of a measured uplift from data sharing would move the benefit cases and could justify the bigger design. A kickback that already pays most of what the data is worth would argue for Plan B. A legal reading that restricts progressive bonuses would argue for the flat part and practical benefits.</p>
+<hr />
+<h2 id="appendix-a-data-standard-for-sales-to-dealer-proposal">Appendix A. Data standard for sales to dealer (proposal)</h2>
+<p>One file per distributor per month. CSV or Excel, UTF-8, one row per dealer, part and period. Price-free.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Distributor ID</td>
+<td>The ISZE distributor code, stable</td>
+</tr>
+<tr>
+<td>Dealer ID</td>
+<td>Stable code agreed between distributor and ISZE; kept after closure, rename or transfer</td>
+</tr>
+<tr>
+<td>Dealer site ID</td>
+<td>Separate code where a dealer has several sites</td>
+</tr>
+<tr>
+<td>Part number</td>
+<td>The Isuzu part number as sold, with leading zeros kept; ten digits where the number allows</td>
+</tr>
+<tr>
+<td>Quantity</td>
+<td>Units; negative for returns and corrections</td>
+</tr>
+<tr>
+<td>Date</td>
+<td>Transaction date; a month is enough</td>
+</tr>
+<tr>
+<td>Reporting period</td>
+<td>Calendar month, <code>YYYY-MM</code></td>
+</tr>
+<tr>
+<td>Transaction type</td>
+<td>Sale, return, credit or correction where known</td>
+</tr>
+<tr>
+<td>Record ID</td>
+<td>Stable line ID so that corrections can be matched</td>
+</tr>
+<tr>
+<td>File version and creation date</td>
+<td>A resubmission replaces its predecessor visibly</td>
+</tr>
+<tr>
+<td>Coverage declaration</td>
+<td>A control record: dealer sites included; known exclusions; first and last date; returns included or not; full range or part; changes that break comparison</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Deadline:</strong> ten working days after month-end. <strong>Not asked:</strong> selling prices, margins, customer names, chassis numbers, workshop orders, dealer stock. <strong>Per-dealer detail</strong> is a target for the first two quarters and a condition from the third.</p>
+<h2 id="appendix-b-level-2-scorecard-criteria-and-the-six-fields">Appendix B. Level 2 scorecard: criteria and the six fields</h2>
+<p>Each criterion needs: definition, source, owner, frequency, evidence, scale. A criterion without all six does not enter the first-year score. The scale below is a proposal, the same for every criterion: 0%, 50% or 100% of the points, with the evidence named.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th style="text-align: right;">Points</th>
+<th>Definition</th>
+<th>Source</th>
+<th>Owner</th>
+<th>Frequency</th>
+<th>Evidence</th>
+<th>Scale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parts sales against plan</td>
+<td style="text-align: right;">20</td>
+<td>Billing of the FY against the reviewed business plan, warranty shown apart</td>
+<td>Billing, business plan</td>
+<td>ISZE sales</td>
+<td>Yearly, tracked quarterly</td>
+<td>Billing extract</td>
+<td>≥100%: 100%; 95–100%: 50%; below: 0</td>
+</tr>
+<tr>
+<td>Genuine share in euros</td>
+<td style="text-align: right;">10</td>
+<td>Genuine euros ÷ genuine plus BVP euros against last FY</td>
+<td>Billing, classification</td>
+<td>ISZE sales</td>
+<td>Yearly</td>
+<td>AIM release pinned</td>
+<td>Not lower: 100%; −1 point: 50%; lower: 0</td>
+</tr>
+<tr>
+<td>Fill rate with MOS limit</td>
+<td style="text-align: right;">5</td>
+<td>First fill rate on parts ISZE delivered on time, MOS within a limit</td>
+<td>KPI file</td>
+<td>Distributor, ISZE</td>
+<td>Monthly</td>
+<td>KPI file</td>
+<td>To define</td>
+</tr>
+<tr>
+<td>IDS improvement</td>
+<td style="text-align: right;">10</td>
+<td>Change in comparable questions since the last round</td>
+<td>IDS</td>
+<td>IMG</td>
+<td>Per round</td>
+<td>IDS report</td>
+<td>To define</td>
+</tr>
+<tr>
+<td>Closed improvement actions</td>
+<td style="text-align: right;">10</td>
+<td>Closed actions ÷ agreed actions</td>
+<td>Follow-up sheet</td>
+<td>Distributor</td>
+<td>Quarterly</td>
+<td>Sheet with evidence</td>
+<td>≥80%: 100%; 50–80%: 50%</td>
+</tr>
+<tr>
+<td>Right order types</td>
+<td style="text-align: right;">5</td>
+<td>Stock orders against rush and VOR</td>
+<td>Billing</td>
+<td>ISZE</td>
+<td>Quarterly</td>
+<td>Billing</td>
+<td>To define</td>
+</tr>
+<tr>
+<td>EDI or equivalent</td>
+<td style="text-align: right;">5</td>
+<td>Digital ordering active</td>
+<td>IT</td>
+<td>ISZE IT</td>
+<td>Yearly</td>
+<td>Test</td>
+<td>Yes/no</td>
+</tr>
+<tr>
+<td>Training passed on</td>
+<td style="text-align: right;">10</td>
+<td>Dealers reached by trained staff</td>
+<td>Training register</td>
+<td>Distributor</td>
+<td>Yearly</td>
+<td>Register</td>
+<td>To define</td>
+</tr>
+<tr>
+<td>Kaizen plan</td>
+<td style="text-align: right;">15</td>
+<td>At least three actions, owner, date, evidence; scored on closed actions</td>
+<td>Kaizen template</td>
+<td>Distributor</td>
+<td>Yearly</td>
+<td>Template</td>
+<td>By closed share</td>
+</tr>
+<tr>
+<td>R&amp;M, extended warranty, roadside</td>
+<td style="text-align: right;">5</td>
+<td>Step reached</td>
+<td>Report</td>
+<td>Distributor</td>
+<td>Yearly</td>
+<td>Step list</td>
+<td>Per step</td>
+</tr>
+<tr>
+<td>One agreed action per review</td>
+<td style="text-align: right;">5</td>
+<td>Action with owner and date, follow-up</td>
+<td>Review record</td>
+<td>Both</td>
+<td>Per review</td>
+<td>Record</td>
+<td>Done / not done</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Corrections to the deck to make before it is shared:</strong> "Demonstratable" to "Demonstrable"; "&lt; 84" to "0–84"; one definition of IDS participation; a definition of "critical compliance" or its removal.</p>
+<h2 id="appendix-c-model-structure-formulas-and-assumptions">Appendix C. Model: structure, formulas and assumptions</h2>
+<p>The ROI model is <code>Excellence_Partner_ROI_Model_2026-10-09.xlsx</code>. Blue cells are inputs; yellow cells are key assumptions or missing numbers.</p>
+<ul>
+<li>Discount cost per year, design 1: stock orders level 1 × 2.5% + stock orders level 2 × 5%.</li>
+<li>Design 2: the same × planned stock-order growth.</li>
+<li>Designs 3 and 4: stock orders level 1 × (flat + expected bonus) + stock orders level 2 × (flat + expected bonus). The expected bonus uses a normal distribution for the distributor's growth, mean = planned growth, spread = 13.8%: expected growth inside each band = E[(g − lower)+] − E[(g − upper)+].</li>
+<li>Design 5: stock orders × expected tier rate, same distribution.</li>
+<li>Margin on an extra euro = gross margin − discount cost ÷ billed of participants.</li>
+<li>Benefit, scenario s, year t = uplift_s × ramp_t × billed_t × margin_t + price share_s × €682,000 × ramp_t × billed_t ÷ in-scope billed + other.</li>
+<li>Net = benefit − discount cost − running cost − build cost.</li>
+<li>Break-even extra sales in year 3 = total cost ÷ (billed × gross margin − discount cost).</li>
+</ul>
+<p>Assumptions that are ours, not evidence: the participation plan per year, the ramp (25%, 60%, 100%), Low/Base/High uplift (0.5%, 1.5%, 3%), the price-decision share (0%, 5%, 10%), the normal distribution of growth, the tier limits and rates, the flat and bonus rates of the two hybrids, Universe's action counts (10, 25, 50).</p>
+<h2 id="appendix-d-evidence-per-distributor">Appendix D. Evidence per distributor</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Distributor</th>
+<th style="text-align: right;">Billed FY2026</th>
+<th style="text-align: right;">Stock orders</th>
+<th style="text-align: right;">Share</th>
+<th style="text-align: right;">Rebate credits FY2026</th>
+<th>Sales to dealer in workspace</th>
+<th style="text-align: right;">IDS 2026</th>
+<th style="text-align: right;">First fill rate</th>
+<th style="text-align: right;">Plan growth FY2027</th>
+<th>Plan level Y1/Y2/Y3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Isuzu Truck UK</td>
+<td style="text-align: right;">€6.81M</td>
+<td style="text-align: right;">€4.54M</td>
+<td style="text-align: right;">67%</td>
+<td style="text-align: right;">€142k</td>
+<td>Per dealer, 2025 only</td>
+<td style="text-align: right;">83.8%</td>
+<td style="text-align: right;">95%</td>
+<td style="text-align: right;">2%</td>
+<td>1/2/2</td>
+</tr>
+<tr>
+<td>Isuzu UK pickup</td>
+<td style="text-align: right;">€5.95M</td>
+<td style="text-align: right;">€3.68M</td>
+<td style="text-align: right;">62%</td>
+<td style="text-align: right;">€95k</td>
+<td>Network total</td>
+<td style="text-align: right;">82.0%</td>
+<td style="text-align: right;">94%</td>
+<td style="text-align: right;">2%</td>
+<td>1/2/2</td>
+</tr>
+<tr>
+<td>UTI (Israel trucks)</td>
+<td style="text-align: right;">€3.21M</td>
+<td style="text-align: right;">€2.51M</td>
+<td style="text-align: right;">78%</td>
+<td style="text-align: right;">€34k</td>
+<td>Network total</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">-3%</td>
+<td>1/1/2</td>
+</tr>
+<tr>
+<td>UMI (Israel light commercial)</td>
+<td style="text-align: right;">€3.00M</td>
+<td style="text-align: right;">€2.65M</td>
+<td style="text-align: right;">88%</td>
+<td style="text-align: right;">€20k</td>
+<td>–</td>
+<td style="text-align: right;">80.1%</td>
+<td style="text-align: right;">97%</td>
+<td style="text-align: right;">-1%</td>
+<td>0/1/1</td>
+</tr>
+<tr>
+<td>Germany</td>
+<td style="text-align: right;">€2.70M</td>
+<td style="text-align: right;">€1.72M</td>
+<td style="text-align: right;">64%</td>
+<td style="text-align: right;">€30k</td>
+<td>–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">8%</td>
+<td>0/1/2</td>
+</tr>
+<tr>
+<td>Benelux</td>
+<td style="text-align: right;">€2.18M</td>
+<td style="text-align: right;">€1.14M</td>
+<td style="text-align: right;">52%</td>
+<td style="text-align: right;">€25k</td>
+<td>–</td>
+<td style="text-align: right;">78.6%</td>
+<td style="text-align: right;">85%</td>
+<td style="text-align: right;">5%</td>
+<td>0/1/1</td>
+</tr>
+<tr>
+<td>Portugal</td>
+<td style="text-align: right;">€1.83M</td>
+<td style="text-align: right;">€1.52M</td>
+<td style="text-align: right;">83%</td>
+<td style="text-align: right;">€20k</td>
+<td>Network total</td>
+<td style="text-align: right;">86.8%</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">1%</td>
+<td>1/2/2</td>
+</tr>
+<tr>
+<td>Norway</td>
+<td style="text-align: right;">€1.48M</td>
+<td style="text-align: right;">€1.34M</td>
+<td style="text-align: right;">91%</td>
+<td style="text-align: right;">€47k</td>
+<td>–</td>
+<td style="text-align: right;">82.8%</td>
+<td style="text-align: right;">96%</td>
+<td style="text-align: right;">20%</td>
+<td>0/1/1</td>
+</tr>
+<tr>
+<td>Sweden</td>
+<td style="text-align: right;">€1.31M</td>
+<td style="text-align: right;">€1.05M</td>
+<td style="text-align: right;">80%</td>
+<td style="text-align: right;">€17k</td>
+<td>–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">12%</td>
+<td>0/1/1</td>
+</tr>
+<tr>
+<td>Ireland</td>
+<td style="text-align: right;">€1.12M</td>
+<td style="text-align: right;">€980k</td>
+<td style="text-align: right;">87%</td>
+<td style="text-align: right;">–</td>
+<td>Network total</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">13%</td>
+<td>1/1/2</td>
+</tr>
+<tr>
+<td>Greece</td>
+<td style="text-align: right;">€472k</td>
+<td style="text-align: right;">€147k</td>
+<td style="text-align: right;">31%</td>
+<td style="text-align: right;">–</td>
+<td>Network total</td>
+<td style="text-align: right;">73.8%</td>
+<td style="text-align: right;">60%</td>
+<td style="text-align: right;">22%</td>
+<td>1/1/1</td>
+</tr>
+<tr>
+<td>Cyprus</td>
+<td style="text-align: right;">€412k</td>
+<td style="text-align: right;">€236k</td>
+<td style="text-align: right;">57%</td>
+<td style="text-align: right;">–</td>
+<td>–</td>
+<td style="text-align: right;">75.0%</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">31%</td>
+<td>0/0/1</td>
+</tr>
+<tr>
+<td>Hungary</td>
+<td style="text-align: right;">€348k</td>
+<td style="text-align: right;">€295k</td>
+<td style="text-align: right;">85%</td>
+<td style="text-align: right;">–</td>
+<td>–</td>
+<td style="text-align: right;">86.4%</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">0%</td>
+<td>0/1/1</td>
+</tr>
+<tr>
+<td>Finland</td>
+<td style="text-align: right;">€281k</td>
+<td style="text-align: right;">€244k</td>
+<td style="text-align: right;">87%</td>
+<td style="text-align: right;">–</td>
+<td>–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">28%</td>
+<td>0/0/1</td>
+</tr>
+<tr>
+<td>Malta</td>
+<td style="text-align: right;">€198k</td>
+<td style="text-align: right;">€186k</td>
+<td style="text-align: right;">94%</td>
+<td style="text-align: right;">–</td>
+<td>–</td>
+<td style="text-align: right;">89.3%</td>
+<td style="text-align: right;">88%</td>
+<td style="text-align: right;">18%</td>
+<td>0/0/1</td>
+</tr>
+<tr>
+<td>Romania</td>
+<td style="text-align: right;">€186k</td>
+<td style="text-align: right;">€1k</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;">–</td>
+<td>Network total (2026)</td>
+<td style="text-align: right;">80.0%</td>
+<td style="text-align: right;">88%</td>
+<td style="text-align: right;">7%</td>
+<td>1/1/1</td>
+</tr>
+<tr>
+<td>Denmark</td>
+<td style="text-align: right;">€160k</td>
+<td style="text-align: right;">€95k</td>
+<td style="text-align: right;">60%</td>
+<td style="text-align: right;">–</td>
+<td>–</td>
+<td style="text-align: right;">81.3%</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">17%</td>
+<td>0/0/1</td>
+</tr>
+<tr>
+<td>Iceland</td>
+<td style="text-align: right;">€90k</td>
+<td style="text-align: right;">€0k</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;">–</td>
+<td>–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">16%</td>
+<td>0/0/1</td>
+</tr>
+<tr>
+<td>Palestine</td>
+<td style="text-align: right;">€42k</td>
+<td style="text-align: right;">€42k</td>
+<td style="text-align: right;">99%</td>
+<td style="text-align: right;">–</td>
+<td>–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+<td style="text-align: right;">–</td>
+<td>0/0/1</td>
+</tr>
+</tbody>
+</table></div>
+<p>Benelux IDS is Belgium only (Netherlands 76.1%). Plan growth = reviewed business plan FY2027 against FY2026 billed. Plan level is the illustrative participation plan of the model (0 = not in, 1 = level 1, 2 = level 2). Fill rate: KPI master, average of available months.</p>
+<h2 id="appendix-e-requirements-for-the-developer">Appendix E. Requirements for the developer</h2>
+<p>Priority: <strong>M</strong> must, <strong>S</strong> should, <strong>C</strong> could. Size: S, M, L are our guesses for the developer to replace with real estimates. <span class="tag tA">A</span></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Requirement</th>
+<th>Priority</th>
+<th>Phase</th>
+<th>Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E1</td>
+<td>Per-distributor secure drop with separate access; no distributor sees another's files</td>
+<td>M</td>
+<td>0</td>
+<td>M</td>
+</tr>
+<tr>
+<td>E2</td>
+<td>Validator against the data standard: schema, period, duplicate keys, negative quantities flagged not rejected, valid part numbers, stable dealer IDs, coverage declaration present</td>
+<td>M</td>
+<td>0</td>
+<td>M</td>
+</tr>
+<tr>
+<td>E3</td>
+<td>Reconciliation: total quantity and valued quantity (at ISZE billed average price) against billing for the same months, warranty apart; tolerance configurable</td>
+<td>M</td>
+<td>0</td>
+<td>M</td>
+</tr>
+<tr>
+<td>E4</td>
+<td>Receipt per file: what passed, what failed, what to correct, route to resubmit</td>
+<td>M</td>
+<td>0</td>
+<td>S</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>Versioning and corrections: original kept, new version active, changed results marked</td>
+<td>M</td>
+<td>0</td>
+<td>M</td>
+</tr>
+<tr>
+<td>E6</td>
+<td>Normalise into the canonical long format; reuse the existing adapters and loaders; no parallel calculation</td>
+<td>M</td>
+<td>0</td>
+<td>M</td>
+</tr>
+<tr>
+<td>E7</td>
+<td>Quarterly eligibility job: gates per distributor with evidence; manual override with a written reason; output for the SAP condition or credit-note job</td>
+<td>M</td>
+<td>0</td>
+<td>M</td>
+</tr>
+<tr>
+<td>E8</td>
+<td>Monthly return per distributor in the existing one-pager format; own figures beside an anonymous network average; no rankings</td>
+<td>S</td>
+<td>0</td>
+<td>M</td>
+</tr>
+<tr>
+<td>E9</td>
+<td>Dealer identity table with history (rename, merge, close, transfer); mapping to IDS names and, where it exists, to SAP customer numbers</td>
+<td>S</td>
+<td>0–1</td>
+<td>L</td>
+</tr>
+<tr>
+<td>E10</td>
+<td>Audit trail of every state change; retention and backup</td>
+<td>M</td>
+<td>0</td>
+<td>S</td>
+</tr>
+<tr>
+<td>E11</td>
+<td>Monitoring: files late, files invalid, quarter-end stock-order share, order-type shift</td>
+<td>S</td>
+<td>0</td>
+<td>S</td>
+</tr>
+<tr>
+<td>E12</td>
+<td>Data classification: price-free by design; reject rows that carry prices or personal data</td>
+<td>M</td>
+<td>0</td>
+<td>S</td>
+</tr>
+<tr>
+<td>E13</td>
+<td>Web upload with sign-in, roles, and hosting approved by IT</td>
+<td>C</td>
+<td>1</td>
+<td>L</td>
+</tr>
+<tr>
+<td>E14</td>
+<td>Case record for decisions taken on the data: owner, date, scope, before/after on the same scope</td>
+<td>S</td>
+<td>1</td>
+<td>M</td>
+</tr>
+<tr>
+<td>E15</td>
+<td>Experiment support: assign dealers or part families to groups, read results over the same months</td>
+<td>C</td>
+<td>1</td>
+<td>L</td>
+</tr>
+<tr>
+<td>E16</td>
+<td>Access rule: each distributor sees only its own data; dealers see only their own record; enforced by the application and by the contents of exports, not by hidden menus</td>
+<td>M</td>
+<td>1</td>
+<td>L</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Security and privacy.</strong> The standard is price-free and carries no customer names, chassis numbers or personal data. Dealer names are company names. Even so, the files are commercially sensitive: encrypt in transit and at rest, keep the access list short, log access, and do not copy files into shared repositories. Raw billing never leaves the secure area.</p>
+<h2 id="appendix-f-glossary">Appendix F. Glossary</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sales to dealer</td>
+<td>What a distributor sells on to its dealers, part number and quantity, no prices</td>
+</tr>
+<tr>
+<td>Stock order (SOR)</td>
+<td>The order type for regular replenishment from ISZE; the base of the discount</td>
+</tr>
+<tr>
+<td>Rush, VOR</td>
+<td>Faster order types; out of scope</td>
+</tr>
+<tr>
+<td>Rebate credit</td>
+<td>Credit lines "Rebate Material" in the billing ledger; the kickback and other incentives</td>
+</tr>
+<tr>
+<td>Level 1, level 2</td>
+<td>Partner; Excellence Partner</td>
+</tr>
+<tr>
+<td>%GM</td>
+<td>Gross margin as a percentage</td>
+</tr>
+<tr>
+<td>FY</td>
+<td>Fiscal year, April to March; FY2026 = 1 Apr 2025 – 31 Mar 2026</td>
+</tr>
+<tr>
+<td>GPS</td>
+<td>Billed parts against target spend per truck</td>
+</tr>
+<tr>
+<td>IDS</td>
+<td>Isuzu Dealer Standards, a dealer self-assessment</td>
+</tr>
+<tr>
+<td>BVP</td>
+<td>Best Value Parts</td>
+</tr>
+<tr>
+<td>MOS</td>
+<td>Months of stock</td>
+</tr>
+<tr>
+<td>StD</td>
+<td>Sales to dealer</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="appendix-g-sources-read-and-what-was-not-read">Appendix G. Sources read, and what was not read</h2>
+<p><strong>Read in the workspace:</strong> the proposal deck; <code>INDEX.md</code>, <code>AGENTS.md</code>, <code>FACTS.md</code>, <code>ISZE_BI_FRAMEWORK.md</code>; <code>sales_fact.parquet</code>, <code>distributor_dimension.csv</code>, <code>q1fy2027_export_with_saty.csv</code>, <code>gps_clean_all_fy_v2.csv</code>, <code>wallet_waterfall.csv</code>, <code>pms_opportunity_matrix.csv</code>, <code>bp_fy27_reviewed.json</code>; the IDS 2026 payloads and logic check; the sales-to-dealer files, registry and standing rule; the August 2026 sales-review minutes; the FY2027 action plan; <code>DECISIONS.md</code>; the Universe 3.0 paper, value-exchange model, participation model, pilot evidence pack, €300k term sheet and DLOD rollout; the earlier analyses in this folder.</p>
+<p><strong>Read on the web (9 October 2026):</strong> the Commission's competition pages and law-firm notes on the extension of Regulation 461/2010 to 31 May 2028 by Regulation 2023/822 and the 2024 evaluation (for example <a href="https://www.cuatrecasas.com/en/global/art/eu-commission-prolongs-motor-vehicle-block-exemption-regulation">Cuatrecasas</a>, <a href="https://eur-lex.europa.eu/eli/reg/2023/822/oj">EUR-Lex 2023/822</a>, <a href="https://competition-policy.ec.europa.eu/sectors/motor-vehicles/review-motor-vehicle-block-exemption-regulation_en">Commission review page</a>); the Commission's page on the vertical block exemption (Regulation 2022/720, <a href="https://competition-policy.ec.europa.eu/antitrust-and-cartels/legislation/vertical-block-exemptions_en">Commission page</a>); and discussions of rebate case law (Post Danmark II, Intel, Michelin).</p>
+<p><strong>Not read:</strong> the text of the Supplementary Guidelines and the 2022 Vertical Guidelines on rebates and non-linear pricing; the 2026 Commission evaluation of Regulation 461/2010 (SWD(2026) 174); the kickback contract; the budget workbook; any non-EU competition rules. <strong>Not verified:</strong> that the 20% share is as stated; the meaning of order type PRD; the SAP configuration options.</p>
+<p><strong>Not done:</strong> a legal review; a costing of internal time; a test with a real distributor.</p>
+<h2 id="appendix-h-the-prompt">Appendix H. The prompt</h2>
+<p>The prompt that defines this paper, and from which the next edition can be written, is <code>MEGAPROMPT_Excellence_Partner_Paper_2026-10-09.md</code> in the same folder.</p></main></div>
+<footer>Built from the Markdown source and the ROI model with _build/build_paper.py. Self-contained: no external files.</footer></body></html>
