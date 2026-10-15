@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRISM — the network, mapped</title>
+<style>
+/* ─── tokens ─────────────────────────────────────────────────────────── */
+:root{
+  --bg0:#0e1626; --bg1:#15233c; --bg2:#1c2f4d;
+  --card:rgba(21,35,60,.92); --card-line:rgba(154,165,184,.22);
+  --ink:#e9ecf3; --muted:#9aa5b8; --faint:#5f6b80;
+  --terra:#c0552d; --terra-lit:#e0714a;
+  --green:#1d9e75; --amber:#eda100; --blue:#2a78d6; --violet:#8b7bd8;
+  --node:#20334f; --node-line:#33486b;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{
+  font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink);
+  background:radial-gradient(1200px 800px at 75% -10%,var(--bg2) 0%,var(--bg1) 45%,var(--bg0) 100%);
+  overflow:hidden;
+}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:normal;}
+
+/* ─── top bar ────────────────────────────────────────────────────────── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;height:58px;z-index:40;
+  display:flex;align-items:center;gap:18px;padding:0 22px;
+  background:linear-gradient(180deg,rgba(14,22,38,.96),rgba(14,22,38,.75) 80%,transparent);
+}
+#wordmark{font-family:Georgia,serif;font-size:22px;letter-spacing:.12em;}
+#wordmark b{color:var(--terra-lit);font-weight:normal;}
+#wordmark small{display:block;font-family:"Segoe UI",sans-serif;font-size:9.5px;letter-spacing:.24em;color:var(--muted);text-transform:uppercase;}
+#lenses{display:flex;gap:4px;background:rgba(255,255,255,.05);border:1px solid var(--card-line);border-radius:9px;padding:3px;}
+#lenses button{
+  border:0;background:transparent;color:var(--muted);font:600 11.5px "Segoe UI",sans-serif;
+  letter-spacing:.06em;text-transform:uppercase;padding:7px 14px;border-radius:6px;cursor:pointer;transition:all .25s;
+}
+#lenses button.on{background:var(--terra);color:#fff;}
+#lenses button:not(.on):hover{color:var(--ink);}
+#spacer{flex:1;}
+#dots{display:flex;gap:7px;align-items:center;}
+#dots i{width:8px;height:8px;border-radius:50%;background:rgba(154,165,184,.3);cursor:pointer;transition:all .3s;}
+#dots i.on{background:var(--terra-lit);transform:scale(1.35);}
+#modebtn{
+  border:1px solid var(--card-line);background:rgba(255,255,255,.05);color:var(--ink);
+  font:600 11.5px "Segoe UI",sans-serif;letter-spacing:.06em;text-transform:uppercase;
+  padding:8px 16px;border-radius:9px;cursor:pointer;transition:all .25s;
+}
+#modebtn:hover{border-color:var(--terra-lit);color:var(--terra-lit);}
+#modes{display:flex;border:1px solid var(--card-line);border-radius:9px;overflow:hidden;flex-shrink:0;}
+#modes span,#modes a{
+  font:600 11.5px "Segoe UI",sans-serif;letter-spacing:.06em;text-transform:uppercase;
+  padding:8px 14px;text-decoration:none;color:var(--muted);
+}
+#modes .on{background:var(--terra);color:#fff;}
+#modes a:hover{color:var(--terra-lit);}
+kbd{font:600 10px "Segoe UI",sans-serif;color:var(--faint);border:1px solid var(--card-line);border-radius:4px;padding:1px 5px;margin-left:6px;}
+
+/* ─── stage ──────────────────────────────────────────────────────────── */
+#viewport{position:absolute;inset:58px 0 30px 0;overflow:hidden;}
+#stage{position:absolute;left:0;top:0;width:1680px;height:920px;transform-origin:0 0;
+  transition:transform .55s cubic-bezier(.4,0,.2,1);}
+#edges{position:absolute;left:0;top:0;pointer-events:none;}
+#edges path{fill:none;stroke:rgba(154,165,184,.22);stroke-width:1.4;transition:stroke .5s,opacity .5s;}
+#edges path.lit{stroke:rgba(224,113,74,.75);stroke-width:2;}
+#edges path.hid{opacity:0;}
+.lenswrap{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .55s;}
+.lenswrap.on{opacity:1;pointer-events:auto;}
+
+/* ─── nodes ──────────────────────────────────────────────────────────── */
+.node{
+  position:absolute;background:var(--node);border:1px solid var(--node-line);border-radius:10px;
+  padding:9px 12px;cursor:pointer;transition:opacity .5s,transform .35s,border-color .35s,box-shadow .35s;
+  animation:pop .6s both;
+}
+@keyframes pop{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+.node:hover{border-color:var(--terra-lit);transform:translateY(-2px);}
+.node .t{font:600 12.5px "Segoe UI",sans-serif;line-height:1.25;}
+.node .s{font-size:10.3px;color:var(--muted);line-height:1.3;margin-top:3px;}
+.node .badge{
+  position:absolute;top:-9px;right:10px;background:var(--terra);color:#fff;
+  font:700 9px "Segoe UI",sans-serif;letter-spacing:.05em;padding:2px 7px;border-radius:8px;
+}
+.node.dim{opacity:.13;}
+.node.lit{border-color:var(--terra-lit);box-shadow:0 0 0 1px rgba(224,113,74,.4),0 10px 28px -14px rgba(224,113,74,.5);}
+.node.sel{border-color:#fff;}
+/* status accents */
+.node.live{border-left:3px solid var(--green);}
+.node.build{border-left:3px solid var(--amber);}
+.node.input{border-left:3px solid var(--blue);}
+.node.concept{border:1px dashed var(--violet);background:rgba(139,123,216,.07);}
+.colhead{
+  position:absolute;font:700 10.5px "Segoe UI",sans-serif;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--faint);transition:opacity .5s;
+}
+.colhead.dim{opacity:.15;}
+.lane{position:absolute;left:36px;right:24px;border-top:1px dashed rgba(154,165,184,.14);transition:opacity .5s;}
+.lane.dim{opacity:.15;}
+
+/* ─── narrative card ─────────────────────────────────────────────────── */
+#story{
+  position:fixed;left:26px;top:96px;width:440px;max-height:calc(100% - 170px);z-index:30;
+  background:var(--card);border:1px solid var(--card-line);border-radius:14px;
+  padding:26px 28px 20px;backdrop-filter:blur(6px);
+  box-shadow:0 30px 70px -30px rgba(0,0,0,.7);
+  transition:transform .5s cubic-bezier(.4,0,.2,1),opacity .5s;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+#story.away{transform:translateX(-120%);opacity:0;pointer-events:none;}
+#kicker{font:700 10.5px "Segoe UI",sans-serif;letter-spacing:.26em;text-transform:uppercase;color:var(--terra-lit);}
+#stitle{font-size:25px;color:#fff;line-height:1.16;margin:9px 0 12px;}
+#sbody{font-size:13px;line-height:1.62;color:#c8cfdc;overflow-y:auto;}
+#sbody p{margin-bottom:9px;}
+#sbody b{color:#fff;font-weight:600;}
+#sbody .hush{color:var(--muted);font-size:12px;border-left:2px solid var(--terra);padding-left:10px;margin:10px 0 2px;}
+#chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px;}
+.chip{background:rgba(255,255,255,.055);border:1px solid var(--card-line);border-radius:8px;padding:7px 11px;}
+.chip .v{font:600 16px Georgia,serif;color:#fff;}
+.chip .v em{font-style:normal;color:var(--terra-lit);}
+.chip .l{font-size:9.3px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-top:1px;}
+#snav{display:flex;align-items:center;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--card-line);}
+#snav button{
+  border:1px solid var(--card-line);background:transparent;color:var(--ink);border-radius:8px;
+  padding:8px 15px;font:600 12px "Segoe UI",sans-serif;cursor:pointer;transition:all .2s;
+}
+#snav button:hover{border-color:var(--terra-lit);color:var(--terra-lit);}
+#snav button.primary{background:var(--terra);border-color:var(--terra);color:#fff;}
+#snav button.primary:hover{background:var(--terra-lit);color:#fff;}
+#stepno{margin-left:auto;font-size:11px;color:var(--faint);}
+.spark{margin:12px 0 2px;}
+.spark svg{display:block;width:100%;height:auto;}
+.spark .cap{font-size:10px;color:var(--faint);margin-top:4px;}
+
+/* ─── detail drawer ──────────────────────────────────────────────────── */
+#drawer{
+  position:fixed;right:26px;top:96px;width:380px;max-height:calc(100% - 170px);z-index:35;
+  background:var(--card);border:1px solid var(--card-line);border-radius:14px;padding:24px 26px;
+  backdrop-filter:blur(6px);box-shadow:0 30px 70px -30px rgba(0,0,0,.7);
+  transform:translateX(130%);transition:transform .45s cubic-bezier(.4,0,.2,1);overflow-y:auto;
+}
+#drawer.open{transform:none;}
+#drawer .status{display:inline-block;font:700 9.5px "Segoe UI",sans-serif;letter-spacing:.14em;text-transform:uppercase;border-radius:7px;padding:3px 9px;margin-bottom:10px;}
+#drawer .status.live{background:rgba(29,158,117,.18);color:#4fd0a4;}
+#drawer .status.build{background:rgba(237,161,0,.15);color:#f2b53d;}
+#drawer .status.input{background:rgba(42,120,214,.16);color:#6aa8ec;}
+#drawer .status.concept{background:rgba(139,123,216,.15);color:#ab9ff0;}
+#dtitle{font-size:20px;color:#fff;margin-bottom:10px;line-height:1.2;}
+#dbody{font-size:12.6px;line-height:1.6;color:#c8cfdc;}
+#dbody .caveat{color:var(--muted);font-size:11.8px;border-left:2px solid var(--terra);padding-left:10px;margin-top:10px;}
+#dtech{font-size:10.3px;color:var(--faint);margin-top:14px;padding-top:10px;border-top:1px solid var(--card-line);line-height:1.5;}
+#dclose{position:absolute;top:12px;right:14px;border:0;background:transparent;color:var(--faint);font-size:17px;cursor:pointer;}
+#dclose:hover{color:#fff;}
+#dpager{
+  display:block;width:100%;margin-top:16px;border:1px solid var(--terra);
+  background:linear-gradient(120deg,var(--terra),var(--terra-lit));color:#fff;
+  font:600 12px "Segoe UI",sans-serif;letter-spacing:.03em;padding:11px 14px;border-radius:9px;cursor:pointer;
+  transition:filter .2s,transform .2s;
+}
+#dpager:hover{filter:brightness(1.08);transform:translateY(-1px);}
+#dpager .g{opacity:.85;font-weight:400;}
+#dpager[hidden]{display:none !important;}
+
+/* ─── one-pager pop-up ───────────────────────────────────────────────── */
+.pgtag{
+  display:inline-block;margin-top:8px;font:700 8.5px "Segoe UI",sans-serif;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--terra-lit);border:1px solid rgba(224,113,74,.45);border-radius:6px;padding:2px 7px 2px 6px;
+}
+.pgtag::before{content:"▤ ";font-size:8px;}
+#pager{position:fixed;inset:0;z-index:60;display:none;align-items:flex-start;justify-content:center;padding:40px 22px;overflow:auto;}
+#pager.open{display:flex;animation:pgfade .3s ease both;}
+.pgbackdrop{position:fixed;inset:0;background:rgba(6,10,18,.76);backdrop-filter:blur(7px);}
+#pgsheet{
+  position:relative;width:min(880px,100%);margin:auto;background:#fbf9f4;color:#1e2733;
+  border-radius:16px;overflow:hidden;box-shadow:0 44px 120px -28px rgba(0,0,0,.85);
+  animation:pgpop .42s cubic-bezier(.2,.85,.25,1) both;
+}
+@keyframes pgfade{from{opacity:0;}to{opacity:1;}}
+@keyframes pgpop{from{opacity:0;transform:translateY(20px) scale(.965);}to{opacity:1;transform:none;}}
+.pghead{background:linear-gradient(125deg,#15233c,#20355a);color:#eef1f7;padding:26px 36px 24px;border-left:6px solid var(--terra-lit);}
+.pghead .eyebrow{font:700 10px "Segoe UI",sans-serif;letter-spacing:.28em;text-transform:uppercase;color:var(--terra-lit);}
+.pghead .pgstatus{display:inline-block;margin:11px 0 0;font:700 9px "Segoe UI",sans-serif;letter-spacing:.14em;text-transform:uppercase;padding:3px 10px;border-radius:7px;background:rgba(29,158,117,.22);color:#7fe0b8;}
+.pghead h2{font-family:Georgia,"Times New Roman",serif;font-size:28px;font-weight:normal;line-height:1.14;color:#fff;margin:9px 0 10px;}
+.pghead .stand{font-size:13.5px;line-height:1.5;color:#c7d0e0;max-width:64ch;}
+.pgbody{padding:24px 36px 6px;}
+.pgbody h3{font-family:Georgia,serif;font-weight:normal;font-size:15px;color:var(--terra);margin:22px 0 9px;letter-spacing:.01em;}
+.pgbody h3:first-child{margin-top:4px;}
+.pglead{font-size:14.8px;line-height:1.66;color:#2c3646;}
+.pglead b{color:#15233c;font-weight:600;}
+.pglead em{font-style:normal;color:var(--terra);font-weight:600;}
+.pgpanel{border:1px solid #e7e0d4;background:#fff;border-radius:12px;padding:18px 18px 12px;margin:14px 0 6px;}
+.pgpanel svg{display:block;width:100%;height:auto;}
+.pgcap{font-size:10.5px;color:#8a8577;margin-top:10px;text-align:center;line-height:1.45;}
+.pgpoints{list-style:none;margin:6px 0 4px;}
+.pgpoints li{position:relative;padding-left:20px;margin-bottom:10px;font-size:13px;line-height:1.55;color:#2c3646;}
+.pgpoints li::before{content:"";position:absolute;left:2px;top:6px;width:8px;height:8px;background:var(--terra-lit);border-radius:2px;transform:rotate(45deg);}
+.pgpoints b{color:#15233c;font-weight:600;}
+.pgrhythm{background:#f1ece2;border-radius:9px;padding:12px 15px;margin:12px 0 2px;font-size:12.5px;line-height:1.5;color:#4a4436;}
+.pgrhythm b{color:#15233c;}
+.pgnote{background:#f4efe6;border-left:3px solid var(--terra);border-radius:0 8px 8px 0;padding:13px 16px;margin:18px 0 4px;font-size:12.5px;line-height:1.56;color:#4a4436;}
+.pgnote b{color:#8a3d1e;}
+.pgfoot{display:flex;align-items:flex-end;gap:16px;padding:16px 36px 24px;border-top:1px solid #e7e0d4;margin-top:12px;}
+.pgsrc{flex:1;font-size:9.8px;color:#9a9384;line-height:1.5;}
+.pgbtns{display:flex;gap:10px;flex-shrink:0;}
+.pgbtn{border:1px solid #c9c1b2;background:#fff;color:#2c3646;font:600 12px "Segoe UI",sans-serif;padding:9px 17px;border-radius:9px;cursor:pointer;transition:all .2s;}
+.pgbtn:hover{border-color:#8a8577;}
+.pgbtn.primary{background:var(--terra);border-color:var(--terra);color:#fff;}
+.pgbtn.primary:hover{background:var(--terra-lit);border-color:var(--terra-lit);}
+
+/* ─── print: isolate the one-pager into a clean PDF ──────────────────── */
+@media print{
+  @page{size:A4;margin:11mm;}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+  body{overflow:visible !important;background:#fff !important;height:auto !important;}
+  #topbar,#viewport,#story,#drawer,#foot{display:none !important;}
+  #pager{position:static !important;display:block !important;padding:0 !important;overflow:visible !important;background:#fff !important;}
+  .pgbackdrop,.pgbtns{display:none !important;}
+  #pgsheet{width:100% !important;max-width:none !important;margin:0 !important;border-radius:0 !important;box-shadow:none !important;animation:none !important;}
+  /* compact so the sheet lands on a single page */
+  .pghead{border-left:6px solid var(--terra-lit) !important;padding:16px 28px 14px !important;}
+  .pghead h2{font-size:21px !important;margin:5px 0 6px !important;}
+  .pghead .eyebrow{font-size:9px !important;}
+  .pghead .pgstatus{margin-top:8px !important;}
+  .pghead .stand{font-size:11px !important;line-height:1.4 !important;}
+  .pgbody{padding:12px 28px 2px !important;}
+  .pgbody h3{font-size:12.5px !important;margin:11px 0 4px !important;}
+  .pglead{font-size:11px !important;line-height:1.48 !important;}
+  .pgpanel{padding:9px 10px 6px !important;margin:8px 0 2px !important;}
+  .pgcap{font-size:8.5px !important;margin-top:5px !important;}
+  .pgpoints li{font-size:10.5px !important;margin-bottom:4px !important;line-height:1.4 !important;}
+  .pgpoints li::before{top:5px !important;}
+  .pgrhythm{font-size:10.5px !important;padding:9px 12px !important;margin:8px 0 2px !important;}
+  .pgnote{font-size:10px !important;padding:9px 12px !important;margin:9px 0 2px !important;}
+  .pgfoot{padding:10px 28px 12px !important;}
+  .pgsrc{font-size:8.5px !important;}
+}
+
+/* ─── footer ─────────────────────────────────────────────────────────── */
+#foot{
+  position:fixed;bottom:0;left:0;right:0;height:30px;z-index:40;display:flex;align-items:center;
+  padding:0 22px;font-size:9.6px;color:var(--faint);
+  background:linear-gradient(0deg,rgba(14,22,38,.95),transparent);
+}
+#hint{margin-left:auto;}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div id="wordmark">PR<b>I</b>SM<small>Parts revenue intelligence</small></div>
+  <div id="lenses">
+    <button data-lens="anatomy">System</button>
+    <button data-lens="concept">Thinking model</button>
+    <button data-lens="roadmap">Roadmap</button>
+  </div>
+  <div id="spacer"></div>
+  <div id="dots"></div>
+  <button id="modebtn">Explore <kbd>E</kbd></button>
+</div>
+
+<div id="viewport"><div id="stage">
+  <svg id="edges" width="1680" height="920" viewBox="0 0 1680 920"></svg>
+  <div class="lenswrap" id="lw-anatomy"></div>
+  <div class="lenswrap" id="lw-concept"></div>
+  <div class="lenswrap" id="lw-roadmap"></div>
+</div></div>
+
+<div id="story">
+  <div id="kicker"></div>
+  <h2 id="stitle"></h2>
+  <div id="sbody"></div>
+  <div id="chips"></div>
+  <div id="snav">
+    <button id="prev">← Back</button>
+    <button id="next" class="primary">Next →</button>
+    <span id="stepno"></span>
+  </div>
+</div>
+
+<div id="drawer">
+  <button id="dclose">✕</button>
+  <span class="status" id="dstatus"></span>
+  <h3 id="dtitle"></h3>
+  <div id="dbody"></div>
+  <div id="dtech"></div>
+  <button id="dpager" hidden></button>
+</div>
+
+<div id="pager" aria-hidden="true">
+  <div class="pgbackdrop"></div>
+  <div id="pgsheet" role="dialog" aria-modal="true" aria-label="Concept one-pager"></div>
+</div>
+
+<div id="foot">
+  <span>Source: PRISM derived layer (SAP billing · IML fleet workbook · BVP catalogue · street-price benchmark · tender notices), gated by 106 automated pipeline checks · figures CY2025 unless noted · wallet = spend ceiling, not a forecast · 17 Jul 2026</span>
+  <span id="hint">← → chapters · E explore · click any node</span>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   DATA — every node grounded in the real repo / derived layer
+   ════════════════════════════════════════════════════════════════════════ */
+var ST={live:"Live",build:"In build",input:"Needs input",concept:"Concept"};
+
+var LENSES={
+/* ── LENS 1 · SYSTEM ANATOMY ─────────────────────────────────────────── */
+anatomy:{
+ heads:[
+  {x:60,y:64,t:"Sources"},{x:405,y:64,t:"Engines"},{x:745,y:64,t:"Derived layer"},
+  {x:1058,y:64,t:"Gate"},{x:1330,y:64,t:"Surfaces"}
+ ],
+ nodes:[
+  {id:"src_sap",x:60,y:100,w:270,st:"live",t:"SAP billing extracts",s:"Every invoice line, CY2023–2026",
+   d:"The revenue truth. Line-level billing per distributor, part number, quantity and net value — the numerator of almost everything.",
+   tech:"Raw CY exports → sales_fact parquet (line grain)."},
+  {id:"src_uio",x:60,y:206,w:270,st:"live",t:"Fleet workbook (IML)",s:"Units in operation by market · model · year",
+   d:"The denominator. How many Isuzu are on the road, where, of which model and registration year. Without it, no per-truck metric exists.",
+   tech:"ISUZU_UIO_Overview_2026.xlsx (canonical _CURRENT copy)."},
+  {id:"src_cat",x:60,y:312,w:270,st:"live",t:"BVP catalogue + cross-reference",s:"Genuine ↔ Best Value part pairs",
+   d:"Which genuine part has a Best Value twin. Turns raw sales into a genuine-vs-BVP mix read and a substitution story.",
+   tech:"BVP parts catalog + genuine_bvp_crossref (authoritative)."},
+  {id:"src_reg",x:60,y:418,w:270,st:"live",t:"Service-parts registry",s:"PMS part numbers per model & interval",
+   d:"Which part numbers count as scheduled maintenance, per model family. The basis for expected demand — what the parc should consume.",
+   tech:"PMS PN registry + OEM interval schedules, country overrides."},
+  {id:"src_str",x:60,y:524,w:270,st:"live",t:"Street-price benchmark",s:"Aftermarket prices, scraped",
+   d:"What the competition charges at the counter. Genuine prices are grossed ×1.785 through the channel so the comparison is apples-to-apples.",
+   tech:"Eucon / AutoDoc scrape → eucon_price_gap, AIM classification."},
+  {id:"src_ten",x:60,y:630,w:270,st:"live",t:"Public tender notices",s:"EU/UK fleet R&M contracts",
+   d:"Forward demand: harvested and scored fleet repair & maintenance tenders. Counts and scores are solid; award prices are still thin.",
+   tech:"Tender scraper → tender_pipeline (520 rows; value on 12)."},
+  {id:"src_tgt",x:60,y:736,w:270,st:"live",t:"Per-model spend targets",s:"€ target per truck per model",
+   d:"What one truck of a given model should spend per year on genuine parts. Multiplied by the parc, this becomes the wallet ceiling.",
+   tech:"gps_model_targets reference table."},
+
+  {id:"eng_fact",x:405,y:120,w:260,st:"live",t:"Sales-fact builder",s:"Billing → one clean fact table",
+   d:"Normalises every billing extract into one line-grain fact table with mapped distributors, fiscal and calendar years.",
+   tech:"build_sales_fact_from_cy + distributor master mapping."},
+  {id:"eng_pms",x:405,y:226,w:260,st:"live",t:"PMS / BVP engines",s:"Capture, mix, substitution",
+   d:"Classifies every line as service-part or not, genuine or Best Value, and computes capture against expected demand from the surviving parc.",
+   tech:"build_bvp_p0…p5, pms_engine, calibrated 07-2026.", badge:"P0–P5"},
+  {id:"eng_con",x:405,y:332,w:260,st:"live",t:"Strategic-contract builder",s:"15 chart-ready datasets",
+   d:"One script per analytical contract: trajectory, lifecycle, concentration, price premium, VOR wheels — each with a written data contract.",
+   tech:"build_strategic_contracts + dashboard_contracts.md.", badge:"15"},
+  {id:"eng_dec",x:405,y:438,w:260,st:"live",t:"Decision-model builders",s:"Waterfall · runway · alerts",
+   d:"The € identity (wallet → captured → gap), the wallet projection to 2030, purchase-rhythm alarms, attach lifts, elasticity.",
+   tech:"build_revenue_runway, build_defection_alerts, build_attach_rates…"},
+  {id:"eng_ew",x:405,y:544,w:260,st:"live",t:"Early-warning builder",s:"3 signals → one ranked list",
+   d:"Joins silence, capture slope and VOR stress into one priority list with reason strings and € exposure. Shipped July 2026.",
+   tech:"build_early_warning → early_warning(_signals).csv."},
+  {id:"eng_ri",x:405,y:650,w:260,st:"live",t:"Risk & integrity audits",s:"Risk index + data checks",
+   d:"The weighted aftersales-risk index per market, plus the audit scripts that police classification and coverage.",
+   tech:"build_db_aftersales_risk, audit_* scripts.", badge:"63 scripts"},
+
+  {id:"der_gps",x:745,y:120,w:250,st:"live",t:"Spend per unit (GPS)",s:"What each truck spends with us a year",
+   d:"Net genuine-parts revenue divided by fleet, per market and year — with green/amber/red thresholds.",
+   tech:"gps_spu_by_distributor + family/PMS splits."},
+  {id:"der_cap",x:745,y:216,w:250,st:"live",t:"Capture by market · category · year",s:"Share of scheduled-service work we win",
+   d:"The heart of PMS: how much of the parc's scheduled-service demand we actually serve, split genuine / Best Value / total.",
+   tech:"pms_capture_by_db_year (grain: DB × category × year × line)."},
+  {id:"der_mix",x:745,y:312,w:250,st:"live",t:"Mix & substitution",s:"Genuine ↔ BVP, pair-level",
+   d:"Where Best Value grows, whether it displaces genuine or defends against the aftermarket, pair by pair over time.",
+   tech:"mix_* families + substitution_by_pair_year."},
+  {id:"der_prc",x:745,y:408,w:250,st:"live",t:"Price exposure",s:"Where the aftermarket beats our counter price",
+   d:"Revenue share exposed to aftermarket price attack, and the named parts where the counter price beats ours.",
+   tech:"aim_exposure_by_db_year, eucon_price_gap."},
+  {id:"der_vor",x:745,y:504,w:250,st:"live",t:"Availability stress (VOR)",s:"Urgent orders, weekly",
+   d:"Vehicle-off-road order share by week — the one weekly-grain signal in the platform, and the cost of stockouts in airfreight.",
+   tech:"vor_seasonality, vor_profile, vor_airfreight_risk."},
+  {id:"der_ew",x:745,y:600,w:250,st:"live",t:"Early-warning list",s:"Ranked entities + reasons",
+   d:"One table: who to act on, why this cycle, € exposed. Distributor grain, ITUK expands to dealers.",
+   tech:"early_warning.csv + early_warning_signals.csv."},
+  {id:"der_dec",x:745,y:696,w:250,st:"live",t:"Decision tables",s:"Waterfall · runway · risk index",
+   d:"The € identity per market, the wallet projection 2024→2030 and the weighted risk ranking.",
+   tech:"wallet_waterfall, revenue_runway, db_aftersales_risk.", badge:"98 datasets"},
+
+  {id:"gate",x:1035,y:380,w:225,h:100,st:"live",t:"Verification gate",s:"106 automated checks — all green",
+   d:"No dataset reaches a page without passing contract checks: schema, coverage, reconciliation, FY completeness. A red gate blocks the pipeline, not the meeting.",
+   tech:"verify_derived_pipeline → _verification_report.json (106/0/0). FACTS.md is the quote gate for headline numbers."},
+
+  {id:"suf_home",x:1330,y:96,w:250,st:"live",t:"Home cockpit",s:"KPI strip · alert ribbon · heatmap",
+   d:"The helicopter view: live traffic-light heatmap over every market, data-integrity status, one click to any module.",
+   tech:"app.py — st.navigation shell, 9 sections."},
+  {id:"suf_ew",x:1330,y:178,w:250,st:"live",t:"Early Warning",s:"One ranked ops list",
+   d:"The page is the list: silence · capture slope · VOR stress, ranked with a € and a reason per entity.",
+   tech:"pages/0_Early_Warning.py."},
+  {id:"suf_fleet",x:1330,y:260,w:250,st:"live",t:"Fleet & Spend",s:"UIO · GPS per truck",
+   d:"How big the base is and what each truck yields — parc structure and spend-per-unit with trends and part explorer.",
+   tech:"pages/1_UIO.py, 2_GPS.py."},
+  {id:"suf_cap",x:1330,y:342,w:250,st:"live",t:"Capture & Mix",s:"PMS · BVP intelligence",
+   d:"Capture league with € gaps, and the genuine-vs-Best-Value quality read with catalog drill-down.",
+   tech:"pages/3_PMS.py, 4_BVP.py, 13_DB_Parts_Mix.py."},
+  {id:"suf_net",x:1330,y:424,w:250,st:"live",t:"Network Intelligence",s:"Cross-signal views",
+   d:"Where the fused signals live: opportunity matrix, benchmark, displacement, price premium, VOR wheels — being consolidated from 29 tabs to 8.",
+   tech:"pages/5_Insights, 5_Strategic (15 tabs), 12_Offset + AIM/ASP/Risk."},
+  {id:"suf_ituk",x:1330,y:506,w:250,st:"live",t:"ITUK deep-dive",s:"Mix-not-capture, with receipts",
+   d:"The narrative that the big-3 categories sit at the capture ceiling and the lever is mix — backed by a part-number audit.",
+   tech:"pages/11_ITUK_PMS_Story.py, 6_ITUK_PMS_Audit.py."},
+  {id:"suf_dec",x:1330,y:588,w:250,st:"live",t:"Decision models",s:"€ waterfall · runway",
+   d:"Wallet → captured → gap as one identity, and the projection of the ceiling to 2030. Assumption notes rendered on every table.",
+   tech:"pages/18_Decision_Models.py."},
+  {id:"suf_tools",x:1330,y:670,w:250,st:"live",t:"Tools & governance",s:"Review packs · tenders · integrity",
+   d:"PDF scorecards and QBR packs per distributor, the tender pipeline, and the data-integrity console.",
+   tech:"pages/9_Review_Pack, 6_Scorecard, 14_Tender, 10_Data_Integrity.", badge:"9 sections · 21 pages"}
+ ],
+ edges:[
+  ["src_sap","eng_fact"],["src_uio","eng_pms"],["src_cat","eng_pms"],["src_reg","eng_pms"],
+  ["src_str","eng_ri"],["src_ten","eng_ri"],["src_tgt","eng_dec"],["src_uio","eng_dec"],
+  ["eng_fact","der_gps"],["eng_fact","der_cap"],["eng_pms","der_cap"],["eng_pms","der_mix"],
+  ["eng_con","der_vor"],["eng_con","der_prc"],["eng_ri","der_prc"],["eng_dec","der_dec"],
+  ["eng_ew","der_ew"],["eng_con","der_gps"],
+  ["der_gps","gate"],["der_cap","gate"],["der_mix","gate"],["der_prc","gate"],
+  ["der_vor","gate"],["der_ew","gate"],["der_dec","gate"],
+  ["gate","suf_home"],["gate","suf_ew"],["gate","suf_fleet"],["gate","suf_cap"],
+  ["gate","suf_net"],["gate","suf_ituk"],["gate","suf_dec"],["gate","suf_tools"]
+ ]
+},
+
+/* ── LENS 2 · THINKING MODEL ─────────────────────────────────────────── */
+concept:{
+ heads:[
+  {x:100,y:96,t:"The base"},{x:520,y:96,t:"The measures"},{x:960,y:96,t:"The movement"},{x:1370,y:96,t:"The move"}
+ ],
+ nodes:[
+  {id:"c_fleet",x:80,y:380,w:280,h:86,st:"live",t:"Fleet on the road",s:"Every Isuzu in operation is recurring parts demand. The denominator under every metric.",
+   d:"22 distributor markets, parc by model and registration year. Nothing in PRISM is an absolute number without this base — everything is per truck, per market, per year.",
+   tech:"Lens in app: Fleet (UIO). Denominator of GPS, PMS, wallet."},
+  {id:"c_wallet",x:450,y:170,w:290,h:92,st:"live",t:"Wallet ceiling",s:"Parc × per-model target spend = what the network could buy. €60.2M in CY2025.",
+   d:"The maximum-spend ceiling, not a forecast. It is deliberately conservative in shape: flat across vehicle age until IML delivers the age-spend curve.",
+   cav:"Ceiling, not forecast. Age-flat until the IML curve lands — the honest gap in the model today.",
+   tech:"wallet_waterfall · Decision models page."},
+  {id:"c_spend",x:450,y:330,w:290,h:86,st:"live",t:"Spend per unit",s:"What each truck actually yields: net € / truck / year, traffic-lit per market.",
+   d:"The first lens on performance. Green ≥ €150, amber €50–149, red below — calibrated for a mixed truck/LCV parc.",
+   tech:"GPS page + cockpit heatmap."},
+  {id:"c_cap",x:450,y:488,w:290,h:92,st:"live",t:"Capture rate",s:"Actual service-part units ÷ expected demand from the surviving parc.",
+   d:"The sharper question: not how much revenue, but how much of the work the parc generates do we actually serve. Split genuine / Best Value / total, per category.",
+   tech:"pms_capture_by_db_year · Capture (PMS) page."},
+  {id:"c_mix",x:450,y:650,w:290,h:92,st:"live",t:"Mix quality",s:"Genuine vs Best Value inside the captured demand.",
+   d:"Best Value winning a line is retention inside our tent, not a loss — the real loss is aftermarket defection. Mix is a gross-profit-quality read, not a capture read.",
+   cav:"BVP ≠ leakage. Down-trade and walk-out are different threats and are never added as one €.",
+   tech:"mix_* + substitution pairs · Mix (BVP) page."},
+  {id:"c_press",x:900,y:210,w:290,h:92,st:"live",t:"Price pressure",s:"Where the aftermarket undercuts us at the counter — priced apples-to-apples.",
+   d:"Genuine list is grossed ×1.785 through distributor and dealer margin before comparing with scraped street prices. Exposure is revenue-weighted, not part-counted.",
+   tech:"AIM exposure + street-price gap · Network Intelligence."},
+  {id:"c_vor",x:900,y:370,w:290,h:86,st:"live",t:"Availability stress",s:"Urgent (VOR) order share vs each market's own baseline, weekly.",
+   d:"A market that always ships urgent is not an alarm — movement against its own baseline is. The only weekly-grain signal in the platform, and the one cause we fix ourselves.",
+   tech:"vor_seasonality / vor_profile."},
+  {id:"c_sig",x:900,y:540,w:290,h:100,st:"live",t:"Signals",s:"Silence · capture slope · VOR spike — the three that demand action.",
+   d:"An action signal must change between refreshes, name a concrete move and carry a €. Concentration and price exposure inform the weighting but never raise the alarm themselves.",
+   cav:"Measured against the data horizon, not today. Dead categories (never bought) are separated from defecting ones.",
+   tech:"early_warning_signals · Early Warning page."},
+  {id:"c_dec",x:1330,y:360,w:290,h:110,st:"live",t:"Decisions",s:"The € identity, the runway to 2030, and one ranked call list.",
+   d:"Wallet €60.2M → captured €30.8M → addressable gap €29.7M, as one arithmetic identity per market. The ceiling climbs to €77.8M by 2030 — and this cycle's call list is 11 entities, €307K exposed.",
+   tech:"Decision models + Early Warning."}
+ ],
+ edges:[
+  ["c_fleet","c_wallet"],["c_fleet","c_spend"],["c_fleet","c_cap"],
+  ["c_wallet","c_dec"],["c_spend","c_cap"],["c_cap","c_mix"],
+  ["c_cap","c_sig"],["c_mix","c_press"],["c_press","c_sig"],["c_vor","c_sig"],
+  ["c_sig","c_dec"]
+ ]
+},
+
+/* ── LENS 3 · ROADMAP ────────────────────────────────────────────────── */
+roadmap:{
+ heads:[
+  {x:46,y:80,t:"Live — describe & diagnose"},
+  {x:46,y:296,t:"In build — decide faster"},
+  {x:46,y:512,t:"Needs one input — sharpen"},
+  {x:46,y:706,t:"Concepts — anticipate"}
+ ],
+ lanes:[{y:288},{y:504},{y:698}],
+ nodes:[
+  {id:"r_found",x:46,y:116,w:280,st:"live",t:"Foundation + 15 strategic contracts",s:"May 2026 · verified pipeline, contract-driven charts",
+   d:"The derived layer with written data contracts per dashboard, and the 15 strategic views built on them. The discipline that everything since stands on.",
+   tech:"build_strategic_contracts · dashboard_contracts.md."},
+  {id:"r_dec",x:356,y:116,w:270,st:"live",t:"Decision models + risk index",s:"June 2026 · wallet identity, runway, alarms",
+   d:"The € waterfall, the 2030 runway, purchase-rhythm alarms and the weighted customer-risk ranking.",
+   tech:"Decision models page · db_aftersales_risk."},
+  {id:"r_cal",x:656,y:116,w:270,st:"live",t:"FY-completeness + calibration",s:"July 2026 · partial-year guards, PMS recalibrated",
+   d:"Part-billed years can no longer masquerade as collapse: coverage flags, complete-year defaults, capture slopes fitted on complete years only.",
+   tech:"year_coverage + pipeline reconcile (106 checks)."},
+  {id:"r_ew",x:956,y:116,w:270,st:"live",t:"Early Warning v1",s:"July 2026 · one ops list, 3 signals",
+   d:"Silence, capture slope and VOR stress collapsed into one ranked call list with reasons and € exposure. Replaces tab-hopping across three pages.",
+   tech:"11 act · 6 watch · €307K exposed this cycle."},
+  {id:"r_ia",x:1256,y:116,w:290,st:"live",t:"IA restructure P0–P2",s:"July 2026 · 9-section nav + render-parity tests",
+   d:"Navigation rebuilt to 9 sections with the decision layer first-class, a smoke-test net over every page, and chart code extracted for reuse.",
+   tech:"st.navigation shell · tests over 21 pages, all green."},
+
+  {id:"r_ni",x:46,y:332,w:300,st:"build",t:"Network Intelligence — 29 tabs → 8",s:"Same questions, one place each",
+   d:"Insights, Strategic and Offset answer the capture-trajectory question four times today. One consolidated page: most exposed, opportunity €, trajectory, benchmark, pricing, substitution, VOR, structure.",
+   tech:"IA plan P3 · render functions already extracted (P2)."},
+  {id:"r_hub",x:386,y:332,w:280,st:"build",t:"Mix & ITUK consolidation",s:"Duplicates return to their home page",
+   d:"BVP loses its three copied tabs; the DB mix split docks in; ITUK gets one hub — story, audit, incentive — instead of content scattered over three pages.",
+   tech:"IA plan P4–P5."},
+  {id:"r_gate",x:696,y:332,w:280,st:"build",t:"MD-safe / internal split",s:"One flag decides what the room sees",
+   d:"Dealer leakage, attach lifts, elasticity and the leakage Sankey sit behind an internal launch flag. Default off: the app is safe to project in any meeting.",
+   tech:"INTERNAL_MODE flag live in config · gating lands P6."},
+  {id:"r_tools",x:1006,y:332,w:280,st:"build",t:"Tools shelf + export cleanup",s:"21 pages → ~13 · exports become buttons",
+   d:"Generators (review pack, scorecard) merge, export tabs become download buttons, and the navigation ends at nine entries an MD can hold in one look.",
+   tech:"IA plan P7–P8."},
+
+  {id:"r_age",x:46,y:548,w:290,st:"input",t:"Age-aware wallets",s:"Unlock: IML age-spend curve",
+   d:"Wallets are age-flat today — a 2015 truck counts like a 2024 one. The IML curve turns the ceiling and the 2030 runway from conservative into precise.",
+   tech:"Feeds: wallet_waterfall, revenue_runway."},
+  {id:"r_award",x:366,y:548,w:290,st:"input",t:"Tender win/loss pricing",s:"Unlock: award line-items",
+   d:"520 scored opportunities, prices on 12. When awarded line-items land, the pipeline gains a win/loss-vs-aftermarket pricing read.",
+   tech:"Feeds: tender_pipeline → pricing analytics."},
+  {id:"r_dealer",x:686,y:548,w:290,st:"input",t:"Dealer-€ resolution",s:"Unlock: dealer sell-out revenue mapping",
+   d:"ITUK dealer silence is visible but carries no €: only ~16% of sell-out units map to service-part tags. A fuller join turns the call list into a priced dealer list.",
+   tech:"Feeds: early_warning dealer grain, leakage views."},
+  {id:"r_elas",x:1006,y:548,w:290,st:"input",t:"Elasticity with power",s:"Unlock: more price transitions",
+   d:"Price-volume response exists but is direction-only by construction (annual prices, two transitions). Each pricing round adds statistical power.",
+   tech:"price_volume_elasticity — never quote a beta externally today."},
+
+  {id:"r_pred",x:46,y:742,w:290,st:"concept",t:"Predictive defection",s:"Probability-ranked, not threshold-triggered",
+   d:"Today an alarm fires when silence crosses a median-gap threshold. The next step ranks entities by defection probability from rhythm, slope and exposure together — earlier, fewer false alarms. No numbers until it is built and validated.",
+   tech:"Builds on: early_warning + capture_trajectory."},
+  {id:"r_loop",x:366,y:742,w:290,st:"concept",t:"Campaign loop",s:"Push a campaign, measure the delta",
+   d:"Early Warning names the cohort; the loop closes when a campaign lands on it and the capture delta is measured on the same list next cycle. Marketing spend gets a feedback wire.",
+   tech:"Builds on: EW cohorts + seasonal pattern."},
+  {id:"r_sim",x:686,y:742,w:290,st:"concept",t:"What-if pricing simulator",s:"Price × volume × capture, offset live",
+   d:"Move a class price and see volume response, capture offset and channel effect in one view — the exec lens, interactive. Needs elasticity power first.",
+   tech:"Builds on: elasticity + price exposure + mix."},
+  {id:"r_net",x:1006,y:742,w:290,st:"concept",t:"Dealer-grain network view",s:"What ITUK has, every market gets",
+   d:"The dealer-level lens (leakage order, attach lifts) generalised beyond ITUK — where distributors share sell-out data.",
+   tech:"Builds on: dealer-€ resolution."},
+  {id:"r_stock",x:1326,y:742,w:290,st:"concept",t:"Season-aware pre-positioning",s:"Beat the VOR spike to the shelf",
+   d:"The VOR seasonality wheel already shows when stress peaks per market. The concept: translate it into pre-positioning advice before the spike, cutting airfreight.",
+   tech:"Builds on: vor_seasonality + airfreight cost."}
+ ],
+ edges:[
+  ["r_found","r_dec"],["r_dec","r_cal"],["r_cal","r_ew"],["r_ew","r_ia"],
+  ["r_ia","r_ni"],["r_ni","r_hub"],["r_hub","r_gate"],["r_gate","r_tools"],
+  ["r_age","r_dec"],["r_dealer","r_net"],["r_elas","r_sim"],["r_award","r_sim"],
+  ["r_ew","r_pred"],["r_ew","r_loop"]
+ ]
+}
+};
+
+/* ════════════════════════════════════════════════════════════════════════
+   CHAPTERS — the story that drives the graph
+   ════════════════════════════════════════════════════════════════════════ */
+var runwayW=[59.0,60.2,63.9,67.4,70.8,74.3,77.8];
+var runwayC=[30.1,30.8,32.9,34.9,36.9,39.0,41.0];
+
+function sparkRunway(){
+  var W=384,H=120,px=34,py=14,n=7;
+  function X(i){return px+i*(W-px-10)/(n-1);}
+  function Y(v){return H-py-(v-25)/(80-25)*(H-2*py);}
+  var pw=runwayW.map(function(v,i){return X(i)+","+Y(v);}).join(" ");
+  var pc=runwayC.map(function(v,i){return X(i)+","+Y(v);}).join(" ");
+  var yrs=[2024,2026,2028,2030];
+  var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Network wallet ceiling versus projected capture, 2024 to 2030">';
+  [30,50,70].forEach(function(v){s+='<line x1="'+px+'" y1="'+Y(v)+'" x2="'+(W-10)+'" y2="'+Y(v)+'" stroke="rgba(154,165,184,.15)"/>'
+    +'<text x="'+(px-6)+'" y="'+(Y(v)+3)+'" fill="#5f6b80" font-size="9" text-anchor="end">'+v+'</text>';});
+  yrs.forEach(function(y){var i=y-2024;s+='<text x="'+X(i)+'" y="'+(H-1)+'" fill="#5f6b80" font-size="9" text-anchor="middle">'+y+'</text>';});
+  s+='<polyline points="'+pw+'" stroke="#e0714a" stroke-width="2.2" fill="none"/>';
+  s+='<polyline points="'+pc+'" stroke="#6aa8ec" stroke-width="1.8" fill="none" stroke-dasharray="5 4"/>';
+  s+='<circle cx="'+X(6)+'" cy="'+Y(77.8)+'" r="3.4" fill="#e0714a"/>';
+  s+='<text x="'+(X(6)-6)+'" y="'+(Y(77.8)-7)+'" fill="#e0714a" font-size="10" font-weight="600" text-anchor="end">€77.8M</text>';
+  s+='<text x="'+(X(2)+4)+'" y="'+(Y(63.9)-8)+'" fill="#c8cfdc" font-size="9">wallet ceiling</text>';
+  s+='<text x="'+(X(2)+4)+'" y="'+(Y(32.9)+15)+'" fill="#9aa5b8" font-size="9">capture, held at CY2025 rate</text>';
+  return '<div class="spark">'+s+'</svg><div class="cap">Network wallet ceiling vs projected capture, €M — capture held flat at the CY2025 rate. A ceiling scenario, not a forecast.</div></div>';
+}
+function sparkWaterfall(){
+  var W=384,H=104,x0=30;
+  function bar(x,y,w,h,c){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="2.5" fill="'+c+'"/>';}
+  function Y(v){return 92-v*(78/60.2);}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="CY2025 euro identity: wallet 60.2, captured 30.8, addressable gap 29.7 million euro">';
+  s+=bar(x0,Y(60.2),74,92-Y(60.2),'#33486b');
+  s+=bar(x0+118,Y(30.8),74,92-Y(30.8),'#1d9e75');
+  s+=bar(x0+236,Y(29.7),74,92-Y(29.7),'#e0714a');
+  s+='<text x="'+(x0+37)+'" y="'+(Y(60.2)-6)+'" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">€60.2M</text>';
+  s+='<text x="'+(x0+155)+'" y="'+(Y(30.8)-6)+'" fill="#4fd0a4" font-size="11" font-weight="600" text-anchor="middle">€30.8M</text>';
+  s+='<text x="'+(x0+273)+'" y="'+(Y(29.7)-6)+'" fill="#e0714a" font-size="11" font-weight="600" text-anchor="middle">€29.7M</text>';
+  s+='<text x="'+(x0+37)+'" y="102" fill="#9aa5b8" font-size="9" text-anchor="middle">wallet ceiling</text>';
+  s+='<text x="'+(x0+155)+'" y="102" fill="#9aa5b8" font-size="9" text-anchor="middle">captured</text>';
+  s+='<text x="'+(x0+273)+'" y="102" fill="#9aa5b8" font-size="9" text-anchor="middle">addressable gap</text>';
+  return '<div class="spark">'+s+'</svg><div class="cap">CY2025 network € identity. Captured = genuine €29.7M + Best Value €1.1M; over-target €0.2M closes the identity.</div></div>';
+}
+
+var CHAPTERS=[
+ {lens:"concept",kicker:"PRISM · Parts Revenue Intelligence",title:"One platform over the whole aftersales network",
+  focus:[],
+  body:"<p>Every Isuzu on the road is recurring parts demand. PRISM reads that demand with <b>one verified data spine</b>: what the parc could spend, what we actually capture, where it moves, and who needs a call this cycle.</p><p>This is a guided tour — the map behind it is live. Use <b>Next</b>, or press <b>E</b> at any point to explore every node yourself.</p>",
+  chips:[["€60.2M","wallet ceiling · CY2025"],["€30.8M","captured · CY2025"],["22","distributor markets"],["106/106","pipeline checks green"]]},
+
+ {lens:"anatomy",kicker:"Lens 1 · The system",title:"Everything stands on one verified spine",
+  focus:[],
+  body:"<p>Seven source families — billing, fleet, catalogue, service registry, street prices, tenders, targets — flow through <b>63 build engines</b> into <b>98 derived datasets</b>.</p><p>Nothing skips the middle: every dataset crosses the <b>same verification gate</b> before any page may show it. No screen computes its own truth, so two pages can never disagree.</p><div class='hush'>Click any node for what it is, where it lives, and its honest caveat.</div>",
+  chips:[["7","source families"],["63","build engines"],["98","derived datasets"],["106","automated checks"]]},
+
+ {lens:"concept",kicker:"Lens 2 · The thinking model",title:"From a truck on the road to a euro of decision",
+  focus:["c_fleet","c_wallet","c_spend","c_cap","c_mix"],
+  body:"<p>The chain is deliberate: the <b>fleet</b> sets the denominator, the <b>wallet ceiling</b> says what the parc could spend, <b>spend per unit</b> and <b>capture rate</b> say what we actually get — and <b>mix</b> says what that capture is worth.</p><p>Two honest rules hold it together: the wallet is a <b>ceiling, not a forecast</b> (age-flat until IML's age-spend curve lands), and <b>Best Value is not leakage</b> — down-trade inside our tent and walk-out to the aftermarket are never added into one number.</p>",
+  chips:[["51%","of ceiling captured · CY2025"],["€29.7M","genuine captured"],["€1.1M","Best Value captured"]]},
+
+ {lens:"concept",kicker:"Lens 2 · The thinking model",title:"The network warns us before it leaks",
+  focus:["c_press","c_vor","c_sig","c_cap"],
+  body:"<p>Three signals earn the right to raise an alarm: <b>silence</b> (a purchase rhythm breaks), <b>capture slope</b> (bleeding in motion), <b>VOR stress</b> (availability burning trust). Each changes between refreshes, names a concrete move, and carries a €.</p><p>Price pressure and concentration <b>inform the weighting but never ring the bell</b> — they explain why someone defects, not that they are defecting.</p><div class='hush'>€ shown is exposure — revenue sitting on alarming categories — never a claimed loss.</div>",
+  chips:[["3","signals, one ranked list"],["11 <em>act</em>","+ 6 watch this cycle"],["€307K","exposed on live alarms"]]},
+
+ {lens:"concept",kicker:"Lens 2 · The thinking model",title:"Decisions carry a €, not an opinion",
+  focus:["c_wallet","c_sig","c_dec"],
+  body:"<p>The decision layer is arithmetic, not narrative: wallet → captured → gap as <b>one identity per market</b>, and a runway that projects the ceiling forward.</p><p>The ceiling <b>climbs through 2030</b> — the parc that generates tomorrow's service demand is already sold. The window to capture it is open now.</p>"+sparkRunway()+sparkWaterfall(),
+  chips:[["€29.7M","addressable gap · CY2025"],["€77.8M","ceiling by 2030 · +32% vs 2024"]]},
+
+ {lens:"roadmap",kicker:"Lens 3 · The roadmap",title:"Built, building, and what one input unlocks",
+  focus:[],
+  body:"<p>The top lane is <b>live</b> — dated, tested, gated. The second is <b>in build</b>: the same insight in fewer, sharper places (29 tabs become 8; 21 pages become ~13 behind 9 entries).</p><p>The third lane is the honest one: four upgrades that are <b>blocked on exactly one input each</b>, named. And the bottom lane holds concepts — deliberately carrying <b>no invented numbers</b> until they are built and validated.</p>",
+  chips:[["9","nav sections · live"],["29 → 8","tabs consolidating"],["4","inputs unlock the next layer"]]},
+
+ {lens:"roadmap",kicker:"Explore",title:"Now walk the map yourself",
+  focus:[],
+  body:"<p>Press <b>E</b> or the Explore button: the text steps aside and every node opens — what it is, its status, its data source, and its honest caveat.</p><p>Switch lenses freely: <b>System</b> for how it is wired, <b>Thinking model</b> for how a truck becomes a euro, <b>Roadmap</b> for what is live, in build, waiting on an input, or still a concept.</p><div class='hush'>Everything green exists today and passed 106 checks this morning. Everything dashed is a concept — and says so.</div>",
+  chips:[["E","toggle explore"],["← →","chapters"],["1 · 2 · 3","switch lenses"]]}
+];
+
+/* ════════════════════════════════════════════════════════════════════════
+   ENGINE
+   ════════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════
+   ONE-PAGERS — plain-language concept sheets · click a node → pop-up → PDF
+   ════════════════════════════════════════════════════════════════════════ */
+/* which nodes offer a one-pager (mapped across all three lenses) */
+var NODE_PAGER={
+  c_fleet:"fleet",  src_uio:"fleet",   suf_fleet:"fleet",
+  c_spend:"gps",    der_gps:"gps",
+  c_cap:"pms",      der_cap:"pms",     eng_pms:"pms",
+  c_mix:"mix",      der_mix:"mix",
+  c_press:"price",  der_prc:"price",
+  c_vor:"vor",      der_vor:"vor",
+  c_sig:"ew",       der_ew:"ew",       eng_ew:"ew",  suf_ew:"ew",
+  c_wallet:"wallet",c_dec:"wallet",    der_dec:"wallet",
+  src_ten:"tender"
+};
+
+/* ── light-sheet graphics: self-contained, print-safe SVG ────────────── */
+function pgWaterfall(){
+  var W=700,H=214,base=172,top=28,x=[72,300,528],w=108,vals=[60.2,30.8,29.7];
+  var cols=["#33486b","#1d9e75","#c0552d"],labs=["Wallet ceiling","Captured","Addressable gap"];
+  function Y(v){return base-(v/60.2)*(base-top);}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CY2025 euro identity: wallet ceiling 60.2, captured 30.8, addressable gap 29.7 million euro">';
+  s+='<line x1="48" y1="'+base+'" x2="652" y2="'+base+'" stroke="#e0d8c9"/>';
+  for(var i=0;i<3;i++){var y=Y(vals[i]);
+    s+='<rect x="'+x[i]+'" y="'+y+'" width="'+w+'" height="'+(base-y)+'" rx="4" fill="'+cols[i]+'"/>';
+    s+='<text x="'+(x[i]+w/2)+'" y="'+(y-10)+'" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="'+cols[i]+'">€'+vals[i].toFixed(1)+'M</text>';
+    s+='<text x="'+(x[i]+w/2)+'" y="'+(base+20)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#6b7688">'+labs[i]+'</text>';
+  }
+  return s+'</svg>';
+}
+function pgChain(){
+  var steps=[["1","UIO","Units in operation"],["2","Potential units","Active share of parc"],
+    ["3","Potential demand","× replacement rhythm"],["4","Actual demand","ISZE invoiced sales"],
+    ["5","Coverage","Actual ÷ potential"]];
+  var W=772,H=150,bw=132,bh=80,y=32,gap=(W-20-bw*5)/4;
+  var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Five-step PMS coverage chain from units in operation to coverage">';
+  s+='<defs><marker id="pgarr" markerWidth="8" markerHeight="8" refX="5" refY="3.1" orient="auto"><path d="M0 0 L6 3.1 L0 6 z" fill="#c0552d"/></marker></defs>';
+  for(var i=0;i<5;i++){var x=10+i*(bw+gap),last=i===4;
+    s+='<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="10" fill="'+(last?"#fbf1e9":"#ffffff")+'" stroke="'+(last?"#c0552d":"#33486b")+'" stroke-width="'+(last?2:1.2)+'"/>';
+    s+='<circle cx="'+(x+19)+'" cy="'+(y+19)+'" r="10.5" fill="'+(last?"#c0552d":"#33486b")+'"/>';
+    s+='<text x="'+(x+19)+'" y="'+(y+23)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">'+steps[i][0]+'</text>';
+    s+='<text x="'+(x+bw/2)+'" y="'+(y+48)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12.5" font-weight="700" fill="#1e2733">'+steps[i][1]+'</text>';
+    s+='<text x="'+(x+bw/2)+'" y="'+(y+65)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#7a8496">'+steps[i][2]+'</text>';
+    if(!last){var ax=x+bw,mid=y+bh/2;s+='<line x1="'+(ax+3)+'" y1="'+mid+'" x2="'+(ax+gap-4)+'" y2="'+mid+'" stroke="#c0552d" stroke-width="1.7" marker-end="url(#pgarr)"/>';}
+  }
+  return s+'</svg>';
+}
+function pgBridge(){
+  var W=700,H=252,base=204,top=28;
+  function Y(v){return base-(v/200)*(base-top);}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Apples-to-apples price comparison: genuine part grossed to the counter versus aftermarket street price">';
+  s+='<line x1="62" y1="'+base+'" x2="656" y2="'+base+'" stroke="#e0d8c9"/>';
+  s+='<line x1="62" y1="'+Y(100)+'" x2="656" y2="'+Y(100)+'" stroke="#ece3d4" stroke-dasharray="3 3"/>';
+  s+='<text x="56" y="'+(Y(100)+4)+'" text-anchor="end" font-family="Segoe UI,sans-serif" font-size="9" fill="#9a9384">100</text>';
+  var gx=140,gw=150,f=100,db=40,dl=38.5;
+  s+='<rect x="'+gx+'" y="'+Y(f)+'" width="'+gw+'" height="'+(base-Y(f))+'" fill="#33486b"/>';
+  s+='<rect x="'+gx+'" y="'+Y(f+db)+'" width="'+gw+'" height="'+(Y(f)-Y(f+db))+'" fill="#5b6f92"/>';
+  s+='<rect x="'+gx+'" y="'+Y(f+db+dl)+'" width="'+gw+'" height="'+(Y(f+db)-Y(f+db+dl))+'" fill="#8a9bb8"/>';
+  s+='<text x="'+(gx+gw/2)+'" y="'+((Y(f)+base)/2+4)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#fff">Factory list · 100</text>';
+  s+='<text x="'+(gx+gw/2)+'" y="'+((Y(f)+Y(f+db))/2+3)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#fff">+ distributor 40%</text>';
+  s+='<text x="'+(gx+gw/2)+'" y="'+((Y(f+db)+Y(f+db+dl))/2+3)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#fff">+ dealer 27.5%</text>';
+  s+='<text x="'+(gx+gw/2)+'" y="'+(Y(178.5)-9)+'" text-anchor="middle" font-family="Georgia,serif" font-size="15" fill="#33486b">×1.785 → 178.5</text>';
+  s+='<text x="'+(gx+gw/2)+'" y="'+(base+20)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#6b7688">Our genuine part, at the counter</text>';
+  var sx=410,sw=150,stv=150;
+  s+='<rect x="'+sx+'" y="'+Y(stv)+'" width="'+sw+'" height="'+(base-Y(stv))+'" fill="#b8ada0"/>';
+  s+='<rect x="'+sx+'" y="'+Y(178.5)+'" width="'+sw+'" height="'+(Y(stv)-Y(178.5))+'" fill="rgba(192,85,45,.15)"/>';
+  s+='<line x1="'+(gx+gw)+'" y1="'+Y(178.5)+'" x2="'+sx+'" y2="'+Y(178.5)+'" stroke="#c0552d" stroke-dasharray="4 3" stroke-width="1.2"/>';
+  s+='<text x="'+(sx+sw/2)+'" y="'+((Y(stv)+base)/2+6)+'" text-anchor="middle" font-family="Georgia,serif" font-size="16" fill="#4a4436">≈ 150</text>';
+  s+='<text x="'+(sx+sw/2)+'" y="'+((Y(178.5)+Y(stv))/2+3.5)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" font-weight="700" fill="#a8431f">price gap = exposure</text>';
+  s+='<text x="'+(sx+sw/2)+'" y="'+(base+20)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#6b7688">Aftermarket copy, at the counter</text>';
+  return s+'</svg>';
+}
+
+function pgFleet(){
+  var W=700,H=210;
+  var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The parc is the denominator under spend, capture and wallet">';
+  s+='<defs><marker id="pgar3" markerWidth="8" markerHeight="8" refX="5" refY="3.1" orient="auto"><path d="M0 0 L6 3.1 L0 6 z" fill="#33486b"/></marker></defs>';
+  var tx=190,tw=320,ty=20,th=58;
+  s+='<rect x="'+tx+'" y="'+ty+'" width="'+tw+'" height="'+th+'" rx="11" fill="#20345a"/>';
+  s+='<text x="'+(tx+tw/2)+'" y="'+(ty+26)+'" text-anchor="middle" font-family="Georgia,serif" font-size="17" fill="#fff">The parc</text>';
+  s+='<text x="'+(tx+tw/2)+'" y="'+(ty+45)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#c7d0e0">every Isuzu in operation · 22 markets · by model &amp; year</text>';
+  s+='<text x="'+(W/2)+'" y="115" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" font-style="italic" fill="#8a6a4a">÷ the parc → every metric becomes per-truck &amp; comparable</text>';
+  var kids=[["Spend / truck","GPS"],["Capture %","PMS"],["Wallet ceiling","€ identity"]];
+  var kw=180,ky=140,kh=48,gap=(W-40-kw*3)/2;
+  for(var i=0;i<3;i++){var kx=20+i*(kw+gap);
+    s+='<path d="M'+(tx+tw/2)+' '+(ty+th)+' C'+(tx+tw/2)+' '+(ty+th+34)+','+(kx+kw/2)+' '+(ky-36)+','+(kx+kw/2)+' '+ky+'" fill="none" stroke="#33486b" stroke-width="1.4" marker-end="url(#pgar3)"/>';
+    s+='<rect x="'+kx+'" y="'+ky+'" width="'+kw+'" height="'+kh+'" rx="9" fill="#fff" stroke="#33486b" stroke-width="1.2"/>';
+    s+='<text x="'+(kx+kw/2)+'" y="'+(ky+22)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12.5" font-weight="700" fill="#1e2733">'+kids[i][0]+'</text>';
+    s+='<text x="'+(kx+kw/2)+'" y="'+(ky+38)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#7a8496">'+kids[i][1]+'</text>';
+  }
+  return s+'</svg>';
+}
+function pgMix(){
+  var W=700,H=200,x=40,sc=17,gen=29.7*sc,bvp=1.1*sc,y=70,h=58;
+  var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Captured demand: genuine 29.7 and Best Value 1.1 million euro, both inside our channel">';
+  s+='<text x="'+x+'" y="'+(y-16)+'" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" letter-spacing="0.5" fill="#1d7a58">INSIDE OUR CHANNEL — the money still comes to us</text>';
+  s+='<rect x="'+x+'" y="'+y+'" width="'+gen+'" height="'+h+'" rx="4" fill="#1d9e75"/>';
+  s+='<rect x="'+(x+gen)+'" y="'+y+'" width="'+bvp+'" height="'+h+'" fill="#7fc9ad"/>';
+  s+='<text x="'+(x+gen/2)+'" y="'+(y+h/2+5)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#fff">Genuine €29.7M</text>';
+  s+='<text x="'+(x+gen+bvp+8)+'" y="'+(y+h/2+5)+'" font-family="Segoe UI,sans-serif" font-size="11" fill="#2c6b52">Best Value €1.1M</text>';
+  var ay=y+h+34;
+  s+='<rect x="'+x+'" y="'+ay+'" width="360" height="34" rx="8" fill="#f0ece4" stroke="#c9c1b2" stroke-dasharray="5 4"/>';
+  s+='<text x="'+(x+180)+'" y="'+(ay+22)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#8a8577">Aftermarket — the real loss, measured separately</text>';
+  s+='<text x="'+(x+372)+'" y="'+(ay+22)+'" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#8a3d1e">never folded into the bar above</text>';
+  return s+'</svg>';
+}
+function pgRunway(){
+  var W=700,H=232,px=54,base=H-34,top=24,n=7;
+  function X(i){return px+i*(W-px-20)/(n-1);}
+  function Y(v){return base-(v-25)/(80-25)*(base-top);}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Network wallet ceiling versus capture held flat, 2024 to 2030">';
+  [30,50,70].forEach(function(v){s+='<line x1="'+px+'" y1="'+Y(v)+'" x2="'+(W-20)+'" y2="'+Y(v)+'" stroke="#ece3d4"/><text x="'+(px-8)+'" y="'+(Y(v)+3)+'" text-anchor="end" font-family="Segoe UI,sans-serif" font-size="9" fill="#9a9384">'+v+'</text>';});
+  [2024,2026,2028,2030].forEach(function(yr){var i=yr-2024;s+='<text x="'+X(i)+'" y="'+(base+16)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#9a9384">'+yr+'</text>';});
+  s+='<polyline points="'+runwayW.map(function(v,i){return X(i)+','+Y(v);}).join(' ')+'" fill="none" stroke="#c0552d" stroke-width="2.4"/>';
+  s+='<polyline points="'+runwayC.map(function(v,i){return X(i)+','+Y(v);}).join(' ')+'" fill="none" stroke="#33486b" stroke-width="1.8" stroke-dasharray="5 4"/>';
+  s+='<circle cx="'+X(6)+'" cy="'+Y(77.8)+'" r="3.6" fill="#c0552d"/>';
+  s+='<text x="'+(X(6)-6)+'" y="'+(Y(77.8)-8)+'" text-anchor="end" font-family="Georgia,serif" font-size="14" fill="#c0552d">€77.8M</text>';
+  s+='<text x="'+(X(1)+6)+'" y="'+(Y(63.9)-8)+'" font-family="Segoe UI,sans-serif" font-size="10" fill="#8a6a4a">wallet ceiling</text>';
+  s+='<text x="'+(X(1)+6)+'" y="'+(Y(32.9)+16)+'" font-family="Segoe UI,sans-serif" font-size="10" fill="#5f6b80">capture, held at CY2025 rate</text>';
+  return s+'</svg>';
+}
+function pgVor(){
+  var W=700,H=210,px=44,base=160,top=28,n=24,baseVal=33;
+  var d=[30,34,28,32,36,30,33,29,35,31,34,38,33,36,32,58,49,38,34,31,35,33,30,34];
+  function X(i){return px+i*(W-px-20)/(n-1);}
+  function Y(v){return base-(v/70)*(base-top);}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrative weekly urgent-order share with a spike above the market baseline">';
+  s+='<rect x="'+px+'" y="'+Y(baseVal+6)+'" width="'+(W-px-20)+'" height="'+(Y(baseVal-6)-Y(baseVal+6))+'" fill="#eef1f4"/>';
+  s+='<text x="'+(W-24)+'" y="'+(Y(baseVal)-5)+'" text-anchor="end" font-family="Segoe UI,sans-serif" font-size="9" fill="#9aa5b8">this market’s own baseline</text>';
+  s+='<polyline points="'+d.map(function(v,i){return X(i)+','+Y(v);}).join(' ')+'" fill="none" stroke="#33486b" stroke-width="1.8"/>';
+  s+='<circle cx="'+X(15)+'" cy="'+Y(58)+'" r="5" fill="#c0552d"/>';
+  s+='<text x="'+X(15)+'" y="'+(Y(58)-10)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#c0552d">the signal</text>';
+  s+='<text x="'+px+'" y="'+(base+18)+'" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#9a9384">weeks →</text>';
+  return s+'</svg>';
+}
+function pgSignals(){
+  var W=700,H=214,cy=107,tx=470,tw=200,th=124,ty=cy-th/2,bx=40,bw=210,bh=44;
+  var sig=[["Silence","vs own buying rhythm"],["Capture slope","falling over full years"],["VOR spike","urgent orders jump"]];
+  var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three signals fused into one ranked call list">';
+  s+='<defs><marker id="pgar2" markerWidth="8" markerHeight="8" refX="5" refY="3.1" orient="auto"><path d="M0 0 L6 3.1 L0 6 z" fill="#c0552d"/></marker></defs>';
+  for(var i=0;i<3;i++){var y=32+i*58;
+    s+='<rect x="'+bx+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="9" fill="#fff" stroke="#33486b" stroke-width="1.2"/>';
+    s+='<text x="'+(bx+14)+'" y="'+(y+19)+'" font-family="Segoe UI,sans-serif" font-size="12.5" font-weight="700" fill="#1e2733">'+sig[i][0]+'</text>';
+    s+='<text x="'+(bx+14)+'" y="'+(y+35)+'" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#7a8496">'+sig[i][1]+'</text>';
+    s+='<path d="M'+(bx+bw)+' '+(y+bh/2)+' C'+(bx+bw+50)+' '+(y+bh/2)+','+(tx-50)+' '+cy+','+tx+' '+cy+'" fill="none" stroke="#c0552d" stroke-width="1.5" marker-end="url(#pgar2)"/>';
+  }
+  s+='<rect x="'+tx+'" y="'+ty+'" width="'+tw+'" height="'+th+'" rx="11" fill="#fbf1e9" stroke="#c0552d" stroke-width="2"/>';
+  s+='<text x="'+(tx+tw/2)+'" y="'+(ty+32)+'" text-anchor="middle" font-family="Georgia,serif" font-size="16" fill="#8a3d1e">Ranked call list</text>';
+  s+='<text x="'+(tx+tw/2)+'" y="'+(ty+58)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#4a4436">who to act on, why,</text>';
+  s+='<text x="'+(tx+tw/2)+'" y="'+(ty+74)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#4a4436">and € exposed</text>';
+  s+='<text x="'+(tx+tw/2)+'" y="'+(ty+100)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" font-weight="700" fill="#c0552d">11 act · 6 watch</text>';
+  return s+'</svg>';
+}
+function pgTender(){
+  var W=700,H=182,y=72,x0=40,x1=W-40;
+  var st=[["Notice","published"],["Consultation","act here"],["Award","decided"],["3–5 yr contract","parts locked"],["Renewal","re-tendered"]];
+  var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tender lifecycle: the window to act is before award">';
+  s+='<line x1="'+x0+'" y1="'+y+'" x2="'+x1+'" y2="'+y+'" stroke="#d9d1c2" stroke-width="2"/>';
+  for(var i=0;i<5;i++){var cx=x0+i*(x1-x0)/4,act=i===1;
+    s+='<circle cx="'+cx+'" cy="'+y+'" r="'+(act?9:6)+'" fill="'+(act?"#c0552d":"#33486b")+'"/>';
+    s+='<text x="'+cx+'" y="'+(y-22)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" font-weight="700" fill="'+(act?"#8a3d1e":"#1e2733")+'">'+st[i][0]+'</text>';
+    s+='<text x="'+cx+'" y="'+(y+24)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="'+(act?"#c0552d":"#7a8496")+'">'+st[i][1]+'</text>';
+  }
+  s+='<text x="'+(W/2)+'" y="'+(y+56)+'" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" font-style="italic" fill="#8a6a4a">Once a maintainer is embedded it is hard to displace — the moment to act is before award.</text>';
+  return s+'</svg>';
+}
+
+/* ── content: each sheet reads like the explainer deck, no jargon first ─ */
+var PAGERS={
+ gps:{st:"live",eyebrow:"PRISM · One-pager",title:"Genuine Parts Share (GPS)",
+  stand:"How much of the parts money each Isuzu generates comes back to us — and how much leaks to the aftermarket.",
+  lead:"Every Isuzu on the road needs parts for as long as it runs — filters, brakes, clutches, oil. Over a truck's life that is a predictable stream of spend. <b>Genuine Parts Share</b> asks one question: of all that spend, how much reaches us through the authorised channel, and how much leaks away to independent aftermarket suppliers? We cannot see aftermarket sales directly — so we measure what we <em>can</em> see, what each truck actually spends with us each year, and read it against what the parc <em>could</em> spend.",
+  hero:pgWaterfall,heroCap:"The network's CY2025 picture: what the parc could spend, what we captured, and the gap still in play. Captured = genuine €29.7M + Best Value €1.1M.",
+  mid:'<h3>How to read it</h3><ul class="pgpoints">'
+    +'<li><b>Wallet ceiling</b> = every Isuzu in the parc multiplied by what one truck of that model should spend on genuine parts a year. A ceiling of opportunity, not a sales forecast.</li>'
+    +'<li><b>Captured</b> = what we actually invoiced through the authorised channel. The gap between the two is the prize still on the table — not a loss already booked.</li>'
+    +'<li>Per market we traffic-light the spend per truck: <b>green</b> at or above €150 a year, <b>amber</b> €50–149, <b>red</b> below — calibrated for a mixed truck-and-van parc.</li></ul>',
+  note:"The ceiling treats a 2015 truck like a 2024 one — spend is held flat across vehicle age until IML delivers the age-spend curve. So the gap is deliberately conservative in shape, and sharpens once that curve lands.",
+  src:"Source · PRISM verified layer: wallet_waterfall, gps_spu_by_distributor · CY2025 · 106 / 106 pipeline checks green. Wallet is a spend ceiling, not a forecast."},
+
+ pms:{st:"live",eyebrow:"PRISM · One-pager",title:"PMS Coverage — the measurable way in",
+  stand:"Scheduled maintenance is the one slice of parts demand we can calculate from our own data. It is how we make the invisible market visible.",
+  lead:"Genuine Parts Share is the big question — but the aftermarket half of it is invisible to us. <b>PMS Coverage</b> is the way in. Every vehicle needs the same scheduled service items on a known rhythm: oil filter, fuel and air filter, brakes, clutch. Because that rhythm is predictable, we can calculate how much of that demand a market <em>should</em> generate, then compare it with what we actually invoiced. It turns an invisible market into a number we can act on.",
+  hero:pgChain,heroCap:"Five steps from the parc to a coverage figure — every input open for the distributor to challenge.",
+  mid:'<div class="pgrhythm"><b>The rhythm we assume.</b> Oil filter ~20,000 km · fuel &amp; air filter ~40,000 km · brakes &amp; clutch ~100,000 km. Annual mileage varies by market — and it is the single biggest swing factor in the whole calculation.</div>'
+    +'<h3>Why we start here</h3><ul class="pgpoints">'
+    +'<li>It is the one slice of demand we can compute from <b>our own data</b> — no need to see aftermarket sales at all.</li>'
+    +'<li>It points to the exact category that is under-captured — oil, brake, air filter, clutch — so promotion and bundling target the real gap, not a hunch.</li>'
+    +'<li>It is the entry point to the wider Genuine Parts Share question: start measurable, learn, then widen the lens to the rest of the basket.</li></ul>',
+  note:"Coverage moves with its inputs. A market's assumed annual mileage (recent reference studies span 50,000–80,000 km — a 60% swing), the active share of the parc, and cross-fitment all shift the figure. Every line is open for the distributor to challenge — that is the exercise, not a verdict handed down.",
+  src:"Source · PRISM PMS engine: pms_capture_by_db_year · replacement rhythm per IML reference · inputs are working assumptions, open for distributor input."},
+
+ price:{st:"live",eyebrow:"PRISM · One-pager",title:"Price exposure — where the counter price decides",
+  stand:"The share of our revenue on parts where the aftermarket beats us at the counter — compared like for like.",
+  lead:"When a customer needs a part, they can buy our genuine one or an aftermarket copy. To compare honestly we cannot use our factory price — the customer never sees it. Our part picks up the distributor's margin and then the dealer's margin on the way to the shelf, so by the counter it costs roughly <b>1.785×</b> the factory list. <b>Price exposure</b> is the share of our revenue sitting on parts where, once both sit on the same counter, the aftermarket copy is cheaper — handing the customer a price reason to walk.",
+  hero:pgBridge,heroCap:"Illustrative — the method, not one part. We gross our factory price up to the counter, then compare it with the scraped street price of the aftermarket copy.",
+  mid:'<h3>How to read it</h3><ul class="pgpoints">'
+    +'<li><b>Revenue-weighted, not part-counted.</b> A fast-moving filter we lose on price matters far more than a cheap wiper blade — exposure is measured in euros at risk.</li>'
+    +'<li>It <b>names the actual parts</b> where the street wins, so the response is surgical: reprice that line, bundle it, or defend on same-day availability — never a blanket cut.</li>'
+    +'<li>The aftermarket side uses <b>live scraped prices</b>, refreshed each cycle, so the comparison stays current.</li></ul>',
+  note:"A price gap is a <em>reason</em> to defect, not proof of a lost sale. Customers still choose genuine for fit, warranty and same-day availability. Exposure flags where the risk sits; it does not book a loss on its own.",
+  src:"Source · PRISM price layer: eucon_price_gap, aim_exposure_by_db_year · counter price = factory list grossed ×1.785 (distributor +40%, dealer +27.5%)."},
+
+ fleet:{st:"live",eyebrow:"PRISM · One-pager",title:"Fleet on the road — the number under every number",
+  stand:"Every Isuzu in operation is recurring parts demand. It is the denominator that makes every other figure per-truck and comparable.",
+  lead:"Nothing in PRISM is a raw total. <b>Fleet on the road</b> — the parc, by model and registration year across 22 markets — is the denominator under everything else. Spend, capture and the wallet ceiling are all expressed <em>per truck</em>, which is what lets a small market and a large one be compared honestly. Get the parc right and every metric downstream is trustworthy; get it wrong and they all drift together.",
+  hero:pgFleet,heroCap:"The parc is the shared denominator: it turns absolute sales into per-truck, per-market figures you can compare.",
+  mid:"<h3>Why it sits first</h3><ul class='pgpoints'>"
+    +"<li>Built from <b>VIN and registration data</b>, by model family and registration year.</li>"
+    +"<li>Makes markets <b>comparable</b>: euros-per-truck and capture-% do not care whether a market runs 500 units or 50,000.</li>"
+    +"<li>Drives the <b>surviving-parc</b> logic — only vehicles likely still on the road generate expected demand.</li></ul>",
+  note:"Grey imports and older units can be missing from the registration base, and the active share of the parc is itself an assumption. Both feed straight into wallet and capture — which is why the parc is the first thing every market is asked to confirm.",
+  src:"Source · PRISM fleet layer: ISUZU_UIO_Overview_2026.xlsx (canonical _CURRENT) · parc by market · model · registration year · 22 markets."},
+
+ mix:{st:"live",eyebrow:"PRISM · One-pager",title:"Mix quality — Best Value is not a loss",
+  stand:"Inside the demand we capture, how much is genuine versus Best Value — and why a Best Value sale is retention, not leakage.",
+  lead:"When a customer buys our <b>Best Value</b> part instead of the premium genuine one, it is tempting to read that as losing ground. It is not. Both sit <em>inside our channel</em> — the money still comes to us. The real loss is when the customer walks to the <b>aftermarket</b> entirely. <b>Mix quality</b> tracks the genuine-versus-Best-Value split so we can read gross-profit quality, without ever confusing an in-house down-trade with a defection.",
+  hero:pgMix,heroCap:"CY2025 captured demand: genuine €29.7M and Best Value €1.1M both land with us. Aftermarket defection is a separate measure, never added to this one.",
+  mid:"<h3>How to read it</h3><ul class='pgpoints'>"
+    +"<li>A Best Value win <b>defends against the aftermarket</b> — often it is the only way to hold a price-sensitive line at all.</li>"
+    +"<li>Down-trade (genuine→Best Value) and walk-out (→aftermarket) are <b>different threats</b>, never summed into one euro.</li>"
+    +"<li>Read it as a <b>gross-profit-quality</b> signal, not a capture signal.</li></ul>",
+  note:"This is a mix read, not a margin read — it shows where Best Value grows, not the profit per line. And it says nothing about the aftermarket share itself, which is invisible to us and tracked through capture and price exposure instead.",
+  src:"Source · PRISM mix engine: mix_* families + substitution_by_pair_year · captured split from wallet_waterfall (CY2025)."},
+
+ vor:{st:"live",eyebrow:"PRISM · One-pager",title:"Availability stress (VOR) — the one we cause ourselves",
+  stand:"Urgent vehicle-off-road orders, watched against each market's own baseline — the only weekly signal, and the one problem we can fix directly.",
+  lead:"When a truck is stuck waiting for a part, the order comes in <b>urgent</b> — vehicle-off-road, or VOR — and often ships by air. Some markets always run urgent; that is their normal, not an alarm. What matters is <em>movement against their own baseline</em>. It is the only signal in PRISM that refreshes <b>weekly</b>, and unlike price or the aftermarket, the cause sits with us — stock and positioning — so it is the one we can fix directly.",
+  hero:pgVor,heroCap:"Illustrative — urgent-order share by week against a market's own baseline. A spike above the band is the signal; a steady high line is not.",
+  mid:"<h3>How to read it</h3><ul class='pgpoints'>"
+    +"<li>Judged <b>against each market's baseline</b>, not one network threshold — a chronically-urgent market is not flagged for being itself.</li>"
+    +"<li>Every avoidable VOR is an <b>airfreight cost</b> as well as a downtime cost.</li>"
+    +"<li>It feeds the ranked call list, and points to the fix: <b>pre-position stock</b> before the seasonal peak.</li></ul>",
+  note:"VOR shows the stress, not yet the cure. Turning the seasonal pattern into concrete pre-positioning advice — how much of which part, where, before the spike — is the next step, not something the signal does today.",
+  src:"Source · PRISM availability layer: vor_seasonality, vor_profile, vor_airfreight_risk · weekly grain."},
+
+ ew:{st:"live",eyebrow:"PRISM · One-pager",title:"Early Warning — one call list, not three dashboards",
+  stand:"Three signals, fused into a single ranked list of who to act on this cycle, why, and how much is at stake.",
+  lead:"Spotting a problem used to mean hopping across three pages. <b>Early Warning</b> collapses them into one. It watches the three things that actually demand action — a customer going <b>silent</b> against their own buying rhythm, a <b>capture rate sliding</b> over complete years, and a spike in <b>urgent (VOR) orders</b> — and fuses them into a single list, ranked, each row carrying a plain reason and a euro figure. It is the page that answers 'what do I do first?'",
+  hero:pgSignals,heroCap:"Three signals in, one prioritised list out — distributor grain, expanding to dealers where we have the data.",
+  mid:"<h3>What earns a place on the list</h3><ul class='pgpoints'>"
+    +"<li>A signal must <b>change between refreshes</b>, name a concrete move and carry a €. Concentration and price exposure inform the ranking but never raise the alarm alone.</li>"
+    +"<li>Measured against the <b>data horizon</b>, not the calendar — so a market that simply has not billed yet is not mistaken for one that is leaving.</li>"
+    +"<li><b>Dead</b> categories (never bought) are separated from <b>defecting</b> ones (bought, then stopped). Only the second is a warning.</li></ul>",
+  note:"ITUK's dealer silence is visible but not yet fully priced — only about a sixth of dealer sell-out maps to service-part tags today, so those rows show the risk without a firm €. A fuller dealer join turns them into a priced list.",
+  src:"Source · PRISM early-warning builder: early_warning.csv + early_warning_signals.csv · shipped July 2026 · this cycle 11 act · 6 watch · €307K exposed."},
+
+ wallet:{st:"live",eyebrow:"PRISM · One-pager",title:"The € identity — wallet, captured, and the road to 2030",
+  stand:"One line of arithmetic per market — what the parc could spend, what we captured, what is left — and where the ceiling goes by 2030.",
+  lead:"Every decision in PRISM resolves to one identity: <b>wallet ceiling → captured → addressable gap</b>. The ceiling is the parc multiplied by what each model should spend a year; captured is what we invoiced; the gap is what is still in play. Because the parc grows, the ceiling <b>climbs to €77.8M by 2030</b> — so standing still means the gap widens even if sales hold.",
+  hero:pgRunway,heroCap:"Network wallet ceiling vs capture held at the CY2025 rate, €M. A ceiling scenario, not a forecast — hold capture flat and the gap grows as the parc does.",
+  mid:"<h3>How to read it</h3><ul class='pgpoints'>"
+    +"<li><b>Wallet €60.2M → captured €30.8M → gap €29.7M</b> in CY2025, as one arithmetic identity per market.</li>"
+    +"<li>The ceiling rises with the parc; the dashed capture line is <b>held flat on purpose</b>, to show what happens if nothing changes.</li>"
+    +"<li>Every table carries its assumption note — this is a planning lens, not a promise.</li></ul>",
+  note:"The ceiling is age-flat: a 2015 truck counts like a 2024 one until IML's age-spend curve lands. So both the gap and the 2030 line are conservative in shape, not aggressive.",
+  src:"Source · PRISM decision models: wallet_waterfall, revenue_runway · CY2024–2030 · wallet is a spend ceiling, not a forecast."},
+
+ tender:{st:"live",eyebrow:"PRISM · One-pager",title:"Public tenders — demand we can see coming",
+  stand:"Every metric so far starts when a truck is already on the road. Tenders are the one signal about demand before it exists — and about fleets we could lock in for years.",
+  lead:"Public authorities across Europe put their fleets out to tender — both to <b>buy</b> vehicles and, more valuably, to <b>outsource maintenance</b> for several years at a time. That maintenance contract decides who supplies the parts for an entire fleet for its duration. PRISM harvests and scores these notices, so a distributor learns about the opportunity <em>before it is awarded</em> — the one moment intervention actually changes the outcome.",
+  hero:pgTender,heroCap:"The maintenance-contract lifecycle. The window to influence it is before award; once a maintainer is embedded, it is hard to displace.",
+  mid:"<h3>Why it matters</h3><ul class='pgpoints'>"
+    +"<li>A repair-&amp;-maintenance contract <b>locks parts demand</b> for its 3–5 year life, and works on the <b>existing</b> fleet — no new vehicle needs to be sold.</li>"
+    +"<li>The one moment that matters is <b>before award</b>; a missed contract cedes years to whoever gets embedded first.</li>"
+    +"<li>It is where vehicle sales, ISZE and the distributor act as <b>one pipeline</b> instead of three silos.</li></ul>",
+  note:"Counts and scores are solid; award prices are still thin (values on only a handful of notices so far). Until more award line-items land, this is a demand-visibility tool, not a pricing one — so we do not attach a euro figure to it yet.",
+  src:"Source · PRISM tender scraper: tender_pipeline · EU/UK fleet notices, scored weekly · external benchmark: Ford Pro reports ~17% of its EBIT from aftermarket & services."}
+};
+
+/* ── render / open / close / save ────────────────────────────────────── */
+function renderPager(id){
+  var P=PAGERS[id];if(!P)return;
+  var h='<div class="pghead"><div class="eyebrow">'+P.eyebrow+'</div>'
+    +'<div><span class="pgstatus">'+(ST[P.st]||"Live")+'</span></div>'
+    +'<h2>'+P.title+'</h2><div class="stand">'+P.stand+'</div></div>'
+    +'<div class="pgbody"><h3>In plain terms</h3><div class="pglead">'+P.lead+'</div>'
+    +'<div class="pgpanel">'+P.hero()+'<div class="pgcap">'+P.heroCap+'</div></div>'
+    +(P.mid||"")
+    +'<div class="pgnote"><b>What this doesn’t capture yet.</b> '+P.note+'</div></div>'
+    +'<div class="pgfoot"><div class="pgsrc">'+P.src+'</div>'
+    +'<div class="pgbtns"><button class="pgbtn" onclick="closePager()">Close</button>'
+    +'<button class="pgbtn primary" onclick="savePagerPDF()">Save as PDF</button></div></div>';
+  document.getElementById("pgsheet").innerHTML=h;
+}
+function openPager(id){if(!PAGERS[id])return;renderPager(id);
+  var p=document.getElementById("pager");p.classList.add("open");p.setAttribute("aria-hidden","false");p.scrollTop=0;}
+function closePager(){var p=document.getElementById("pager");
+  if(!p.classList.contains("open"))return false;
+  p.classList.remove("open");p.setAttribute("aria-hidden","true");return true;}
+function savePagerPDF(){window.print();}
+document.querySelector("#pager .pgbackdrop").addEventListener("click",closePager);
+
+var state={mode:"story",ch:0,lens:CHAPTERS[0].lens,sel:null};
+var stage=document.getElementById("stage"),vp=document.getElementById("viewport");
+var svg=document.getElementById("edges");
+var nodeEls={},edgeEls={};
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+
+/* build nodes + edges once */
+Object.keys(LENSES).forEach(function(ln){
+  var L=LENSES[ln],wrap=document.getElementById("lw-"+ln);
+  (L.heads||[]).forEach(function(h){
+    var el=document.createElement("div");el.className="colhead";
+    el.style.left=h.x+"px";el.style.top=h.y+"px";el.textContent=h.t;wrap.appendChild(el);
+  });
+  (L.lanes||[]).forEach(function(l){
+    var el=document.createElement("div");el.className="lane";el.style.top=l.y+"px";wrap.appendChild(el);
+  });
+  L.nodes.forEach(function(n,i){
+    var el=document.createElement("div");
+    el.className="node "+(n.st||"");
+    el.style.left=n.x+"px";el.style.top=n.y+"px";el.style.width=n.w+"px";
+    if(n.h)el.style.minHeight=n.h+"px";
+    el.style.animationDelay=(i*45)+"ms";
+    el.innerHTML=(n.badge?'<span class="badge">'+esc(n.badge)+'</span>':"")
+      +'<div class="t">'+esc(n.t)+'</div>'+(n.s?'<div class="s">'+esc(n.s)+'</div>':"")
+      +(NODE_PAGER[n.id]?'<span class="pgtag">One-pager</span>':"");
+    el.addEventListener("click",function(ev){ev.stopPropagation();openDrawer(n,el);});
+    wrap.appendChild(el);nodeEls[n.id]={el:el,n:n,lens:ln};
+  });
+});
+
+function drawEdges(){
+  svg.innerHTML="";edgeEls={};
+  var L=LENSES[state.lens];
+  L.edges.forEach(function(e){
+    var a=nodeEls[e[0]],b=nodeEls[e[1]];if(!a||!b)return;
+    var ar=a.el,br=b.el;
+    var x1=a.n.x+ar.offsetWidth,y1=a.n.y+ar.offsetHeight/2;
+    var x2=b.n.x,y2=b.n.y+br.offsetHeight/2;
+    if(x2<x1){ x1=a.n.x+ar.offsetWidth/2;y1=a.n.y+ar.offsetHeight;x2=b.n.x+br.offsetWidth/2;y2=b.n.y; }
+    var dx=Math.max(40,(x2-x1)*0.45);
+    var p=document.createElementNS("http://www.w3.org/2000/svg","path");
+    p.setAttribute("d","M"+x1+" "+y1+" C"+(x1+dx)+" "+y1+","+(x2-dx)+" "+y2+","+x2+" "+y2);
+    svg.appendChild(p);edgeEls[e[0]+">"+e[1]]=p;
+  });
+}
+
+function setLens(ln,animate){
+  state.lens=ln;
+  document.querySelectorAll(".lenswrap").forEach(function(w){w.classList.toggle("on",w.id==="lw-"+ln);});
+  document.querySelectorAll("#lenses button").forEach(function(b){b.classList.toggle("on",b.dataset.lens===ln);});
+  if(animate){var wrap=document.getElementById("lw-"+ln);
+    wrap.querySelectorAll(".node").forEach(function(el,i){el.style.animation="none";void el.offsetWidth;el.style.animationDelay=(i*38)+"ms";el.style.animation="";});
+  }
+  requestAnimationFrame(drawEdges);
+  applyFocus();
+}
+
+function applyFocus(){
+  var focus=(state.mode==="story")?(CHAPTERS[state.ch].focus||[]):[];
+  var hasFocus=focus.length>0;
+  Object.keys(nodeEls).forEach(function(id){
+    var rec=nodeEls[id];if(rec.lens!==state.lens)return;
+    rec.el.classList.toggle("dim",hasFocus&&focus.indexOf(id)<0);
+    rec.el.classList.toggle("lit",hasFocus&&focus.indexOf(id)>=0);
+  });
+  document.querySelectorAll("#lw-"+state.lens+" .colhead, #lw-"+state.lens+" .lane").forEach(function(h){
+    h.classList.toggle("dim",hasFocus);
+  });
+  Object.keys(edgeEls).forEach(function(k){
+    var ab=k.split(">");
+    var lit=hasFocus&&focus.indexOf(ab[0])>=0&&focus.indexOf(ab[1])>=0;
+    var hid=hasFocus&&!(focus.indexOf(ab[0])>=0&&focus.indexOf(ab[1])>=0);
+    edgeEls[k].classList.toggle("lit",lit);
+    edgeEls[k].classList.toggle("hid",hid&&false);
+    edgeEls[k].style.opacity=hasFocus&&!lit?0.12:"";
+  });
+}
+
+/* story */
+var storyEl=document.getElementById("story");
+function setChapter(i){
+  state.ch=Math.max(0,Math.min(CHAPTERS.length-1,i));
+  var c=CHAPTERS[state.ch];
+  storyEl.style.opacity=0;
+  setTimeout(function(){
+    document.getElementById("kicker").textContent=c.kicker;
+    document.getElementById("stitle").textContent=c.title;
+    document.getElementById("sbody").innerHTML=c.body;
+    document.getElementById("chips").innerHTML=c.chips.map(function(ch){
+      return '<div class="chip"><div class="v">'+ch[0]+'</div><div class="l">'+ch[1]+'</div></div>';}).join("");
+    document.getElementById("stepno").textContent=(state.ch+1)+" / "+CHAPTERS.length;
+    document.getElementById("prev").style.visibility=state.ch===0?"hidden":"visible";
+    document.getElementById("next").textContent=state.ch===CHAPTERS.length-1?"Explore →":"Next →";
+    storyEl.style.opacity=1;
+  },220);
+  document.querySelectorAll("#dots i").forEach(function(d,j){d.classList.toggle("on",j===state.ch);});
+  if(c.lens!==state.lens)setLens(c.lens,true);else applyFocus();
+}
+
+function setMode(m){
+  state.mode=m;
+  storyEl.classList.toggle("away",m==="explore");
+  document.getElementById("modebtn").innerHTML=(m==="explore"?"Story":"Explore")+" <kbd>E</kbd>";
+  fit();
+  applyFocus();
+}
+
+/* drawer */
+var drawer=document.getElementById("drawer");
+function openDrawer(n,el){
+  document.querySelectorAll(".node.sel").forEach(function(x){x.classList.remove("sel");});
+  el.classList.add("sel");state.sel=n.id;
+  var stEl=document.getElementById("dstatus");
+  stEl.textContent=ST[n.st]||"";stEl.className="status "+n.st;
+  document.getElementById("dtitle").textContent=n.t;
+  document.getElementById("dbody").innerHTML="<p>"+esc(n.d||n.s||"")+"</p>"+(n.cav?'<div class="caveat">'+esc(n.cav)+'</div>':"");
+  document.getElementById("dtech").textContent=n.tech||"";
+  var pgId=NODE_PAGER[n.id],pgBtn=document.getElementById("dpager");
+  if(pgId){pgBtn.hidden=false;pgBtn.innerHTML="Open the one-pager <span class='g'>· saves as PDF</span>";pgBtn.onclick=function(){openPager(pgId);};}
+  else{pgBtn.hidden=true;pgBtn.onclick=null;}
+  drawer.classList.add("open");
+}
+function closeDrawer(){
+  drawer.classList.remove("open");state.sel=null;
+  document.querySelectorAll(".node.sel").forEach(function(x){x.classList.remove("sel");});
+}
+document.getElementById("dclose").addEventListener("click",closeDrawer);
+vp.addEventListener("click",closeDrawer);
+
+/* controls */
+document.getElementById("next").addEventListener("click",function(){
+  if(state.ch===CHAPTERS.length-1)setMode("explore");else setChapter(state.ch+1);
+});
+document.getElementById("prev").addEventListener("click",function(){setChapter(state.ch-1);});
+document.getElementById("modebtn").addEventListener("click",function(){setMode(state.mode==="story"?"explore":"story");});
+document.querySelectorAll("#lenses button").forEach(function(b){
+  b.addEventListener("click",function(){if(state.mode!=="explore")setMode("explore");setLens(b.dataset.lens,true);});
+});
+var dots=document.getElementById("dots");
+CHAPTERS.forEach(function(_,i){
+  var d=document.createElement("i");
+  d.addEventListener("click",function(){if(state.mode==="explore")setMode("story");setChapter(i);});
+  dots.appendChild(d);
+});
+document.addEventListener("keydown",function(ev){
+  if(ev.key==="ArrowRight"&&state.mode==="story")setChapter(state.ch+1);
+  else if(ev.key==="ArrowLeft"&&state.mode==="story")setChapter(state.ch-1);
+  else if(ev.key==="e"||ev.key==="E")setMode(state.mode==="story"?"explore":"story");
+  else if(ev.key==="Escape"){if(!closePager())closeDrawer();}
+  else if(ev.key==="1"&&state.mode==="explore")setLens("anatomy",true);
+  else if(ev.key==="2"&&state.mode==="explore")setLens("concept",true);
+  else if(ev.key==="3"&&state.mode==="explore")setLens("roadmap",true);
+});
+
+/* fit stage to viewport — story mode fits the graph beside the text card,
+   explore mode reclaims the full width */
+function fit(){
+  var w=vp.clientWidth,h=vp.clientHeight;
+  var reserve=(state.mode==="story"&&w>900)?486:0;
+  var aw=w-reserve;
+  var s=Math.min(aw/1680,h/920);
+  var ox=reserve+Math.max(0,(aw-1680*s)/2),oy=Math.max(0,(h-920*s)/2);
+  stage.style.transform="translate("+ox+"px,"+oy+"px) scale("+s+")";
+}
+window.addEventListener("resize",fit);
+
+/* boot */
+fit();
+setLens(CHAPTERS[0].lens,false);
+setChapter(0);
+requestAnimationFrame(function(){requestAnimationFrame(drawEdges);});
+</script>
+<style>
+#modes{display:flex;border:1px solid var(--card-line);border-radius:9px;overflow:hidden;flex-shrink:0;}
+#modes span,#modes a{font:600 11.5px "Segoe UI",sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;text-decoration:none;color:var(--muted);}
+#modes .on{background:var(--terra);color:#fff;}
+#modes a:hover{color:var(--terra-lit);}
+#ddesk{display:block;width:100%;margin-top:10px;border:1px solid var(--terra-lit);background:transparent;color:var(--terra-lit);text-decoration:none;text-align:center;font:600 12px "Segoe UI",sans-serif;letter-spacing:.03em;padding:10px 14px;border-radius:9px;}
+#ddesk:hover{filter:brightness(1.08);}
+#ddesk .g{opacity:.85;font-weight:400;}
+#ddesk[hidden]{display:none !important;}
+.desktag{display:inline-block;margin-top:8px;margin-left:6px;font:700 8.5px "Segoe UI",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#4fd0a4;border:1px solid rgba(29,158,117,.45);border-radius:6px;padding:2px 7px;}
+</style>
+<script>
+window.__PRISM_SNAP__={"as_of":"2026-10-15","n_markets":22,"wallet":54420472,"captured":30756771.61,"genuine":29692068.09,"bvp":1064703.52,"gap":23994964.01,"capture_pct":"57","gps_fy2026":32234865.1,"gps_fy2026_rows":22,"gps_source":"01_data/00_derived/gps_pure_sales_2026-08-13_v2.csv","wallet_2030":77778868.87272964,"wallet_2030_vs_2024":"+32% vs 2024","runwayW":[59,60.2,63.9,67.4,70.8,74.3,77.8],"runwayC":[33,33.7,36,38.3,40.5,42.8,45.1],"sources":["01_data/00_derived/wallet_waterfall.csv","01_data/00_derived/gps_pure_sales_2026-08-13_v2.csv","01_data/00_derived/revenue_runway.csv","01_data/00_derived/distributor_dimension.csv"]};
+window.__DESK_HREF__="isze_cockpit.internal.html";
+(function(){
+  var NODE_DESK={
+    c_spend:{module:"gps_pure_sales",period:"fy"},
+    der_gps:{module:"gps_pure_sales",period:"fy"},
+    suf_fleet:{module:"gps_pure_sales",period:"fy"},
+    suf_home:{module:"wallet_identity",year:"2025"},
+    c_wallet:{module:"wallet_identity",year:"2025"},
+    c_dec:{module:"wallet_identity",year:"2025"},
+    der_dec:{module:"wallet_identity",year:"2025"},
+    suf_dec:{module:"wallet_identity",year:"2025"},
+    src_tgt:{module:"wallet_identity",year:"2025"},
+    eng_fact:{module:"gps_pure_sales",period:"fy"},
+    c_cap:{module:"db_compare"},
+    der_cap:{module:"db_compare"},
+    suf_cap:{module:"db_compare"},
+    c_mix:{module:"mix_quality",year:"2025"},
+    der_mix:{module:"mix_quality",year:"2025"},
+    eng_pms:{module:"db_compare"},
+    suf_ituk:{module:"db_compare",db:"ITUK"}
+  };
+  function mEur(n){ return "€"+(Number(n)/1e6).toFixed(1)+"M"; }
+  function deskHref(spec){
+    spec=spec||{};
+    var q=[];
+    if(spec.module) q.push("module="+encodeURIComponent(spec.module));
+    if(spec.db) q.push("db="+encodeURIComponent(spec.db));
+    if(spec.period) q.push("period="+encodeURIComponent(spec.period));
+    if(spec.fy) q.push("fy="+encodeURIComponent(spec.fy));
+    if(spec.year) q.push("year="+encodeURIComponent(spec.year));
+    return window.__DESK_HREF__+(q.length?"?"+q.join("&"):"");
+  }
+  function liveChip(ch){
+    var S=window.__PRISM_SNAP__; if(!S) return ch;
+    var l=ch[1]||"";
+    if(/wallet ceiling · CY2025/.test(l)) return [mEur(S.wallet), l];
+    if(/^captured · CY2025$/.test(l)) return [mEur(S.captured), l];
+    if(/^distributor markets$/.test(l)) return [String(S.n_markets), l];
+    if(/of ceiling captured/.test(l)) return [S.capture_pct+"%", l];
+    if(/genuine captured/.test(l)) return [mEur(S.genuine), l];
+    if(/Best Value captured/.test(l)) return [mEur(S.bvp), l];
+    if(/addressable gap · CY2025/.test(l)) return [mEur(S.gap), l];
+    if(/ceiling by 2030/.test(l)) return [mEur(S.wallet_2030), (S.wallet_2030_vs_2024?"ceiling by 2030 · "+S.wallet_2030_vs_2024:l)];
+    return ch;
+  }
+  var modes=document.createElement("div");
+  modes.id="modes";
+  modes.innerHTML='<span class="on">Map</span><a id="deskbtn" href="'+deskHref({})+'">Desk</a>';
+  var spacer=document.getElementById("spacer");
+  if(spacer&&spacer.parentNode) spacer.parentNode.insertBefore(modes, spacer.nextSibling);
+  var ddesk=document.createElement("a");
+  ddesk.id="ddesk"; ddesk.hidden=true;
+  var drawerEl=document.getElementById("drawer");
+  if(drawerEl) drawerEl.appendChild(ddesk);
+  if(typeof openDrawer==="function"){
+    var _open=openDrawer;
+    openDrawer=function(n,el){
+      _open(n,el);
+      var spec=NODE_DESK[n.id];
+      if(!spec || n.st==="concept"){ ddesk.hidden=true; ddesk.removeAttribute("href"); return; }
+      var label=spec.db ? ("Open desk · "+spec.db) : (spec.module==="gps_pure_sales" ? "Open desk · Spend" : spec.module==="db_compare" ? "Open desk · Capture" : spec.module==="wallet_identity" ? "Open desk · Wallet" : spec.module==="mix_quality" ? "Open desk · Mix" : "Open desk");
+      ddesk.hidden=false;
+      ddesk.href=deskHref(spec);
+      ddesk.innerHTML=label+' <span class="g">· same spine</span>';
+    };
+  }
+  if(typeof setChapter==="function"){
+    var _ch=setChapter;
+    setChapter=function(i){
+      _ch(i);
+      var S=window.__PRISM_SNAP__; if(!S||!CHAPTERS) return;
+      setTimeout(function(){
+        var c=CHAPTERS[state.ch];
+        var chips=c.chips.map(liveChip);
+        if(state.ch===0 && S.gps_fy2026!=null) chips.push([mEur(S.gps_fy2026),"GPS-eligible parts · FY2026"]);
+        document.getElementById("chips").innerHTML=chips.map(function(ch){
+          return '<div class="chip"><div class="v">'+ch[0]+'</div><div class="l">'+ch[1]+'</div></div>';
+        }).join("");
+      }, 240);
+    };
+  }
+  if(typeof runwayW!=="undefined" && window.__PRISM_SNAP__.runwayW && window.__PRISM_SNAP__.runwayW.length){
+    runwayW=window.__PRISM_SNAP__.runwayW;
+    runwayC=window.__PRISM_SNAP__.runwayC;
+  }
+  Object.keys(nodeEls||{}).forEach(function(id){
+    if(!NODE_DESK[id]) return;
+    var rec=nodeEls[id];
+    if(rec.n.st==="concept") return;
+    if(rec.el.querySelector(".desktag")) return;
+    var tag=document.createElement("span");
+    tag.className="desktag"; tag.textContent="Desk";
+    rec.el.appendChild(tag);
+  });
+  var foot=document.querySelector("#foot span");
+  if(foot && window.__PRISM_SNAP__){
+    var S=window.__PRISM_SNAP__;
+    foot.textContent="Snapshot "+S.as_of+" · wallet_waterfall CY2025 · "+S.gps_source.split("/").pop()+" FY2026 (network DBs only) · ceiling, not a forecast · Map + Desk share distributor_dimension.csv";
+  }
+  if(typeof setChapter==="function") setChapter(state.ch||0);
+})();
+</script>
+</body>
+</html>

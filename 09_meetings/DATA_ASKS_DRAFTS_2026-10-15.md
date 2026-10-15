@@ -4,11 +4,13 @@ Nothing here has been sent. You send from Outlook. Each one closes an item on `0
 
 ---
 
-**1. Duncan Young, ITUK. Closes: UK truck annual mileage (35 point swing on oil filter cover)**
+**1. Duncan Young, ITUK. Closes: UK mileage split by N35 and N75**
+
+Japan sent mileage tables on 6 Oct (median about 21,250 km a year for 4,883 N-series trucks), so the headline question is mostly answered. Check with Shimauchi first that those tables are the UK. Duncan is only needed for the split.
 
 Hello Duncan,
 
-What is the average annual mileage of the UK N-series fleet? Split by N35 and N75 if you have it. A rough figure from service records is enough.
+Can you split the average annual mileage of the UK fleet between N35 and N75? A rough figure from service records is enough.
 
 Kind regards,
 
@@ -24,11 +26,13 @@ Kind regards,
 
 ---
 
-**3. Your Israel contact, UTI. Closes: no vehicle age or model mix for Israel**
+**3. Toshiaki Shimauchi, ISZJ. Closes: no vehicle age or model mix for Israel**
 
-Hello [name],
+The gaps workbook of 6 Oct (`01_data/11_planning/ISZE_Data_Gaps_To_Close_2026-10-06.xlsx`) lists the Israel chassis pack as promised by Shimauchi in his 6 Oct mail, so this is a follow-up, not a new ask.
 
-Can you send the list of Isuzu vehicles in Israel with chassis number, model and registration date? We need it to measure vehicle age.
+Hello Shimauchi san,
+
+Can you send the Israel list of vehicles with chassis number, model and registration date that you mentioned on 6 October? We need it to measure vehicle age.
 
 Kind regards,
 
