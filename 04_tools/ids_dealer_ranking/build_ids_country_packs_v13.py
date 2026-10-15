@@ -299,7 +299,11 @@ def render_country_html(payload: dict[str, Any], country: str, *, built_at: str)
     e_note = (
         " · Section E not scored (A–D only, 0/27 recorded)"
         if country == "Israel LCV"
-        else ""
+        else (
+            " · premises, organisation and vehicle sales not scored (service and parts only, not a 0%)"
+            if country == "UTI"
+            else ""
+        )
     )
     subtitle = (
         f"{VERSION} · {country} dealers only ({n_dealers}){e_note} · "

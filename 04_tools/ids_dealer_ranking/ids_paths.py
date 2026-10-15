@@ -54,6 +54,8 @@ COUNTRY_LABELS: dict[str, str] = {
     "IUK": "UK LCV",
     "ITUK": "UK CV",
     "Israel": "Israel LCV",
+    # UTI is the Israel truck distributor. Never the UMI Israel LCV pack.
+    "UTI": "UTI",
 }
 
 # Legacy codes / MIDI tags / ALL-CAPS sheet values → English display name
@@ -82,6 +84,7 @@ COUNTRY_DISPLAY_ALIASES: dict[str, str] = {
     "UK LCV": "UK LCV",
     "Israel": "Israel LCV",
     "Israel LCV": "Israel LCV",
+    "UTI": "UTI",
     "Gasanzammit": "Malta",
     "Loutsios": "Cyprus",
     "MALTA": "Malta",

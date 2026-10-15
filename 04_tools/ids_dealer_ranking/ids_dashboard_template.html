@@ -673,8 +673,11 @@
       const nAvg = DATA.network.total_pct;
       const ukcv = isUkcvBasis(dealer) || countryIsUkcv(country);
       const basis = dealer.score_basis === "A-D" ? " (A–D)"
+        : dealer.score_basis === "C-D" ? " (service and parts)"
         : (ukcv ? " (A–H)" : "");
-      const totalTip = dealer.score_basis === "A-D"
+      const totalTip = dealer.score_basis === "C-D"
+        ? "Total is service and parts only (sections C and D, max 127). Premises, organisation and vehicle sales were not filled, so they are left out of this percentage. They are not shown as 0%."
+        : dealer.score_basis === "A-D"
         ? "Total is A–D only (max 253). Section E is recorded as not scored (0/18 questions, 0/27 points) and is not in this percentage. 0/27 is not a vehicle-sales fail."
         : (ukcv
           ? "UK CV total is percent of ITUK’s own checklist max (234 or 224), not the continental 280-point A–E form."
@@ -697,7 +700,9 @@
         const rec = document.createElement("div");
         rec.id = "ov-e-record";
         rec.className = "record-e";
-        rec.innerHTML = eRec === "not_scored"
+        rec.innerHTML = dealer.score_basis === "C-D"
+          ? "<strong>Premises, organisation and vehicle sales are not scored.</strong> Those sections were not filled, so they are left out of the total. They are not a 0%."
+          : eRec === "not_scored"
           ? "<strong>Section E recorded — not scored.</strong> 0/18 questions, 0/27 points, fill not_scored. Left out of this dealer’s total and out of the network average. Not a vehicle-sales fail. Operating headline: Section D (Parts)."
           : "<strong>Section E blank.</strong> No marks on vehicle sales. Omitted from the Section E average only — not treated as a zero fail.";
         $("#ov-kpis").after(rec);
@@ -719,7 +724,9 @@
         const meta = r.notScored
           ? (ukcv
             ? `Section ${r.id} not scored on this dealer’s block · Country ${pct(r.cPct)}`
-            : `Section E recorded · not scored (0/27) — excluded from averages · ${netLabel("Network")} ${pct(r.nPct)}`)
+            : r.id === "E" && dealer.score_basis !== "C-D"
+            ? `Section E recorded · not scored (0/27) — excluded from averages · ${netLabel("Network")} ${pct(r.nPct)}`
+            : `Section ${r.id} not filled — left out of the score, not a 0% · ${netLabel("Network")} ${pct(r.nPct)}`)
           : (ukcv
             ? `Dealer ${pct(r.dPct)} · Country ${pct(r.cPct)} · Δ ${pctGap(r.gapC)}`
             : `Dealer ${pct(r.dPct)} · Country ${pct(r.cPct)} · ${netLabel("Network")} ${pct(r.nPct)} · Δ ${pctGap(r.gapC)}`);
@@ -952,9 +959,9 @@
         const gapN = dPct != null && nPct != null ? dPct - nPct : null;
         const band = bandFor(dPct, cPct);
         return { q, i, dPct, cPct, nPct, score, gapPts, gapC, gapN, band };
-      }).filter((r) => r.dPct != null || (r.q.section === "E" && (eFill(dealer) === "not_scored" || eFill(dealer) === "blank")))
+      }).filter((r) => r.dPct != null || sectionIsNotScored(dealer, r.q.section))
         .filter((r) => !secFilter || r.q.section === secFilter)
-        .filter((r) => !bandFilter || r.band === bandFilter || ((eFill(dealer) === "not_scored" || eFill(dealer) === "blank") && r.q.section === "E"));
+        .filter((r) => !bandFilter || r.band === bandFilter);
 
       if (sort === "worst") rows.sort((a, b) => (a.gapC ?? 0) - (b.gapC ?? 0));
       else if (sort === "best") rows.sort((a, b) => (b.gapC ?? 0) - (a.gapC ?? 0));
@@ -975,12 +982,12 @@
         <th class="num">Δ ctry</th><th class="num">Δ net</th><th class="num">Pts left</th>
       </tr></thead><tbody>`;
       rows.forEach((r) => {
-        const ns = r.q.section === "E" && (eFill(dealer) === "not_scored" || eFill(dealer) === "blank");
+        const ns = sectionIsNotScored(dealer, r.q.section);
         html += `<tr>
           <td><strong>${r.q.id}</strong><br/><small>${r.q.section || ""}</small></td>
           <td class="q-text">${(r.q.text || "").slice(0, 140)}</td>
           <td>${ns ? '<span class="ns-label">Not scored</span>' : bandHtml(r.band)}</td>
-          <td class="num">${ns ? "0 / " + (r.q.max || 0) : pct(r.dPct)}</td>
+          <td class="num">${ns ? "—" : pct(r.dPct)}</td>
           <td class="num">${ns ? "—" : pct(r.cPct)}</td>
           <td class="num">${pct(r.nPct)}</td>
           <td class="num">${ns ? "—" : pctGap(r.gapC)}</td>
@@ -1167,7 +1174,7 @@
           const ns = sectionIsNotScored(d, sec);
           const v = ns ? null : d.sections[sec]?.pct;
           const bg = heatBg(d, sec, mode);
-          html += `<div class="hm-cell${bg ? "" : " hm-na"}"${bg ? ` style="background:${bg}"` : ""} title="${ns ? "Section E not scored — excluded from averages" : ""}">${ns ? "NS" : (v == null ? "·" : Math.round(v * 100))}</div>`;
+          html += `<div class="hm-cell${bg ? "" : " hm-na"}"${bg ? ` style="background:${bg}"` : ""} title="${ns ? "Not scored — left out of the average, not a 0%" : ""}">${ns ? "NS" : (v == null ? "·" : Math.round(v * 100))}</div>`;
         });
       });
       grid.innerHTML = html;

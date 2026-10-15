@@ -435,6 +435,29 @@ def find_cover_sheet(sheetnames: list[str]) -> str | None:
     return None
 
 
+def _uti_drop_unfilled_sections(dealers: list[DealerData]) -> None:
+    """UTI did not fill premises (A), organisation (B) or vehicle sales (E).
+
+    Drop those questions so the overall sheet does not store them as zero.
+    The percentage is service and parts only.
+    """
+    for dealer in dealers:
+        if dealer.error:
+            continue
+        kept: dict[str, float] = {}
+        for qid, val in dealer.question_scores.items():
+            if qid[:1].upper() in {"A", "B", "E"}:
+                continue
+            kept[qid] = val
+        dealer.question_scores = kept
+        total = sum(kept.values())
+        # 80 service + 47 parts. Universal Petah Tikva has no locker question (C.2-1).
+        mx = 127.0 if any(qid.upper() == "C.2-1" for qid in kept) else 126.0
+        dealer.total_override = total
+        dealer.total_pct_override = (total / mx) if mx else None
+        dealer.score_basis = "C-D"
+
+
 def _dealer_total(d: DealerData) -> float:
     if d.total_override is not None:
         return d.total_override
@@ -1269,6 +1292,8 @@ def main() -> int:
             print(f"No workbooks in {dirs}", file=sys.stderr)
             return 1
         dealers = [parse_dealer_workbook(p) for p in unique]
+        if country_display_name(country) == "UTI":
+            _uti_drop_unfilled_sections(dealers)
 
     output = args.output or result_report_path(country)
     build_report(country, dealers, template_path, output.resolve())

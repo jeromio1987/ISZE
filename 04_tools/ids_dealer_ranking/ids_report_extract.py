@@ -346,7 +346,50 @@ def _apply_section_e_policy(
         else:
             rec.score_basis = "A-E"
             rec.total_max = TOTAL_MAX_AE
+    _apply_uti_service_parts_basis(records, dealers, resolved_totals, resolved_pcts)
     return e_out_of_avg
+
+
+def _apply_uti_service_parts_basis(
+    records: list[DealerRecord],
+    dealers: list[tuple[int, str]],
+    resolved_totals: dict[int, float | None],
+    resolved_pcts: dict[int, float | None],
+) -> None:
+    """UTI left premises, organisation and vehicle sales blank.
+
+    Those sections stay out of the percentage. A blank is not a 0% fail.
+    The total is service (C) and parts (D) only.
+    """
+    if not records or records[0].country != "UTI":
+        return
+    for rec, (col, _) in zip(records, dealers):
+        score = 0.0
+        mx = 0.0
+        for sid in ("C", "D"):
+            block = rec.sections.get(sid) or {}
+            if block.get("score") is not None:
+                score += float(block["score"])
+            if block.get("max"):
+                mx += float(block["max"])
+        rec.total = score
+        rec.total_max = mx or 127.0
+        rec.total_pct = (score / rec.total_max) if rec.total_max else None
+        rec.score_basis = "C-D"
+        resolved_totals[col] = rec.total
+        resolved_pcts[col] = rec.total_pct
+        for sid in ("A", "B", "E"):
+            block = rec.sections.setdefault(
+                sid, {"score": None, "max": None, "pct": None}
+            )
+            block["score"] = None
+            block["pct"] = None
+            block["fill"] = "not_scored"
+        for qid, qblock in rec.questions.items():
+            if str(qid)[:1].upper() in {"A", "B", "E"}:
+                qblock["score"] = None
+                qblock["pct"] = None
+                qblock["fill"] = "not_scored"
 
 
 def _is_scored_pct(pct: float | None) -> bool:
@@ -946,7 +989,14 @@ def build_dashboard_payload(reports_dir: Path) -> dict[str, Any]:
                 and d["sections"][sid].get("pct") is not None
             ]
             sec_pct[sid] = mean(vals) if vals else None
-        tvals = [d["total_pct"] for d in basis if d.get("total_pct") is not None]
+        tvals = [
+            d["total_pct"]
+            for d in basis
+            if d.get("total_pct") is not None
+            # UTI total is service and parts only. Do not mix it into the
+            # full-form network percentage.
+            and not (for_network and d.get("score_basis") == "C-D")
+        ]
         return {
             "total_pct": mean(tvals) if tvals else None,
             "sections_pct": sec_pct,
@@ -991,6 +1041,13 @@ def build_dashboard_payload(reports_dir: Path) -> dict[str, Any]:
                 "0/27 points, fill not_scored) and is excluded from this average. "
                 "0/27 is not a vehicle-sales fail. The operating gap is Section D "
                 "(Parts), not vehicle sales."
+            )
+        if c == "UTI":
+            prof["score_basis"] = "C-D"
+            prof["avg_hover"] = (
+                "UTI national average is service and parts only (sections C and D, "
+                "max 127). Premises, organisation and vehicle sales were not filled, "
+                "so they are left out of this percentage. They are not a 0%."
             )
         if c == UKCV_LABEL:
             prof["score_basis"] = UKCV_SCORE_BASIS
