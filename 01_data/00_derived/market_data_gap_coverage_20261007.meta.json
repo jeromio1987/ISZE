@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-07T09:49:16.822575+00:00",
+  "built_at": "2026-10-15T16:52:32.194004+00:00",
   "builder": "01_data/91_build/build_market_data_gap_coverage_20261007.py",
   "node_runner": "01_data/91_build/run_u19_ledger_through_evidence_20261007.mjs",
   "evidence_modules": [
@@ -10,28 +10,35 @@
   "euros_file": "01_data/00_derived/gps_spu_pms.csv",
   "ledger_path": "C:\\Users\\jerom\\Desktop\\claude\\_worktrees\\ISZE_u26\\01_data\\00_derived\\price_observations.parquet",
   "ledger_path_rule": "the worktree copy is first in LEDGER_CANDIDATES; the main-clone path remains only as a fallback",
-  "ledger_sha256": "d52bc58a8595d19fbbb0e46903a5cfed246c67c9055e4b19d3438a8932548e4f",
-  "ledger_meta_sha256": "f54cfabfbdf21a367e5136f40389794081e7abd5552f6c7ea89df1981c6acfa3",
+  "ledger_sha256": "72fe3b9563f59dbb37b861f81573d8895739c048513184796a115421ffbebcc0",
+  "ledger_meta_sha256": "c9559472794b03379893a2d06be8b3a76b5aea7897cee593dfc1c1872ee7d589",
   "family_file_sha256": "e1ce21938b66a8c5bd7515bf50ac62249b913c7b7ae7e818f67f6611988af9c5",
   "focus_families": [
     "brake_pad",
     "oil_filter"
   ],
   "focus_pn_count": 123,
-  "focus_ledger_rows": 106,
-  "coverage_rows": 29,
-  "empty_pn_rows": 217,
+  "focus_ledger_rows": 270,
+  "coverage_rows": 87,
+  "pair_cover_rows_appended": 18,
+  "empty_pn_rows": 159,
   "sufficiency": {
     "UK": {
       "distributor": "ITUK",
       "label": "UK (ITUK)",
-      "focus_rows": 79,
-      "usable_rows": 0,
-      "focus_pns_with_rows": 24,
-      "status": "insufficient",
+      "focus_rows": 105,
+      "usable_rows": 72,
+      "focus_pns_with_rows": 39,
+      "status": "sufficient",
       "status_basis": "usable_rows (rows that pass the evidence checks) against min_usable",
       "min_usable": 50,
       "by_loader_price_type_family": [
+        {
+          "loader": "carparts247",
+          "price_type": "aftermarket_retail",
+          "pms_category": "oil_filter",
+          "rows": 3
+        },
         {
           "loader": "eucon_survey_2023",
           "price_type": "survey_list",
@@ -105,6 +112,18 @@
           "rows": 1
         },
         {
+          "loader": "partsinmotion",
+          "price_type": "aftermarket_retail",
+          "pms_category": "brake_pad",
+          "rows": 13
+        },
+        {
+          "loader": "partsinmotion",
+          "price_type": "aftermarket_retail",
+          "pms_category": "oil_filter",
+          "rows": 4
+        },
+        {
           "loader": "tmc",
           "price_type": "aftermarket_retail",
           "pms_category": "brake_pad",
@@ -127,17 +146,29 @@
           "price_type": "genuine_grey",
           "pms_category": "oil_filter",
           "rows": 3
+        },
+        {
+          "loader": "tranzparts",
+          "price_type": "aftermarket_retail",
+          "pms_category": "brake_pad",
+          "rows": 4
+        },
+        {
+          "loader": "tranzparts",
+          "price_type": "aftermarket_retail",
+          "pms_category": "oil_filter",
+          "rows": 2
         }
       ],
-      "empty_focus_rows": 79
+      "empty_focus_rows": 33
     },
     "PT": {
       "distributor": "PORTUGAL",
       "label": "Portugal (I-Motors)",
-      "focus_rows": 27,
-      "usable_rows": 0,
-      "focus_pns_with_rows": 5,
-      "status": "insufficient",
+      "focus_rows": 165,
+      "usable_rows": 138,
+      "focus_pns_with_rows": 48,
+      "status": "sufficient",
       "status_basis": "usable_rows (rows that pass the evidence checks) against min_usable",
       "min_usable": 50,
       "by_loader_price_type_family": [
@@ -152,6 +183,18 @@
           "price_type": "aftermarket_rrp",
           "pms_category": "oil_filter",
           "rows": 14
+        },
+        {
+          "loader": "spareto_pt",
+          "price_type": "aftermarket_retail",
+          "pms_category": "brake_pad",
+          "rows": 80
+        },
+        {
+          "loader": "spareto_pt",
+          "price_type": "aftermarket_retail",
+          "pms_category": "oil_filter",
+          "rows": 58
         }
       ],
       "empty_focus_rows": 27
@@ -159,18 +202,17 @@
   },
   "sufficiency_rule": "status is decided on usable_rows (rows passing the evidence checks) against min_usable; focus_rows is the raw count and is retained but no longer decides the label",
   "eligible_offers_by_market": {
-    "UK": 0,
-    "PT": 0
+    "UK": 72,
+    "PT": 138
   },
   "exclusion_totals_by_market": {
     "PT:DELIVERY_BASIS_NOT_STATED": 27,
     "PT:PACK_CONTENTS_UNKNOWN": 13,
     "PT:PRODUCT_MATCH_UNRESOLVED": 27,
     "PT:TAX_BASIS_NOT_STATED": 27,
-    "UK:DELIVERY_BASIS_NOT_STATED": 79,
-    "UK:PACK_CONTENTS_UNKNOWN": 33,
-    "UK:PRODUCT_MATCH_UNRESOLVED": 54,
-    "UK:TAX_BASIS_NOT_STATED": 9
+    "UK:DELIVERY_BASIS_NOT_STATED": 24,
+    "UK:DELIVERY_COST_NOT_SUPPLIED": 9,
+    "UK:TAX_RATE_NOT_STATED": 9
   },
   "euros_2025_billed_line_type_all": [
     {
@@ -209,9 +251,9 @@
   "eucon_rule": "Eucon-sourced rows stay local; never sent to DeepSeek or any service outside the EU",
   "mapping_rules": {
     "match": "exact_oem -> basis exact_part_number (product id only); crossref/category_only -> unresolved candidate; never status accepted",
-    "pack": "pack contents always null from ledger (kit/set words set amount_scope=per_pack only; contents never inferred)",
+    "pack": "exact_oem amount_scope=per_piece (OE PN is the sellable unit, even when named PAD KIT); other methods: kit/set words -> per_pack. pack.contents filled only from explicit size text (set of N / N pads); never inferred from family",
     "level": "all competitor ledger rows -> public_advertised_retail; price_type kept in stage JSON under _ledger",
-    "delivery": "the ledger's delivery_note / delivery_included are read here (delivery_basis()); yes -> true, no -> false, blank -> null. Blank is not 'no'. delivery_cost_eur stays null: no cost was read into a numeric field.",
+    "delivery": "the ledger's delivery_note / delivery_included are read here (delivery_basis()); yes -> true, no -> false, blank -> null. Blank is not 'no'. delivery_cost_eur comes from delivery_cost_amount (+ currency) via observation FX when present",
     "tax": "vat excl->excluded (+vat_rate 0 percent); unknown/blank->null"
   },
   "worktree": "C:\\Users\\jerom\\Desktop\\claude\\_worktrees\\ISZE_u26",
@@ -225,5 +267,5 @@
     ],
     "convention": "same date-named files rewritten in place; no new version label such as _b was invented"
   },
-  "start_commit": "c55fa3a88a23e0a16b6d092ba02deb2bc342e555"
+  "start_commit": "c22792b8c6a66258f71ad0da4d1a0c31f6436544"
 }

@@ -20,8 +20,10 @@ does not send Eucon rows outside the EU (local Node only).
 """
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from collections import Counter
@@ -43,13 +45,17 @@ OUT_BUILD = ROOT / "01_data" / "91_build"
 NODE_RUNNER = OUT_BUILD / "run_u19_ledger_through_evidence_20261007.mjs"
 
 FAMILY_FILE = "epc_decode_worklist.csv"
-FOCUS_FAMILIES = ("brake_pad", "oil_filter")
+DEFAULT_FOCUS_FAMILIES = ("brake_pad", "oil_filter")
+FOCUS_FAMILIES = DEFAULT_FOCUS_FAMILIES  # mutated only when --families is passed
 MARKETS = {
     "UK": {"distributor": "ITUK", "label": "UK (ITUK)"},
     "PT": {"distributor": "PORTUGAL", "label": "Portugal (I-Motors)"},
 }
 MIN_USABLE = 50
-RETIRED_LOADERS = {"mekonomen", "auto365", "tranzparts", "autodoc"}
+# tranzparts un-retired 2026-10-11: UK exact_oem rows now carry published
+# shipping (£5.99 / free ≥£80) from tranzparts.co.uk/policies/shipping-policy.
+# Still exclude mekonomen / auto365 / autodoc category scrapes.
+RETIRED_LOADERS = {"mekonomen", "auto365", "autodoc"}
 
 
 def sha256_file(path: Path) -> str:
@@ -67,12 +73,58 @@ def load_ledger() -> tuple[pd.DataFrame, Path]:
     raise SystemExit("price_observations.parquet not found on disk")
 
 
-def focus_pn_map() -> pd.DataFrame:
+def focus_pn_map(families: tuple[str, ...] | None = None) -> pd.DataFrame:
     path = DERIVED / FAMILY_FILE
     df = pd.read_csv(path, dtype={"part_number": str})
-    return df[df["pms_category"].isin(FOCUS_FAMILIES)][
+    fams = families if families is not None else FOCUS_FAMILIES
+    return df[df["pms_category"].isin(fams)][
         ["part_number", "pms_category", "eur_all"]
     ].drop_duplicates("part_number")
+
+
+def full_pn_map() -> pd.DataFrame:
+    """All classified PNs (any family) — used by the wider UK exact_oem report."""
+    path = DERIVED / FAMILY_FILE
+    df = pd.read_csv(path, dtype={"part_number": str})
+    return df[["part_number", "pms_category", "eur_all"]].drop_duplicates("part_number")
+
+
+# Pair cover is a coverage label only. It never writes a price-ledger row and
+# never changes usable_rows / eligible_rows / eligible_pns (those stay direct offers).
+PAIR_SOURCES = ("catalog_paired", "catalog_continuation")
+
+
+def genuine_pairs_by_bvp() -> dict[str, list[str]]:
+    """Own-brand number -> genuine numbers, catalog_paired or catalog_continuation only."""
+    path = DERIVED / "genuine_bvp_crossref.csv"
+    df = pd.read_csv(path, dtype=str)
+    df = df[df["pair_source"].isin(PAIR_SOURCES)]
+    out: dict[str, list[str]] = {}
+    for bvp, gen in zip(df["bvp_pn"], df["genuine_pn"]):
+        bvp_s = str(bvp).strip()
+        gen_s = str(gen).strip()
+        if not bvp_s or not gen_s or bvp_s == "nan" or gen_s == "nan":
+            continue
+        bucket = out.setdefault(bvp_s, [])
+        if gen_s not in bucket:
+            bucket.append(gen_s)
+    return out
+
+
+def pair_cover_for(
+    pn: str,
+    direct_eligible: int,
+    pairs: dict[str, list[str]],
+    uk_eligible_rows: dict[str, int],
+) -> tuple[bool, str]:
+    """True when an empty own-brand number's genuine has at least one eligible UK offer."""
+    links = pairs.get(str(pn), [])
+    if not links or int(direct_eligible or 0) > 0:
+        return False, ""
+    qualifying = sorted({g for g in links if uk_eligible_rows.get(g, 0) >= 1})
+    if not qualifying:
+        return False, ""
+    return True, "|".join(qualifying)
 
 
 def map_tax(vat) -> str | None:
@@ -88,8 +140,23 @@ def map_tax(vat) -> str | None:
     return None
 
 
-def amount_scope_from_description(desc: str | None) -> str:
-    """Piece vs pack only when listing text says kit/set. Never invent piece count."""
+def amount_scope_from_description(
+    desc: str | None, match_method: str | None = None
+) -> str:
+    """Piece vs pack from listing text. Never invent a piece count.
+
+    exact_oem: the searched OE part number *is* the sellable unit (including when
+    that OE unit is itself a kit / pad set). Marking those as per_pack would demand
+    pad counts the listing never states, and would block a like-for-like OE-to-OE
+    kit price. Those stay per_piece.
+
+    Other match methods: kit/set words in the title still mean per_pack, and pack
+    contents stay unknown unless the text states an explicit size (see
+    pack_from_description).
+    """
+    mm = (match_method or "").strip().lower()
+    if mm == "exact_oem":
+        return "per_piece"
     if not desc:
         return "per_piece"
     d = str(desc).upper()
@@ -105,6 +172,34 @@ def amount_scope_from_description(desc: str | None) -> str:
     if " KIT" in d or d.startswith("KIT") or ";KIT" in d:
         return "per_pack"
     return "per_piece"
+
+
+def pack_from_description(desc: str | None) -> dict | None:
+    """Fill pack.contents only when the listing states an explicit size.
+
+    Accepts forms like 'set of 4', 'pack of 4', '4 pads', '4 pcs'. Returns None
+    when the count is not written — never invents a pad or kit size from the
+    part family alone.
+    """
+    if not desc:
+        return None
+    s = str(desc)
+    m = re.search(
+        r"(?:set|pack|kit)\s+of\s+(\d+)\b"
+        r"|(\d+)\s*(?:pcs?|pieces?|pads?)\b",
+        s,
+        flags=re.IGNORECASE,
+    )
+    if not m:
+        return None
+    n = int(m.group(1) or m.group(2))
+    if n < 1:
+        return None
+    return {
+        "contents": [{"part": "piece", "quantity": n}],
+        "pieces_per_pack": n,
+        "unit": "piece",
+    }
 
 
 def match_fields(match_method: str | None, competitor_pn) -> dict:
@@ -153,9 +248,9 @@ def delivery_basis(row: dict) -> tuple:
 
     A blank is NOT the same as "no": the absence of a stated charge is never read as a
     charge. Anything that is not yes / no / blank is treated as blank rather than guessed,
-    and `delivery_cost_eur` is deliberately left alone — no delivery cost was read into a
-    numeric field, so a "no" row is excluded on DELIVERY_COST_NOT_SUPPLIED until a cost is
-    actually stated on the page. This is the ONLY place eligibility learns about delivery.
+    and `delivery_cost_eur` is taken from ledger `delivery_cost_amount` (+ currency) when present;
+    otherwise None, so a "no" row without a stated cost is excluded on DELIVERY_COST_NOT_SUPPLIED.
+    This is the ONLY place eligibility learns about delivery.
     """
     raw = row.get("delivery_included")
     note = row.get("delivery_note")
@@ -183,6 +278,7 @@ def row_to_evidence_input(r: dict) -> dict:
         except (TypeError, ValueError):
             fx = None
     desc = r.get("description")
+    match_method = r.get("match_method")
     tax = map_tax(r.get("vat"))
     alt = r.get("competitor_pn")
     if alt is not None and isinstance(alt, float) and pd.isna(alt):
@@ -190,6 +286,29 @@ def row_to_evidence_input(r: dict) -> dict:
     elif alt is not None:
         alt = str(alt)
     delivery, delivery_note = delivery_basis(r)
+    pack = pack_from_description(desc)
+    # Delivery cost when the page/policy states one (e.g. KS UK mainland min GBP 10).
+    # Convert with the same observation FX when currency is not EUR. Blank stays None.
+    delivery_cost_eur = None
+    raw_cost = r.get("delivery_cost_amount")
+    cost_ccy = r.get("delivery_cost_currency")
+    if raw_cost is not None and not (isinstance(raw_cost, float) and pd.isna(raw_cost)):
+        try:
+            cost_amt = float(raw_cost)
+            ccy = str(cost_ccy or "").strip().upper()
+            if ccy in ("", "EUR"):
+                delivery_cost_eur = cost_amt
+            elif fx is not None and ccy == str(r.get("currency") or "").strip().upper():
+                delivery_cost_eur = cost_amt * float(fx)
+            elif fx is not None and ccy == "GBP" and str(r.get("currency") or "").strip().upper() == "GBP":
+                delivery_cost_eur = cost_amt * float(fx)
+            elif fx is not None and ccy == "GBP":
+                # observation may already be in EUR; use observation FX only when currency matches GBP
+                # else leave None rather than guess a second rate
+                if str(r.get("currency") or "").strip().upper() in ("GBP", "GB"):
+                    delivery_cost_eur = cost_amt * float(fx)
+        except (TypeError, ValueError):
+            delivery_cost_eur = None
     return {
         "observation_id": r["obs_id"],
         "source": r.get("source") or r.get("loader"),
@@ -200,7 +319,7 @@ def row_to_evidence_input(r: dict) -> dict:
         "market": r["country"],
         "currency": (str(r["currency"]).upper() if r.get("currency") else None),
         "tax": tax,
-        "pack": None,
+        "pack": pack,
         "channel": "web_listing",
         "availability_meaning": stock_meaning(r.get("stock")),
         "role": "competitor",
@@ -208,20 +327,35 @@ def row_to_evidence_input(r: dict) -> dict:
         "part_number": str(r["part_no"]),
         "case_id": f"U19-{r['country']}-{r['part_no']}",
         "amount": None if price is None or (isinstance(price, float) and pd.isna(price)) else float(price),
-        "amount_scope": amount_scope_from_description(desc),
+        "amount_scope": amount_scope_from_description(desc, match_method),
         "unit": "piece",
-        "vat_rate": 0 if tax == "excluded" else None,
-        "vat_rate_unit": "percent" if tax == "excluded" else None,
+        "vat_rate": (
+            0
+            if tax == "excluded"
+            else (
+                float(r["vat_rate"])
+                if r.get("vat_rate") is not None
+                and not (isinstance(r.get("vat_rate"), float) and pd.isna(r.get("vat_rate")))
+                else None
+            )
+        ),
+        "vat_rate_unit": "percent" if tax in ("excluded", "included") and (
+            tax == "excluded"
+            or (
+                r.get("vat_rate") is not None
+                and not (isinstance(r.get("vat_rate"), float) and pd.isna(r.get("vat_rate")))
+            )
+        ) else None,
         "delivery_included": delivery,
-        "delivery_cost_eur": None,
+        "delivery_cost_eur": delivery_cost_eur,
         "fx_to_eur": fx,
         "fx_date": "2026-09-24" if fx is not None else None,
-        "match": match_fields(r.get("match_method"), r.get("competitor_pn")),
+        "match": match_fields(match_method, r.get("competitor_pn")),
         "_ledger": {
             "loader": r.get("loader"),
             "price_type": r.get("price_type"),
             "vat": r.get("vat"),
-            "match_method": r.get("match_method"),
+            "match_method": match_method,
             "description": desc,
             "delivery_note": delivery_note,
             "price_eur": None
@@ -256,11 +390,6 @@ def main() -> int:
 
     ledger, ledger_path = load_ledger()
     print(f"ledger read: {ledger_path}  ({len(ledger):,} rows)")
-    # U26 2026-10-07: counted BEFORE the retired-loader filter, so the number reported is
-    # what the ledger actually holds rather than what this build happens to read.
-    _delivery_stated_raw = int(
-        ledger["delivery_included"].astype(str).isin(["yes", "no"]).sum()
-    ) if "delivery_included" in ledger.columns else 0
     ledger = ledger[~ledger["loader"].isin(RETIRED_LOADERS)].copy()
     focus = focus_pn_map()
     focus_pns = set(focus["part_number"].astype(str))
@@ -398,6 +527,13 @@ def main() -> int:
         }
     )
 
+    uk_eligible_rows = {
+        pn: int(a["eligible_count"])
+        for (pn, market), a in agg.items()
+        if market == "UK"
+    }
+    pairs = genuine_pairs_by_bvp()
+
     cov_rows = []
     for (pn, market), a in sorted(agg.items()):
         row = {
@@ -412,10 +548,14 @@ def main() -> int:
         }
         for code in all_codes:
             row[f"excl_{code}"] = int(a["reason_codes"].get(code, 0))
+        covered, gpn = pair_cover_for(
+            a["part_number"], a["eligible_count"], pairs, uk_eligible_rows
+        )
+        row["covered_via_genuine_pair"] = bool(covered)
+        row["genuine_pair_pn"] = gpn
         cov_rows.append(row)
 
-    cov_path = OUT_DERIVED / "market_data_gap_coverage_20261007.csv"
-    pd.DataFrame(cov_rows).to_csv(cov_path, index=False)
+    direct_coverage_rows = len(cov_rows)
 
     empty_rows = []
     for country, meta in MARKETS.items():
@@ -424,6 +564,7 @@ def main() -> int:
             pn = str(fr["part_number"])
             if pn in have:
                 continue
+            covered, gpn = pair_cover_for(pn, 0, pairs, uk_eligible_rows)
             empty_rows.append(
                 {
                     "part_number": pn,
@@ -432,8 +573,40 @@ def main() -> int:
                     "pms_category": fr["pms_category"],
                     "eur_all_billed_all_markets": fr["eur_all"],
                     "ledger_rows": 0,
+                    "covered_via_genuine_pair": bool(covered),
+                    "genuine_pair_pn": gpn,
                 }
             )
+    # Empty own-brand numbers are not in the direct coverage rows (no ledger row).
+    # Append only the covered ones, with eligible_count 0, so the label sits beside
+    # the direct count and does not add to it.
+    existing_keys = {(r["part_number"], r["market"]) for r in cov_rows}
+    for er in empty_rows:
+        if not er["covered_via_genuine_pair"]:
+            continue
+        key = (er["part_number"], er["market"])
+        if key in existing_keys:
+            continue
+        extra = {
+            "part_number": er["part_number"],
+            "market": er["market"],
+            "distributor": er["distributor"],
+            "pms_category": er["pms_category"],
+            "ledger_rows": 0,
+            "eligible_count": 0,
+            "newest_observation_date": None,
+            "market_sufficiency": sufficiency[er["market"]]["status"],
+        }
+        for code in all_codes:
+            extra[f"excl_{code}"] = 0
+        extra["covered_via_genuine_pair"] = True
+        extra["genuine_pair_pn"] = er["genuine_pair_pn"]
+        cov_rows.append(extra)
+        existing_keys.add(key)
+
+    cov_path = OUT_DERIVED / "market_data_gap_coverage_20261007.csv"
+    pd.DataFrame(cov_rows).to_csv(cov_path, index=False)
+
     empty_path = OUT_DERIVED / "market_data_gap_empty_pns_20261007.csv"
     pd.DataFrame(empty_rows).sort_values(
         ["market", "pms_category", "eur_all_billed_all_markets"],
@@ -463,38 +636,6 @@ def main() -> int:
         "focus_families": list(FOCUS_FAMILIES),
         "focus_pn_count": int(len(focus_pns)),
         "billed_eur_all_markets_focus": round(billed_eur_all_markets, 2),
-        # U26 2026-10-07: why the delivery field, now that it exists, still does not make a
-        # row eligible. Stated here so the zero cannot be read as "the field was not added".
-        "delivery_basis_finding": {
-            "ledger_columns_added": ["delivery_note", "delivery_included"],
-            "read_from": "the pages already saved under _probe/ and _probe/_u26/",
-            "rows_in_ledger_stating_a_basis": _delivery_stated_raw,
-            "rows_in_build_focus_stating_a_basis": int(
-                focus_rows["delivery_included"].astype(str).isin(["yes", "no"]).sum()
-            ),
-            "pages_stating_a_free_delivery_threshold": (
-                "6 Tranzparts pages, all the same shop-wide rule ('FREE DELIVERY WHEN YOU "
-                "SPEND OVER GBP 50' in the announcement bar; free tracked over GBP 80 in the "
-                "Delivery and Shipping panel). Where the two disagree for a listing, no basis "
-                "is claimed and the note says so."
-            ),
-            "pages_stating_delivery_info_only": (
-                "KS International shop pages carry a footer link named 'Delivery Information' "
-                "and nothing else. Recorded as the note 'delivery info page only' with the "
-                "basis LEFT BLANK: a link states no basis for this listing."
-            ),
-            "why_no_focus_row_is_eligible_on_delivery": (
-                "4 UK Tranzparts rows state 'no' (price GBP 19.26-32.00, below the stated "
-                "GBP 50 threshold), and 2 more state the two-threshold ambiguity. A 'no' needs "
-                "a delivered cost to compare and no cost was read into a numeric field, so "
-                "those rows would be excluded on DELIVERY_COST_NOT_SUPPLIED; they do not reach "
-                "the build at all because RETIRED_LOADERS (unchanged) drops that loader. All "
-                "79 UK focus rows that DO reach the build state nothing, so they remain "
-                "excluded on DELIVERY_BASIS_NOT_STATED. No harvested UK page states that its "
-                "price includes delivery, so the honest answer is that the field is now "
-                "carried but the market still has no eligible comparable."
-            ),
-        },
         "by_market": {},
     }
     for country, meta in MARKETS.items():
@@ -533,6 +674,37 @@ def main() -> int:
                 empt, key=lambda r: -(r["eur_all_billed_all_markets"] or 0)
             )[:15],
         }
+    pair_cover_rows = [r for r in cov_rows if r.get("covered_via_genuine_pair")]
+    metrics["pair_cover"] = {
+        "label": "via matching genuine part",
+        "rule": (
+            "An empty own-brand number counts as covered via the matching genuine "
+            "part when genuine_bvp_crossref.csv links it with pair_source "
+            "catalog_paired or catalog_continuation and that genuine number has "
+            "at least one eligible UK offer. usable_rows, eligible_rows, "
+            "eligible_pns and empty_pns stay direct offers only. This is not a "
+            "ledger row."
+        ),
+        "crossref_file": "01_data/00_derived/genuine_bvp_crossref.csv",
+        "direct_coverage_rows": direct_coverage_rows,
+        "by_market": {
+            country: {
+                "covered_via_genuine_pair_count": sum(
+                    1 for r in pair_cover_rows if r["market"] == country
+                ),
+                "covered_via_genuine_pair": [
+                    {
+                        "part_number": r["part_number"],
+                        "genuine_pair_pn": r["genuine_pair_pn"],
+                        "eligible_count_direct": int(r["eligible_count"]),
+                    }
+                    for r in pair_cover_rows
+                    if r["market"] == country
+                ],
+            }
+            for country in MARKETS
+        },
+    }
     metrics_path = OUT_DERIVED / "market_data_gap_coverage_20261007.metrics.json"
     metrics_path.write_text(json.dumps(metrics, indent=2, ensure_ascii=False), encoding="utf-8")
 
@@ -557,7 +729,8 @@ def main() -> int:
         "focus_families": list(FOCUS_FAMILIES),
         "focus_pn_count": int(len(focus_pns)),
         "focus_ledger_rows": int(len(focus_rows)),
-        "coverage_rows": len(cov_rows),
+        "coverage_rows": direct_coverage_rows,
+        "pair_cover_rows_appended": len(cov_rows) - direct_coverage_rows,
         "empty_pn_rows": len(empty_rows),
         # U26 2026-10-07: the sufficiency label now counts USABLE rows (eligible), not raw
         # focus rows. Both are kept, labelled. This file was corrected for the sufficiency
@@ -575,11 +748,13 @@ def main() -> int:
         "eucon_rule": "Eucon-sourced rows stay local; never sent to DeepSeek or any service outside the EU",
         "mapping_rules": {
             "match": "exact_oem -> basis exact_part_number (product id only); crossref/category_only -> unresolved candidate; never status accepted",
-            "pack": "pack contents always null from ledger (kit/set words set amount_scope=per_pack only; contents never inferred)",
+            "pack": ("exact_oem amount_scope=per_piece (OE PN is the sellable unit, even when named "
+                     "PAD KIT); other methods: kit/set words -> per_pack. pack.contents filled only "
+                     "from explicit size text (set of N / N pads); never inferred from family"),
             "level": "all competitor ledger rows -> public_advertised_retail; price_type kept in stage JSON under _ledger",
             "delivery": ("the ledger's delivery_note / delivery_included are read here (delivery_basis()); "
                          "yes -> true, no -> false, blank -> null. Blank is not 'no'. delivery_cost_eur "
-                         "stays null: no cost was read into a numeric field."),
+                         "comes from delivery_cost_amount (+ currency) via observation FX when present"),
             "tax": "vat excl->excluded (+vat_rate 0 percent); unknown/blank->null",
         },
         "worktree": str(ROOT),
@@ -631,5 +806,169 @@ def main() -> int:
     return 0
 
 
+def run_uk_wider_exact(ledger: pd.DataFrame, ledger_path: Path) -> dict:
+    """Second report: all UK exact_oem (or better) rows through the same evidence rules.
+
+    Does not rewrite the focus coverage CSV. Writes:
+      market_data_gap_coverage_uk_wider_exact_20261007.csv
+      market_data_gap_coverage_uk_wider_exact_20261007.metrics.json
+    """
+    uk = ledger[
+        (ledger["country"] == "UK")
+        & (ledger["match_method"].astype(str).str.lower() == "exact_oem")
+    ].copy()
+    pn_all = full_pn_map()
+    pn_family = dict(zip(pn_all["part_number"].astype(str), pn_all["pms_category"]))
+    pn_eur = dict(zip(pn_all["part_number"].astype(str), pn_all["eur_all"]))
+    uk["pms_category"] = uk["part_no"].astype(str).map(pn_family)
+
+    mapped = [row_to_evidence_input(r) for r in uk.to_dict(orient="records")]
+    stage_path = OUT_BUILD / "_u19_stage_offers_uk_wider_exact_20261007.json"
+    stage_path.write_text(json.dumps({"offers": mapped}, indent=2), encoding="utf-8")
+    result_path = OUT_BUILD / "_u19_evidence_results_uk_wider_exact_20261007.json"
+    proc = subprocess.run(
+        ["node", str(NODE_RUNNER), str(stage_path), str(result_path)],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    if proc.returncode != 0:
+        sys.stderr.write(proc.stdout + "\n" + proc.stderr)
+        raise SystemExit(f"node runner failed (uk wider): {proc.returncode}")
+    print(proc.stdout.strip())
+
+    results = json.loads(result_path.read_text(encoding="utf-8"))
+    by_obs = {r["observation_id"]: r for r in results["rows"]}
+
+    exclusion_totals: Counter = Counter()
+    eligible = 0
+    eligible_pns: set[str] = set()
+    focus_set = set(DEFAULT_FOCUS_FAMILIES)
+    eligible_in_focus = 0
+    eligible_outside = 0
+    rows_out = []
+
+    for r in uk.to_dict(orient="records"):
+        oid = r["obs_id"]
+        er = by_obs.get(oid) or {}
+        fam = pn_family.get(str(r["part_no"]))
+        is_el = bool(er.get("eligible"))
+        if is_el:
+            eligible += 1
+            eligible_pns.add(str(r["part_no"]))
+            if fam in focus_set:
+                eligible_in_focus += 1
+            else:
+                eligible_outside += 1
+        codes = er.get("reason_codes") or []
+        for c in codes:
+            exclusion_totals[c] += 1
+        rows_out.append(
+            {
+                "part_number": str(r["part_no"]),
+                "obs_id": oid,
+                "market": "UK",
+                "distributor": "ITUK",
+                "pms_category": fam,
+                "in_focus_brake_pad_oil_filter": bool(fam in focus_set),
+                "loader": r.get("loader"),
+                "match_method": r.get("match_method"),
+                "vat": r.get("vat"),
+                "delivery_included": r.get("delivery_included"),
+                "delivery_cost_amount": r.get("delivery_cost_amount"),
+                "eligible": is_el,
+                "reason_codes": "|".join(codes),
+                "price": r.get("price"),
+                "currency": r.get("currency"),
+                "description": r.get("description"),
+            }
+        )
+
+    cov_path = OUT_DERIVED / "market_data_gap_coverage_uk_wider_exact_20261007.csv"
+    pd.DataFrame(rows_out).to_csv(cov_path, index=False)
+
+    metrics = {
+        "built_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "scope": "UK exact_oem (or better) rows only — second report; focus CSV unchanged",
+        "focus_families_for_split": list(DEFAULT_FOCUS_FAMILIES),
+        "ledger_path": str(ledger_path),
+        "uk_exact_oem_rows": int(len(uk)),
+        "eligible_rows": eligible,
+        "eligible_pns": len(eligible_pns),
+        "eligible_rows_in_focus": eligible_in_focus,
+        "eligible_rows_outside_focus": eligible_outside,
+        "eligible_pns_detail": [
+            {
+                "part_number": p,
+                "pms_category": pn_family.get(p),
+                "eur_all_billed": pn_eur.get(p),
+                "in_focus": pn_family.get(p) in focus_set,
+            }
+            for p in sorted(eligible_pns)
+        ],
+        "billed_eur_of_eligible_pns": round(
+            float(sum((pn_eur.get(p) or 0) for p in eligible_pns)), 2
+        ),
+        "exclusions_by_reason": [
+            {"reason": c, "rows": n}
+            for c, n in sorted(exclusion_totals.items(), key=lambda x: -x[1])
+        ],
+        "comparison_to_focus_report": {
+            "focus_families": list(DEFAULT_FOCUS_FAMILIES),
+            "note": (
+                "Focus report eligible counts only brake_pad + oil_filter. "
+                "This file counts every UK exact_oem row that passes evidence."
+            ),
+        },
+    }
+    metrics_path = OUT_DERIVED / "market_data_gap_coverage_uk_wider_exact_20261007.metrics.json"
+    metrics_path.write_text(json.dumps(metrics, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(
+        f"UK wider exact_oem: {len(uk)} rows -> {eligible} eligible "
+        f"(in focus {eligible_in_focus}, outside {eligible_outside})"
+    )
+    print("WROTE", cov_path)
+    print("WROTE", metrics_path)
+    return metrics
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    ap = argparse.ArgumentParser(
+        description="MARKET-DATA-GAP coverage from the price ledger (U26 / 20261007)."
+    )
+    ap.add_argument(
+        "--families",
+        type=str,
+        default="",
+        help=(
+            "Comma-separated pms_category list overriding the default focus "
+            f"{list(DEFAULT_FOCUS_FAMILIES)}. Focus CSV/metrics are rewritten for that set."
+        ),
+    )
+    ap.add_argument(
+        "--also-uk-exact",
+        action="store_true",
+        help=(
+            "Also write a second UK-only report for all exact_oem rows "
+            "(market_data_gap_coverage_uk_wider_exact_20261007.*) without breaking the focus report."
+        ),
+    )
+    return ap.parse_args(argv)
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    args = parse_args()
+    if args.families.strip():
+        # Module-level override for focus_pn_map() / euros_table() / main().
+        FOCUS_FAMILIES = tuple(  # noqa: F841 — assigned for main() readers of this name
+            f.strip() for f in args.families.split(",") if f.strip()
+        )
+        # Bind into the module dict so focus_pn_map sees it (local assignment would shadow).
+        globals()["FOCUS_FAMILIES"] = FOCUS_FAMILIES
+        print(f"FOCUS_FAMILIES override: {FOCUS_FAMILIES}")
+    rc = main()
+    if args.also_uk_exact:
+        ledger, ledger_path = load_ledger()
+        ledger = ledger[~ledger["loader"].isin(RETIRED_LOADERS)].copy()
+        run_uk_wider_exact(ledger, ledger_path)
+    raise SystemExit(rc)

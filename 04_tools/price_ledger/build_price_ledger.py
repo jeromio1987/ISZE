@@ -420,6 +420,90 @@ def load_scraped_phase1():
             delivery_included=(r.get("delivery_included")
                                if pd.notna(r.get("delivery_included")) else None),
         ))
+    return apply_ks_pdp_oe_upgrades(rows)
+
+
+def _merge_delivery_from_previous_parquet(df):
+    """Keep delivery_* hand patches when a clean rebuild would blank them.
+
+    OFFERED_ROWS often lacks delivery columns even after parsers filled the live
+    parquet. A naïve rebuild then drops ~170 stated-basis rows to ~4 (seen 2026-10-11).
+    If the previous parquet exists, copy delivery_note / delivery_included by obs_id
+    onto blank rebuild cells only — never overwrite a non-blank rebuild value.
+    """
+    if "obs_id" not in df.columns:
+        return df
+    prev_path = OUT
+    if not prev_path.exists():
+        return df
+    try:
+        prev = pd.read_parquet(prev_path, columns=["obs_id", "delivery_note", "delivery_included"])
+    except Exception:  # noqa: BLE001
+        try:
+            prev = pd.read_parquet(prev_path)
+            prev = prev[["obs_id", "delivery_note", "delivery_included"]]
+        except Exception:  # noqa: BLE001
+            return df
+    if prev.empty:
+        return df
+    prev = prev.drop_duplicates(subset=["obs_id"], keep="last")
+    merged = df.merge(prev, on="obs_id", how="left", suffixes=("", "_prev"))
+    n = 0
+    for col in ("delivery_note", "delivery_included"):
+        prev_col = f"{col}_prev"
+        if prev_col not in merged.columns:
+            continue
+        cur = merged[col]
+        blank = cur.isna() | (cur.astype(str).str.strip() == "") | (cur.astype(str) == "nan")
+        take = blank & merged[prev_col].notna() & (merged[prev_col].astype(str).str.strip() != "")
+        n += int(take.sum())
+        merged.loc[take, col] = merged.loc[take, prev_col]
+        merged = merged.drop(columns=[prev_col])
+    if n:
+        print(f"delivery_merge: restored {n} blank delivery field(s) from previous parquet")
+    return merged
+
+
+def apply_ks_pdp_oe_upgrades(rows):
+    """Upgrade KS category_only → exact_oem from the reviewed PDP OE seed file.
+
+    `KS_PDP_OE_ROWS.csv` is a human/agent-reviewed list: KS SKU + Isuzu PN + path to a
+    saved product page whose Part Code is that SKU and whose OE/OEM field prints that
+    Isuzu number. Without this, OE upgrades that only live in a gitignored parquet are
+    wiped on the next ledger rebuild (competitor-price campaign, 2026-10-11).
+
+    Missing file = no change. Only upgrades when both SKU and Isuzu PN match a seed line
+    and the row is still `category_only` (never downgrades exact_oem / crossref).
+    """
+    f = Path(__file__).resolve().parent / "KS_PDP_OE_ROWS.csv"
+    if not f.exists() or f.stat().st_size == 0:
+        return rows
+    try:
+        seed = pd.read_csv(f, dtype=str, encoding="utf-8-sig")
+    except Exception:  # noqa: BLE001
+        return rows
+    if seed.empty or "ks_sku" not in seed.columns or "isuzu_pn" not in seed.columns:
+        return rows
+    pairs = set()
+    for _, s in seed.iterrows():
+        sku = str(s.get("ks_sku") or "").strip()
+        pn = _pn(s.get("isuzu_pn"))
+        if sku and pn:
+            pairs.add((sku, pn))
+    if not pairs:
+        return rows
+    n = 0
+    for r in rows:
+        if str(r.get("match_method") or "") != "category_only":
+            continue
+        sku = str(r.get("competitor_pn") or "").strip()
+        pn = r.get("part_no")
+        if (sku, pn) in pairs:
+            r["match_method"] = "exact_oem"
+            n += 1
+    if n:
+        print(f"ks_pdp_oe: upgraded {n} category_only row(s) to exact_oem "
+              f"from KS_PDP_OE_ROWS.csv ({len(pairs)} reviewed pairs)")
     return rows
 
 
@@ -503,6 +587,9 @@ def main():
     else:
         df["obs_id"] = computed
     df = df[COLUMNS]
+    # Restore delivery_* from the previous parquet onto blank cells before validate/write
+    # (OFFERED_ROWS often omits them; a clean rebuild otherwise wipes hand-filled basis).
+    df = _merge_delivery_from_previous_parquet(df)
 
     errors = validate(df)
     if errors:

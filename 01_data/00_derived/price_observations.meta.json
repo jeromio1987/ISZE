@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-07T09:13:31+00:00",
+  "built_at": "2026-10-11T16:38:10+00:00",
   "builder": "04_tools/price_ledger/build_price_ledger.py",
   "rows": 6690,
   "rows_by_loader": {
@@ -52,5 +52,8 @@
     "delivery_included": "yes / no only, and only where the page states it for that listing or states a threshold rule the listed price meets or fails; blank when the page is silent. Never inferred from the absence of a charge, and never from the price.",
     "why": "the shared evidence rule (evidence.js adjustToComparable, reported as DELIVERY_BASIS_NOT_STATED) excludes every row whose delivery basis is not stated. Before this column existed no row could be eligible.",
     "rows_stating_a_basis": 4
-  }
+  },
+  "note_20261011": "Restored delivery columns from ISZE_u29b parquet after accidental clean rebuild; re-applied KS_PDP_OE_ROWS exact_oem upgrades on top.",
+  "rows_stating_a_basis_restored": 175,
+  "ks_pdp_oe_upgrades_applied": 31
 }
