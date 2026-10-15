@@ -1,0 +1,58 @@
+{
+  "generated": "2026-10-15T11:36:40+00:00",
+  "built_by": "01_data/91_build/build_aim_classification_release_20261015.py",
+  "release_id": "2026-10-15",
+  "status": "APPROVED",
+  "base_release": "2026-10-11",
+  "base_sha256": "d9b26b0124bacadcece437f665fc673e32b70d2087d78aa0884ea6615369f605",
+  "sha256": "cd7ac827199751ddb55bc3b7a864724184877ab652ed86824016b8fc36b02571",
+  "rows": 165055,
+  "built_by_note": "combined pad kits + wrong-label moves",
+  "jerome_go": "approve and do all changes, I want AIM to be as good as possible (2026-10-15 chat; pad kits + wrong-label moves; no new leaves)",
+  "counts": {
+    "padkit_disc_brk_kit_as_disc": 5,
+    "padkit_no_release_description": 3,
+    "padkit_rear_caliper_blank": 22,
+    "wronglabel_A_pumps": 75,
+    "wronglabel_B_real_labels": 900,
+    "wronglabel_C_not_real_labels": 45
+  },
+  "parts_in_proposals": 1050,
+  "parts_with_aim_cell_change": 1050,
+  "change_log": "aim_pn_classification_release_2026-10-15.changes.csv",
+  "change_log_rows": 2792,
+  "zero_checks": {
+    "pad_kits_outside_brake_pad_kit": 0,
+    "new_aim_labels": 0,
+    "catalogue_columns_changed": 0,
+    "brake_pad_kit_before": 112,
+    "brake_pad_kit_after": 142
+  },
+  "aim_label_vocabulary": {
+    "new_aim_labels": [],
+    "note": "no new AIM triples; pad kits and wrong-label moves onto existing leaves only"
+  },
+  "catalogue_verification_vs_pr00": {
+    "rows_checked": 164794,
+    "rows_matching": 164669,
+    "match_pct": 99.9241,
+    "reference_file": "pr00_classification_reference_20260920.csv",
+    "reference_sha256": "98e64b5bdaef73819cf954ce96241f1a9b49d8fbd998d02700ae8494028bea34",
+    "non_matching_parts": 127,
+    "base_release_non_matching_parts": 127,
+    "note": "COPY-INTEGRITY ONLY. This release did not change catalogue columns.",
+    "reference_reason": "Jerome decision 2026-10-02 (chat): copy integrity is measured against pr00_classification.csv as committed 20 Sep 2026 (git c813330f), not against today's file, because today's file carries the 21 Sep regression (1,660 rows). Pinned as a hash-recorded copy so the reference cannot move underneath the gate.",
+    "reference_source": "git c813330f"
+  },
+  "consumer_contract": [
+    "Axis A (identity): group by catalog_l1/l2/l3; filter catalog_node_present=1.",
+    "aim_l1_fixed/aim_l2_fixed/aim_l3_fixed = the governed AIM family (what the AIM pages chart).",
+    "line_kind != 'part' marks freight / rebate / service / lubricant rows; filter line_kind=='part' for parts revenue.",
+    "Lubricants are stored under BOTH key forms (0550xxxxxx and 550xxxxxx); the billing sits on the 9-digit row, the 10-digit row carries the master's 0.0. Do not sum both without knowing that."
+  ],
+  "decide_not_applied": {
+    "note": "wrong-label verdict=decide parts were not applied; no existing leaf fits and new labels are out of scope",
+    "parts": 1472
+  },
+  "purpose": "Two-axes lock 2026-09-17: Axis A = catalog_l1/l2/l3 identity (the catalogue tree of the approved 2026-09-20 release); Axis B = commercial score beside Axis A, not built as scored columns here and never the parent of the identity tree. aim_l*_fixed is the governed AIM family label. legacy workbook_l* is context only. Do not invent a fourth layer."
+}

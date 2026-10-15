@@ -1,0 +1,733 @@
+{
+  "generated": "2026-10-15T11:12:30+00:00",
+  "built_by": "01_data/91_build/build_next_release_proposal_wrong_labels_20261015.py",
+  "status": "PROPOSED",
+  "base_release": "2026-10-11",
+  "base_sha256": "d9b26b0124bacadcece437f665fc673e32b70d2087d78aa0884ea6615369f605",
+  "rule": "Universe U = line_kind part with FY2026 billed != 0. Group A = PUMP ASM on Fuel Pump/Gasket without FUEL/INJ/DEF. Group B = real labels, review pairs >= EUR 1,000. Group C = not-real labels, review pairs >= EUR 1,000. Description words decide; move only to an existing leaf.",
+  "universe": {
+    "parts": 16705,
+    "eur_fy2026": 33468155.07,
+    "not_real_parts": 1951,
+    "not_real_eur_fy2026": 427322.0,
+    "blank_parts": 91,
+    "blank_eur_fy2026": 4468.84
+  },
+  "by_group_verdict": {
+    "A_pumps": {
+      "decide": {
+        "parts": 6,
+        "eur_fy2026": 7696.21
+      },
+      "move": {
+        "parts": 75,
+        "eur_fy2026": 212646.02
+      }
+    },
+    "B_real_labels": {
+      "decide": {
+        "parts": 1466,
+        "eur_fy2026": 2063484.13
+      },
+      "keep": {
+        "parts": 7404,
+        "eur_fy2026": 28253651.8
+      },
+      "move": {
+        "parts": 900,
+        "eur_fy2026": 1853403.0
+      },
+      "not_reviewed": {
+        "parts": 4898,
+        "eur_fy2026": 425527.92
+      }
+    },
+    "C_not_real_labels": {
+      "keep": {
+        "parts": 564,
+        "eur_fy2026": 322071.72
+      },
+      "move": {
+        "parts": 45,
+        "eur_fy2026": 11173.38
+      },
+      "not_reviewed": {
+        "parts": 1342,
+        "eur_fy2026": 94076.9
+      }
+    }
+  },
+  "pair_counts": {
+    "B_reviewed": 1006,
+    "B_reviewed_eur_fy2026": 32170538.93,
+    "C_reviewed": 82,
+    "C_reviewed_eur_fy2026": 333245.1,
+    "A_parts": 81,
+    "A_eur_fy2026": 220342.23
+  },
+  "dry_run": {
+    "move_parts": 1020,
+    "new_labels": 0,
+    "release_rows": 165055,
+    "pad_kits_unchanged": 30,
+    "non_aim_cells_changed": 0
+  },
+  "rebate_service_duplicate_keys": {
+    "keys": [
+      "0000REBATE",
+      "000SERVICE"
+    ],
+    "rows_in_release": 4,
+    "line_kinds": [
+      {
+        "pn": "0000REBATE",
+        "line_kind": "part",
+        "n": 1
+      },
+      {
+        "pn": "0000REBATE",
+        "line_kind": "rebate",
+        "n": 1
+      },
+      {
+        "pn": "000SERVICE",
+        "line_kind": "part",
+        "n": 1
+      },
+      {
+        "pn": "000SERVICE",
+        "line_kind": "service_fee",
+        "n": 1
+      }
+    ]
+  },
+  "alternator_never_billed_no_alt_word": {
+    "parts": 340,
+    "by_aim_source_top": {
+      "pr00_catalog|desc_proven_20261007": 335,
+      "pr00_catalog|export_aim_eq_20260924": 3,
+      "pr00_catalog": 2
+    }
+  },
+  "decide_reasons": [
+    {
+      "reason": "wheel brake cylinder, not a road wheel; no wheel-cylinder leaf",
+      "pairs": 1,
+      "parts": 72,
+      "eur_fy2026": 143495.43
+    },
+    {
+      "reason": "ABS hydraulic unit; no ABS modulator / hydraulic unit leaf exists",
+      "pairs": 1,
+      "parts": 49,
+      "eur_fy2026": 118055.33
+    },
+    {
+      "reason": "charge-air cooler (intercooler); no intercooler leaf (radiator is the nearest wrong home)",
+      "pairs": 1,
+      "parts": 11,
+      "eur_fy2026": 109884.82
+    },
+    {
+      "reason": "window regulator; no window-regulator leaf (door panel is the nearest wrong home)",
+      "pairs": 1,
+      "parts": 37,
+      "eur_fy2026": 79271.1
+    },
+    {
+      "reason": "camera; no camera leaf",
+      "pairs": 2,
+      "parts": 10,
+      "eur_fy2026": 72128.23
+    },
+    {
+      "reason": "transfer case; no transfer-case leaf",
+      "pairs": 1,
+      "parts": 8,
+      "eur_fy2026": 70812.89
+    },
+    {
+      "reason": "A/C compressor; no compressor leaf",
+      "pairs": 1,
+      "parts": 14,
+      "eur_fy2026": 64767.8
+    },
+    {
+      "reason": "starter motor; no starter leaf (Motor is the nearest wrong home)",
+      "pairs": 1,
+      "parts": 12,
+      "eur_fy2026": 58098.23
+    },
+    {
+      "reason": "hose; description too thin to pick Brake/Fuel/Bypass hose safely",
+      "pairs": 13,
+      "parts": 252,
+      "eur_fy2026": 56794.57
+    },
+    {
+      "reason": "high-voltage battery, not an alternator; no HV battery leaf exists",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 56220.27
+    },
+    {
+      "reason": "cylinder head assembly; Head Cover is the cover, not the head",
+      "pairs": 1,
+      "parts": 13,
+      "eur_fy2026": 55860.14
+    },
+    {
+      "reason": "MAP sensor is not a DPD pressure sensor; no MAP sensor leaf exists",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 43315.73
+    },
+    {
+      "reason": "airbag; no airbag leaf",
+      "pairs": 2,
+      "parts": 27,
+      "eur_fy2026": 42687.259999999995
+    },
+    {
+      "reason": "description is a bracket; sensor/other leaves are not brackets",
+      "pairs": 9,
+      "parts": 95,
+      "eur_fy2026": 42613.46
+    },
+    {
+      "reason": "multi display; no display leaf",
+      "pairs": 1,
+      "parts": 9,
+      "eur_fy2026": 39915.83
+    },
+    {
+      "reason": "throttle body; no throttle leaf",
+      "pairs": 1,
+      "parts": 6,
+      "eur_fy2026": 39034.79
+    },
+    {
+      "reason": "current label Electrical > Control Units > Control Unit does not fit the description; no existing leaf fits closely enough",
+      "pairs": 7,
+      "parts": 49,
+      "eur_fy2026": 37354.5
+    },
+    {
+      "reason": "clutch master cylinder; no clutch master leaf (slave cylinder is not the same)",
+      "pairs": 1,
+      "parts": 33,
+      "eur_fy2026": 36201.37
+    },
+    {
+      "reason": "A/C condenser; no condenser leaf",
+      "pairs": 2,
+      "parts": 5,
+      "eur_fy2026": 35169.76
+    },
+    {
+      "reason": "current label Accident & Body > Panels > Door does not fit the description; no existing leaf fits closely enough",
+      "pairs": 8,
+      "parts": 78,
+      "eur_fy2026": 33747.479999999996
+    },
+    {
+      "reason": "current label Intake Exhaust Emission > EGR > EGR Component does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 3,
+      "eur_fy2026": 32597.01
+    },
+    {
+      "reason": "brake master cylinder; no master-cylinder leaf",
+      "pairs": 1,
+      "parts": 27,
+      "eur_fy2026": 30644.22
+    },
+    {
+      "reason": "current label Clutch > Release System > Pivot does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 10,
+      "eur_fy2026": 30622.6
+    },
+    {
+      "reason": "current label Wheels Hub > Wheel Rim > Rim does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 68,
+      "eur_fy2026": 28916.13
+    },
+    {
+      "reason": "current label Engine > Mounting > Engine Mount does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 13,
+      "eur_fy2026": 27541.92
+    },
+    {
+      "reason": "heater unit; HVAC blower-filter leaf is not the heater",
+      "pairs": 1,
+      "parts": 8,
+      "eur_fy2026": 27518.66
+    },
+    {
+      "reason": "current label Cooling > Radiator > Radiator Assembly does not fit the description; no existing leaf fits closely enough",
+      "pairs": 5,
+      "parts": 22,
+      "eur_fy2026": 26024.82
+    },
+    {
+      "reason": "current label Chassis Frame > Crossmember & Brackets > Reinforcement does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 8,
+      "eur_fy2026": 25022.72
+    },
+    {
+      "reason": "brake expander; no expander leaf",
+      "pairs": 1,
+      "parts": 2,
+      "eur_fy2026": 24378.4
+    },
+    {
+      "reason": "current label Engine > Internal Rotating > Engine Internal does not fit the description; no existing leaf fits closely enough",
+      "pairs": 3,
+      "parts": 25,
+      "eur_fy2026": 24129.15
+    },
+    {
+      "reason": "current label Lighting > Lighting > Lamp does not fit the description; no existing leaf fits closely enough",
+      "pairs": 6,
+      "parts": 22,
+      "eur_fy2026": 22639.43
+    },
+    {
+      "reason": "current label Transmission > Geartrain > Synchronizer does not fit the description; no existing leaf fits closely enough",
+      "pairs": 4,
+      "parts": 17,
+      "eur_fy2026": 21453.06
+    },
+    {
+      "reason": "lock barrel / steering lock; no lock-barrel leaf",
+      "pairs": 1,
+      "parts": 12,
+      "eur_fy2026": 20349.41
+    },
+    {
+      "reason": "current label Accident & Body > Trim > Trim does not fit the description; no existing leaf fits closely enough",
+      "pairs": 3,
+      "parts": 24,
+      "eur_fy2026": 19977.91
+    },
+    {
+      "reason": "current label Accident & Body > Panels > Panel does not fit the description; no existing leaf fits closely enough",
+      "pairs": 8,
+      "parts": 37,
+      "eur_fy2026": 19888.99
+    },
+    {
+      "reason": "cooling-fan clutch; Clutch Disc (driveline) is the wrong home and no fan-clutch leaf exists",
+      "pairs": 1,
+      "parts": 12,
+      "eur_fy2026": 19794.78
+    },
+    {
+      "reason": "axle/diff bearing; Release Bearing (clutch) is the wrong home",
+      "pairs": 3,
+      "parts": 9,
+      "eur_fy2026": 17039.59
+    },
+    {
+      "reason": "current label Accident & Body > Trim > Emblem does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 22,
+      "eur_fy2026": 16934.6
+    },
+    {
+      "reason": "current label Intake Exhaust Emission > Air Intake > Air Duct does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 8,
+      "eur_fy2026": 15529.95
+    },
+    {
+      "reason": "current label Fuel System > Injection > Injector Nozzle does not fit; nearest leaf Engine > Gasket & Sealing > Gasket is not a safe match \u2014 needs a human call",
+      "pairs": 1,
+      "parts": 3,
+      "eur_fy2026": 15381.55
+    },
+    {
+      "reason": "A/C evaporator; no evaporator leaf",
+      "pairs": 1,
+      "parts": 8,
+      "eur_fy2026": 15022.64
+    },
+    {
+      "reason": "current label Steering > Gear > Steering Gear does not fit the description; no existing leaf fits closely enough",
+      "pairs": 3,
+      "parts": 16,
+      "eur_fy2026": 14932.599999999999
+    },
+    {
+      "reason": "prop-shaft centre bearing; Release Bearing is clutch and Prop Shaft is the shaft",
+      "pairs": 1,
+      "parts": 16,
+      "eur_fy2026": 14054.54
+    },
+    {
+      "reason": "current label Wheels Hub > Wheel Rim > Wheel does not fit; nearest leaf Engine > Internal Rotating > Engine Internal is not a safe match \u2014 needs a human call",
+      "pairs": 2,
+      "parts": 10,
+      "eur_fy2026": 13177.8
+    },
+    {
+      "reason": "current label Engine > Internal Rotating > Crankshaft does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 18,
+      "eur_fy2026": 12528.29
+    },
+    {
+      "reason": "current label Driveline Axle > Differential > Carrier does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 9,
+      "eur_fy2026": 12397.35
+    },
+    {
+      "reason": "current label Cabin Interior > Pedals & Controls > Cable does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 3,
+      "eur_fy2026": 12107.68
+    },
+    {
+      "reason": "current label Intake Exhaust Emission > Turbo > Turbocharger does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 7,
+      "eur_fy2026": 12077.48
+    },
+    {
+      "reason": "current label Intake Exhaust Emission > Emission Control > Catalyst does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 11910.31
+    },
+    {
+      "reason": "current label Engine > Block & Structure > Oil Pan does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 8,
+      "eur_fy2026": 11711.199999999999
+    },
+    {
+      "reason": "current label Cabin Interior > HVAC Filters > HVAC does not fit the description; no existing leaf fits closely enough",
+      "pairs": 3,
+      "parts": 7,
+      "eur_fy2026": 11326.630000000001
+    },
+    {
+      "reason": "door window regulator; Electrical Regulator is a voltage regulator",
+      "pairs": 1,
+      "parts": 10,
+      "eur_fy2026": 10729.52
+    },
+    {
+      "reason": "current label Electrical > Instruments > Instrument Cluster does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 10680.26
+    },
+    {
+      "reason": "current label Brakes > Booster & Control > Brake Valve does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 3,
+      "eur_fy2026": 10632.44
+    },
+    {
+      "reason": "current label Driveline Axle > Axle Shaft > Axle Shaft does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 6,
+      "eur_fy2026": 10445.03
+    },
+    {
+      "reason": "current label Clutch > Clutch Kit > Clutch Kit does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 2,
+      "eur_fy2026": 10282.47
+    },
+    {
+      "reason": "current label Engine > Valve Train > Rocker Arm does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 4,
+      "eur_fy2026": 9356.41
+    },
+    {
+      "reason": "current label Wheels Hub > Hub & Bearing > Hub does not fit; nearest leaf Brakes > Caliper > Brake Caliper is not a safe match \u2014 needs a human call",
+      "pairs": 1,
+      "parts": 3,
+      "eur_fy2026": 8841.64
+    },
+    {
+      "reason": "current label Transmission > Geartrain > Gear does not fit the description; no existing leaf fits closely enough",
+      "pairs": 3,
+      "parts": 4,
+      "eur_fy2026": 8661.47
+    },
+    {
+      "reason": "current label Chassis Frame > Crossmember & Brackets > Bracket does not fit the description; no existing leaf fits closely enough",
+      "pairs": 3,
+      "parts": 8,
+      "eur_fy2026": 7885.68
+    },
+    {
+      "reason": "vacuum pump; no vacuum-pump leaf exists in the release",
+      "pairs": 2,
+      "parts": 6,
+      "eur_fy2026": 7696.21
+    },
+    {
+      "reason": "current label Driveline Axle > Axle Shaft > Drive Shaft does not fit the description; no existing leaf fits closely enough",
+      "pairs": 4,
+      "parts": 10,
+      "eur_fy2026": 7583.85
+    },
+    {
+      "reason": "current label Chassis Frame > Underbody Protection > Guard does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 9,
+      "eur_fy2026": 7394.09
+    },
+    {
+      "reason": "current label Chassis Frame > Side Rail & Crossmember > Frame does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 9,
+      "eur_fy2026": 7095.38
+    },
+    {
+      "reason": "current label Suspension > Bush & Mount > Bushing does not fit the description; no existing leaf fits closely enough",
+      "pairs": 3,
+      "parts": 10,
+      "eur_fy2026": 6773.96
+    },
+    {
+      "reason": "current label Electrical > Charging > Alternator/Generator does not fit the description; no existing leaf fits closely enough",
+      "pairs": 3,
+      "parts": 4,
+      "eur_fy2026": 6738.21
+    },
+    {
+      "reason": "current label Chassis Frame > Mounting Hardware > Bolt does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 9,
+      "eur_fy2026": 6176.75
+    },
+    {
+      "reason": "current label Transmission > Case > Case Cover does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 2,
+      "eur_fy2026": 5917.97
+    },
+    {
+      "reason": "current label Fuel System > Tank & Supply > Fuel Tank does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 8,
+      "eur_fy2026": 4783.7
+    },
+    {
+      "reason": "current label Driveline Axle > Final Drive > Final Drive Asm does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 6,
+      "eur_fy2026": 4655.549999999999
+    },
+    {
+      "reason": "current label Tools Equipment > Workshop Tools > Gauge does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 16,
+      "eur_fy2026": 4622.66
+    },
+    {
+      "reason": "current label Brakes > Hydraulic > Brake Hose does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 4,
+      "eur_fy2026": 4568.03
+    },
+    {
+      "reason": "current label Wheels Hub > Hub & Bearing > Hub does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 8,
+      "eur_fy2026": 4234.53
+    },
+    {
+      "reason": "current label Accident & Body > Panels > Grille does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 7,
+      "eur_fy2026": 4109.81
+    },
+    {
+      "reason": "current label Brakes > Caliper > Brake Caliper does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 3466.97
+    },
+    {
+      "reason": "current label Engine > Timing Drive > Timing Gear does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 3411.06
+    },
+    {
+      "reason": "current label Cooling > Cooling Hoses & Pipes > Water Pipe does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 7,
+      "eur_fy2026": 3405.07
+    },
+    {
+      "reason": "current label Accident & Body > Mirrors > Mirror does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 5,
+      "eur_fy2026": 3123.2700000000004
+    },
+    {
+      "reason": "current label Chassis Frame > Mounting Hardware > Fastener does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 3030.99
+    },
+    {
+      "reason": "current label Fluids Chemicals > Coolant > Coolant does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 2,
+      "eur_fy2026": 2899.68
+    },
+    {
+      "reason": "current label Cabin Interior > Pedals & Controls > Lever does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 3,
+      "eur_fy2026": 2835.83
+    },
+    {
+      "reason": "current label Suspension > Suspension Arm > Ball Joint does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 6,
+      "eur_fy2026": 2804.42
+    },
+    {
+      "reason": "current label Electrical > Harness & Connectors > Terminal does not fit the description; no existing leaf fits closely enough",
+      "pairs": 2,
+      "parts": 10,
+      "eur_fy2026": 2619.31
+    },
+    {
+      "reason": "current label Accident & Body > Panels > Bumper does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 4,
+      "eur_fy2026": 2586.15
+    },
+    {
+      "reason": "current label Suspension > Bush & Mount > Bush does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 2517.72
+    },
+    {
+      "reason": "current label Electrical > Sensors & Switches > Speed Sensor does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 4,
+      "eur_fy2026": 2495.64
+    },
+    {
+      "reason": "MAP sensor is not a speed sensor; no MAP sensor leaf exists",
+      "pairs": 1,
+      "parts": 7,
+      "eur_fy2026": 2280.22
+    },
+    {
+      "reason": "current label Chassis Frame > Crossmember & Brackets > Bracket does not fit; nearest leaf Suspension > Bushings > Rubber Mount is not a safe match \u2014 needs a human call",
+      "pairs": 1,
+      "parts": 3,
+      "eur_fy2026": 2034.28
+    },
+    {
+      "reason": "current label Intake Exhaust Emission > DEF System > DEF Tank does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 2,
+      "eur_fy2026": 1690.01
+    },
+    {
+      "reason": "knuckle bearing; Release Bearing is clutch",
+      "pairs": 1,
+      "parts": 2,
+      "eur_fy2026": 1649.16
+    },
+    {
+      "reason": "current label Fuel System > Fuel Control > Injector does not fit; nearest leaf Engine > Gasket & Sealing > Gasket is not a safe match \u2014 needs a human call",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 1622.76
+    },
+    {
+      "reason": "current label Accident & Body > Panels > Door does not fit; nearest leaf Engine > Gasket & Sealing > Gasket is not a safe match \u2014 needs a human call",
+      "pairs": 1,
+      "parts": 11,
+      "eur_fy2026": 1541.2
+    },
+    {
+      "reason": "current label Transmission > Shift Mechanism > Shift Fork does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 1532.55
+    },
+    {
+      "reason": "current label Electrical > Motors & Actuators > Motor does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 2,
+      "eur_fy2026": 1503.82
+    },
+    {
+      "reason": "current label Intake Exhaust Emission > DPF/DPD > DPD Assembly does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 1371.9
+    },
+    {
+      "reason": "current label Electrical > Lighting > Lamp does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 1222.98
+    },
+    {
+      "reason": "current label Engine > Cylinder Head > Head Cover does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 1196.14
+    },
+    {
+      "reason": "current label Cabin Interior > Dashboard & Controls > Knob does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 5,
+      "eur_fy2026": 1146.37
+    },
+    {
+      "reason": "current label Electrical > Starting & Charging > Battery Cable does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 1145.78
+    },
+    {
+      "reason": "current label Electrical > Switch Relay Fuse > Relay does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 1054.82
+    },
+    {
+      "reason": "current label Intake Exhaust Emission > Exhaust > Exhaust Pipe does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 1046.95
+    },
+    {
+      "reason": "current label Suspension > Spring > Shackle does not fit the description; no existing leaf fits closely enough",
+      "pairs": 1,
+      "parts": 1,
+      "eur_fy2026": 1019.26
+    }
+  ],
+  "not_touched": [
+    "release files",
+    "aim_master_v2.csv",
+    "aim_pn_classification_20260920.csv",
+    "RELEASES.json",
+    "pad kit proposal parts"
+  ]
+}
