@@ -120,7 +120,7 @@
       "release_id": "2026-10-11",
       "path": "aim_pn_classification_release_2026-10-11.csv",
       "sha256": "d9b26b0124bacadcece437f665fc673e32b70d2087d78aa0884ea6615369f605",
-      "status": "APPROVED",
+      "status": "SUPERSEDED",
       "rows": 165055,
       "rows_note": "data rows, header excluded",
       "base_release": "2026-10-07",
@@ -129,7 +129,43 @@
       "notes": "No new AIM labels. Change log aim_pn_classification_release_2026-10-11.changes.csv. Counts: {'cyl_hd_gasket': 79, 'trans_asm': 38, 'turbo_water': 1, 'turbo_kit': 1}",
       "approved_by": "Jerome",
       "approved_on": "2026-10-11",
-      "approved_note": "Jerome asked in chat 2026-10-11 to fix the QA residues (cyl-head gasket under Transmission, transmission ASM under Literature, turbo water return, turbo kit) and write a new Bart draft."
+      "approved_note": "Jerome asked in chat 2026-10-11 to fix the QA residues (cyl-head gasket under Transmission, transmission ASM under Literature, turbo water return, turbo kit) and write a new Bart draft.",
+      "superseded_by": "2026-10-15",
+      "superseded_on": "2026-10-15",
+      "superseded_note": "Superseded when Jerome approved the combined pad-kit + wrong-label release 2026-10-15."
+    },
+    {
+      "release_id": "2026-10-15",
+      "path": "aim_pn_classification_release_2026-10-15.csv",
+      "sha256": "cd7ac827199751ddb55bc3b7a864724184877ab652ed86824016b8fc36b02571",
+      "status": "SUPERSEDED",
+      "rows": 165055,
+      "rows_note": "data rows, header excluded",
+      "base_release": "2026-10-11",
+      "source": "release 2026-10-11 + pad kits (30) + wrong-label moves (1020); decide rows not applied",
+      "recommendation": "approve and do all changes, I want AIM to be as good as possible (2026-10-15 chat; pad kits + wrong-label moves; no new leaves)",
+      "notes": "Change log aim_pn_classification_release_2026-10-15.changes.csv. No new AIM labels. Counts: {'padkit_disc_brk_kit_as_disc': 5, 'padkit_no_release_description': 3, 'padkit_rear_caliper_blank': 22, 'wronglabel_A_pumps': 75, 'wronglabel_B_real_labels': 900, 'wronglabel_C_not_real_labels': 45}",
+      "approved_by": "Jerome",
+      "approved_on": "2026-10-15",
+      "approved_note": "approve and do all changes, I want AIM to be as good as possible (2026-10-15 chat; pad kits + wrong-label moves; no new leaves)",
+      "superseded_by": "2026-10-15-revert",
+      "superseded_on": "2026-10-15",
+      "superseded_note": "26 wrong move groups, 178 parts, put back on their 11 Oct labels; other moves and pad kits kept"
+    },
+    {
+      "release_id": "2026-10-15-revert",
+      "path": "aim_pn_classification_release_2026-10-15-revert.csv",
+      "sha256": "acb212976e31b4af56b67a0f103e73f8f71f62eb2f5661b16ee20a898b110368",
+      "status": "APPROVED",
+      "rows": 165055,
+      "rows_note": "data rows, header excluded",
+      "base_release": "2026-10-15",
+      "source": "release 2026-10-15 with 178 parts from 26 wrong move groups put back on their 11 Oct labels; other moves and pad kits kept",
+      "recommendation": "Yes, write the fix brief: revert the 26 wrong groups to their 11 Oct labels, keep the other 76, refresh the Power BI file and rewrite the Bart draft.",
+      "notes": "Change log aim_pn_classification_release_2026-10-15-revert.changes.csv. 711 AIM cells. No new AIM labels. counts parts 178 groups 26.",
+      "approved_by": "Jerome",
+      "approved_on": "2026-10-15",
+      "approved_note": "Yes, write the fix brief: revert the 26 wrong groups to their 11 Oct labels, keep the other 76, refresh the Power BI file and rewrite the Bart draft."
     }
   ]
 }

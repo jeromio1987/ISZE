@@ -1,0 +1,53 @@
+{
+  "generated": "2026-10-15T09:20:22+00:00",
+  "built_by": "01_data/91_build/build_next_release_proposal_pad_kits_20261015.py",
+  "status": "PROPOSED - not applied to any release; Jerome approves",
+  "base_release": "2026-10-11",
+  "base_sha256": "d9b26b0124bacadcece437f665fc673e32b70d2087d78aa0884ea6615369f605",
+  "rule": "description starts with 'PAD KIT' (release description, or the PR00 price list description where the release has none) and aim_l3_fixed != 'Brake Pad Kit'",
+  "target_leaf": [
+    "Brakes",
+    "Pads & Shoes",
+    "Brake Pad Kit"
+  ],
+  "parts": 30,
+  "by_group": {
+    "disc_brk_kit_as_disc": {
+      "parts": 5,
+      "eur_tool": 260015.9,
+      "eur_fy2026": 224423.99,
+      "with_pr00_list": 5
+    },
+    "no_release_description": {
+      "parts": 3,
+      "eur_tool": 0.0,
+      "eur_fy2026": 0.0,
+      "with_pr00_list": 3
+    },
+    "rear_caliper_blank": {
+      "parts": 22,
+      "eur_tool": 0.0,
+      "eur_fy2026": 0.0,
+      "with_pr00_list": 21
+    }
+  },
+  "eur_basis": {
+    "price_tool": "price_bp_weighted_compare_pn.csv in-scope lines priced on both sides (load_base), the base of ISZE_Price_Revision_by_AIM_Level_2026-10-15.xlsx, Jul 2025 - Jun 2026",
+    "fy2026": "sales_fact.parquet net_sales_value 2025-04-01..2026-03-31",
+    "release_column_note": "the release's own l12m_billed_eur is Jan 2025 - Jun 2026 (18 months); not used here"
+  },
+  "dry_run": {
+    "rows_changed": 30,
+    "cells_changed": 85,
+    "other_rows_changed": 0,
+    "pad_kits_outside_brake_pad_kit_after": 0,
+    "brake_pad_kit_parts_before": 112,
+    "brake_pad_kit_parts_after": 142
+  },
+  "not_touched": [
+    "release files",
+    "aim_master_v2.csv",
+    "aim_pn_classification_20260920.csv",
+    "RELEASES.json"
+  ]
+}

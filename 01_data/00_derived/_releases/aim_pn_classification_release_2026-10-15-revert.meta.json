@@ -1,0 +1,41 @@
+{
+  "generated": "2026-10-15T16:54:49+00:00",
+  "built_by": "01_data/91_build/build_aim_classification_release_revert_20261015.py",
+  "release_id": "2026-10-15-revert",
+  "status": "APPROVED",
+  "base_release": "2026-10-15",
+  "base_sha256": "cd7ac827199751ddb55bc3b7a864724184877ab652ed86824016b8fc36b02571",
+  "sha256": "acb212976e31b4af56b67a0f103e73f8f71f62eb2f5661b16ee20a898b110368",
+  "rows": 165055,
+  "jerome_go": "Yes, write the fix brief: revert the 26 wrong groups to their 11 Oct labels, keep the other 76, refresh the Power BI file and rewrite the Bart draft.",
+  "revert_list": "01_data/00_derived/_releases/revert_list_wrong_moves_2026-10-15.csv",
+  "revert_list_sha256": "18d487d10d84aab1ecb94bb59675ef04488f407ed99fba24eaac5a1d584966ec",
+  "counts": {
+    "parts": 178,
+    "groups": 26
+  },
+  "change_log": "aim_pn_classification_release_2026-10-15-revert.changes.csv",
+  "change_log_rows": 711,
+  "aim_label_vocabulary": {
+    "new_aim_labels": []
+  },
+  "catalogue_verification_vs_pr00": {
+    "rows_checked": 164794,
+    "rows_matching": 164669,
+    "match_pct": 99.9241,
+    "reference_file": "pr00_classification_reference_20260920.csv",
+    "reference_sha256": "98e64b5bdaef73819cf954ce96241f1a9b49d8fbd998d02700ae8494028bea34",
+    "non_matching_parts": 125,
+    "base_release_non_matching_parts": 125,
+    "note": "COPY-INTEGRITY ONLY. This release did not change catalogue columns.",
+    "reference_reason": "Jerome decision 2026-10-02 (chat): copy integrity is measured against pr00_classification.csv as committed 20 Sep 2026 (git c813330f), not against today's file, because today's file carries the 21 Sep regression (1,660 rows). Pinned as a hash-recorded copy so the reference cannot move underneath the gate.",
+    "reference_source": "git c813330f"
+  },
+  "consumer_contract": [
+    "Axis A (identity): group by catalog_l1/l2/l3; filter catalog_node_present=1.",
+    "aim_l1_fixed/aim_l2_fixed/aim_l3_fixed = the governed AIM family (what the AIM pages chart).",
+    "line_kind != 'part' marks freight / rebate / service / lubricant rows; filter line_kind=='part' for parts revenue.",
+    "Lubricants are stored under BOTH key forms (0550xxxxxx and 550xxxxxx); the billing sits on the 9-digit row, the 10-digit row carries the master's 0.0. Do not sum both without knowing that."
+  ],
+  "purpose": "Two-axes lock 2026-09-17: Axis A = catalog_l1/l2/l3 identity (the catalogue tree of the approved 2026-09-20 release); Axis B = commercial score beside Axis A, not built as scored columns here and never the parent of the identity tree. aim_l*_fixed is the governed AIM family label. legacy workbook_l* is context only. Do not invent a fourth layer."
+}
