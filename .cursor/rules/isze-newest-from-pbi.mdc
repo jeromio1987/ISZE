@@ -1,0 +1,25 @@
+---
+description: Newest part numbers come from Power BI ISZJ PARTS MASTER — not IE40 PR00
+alwaysApply: true
+---
+
+# Newest PN — Power BI first (hard rule)
+
+**Jerome 2026-10-15:** *"well redo the whole exercise with PBI ..... there are the latest part numbers, remember this"*
+
+## Rule
+
+For **supersession / newest / successor** part numbers (VK11 paste, price inheritance, "add the newest line"):
+
+1. **Authoritative source = Power BI** report **SALES DATA VP NEW** → table **ISZJ PARTS MASTER** (page MASTER DATA / PARTS INFO). Columns **Material** and **NEWEST**.
+2. Do **not** treat IE40 `newest_pn`, `pn_supersession_map.csv`, or PRICE CD `New Pno` as the live latest when they disagree with PBI.
+3. When building a VK11 / Fast Entry paste: if PBI **NEWEST ≠ Material**, paste **both** lines (ordered Material + NEWEST) with the same amount. Valid From default **01.01.2026** unless Jerome says otherwise.
+4. IE40 / ZPR1 remain the source for **list amounts** (PR00 / customer price). PBI is the source for **which PN is newest**.
+
+## Why
+
+IE40 and PRICE CD lag. Example verified 2026-10-15: fuel pump **7552061780 → 7552061781** in PBI; Aug IE40 and Sep PRICE CD still pointed at self.
+
+## Pull
+
+Use the open Power BI session (browser) and dataset executeQueries on `ISZJ PARTS MASTER`, or a fresh PBI export Jerome drops in `01_data/90_INBOX/`. Do not invent newest from `pn+1` heuristics.

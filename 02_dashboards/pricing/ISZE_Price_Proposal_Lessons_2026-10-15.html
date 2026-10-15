@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How the price proposal is priced</title>
+<style>
+:root{--navy:#15233c;--terra:#c0552d;--paper:#f7f4ee;--ink:#222;--pale:#eef3f9;--line:#d9d3c7;--muted:#5b6475}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px 60px}
+header{background:var(--navy);color:var(--paper);padding:34px 0 28px;border-bottom:4px solid var(--terra)}
+header .wrap{padding-bottom:0}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:600}
+h1{font-size:30px;margin:0 0 8px;color:var(--paper)}
+header p{margin:0;color:#d9dfeb;max-width:720px}
+h2{font-size:23px;color:var(--navy);margin:44px 0 6px;border-bottom:2px solid var(--terra);padding-bottom:6px}
+h2 .n{color:var(--terra);margin-right:8px}
+h3{font-size:17px;color:var(--navy);margin:24px 0 6px}
+p{margin:8px 0}
+.lead{font-size:17px}
+.box{background:#fff;border:1px solid var(--line);border-left:5px solid var(--navy);padding:14px 18px;margin:16px 0}
+.box.warn{border-left-color:var(--terra)}
+.box b.t{display:block;color:var(--navy);margin-bottom:4px}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:15px;background:#fff}
+th{background:var(--navy);color:var(--paper);text-align:left;padding:8px 10px;font-weight:600;position:sticky;top:0}
+td{padding:7px 10px;border-bottom:1px solid var(--line);color:var(--ink);vertical-align:top}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+tr.hl td{background:var(--pale);font-weight:600}
+.scroll{overflow-x:auto}
+.calc{font-family:Consolas,"Courier New",monospace;background:var(--pale);border:1px solid var(--line);padding:12px 14px;margin:12px 0;white-space:pre-wrap;color:var(--ink);font-size:14.5px}
+.tip{border-bottom:1px dotted var(--terra);cursor:help;position:relative;white-space:nowrap}
+.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:130%;width:290px;white-space:normal;background:var(--navy);color:var(--paper);border-top:3px solid var(--terra);padding:8px 10px;font:13px/1.4 system-ui,sans-serif;opacity:0;pointer-events:none;transition:opacity .12s;z-index:50}
+.tip:hover::after,.tip:focus::after{opacity:1}
+.src{font-size:13px;color:var(--muted);margin-top:6px}
+svg{max-width:100%;height:auto}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.cols{grid-template-columns:1fr}h1{font-size:25px}}
+nav{background:#fff;border:1px solid var(--line);padding:12px 18px;margin:22px 0}
+nav a{color:var(--navy);text-decoration:none;display:block;padding:2px 0}
+nav a:hover{color:var(--terra)}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>How the price proposal is priced</h1>
+<p>Six short lessons on the +5% workbook sent on 11 October 2026: where each price comes from, what a margin does to it, what the switches do, and why the 5.0%, 5.3% and 6.0% are three different numbers. Written after Masumi's questions of 12 October.</p>
+</div></header>
+<div class="wrap">
+
+<nav>
+<a href="#l1"><b>1</b> What is being priced, in euros</a>
+<a href="#l2"><b>2</b> From factory price to list price: one part, step by step</a>
+<a href="#l3"><b>3</b> Why not simply +5% on every part</a>
+<a href="#l4"><b>4</b> The holds and the recovery extra: who pays for what</a>
+<a href="#l5"><b>5</b> The UK shop test (Summary rows 7 and 8)</a>
+<a href="#l6"><b>6</b> 5.0%, 5.3% and 6.0%: the gap and what +5.3% does</a>
+</nav>
+
+<h2 id="l1"><span class="n">1</span>What is being priced, in euros</h2>
+<p class="lead">The workbook sets a new list price for 15,273 part numbers. The base is what the distributors actually bought from us from July 2025 to June 2026: <b>EUR 32,595,853</b>.</p>
+<p>The increase is measured on that base, not on a simple average of the part numbers. A part that sold EUR 800,000 counts far more than a part that sold EUR 300. So "+5.00%" means: <b>new price × same volume, minus old price × same volume = EUR 1,629,793</b>, and EUR 1,629,793 ÷ EUR 32,595,853 = 5.00%.</p>
+<table>
+<tr><th>List</th><th>Used for</th><th class="r">Billed EUR</th></tr>
+<tr><td>PR00 price list</td><td>EU distributors (ITUK, IUK, Ireland, Portugal, Nordics, Greece and others)</td><td class="r">12,831,246 + UK 12,479,230</td></tr>
+<tr><td>Israel list</td><td>UTI (1799) and UMI (1797), each on its own, never blended</td><td class="r">3,400,405 + 2,429,160</td></tr>
+<tr><td>CIS list</td><td>Armenia, Kazakhstan</td><td class="r">1,455,811</td></tr>
+</table>
+<p class="src">Source: workbook 'Summary' rows 36-43. The UK is shown as one line because the workbook groups ITUK trucks and IUK D-Max together.</p>
+
+<h2 id="l2"><span class="n">2</span>From factory price to list price: one part, step by step</h2>
+<p>Every list price is built the same way: the factory base price in yen, turned into our cost, then divided by (1 minus the class margin). Each part number belongs to one of seven price classes issued by IML. The class sets the margin.</p>
+<div class="scroll"><table>
+<tr><th>Class</th><th class="r">Margin</th><th class="r">Billed EUR</th><th class="r">Proposed increase</th><th class="r">Factory move, same weights</th><th class="r">Margin change (points)</th></tr>
+<tr><td>C</td><td class="r">53.0%</td><td class="r">16,490,420</td><td class="r">5.88%</td><td class="r">6.39%</td><td class="r">-0.23</td></tr>
+<tr><td>D</td><td class="r">52.0%</td><td class="r">4,219,065</td><td class="r">4.75%</td><td class="r">5.92%</td><td class="r">-0.55</td></tr>
+<tr><td>F</td><td class="r">47.5%</td><td class="r">3,714,347</td><td class="r">4.74%</td><td class="r">5.09%</td><td class="r">-0.17</td></tr>
+<tr><td>J</td><td class="r">44.5%</td><td class="r">137,487</td><td class="r">5.77%</td><td class="r">5.91%</td><td class="r">-0.02</td></tr>
+<tr><td>M</td><td class="r">50.0%</td><td class="r">912,169</td><td class="r">6.35%</td><td class="r">7.01%</td><td class="r">-0.31</td></tr>
+<tr><td>P</td><td class="r">56.0%</td><td class="r">2,213,194</td><td class="r">6.55%</td><td class="r">7.23%</td><td class="r">-0.28</td></tr>
+<tr><td>V</td><td class="r">45.0%</td><td class="r">4,890,045</td><td class="r">1.47%</td><td class="r">4.74%</td><td class="r">-1.78</td></tr>
+</table></div>
+<p class="src">Source: workbook 'Summary' rows 53-59; margins as issued by IML in the pricing configuration. Class V's proposed increase (1.47%) is far below its factory move (4.74%), so it loses the most margin (-1.78 points). The workbook does not say which holds sit in class V; I have not traced that.</p>
+
+<h3>Worked example: sensor 8978808250 (class C, Japan, EUR 808,390 billed)</h3>
+<div class="calc">Factory base price      JPY 30,004  ->  JPY 32,105      = +7.00%   (our cost moves +7.00%)
+Our share of the move   the whole book is scaled to 90.54% of each part's own move
+Proposed list move      7.00% x 0.9054                    = +6.34%
+List price (PR00)       EUR 241.79 x 1.0634               = EUR 257.12
+
+Margin before           53.00%                (cost is 47.00 of every 100 of price)
+Margin after            1 - (47.00 x 1.0700) / (100 x 1.0634)
+                        = 1 - 50.29 / 106.34              = 52.71%
+Change                  -0.29 points                      (the sheet shows -0.29%)</div>
+<p>The part moves less than its own factory move because the book as a whole has to land on +5.00%, and other parts are held (lesson 4). The margin falls by 0.29 points, not by 1 point, because the price still moves most of the way with the cost.</p>
+<p class="src">Source: workbook 'Proposal' row 3. I recomputed the new list price and the margin by hand; both match the sheet.</p>
+
+<h2 id="l3"><span class="n">3</span>Why not simply +5% on every part</h2>
+<p>A flat +5% is easy to explain but it treats a part whose cost rose 15% the same as a part whose cost did not move. The first one loses margin badly, the second one gets fatter. The proposal follows each part's own factory move instead, then scales all moves so the total still lands on +5.00%.</p>
+<div class="scroll"><table>
+<tr><th>Way to reach +5.00% (EUR 1,629,793)</th><th class="r">Scaling</th><th class="r">Parts at 0%</th><th class="r">Typical part</th><th class="r">Margin change (pts)</th><th class="r">Billed EUR losing more than 1 margin point</th></tr>
+<tr><td>Flat +5% on every part</td><td class="r">-</td><td class="r">0</td><td class="r">5.00%</td><td class="r">-0.45</td><td class="r">5,607,060</td></tr>
+<tr><td>Follow each part's factory move, nothing else</td><td class="r">0.8319</td><td class="r">180</td><td class="r">5.84%</td><td class="r">-0.46</td><td class="r">451,108</td></tr>
+<tr class="hl"><td>This proposal (follow factory move, with the holds and the extra)</td><td class="r">0.9054</td><td class="r">207</td><td class="r">6.35%</td><td class="r">-0.50</td><td class="r">2,356,918</td></tr>
+</table></div>
+<p class="src">Source: workbook 'Summary' rows 25-27. Class margin change is billed-weighted and holds the exchange rate and the purchase discount where they are.</p>
+<div class="box warn"><b class="t">An honest reading of this table</b>
+The proposal is not the best of the three on margin: it loses slightly more margin overall (-0.50 points) than a flat +5% (-0.45), because it holds parts at today's price on purpose (pad kits, discs, service parts in eight markets) and asks other parts to carry the difference. What it buys is a better spread: EUR 2.4M of billed value loses more than one margin point, against EUR 5.6M under a flat +5%.</div>
+
+<h2 id="l4"><span class="n">4</span>The holds and the recovery extra: who pays for what</h2>
+<p>A hold means the distributor keeps paying today's price on that group of parts. Every euro held has to be earned back somewhere else, or the total falls below +5.00%. That somewhere else is the <b>recovery extra</b>: a few extra points on parts where the market allows it. The workbook solves the size of that extra by itself, so the total always lands on target.</p>
+<svg viewBox="0 0 900 260" role="img" aria-label="Bridge from own increase to the total increase after holds, ceiling and recovery extra, drawn to scale">
+<style>.l{font:13px system-ui,sans-serif;fill:#222}.v{font:600 13px system-ui,sans-serif;fill:#222}.ax{stroke:#d9d3c7}</style>
+<line class="ax" x1="40" y1="200" x2="880" y2="200"/>
+<rect x="60" y="40" width="130" height="160" fill="#15233c"/>
+<rect x="230" y="40" width="130" height="35.6" fill="#c0552d"/>
+<rect x="400" y="75.6" width="130" height="2" fill="#c0552d"/>
+<rect x="570" y="41.2" width="130" height="36.4" fill="#2f7d5b"/>
+<rect x="740" y="41.2" width="130" height="158.8" fill="#15233c"/>
+<text class="v" x="125" y="30" text-anchor="middle">1,629,793</text>
+<text class="v" x="295" y="30" text-anchor="middle">-362,884</text>
+<text class="v" x="465" y="68" text-anchor="middle">-7,654</text>
+<text class="v" x="635" y="30" text-anchor="middle">+370,538</text>
+<text class="v" x="805" y="30" text-anchor="middle">1,629,793</text>
+<text class="l" x="125" y="222" text-anchor="middle">Own increase</text>
+<text class="l" x="125" y="238" text-anchor="middle">per part</text>
+<text class="l" x="295" y="222" text-anchor="middle">Given up by</text>
+<text class="l" x="295" y="238" text-anchor="middle">the holds</text>
+<text class="l" x="465" y="222" text-anchor="middle">Cut by the</text>
+<text class="l" x="465" y="238" text-anchor="middle">ceiling</text>
+<text class="l" x="635" y="222" text-anchor="middle">Recovery</text>
+<text class="l" x="635" y="238" text-anchor="middle">extra</text>
+<text class="l" x="805" y="222" text-anchor="middle">Total = +5.00%</text>
+</svg>
+<p class="src">Source: workbook 'Market layer' rows 16-23, EUR a year on the same volume. Bars are drawn to scale. The ceiling: no part may rise more than its own factory move plus 5 points.</p>
+
+<div class="scroll"><table>
+<tr><th>Hold</th><th class="r">Billed EUR covered</th><th class="r">Given up, EUR</th><th>Status in the workbook</th></tr>
+<tr><td>Brake pad kits (29 kits)</td><td class="r">1,178,671</td><td class="r">0 (already at 0% in "own increase")</td><td>Decided 30 September 2026</td></tr>
+<tr><td>Brake discs and drums</td><td class="r">1,033,720</td><td class="r">52,339</td><td>Decided 11 October 2026, same logic as the pad kits</td></tr>
+<tr><td>Other service parts in the 8 markets</td><td class="r">4,983,112</td><td class="r">189,413</td><td>Decided 30 September 2026</td></tr>
+<tr><td>Intake, exhaust and emission parts</td><td class="r">1,483,337</td><td class="r">92,749</td><td><b>Not decided.</b> Held now, switch on Summary row 77</td></tr>
+<tr><td>Israel body, collision and lighting</td><td class="r">488,869</td><td class="r">28,382</td><td>Decided 2 October 2026</td></tr>
+<tr><td>Filters</td><td class="r">1,236,343</td><td class="r">0 (26,030 if held)</td><td>Decided 11 October 2026: they follow the factory increase</td></tr>
+</table></div>
+<p class="src">Source: workbook 'Market layer' rows 36-40 and 'Summary' rows 66, 76-77. The pad kits are held through their own switch (Summary row 9) and already sit at 0% in the first bar of the chart above, so they are not part of the EUR 362,884 given up by the other holds.</p>
+<p><b>Why the pad kits matter:</b> the factory raised two of them by more than 15%. At an unchanged price their margin falls to 31%-33%, against 53% for the class. That is the price of holding them, and the other parts carry it.</p>
+
+<h2 id="l5"><span class="n">5</span>The UK shop test (Summary rows 7 and 8)</h2>
+<p>Masumi asked what these two lines mean. Both compare us with an independent UK shop (called KS in the workbook) that sells the same part number. To compare like with like we first need our <b>reference dealer price</b>: the price a dealer pays us, grossed up to what the dealer would charge.</p>
+<div class="box"><b class="t">How the reference dealer price is built</b>
+List price × 2.19. Read as a margin: 37% at the distributor step and about 27.5% at the dealer step. (1 ÷ 0.63 = 1.587, and 1 ÷ 0.725 = 1.379; 1.587 × 1.379 = 2.19.)<br>
+Before 2 October 2026 the workbook used × 1.785 (1.40 to the dealer, 1.275 to the customer). The paper of 2 October replaced it with × 2.19 and marks it <b>provisional</b>. The 'Read me' sheet still describes the old × 1.785 in its main text and corrects it only in a note at the bottom. That mismatch is probably part of the confusion.</div>
+
+<div class="cols">
+<div class="box"><b class="t">Row 7 - "Extra where the UK shop sells above our reference dealer price" (ON)</b>
+If the UK shop charges more than our reference dealer price for the same part number, there is room to raise our price. These parts get an extra on top of their own move, capped at the part's own factory move plus 5 points.<br><br>
+<b>Today it touches 5 part numbers</b>, EUR 244,594 billed, average move 14.23%, EUR 34,794 extra.</div>
+<div class="box"><b class="t">Row 8 - "Hold at 0% where our reference dealer price is more than 1.6 times the UK shop price" (OFF)</b>
+The opposite case: our dealer price is far above the shop, so we may be pricing the part out. The test holds those parts at today's price.<br><br>
+It is <b>switched off</b>, so it holds nothing today (0 part numbers). Reason: in the April 2026 dealer data, parts that got a bigger increase did not lose measurably more volume.</div>
+</div>
+<p><b>Example of row 8 if it were on:</b> rotor 8983767550 (EUR 703,041 billed). Our dealer price is 4.03 times the UK shop price, far above 1.6, so the whole of its UK share would be held. The 'Proposal' sheet marks it "100% held: far above UK shop price" but, with the switch off, gives it +6.34% before the market holds. In the eight service markets it is then held at today's price anyway, because brake discs were decided held on 11 October.</p>
+<p class="src">Source: workbook 'Summary' rows 7-8, 65, 68; 'Proposal' row 4; 'Read me' rows 17 and 28. The 1.6 limit and the 2.19 basis are the workbook's own settings; I have not tested other values.</p>
+
+<h2 id="l6"><span class="n">6</span>5.0%, 5.3% and 6.0%: the gap and what +5.3% does</h2>
+<p>Three numbers sit in the same conversation, and they do not measure the same thing.</p>
+<table>
+<tr><th>Number</th><th>What it is</th><th>Weighted on</th></tr>
+<tr><td>5.0%</td><td>The target we set in the workbook for the price increase to distributors</td><td>What distributors bought, Jul 2025-Jun 2026</td></tr>
+<tr><td>5.3%</td><td>IML parts department's overall weighted average increase (Masumi's figure)</td><td>IML's own weights. I do not have them.</td></tr>
+<tr><td>6.0%</td><td>The factory price move on the parts we price (5.96% in the 'Checks' recipe, 6.01% in the Summary table)</td><td>The same distributor volume as the 5.0%</td></tr>
+</table>
+<p>The gap Masumi names is 6.0% minus 5.3% = about <b>0.7 points</b>: our cost goes up by more than the price we would charge.</p>
+
+<h3>What the workbook gives at +5.3%</h3>
+<p>I changed the target cell to 5.3% on a copy of the workbook and let it recalculate. Every check on the 'Checks' sheet still reads OK. The original file is untouched.</p>
+<table>
+<tr><th></th><th class="r">Target +5.0%</th><th class="r">Target +5.3%</th></tr>
+<tr><td>Extra EUR a year, same volume</td><td class="r">1,629,793</td><td class="r"><span class="tip" tabindex="0" data-tip="5.3% x billed base EUR 32,595,853. Same volume, before any dealer reaction.">1,727,580</span></td></tr>
+<tr><td>Difference</td><td class="r">-</td><td class="r"><span class="tip" tabindex="0" data-tip="1,727,580 minus 1,629,793. My subtraction.">+97,787</span></td></tr>
+<tr><td>Scaling of each part's own factory move</td><td class="r">90.5%</td><td class="r">96.1%</td></tr>
+<tr><td>Typical part move (median)</td><td class="r">6.35%</td><td class="r">6.74%</td></tr>
+<tr><td>Class margin change, billed-weighted</td><td class="r">-0.50 points</td><td class="r">-0.37 points</td></tr>
+<tr><td>Recovery extra</td><td class="r">370,538</td><td class="r">393,393</td></tr>
+<tr><td>Parts held at 0%</td><td class="r">207</td><td class="r">207</td></tr>
+</table>
+<p class="src">Source: scratch copy of the workbook with Summary B5 = 5.3%, recalculated in Excel on 15 October 2026. Not saved into the shared file.</p>
+
+<div class="box warn"><b class="t">The gap in euros: two ways to read it, and what is still open</b>
+<b>As margin:</b> at +5.3% the workbook still loses 0.37 margin points. On the new billed value (EUR 32,595,853 + 1,727,580 = EUR 34,323,433) that is about <span class="tip" tabindex="0" data-tip="0.37% x 34,323,433. My calculation from the workbook's margin line; the workbook does not print this euro figure.">EUR 127,000</span> of margin a year that we would not earn at today's margins.<br><br>
+<b>As price:</b> passing on the full 0.7 points would be 0.7% x EUR 32,595,853, about <span class="tip" tabindex="0" data-tip="0.7% x 32,595,853 = 228,171. My calculation, on the distributor volume, using the rounded 6.0% minus 5.3%.">EUR 228,000</span> more on the list prices.<br><br>
+The two differ because one counts only what the cost increase does to margin, the other counts the whole price move. Which one Masumi means by "gap amount" is a question for him. A second open point: I cannot see <b>which purchase value the 5.3% is weighted on</b>. If IML's 5.3% uses IML's weights and our 6.0% uses distributor volume, part of the 0.7 points is only a difference in weights, not a real cost gap. That needs one check with IML before a single number is quoted.</div>
+
+<p>How the gap could be recovered, as Masumi asks (inside the price revision or through the GPS increase):</p>
+<ul>
+<li><b>Inside the revision:</b> only a higher target adds euros. The holds do not: because the total is pinned to the target, releasing a hold only changes which parts pay. Each 0.1 point of target is worth about EUR 32,600 a year.</li>
+<li><b>Through the GPS increase:</b> the gap is then recovered on the markets' spend target instead of on the list prices, and the price list stays as proposed.</li>
+</ul>
+
+<p class="src" style="margin-top:34px">Built 15 October 2026 from 'Price_Increase_5pct_Proposal_GRID_DRAFT_2026-10-11.xlsb' (Summary, Read me, Market layer, Pricing grid, Layer solver, Proposal, Checks). Figures marked as my calculation are not printed in the workbook. Nothing in the workbook, the price list or the price file has been changed.</p>
+</div>
+</body>
+</html>

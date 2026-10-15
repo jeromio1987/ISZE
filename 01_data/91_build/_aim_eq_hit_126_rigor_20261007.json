@@ -1,0 +1,163 @@
+{
+  "as_of": "2026-10-07T16:10:14.732133+00:00",
+  "apply": "NO \u2014 proposal/gate only. Does not write aim_master.",
+  "verdict": "PARTIAL",
+  "permission": "NOT_EARNED_FULL_PROVEN_SUBSET_OK",
+  "permission_bar": "PARTIAL",
+  "apply_permission_sentence": "PARTIAL \u2014 116 of 126 are apply-ready under description + EQ figure evidence; 10 fail commercial/family checks (keyword-order traps in the overnight suggester); 0 inconclusive. ZKK does not prove family here.",
+  "proposal_rows": 126,
+  "rigor_pass": 116,
+  "rigor_fail": 10,
+  "rigor_inconclusive": 0,
+  "apply_ready_under_desc_eq": 116,
+  "session_hits": {
+    "total_hit": 603,
+    "with_figure_and_part": 166,
+    "with_family_suggestion": 126,
+    "figure_dig_no_family_map": 40,
+    "catalog_vehicle_only_no_figure": 397,
+    "status_hit_only": 40,
+    "hits_still_needing_figure_dig_or_family_map": 477,
+    "note_477": "477 of 603 HITs have no family suggestion yet. Of those: 40 already have figure+part but the overnight keyword map did not land a family; 397 have vehicle/catalog text only (need figure dig); 40 are status-only HITs (need full figure dig)."
+  },
+  "price_zkk_hkk_honesty": "Price: 0 of 126 have a list euro on master; 0 absurdity fails. ZKK filled on 87/126; only 0 sit on a \u226580% pure master-family ZKK code (n\u226520) \u2014 and those majorities speak master AIM labels (Engine, Brakes, \u2026), not this overnight Powertrain/Chassis tree, so ZKK cannot approve these suggestions. HKK filled on 87/126; 5 on a strong pure code. PN length fails: 0. Family proof for this file is description text + EQ figure/part name, not ZKK.",
+  "zkk_contribution": {
+    "zkk_majority_codes_usable_on_master": 1,
+    "rows_with_zkk": 87,
+    "rows_on_pure_zkk_code": 0,
+    "note": "ZKK is a Japan catalogue attribute. Pure majorities are on master AIM L1 labels, not the overnight Powertrain/Chassis tree. Not used as a pass/fail for this proposal."
+  },
+  "hkk_contribution": {
+    "hkk_majority_codes_usable_on_master": 23,
+    "rows_with_hkk": 87,
+    "rows_on_strong_pure_hkk": 5
+  },
+  "price_pn": {
+    "price_checked": 0,
+    "price_fail_count": 0,
+    "pn_length_fail_count": 0
+  },
+  "reason_counts": {
+    "desc_hard": 10,
+    "truth_vs_propose": 5
+  },
+  "systematic_paths": [
+    {
+      "proposed_aim_path": "Filters > Fuel filtration > Fuel filter",
+      "n": 5,
+      "fail_n": 3,
+      "fail_rate": 0.6
+    },
+    {
+      "proposed_aim_path": "Powertrain > Pipes / hoses > Pipe / hose",
+      "n": 12,
+      "fail_n": 5,
+      "fail_rate": 0.4167
+    }
+  ],
+  "fail_examples": [
+    {
+      "pn": "0952348320",
+      "desc": "CLIP; OIL PIPE",
+      "eq_fig": "8-75 - CONDENSER",
+      "eq_part": "CLIP; PIPE",
+      "proposed": "Powertrain > Pipes / hoses > Pipe / hose",
+      "truth": "Comfort > HVAC > Heater / A/C",
+      "reasons": "desc_hard:ac_hose_vs_powertrain_pipe"
+    },
+    {
+      "pn": "1154142950",
+      "desc": "PIPE; FUEL,FUEL",
+      "eq_fig": "0-42B - FUEL PUMP AND PIPE",
+      "eq_part": "PIPE; FUEL,FUEL FILTER TO INJ PUMP",
+      "proposed": "Filters > Fuel filtration > Fuel filter",
+      "truth": "Powertrain > Pipes / hoses > Pipe / hose",
+      "reasons": "desc_hard:fuel_pipe_vs_filter; truth_vs_propose:Powertrain/Pipes / hoses_vs_Filters/Fuel filtration"
+    },
+    {
+      "pn": "1154168700",
+      "desc": "PIPE; FUEL,FEED",
+      "eq_fig": "0-42 - FUEL PUMP AND PIPE",
+      "eq_part": "PIPE; FUEL,FUEL FILTER TO FILTER",
+      "proposed": "Filters > Fuel filtration > Fuel filter",
+      "truth": "Powertrain > Pipes / hoses > Pipe / hose",
+      "reasons": "desc_hard:fuel_pipe_vs_filter; truth_vs_propose:Powertrain/Pipes / hoses_vs_Filters/Fuel filtration"
+    },
+    {
+      "pn": "1157232600",
+      "desc": "SPRING",
+      "eq_fig": "0-81 - GOVERNOR; INJECTION PUMP",
+      "eq_part": "SPRING; STOP LEVER,GOV",
+      "proposed": "Chassis > Suspension > Suspension parts",
+      "truth": "Powertrain > Fuel system > Fuel system parts",
+      "reasons": "desc_hard:gov_spring_vs_suspension; truth_vs_propose:Powertrain/Fuel system_vs_Chassis/Suspension"
+    },
+    {
+      "pn": "7551874070",
+      "desc": "HOSE; FLEX,A/C",
+      "eq_fig": "8-52 - PIPING; AIR CONDITIONING",
+      "eq_part": "HOSE; FLEX,A/C",
+      "proposed": "Powertrain > Pipes / hoses > Pipe / hose",
+      "truth": "Comfort > HVAC > Heater / A/C",
+      "reasons": "desc_hard:ac_hose_vs_powertrain_pipe"
+    },
+    {
+      "pn": "7551938790",
+      "desc": "HOSE; FLEX,A/C",
+      "eq_fig": "8-52 - PIPING; AIR CONDITIONING",
+      "eq_part": "HOSE; FLEX,A/C",
+      "proposed": "Powertrain > Pipes / hoses > Pipe / hose",
+      "truth": "Comfort > HVAC > Heater / A/C",
+      "reasons": "desc_hard:ac_hose_vs_powertrain_pipe"
+    },
+    {
+      "pn": "7551938800",
+      "desc": "HOSE; FLEX,A/C",
+      "eq_fig": "8-52 - PIPING; AIR CONDITIONING",
+      "eq_part": "HOSE; FLEX,A/C",
+      "proposed": "Powertrain > Pipes / hoses > Pipe / hose",
+      "truth": "Comfort > HVAC > Heater / A/C",
+      "reasons": "desc_hard:ac_hose_vs_powertrain_pipe"
+    },
+    {
+      "pn": "7552614900",
+      "desc": "HOSE ASM; DEF DCM",
+      "eq_fig": "1-46 - DEF TANK AND PIPING",
+      "eq_part": "HOSE ASM; DEF DCM",
+      "proposed": "Powertrain > Pipes / hoses > Pipe / hose",
+      "truth": "Powertrain > Exhaust / aftertreatment > Exhaust parts",
+      "reasons": "desc_hard:def_hose_vs_generic_pipe"
+    },
+    {
+      "pn": "8970346291",
+      "desc": "SPRING; VLV",
+      "eq_fig": "0-14A - CAMSHAFT AND VALVE",
+      "eq_part": "SPRING; VLV",
+      "proposed": "Chassis > Suspension > Suspension parts",
+      "truth": "Powertrain > Engine > Engine parts",
+      "reasons": "desc_hard:valve_spring_vs_suspension; truth_vs_propose:Powertrain/Engine_vs_Chassis/Suspension"
+    },
+    {
+      "pn": "8980259980",
+      "desc": "PIPE; FUEL,FUEL",
+      "eq_fig": "0-42 - FUEL PUMP AND PIPE",
+      "eq_part": "PIPE; FUEL,FUEL FILTER LEAK OFF",
+      "proposed": "Filters > Fuel filtration > Fuel filter",
+      "truth": "Powertrain > Pipes / hoses > Pipe / hose",
+      "reasons": "desc_hard:fuel_pipe_vs_filter; truth_vs_propose:Powertrain/Pipes / hoses_vs_Filters/Fuel filtration"
+    }
+  ],
+  "paths": {
+    "proposal": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\next_release_proposal_eq_hit_live_order_2026-10-07.csv",
+    "results": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_eq_hit_results_20261007.csv",
+    "rigor_md": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\_aim_eq_hit_126_rigor_20261007.md",
+    "rigor_json": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\_aim_eq_hit_126_rigor_20261007.json",
+    "fails_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\_aim_eq_hit_126_rigor_fails_20261007.csv",
+    "proven_csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\next_release_proposal_eq_hit_live_order_PROVEN_2026-10-07.csv"
+  },
+  "notes": [
+    "Does not apply aim_master.",
+    "Overnight fig_to_aim keyword order caused known traps (SPRING\u2192Suspension, FUEL FILTER substring\u2192Filters, A/C hose\u2192Pipes).",
+    "PROVEN subset = rigor pass only."
+  ]
+}

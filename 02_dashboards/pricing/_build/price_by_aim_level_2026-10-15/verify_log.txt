@@ -1,0 +1,36 @@
+shipped settings: {"extra": {"PR00": 1416492.2999931981, "UTI": 163604.57224982342, "UMI": 129956.57438393628, "OTH": 17526.742763041708}, "achieved": 0.05299999999999999, "s2": {"PR00": 0.9396771013571023, "UTI": 0.9396771013571023, "UMI": 0.9396771013571023, "OTH": 0.9396771013571023}}
+neutral reconciliation vs price revision workbook: max difference 1.35e-14 on 15273 parts
+saved C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\ISZE_Price_Revision_by_AIM_Level_2026-10-15.xlsx (12.6 MB), parts 15273, groups L1 25 L2 124 L3 263
+1. delivered workbook, shipped settings
+    recalculated and saved in 26.8s: C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\ISZE_Price_Revision_by_AIM_Level_2026-10-15.xlsx
+   shipped: largest difference between Excel and Python on 15,273 parts x 4 lists = 5.8e-15
+   whole book: extra EUR 1,727,580.19 (Python 1,727,580.19), achieved 5.300000%, status OK
+   check: OK    Billed base equals the published in-scope priced base (EUR)
+   check: OK    Part numbers in the tool
+   check: OK    The four lists add up to the base (EUR)
+   check: OK    Parts with no row in the AIM release of 11 Oct 2026 (grouped as 'Not classified'; they sti
+   check: OK    Target reached (whole book, or each list when B6 = 2)
+   check: OK    Settings not understood (must be 0)
+   check: OK    Extra EUR on the parts equals the extra EUR on the settings sheet
+   check: OK    No part on the scaled factory move moved below the lowest move
+2. neutral copy: no settings, target 5.00%
+    recalculated and saved in 27.6s: C:\Users\jerom\AppData\Local\Temp\isze_aim_level_verify\neutral.xlsx
+   neutral: largest difference between Excel and Python on 15,273 parts x 4 lists = 6.0e-15
+   vs 'Factory-led only move' of the price revision workbook: largest difference 5.0e-13
+3. scenario copy: settings on every level, one target per list
+    recalculated and saved in 26.4s: C:\Users\jerom\AppData\Local\Temp\isze_aim_level_verify\scenario.xlsx
+   scenario: largest difference between Excel and Python on 15,273 parts x 4 lists = 6.7e-15
+   PR00: target 5.50%, achieved 5.5000%, status OK
+   UTI: target 4.00%, achieved 4.0000%, status OK
+   UMI: target 5.00%, achieved 5.0000%, status OK
+   OTH: target 5.30%, achieved 5.3000%, status OK
+   rotor 8983767550 on PR00: setting from 'Part', used 'F-1', move 6.0033% (own factory move 7.0033%)
+
+RESULT: ALL OK
+rendered Read me
+rendered Settings
+rendered By L1
+rendered By L3
+rendered Parts
+rendered Checks
+exit 0
