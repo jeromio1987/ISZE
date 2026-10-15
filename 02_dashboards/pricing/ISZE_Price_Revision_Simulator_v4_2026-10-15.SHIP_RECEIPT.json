@@ -1,0 +1,51 @@
+{
+    "schema":  "ship_receipt/v2",
+    "artifact":  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Price_Revision_Simulator_v4_2026-10-15.html",
+    "artifact_mtime_ms":  1792081132836,
+    "written_at":  "2026-10-15T16:18:55.1946638Z",
+    "ok":  true,
+    "screenshots_taken":  2,
+    "screenshots_read":  2,
+    "checks":  [
+                   {
+                       "detail":  "2546035 bytes",
+                       "ok":  true,
+                       "id":  "exists"
+                   },
+                   {
+                       "detail":  "no external script",
+                       "ok":  true,
+                       "id":  "no_cdn"
+                   },
+                   {
+                       "detail":  "independent pandas model vs JS at 3 scenarios (steering +5% with and without the shop-far hold, all holds at 5.0%): extra EUR identical to the cent (ref4.py ALL OK)",
+                       "ok":  true,
+                       "id":  "js_vs_python"
+                   },
+                   {
+                       "detail":  "start state: book EUR 1,727,580; held EUR 1,632,745; scale 0.9625; steering units EUR 63,250, same as the read-only run",
+                       "ok":  true,
+                       "id":  "vs_steering2"
+                   },
+                   {
+                       "detail":  "workbooks for the start state and an all-holds scenario with part, list and BP settings: 8 of 8 Checks lines OK each, 0 formula errors, typing 4% in Settings!B4 recalculates to the model value",
+                       "ok":  true,
+                       "id":  "xlsx_in_excel"
+                   },
+                   {
+                       "detail":  "20 parts, 172 part x market lines, EUR 1,632,745 held of EUR 1,844,925 billed on those parts; matches the revision workbook count of 20 parts",
+                       "ok":  true,
+                       "id":  "shop_far_flags"
+                   },
+                   {
+                       "detail":  "OPEN_Price_Revision_Simulator_v4.cmd",
+                       "ok":  true,
+                       "id":  "open_cmd"
+                   }
+               ],
+    "screenshots":  [
+                        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_sim_20261015\\v4a.png",
+                        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_sim_20261015\\v4b.png"
+                    ],
+    "notes":  "Both screenshots image-read. After them the empty header cell of the tree table was fixed (one extra th) and verified by column count only, not by image."
+}

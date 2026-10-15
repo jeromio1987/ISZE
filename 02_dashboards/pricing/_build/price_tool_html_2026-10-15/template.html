@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Price Revision Simulator</title>
+<style>
+:root{--navy:#15233c;--terra:#c0552d;--paper:#f7f4ee;--ink:#222;--line:#d9d3c8;--muted:#6b6459;--card:#fff;--ok:#2f6b3f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:14px}
+.wrap{max-width:1240px;margin:0 auto;padding:26px 20px 60px}
+h1{font-family:Georgia,serif;color:var(--navy);font-size:28px;margin:0 0 4px}
+h2{font-family:Georgia,serif;color:var(--navy);font-size:19px;margin:30px 0 4px}
+.sub{color:var(--muted);margin:0 0 14px;line-height:1.5;max-width:920px}
+.bar{position:sticky;top:0;z-index:50;background:var(--navy);color:var(--paper);padding:12px 20px;display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center;margin:0 -20px 18px;border-bottom:4px solid var(--terra)}
+.bar .grp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.bar label{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#c9c3b6}
+.tgt{display:flex;align-items:center;background:var(--paper);border-radius:4px;padding:0 8px}
+.tgt input{width:64px;border:0;background:transparent;font:700 24px Georgia,serif;color:var(--navy);text-align:right;padding:4px 0}
+.tgt span{font:700 20px Georgia,serif;color:var(--navy)}
+input[type=range]{accent-color:var(--terra);width:160px}
+.chip{border:1px solid #5b6b87;background:transparent;color:var(--paper);padding:5px 11px;border-radius:14px;cursor:pointer;font-size:13px}
+.chip:hover{border-color:var(--paper)}
+.chip.on{background:var(--terra);border-color:var(--terra);color:#fff;font-weight:600}
+.btn{border:1px solid var(--navy);background:#fff;color:var(--navy);padding:6px 12px;border-radius:4px;cursor:pointer;font-size:13px}
+.bar .btn{border-color:#5b6b87;background:transparent;color:var(--paper)}
+.btn:hover{background:var(--terra);color:#fff;border-color:var(--terra)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--terra);padding:12px 14px;position:relative;cursor:help}
+.kpi.nv{border-left-color:var(--navy)}
+.kpi .lbl{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.kpi .val{font-family:Georgia,serif;font-size:26px;color:var(--navy);margin-top:4px;line-height:1.1}
+.kpi .note{font-size:12px;color:var(--muted);margin-top:5px}
+[data-tip]{position:relative}
+[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:0;top:100%;z-index:80;width:300px;background:var(--navy);color:var(--paper);font-size:12px;line-height:1.45;padding:10px 12px;border-left:4px solid var(--terra);font-weight:400;text-transform:none;letter-spacing:0;white-space:normal}
+.status{margin:12px 0 0;padding:9px 14px;border-left:5px solid var(--ok);background:#eef5ef;font-size:13px}
+.status.warn{border-left-color:var(--terra);background:#fff4ec}
+.card{background:var(--card);border:1px solid var(--line);padding:12px 14px;margin-top:10px}
+.brow{display:grid;grid-template-columns:230px 1fr 130px;gap:10px;align-items:center;padding:4px 6px;cursor:pointer;border-radius:3px}
+.brow:hover{background:#fdf1ea}
+.brow .nm{font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brow .tr{position:relative;height:16px;background:#efe9de}
+.brow .fl{position:absolute;left:0;top:0;bottom:0;background:var(--terra)}
+.brow .nu{text-align:right;font-variant-numeric:tabular-nums}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.tools input[type=search]{padding:7px 10px;border:1px solid var(--line);border-radius:4px;min-width:280px;font-size:13px}
+.scroll{overflow:auto;max-height:640px;border:1px solid var(--line);background:#fff}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{background:var(--navy);color:var(--paper);text-align:left;padding:8px 10px;position:sticky;top:0;z-index:5;white-space:nowrap;font-weight:600}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+td{padding:5px 10px;border-bottom:1px solid #ece7de;vertical-align:middle}
+tr.l1 td{background:#eef3f9;color:var(--ink);font-weight:600}
+tr.l2 td{background:#fff}
+tr.l3 td{background:#fbfaf7}
+tr.pt td{background:#fff;color:#444;font-size:12.5px}
+tr.set td:first-child{box-shadow:inset 4px 0 0 var(--terra)}
+td.nm{cursor:pointer}
+td.nm:hover{color:var(--terra)}
+.car{display:inline-block;width:16px;color:var(--terra)}
+.in{width:74px;padding:4px 6px;border:1px solid #cfc8bb;border-radius:3px;text-align:right;background:#fffbe6;color:#1a3b8a;font-size:13px}
+.in::placeholder{color:#9a9384}
+.hb{border:1px solid var(--line);background:#fff;color:var(--navy);padding:3px 8px;border-radius:3px;cursor:pointer;font-size:12px}
+.hb:hover{background:var(--navy);color:var(--paper)}
+.hb.on{background:var(--terra);border-color:var(--terra);color:#fff}
+.dim{color:var(--muted)}
+tr.ref td{background:#faf8f4;color:var(--muted);font-style:italic}
+tr.tot td{background:#eef3f9;font-weight:700;border-top:2px solid var(--navy)}
+.foot{margin-top:34px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.6}
+.legend{font-size:12px;color:var(--muted);margin:6px 0 0}
+@media(max-width:760px){.brow{grid-template-columns:110px 1fr 90px}.bar{position:static}}
+</style></head>
+<body><div class="wrap">
+<h1>Price revision simulator</h1>
+<p class="sub">Pick the weighted increase, then click any group to open it and change its move. Everything recalculates at once on what the distributors bought from July 2025 to June 2026 (EUR 32.6M, 15,273 part numbers). Nothing is published and no price list is touched.</p>
+
+<div class="bar" id="bar">
+  <div class="grp"><label>Weighted increase</label>
+    <div class="tgt"><input id="tgt" inputmode="decimal" value="5,3"><span>%</span></div>
+    <input type="range" id="rng" min="0" max="8" step="0.1" value="5.3">
+    <span id="presets"></span></div>
+  <div class="grp"><label>Price list</label><span id="views"></span></div>
+  <div class="grp"><button class="btn" id="reset">Reset</button><button class="btn" id="exp">Download moves (CSV)</button></div>
+</div>
+
+<div class="grid" id="kpis"></div>
+<div class="status" id="status"></div>
+
+<h2>Where the extra euro comes from</h2>
+<p class="sub">Click a bar to open that group below.</p>
+<div class="card" id="bars"></div>
+
+<h2>Adjust by group or part</h2>
+<p class="sub">Click a name to open it. In the yellow box type <b>0</b> to hold today's price, a number such as <b>4</b> for exactly +4%, <b>BP</b> to follow the part's own base price step, <b>BP+2</b> for two points more, or leave it empty for <b>auto</b> (the step is scaled so the whole book lands on your target). The part beats its group, and a group beats the one above it. With a price list selected above, your setting applies to that list only.</p>
+<div class="tools"><input type="search" id="q" placeholder="Find a part number or description"><button class="btn" id="open1">Open all L1</button><button class="btn" id="close1">Close all</button></div>
+<div class="scroll"><table><thead><tr><th>AIM group</th><th class="num">Parts</th><th class="num">Billed EUR</th><th class="num" data-tip="Base price (BP) step in yen, weighted by billed euros. This is the purchase side.">BP step</th><th class="num">New move</th><th class="num">Extra EUR</th><th>Setting</th><th></th></tr></thead><tbody id="tree"></tbody></table></div>
+<p class="legend">A terracotta edge on the left means a setting is in force on that row: yours, or the brake pad kit hold decided on 30 Sep 2026 (five kits are labelled Brake Disc in the AIM release, so they are held by part as well).</p>
+
+<h2>Purchase side to sales side, per price list</h2>
+<p class="sub">The same three steps as the 2026 simulation file: base price in yen, purchase cost in euro including the exchange rate, and what we bill.</p>
+<div class="scroll" style="max-height:none"><table id="lists"></table></div>
+
+<div class="foot" id="foot"></div>
+</div>
+<script type="application/json" id="payload">/*PAYLOAD*/</script>
+<script>/*MODEL*/</script>
+<script>/*UI*/</script>
+</body></html>

@@ -1,0 +1,147 @@
+{
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\ISZE_Backlog_IML_WK41.html",
+  "launcher": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\OPEN_ISZE_Backlog_IML_WK41.cmd",
+  "builder": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_build_backlog_iml_wk41.py",
+  "qa_harness": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_charts\\harness3.py",
+  "qa_matrix": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_charts\\matrix.csv",
+  "qa_drill": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_charts\\drill.json",
+  "qa_clipping": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_charts\\clipping.json",
+  "qa_stamp_proof": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_charts\\stamp_proof.json",
+  "built": "2026-10-08T12:25+02:00",
+  "build_stamp": "2026-10-08 12:25 build a1e8383a3e",
+  "previous_stamp": "2026-10-08 11:34 build fa80bd063a",
+  "size_mb": 2.13,
+  "ok": true,
+  "self_contained": true,
+  "chartjs": "inlined from 02_dashboards/_ui/chart.umd.min.js",
+  "tabs": 8,
+  "canvases": 20,
+  "revision": "tenth pass - AIM category (aim_l2) as its own grouping, and both drills run to part number",
+  "ownership": {
+    "checked_before_starting": "2026-10-08 11:52",
+    "working_on": "commit ea50b008, verified state",
+    "other_writers": "none. Across the whole session only the page, builder, launcher, receipt and the QA folder changed, all by this agent. The stray http.server on 8962 from the 2026-10-07 22:11 build is still running and was left alone."
+  },
+  "source_of_the_second_aim_level": {
+    "column": "aim_l2 in 01_data/00_derived/aim_master_v2.csv, with aim_l2_fixed used only where aim_l2 is blank",
+    "verified_as_a_real_second_level": "24 distinct aim_l1 families, 116 distinct aim_l2 categories, median 5 categories per family, max 11. 4,390 of the 56,197 filled rows have l1 == l2, which is the parts where the two levels coincide.",
+    "filled_on_the_same_rows_as_the_family": "56,197 of 165,422 rows carry both, 0 carry one and not the other",
+    "note": "AIM category therefore splits a family but does not reach any part the family does not already reach. That is stated on the page so the second level is not oversold."
+  },
+  "checks": [
+    {
+      "name": "aim_category_is_its_own_option",
+      "result": "pass - a third, separate dropdown entry on all four tabs that have one",
+      "dropdowns": {
+        "The delay, in numbers": ["AIM family", "AIM category", "Catalogue category", "Process status", "Sea or air", "Waiting-time band", "Part"],
+        "Which parts": ["AIM family", "AIM category", "Catalogue category", "Process status", "Sea or air", "Waiting-time band", "Part"],
+        "The customer backlog": ["Distributor", "AIM family", "AIM category", "Catalogue category", "Order type (SOR / VOR / RUSH)", "Age band", "Ships from (ISZJ / IMIT)", "Parts family group", "Part"],
+        "Waiting over 30 days": ["Kind of part (in words)", "AIM family", "AIM category", "Catalogue category", "Sub-family", "Part"]
+      },
+      "not_merged": "AIM family, AIM category and Catalogue category are three distinct options and three distinct columns. Selecting one regroups the chart and its title names which is in use. The AIM pair and the catalogue are never both on a drill path, because a name in one is not a name in the other.",
+      "empty_labels": "in AIM, no category yet for a part in the file with no level 2; not in the AIM file for a part not in the file at all. Same two labels the family already used. Nothing invented, nothing dropped."
+    },
+    {
+      "name": "how_many_lines_each_vocabulary_classifies",
+      "warehouse_2102_lines": {"aim_family": "1,506 = 71.6%", "aim_category": "1,506 = 71.6%", "catalogue_category": "1,658 = 78.9%",
+                               "no_family_yet": 305, "no_category_yet": 305, "not_in_the_file": 291},
+      "backlog_1846_lines": {"aim_family": "1,664 = 90.1%", "aim_category": "1,664 = 90.1%", "catalogue_category": "1,720 = 93.2%",
+                             "no_family_yet": 151, "no_category_yet": 151, "not_in_the_file": 31},
+      "master_file": "165,113 part numbers; 55,895 carry an AIM family, 55,895 an AIM category, 164,795 a catalogue category",
+      "coverage_table_on_the_page": "seven rows now, both AIM levels shown separately from the catalogue and both types of gap named"
+    },
+    {
+      "name": "the_customer_drill_runs_to_part_number",
+      "method": "Playwright, Chromium, plain load then clicks. No fragment URL.",
+      "result": "pass - four levels below the chart, each one clickable, the path printing at every step",
+      "steps": [
+        "0 plain load: 1,846 lines / 14,739 pieces",
+        "1 click Isuzu Truck (UK) Limited (8,625 pieces): path 'ISUZU TRUCK (UK) LIMITED', 628 lines, 435 part numbers, 8,625 pieces, oldest 1,625 days, 112 urgent. Chart 1 pieces by AIM family = Chassis Frame, Accident & Body, Electrical, Maintenance Service. Chart 2 oldest wait by AIM category.",
+        "2 click Chassis Frame: path '... > Chassis Frame', 76 lines, 54 part numbers, 2,225 pieces, oldest 1,625 days, 14 urgent. 2,225 = that bar. Chart 1 becomes pieces by AIM category = Mounting Hardware, Crossmember & Brackets. Chart 2 becomes oldest wait by part number.",
+        "3 click Mounting Hardware: path '... > Chassis Frame > Mounting Hardware', 60 lines, 42 part numbers, 2,183 pieces, oldest 1,625 days, 11 urgent. 2,183 = that bar. Chart 1 becomes pieces by part number = 0583306120, 0911801080, 8973600550, 8973601240.",
+        "4 click 0583306120: path '... > Mounting Hardware > 0583306120', 2 lines, 1 part number, 683 pieces, oldest 34 days. The table shows exactly those 2 lines with their required delivery dates (2026-09-02 and 2026-09-22) and days waiting (34 and 14). The charts switch to order type and waiting-time band, which is what is left to ask of one part.",
+        "5 step back one level four times: 60 / 2,183, then 76 / 2,225, then 628 / 8,625, path unwinding with it",
+        "6 clear all: 1,846 lines / 14,739 pieces back"
+      ],
+      "defect_found_and_fixed_by_this_walk": "at the part level the table printed 'undefined' for days waiting and a blank delivery date, because the deep-dive rows are the fact rows (fields req and days) and not the payload columns (req_dlv and days_open) the customer backlog table uses. Found by reading the rendered cells, not the source. Fixed and re-verified: the two rows now read 2026-09-02 / 34 and 2026-09-22 / 14.",
+      "also_verified": "the family-level switch steps AIM family, AIM category, catalogue category and back; the path and the charts follow it and the count returns to the same 628 lines"
+    },
+    {
+      "name": "the_warehouse_drill_runs_to_part_number",
+      "result": "pass - AIM family > AIM category> part number > lines, with no customer anywhere in it",
+      "steps": [
+        "click Maintenance Service on the parts tab: path 'Maintenance Service', 35 lines, 20 part numbers, 5,723 pieces, 15 orders, longest wait 367 days",
+        "the drill's first chart cuts that family by AIM category: Oil Filter, Fuel Filter, Filters, Belts",
+        "click Oil Filter: path 'Maintenance Service > Oil Filter', 7 lines, 4 part numbers, 5,187 pieces, longest 59 days",
+        "click 1876102890: path 'Maintenance Service > Oil Filter > 1876102890', 2 lines, 5,177 pieces, longest 59 days, and the table lists those 2 lines"
+      ],
+      "honest_limit_kept": "the amber note 'read this as a warning, not as proof' is word for word unchanged, the tab still has no Distributor option, and the drill never claims a distributor. The two tabs are deliberately not symmetrical."
+    },
+    {
+      "name": "chart_matrix",
+      "file": "02_dashboards/ops/_qa_charts/matrix.csv",
+      "columns": "tab, canvas, clickable, box_h, canvas_h, chart_h, datasets, points, data_max, scale_max, arcs, click_label, click_changed, click_depth, status",
+      "result": "102 rows: 102 PASS, 0 FAIL",
+      "new_this_pass": "every option of every GROUP BY dropdown on the four tabs that have one, plus the four levels of the customer chain and the three of the warehouse chain, so each new dimension and each new depth has its own row",
+      "click_rule": "a chart whose cursor is a pointer must change something when clicked or the row is a FAIL. In the sweep the largest bar or arc is clicked first, and if that narrows nothing the other drawn elements are tried before the chart is called inert, because the dominant slice of a two-way cut legitimately filters to almost the whole set."
+    },
+    {
+      "name": "chart_heights_on_his_path",
+      "result": "pass - 102 of 102 canvases land between 200 and 420 px, across every tab and every dimension",
+      "values": "260, 300, 340, 420 px. Nothing under 100 px, which is the threshold that made a chart unclickable for four rounds.",
+      "note": "the height is still carried by the .chartbox wrapper, not the canvas, because Chart.js writes its own inline height on the canvas and overrides any CSS rule there"
+    },
+    {
+      "name": "clipping_overlap_kpi_fill",
+      "file": "02_dashboards/ops/_qa_charts/clipping.json",
+      "result": "0 findings",
+      "note": "one finding appeared first: the who-is-waiting per-part table is now 13 columns wide and extends past the viewport. It sits in a box that scrolls horizontally, so it is reachable by scrolling. The check now only reports an offscreen element when no ancestor can scroll to it, which is the correct rule."
+    },
+    {
+      "name": "charts_actually_painted",
+      "result": "pass - no chart under 3% painted, range 5.6% to 35.3%, read from the canvas pixels on his path"
+    },
+    {
+      "name": "every_classification_column_actually_carries_values",
+      "file": "02_dashboards/ops/_qa_charts/columns.json",
+      "what_it_catches": "a column whose header is present but whose cells are all empty looks like the data has no category, so it is worse than no column. Three tables were in exactly that state after the AIM category column was added.",
+      "defect_found_and_fixed": "the delayed-parts table, the worst-lines table on the delay tab and the per-part table on the who-is-waiting tab all had an AIM category header with 60, 150 and 120 blank cells, because those rows are payload tables built in Python and the new column had not been added to them. The rows-table on the delay tab was also misaligned: its header had 11 columns and its body 10, so the catalogue category was printing under the AIM category header. All four fixed and re-verified.",
+      "result": "0 columns entirely blank across every tab and both drill levels. Every AIM family, AIM category and catalogue category cell is filled or honestly labelled; catalogue category shows a small number of blanks on parts we hold no catalogue node for, which is a measured gap and is counted in the coverage table."
+    },
+    {
+      "name": "build_stamp_moved_and_hashes_content",
+      "previous": "2026-10-08 11:34 build fa80bd063a",
+      "now": "2026-10-08 12:25 build a1e8383a3e",
+      "hash_component_changed": "yes, fa80bd063a -> a1e8383a3e, because the content changed",
+      "proof": [
+        "two rebuilds with nothing changed give the same content hash while the clock moves, so it does not move on noise",
+        "the stamp equals a hash independently recomputed from the written page",
+        "one comment character added to the page template moves the hash; reverting returns it exactly"
+      ]
+    },
+    {
+      "name": "not_regressed",
+      "items": [
+        "coverage heading, body and table all read 71.6% warehouse / 90.1% backlog, catalogue 78.9% / 93.2%, from the payload",
+        "the customer chain's ITUK numbers are unchanged: 628 lines / 8,625 pieces, oldest 1,625 days, 112 urgent; Chassis Frame 76 lines / 2,225 pieces; part 0583306120 2 lines / 683 pieces",
+        "AIM family and Catalogue category are still separate columns, now with AIM category between them",
+        "no euro on the warehouse view",
+        "part numbers read as text with leading zeros ignored",
+        "sortable headers on every table",
+        "self-contained: 0 external script src, 0 link href, 0 http references, 0 fetch, Chart.js inlined",
+        "CRLF launcher, 55 bytes"
+      ]
+    }
+  ],
+  "known_limits": [
+    "AIM category is filled on exactly the same part numbers as AIM family, so it splits a family into categories but classifies no line the family does not already classify. The two therefore show the same 71.6% warehouse and 90.1% backlog coverage. This is stated on the page rather than presented as extra coverage.",
+    "The catalogue category remains the most complete vocabulary at 78.9% / 93.2% and is kept separate from both AIM levels.",
+    "At the deepest level a single part is often one order type, so both drill charts can come out as a single bar; the lines table is then the answer.",
+    "628 lines is the largest customer and the line table is capped at 400 rows with the count printed beside it. The kpis and charts use all 628.",
+    "The warehouse tab still cannot name a customer and still has no Distributor option. The amber note is unchanged.",
+    "The two recurrence charts and the fill-rate chart are still not clickable: they are weekly and per-distributor aggregates with no lines underneath.",
+    "No euro valuation on this page, by request."
+  ],
+  "not_committed": "Nothing was committed or pushed. The finished files are on disk: the page (2.13 MB), the builder, the launcher, the receipt, and the QA folder with the matrix, the drill log, the column check and the screenshots.",
+  "gate_note": "Built on the 2026-10-08 bounded brief. OPEN: cmd-only, the launcher was not started."
+}

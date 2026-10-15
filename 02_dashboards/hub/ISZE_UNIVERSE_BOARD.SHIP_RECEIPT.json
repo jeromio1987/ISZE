@@ -1,18 +1,56 @@
 {
+  "schema": "ship_receipt/v2",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\hub\\ISZE_UNIVERSE_BOARD.html",
+  "artifact_mtime_ms": 1791391143289,
+  "written_at": "2026-10-07T16:40:35.475Z",
   "ok": true,
-  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\_worktrees\\ISZE_u29c_ids_ituk_pt\\02_dashboards\\hub\\ISZE_UNIVERSE_BOARD.html",
-  "artifact_mtime": "2026-10-07T15:16:54",
-  "built_at": "2026-10-07T15:16:54",
-  "purpose": "Keep-building: restore page inventory (117 pages) and refresh board; AIM INTERNAL rebuilt locally with real feeds.",
-  "built_by": "02_dashboards/_build/collect_page_inventory.py + build_universe_board.py",
-  "groundwork_pct": 43,
-  "live_pages": 117,
-  "checks": {
-    "page_inventory_rows": 117,
-    "html_groups": 11,
-    "html_bytes": 72282,
-    "aim_internal_bytes": 5941628,
-    "aim_internal_checks": "60/60"
-  },
-  "written_at": "2026-10-07T13:18:21+00:00"
+  "screenshots_taken": 2,
+  "screenshots_read": 2,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\hub\\ISZE_UNIVERSE_BOARD.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "74201 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=true banner=58/162/41"
+    },
+    {
+      "id": "banner_58_162_41",
+      "ok": true,
+      "detail": "focus 58 offers (above 50-row bar); wider UK exact-OEM = 162 offers / 41 PNs; Pass3 + prior OE + focus close + KS \u00a310 + Omega Free Economy \u00a30"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN_ISZE_UNIVERSE_BOARD.cmd opens ISZE_UNIVERSE_BOARD.html (CRLF ok)"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "screenshots_taken 2, screenshots_read 2 (image-Read both; banner shows focus 58 / wider 162 offers / 41 PNs)"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\hub\\_qa\\universe_board_hero_banner_20261007.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\hub\\_qa\\universe_board_full_20261007.png"
+  ],
+  "notes": "Market gap banner refreshed after focus close; INTERNAL wired 162 eligible shop offers / 41 PNs (41 case hooks). Focus 58 and wider 162 both above the 50-row shop bar."
 }

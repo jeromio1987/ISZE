@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Price Revision Simulator v6</title>
+<style>
+:root{--navy:#15233c;--terra:#c0552d;--paper:#f7f4ee;--ink:#222;--line:#d9d3c8;--muted:#6b6459;--card:#fff;--ok:#2f6b3f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:14px}
+.wrap{max-width:1260px;margin:0 auto;padding:26px 20px 60px}
+h1{font-family:Georgia,serif;color:var(--navy);font-size:28px;margin:0 0 4px}
+h2{font-family:Georgia,serif;color:var(--navy);font-size:19px;margin:32px 0 4px}
+.sub{color:var(--muted);margin:0 0 14px;line-height:1.5;max-width:940px}
+.bar{position:sticky;top:0;z-index:50;background:var(--navy);color:var(--paper);padding:10px 20px;display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;margin:0 -20px 18px;border-bottom:4px solid var(--terra)}
+.bar .grp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.bar label{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#c9c3b6}
+.tgt{display:flex;align-items:center;background:var(--paper);border-radius:4px;padding:0 8px}
+.tgt input{width:70px;border:0;background:transparent;font:700 24px Georgia,serif;color:var(--navy);text-align:right;padding:4px 0}
+.tgt span{font:700 20px Georgia,serif;color:var(--navy)}
+input[type=range]{accent-color:var(--terra);width:150px}
+.chip{border:1px solid #5b6b87;background:transparent;color:var(--paper);padding:5px 11px;border-radius:14px;cursor:pointer;font-size:13px}
+.chip:hover{border-color:var(--paper)}
+.chip.on{background:var(--terra);border-color:var(--terra);color:#fff;font-weight:600}
+.btn{border:1px solid var(--navy);background:#fff;color:var(--navy);padding:6px 12px;border-radius:4px;cursor:pointer;font-size:13px}
+.btn.pri{background:var(--navy);color:var(--paper)}
+.bar .btn{border-color:#5b6b87;background:transparent;color:var(--paper)}
+.btn:hover{background:var(--terra);color:#fff;border-color:var(--terra)}
+select{padding:6px 8px;border:1px solid #cfc8bb;border-radius:4px;font-size:13px;background:#fff;color:var(--navy);max-width:230px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--terra);padding:12px 14px;position:relative;cursor:help}
+.kpi.nv{border-left-color:var(--navy)}
+.kpi .lbl{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.kpi .val{font-family:Georgia,serif;font-size:25px;color:var(--navy);margin-top:4px;line-height:1.1}
+.kpi .note{font-size:12px;color:var(--muted);margin-top:5px}
+[data-tip]{position:relative}
+th[data-tip]{position:sticky}
+[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:0;top:100%;z-index:80;width:310px;background:var(--navy);color:var(--paper);font-size:12px;line-height:1.45;padding:10px 12px;border-left:4px solid var(--terra);font-weight:400;text-transform:none;letter-spacing:0;white-space:normal}
+.status{margin:12px 0 0;padding:9px 14px;border-left:5px solid var(--ok);background:#eef5ef;font-size:13px;line-height:1.5}
+.status.warn{border-left-color:var(--terra);background:#fff4ec}
+.card{background:var(--card);border:1px solid var(--line);padding:12px 14px;margin-top:10px}
+.cond{display:grid;grid-template-columns:auto 1fr auto;gap:6px 12px;align-items:center}
+.cond label{cursor:pointer;line-height:1.4}
+.cond .eur{font-variant-numeric:tabular-nums;color:var(--navy);font-weight:600;text-align:right}
+.cond input{width:17px;height:17px;accent-color:var(--terra)}
+.cond .why{font-size:12px;color:var(--muted)}
+.brow{display:grid;grid-template-columns:230px 1fr 140px;gap:10px;align-items:center;padding:4px 6px;cursor:pointer;border-radius:3px}
+.brow:hover{background:#fdf1ea}
+.brow .nm{font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brow .tr{position:relative;height:16px;background:#efe9de}
+.brow .fl{position:absolute;left:0;top:0;bottom:0;background:var(--terra)}
+.brow .nu{text-align:right;font-variant-numeric:tabular-nums}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.tools input[type=search],.tools input[type=text]{padding:7px 10px;border:1px solid var(--line);border-radius:4px;min-width:200px;font-size:13px}
+.scroll{overflow:auto;max-height:600px;border:1px solid var(--line);background:#fff}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{background:var(--navy);color:var(--paper);text-align:left;padding:8px 10px;position:sticky;top:0;z-index:5;white-space:nowrap;font-weight:600}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+td{padding:5px 10px;border-bottom:1px solid #ece7de;vertical-align:middle}
+tr.l1 td{background:#eef3f9;color:var(--ink);font-weight:600}
+tr.l2 td{background:#fff}
+tr.l3 td{background:#fbfaf7}
+tr.pt td{background:#fff;color:#444;font-size:12.5px}
+tr.set td:first-child{box-shadow:inset 4px 0 0 var(--terra)}
+td.nm{cursor:pointer}
+td.nm:hover{color:var(--terra)}
+tr.dbr{cursor:pointer}
+tr.dbr:hover td{background:#fdf1ea}
+tr.dbr.foc td{background:#fbe3d6;font-weight:600}
+.car{display:inline-block;width:16px;color:var(--terra)}
+.in{width:74px;padding:4px 6px;border:1px solid #cfc8bb;border-radius:3px;text-align:right;background:#fffbe6;color:#1a3b8a;font-size:13px}
+.in::placeholder{color:#9a9384}
+.hb{border:1px solid var(--line);background:#fff;color:var(--navy);padding:3px 8px;border-radius:3px;cursor:pointer;font-size:12px}
+.hb:hover{background:var(--navy);color:var(--paper)}
+.hb.on{background:var(--terra);border-color:var(--terra);color:#fff}
+.dim{color:var(--muted)}
+.foc-tag{display:inline-block;background:var(--terra);color:#fff;border-radius:12px;padding:3px 10px;font-size:12px;margin-left:8px}
+tr.ref td{background:#faf8f4;color:var(--muted);font-style:italic}
+tr.tot td{background:#eef3f9;font-weight:700;border-top:2px solid var(--navy)}
+tr.cur td{background:#fff4ec;font-weight:600}
+.foot{margin-top:34px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.6}
+.legend{font-size:12px;color:var(--muted);margin:6px 0 0}
+.amber{background:#fff8e6;border-left:5px solid #d99a00;padding:9px 14px;font-size:13px;margin-top:10px;line-height:1.5}
+.fx{display:inline-block;font:italic 700 13px Georgia,serif;color:var(--terra);cursor:pointer;border:1px solid #e3c9bb;border-radius:50%;width:20px;height:20px;line-height:18px;text-align:center;background:#fff}
+.fx:hover{background:var(--terra);color:#fff;border-color:var(--terra)}
+.kpi .fx{position:absolute;top:8px;right:8px}
+.kpi .lbl{padding-right:26px}
+.status .fx{margin-right:8px}
+.xp{position:fixed;top:0;right:-470px;width:450px;max-width:100vw;height:100vh;background:#fff;border-left:5px solid var(--terra);box-shadow:-6px 0 24px rgba(21,35,60,.25);z-index:120;transition:right .18s;overflow-y:auto;padding:0 0 30px}
+.xp.open{right:0}
+.xp .xh{position:sticky;top:0;background:var(--navy);color:var(--paper);padding:14px 16px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start;font-family:Georgia,serif;font-size:16px}
+.xp .xh button{background:none;border:0;color:var(--paper);font-size:24px;cursor:pointer;line-height:1}
+.xp .st{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #ece7de}
+.xp .sn{flex:0 0 24px;height:24px;border-radius:50%;background:var(--navy);color:var(--paper);text-align:center;line-height:24px;font-size:12px;font-weight:700}
+.xp .sb{flex:1;min-width:0}
+.xp .sb p{margin:4px 0 0;color:#444;line-height:1.45}
+.xp .fm{margin-top:6px;background:#f3efe6;border-left:3px solid var(--terra);padding:7px 9px;font:12.5px Consolas,monospace;word-break:break-word;line-height:1.5}
+.xp .xr{margin-top:6px;font-size:12px;color:var(--muted);font-style:italic}
+.xp .xn{padding:10px 16px;color:var(--muted);font-size:12.5px;line-height:1.5;margin:0}.tabbar{display:flex;gap:6px;margin:26px 0 0;border-bottom:3px solid var(--navy)}
+.tb{border:1px solid var(--line);border-bottom:0;background:#efe9de;color:var(--navy);padding:9px 20px;font:700 15px Georgia,serif;cursor:pointer;border-radius:6px 6px 0 0}
+.tb:hover{background:#fdf1ea}
+.tb.on{background:var(--navy);color:var(--paper);border-color:var(--navy)}
+a.lk{color:var(--terra);font-size:12px;text-decoration:none;margin-left:6px;font-weight:600}
+a.lk:hover{text-decoration:underline}
+ul.rel{margin:0;padding-left:18px;line-height:1.9}
+td.gc{cursor:pointer;min-width:96px}
+td.gc:hover{outline:2px solid var(--terra);outline-offset:-2px}
+td.gl{background:#fbe3d6;color:#7a2d12}
+td.gn{background:#ebe8e1;color:#777}
+td.gh2{box-shadow:inset 0 0 0 3px var(--navy)}
+td.gc .gs{font-size:11px;color:var(--muted);font-weight:400}
+td.gc .hold{display:inline-block;background:var(--navy);color:var(--paper);font-size:10px;padding:1px 6px;border-radius:8px;margin-left:4px}
+#tab-pms td.num{white-space:nowrap}
+th.gh{cursor:pointer}
+th.gh:hover{background:var(--terra)}tr.rcase{cursor:pointer}
+tr.rcase:hover td{background:#fdf1ea}
+tr.rcase.cur td{background:#fbe3d6}
+.pk{font-family:Arial,Helvetica,sans-serif;color:#222;max-width:900px;margin:0 auto;font-size:13px;line-height:1.5}.pkt{font:700 22px Georgia,serif;color:#15233c}.pks{color:#6b6459;font-size:12px;margin-bottom:6px}.pk h3{font:700 15px Georgia,serif;color:#15233c;margin:18px 0 4px;border-bottom:2px solid #c0552d;padding-bottom:2px}.pkt2{border-collapse:collapse;width:100%;margin:4px 0}.pkt2 th{background:#15233c;color:#f7f4ee;text-align:left;padding:5px 8px;font-size:12px;position:static}.pkt2 td{padding:4px 8px;border-bottom:1px solid #e6e0d4}.pkt2 td+td,.pkt2 th+th{text-align:right}.pkl td:nth-child(2),.pkl th:nth-child(2){text-align:left}.pkn{color:#6b6459;font-size:12px}.pk ul{margin:4px 0 4px 18px;padding:0}
+@media print{.wrap>*:not(#tab-pack){display:none!important}#tab-pack{display:block!important}#tab-pack>h2,#tab-pack>.sub,#tab-pack>.tools{display:none!important}.card{border:0;padding:0}body{background:#fff}}@media(max-width:760px){.brow{grid-template-columns:110px 1fr 90px}.bar{position:static}}
+</style></head>
+<body><div class="wrap">
+<h1>Price revision simulator <span class="dim" style="font-size:16px">v6</span></h1>
+<p class="sub">Pick the weighted increase, choose which market conditions apply, then click any group, market or part to change its move. Everything recalculates at once on what the distributors bought from July 2025 to June 2026 (EUR 32.6M, 15,273 part numbers, 22 markets). It ends in a price file you can load and an Excel file with the formulas. Nothing is published and no price list is touched.</p>
+
+<div class="bar" id="bar">
+  <div class="grp"><label>Weighted increase</label>
+    <div class="tgt"><input id="tgt" inputmode="decimal" value="5,3"><span>%</span></div>
+    <input type="range" id="rng" min="0" max="8" step="0.1" value="5.3">
+    <span id="presets"></span></div>
+  <div class="grp"><label>Price list</label><span id="views"></span></div>
+  <div class="grp"><label>Market</label><select id="dbsel"></select></div>
+  <div class="grp"><button class="btn" id="xlb2">Excel with formulas</button><button class="btn" id="plain" title="Own BP step only, brake pad kits held, no market condition">Plain recipe</button><button class="btn" id="reset">Reset</button></div>
+</div>
+
+<div class="grid" id="kpis"></div>
+<div class="status" id="status"></div>
+
+<h2>Market conditions</h2>
+<p class="sub">A held market pays today's price on the parts concerned. The list stays one price per part, so the rest of the book carries more to stay on your target. Tick what applies. The page opens with steering units at +5% (their base price did not move, so they would otherwise stay flat) and the shop-far hold ticked; Plain recipe goes back to the own-step recipe, Reset back to this starting point.</p>
+<div class="card cond" id="cond"></div>
+
+<div id="tabbar" class="tabbar"><button class="tb on" data-tab="book">Price book</button><button class="tb" data-tab="pms">PMS parts</button><button class="tb" data-tab="after">After the increase</button><button class="tb" data-tab="pack">Market pack</button></div>
+<div id="tab-book">
+<h2>Where the extra euro comes from</h2>
+<p class="sub">Click a bar to open that group below.</p>
+<div class="card" id="bars"></div>
+
+<h2>By market</h2>
+<p class="sub">Click a market to look at the whole page through that market only. Click it again, or use the Market box above, to go back to all markets.</p>
+<div class="scroll" style="max-height:520px"><table id="dbt"></table></div>
+
+<h2>Adjust by group or part</h2>
+<p class="sub">Click a name to open it, or the round ƒ to see how its numbers are calculated. In the yellow box type <b>0</b> to hold today's price, a number such as <b>4</b> for exactly +4%, <b>BP</b> to follow the part's own base price step, <b>BP+2</b> for two points more, or leave it empty for <b>auto</b> (the step is scaled so the whole book lands on your target). The part beats its group, and a group beats the one above it. With a price list selected above, your setting applies to that list only.</p>
+<div class="tools"><input type="search" id="q" placeholder="Find a part number or description"><button class="btn" id="open1">Open all L1</button><button class="btn" id="close1">Close all</button></div>
+<div class="scroll"><table><thead><tr><th>AIM group</th><th class="num">Parts</th><th class="num">Billed EUR</th><th class="num" data-tip="Base price (BP) step in yen, weighted by quantity: the same way as the 5.96% in the base price comparison. This is the purchase side.">BP step</th><th class="num">New move</th><th class="num">Extra EUR</th><th>Setting</th><th></th><th></th></tr></thead><tbody id="tree"></tbody></table></div>
+<p class="legend">A terracotta edge on the left means a setting is in force on that row: yours, or the brake pad kit hold decided on 30 Sep 2026 (five kits are labelled Brake Disc in the AIM release, so they are held by part as well). "New move" is what the distributors in view pay on average, including held markets.</p>
+
+<h2>Price file</h2>
+<p class="sub">The new list price per part, from your settings. Pick the price list, check the date, download.</p>
+<div class="card" id="pf"></div>
+
+<h2>Purchase side to sales side, per price list</h2>
+<p class="sub">The same three steps as the 2026 simulation file: base price in yen, purchase cost in euro including the exchange rate, and what we bill.</p>
+<div class="scroll" style="max-height:none"><table id="lists"></table></div>
+
+<h2>Compare options</h2>
+<p class="sub">Your current conditions and settings at four targets, then your saved scenarios. Save the current state under a name to keep it.</p>
+<div class="scroll" style="max-height:none"><table id="cmp"></table></div>
+<div class="tools"><input type="text" id="sname" placeholder="Name for this scenario, e.g. 5,3 with holds"><button class="btn pri" id="ssave">Save current as scenario</button><button class="btn" id="sdl">Download scenarios (file)</button><label class="btn" style="margin:0">Load scenarios file<input type="file" id="sul" accept=".json" style="display:none"></label></div>
+<div class="scroll" style="max-height:none"><table id="scen"></table></div>
+
+</div>
+
+<div id="tab-pms" style="display:none">
+<h2>PMS parts</h2>
+<p class="sub" id="pmsSay"></p>
+<div class="grid" id="pmsHead"></div>
+
+<h2>Category, made in, weight band, part</h2>
+<p class="sub">PMS parts are the 484 part numbers of this base that sit in a PMS category: brake pads, shoes and rotors, clutch parts and five filter types. Click a name to open it: category, then where it is made (Japan IML or Thailand IMIT), then weight band, then the parts. A setting typed on a row works like on the price book tab: <b>0</b> holds today's price, <b>4</b> is exactly +4%, <b>BP</b> follows the part's own step, empty is auto. The part beats its group, the group beats its category, the category beats the AIM levels. The box in the second last column holds the category at today's price in every market where the distributor buys under 45% of what its trucks need.</p>
+<div class="scroll"><table><thead><tr><th>PMS group</th><th class="num">Parts</th><th class="num">Billed EUR</th><th class="num" data-tip="Base price step in yen, weighted by quantity: the purchase side.">BP step</th><th class="num">New move</th><th class="num">Extra EUR</th><th class="num">Held EUR</th><th>Setting</th><th></th><th title="Hold the category at today's price where the distributor buys under 45% of what its trucks need" style="text-align:center">Hold where under 45%</th><th></th></tr></thead><tbody id="pmsTree"></tbody></table></div>
+<p class="legend">A terracotta edge on the left means a setting is in force on that row. Weight bands come from the vehicle band file: D-Max, 7.5 t, F-series and 3.5 t are only shown where a part fits exactly one band. Many parts fit several bands or have none on file, and they are shown as such rather than forced into a tonnage.</p>
+
+<h2>What each market buys against what its trucks need</h2>
+<p class="sub">The share of what a distributor's trucks need in this category that it buys from us (2025, all lines). Red means under 45%: the distributor already buys most of it elsewhere, so a list increase there mostly costs attention. Grey n/r means above 100%: the demand base is wrong for that market, so the figure is not used. Click a cell to hold that market and category at today's price, or a column heading to hold the whole category where it is red.</p>
+<div class="tools"><label>Show <select id="pgrp"><option value="filters">Filters</option><option value="brakes">Brakes</option><option value="clutch">Clutch</option><option value="all">All PMS categories</option></select></label></div>
+<div class="scroll" style="max-height:640px"><table id="pmsGrid"></table></div>
+
+<h2>Related dashboards</h2>
+<div class="card" id="pmsRel">
+<p class="sub" style="margin:0 0 8px">These open in the same folder. Only Parts Price Intelligence can open on a part number from a link; for the shop price page the part number is copied for you to paste.</p>
+<ul class="rel">
+<li><a class="lk" href="ISZE_PMS_Price_Response_Brief_2026-09-22.html" target="_blank" rel="noopener">PMS price response brief &#8599;</a> zoom from PMS category to part number, five customers against list, days of parts in stock.</li>
+<li><a class="lk" href="ISZE_PMS_Campaign_Impact_Review_2026-09-23.html" target="_blank" rel="noopener">PMS campaign impact review &#8599;</a> how campaign discounts stack on IUK filters by month. A list increase lands on a lower real price where they stack.</li>
+<li><a class="lk" href="ISZE_IAM_Price_vs_Billed_PN.html" target="_blank" rel="noopener">Aftermarket shop price against what we billed &#8599;</a> per part number, with the PMS wear parts labelled.</li>
+<li><a class="lk" href="ISZE_Parts_Price_Intelligence.html" target="_blank" rel="noopener">Parts Price Intelligence &#8599;</a> where rivals sit against our price; opens on a part number from the link on each part row.</li>
+</ul>
+</div>
+</div>
+
+<div id="tab-after" style="display:none">
+<h2>If dealers buy less</h2>
+<p class="sub" id="afSay"></p>
+<p class="sub">Dealers react to a higher price by buying a little less. The response is the percent change in what they buy for +1% on our price. Click a case to use it in the tables below. Extra after the volume effect = billed euro x (1 + move) x (1 + response x move) minus billed euro, as in the revision workbook. No early buying before the date is assumed.</p>
+<div class="scroll" style="max-height:none"><table id="afCases"></table></div>
+<h2>Where the reaction costs most</h2>
+<div class="scroll" style="max-height:520px"><table id="afRisk"></table></div>
+<h2>When it pays: the fiscal year</h2>
+<p class="sub">The figures on the tiles are a full year. A start date inside the year earns only the months from that date. Billing follows the monthly pattern of July 2025 to June 2026 in each market. Fiscal year 2027 runs 1 April 2026 to 31 March 2027. The effective date you pick is also the Valid From date of the SAP paste file.</p>
+<div class="tools"><label>Effective date <input type="date" id="afEff"></label> <span class="dim">no date is set until you pick one</span></div>
+<div class="scroll" style="max-height:none"><table id="afFy"></table></div>
+</div>
+
+<div id="tab-pack" style="display:none">
+<h2>Market pack</h2>
+<p class="sub">One page per market, built from the page as it is now: the numbers, the 15 parts with the most extra, what is held and why, what if dealers buy less, when it pays, and the settings in force. A draft for internal review. Print it, save it as PDF from the print window, or download it as a page.</p>
+<div class="tools"><label>Market <select id="packSel"></select></label><button class="btn pri" id="packPrint">Print or save as PDF</button><button class="btn" id="packDl">Download as a page</button></div>
+<div class="card" id="packBody"></div>
+</div>
+
+<div class="foot" id="foot"></div>
+<aside class="xp" id="xp"><div class="xh"><span id="xt"></span><button id="xc" title="Close">&times;</button></div><div id="xb"></div></aside>
+</div>
+<script type="application/json" id="payload">/*PAYLOAD*/</script>
+<script>/*MODEL*/</script>
+<script>/*XL*/</script>
+<script>/*UI*/</script>
+</body></html>
