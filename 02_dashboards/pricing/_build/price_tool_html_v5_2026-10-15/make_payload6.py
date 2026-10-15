@@ -45,6 +45,16 @@ for f in files:
 hit = 0
 for p in D["parts"]:
     if p[0] in pbi: p[12] = pbi[p[0]]; hit += 1
+allchk = False
+for m in glob.glob(str(ISZE / "01_data/90_INBOX/pbi_iszj_newest_export_all*.meta.json")):
+    mj = json.loads(Path(m).read_text(encoding="utf-8"))
+    if mj.get("all_base_checked") and mj.get("queried_part_numbers", 0) >= len(D["parts"]): allchk = True
+if allchk:
+    for p in D["parts"]:
+        if p[12] == "": p[12] = p[0]  # queried in Power BI, NEWEST equals Material
+    hit = len(D["parts"])
+D["pbi_all"] = allchk
+D["pbi_diff"] = sum(1 for p in D["parts"] if p[12] != "" and p[12] != p[0])
 D["pbi_n"] = len(pbi); D["pbi_files"] = [Path(f).name for f in files]
 (H / "payload6.json").write_text(json.dumps(D, separators=(",", ":")), encoding="utf-8")
 print("months ok, markets with a profile", len(share), "| book profile", book, "| PBI newest on file", len(pbi), "of which in the base", hit, "| files", D["pbi_files"])
