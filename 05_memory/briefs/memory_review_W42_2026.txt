@@ -1,0 +1,54 @@
+ISZE MEMORY REVIEW — Week 42, 2026
+Generated: 2026-10-12
+
+Scope note: lubricants and action-plan-fy* out of scope (standing instruction 2026-07-13). action-plan-fy2027.md present, not opened. Delta since W41 (2026-10-05). Automated run, no questions asked.
+
+## Verifier
+| Check | Result | Evidence |
+|-------|--------|----------|
+| Brief written this run | PASS | 05_memory/briefs/memory_review_W42_2026.txt |
+| Stale files remaining | FAIL | 11 of 12 in-scope project files STALE by clock (same list as W41; no edits, dates unchanged) |
+| Off-scope untouched | PASS | action-plan-fy2027.md not opened or edited; no lubricants file |
+| Applied log updated | N/A | no edits this run |
+
+## Memory Health
+1. _verification_report.md unchanged: still 2026-09-24T18:26:53Z, 164 pass / 1 warn / 0 fail. No reconfirmation added.
+2. AIM release chain has moved again (aftermarket-intelligence.md has no release section at all). RELEASES.json now: 2026-09-20 superseded; 2026-10-02 superseded by 2026-10-02-chassis-frame; chassis-frame superseded by 2026-10-04 (approved 2026-10-04); 2026-10-04 superseded by 2026-10-07; 2026-10-07 superseded by 2026-10-11; **2026-10-11 is the sole APPROVED release (approved 2026-10-11)**. W41's "2026-10-04 waiting for approval" item is therefore closed (approved, then superseded). Not applied: governance content, file lacks the section to sync.
+3. AIM P0 two-taxonomy finding (17 Sep): no evidence of resolution found; still open.
+4. DECISIONS.md (at ISZE root, not 03_analytics/isze_pricing/ as W41 looked) found. Its latest entry is the 2026-09-24 Eucon go (scrape on Eucon-sourced data ahead of legal; four licence questions still open; Eucon rows still barred from outside-EU services). Not yet reflected in competitiveness.md.
+5. Automation drift 2026-10-12 (cross-ref): ISZE_EQ_Hit_Session_20260919 still exit 1 (5th week); 940 banned labels in shared pages changed in last 7 days (was 25); LiveStateAudit task overlapped its own audit (low). ISZE_PriceLedger_Weekly is now audited (W41 said not in register).
+6. Not checked (cheap tier): PMS/GPS/BVP figures vs metric_dictionary.md beyond prior state; metric_dictionary.md was modified 2026-10-11 — content not re-diffed against pms-coverage.md / gps-reconciliation.md.
+
+STALE (>3 weeks), 11 of 12:
+pricing-basket-2026.md (2026-06-29); sales-analytics-pipeline.md (2026-06-13); monthly-sales-report-fy2027.md (2026-07-05); aftermarket-intelligence.md (2026-07-02); gps-reconciliation.md (2026-07-03); pms-coverage.md (2026-07-03); competitiveness.md (2026-07-27); imie_3party_2025_2026.md (2026-07-30); ids-db-leverage-os.md (2026-08-11); db-sales-review-mode-a.md (2026-08-12); uio.md (2026-08-17).
+isze-corporate-presentations-20260919.md: no frontmatter.
+
+## Applied this run
+None.
+
+## Open Items Still Unresolved
+- AIM classification P0 two-axis conflict.
+- EQ-HIT PN→service mapping (pms-coverage.md); scheduled task failing 5 weeks.
+- CY2025 full PMS basket gap revalidation.
+- VKWRT load for SPA-adjusted AIM; other-DB sell-out for AIM FY2027 KPI.
+- Eucon licence: four legal questions open; NOTE_Eucon.txt plain-text password still to be removed by Jerome.
+- GPS v9 snapshot re-basing decision.
+- MIDI estimate / V20 promotion; NMR and Malta/Cyprus decisions not in uio.md.
+- ids-db-leverage-os §9 v1.4 question (likely moot).
+- Monthly sales report PDFs July–Sep missing.
+- 940 banned labels in shared pages (automation drift).
+(Closed vs W41: AIM 2026-10-04 approval decision — approved 2026-10-04, since superseded.)
+
+## Suggested Updates (Jerome)
+1. aftermarket-intelligence.md: add release-governance section (current approved = 2026-10-11; chain above) plus P0 two-taxonomy caveat qualifying 93.5%/87% rates.
+2. competitiveness.md: Eucon licence-risk flag and the 2026-09-24 scrape-go decision.
+3. uio.md: NMR/NMR85 5.5t and Malta/Cyprus 3.5t=0 decisions.
+4. ids-db-leverage-os.md: close v1.4 question (rebuild shipped 2026-08-15).
+5. pricing-basket-2026.md: fold in 2026-08-11 DECISIONS batch.
+6. isze-corporate-presentations-20260919.md: add frontmatter/last_validated.
+7. Global "Key confirmed data" memory (outside this tree) still shows PMS 0.3%/€3.5M, AIM 93.5%, UIO v9, Source J 0.62 (now 0.673), FX 163.7 (now 178.5).
+8. One full re-validation pass would clear the weekly staleness FAIL.
+9. Move Sales to Dealers_ITUK_CY2025.xlsx out of 05_memory/projects/.
+
+## No action needed
+- glossary.md (synced 2026-09-23), sales-analytics-pipeline.md, db-sales-review-mode-a.md, imie_3party_2025_2026.md: no new contradicting evidence.
