@@ -1,6 +1,6 @@
 # Cross-reference grading (task 2.2)
 
-Built 2026-10-07T06:31:19+00:00 by `grade_crossref_edges.py`.
+Built 2026-10-15T16:49:03+00:00 by `grade_crossref_edges.py`.
 
 - rival edges graded: **7,602**
 - confirmed: **1,450**
