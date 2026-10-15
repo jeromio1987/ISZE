@@ -76,9 +76,10 @@ frame(s, "The problem", "The old price list filed steering units as “Competiti
            "selling?” from it.", RED),
           (f"The new top level names what the part is: {L[0]} families, from brakes to lighting.", AMBER),
           ("Purpose: one product view of everything we bill, so sales and prices can be read per product.", AMBER)])
-text(s, 0.25, 1.98, 4.5, 0.3, "Old top level: share of what we billed", size=12, bold=True)
-hbar(s, 0.25, 2.3, 4.5, 3.25, order_old, [old[k]["pct"] for k in order_old], [RED] + [BAR] * 6,
-     lambda v: f"{v:.1f}%", "chart_old", vmax=56, size=10.5)
+text(s, 0.25, 1.98, 4.5, 0.3, "Old “Competitive” label: biggest part types", size=12, bold=True)
+top5 = N["old_competitive_top_l3"][:5]
+hbar(s, 0.25, 2.3, 4.5, 3.25, [d["l3"] for d in top5], [d["eur"] for d in top5], [RED] + [BAR] * 4,
+     lambda v: f"€{v / 1e6:.2f}M", "chart_old", vmax=1.65e6, size=10.5)
 text(s, 5.0, 1.98, 4.65, 0.3, f"New top level: the ten largest of {L[0]} families", size=12, bold=True)
 hbar(s, 5.0, 2.3, 4.65, 3.25, [nice(d["label"]) for d in top10], [d["pct"] for d in top10], [LIGHT] * 10,
      lambda v: f"{v:.1f}%", "chart_aim", vmax=23, size=10, gap=40)
@@ -86,8 +87,8 @@ band(s, 0.25, 5.8, 9.4, 0.95, [[(f"{eur_m(comp['eur'])} sat under one commercial
                                   {"bold": True}),
                                  (f"Steering units alone are {eur_m(st['eur_under_competitive'], 2)} of that pile; they are captive, not competitive.", {})]], size=12.5)
 notes(s, f"The old tree had {N['levels']['old'][0]} top-level labels. Five describe a commercial opinion (competitive, "
-         f"repair, accident, high value repair, comfort), not a product. {comp['pct']:.1f}% of what we billed "
-         f"({eur_m(comp['eur'], 2)}) sat in 'Competitive parts'. Inside it, by part type: " +
+         f"repair, accident, high value repair, comfort), not a product. {eur_m(comp['eur'], 2)} of what we billed "
+         "sat in 'Competitive parts'. Inside it, by part type: " +
       ", ".join(f"{d['l3']} {eur_m(d['eur'], 2)}" for d in N["old_competitive_top_l3"][:5]) +
       f". The new classification has {L[0]} families, {L[1]} product groups and {L[2]} part types on this basis; the old tree had "
       f"{N['levels']['old'][0]} / {N['levels']['old'][1]} / {N['levels']['old'][2]}.")
