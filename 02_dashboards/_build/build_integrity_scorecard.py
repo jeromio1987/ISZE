@@ -104,8 +104,8 @@ ITEMS = [
 ]
 
 CONTRADICTIONS = [
- ("Sales end date", "The open-issues register says the sales file ends 31 March 2026 (in the order-latency item). The file itself ends %s." % sales_end.strftime("%d %b %Y"),
-  "Register line is out of date; fix the register, not the data."),
+ ("Sales end date", "The data map (00_docs/ISZE_OS_DATA_MAP.yaml, order-latency item) says the sales file ends 31 March 2026. The file itself ends %s." % sales_end.strftime("%d %b %Y"),
+  "The data map line is out of date. Whether the order-latency measure itself still stops at 31 March is not verified."),
  ("Warranty export chase", "The contact page dated 22 Sep asks Germany for the pickup export 'from May 2026'. The register of 24 Sep says it arrived and runs to August 2026.",
   "Contact page is out of date. Generate it from the register."),
  ("Green tick vs do-not-quote", "The report passes %d checks; the same register says not to quote the 2026-2030 fleet to anyone." % npass,
@@ -207,7 +207,7 @@ vals = dict(
     today=TODAY.strftime("%d %b %Y"), npass=npass, nwarn=nwarn, nfail=nfail, rep=rep_date,
     t1=tip("checks passed / warned / failed", "Counts from the verification report. Most checks confirm a file exists or a column matches. They do not test whether a figure is true."),
     t2=tip("open items that move a headline", "Tier A items in section 3. Sizes are copied from the open-issues register; nothing here is a new estimate."),
-    t3=tip("sales file runs to", "Latest billing date in sales_fact.parquet, read at build time. The register still says 31 March 2026."),
+    t3=tip("sales file runs to", "Latest billing date in sales_fact.parquet, read at build time. The data map still says 31 March 2026."),
     t4=tip("pages are test or QA copies", "QA and test HTML files sitting inside live dashboard folders, excluding the archive. Counted by folder name at build time."),
     nA=len([i for i in ITEMS if i[0] == "A"]), sales=sales_end.strftime("%d %b %Y"),
     nqa=len(qa_html), nall=len(all_html), nbak=len(bak), nrec=len(receipts),
