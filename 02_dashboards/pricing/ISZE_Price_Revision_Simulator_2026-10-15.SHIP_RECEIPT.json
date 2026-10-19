@@ -1,0 +1,41 @@
+{
+    "schema":  "ship_receipt/v2",
+    "artifact":  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Price_Revision_Simulator_2026-10-15.html",
+    "artifact_mtime_ms":  1792076293985,
+    "written_at":  "2026-10-15T14:58:45.9823145Z",
+    "ok":  true,
+    "screenshots_taken":  3,
+    "screenshots_read":  2,
+    "checks":  [
+                   {
+                       "detail":  "1293276 bytes",
+                       "ok":  true,
+                       "id":  "exists"
+                   },
+                   {
+                       "detail":  "no external script",
+                       "ok":  true,
+                       "id":  "no_cdn"
+                   },
+                   {
+                       "detail":  "node model at 5.3% with pad kit holds: extra 1,727,581 vs Python 1,727,581 (EUR 2 rounding of billed to whole euro)",
+                       "ok":  true,
+                       "id":  "js_vs_python"
+                   },
+                   {
+                       "detail":  "headless scripted: bar click opens L1, L2/L3 open, 12 part rows, target 4 -\u003e on target 4,00%, hold on pad kits shown",
+                       "ok":  true,
+                       "id":  "clicks"
+                   },
+                   {
+                       "detail":  "OPEN_Price_Revision_Simulator.cmd",
+                       "ok":  true,
+                       "id":  "open_cmd"
+                   }
+               ],
+    "screenshots":  [
+                        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_sim_20261015\\full.png",
+                        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_sim_20261015\\t2.png"
+                    ],
+    "notes":  "Read by the parent agent, full.png and t2.png. t1.png was taken (interaction test at 4%) but not image-read; its numbers were read from the DOM dump."
+}

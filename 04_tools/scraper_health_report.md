@@ -1,32 +1,33 @@
-⚠ GENERATED 2026-10-04 by isze-scraper-healthcheck-autofix — review applied_patches_log.md for any auto-applies.
+⚠ GENERATED 2026-10-18 by isze-scraper-healthcheck-autofix — review applied_patches_log.md for any auto-applies.
 
-# ISZE SCRAPER HEALTH REPORT — 2026-10-04
+# ISZE SCRAPER HEALTH REPORT — 2026-10-18
 
 ## Verifier
 | Check | Result | Evidence |
 |-------|--------|----------|
-| Tender JSON ≤14d | PASS | `01_data\14_dashboards\tender_data.json` meta.generated_at = 2026-09-28T05:51:57Z (~6 days old) |
-| KS CSV ≤14d | PASS | `04_tools\autodoc_scraper\ks_results.csv` mtime 2026-09-28 05:20 (~6 days old) |
-| Auto-apply compile | N/A | No patches applied — nothing Edit'd |
-| Allowlist scope | PASS | No files Edit'd this run |
+| Tender JSON ≤14d | FAIL (unverifiable) | `01_data/dashboards` (symlink) returns "Input/output error" in this sandbox; tender_data.json could not be read, so `meta.generated_at` is unknown. No other copy found. Indirect: tender_price_context.meta.json built_at 2026-10-02 (16d, derived file, not proof). |
+| KS CSV ≤14d | PASS | ks_results.csv modified 2026-10-12 05:12 (6 days); tmc_results.csv 2026-10-12 |
+| Auto-apply compile | N/A | No edits made. Read-only py_compile of all 5 allowlisted scrapers: OK |
+| Allowlist scope | PASS | No Edit attempted anywhere |
 
 | Scraper | Status | Last output | Action |
 |---------|--------|-------------|--------|
-| Tender | 🟢 | tender_data.json — 2026-09-28 (~6d) | none |
-| KS pipeline | 🟢 | ks_results.csv — 2026-09-28 (~6d) | none |
-| Tranzparts | 🟢 | 2026-09-22 (~12d, inside 14d window; watch) | none |
-| TMC | 🟢 | 2026-09-28 (~6d) | none |
-| Mekonomen | 🟢 | 2026-09-21 (~13d, inside 14d window; watch) | none |
-| Auto365 | 🟢 | 2026-09-21 (~13d, inside 14d window; watch) | none |
+| Tender | 🟠 unknown (access error, not a confirmed stale) | unreadable | none (propose-only; nothing to patch) |
+| KS pipeline | 🟢 | ks 2026-10-12, tmc 2026-10-12 | none |
+| Tranzparts | 🟠 info | 2026-09-22 (26d) | none — not in primary 14d check; wrapper last run (10-12) refreshed only KS+TMC |
+| Mekonomen / Auto365 | 🟠 info | 2026-09-21 | none — deliberately skipped (robots disallow, per scrape_asof.json) |
+
+Weekly refresh logs present through 2026-10-12; a 2026-10-19 run is expected tomorrow.
 
 ## Auto-applied this run
-None.
+None
 
 ## Proposed (not applied)
-None.
+None
 
 ## Manual review
-None new. Note: `01_data\dashboards` is still a dangling link (I/O error); live data is at `01_data\14_dashboards` (not in scope). Existing `manual_review_required.md` left untouched.
+None new.
 
 ## Waiting on Jerome
-1. Nothing blocking. Mekonomen/Auto365 CSVs (21 Sep) and Tranzparts (22 Sep) will cross the 14-day window on 5–6 Oct if the weekly refresh doesn't update them (the 28 Sep refresh only touched KS/TMC).
+1. Tender JSON freshness could not be checked: the `01_data/dashboards` link is unreadable from the cloud sandbox. Please confirm `meta.generated_at` in tender_data.json is within 14 days (or check the local tender scheduled task).
+2. Tranzparts last refreshed 2026-09-22; confirm whether it should be in the weekly wrapper run.

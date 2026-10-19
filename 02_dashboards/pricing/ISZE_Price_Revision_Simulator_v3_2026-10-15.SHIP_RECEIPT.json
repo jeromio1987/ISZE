@@ -1,0 +1,52 @@
+{
+    "schema":  "ship_receipt/v2",
+    "artifact":  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Price_Revision_Simulator_v3_2026-10-15.html",
+    "artifact_mtime_ms":  1792079264340,
+    "written_at":  "2026-10-15T15:47:46.2956896Z",
+    "ok":  true,
+    "screenshots_taken":  4,
+    "screenshots_read":  3,
+    "checks":  [
+                   {
+                       "detail":  "2544140 bytes",
+                       "ok":  true,
+                       "id":  "exists"
+                   },
+                   {
+                       "detail":  "no external script; xlsx written with the browser CompressionStream, no library",
+                       "ok":  true,
+                       "id":  "no_cdn"
+                   },
+                   {
+                       "detail":  "no holds, 5.3%: v3 extra per price list equals the AIM-level Excel tool to the cent (test_lists3.js)",
+                       "ok":  true,
+                       "id":  "vs_excel_tool"
+                   },
+                   {
+                       "detail":  "workbook built by the page itself opened in Excel: 8 of 8 Checks lines OK, 0 formula errors, By L1 and By market totals tie, typing 4% in Settings!B4 recalculates to the model value",
+                       "ok":  true,
+                       "id":  "xlsx_in_excel"
+                   },
+                   {
+                       "detail":  "3 scenarios (holds all ticked; settings at part, L1, L2 and list level; page run with a typed L1 setting) all tie in Excel",
+                       "ok":  true,
+                       "id":  "xlsx_scenarios"
+                   },
+                   {
+                       "detail":  "panel opens from KPI, status line, tree rows and price rows; scale and part panels read",
+                       "ok":  true,
+                       "id":  "explain_panel"
+                   },
+                   {
+                       "detail":  "OPEN_Price_Revision_Simulator_v3.cmd",
+                       "ok":  true,
+                       "id":  "open_cmd"
+                   }
+               ],
+    "screenshots":  [
+                        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_sim_20261015\\v3p1.png",
+                        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_sim_20261015\\v3p2.png",
+                        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_sim_20261015\\xlpdf\\Settings.pdf"
+                    ],
+    "notes":  "Read by the parent agent: v3p1 (scale panel), v3p2 (part panel), Settings.pdf and Read_me.pdf and Parts.pdf text. The Checks, By L1 and By market sheets were verified by numbers, not by image. v3p1 was taken before a small label padding fix and not retaken."
+}

@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Call prep: every open question, 16 Oct 2026</title>
+<style>
+:root{
+  --navy:#15233c; --navy2:#1d3050; --navy3:#2a4066;
+  --terra:#c0552d; --terra2:#e07a4f;
+  --paper:#f7f4ee; --paper2:#eee8dc; --ink:#222; --mute:#5b6677;
+  --ok:#2f7d5b; --warn:#c98a1a; --bad:#b23a2e;
+  --line:#d9d1c1;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;overflow-x:hidden;background:var(--paper);color:var(--ink);font:16px/1.55 "Segoe UI",system-ui,sans-serif}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;letter-spacing:-.01em;margin:0}
+a{color:inherit}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;background:
+  radial-gradient(1200px 500px at 85% -10%,rgba(224,122,79,.35),transparent 60%),
+  radial-gradient(900px 500px at -10% 110%,rgba(42,64,102,.9),transparent 60%),
+  linear-gradient(160deg,#0f1b30 0%,var(--navy) 55%,#1b2d4b 100%);
+  color:var(--paper);padding:56px 24px 120px}
+.hero::after{content:"";position:absolute;inset:0;background:
+  repeating-linear-gradient(115deg,rgba(255,255,255,.025) 0 2px,transparent 2px 22px);pointer-events:none}
+.wrap{max-width:1120px;margin:0 auto;position:relative;z-index:1}
+.eyebrow{display:inline-flex;gap:10px;align-items:center;font:600 12px/1 "Segoe UI",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--terra2)}
+.eyebrow i{width:34px;height:2px;background:var(--terra2);display:block}
+.hero h1{font-size:clamp(34px,5.4vw,64px);line-height:1.04;margin:18px 0 14px;color:#fff;max-width:880px}
+.hero h1 em{font-style:normal;color:var(--terra2)}
+.hero p.lede{font-size:clamp(16px,1.6vw,20px);color:#d6dcea;max-width:760px;margin:0}
+.meta{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:1px solid rgba(247,244,238,.28);color:var(--paper);padding:6px 12px;border-radius:99px;font-size:13px;background:rgba(255,255,255,.05)}
+
+/* KPI */
+.kpis{margin-top:-78px;position:relative;z-index:3}
+.kgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 20px 18px;box-shadow:0 18px 40px -22px rgba(21,35,60,.55);position:relative;cursor:help;transition:transform .2s}
+.kpi:hover{transform:translateY(-4px)}
+.kpi::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:4px;border-radius:0 4px 4px 0;background:var(--terra)}
+.kpi .n{font:700 clamp(30px,3.6vw,44px)/1 Georgia,serif;color:var(--navy)}
+.kpi .l{margin-top:8px;font-size:13.5px;color:var(--mute)}
+.kpi.dark{background:var(--navy);color:var(--paper);border-color:var(--navy)}
+.kpi.dark .n{color:#fff}.kpi.dark .l{color:#c9d2e4}
+
+/* tooltip */
+[data-tip]{position:relative}
+[data-tip]::after{content:attr(data-tip);position:absolute;left:12px;right:12px;bottom:calc(100% + 10px);background:var(--navy);color:var(--paper);
+  border-left:4px solid var(--terra);padding:10px 12px;border-radius:8px;font:400 12.5px/1.45 "Segoe UI",sans-serif;
+  opacity:0;pointer-events:none;transform:translateY(6px);transition:.18s;z-index:60;box-shadow:0 14px 30px -10px rgba(0,0,0,.5)}
+[data-tip]:hover::after{opacity:1;transform:none}
+.tipinline{border-bottom:1.5px dotted var(--terra);cursor:help;display:inline-block}
+.tipinline::after{left:0;right:auto;width:290px}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:50;background:rgba(247,244,238,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-top:38px}
+nav .wrap{display:flex;gap:6px;overflow-x:auto;padding:10px 0}
+nav a{white-space:nowrap;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--navy);padding:8px 14px;border-radius:99px;border:1px solid transparent}
+nav a:hover{background:var(--navy);color:var(--paper)}
+
+section{padding:56px 0 8px}
+.sh{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sh .no{font:700 14px Georgia,serif;color:var(--terra);letter-spacing:.1em}
+.sh h2{font-size:clamp(26px,3vw,36px);color:var(--navy)}
+.sub{color:var(--mute);margin:0 0 24px;max-width:780px}
+
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px}
+.two{display:grid;grid-template-columns:1.25fr 1fr;gap:20px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+/* chart */
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13.5px;margin-top:6px}
+.legend span::before{content:"";display:inline-block;width:22px;height:4px;border-radius:2px;margin-right:8px;vertical-align:middle;background:var(--c)}
+.cap{font-size:12.5px;color:var(--mute);margin-top:10px}
+
+/* coverage grid */
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:560px}
+th{background:var(--navy);color:var(--paper);text-align:left;padding:10px 12px;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase}
+td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--ink);background:#fff;vertical-align:top}
+tr:nth-child(even) td{background:#faf7f1}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700;color:#fff;white-space:nowrap}
+.p-ok{background:var(--ok)}.p-warn{background:var(--warn)}.p-bad{background:var(--bad)}.p-mute{background:#6b7588}
+
+/* decisions */
+.dec{display:grid;gap:12px;counter-reset:d}
+.d{display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;transition:.2s}
+.d:hover{border-color:var(--terra)}
+.d .num{counter-increment:d;width:36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font:700 15px Georgia,serif}
+.d .num::before{content:counter(d)}
+.d h3{font-size:18px;color:var(--navy);margin-bottom:3px}
+.d p{margin:0;color:#3a4558;font-size:14.5px}
+.d .rec{margin-top:8px;font-size:13.5px;color:var(--navy);background:var(--paper2);padding:6px 10px;border-radius:8px;border-left:3px solid var(--terra)}
+.d label{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--mute);cursor:pointer;user-select:none}
+.d input{accent-color:var(--terra);width:18px;height:18px}
+.d.done{opacity:.55}
+
+/* topic cards */
+.t{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.t header{background:var(--navy);color:var(--paper);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.t header h3{color:#fff;font-size:19px}
+.t header .st{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--paper);background:var(--terra);padding:4px 10px;border-radius:99px}
+.t header .st.w{background:#6b7588}
+.t ul{margin:0;padding:16px 18px 18px 36px}
+.t li{margin:6px 0;color:var(--ink)}
+.t li b{color:var(--navy)}
+.ask{margin:0 18px 18px;background:var(--paper2);border-left:4px solid var(--terra);padding:10px 12px;border-radius:8px;font-size:14px;color:var(--ink)}
+.ask strong{color:var(--terra)}
+
+/* timeline */
+.tl{position:relative;padding-left:28px;border-left:3px solid var(--terra);margin-left:8px}
+.tl div{margin:0 0 18px;position:relative}
+.tl div::before{content:"";position:absolute;left:-37px;top:5px;width:15px;height:15px;border-radius:50%;background:var(--paper);border:3px solid var(--terra)}
+.tl b{color:var(--navy);font-family:Georgia,serif}
+
+footer{margin-top:60px;background:var(--navy);color:#c9d2e4;padding:34px 24px;font-size:13px}
+footer b{color:var(--paper)}
+
+@media(max-width:860px){
+  .kgrid{grid-template-columns:repeat(2,1fr)}
+  .two,.three{grid-template-columns:1fr}
+  .d{grid-template-columns:36px 1fr}.d label{grid-column:2}
+  .hero{padding:44px 0 110px}.wrap{padding:0 16px}.kpi .n{font-size:28px}.chip{font-size:12px}
+}
+@media print{nav{display:none}.kpis{margin-top:20px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><i></i>ISZE · Call prep · Friday 16 Oct 2026</div>
+    <h1>Every open question, <em>one page</em>.</h1>
+    <p class="lede">UIO is the big one: the car-park forecast is overstated, a corrected version exists but is not promoted, and the new source data has not arrived on disk. Below that: pricing, ITUK, Portugal, and who owes you what.</p>
+    <div class="meta">
+      <span class="chip">Read from the roadmap, the decision register, the UIO files, and the mail log built 15 Oct 18:56</span>
+      <span class="chip">No fresh mail pulled · no attachments opened</span>
+    </div>
+  </div>
+</header>
+
+<div class="kpis"><div class="wrap">
+  <div class="kgrid">
+    <div class="kpi dark" data-tip="Grand Total including MIDI, sheet 1 row 2. V19 = 309,125 and candidate c = 224,238 in 2030F. (224,238 − 309,125) ÷ 309,125 = −27.5%. MIDI markets are not ISZE customers; ex-MIDI is lower on both sides."><div class="n">−27.5%</div><div class="l">2030 fleet, candidate c vs live V19</div></div>
+    <div class="kpi" data-tip="Sum of 2026–2030 Grand Total: candidate c 1,190,140 vs V19 1,446,918. Difference −256,778 = −17.75%. Source: V20 assumptions log, candidate c section."><div class="n">−17.75%</div><div class="l">Five-year total, candidate c vs V19</div></div>
+    <div class="kpi" data-tip="Files that read the UIO or fleet figures: 58 live/on-screen, 49 shared packs, 9 archive. Source: UIO_UPGRADE_IMPACT_MAP_2026-09-22.md. None rebuilt yet."><div class="n">116</div><div class="l">Files waiting on the corrected forecast</div></div>
+    <div class="kpi" data-tip="Five choices only you can make on UIO (see section 2). Plus the pricing and ITUK replies. Count is from the UIO log and the roadmap, not a formula."><div class="n">5</div><div class="l">UIO calls only you can make</div></div>
+  </div>
+</div></div>
+
+<nav><div class="wrap">
+  <a href="#uio">1 · UIO</a><a href="#decide">2 · Your calls</a><a href="#data">3 · New data</a>
+  <a href="#price">4 · Pricing</a><a href="#ituk">5 · ITUK</a><a href="#pt">6 · Portugal</a>
+  <a href="#wait">7 · Waiting on others</a><a href="#dates">8 · Dates</a>
+</div></nav>
+
+<div class="wrap">
+
+<section id="uio">
+  <div class="sh"><span class="no">01</span><h2>UIO: what the fleet forecast says now</h2></div>
+  <p class="sub">The live workbook (V19, 18 June) assumes a truck lasts 33 years. Everywhere else in the same file a truck lasts 8 to 10 years. So the fleet grows no matter what is fed in. Candidate c fixes that.</p>
+  <div class="two">
+    <div class="card chart">
+      <h3 style="font-size:19px;color:var(--navy);margin-bottom:2px">Total fleet 2025–2030, including MIDI</h3>
+      <div class="cap" style="margin:0 0 10px">The gap between the lines is how much V19 overstates the fleet</div>
+      <svg id="ch" viewBox="0 0 640 330" role="img" aria-label="Line chart: V19 rises to 309,125 in 2030; candidate c falls to 224,238"></svg>
+      <div class="legend"><span style="--c:#c0552d">V19 (live workbook)</span><span style="--c:#15233c">Candidate c (corrected, not promoted)</span></div>
+      <div class="cap">Source: V20 assumptions log, candidate c grand total table. 2025E = 258,594 on both. Candidate a and b sit within 1% of c and are left off.</div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:19px;color:var(--navy);margin-bottom:12px">What is true today</h3>
+      <ul style="margin:0;padding-left:20px">
+        <li style="margin:8px 0"><b>Not promoted.</b> V19 is still the file everything reads.</li>
+        <li style="margin:8px 0"><b>Independent check fails 3 of 11.</b> Two are the Portugal and Cyprus LCV rows you must rule on; one is the 2027–28 curve versus the spec.</li>
+        <li style="margin:8px 0"><b>UIO dashboard prints two answers.</b> 2030 is <span class="tipinline" data-tip="Plotted data says 304,580; annotations and the warning box say 262,559. Same page, 42,021 apart.">304,580 and 262,559</span> on one page, and its headline <span class="tipinline" data-tip="Recomputed from its own two printed values: 258,594 → 304,580 = +17.8%. The page prints +0.8%.">+0.8%</span> is really +17.8%.</li>
+        <li style="margin:8px 0"><b>BVDB pack</b> carries the V19 forecast years. IUK 2026 is covered only by an override file (44,926, not 49,280).</li>
+        <li style="margin:8px 0"><b>Not verified:</b> whether the dashboard and deploy copies were pulled. I could not tell from disk.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="decide">
+  <div class="sh"><span class="no">02</span><h2>The five UIO calls only you can make</h2></div>
+  <p class="sub">Tick them off as you settle them on the call. Ticks are stored in this browser only.</p>
+  <div class="dec" id="decs">
+    <div class="d" data-k="d1"><div class="num"></div><div>
+      <h3>Accept “not reconstructable” for Portugal LCV and Cyprus LCV?</h3>
+      <p>Two repair attempts produced negative registrations or retention above 100%. Candidate c reverts both rows to the earlier values. The checker still flags them.</p>
+      <div class="rec">Recommend: accept, and say so on the page. No source on disk can rebuild them.</div></div>
+      <label><input type="checkbox"> settled</label></div>
+    <div class="d" data-k="d2"><div class="num"></div><div>
+      <h3>Review the two rows I changed outside the brief</h3>
+      <p>Poland LCV (2026: 61 → 23) and Cyprus light-duty (261 → 205). The new retention test convicted both. Both lower the 2026 level.</p>
+      <div class="rec">Recommend: keep, flagged for review before promotion.</div></div>
+      <label><input type="checkbox"> settled</label></div>
+    <div class="d" data-k="d3"><div class="num"></div><div>
+      <h3>LCV survival at age 12: 0.10 or 0.00?</h3>
+      <p>IMIT’s own table says 0.10 (8.23-year life). The locked IUK number 44,926 only works with 0.00 (8.13 years). Moving it shifts all 22 LCV rows.</p>
+      <div class="rec">Needs your call: keep the lock, or reopen it.</div></div>
+      <label><input type="checkbox"> settled</label></div>
+    <div class="d" data-k="d4"><div class="num"></div><div>
+      <h3>Switch the scope cell to “Exclude MIDI”</h3>
+      <p>The workbook’s read-me says Exclude. The cell is on Include, so the top row shows 258,594 instead of 163,198.</p>
+      <div class="rec">Recommend: change it. Anyone quoting the top row today quotes about 95,000 non-customer vehicles.</div></div>
+      <label><input type="checkbox"> settled</label></div>
+    <div class="d" data-k="d5"><div class="num"></div><div>
+      <h3>Make 163,198 the one fleet base</h3>
+      <p>The spend-per-truck file still uses 163,459, a 261-vehicle gap caused by the light/heavy split, not by two different counts.</p>
+      <div class="rec">Recommend: yes. The dashboards already use 163,198.</div></div>
+      <label><input type="checkbox"> settled</label></div>
+  </div>
+</section>
+
+<section id="data">
+  <div class="sh"><span class="no">03</span><h2>New actuals and outlooks: what exists, what doesn’t</h2></div>
+  <p class="sub">The honest answer on “we need new everything”: one good new input exists in the mail and is not on disk. The rest is a list of sources that were never supplied.</p>
+  <div class="card" style="margin-bottom:18px;border-left:6px solid var(--terra)">
+    <h3 style="font-size:20px;color:var(--navy);margin-bottom:6px">The one new input: IMIT shipments and forecast (Kawin, 25 Sep)</h3>
+    <p style="margin:0">IMIT shipments through May 2026, plus a forecast June 2026 to December 2030 built from their May vehicle forecast. It includes lines for non-distributor markets that must be stripped out; the LCV survival ratio is unchanged. <b>I found no file for it on disk</b>, so ask Kawin to resend it. This is the best raw material for new outlooks.</p>
+  </div>
+  <div class="card tw" style="padding:0">
+  <table>
+    <tr><th>Market / series</th><th>Status</th><th>What we have, what is missing</th></tr>
+    <tr><td>Ireland, Portugal (light-duty)</td><td><span class="pill p-ok">Real registrations</span></td><td>Only two markets built on actual registrations. Portugal register runs to June 2026; light share settled at 63.6%.</td></tr>
+    <tr><td>IUK LCV (UK pickup)</td><td><span class="pill p-ok">Locked</span></td><td>2026 = 44,926 (two methods agree within 3). The old 49,280 still sits in several files.</td></tr>
+    <tr><td>ITUK car park</td><td><span class="pill p-warn">Stale</span></td><td>DVLA/SMMT actuals stop at 2024; sheet still labelled V15. Next extract about March 2027. Duncan’s VIN extract (13 Oct) arrived, unopened.</td></tr>
+    <tr><td>Israel (UTI)</td><td><span class="pill p-warn">Partial</span></td><td>Registration table 1994–2025 is on disk. Ministry of Transport parc table exists only as a picture. Shimauchi’s UK and Israel records are still to come. I did not read the Israel rebuild note.</td></tr>
+    <tr><td>Germany</td><td><span class="pill p-bad">None</span></td><td>One 31 Dec 2025 snapshot, no history. Stays marked indicative.</td></tr>
+    <tr><td>Greece (light-duty)</td><td><span class="pill p-bad">None</span></td><td>No registration series anywhere on disk.</td></tr>
+    <tr><td>Cyprus LCV, Poland LCV</td><td><span class="pill p-bad">None</span></td><td>Cyprus stops at 2014. Poland has no series at all.</td></tr>
+    <tr><td>Belgium, Cyprus, Malta, Greece history</td><td><span class="pill p-mute">Low confidence</span></td><td>Built from IML backbone, not registrations.</td></tr>
+    <tr><td>Mileage, transmission (clutch sizing)</td><td><span class="pill p-warn">Part in</span></td><td>Mileage arrived 6 Oct. Transmission table (MT/AT/AMT) still to come.</td></tr>
+  </table>
+  </div>
+</section>
+
+<section id="price">
+  <div class="sh"><span class="no">04</span><h2>Pricing revision</h2></div>
+  <p class="sub">The thread with Masumi is the live one.</p>
+  <div class="three">
+    <div class="t"><header><h3>Masumi’s ask</h3><span class="st">Reply due</span></header>
+      <ul>
+        <li>Overall <b>+5.3%</b>, to match the IML parts weighted average (12 Oct).</li>
+        <li>Identify the gap versus a <b>6.0%</b> increase on ISZE purchase, and how to recover it.</li>
+        <li>Some wording on the summary tab is unclear to her.</li>
+      </ul>
+      <div class="ask"><strong>Say:</strong> measured whole-book increase is <span class="tipinline" data-tip="Weighted by parts billed 1 Jul 2025 to 30 Jun 2026, from the pricing revision dashboard. Japan +6.21%, Thailand +6.31%.">+5.96%</span>. UTI +5.58%, UMI +5.64%.</div></div>
+    <div class="t"><header><h3>Suzuki (8 Oct)</h3><span class="st w">Answer</span></header>
+      <ul>
+        <li>Parts with no established price get no new price.</li>
+        <li>Tell him before an order so the price can be checked.</li>
+        <li>Open lines: PN 7553263570 and 7553263740. PN 8979024290 was priced at JPY 25,000.</li>
+      </ul></div>
+    <div class="t"><header><h3>Also in flight</h3><span class="st w">In review</span></header>
+      <ul>
+        <li>IE price simulation 2027 (Peter De Clercq): JPY comparison added, factor reduced on 288 items.</li>
+        <li>BVP water pump survey due <b>20 Oct</b>; your answer already sent.</li>
+        <li>Base price check on 8984876350 is with IMIT.</li>
+      </ul></div>
+  </div>
+</section>
+
+<section id="ituk">
+  <div class="sh"><span class="no">05</span><h2>ITUK brakes SPA</h2></div>
+  <div class="two">
+    <div class="card">
+      <ul style="margin:0;padding-left:20px">
+        <li style="margin:8px 0">8 Oct: ITUK <b>rejected your framework</b> (the one that normally gives ISZE a higher margin) and will send a counterproposal. Both paths run in parallel.</li>
+        <li style="margin:8px 0">Duncan’s argument: a lower price would only stop the loss of sales.</li>
+        <li style="margin:8px 0">He is updating the <b>mandatory dealer parts list</b>, including P700, and expects Yoshimoto to approve a PMS SPA.</li>
+        <li style="margin:8px 0">You expect the list next week.</li>
+      </ul>
+    </div>
+    <div class="card" style="background:var(--navy);color:var(--paper);border-color:var(--navy)">
+      <h3 style="color:#fff;margin-bottom:8px">Brake finding behind it</h3>
+      <p style="margin:0;color:#d6dcea">Five brake part numbers carry about €696,000 of the €722,257 billed where the peer shop is far cheaper than our reference dealer price. Pad kit 8982447940 is both held on ITUK and flagged as exposed. Pricing changes are yours to start directly, not through the question register.</p>
+    </div>
+  </div>
+</section>
+
+<section id="pt">
+  <div class="sh"><span class="no">06</span><h2>Portugal R&amp;M</h2></div>
+  <div class="card">
+    <ul style="margin:0;padding-left:20px">
+      <li style="margin:8px 0">Imotors still gives <b>no volume</b> and has not started the study.</li>
+      <li style="margin:8px 0">Leasing is over 30% of B2B new-vehicle sales (Luis Esteves, 2 Oct). Arval white-label renting contract due end October, no later than November.</li>
+      <li style="margin:8px 0">Your idea: this way of working could raise R&amp;M contracts in Portugal and at other distributors.</li>
+      <li style="margin:8px 0"><b>Masumi (15 Oct) asked you to explain the details, “maybe tomorrow”.</b></li>
+      <li style="margin:8px 0">Nuno sent the three-dealer vehicle sales by tonnes; the <b>parts file is still outstanding</b>.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="wait">
+  <div class="sh"><span class="no">07</span><h2>Waiting on others</h2></div>
+  <div class="card tw" style="padding:0">
+  <table>
+    <tr><th>Who</th><th>What they owe you</th><th>Since</th></tr>
+    <tr><td>Kawin (IMIT)</td><td>UIO file (shipments to May, forecast to 2030) is not on disk</td><td>25 Sep</td></tr>
+    <tr><td>Shimauchi (IML)</td><td>Transmission table, UK and Israel vehicle records</td><td>6 Oct</td></tr>
+    <tr><td>Duncan (ITUK)</td><td>Counterproposal, mandatory parts list including P700</td><td>8–15 Oct</td></tr>
+    <tr><td>Nuno (Imotors)</td><td>Parts sales-to-dealer file for the three dealers</td><td>9 Oct</td></tr>
+    <tr><td>Sebastian Muller (ISD)</td><td>Sales-to-dealer data agreed in the action-points meeting</td><td>end Sep, chased 14 Oct</td></tr>
+    <tr><td>IMIT (Peeraya)</td><td>IDA tender prices; your final amounts also not sent</td><td>9–15 Oct</td></tr>
+    <tr><td>Poland tender</td><td>Signed agreement and dealer agreement</td><td>6 Oct</td></tr>
+    <tr><td>Aaron (IUK)</td><td>Subaru sealer price; answer to his fulfilment question is owed by you</td><td>12–14 Oct</td></tr>
+    <tr><td>Panagiotis (Petros)</td><td>Reply on the SPA tender follow-up</td><td>7 Oct</td></tr>
+  </table>
+  </div>
+  <p class="cap" style="margin-top:12px">Also from the decision register: D05 (sales-review gate repair) is the one item never answered; you asked for those questions to stop. The BI Command Center retirement stands, but its ship-gate entry still needs dropping.</p>
+</section>
+
+<section id="dates">
+  <div class="sh"><span class="no">08</span><h2>Dates</h2></div>
+  <div class="card"><div class="tl">
+    <div><b>20 Oct</b> · BVP water pump survey due. Also the day you leave for Japan.</div>
+    <div><b>20–31 Oct</b> · In Japan (IML). Mobile internet requested from Nasir.</div>
+    <div><b>End Oct to Nov</b> · Arval renting contract in Portugal.</div>
+    <div><b>Next week</b> · Duncan’s mandatory parts list expected.</div>
+    <div><b>About March 2027</b> · Next DVLA/SMMT extract for the ITUK car park.</div>
+  </div></div>
+</section>
+
+</div>
+
+<footer><div class="wrap">
+  <b>Sources.</b> ISZE_ROADMAP.md · DECISIONS_AWAITING_JEROME_2026-09-19 · UIO_V20_ASSUMPTIONS_2026-09-22c.md · UIO_UPGRADE_IMPACT_MAP_2026-09-22.md · V20_SPEC_v2_DRAFT.md · MAIL_LOG_2026-09-01_to_2026-10-05 and 2026-10-06_to_2026-10-15. Internal, not for forwarding. Mail items are as logged on 15 Oct and were not re-checked.
+</div></footer>
+
+<script>
+(function(){
+  var yrs=["2025E",2026,2027,2028,2029,2030];
+  var v19=[258594,269314,279502,289529,299448,309125];
+  var c=[258594,252124,245135,237813,230830,224238];
+  var W=640,H=330,L=64,R=28,T=34,B=44,lo=200000,hi=320000;
+  function X(i){return L+i*(W-L-R)/5}
+  function Y(v){return T+(hi-v)/(hi-lo)*(H-T-B)}
+  var s='';
+  for(var g=200000;g<=320000;g+=40000){
+    s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(g)+'" y2="'+Y(g)+'" stroke="#d9d1c1" stroke-dasharray="3 4"/>';
+    s+='<text x="'+(L-10)+'" y="'+(Y(g)+4)+'" text-anchor="end" font-size="12" fill="#5b6677">'+(g/1000)+'k</text>';
+  }
+  var pts1=v19.map(function(v,i){return X(i)+','+Y(v)});
+  var pts2=c.map(function(v,i){return X(i)+','+Y(v)});
+  s+='<polygon points="'+pts1.join(' ')+' '+pts2.slice().reverse().join(' ')+'" fill="#c0552d" opacity=".13"/>';
+  s+='<polyline points="'+pts1.join(' ')+'" fill="none" stroke="#c0552d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>';
+  s+='<polyline points="'+pts2.join(' ')+'" fill="none" stroke="#15233c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>';
+  v19.forEach(function(v,i){ if(i>0) s+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="5" fill="#fff" stroke="#c0552d" stroke-width="3"/>'});
+  c.forEach(function(v,i){ if(i>0) s+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="5" fill="#fff" stroke="#15233c" stroke-width="3"/>'});
+  yrs.forEach(function(y,i){s+='<text x="'+X(i)+'" y="'+(H-16)+'" text-anchor="middle" font-size="13" fill="#222">'+y+'</text>'});
+  s+='<text x="'+(X(5)-6)+'" y="'+(Y(v19[5])-14)+'" text-anchor="end" font-size="14" font-weight="700" fill="#c0552d">309,125</text>';
+  s+='<text x="'+(X(5)-6)+'" y="'+(Y(c[5])+26)+'" text-anchor="end" font-size="14" font-weight="700" fill="#15233c">224,238</text>';
+  s+='<text x="'+((X(5)+X(4))/2+30)+'" y="'+((Y(v19[5])+Y(c[5]))/2+4)+'" text-anchor="middle" font-size="13" font-weight="700" fill="#c0552d">gap 84,887</text>';
+  document.getElementById('ch').innerHTML=s;
+
+  try{
+    var st=JSON.parse(localStorage.getItem('callprep_20261016')||'{}');
+    document.querySelectorAll('.d').forEach(function(d){
+      var k=d.getAttribute('data-k'),cb=d.querySelector('input');
+      if(st[k]){cb.checked=true;d.classList.add('done')}
+      cb.addEventListener('change',function(){
+        d.classList.toggle('done',cb.checked);st[k]=cb.checked;
+        try{localStorage.setItem('callprep_20261016',JSON.stringify(st))}catch(e){}
+      });
+    });
+  }catch(e){
+    document.querySelectorAll('.d input').forEach(function(cb){cb.addEventListener('change',function(){cb.closest('.d').classList.toggle('done',cb.checked)})});
+  }
+})();
+</script>
+</body>
+</html>

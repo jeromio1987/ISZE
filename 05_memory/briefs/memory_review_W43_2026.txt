@@ -1,0 +1,54 @@
+ISZE MEMORY REVIEW — Week 43, 2026
+Generated: 2026-10-19
+
+Scope note: lubricants and action-plan-fy* out of scope (standing instruction 2026-07-13). action-plan-fy2027.md present, not opened. Delta since W42 (2026-10-12). Automated run, no questions asked, cheap tier.
+
+## Verifier
+| Check | Result | Evidence |
+|-------|--------|----------|
+| Brief written this run | PASS | 05_memory/briefs/memory_review_W43_2026.txt |
+| Stale files remaining | FAIL | 11 of 13 in-scope project files STALE by clock (same 11 as W42; dates unchanged, no edits) |
+| Off-scope untouched | PASS | action-plan-fy2027.md not opened or edited; no lubricants file |
+| Applied log updated | N/A | no edits this run |
+
+## Memory Health
+1. _verification_report.md unchanged: still 2026-09-24T18:26:53Z, 164 pass / 1 warn / 0 fail. No new reconfirmation to sync (the report is now 25 days old; the pipeline may not have regenerated it).
+2. metric_dictionary.md modified 2026-10-15 (was 10-11 at W42). Content not re-diffed against pms-coverage.md / gps-reconciliation.md (cheap tier). Treat the PMS/GPS figures in those two files as unverified against the new version.
+3. New file since W42: projects/pbi-newest-pn.md (282 bytes, 2026-10-15). No frontmatter / last_validated. Not in scope of earlier reviews.
+4. DECISIONS.md unchanged since W42 (latest entry 2026-09-24 Eucon/scrape go). Still not reflected in competitiveness.md.
+5. Automation drift 2026-10-19 (cross-ref): 2 findings, 0 high. Banned labels in shared pages down from 940 to 21 (IDS_2026_dealer_compare_UTI.html). LiveStateAudit overlap with the PMS/IAM refresh (low). EQ-HIT session task status not restated in this report.
+6. glossary.md unchanged since 2026-09-23 sync. Global "Key confirmed data" (outside this tree) still carries obsolete values (see Suggested 7).
+
+STALE (>3 weeks), 11:
+pricing-basket-2026.md (2026-06-29); sales-analytics-pipeline.md (2026-06-13); monthly-sales-report-fy2027.md (2026-07-05); aftermarket-intelligence.md (2026-07-02); gps-reconciliation.md (2026-07-03); pms-coverage.md (2026-07-03); competitiveness.md (2026-07-27); imie_3party_2025_2026.md (2026-07-30); ids-db-leverage-os.md (2026-08-11); db-sales-review-mode-a.md (2026-08-12); uio.md (2026-08-17).
+No frontmatter: isze-corporate-presentations-20260919.md, pbi-newest-pn.md.
+
+## Applied this run
+None. No high-confidence factual sync available (verification report unchanged; metric_dictionary change not diffed).
+
+## Open Items Still Unresolved
+- AIM classification P0 two-axis conflict.
+- EQ-HIT PN→service mapping (pms-coverage.md).
+- CY2025 full PMS basket gap revalidation.
+- VKWRT load for SPA-adjusted AIM; other-DB sell-out for AIM FY2027 KPI.
+- Eucon licence: four legal questions open; NOTE_Eucon.txt plain-text password still to be removed by Jerome.
+- GPS v9 snapshot re-basing decision.
+- MIDI estimate / V20 promotion; NMR and Malta/Cyprus decisions not in uio.md.
+- ids-db-leverage-os §9 v1.4 question (likely moot).
+- Monthly sales report PDFs July–Sep missing.
+- 21 banned labels in IDS_2026_dealer_compare_UTI.html.
+
+## Suggested Updates (Jerome)
+1. aftermarket-intelligence.md: add release-governance section (check RELEASES.json for current approved release) plus P0 two-taxonomy caveat qualifying the 93.5%/87% rates.
+2. competitiveness.md: Eucon licence-risk flag and the 2026-09-24 scrape-go decision.
+3. uio.md: NMR/NMR85 5.5t and Malta/Cyprus 3.5t=0 decisions (DECISIONS.md 2026-09-23).
+4. ids-db-leverage-os.md: close v1.4 question (rebuild shipped 2026-08-15).
+5. pricing-basket-2026.md: fold in 2026-08-11 DECISIONS batch.
+6. Add frontmatter/last_validated to isze-corporate-presentations-20260919.md and pbi-newest-pn.md.
+7. Global "Key confirmed data" memory still shows PMS 0.3%/EUR 3.5M, AIM 93.5%, UIO v9, Source J 0.62 (now 0.673), FX 163.7 (now 178.5).
+8. One full re-validation pass would clear the weekly staleness FAIL (now 4+ weeks running).
+9. Move Sales to Dealers_ITUK_CY2025.xlsx out of 05_memory/projects/.
+10. Re-run the verification report so it reflects current data.
+
+## No action needed
+- glossary.md (synced 2026-09-23), sales-analytics-pipeline.md, db-sales-review-mode-a.md, imie_3party_2025_2026.md: no new contradicting evidence.

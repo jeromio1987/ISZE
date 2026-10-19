@@ -1,0 +1,52 @@
+{
+    "schema":  "ship_receipt/v2",
+    "artifact":  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Price_Revision_Simulator_v5_2026-10-15.html",
+    "artifact_mtime_ms":  1792082231161,
+    "written_at":  "2026-10-15T16:39:19.3561607Z",
+    "ok":  true,
+    "screenshots_taken":  4,
+    "screenshots_read":  4,
+    "checks":  [
+                   {
+                       "detail":  "2808951 bytes",
+                       "ok":  true,
+                       "id":  "exists"
+                   },
+                   {
+                       "detail":  "no external script",
+                       "ok":  true,
+                       "id":  "no_cdn"
+                   },
+                   {
+                       "detail":  "independent pandas model vs JS at 3 PMS scenarios (settings at part, PMS cell, PMS category; category holds where under 45%; single market x category hold; shop-far hold): extra EUR identical to the cent (ref5.py ALL OK)",
+                       "ok":  true,
+                       "id":  "js_vs_python"
+                   },
+                   {
+                       "detail":  "484 PMS part numbers, EUR 6,322,981 billed; start state PMS extra EUR 149,769 = 2.37%",
+                       "ok":  true,
+                       "id":  "pms_base"
+                   },
+                   {
+                       "detail":  "3 node-built scenarios plus a workbook built by the page itself after PMS clicks: every Checks line OK incl. PMS extra, By PMS category ties, 0 formula errors, typing 4% recalculates to the model value",
+                       "ok":  true,
+                       "id":  "xlsx_in_excel"
+                   },
+                   {
+                       "detail":  "Parts Price Intelligence accepts #pn=; the other pages open without a deep link, the part number is copied",
+                       "ok":  true,
+                       "id":  "links"
+                   },
+                   {
+                       "detail":  "OPEN_Price_Revision_Simulator_v5.cmd",
+                       "ok":  true,
+                       "id":  "open_cmd"
+                   }
+               ],
+    "screenshots":  [
+                        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_sim_20261015\\v5b.png",
+                        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_sim_20261015\\v5c.png",
+                        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_sim_20261015\\v5d.png"
+                    ],
+    "notes":  "v5b, v5c and v5d image-read (drill, market grid, explain panel). The nowrap CSS fix was made after v5b and checked in v5d. Link targets opened by href only, not clicked in a browser."
+}

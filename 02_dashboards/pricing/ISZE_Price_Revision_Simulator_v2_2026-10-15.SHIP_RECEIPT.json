@@ -1,0 +1,56 @@
+{
+    "schema":  "ship_receipt/v2",
+    "artifact":  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Price_Revision_Simulator_v2_2026-10-15.html",
+    "artifact_mtime_ms":  1792077679242,
+    "written_at":  "2026-10-15T15:21:19.6000387Z",
+    "ok":  true,
+    "screenshots_taken":  2,
+    "screenshots_read":  2,
+    "checks":  [
+                   {
+                       "detail":  "2497879 bytes",
+                       "ok":  true,
+                       "id":  "exists"
+                   },
+                   {
+                       "detail":  "no external script",
+                       "ok":  true,
+                       "id":  "no_cdn"
+                   },
+                   {
+                       "detail":  "independent pandas line model vs JS at 4 scenarios incl. all holds: extra EUR identical to the cent (ref_model2.py: ALL OK)",
+                       "ok":  true,
+                       "id":  "js_vs_python_lines"
+                   },
+                   {
+                       "detail":  "no holds, 5.3%: per list within EUR 1.12 of the AIM-level Excel tool",
+                       "ok":  true,
+                       "id":  "vs_excel_tool"
+                   },
+                   {
+                       "detail":  "service holds at 5.0%: extra EUR 1,629,792.63 = proposal step_eur 1,629,792.63",
+                       "ok":  true,
+                       "id":  "vs_29sep_proposal"
+                   },
+                   {
+                       "detail":  "BP step weighted by quantity 5.9616% = published figure",
+                       "ok":  true,
+                       "id":  "bp_qty"
+                   },
+                   {
+                       "detail":  "headless scripted: holds toggle, market focus, scenario save, price file blobs (13,807 paste lines PR00), no JS errors",
+                       "ok":  true,
+                       "id":  "clicks"
+                   },
+                   {
+                       "detail":  "OPEN_Price_Revision_Simulator_v2.cmd",
+                       "ok":  true,
+                       "id":  "open_cmd"
+                   }
+               ],
+    "screenshots":  [
+                        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_sim_20261015\\v2t2.png",
+                        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_sim_20261015\\v2t3.png"
+                    ],
+    "notes":  "Both screenshots image-read. Sticky header bug seen on t2 fixed before t3. Newest part number: PBI pull covers only 3 of the PR00 parts; page says so."
+}

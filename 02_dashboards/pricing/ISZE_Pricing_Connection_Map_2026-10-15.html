@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How pricing, AIM, PRISM and tenders connect</title>
+<style>
+:root{--navy:#15233c;--terra:#c0552d;--paper:#f7f4ee;--ink:#222;--line:#d9d3c7;--mute:#5b6577;--ok:#2f6b4f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#10151f;--ink:#e8e4da;--line:#2b3548;--mute:#9aa5b8}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 system-ui,Segoe UI,Arial,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:28px 16px 40px}
+h1{font:700 28px/1.2 Georgia,serif;color:var(--navy);margin:0 0 6px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) h1,:root:not([data-theme="light"]) h2{color:#f7f4ee}}
+h2{font:700 19px/1.3 Georgia,serif;color:var(--navy);margin:30px 0 8px}
+.sub{color:var(--mute);margin:0 0 18px}
+.verdict{background:var(--navy);color:#f7f4ee;border-left:6px solid var(--terra);padding:16px 18px;border-radius:4px;font-size:16px}
+.verdict b{color:#fff}
+svg{width:100%;min-width:640px;height:auto;display:block;margin:10px 0 4px}
+.dia{overflow-x:auto}
+html,body{overflow-x:hidden}
+.box{fill:#fff;stroke:#15233c;stroke-width:1.5}
+.boxk{fill:#15233c}
+.t{font:600 14px system-ui,sans-serif;fill:#15233c}
+.tw{font:600 14px system-ui,sans-serif;fill:#f7f4ee}
+.s{font:12px system-ui,sans-serif;fill:#5b6577}
+.sw{font:12px system-ui,sans-serif;fill:#d9d3c7}
+.ok{stroke:#2f6b4f;stroke-width:2.2;fill:none}
+.no{stroke:#c0552d;stroke-width:2.2;stroke-dasharray:7 5;fill:none}
+.legend{font-size:13px;color:var(--mute);margin:2px 0 0}
+.legend i{display:inline-block;width:26px;border-top:3px solid var(--ok);vertical-align:middle;margin-right:6px}
+.legend i.d{border-top:3px dashed var(--terra);margin-left:16px}
+table{width:100%;border-collapse:collapse;margin:8px 0}
+th{background:var(--navy);color:#f7f4ee;text-align:left;padding:8px 10px;font-size:13px}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-size:14px}
+tr.gap td:first-child{border-left:4px solid var(--terra)}
+tr.have td:first-child{border-left:4px solid var(--ok)}
+.tip{position:relative;border-bottom:1px dotted var(--terra);cursor:help;font-weight:600}
+.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:130%;width:min(280px,70vw);background:#15233c;color:#f7f4ee;border-top:3px solid #c0552d;padding:8px 10px;border-radius:3px;font:400 12px/1.4 system-ui,sans-serif;opacity:0;pointer-events:none;transition:opacity .12s;z-index:50}
+.tip:hover::after,.tip:focus::after{opacity:1}
+ol.opts{padding-left:20px}
+ol.opts li{margin:0 0 10px}
+.q{background:#fff;border:2px solid var(--terra);padding:14px 16px;border-radius:4px;color:#222;margin-top:12px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .q{background:#1a2233;color:#e8e4da}}
+.foot{color:var(--mute);font-size:12px;margin-top:26px;border-top:1px solid var(--line);padding-top:10px}
+.foot code{font-size:11px;word-break:break-all}
+td,th{overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How pricing, AIM, PRISM and tenders connect</h1>
+<p class="sub">Internal read, 15 October 2026. Your markets only; the MIDI countries (France, Spain, Italy, Switzerland, Poland, Serbia) are left out.</p>
+
+<div class="verdict">
+<b>They share one key already, the AIM parts category, and most of the pipes exist.</b> What does not exist is evidence flowing the right way: the price revision does not see rival prices or tenders, and the tenders are not recalculated when the list price moves. The first limit is data, not wiring: rival prices are known for only a few hundred part numbers, and no tender has a recorded outcome.
+</div>
+
+<h2>The picture</h2>
+<div class="dia"><svg viewBox="0 0 960 400" role="img" aria-label="Five blocks around the AIM category key; solid arrows exist, dashed arrows are missing">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2f6b4f"/></marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c0552d"/></marker>
+  </defs>
+  <!-- centre key -->
+  <rect class="boxk" x="350" y="150" width="260" height="100" rx="6"/>
+  <text class="tw" x="480" y="182" text-anchor="middle">AIM parts category</text>
+  <text class="sw" x="480" y="203" text-anchor="middle">the common key, plus the</text>
+  <text class="sw" x="480" y="221" text-anchor="middle">distributor (sold-to code)</text>
+
+  <rect class="box" x="20" y="20" width="270" height="86" rx="6"/>
+  <text class="t" x="34" y="46">Price revision</text>
+  <text class="s" x="34" y="66">Simulator v6, AIM-level workbook</text>
+  <text class="s" x="34" y="84">+5.96% weighted, whole book</text>
+
+  <rect class="box" x="670" y="20" width="270" height="86" rx="6"/>
+  <text class="t" x="684" y="46">Price intelligence</text>
+  <text class="s" x="684" y="66">Rival and genuine prices seen</text>
+  <text class="s" x="684" y="84">304 part numbers observed</text>
+
+  <rect class="box" x="20" y="294" width="270" height="86" rx="6"/>
+  <text class="t" x="34" y="320">Tenders</text>
+  <text class="s" x="34" y="340">734 opportunities, 480 matched</text>
+  <text class="s" x="34" y="358">to one of your distributors</text>
+
+  <rect class="box" x="670" y="294" width="270" height="86" rx="6"/>
+  <text class="t" x="684" y="320">PRISM (the analysis app)</text>
+  <text class="s" x="684" y="340">GPS: what we billed against</text>
+  <text class="s" x="684" y="358">target; PMS: service demand</text>
+
+  <!-- existing -->
+  <path class="ok" d="M290 70 L350 165" marker-end="url(#a)"/>
+  <path class="ok" d="M670 70 L610 165" marker-end="url(#a)"/>
+  <path class="ok" d="M670 335 L610 235" marker-end="url(#a)"/>
+  <path class="ok" d="M290 335 L350 235" marker-end="url(#a)"/>
+  <!-- missing -->
+  <path class="no" d="M290 52 L670 52" marker-end="url(#b)"/>
+  <path class="no" d="M155 294 L155 106" marker-end="url(#b)"/>
+  <path class="no" d="M290 345 L670 345" marker-end="url(#b)"/>
+  <path class="no" d="M805 106 L805 294" marker-end="url(#b)"/>
+  <text class="s" x="480" y="44" text-anchor="middle" fill="#c0552d">rival prices do not reach the move</text>
+  <text class="s" x="146" y="205" text-anchor="end">revised list does not</text>
+  <text class="s" x="146" y="221" text-anchor="end">re-price tender demand</text>
+  <text class="s" x="480" y="337" text-anchor="middle">only 10 tenders carry a euro value</text>
+  <text class="s" x="814" y="205">intelligence and PRISM</text>
+  <text class="s" x="814" y="221">do not meet</text>
+</svg></div>
+<p class="legend"><i></i>exists today <i class="d"></i>missing</p>
+
+<h2>What is in place and what is not</h2>
+<table>
+<tr><th style="width:26%">Link</th><th>State today</th></tr>
+<tr class="have"><td>Revision → AIM category</td><td>Built. The simulator sorts every part by AIM category and checks that its base matches monthly billing (148,293 rows, EUR 32.60M, difference 0.00). Per market: PR00 +5.92%, UTI +5.58%, UMI +5.64%, CIS +4.85%.</td></tr>
+<tr class="have"><td>Revision → price intelligence</td><td>One way only: a link from the simulator opens the intelligence page on a part number. The simulator's "dealers buy less" response is an assumption you set; it is not driven by how far rivals sit from us.</td></tr>
+<tr class="have"><td>Tenders → distributor and service demand</td><td>Partly built. <span class="tip" tabindex="0" data-tip="Count of opportunities in tender_data.json with a distributor code. None of them are in a MIDI country.">480 of 734</span> tenders are matched to one of your 16 distributors, and 310 are tagged as aftersales. But only <span class="tip" tabindex="0" data-tip="Opportunities with a value for GPS addressable euros per year in tender_data.json, generated 12 Oct 2026.">10</span> carry a euro value for parts demand, 29 a fleet size and 88 a contract value.</td></tr>
+<tr class="gap"><td>Tenders → rival prices</td><td>A script exists, but the file was last built on 2 Oct and covers 7 of 664 opportunities. Of its 98 category rows, 70 have some rival price. Do not read a blank as "no competitor"; it means we have not looked.</td></tr>
+<tr class="gap"><td>Tenders → revision</td><td>Nothing. Tender parts demand is valued at today's price, so a +5.96% move changes tender value and nothing recalculates it. The simulator mentions tenders zero times.</td></tr>
+<tr class="gap"><td>Tenders → what price wins</td><td>No tender has a recorded outcome (0 of 734), so tenders cannot tell pricing what a winning level looks like.</td></tr>
+<tr class="gap"><td>Intelligence → PRISM</td><td>Separate. The rival price work lives in its own pages and scrapers; PRISM's GPS and PMS pages do not use it.</td></tr>
+</table>
+
+<h2>The options, best first</h2>
+<ol class="opts">
+<li><b>Put rival-price coverage beside the move, per AIM category, in the simulator.</b> Low to medium effort, reads data that exists. It tells you for each category whether a move is backed by evidence or is a guess. Risk: most categories will show "no evidence" at first, which is true and useful, but it will look thin.</li>
+<li><b>Re-price tender demand at the revised list and rebuild the tender price file.</b> Low effort. It shows how a move changes tender value. Risk: only about 10 tenders carry a euro value today, so the picture is small until more are filled in.</li>
+<li><b>Record tender outcomes for your distributors' markets.</b> Little code, but it needs people to report wins, losses and prices. It is the only route to learning what price wins.</li>
+<li><b>One hub page that links everything.</b> Cheap, but it would only be a menu. I would not do it.</li>
+</ol>
+
+<div class="q"><b>The one decision:</b> should the first link be option 1, rival-price evidence next to each AIM category's price move, or option 2, tender demand re-priced at the new list? I recommend option 1, because the move is the decision in front of you and it is the one place the evidence is missing.</div>
+
+<p class="foot">Sources: <code>02_dashboards/pricing/ISZE_Price_Revision_Simulator_v6_2026-10-15.html</code> and its ship receipt; <code>00_docs/roadmaps/pricing.md</code> (index +5.9616%, 19 Sep); <code>01_data/00_derived/pricing_stack_applied_2026-09-19.json</code>; <code>01_data/14_dashboards/tender_data.json</code> (generated 12 Oct 2026); <code>01_data/00_derived/tender_price_context.csv</code> and <code>.meta.json</code> (built 2 Oct); <code>03_analytics/Isuzu/prism/pages/14_Tender_Pipeline.py</code>. Counts were read from these files on 15 Oct 2026. GPS means what we billed divided by the target spend per truck; PMS means the planned service schedule demand; AIM is our parts category tree.</p>
+</div>
+</body>
+</html>

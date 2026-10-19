@@ -1,0 +1,56 @@
+{
+    "schema": "ship_receipt/v2",
+    "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Price_Revision_Simulator_v6_2026-10-15.html",
+    "artifact_mtime_ms": 1792087595684,
+    "written_at": "2026-10-15T18:03:04.652502Z",
+    "ok": true,
+    "screenshots_taken": 2,
+    "screenshots_read": 2,
+    "checks": [
+        {
+            "detail": "2839404 bytes",
+            "ok": true,
+            "id": "exists"
+        },
+        {
+            "detail": "no external script",
+            "ok": true,
+            "id": "no_cdn"
+        },
+        {
+            "detail": "sales_fact.parquet monthly billing matched to the revision base: 148,293 rows, EUR 32,595,852.63, difference 0.00",
+            "ok": true,
+            "id": "monthly_base"
+        },
+        {
+            "detail": "independent pandas: extra, central and stress after reaction, FY2027 and FY2028 from two dates, central FY: identical to the cent (ref6.py ALL OK)",
+            "ok": true,
+            "id": "reaction_and_fy_python"
+        },
+        {
+            "detail": "two node-built scenarios and one workbook built by the page itself after clicks (effective date, stress case, PMS hold): 11 of 11 Checks lines OK, 0 formula errors; typing a new date or response in Excel recalculates",
+            "ok": true,
+            "id": "xlsx_in_excel"
+        },
+        {
+            "detail": "effective date starts empty; the SAP paste Valid From stays empty with a warning; example dates are labelled as examples",
+            "ok": true,
+            "id": "no_invented_date"
+        },
+        {
+            "detail": "OPEN_Price_Revision_Simulator_v6.cmd",
+            "ok": true,
+            "id": "open_cmd"
+        },
+        {
+            "id": "pbi_newest_all",
+            "ok": true,
+            "detail": "Power BI ISZJ PARTS MASTER read-only: 15,273 of 15,273 base parts found, 713 with a newer number (SHA-256 of pair list identical between page and saved csv). Built page: PR00 SAP paste has 13,804 rows + 594 'newest' second lines, 0 NOT CHECKED; Price file section rendered and read: green 'checked for all 13.958 parts' note replaces the amber warning."
+        }
+    ],
+    "screenshots": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_sim_20261015\\v6c.png",
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_sim_20261015\\v6d.png"
+    ],
+    "notes": "v6c (reaction tab) and v6d (market pack) image-read. The left-aligned description column in the pack was fixed after v6d and not re-photographed. The print layout was not tested in a print preview."
+}
