@@ -122,6 +122,15 @@ D2["A57"] = None
 W["U13"] = "-> ITUK  (as presented in July)"
 W["U14"] = "-> UTI  (as presented in July)"
 W["U10"] = "The remaining stretch is negative because the GPS stretch is larger than the gap: that amount is the surplus above the plan."
+for _c in ("U", "AE", "AO", "AY", "BI"):
+    D2[f"{_c}46"] = "Network plan (BP)"
+IN["A21"] = "Network plan (BP), EUR"
+for t in TABS:
+    wb[t]["A22" if t in LCV else "A28"] = "Stretch (%) = global input (capped only if Dashboard (2) Q1 = YES)"
+D["V12"] = "Not enough data: 6 of 12 months reported in FY2026 (KPI file June 2026)."
+D["V16"] = "Not enough data: 11 of 12 months in FY2025, none in FY2026 (KPI file June 2026)."
+D["V20"] = "Not enough data: 8 of 12 months in FY2025, none in FY2026 (KPI file June 2026)."
+D["V21"] = "Not enough data: no KPI figures from Loutsios & Sons."
 wb["Waterfall VP (original)"]["A1"] = "Original FY2027 plan waterfall (reference, unchanged)"
 wb["Waterfall VP (original)"]["A2"] = "Reference copy of the original plan waterfall. Nothing added, nothing changed."
 

@@ -1,4 +1,4 @@
-# Draft mail to Masumi san — GPS extended target V3.3 (DRAFT, do not send without Jerome)
+# Draft mail to Masumi san — GPS extended target V3.4 (DRAFT, do not send without Jerome)
 
 Subject: GPS extended target FY2027 and outlook FY2028-FY2031 (model V3.4)
 
@@ -16,14 +16,14 @@ Following your summary of 22 October, please find attached the updated GPS model
    - From FY2028 to FY2031 all rates go up 3% a year, as in the IML policy.
 
 2. Vehicle numbers
-   - We use the vehicles in use from the UIO file version 19, one year shifted as you corrected: FY2027 uses calendar 2026, up to FY2031 using calendar 2030.
+   - We use the vehicles in use from UIO V19, one year shifted as you corrected: FY2027 uses calendar 2026, up to FY2031 using calendar 2030.
    - For the 18 distributors the fleet grows from 163,170 vehicles (FY2026) to 205,337 (FY2031), +26%.
 
 3. FY2025 and FY2026 sales
    - ISZE sales per distributor are refreshed from our checked billing file. Small changes only, the largest is IUK FY2026 at EUR 5.90M instead of EUR 5.98M.
 
 4. FY2027 extended target
-   - ITUK and UTI keep the targets as presented in July (EUR 7.35M and EUR 3.26M). Their maximum spend now uses your data on 2026 vehicles with +5% (EUR 12.54M and EUR 8.49M), so GPS reads 55.6% for ITUK and 36.5% for UTI after the stretch.
+   - ITUK and UTI keep the targets as presented in July (EUR 7.35M and EUR 3.26M). Their maximum spend now uses your data on 2026 vehicles with +5% (EUR 12.54M and EUR 8.49M), so GPS reads 55.6% for ITUK and 36.5% for UTI on budget, and 58.6% and 38.4% after the stretch.
    - Stretch of 1.8% of the maximum spend for every distributor, no exception.
    - Stretch total EUR 1,239,483, extended target EUR 34,461,845 for the 18 distributors.
    - In the waterfall the stretch replaces the remaining gap of EUR 952,037 between FY2026 actual plus the identified actions (EUR 34,332,407) and the FY2027 plan (EUR 35,284,444).
@@ -57,7 +57,7 @@ Following your summary of 22 October, please find attached the updated GPS model
    - All fixed numbers are now on one Inputs sheet, so any rate, price step or margin can be changed in one place. A Checks sheet confirms the totals agree across all sheets.
 
 9. Points where we need your view
-   - Price increase: the plan bridge uses +2%, the maximum spend uses +5%. Please confirm which one applies to FY2027.
+   - Price increase: we used +5% for FY2027 as in your mail; the plan waterfall shows +2%. Please confirm +5% is the one to keep.
    - Belgium: IBX also serves the Netherlands, Poland and Luxembourg, but only Belgian vehicles are counted. Can IML share the vehicle numbers for the other three?
 
 Kind regards,
