@@ -43,7 +43,7 @@ FY27 at 1.0% gives EUR 923K, EUR 29K short of EUR 952K — so FY27 stays 1.8%.
 
 ## Open points
 
-- Ireland is already at 117% on FY26 actual sales: the Irish rate or vehicle count looks too low (the pricing file already forces Ireland to a different vehicle count). Not fixed here.
+- Ireland is already at 117% on FY26 actual sales: the Irish rate or vehicle count looks too low. Not fixed here.
 - Corrected CY2026 vehicle file (30-07, ~9% fewer LCV) not used: V20 is not adopted. If it is, every share goes up about 10%.
 - Belgium potential counts Belgian vehicles only (IBX also serves NL / PL / LU).
 - Price: plan bridge uses +2%, potential uses +5% — question 6 to Masumi-san still open.
