@@ -38,7 +38,7 @@ python -I _build/build_v33.py ISZE_GPS_Extended_Target_FY27_V3.2.xlsx ^
 | Above budget | +1.24 | +2.78 | +2.89 | +2.48 | +1.50 |
 
 FY27 stretch EUR 1,239,483 against EUR 952,037 needed → EUR 287,446 buffer (identical to the Masumi document v3.3).
-Max spend 18 distributors FY27 EUR 61,019,133 (the v3.3 document still shows 56,813,054 from the earlier rate), GPS 54.4% at budget, 56.5% after stretch.
+Max spend 18 distributors FY27 EUR 60,153,415 (ITUK/UTI on Masumi-san's data; the v3.3 document still shows 56,813,054 from the earlier rate), GPS 55.2% at budget, 57.3% after stretch.
 
 Sensitivity on the FY28–31 input (FY27 at 1.8%): 1.8% → +3.3 to +4.3M a year above budget; 0.8% → FY31 +0.84M.
 FY27 at 1.0% gives about EUR 926K, EUR 26K short of EUR 952K — so FY27 stays 1.8%.
