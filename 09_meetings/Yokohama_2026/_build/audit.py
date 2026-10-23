@@ -192,7 +192,7 @@ for ws in wf:
             if isinstance(c.value, str) and c.value.startswith("="):
                 nform += 1
                 v = wsv[c.coordinate].value
-                if v is None and ws.title != "Waterfall VP (original)":
+                if v is None and ws.title != "Waterfall VP (original)" and '""' not in c.value:
                     empty.append(f"{ws.title}!{c.coordinate}")
                 if isinstance(v, str) and v.startswith(("#", "Err")):
                     errs.append(f"{ws.title}!{c.coordinate}={v}")

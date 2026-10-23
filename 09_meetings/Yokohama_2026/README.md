@@ -67,3 +67,10 @@ Run: `python -I _build/audit.py <builder output.xlsx> <recalculated.xlsx> <ISZE 
 
 **Not verifiable inside the repo** (source workbooks are not in git): KPI sales to dealer (Dashboard col Q), ITUK/UTI V4 figures, the waterfall bars. They are carried from V3.2 unchanged.
 **Known, not an error:** ITUK / UTI potential differs between `Dashboard` (V4: 13.05M / 8.83M) and `Dashboard (2)` (2026 fleet: 12.54M / 8.49M). Both as presented; the targets agree.
+
+## V3.4 — file to send (23-10-2026)
+
+`ISZE_GPS_Extended_Target_FY27_V3.4.xlsx` = V3.3 model, cleaned for sending (no file names, no internal names), one model (the July dealer-target columns on `Dashboard` removed), plus two sheets:
+- `UIO V19` — fleet used by the model, plain explanation (3% a year leaving the road after 2025), new-van forecast, potential and targets FY27–FY31 (all links to the model).
+- `UIO V20` — same fleet on the UIO V20 spec (150 values checked against the V20 change list), potential and targets with the same rule, summary against plan. FY31: V19 +EUR 1.50M vs plan, V20 −EUR 7.40M.
+Built by `_build/build_v33.py` then `_build/finalize.py`; audit 0 fails, Checks ALL OK.

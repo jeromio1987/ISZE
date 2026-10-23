@@ -1,14 +1,14 @@
 # Draft mail to Masumi san — GPS extended target V3.3 (DRAFT, do not send without Jerome)
 
-Subject: GPS extended target FY2027 and outlook FY2028-FY2031 (model V3.3)
+Subject: GPS extended target FY2027 and outlook FY2028-FY2031 (model V3.4)
 
-Attachment: ISZE_GPS_Extended_Target_FY27_V3.3.xlsx
+Attachment: ISZE_GPS_Extended_Target_FY27_V3.4.xlsx
 
 ---
 
 Dear Masumi san,
 
-Following your summary of 22 October, please find attached the updated GPS model (V3.3). Below are all changes since the last version, the results, and the points where we need your view.
+Following your summary of 22 October, please find attached the updated GPS model (V3.4). Below are all changes since the last version, the results, and the points where we need your view.
 
 1. Spend per vehicle
    - Van (D-Max) rate is now EUR 250 per vehicle (FY2026, ISZE net), so EUR 262.50 in FY2027 with the +5% price increase. This replaces the 219.56 calculation, where exchange rate and margin were applied twice.
@@ -45,6 +45,8 @@ Following your summary of 22 October, please find attached the updated GPS model
      FY2030 EUR 48.87M against plan EUR 46.39M (+2.48M)
      FY2031 EUR 53.60M against plan EUR 52.10M (+1.50M)
    - With 0.8 points a year FY2031 would be only EUR 0.84M above plan, so 1.0 point is our proposal.
+   - These figures use UIO V19. UIO V19 adds the forecast of new vans and trucks but lets only 3% of the fleet leave the road each year, so the fleet grows about 26% to FY2031. The UIO V20 spec keeps the same new vehicle forecast but lets vehicles leave on the normal age curve, so the fleet goes down about 6%.
+   - On the UIO V20 spec the same rule gives FY2028 EUR 0.73M above plan, then FY2029 EUR 1.39M, FY2030 EUR 4.11M and FY2031 EUR 7.40M below plan. Both are shown in the sheets UIO V19 and UIO V20. We think the real fleet is between the two, so we propose to fix FY2028 to FY2031 only after UIO V20 is approved.
 
 7. Distributor to dealer level
    - The distributor columns in your sheet are now filled for all 18 distributors, as amounts. The FY2027 dealer target is the FY2026 sales to dealers plus the ISZE stretch divided by 0.65, as in your method. After FY2027 it moves in line with the ISZE target.
@@ -57,6 +59,5 @@ Following your summary of 22 October, please find attached the updated GPS model
 9. Points where we need your view
    - Price increase: the plan bridge uses +2%, the maximum spend uses +5%. Please confirm which one applies to FY2027.
    - Belgium: IBX also serves the Netherlands, Poland and Luxembourg, but only Belgian vehicles are counted. Can IML share the vehicle numbers for the other three?
-   - Outlook: we use the growing vehicle forecast of the UIO file for FY2028 to FY2031. Please confirm this is the basis you want.
 
 Kind regards,
