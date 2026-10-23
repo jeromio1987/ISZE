@@ -48,3 +48,5 @@ FY27 at 1.0% gives EUR 923K, EUR 29K short of EUR 952K — so FY27 stays 1.8%.
 - Corrected CY2026 vehicle file (30-07, ~9% fewer LCV) not used: V20 is not adopted. If it is, every share goes up about 10%.
 - Belgium potential counts Belgian vehicles only (IBX also serves NL / PL / LU).
 - Price: plan bridge uses +2%, potential uses +5% — question 6 to Masumi-san still open.
+
+Note: the delivered V3.3 is saved after a full recalculation (LibreOffice), so every formula cell carries its value for previews. The builder output alone has formulas without values until Excel recalculates.
