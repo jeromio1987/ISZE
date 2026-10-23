@@ -112,7 +112,8 @@ def cell(r, b, off):
 
 
 models = lambda t: ["LCV"] if t in LCV else ["LD", "MD", "F-Series", "LCV"]
-S27, CEIL, SL = 0.018, 1.0, 0.010
+S27, SL = 0.018, 0.010
+CEIL = wv["Inputs"]["B38"].value  # 9.99 when the cap is off
 model = {}
 for t in LCV + MIX:
     pot = {fy: sum(U(t, m, fy - 1) * RATE[m] * price[fy] for m in models(t)) for fy in range(2026, 2032)}
@@ -156,14 +157,14 @@ for fy in range(2028, 2032):
     n35 = round(ld * w6 / (w6 + w7)); n75 = ld - n35
     k = price[fy] / 1.05
     pot = n35 * D2["V6"].value * k + n75 * D2["V7"].value * k + f * D2["V8"].value * k
-    sh = sh if sh >= 1 else min(sh + SL, 1)
+    sh = sh if sh >= CEIL else min(sh + SL, CEIL)
     chk("C recompute", f"ITUK potential FY{fy % 100}", close(cell(9, fy, 3), pot, 1), f"{cell(9, fy, 3)} vs {pot:.0f}")
     chk("C recompute", f"ITUK target FY{fy % 100}", close(cell(9, fy, 5), pot * sh, 1), f"{cell(9, fy, 5)} vs {pot * sh:.0f}")
 sh = D2["Y10"].value
 for fy in range(2028, 2032):
     u = U("UTI", "LD", fy - 1) + U("UTI", "MD", fy - 1)
     pot = u * D2["V10"].value * price[fy] / 1.05
-    sh = min(sh + SL, 1)
+    sh = sh if sh >= CEIL else min(sh + SL, CEIL)
     chk("C recompute", f"UTI target FY{fy % 100}", close(cell(10, fy, 5), pot * sh, 1), f"{cell(10, fy, 5)} vs {pot * sh:.0f}")
 
 # ------------------------------------------------------------------ D. ties
@@ -177,7 +178,7 @@ chk("D ties", "Dashboard (2) C..I = Dashboard C..I (18 rows)", all(close(D2[f"{c
     for (r1, r2) in zip(DROW.values(), [6, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 24, 27, 31, 35, 38, 41]) for c in "CDEGI"))
 chk("D ties", "Inputs D23 outside-18 = 35.28M - sum BP", close(I["D23"].value, 35284444.2378 - sum(bp.values()), 2))
 for t in LCV + MIX:
-    chk("D ties", f"{t} share <= ceiling after stretch (or flat if already above)", (D[f"H{DROW[t]}"].value <= 1.0000001) or D[f"F{DROW[t]}"].value == 0)
+    chk("D ties", f"{t} share <= ceiling after stretch (or flat if already above)", (D[f"H{DROW[t]}"].value <= CEIL + 1e-7) or D[f"F{DROW[t]}"].value == 0)
 # known difference, reported not hidden
 chk("D ties", "INFO ITUK potential: Dashboard D5 (V4, 13.05M) vs Dashboard (2) X9 (CY2026 N35/N75/F, 12.54M)",
     False, f"{D['D5'].value:,.0f} vs {D2['X9'].value:,.0f} — two bases in one file, both as presented")

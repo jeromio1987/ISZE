@@ -108,6 +108,10 @@ IN["A25"] = "Fleet for the two tailor-made customers (01_data/00_derived/uio_by_
 IN["A11"] = "Dealer price step FY27 (ITUK row as presented)"; inp("B11", 0.03, "0.0%")
 IN["A34"] = "ITUK sales to dealers FY26 (GBP, as presented)"; inp("B34", 12873997.67, "#,##0.00")
 IN["C34"] = "x GBP->EUR B16 = Dashboard (2) S9"
+IN["A36"] = "Cap stretch at the share ceiling? (switch on Dashboard (2) Q1)"; inp("B36", "='Dashboard (2)'!Q1", "@")
+IN["A37"] = "Share ceiling when the cap is on"; inp("B37", 1.0, "0%")
+IN["A38"] = "Effective ceiling used by the formulas (no cap = 999%)"; inp("B38", '=IF(UPPER(B36)="YES",B37,9.99)', "0%")
+IN["C36"] = "Default NO (Jerome 23-10-2026): same stretch for every distributor; above 100% we quote the amount, not the %."
 IN["A32"] = ("Other inputs stay where they were: fleet per distributor and FY25/FY26 billing on each distributor tab (rows 9-12, 20/26), "
              "stretch / ceiling / price on Dashboard (2) row 1-2, ITUK and UTI FY27 figures as presented (V4 basis).")
 IN["A32"].font = NOTE
@@ -120,7 +124,7 @@ D2 = wb["Dashboard (2)"]
 INP = {"stretch": "N1", "ceiling": "Q1", "price": "T1"}
 for lab_cell, lab, cell, val, fmt in [("K1", "GPS stretch FY27 (pt)", "N1", 0.018, "0.0%"),
                                       ("K2", "GPS stretch FY28-31 / yr (pt)", "N2", 0.010, "0.0%"),
-                                      ("O1", "Share ceiling", "Q1", 1.0, "0%"),
+                                      ("O1", "Cap at 100%? YES/NO", "Q1", "NO", "@"),
                                       ("R1", "Price FY28-31 / yr", "T1", 0.03, "0.0%")]:
     D2[lab_cell] = lab
     D2[lab_cell].font = Font(bold=True)
@@ -130,13 +134,13 @@ for lab_cell, lab, cell, val, fmt in [("K1", "GPS stretch FY27 (pt)", "N1", 0.01
     D2[cell].fill = INPUT_FILL
 D2["V2"] = "FY27 stretch must stay >= ~1.1% to cover the EUR 952K the waterfall needs (Dashboard C25)."
 D2["V2"].font = NOTE
-D2["V1"] = ("Blue/yellow = input. Stretch is capped per distributor so GPS share never passes the ceiling; "
-            "a distributor already above it keeps its share flat (no stretch).")
+D2["V1"] = ("Blue/yellow = input. Q1 = NO: the same stretch for every distributor (Jerome 23-10-2026). "
+            "Q1 = YES: stretch capped so no GPS share passes 100%.")
 D2["V1"].font = NOTE
 D2.row_dimensions[2].hidden = False  # row 2 holds the FY28-31 input
 STRETCH = "'Dashboard (2)'!$N$1"
 STRETCH_LATER = "'Dashboard (2)'!$N$2"
-CEIL = "'Dashboard (2)'!$Q$1"
+CEIL = "Inputs!$B$38"  # effective ceiling: 100% when Dashboard (2) Q1 = YES, otherwise no cap
 PRICE = "'Dashboard (2)'!$T$1"
 
 YEARS = [2028, 2029, 2030, 2031]   # FY
@@ -254,8 +258,8 @@ for t in MIX_TABS:
 
 # ---------------------------------------------------------------- Dashboard (English): stretch label
 DB = wb["Dashboard"]
-DB["J12"] = "Above ceiling at BP — no stretch"
-DB["J19"] = "Stretch capped at 100% share"
+DB["J12"] = "Above 100% at BP: quote the amount, not the %"
+DB["J19"] = "Above 100% after stretch: quote the amount, not the %"
 DB["J17"] = "Belgian vehicles only (IBX also serves NL/PL/LU)"
 
 # ---------------------------------------------------------------- Dashboard (2)
@@ -552,8 +556,9 @@ for fy in YEARS:
         D2.column_dimensions[dst].width = D2.column_dimensions[src].width or 12
 
 # WATCH notes refreshed
-D2["A54"] = ("• CEILING (v3.3): stretch is capped per distributor at the share ceiling (input Q1). "
-             "FINLAND is above 100% at BP (104.9%) — no stretch, share held flat. It is the BP, not the model.")
+D2["A54"] = ("• NO CAP (v3.3, Jerome 23-10-2026): every distributor gets the same stretch. FINLAND (104.9% at BP) and IRELAND "
+             "(98.4% at BP, 100.2% after stretch) read above 100%: quote the amount, never the %. Ireland's fleet is national "
+             "registration data (SIMI 2010-2025), so the gap sits in the spend-per-vehicle estimate, not the fleet. Switch: Q1.")
 D2["A53"] = ("• V4 IUK max spend = 50,202 (CY2027F) x EUR250 = 12,550,500. This file (v3.3): 49,280 (CY2026F) x 262.50 = 12,936,000.")
 DB["A33"] = D2["A54"].value
 DB["A32"] = D2["A53"].value
@@ -567,8 +572,8 @@ lines = [
     "MH's 291.2 x 1.16 x 0.65 = 219.56 chain retired (FX and margin applied twice).",
     "2. UIO: V19 detail rows kept, one-column shift (FY = CY-1). FY28..FY31 <- CY2027F..CY2030F "
     "(01_data/00_derived/uio_by_market_type_year.csv). Corrected CY2026 file (30-07, ~9% lower LCV) NOT applied — V20 not adopted.",
-    "3. Ceiling per distributor (input Q1 on Dashboard (2), 100%): stretch = MAX(0, MIN(stretch input, ceiling - GPS share)). "
-    "Share already at/above the ceiling is held flat. FY28-31: share = previous share + FY28-31 stretch input (N2, 1.0%), capped the same way.",
+    "3. No cap (Jerome 23-10-2026): every distributor gets the same stretch. Optional cap via Dashboard (2) Q1 = YES: "
+    "stretch = MAX(0, MIN(stretch input, 100% - GPS share)); a share already above 100% is then held flat. FY28-31: share = previous share + FY28-31 stretch input (N2, 1.0%), capped the same way.",
     "   Why two inputs: FY27 at 1.0% gives EUR 923K stretch, EUR 29K short of the EUR 952K the waterfall needs, so FY27 stays 1.8%. "
     "FY28-31 at 1.8% puts the 18 + outside customers EUR 3.3-4.2M a year above the network plan and drives Iceland to 99.8% / Ireland to the ceiling; "
     "1.0% stays above plan every year (FY31 +0.9M); 0.8% gives FY31 +0.2M only.",
@@ -612,10 +617,10 @@ for t in LCV_TABS + MIX_TABS:
 for t in ("ICELAND",):
     wb[t]["A39"] = None
 wb["UMI"]["A39"] = "2. Dealer-level data is 'Internal only' in the KPI Master: no sales-to-dealer figure, dealer target shows 'no KPI data'."
-wb["FINLAND"]["A39"] = ("2. GPS share is above 100% at BP (104.9% at the EUR 262.50 rate): no stretch, share held flat. "
-                        "Do not quote a GPS % to this DB — discuss the amount, or agree the per-unit rate first.")
-wb["IRELAND"]["A45"] = ("2. Share 98.4% at BP: stretch capped so the share stops at 100%. FY26 actual already reads 117% — "
-                        "the rate or the fleet for Ireland looks too low. Do not quote a GPS % to this DB.")
+wb["FINLAND"]["A39"] = ("2. GPS share is above 100% at BP (104.9% at the EUR 262.50 rate) and the stretch applies as for everyone. "
+                        "Do not quote a GPS % to this DB — discuss the amount.")
+wb["IRELAND"]["A45"] = ("2. Share 98.4% at BP, 100.2% after stretch; FY26 actual reads 117%. The fleet is national registration data "
+                        "(SIMI 2010-2025), so Ireland buys more than the estimated spend per vehicle. Do not quote a GPS % to this DB.")
 wb["BELGIUM"]["A45"] = ("2. ISUZU BENELUX NV covers BE/NL/PL/LUX. This tab uses the BELGIUM fleet only — NL/PL/LUX are not in "
                         "the max spend, so the GPS share is likely overstated.")
 DEALER_NOTE = ("• DEALER LEVEL (販社, v3.3): filled for all 18 as AMOUNTS ONLY. KPI 'Parts Sales DB to DLR' runs 2.2-3.7x ISZE "
@@ -641,6 +646,8 @@ rows = [
     ("Japanese view FY27 target total = Dashboard extended target total", "='Dashboard (2)'!Z44", "=Dashboard!I23"),
     ("Japanese view FY27 potential (16) = Dashboard max spend (16)",
      "='Dashboard (2)'!X44-'Dashboard (2)'!X9-'Dashboard (2)'!X10", "=Dashboard!D23-Dashboard!D5-Dashboard!D6"),
+    ("Stretch total FY27 = sum over the 16 tabs + ITUK + UTI", "=Dashboard!G23",
+     "=" + "+".join(f"{t}!E{23 if t in LCV_TABS else 29}" for t in LCV_TABS + MIX_TABS) + "+Dashboard!G5+Dashboard!G6"),
     ("Gap row FY31 = target + outside - BP", "='Dashboard (2)'!BN47", "='Dashboard (2)'!BN44+'Dashboard (2)'!BN45-'Dashboard (2)'!BN46"),
     ("Error cells on Dashboard (2) (must be 0)", "=SUMPRODUCT(--ISERROR('Dashboard (2)'!A1:BR60))", "=0"),
     ("Error cells on Dashboard (must be 0)", "=SUMPRODUCT(--ISERROR(Dashboard!A1:W40))", "=0"),
@@ -658,7 +665,10 @@ for i, (lab, a, b) in enumerate(rows, start=5):
     CK[f"F{i}"] = f'=IF(ABS(E{i})<1,"OK","CHECK")'
     for c in "CDE":
         CK[f"{c}{i}"].number_format = "#,##0.00"
-n = len(rows) + 6
+n = len(rows) + 5
+CK[f"A{n}"] = "i"; CK[f"B{n}"] = "INFO: distributors above 100% GPS share after the FY27 stretch (quote amount only)"
+CK[f"C{n}"] = "=COUNTIF(Dashboard!H7:H22,\">1\")"; CK[f"F{n}"] = "INFO"
+n += 2
 CK[f"B{n}"] = ("Known, not an error: ITUK and UTI potential differ between Dashboard (V4 basis, 13.05M / 8.83M) and "
                "Dashboard (2) (fleet 2026 by N35/N75/F, 12.54M / 8.49M). Both are as presented; targets agree.")
 CK[f"B{n}"].font = NOTE

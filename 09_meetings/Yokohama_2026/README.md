@@ -20,32 +20,32 @@ python -I _build/build_v33.py ISZE_GPS_Extended_Target_FY27_V3.2.xlsx ^
 
 1. **LCV rate EUR 250** (FY26, ISZE net) → 262.50 in FY27 → +3% a year. Replaces 219.56.
 2. **Vehicle numbers stay V19**, one year shifted (FY27 ← CY2026F … FY31 ← CY2030F).
-3. **Ceiling per distributor (100%).** The stretch never pushes a share above 100%. Finland (104.9% at budget) gets no stretch.
+3. **No cap (Jerome, 23-10-2026).** Every distributor gets the same stretch. Finland (104.9% at budget) and Ireland (100.2% after stretch) read above 100%: quote the amount, not the %. Ireland's fleet is national registration data (SIMI 2010-2025). Optional cap: `Dashboard (2)` Q1 = YES.
 4. **ITUK / UTI** kept as presented for FY27.
-5. **Two stretch inputs** on `Dashboard (2)`: FY27 1.8% (N1), FY28–FY31 1.0% a year (N2). Ceiling Q1, price T1.
+5. **Two stretch inputs** on `Dashboard (2)`: FY27 1.8% (N1), FY28–FY31 1.0% a year (N2). Cap switch Q1 (default NO), price T1.
 6. FY25/FY26 ISZE sales refreshed from the GPS-audited billing file.
 7. **Distributor level (販社) filled for all 18, amounts only.** Dealer spend per vehicle as in the ITUK row (£400 / £1,000 / £1,200 × 1.12 = €448 LCV, €1,120 LD, €1,344 MD/F). FY26 actual = KPI sales to dealer. FY27 target = FY26 + ISZE stretch ÷ 0.65. FY28–31 moves with the ISZE target. No dealer share %: KPI sales to dealer run 2.2–3.7× our billing, so Norway, Denmark, Belgium, Ireland and Iceland would read 108–184%.
 8. **`Inputs` sheet.** Every constant a formula uses sits there (rates, +5%, dealer GBP spend and FX, 35% margin, network BP, ITUK/UTI fleet). No calculation has a number typed into it, except Masumi-san's ITUK/UTI FY27 inputs (blue) and two cells from V3.2 left as they were (`Dashboard` col L `=G*0.33/2`, `Waterfall VP` N7). Checked by `_build/scan.py`; totals re-computed independently by `_build/indep.py` (match within EUR 900 a year: one Danish truck the Denmark tab does not count).
 9. Fixes in `Dashboard (2)`: links to the old September file removed; Malta LCV row used the F-Series rate; Greece and Cyprus medium trucks were missing from the potential.
 
-## Headline (FY27 1.8%, FY28–31 1.0%)
+## Headline (FY27 1.8%, FY28–31 1.0%, no cap)
 
 | | FY27 | FY28 | FY29 | FY30 | FY31 |
 |---|---:|---:|---:|---:|---:|
-| Target, 18 distributors (EUR M) | 34.45 | 38.22 | 42.29 | 46.71 | 51.39 |
+| Target, 18 distributors (EUR M) | 34.46 | 38.25 | 42.35 | 46.81 | 51.54 |
 | + customers outside the 18, flat | 2.06 | 2.06 | 2.06 | 2.06 | 2.06 |
 | Network budget (PL plan row 186) | 35.28 | 37.53 | 41.53 | 46.39 | 52.10 |
-| Above budget | +1.23 | +2.75 | +2.83 | +2.39 | +1.36 |
-| GPS share, 18 distributors | 57.3% | 58.5% | 59.7% | 60.9% | 62.1% |
+| Above budget | +1.24 | +2.78 | +2.89 | +2.48 | +1.50 |
 
-FY27 stretch EUR 1,230,452 against EUR 952,037 needed → EUR 278,415 buffer.
+FY27 stretch EUR 1,239,483 against EUR 952,037 needed → EUR 287,446 buffer (identical to the Masumi document v3.3).
+Max spend 18 distributors FY27 EUR 61,019,133 (the v3.3 document still shows 56,813,054 from the earlier rate), GPS 54.4% at budget, 56.5% after stretch.
 
-Sensitivity on the FY28–31 input (FY27 held at 1.8%): 1.8% → +3.3 to +4.2M a year above budget, Iceland reaches 99.8%; 0.8% → FY31 +0.7M.
-FY27 at 1.0% gives EUR 923K, EUR 29K short of EUR 952K — so FY27 stays 1.8%.
+Sensitivity on the FY28–31 input (FY27 at 1.8%): 1.8% → +3.3 to +4.3M a year above budget; 0.8% → FY31 +0.84M.
+FY27 at 1.0% gives about EUR 926K, EUR 26K short of EUR 952K — so FY27 stays 1.8%.
 
 ## Open points
 
-- Ireland is already at 117% on FY26 actual sales: the Irish rate or vehicle count looks too low. Not fixed here.
+- Ireland reads 117% on FY26 actual sales against a fleet from national registration data: the spend-per-vehicle estimate is low for Ireland. Quote amounts only.
 - Corrected CY2026 vehicle file (30-07, ~9% fewer LCV) not used: V20 is not adopted. If it is, every share goes up about 10%.
 - Belgium potential counts Belgian vehicles only (IBX also serves NL / PL / LU).
 - Price: plan bridge uses +2%, potential uses +5% — question 6 to Masumi-san still open.
