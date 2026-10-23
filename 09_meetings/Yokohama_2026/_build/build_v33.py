@@ -261,6 +261,12 @@ DB = wb["Dashboard"]
 DB["J12"] = "Above 100% at BP: quote the amount, not the %"
 DB["J19"] = "Above 100% after stretch: quote the amount, not the %"
 DB["J17"] = "Belgian vehicles only (IBX also serves NL/PL/LU)"
+# ITUK / UTI max spend on Masumi-san's data (Jerome 23-10-2026): his Japanese sheet, 2026 vehicles, +5%.
+# Targets and stretch stay as presented (V4); only the max spend and the GPS % move.
+DB["D5"] = "='Dashboard (2)'!X9"
+DB["D6"] = "='Dashboard (2)'!X10"
+DB["J5"] = "Max spend on MH data (2026 vehicles, +5%); target as presented"
+DB["J6"] = "Max spend on MH data (2026 vehicles, +5%); target as presented"
 
 # ---------------------------------------------------------------- Dashboard (2)
 # 1. internal refs, link C..I to Dashboard
@@ -648,6 +654,8 @@ rows = [
      "='Dashboard (2)'!X44-'Dashboard (2)'!X9-'Dashboard (2)'!X10", "=Dashboard!D23-Dashboard!D5-Dashboard!D6"),
     ("Stretch total FY27 = sum over the 16 tabs + ITUK + UTI", "=Dashboard!G23",
      "=" + "+".join(f"{t}!E{23 if t in LCV_TABS else 29}" for t in LCV_TABS + MIX_TABS) + "+Dashboard!G5+Dashboard!G6"),
+    ("ITUK max spend: Dashboard = Japanese view (MH data)", "=Dashboard!D5", "='Dashboard (2)'!X9"),
+    ("UTI max spend: Dashboard = Japanese view (MH data)", "=Dashboard!D6", "='Dashboard (2)'!X10"),
     ("Gap row FY31 = target + outside - BP", "='Dashboard (2)'!BN47", "='Dashboard (2)'!BN44+'Dashboard (2)'!BN45-'Dashboard (2)'!BN46"),
     ("Error cells on Dashboard (2) (must be 0)", "=SUMPRODUCT(--ISERROR('Dashboard (2)'!A1:BR60))", "=0"),
     ("Error cells on Dashboard (must be 0)", "=SUMPRODUCT(--ISERROR(Dashboard!A1:W40))", "=0"),
@@ -669,8 +677,8 @@ n = len(rows) + 5
 CK[f"A{n}"] = "i"; CK[f"B{n}"] = "INFO: distributors above 100% GPS share after the FY27 stretch (quote amount only)"
 CK[f"C{n}"] = "=COUNTIF(Dashboard!H7:H22,\">1\")"; CK[f"F{n}"] = "INFO"
 n += 2
-CK[f"B{n}"] = ("Known, not an error: ITUK and UTI potential differ between Dashboard (V4 basis, 13.05M / 8.83M) and "
-               "Dashboard (2) (fleet 2026 by N35/N75/F, 12.54M / 8.49M). Both are as presented; targets agree.")
+CK[f"B{n}"] = ("ITUK and UTI max spend use Masumi-san's data on both dashboards (12.54M / 8.49M, 2026 vehicles, +5%). "
+               "Targets and stretch stay as presented in July (V4).")
 CK[f"B{n}"].font = NOTE
 CK[f"B{n + 1}"] = ("Not verifiable inside the repo: KPI sales-to-dealer (Dashboard col Q, from KPI Master File June 2026), "
                    "ITUK/UTI V4 figures, waterfall bars. They are carried from V3.2 unchanged.")

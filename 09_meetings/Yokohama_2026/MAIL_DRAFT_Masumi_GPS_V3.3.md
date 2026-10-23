@@ -23,10 +23,12 @@ Following your summary of 22 October, please find attached the updated GPS model
    - ISZE sales per distributor are refreshed from our checked billing file. Small changes only, the largest is IUK FY2026 at EUR 5.90M instead of EUR 5.98M.
 
 4. FY2027 extended target
+   - ITUK and UTI keep the targets as presented in July (EUR 7.35M and EUR 3.26M). Their maximum spend now uses your data on 2026 vehicles with +5% (EUR 12.54M and EUR 8.49M), so GPS reads 55.6% for ITUK and 36.5% for UTI after the stretch.
    - Stretch of 1.8% of the maximum spend for every distributor, no exception.
    - Stretch total EUR 1,239,483, extended target EUR 34,461,845 for the 18 distributors.
+   - In the waterfall the stretch replaces the remaining gap of EUR 952,037 between FY2026 actual plus the identified actions (EUR 34,332,407) and the FY2027 plan (EUR 35,284,444).
    - Against the EUR 952,037 we need for the FY2027 plan this leaves a buffer of EUR 287,446.
-   - Please note one correction to the summary document: the total maximum spend is EUR 61,019,133, not EUR 56,813,054. The old total still used the earlier van rate. GPS is therefore 54.4% on budget and 56.5% after the stretch. The stretch and target amounts do not change.
+   - Please note one correction to the summary document: the total maximum spend is EUR 60,153,415, not EUR 56,813,054. The old total still used the earlier van rate. GPS is therefore 55.2% on budget and 57.3% after the stretch. The stretch and target amounts do not change.
 
 5. Distributors above 100%
    - Finland is at 104.9% on its budget already, and Ireland comes to 100.2% after the stretch.
@@ -53,7 +55,6 @@ Following your summary of 22 October, please find attached the updated GPS model
    - All fixed numbers are now on one Inputs sheet, so any rate, price step or margin can be changed in one place. A Checks sheet confirms the totals agree across all sheets.
 
 9. Points where we need your view
-   - ITUK and UTI: we kept the targets as presented in July (7.35M and 3.26M). The file shows their maximum spend on two bases (13.05M and 8.83M on the July basis, 12.54M and 8.49M on 2026 vehicles). Which one do you prefer to show?
    - Price increase: the plan bridge uses +2%, the maximum spend uses +5%. Please confirm which one applies to FY2027.
    - Belgium: IBX also serves the Netherlands, Poland and Luxembourg, but only Belgian vehicles are counted. Can IML share the vehicle numbers for the other three?
    - Outlook: we use the growing vehicle forecast of the UIO file for FY2028 to FY2031. Please confirm this is the basis you want.

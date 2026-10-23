@@ -180,9 +180,8 @@ chk("D ties", "Inputs D23 outside-18 = 35.28M - sum BP", close(I["D23"].value, 3
 for t in LCV + MIX:
     chk("D ties", f"{t} share <= ceiling after stretch (or flat if already above)", (D[f"H{DROW[t]}"].value <= CEIL + 1e-7) or D[f"F{DROW[t]}"].value == 0)
 # known difference, reported not hidden
-chk("D ties", "INFO ITUK potential: Dashboard D5 (V4, 13.05M) vs Dashboard (2) X9 (CY2026 N35/N75/F, 12.54M)",
-    False, f"{D['D5'].value:,.0f} vs {D2['X9'].value:,.0f} — two bases in one file, both as presented")
-chk("D ties", "INFO UTI potential: Dashboard D6 (V4) vs Dashboard (2) X10", False, f"{D['D6'].value:,.0f} vs {D2['X10'].value:,.0f}")
+chk("D ties", "ITUK max spend on MH data on both dashboards", close(D["D5"].value, D2["X9"].value, 1), f"{D['D5'].value:,.0f} vs {D2['X9'].value:,.0f}")
+chk("D ties", "UTI max spend on MH data on both dashboards", close(D["D6"].value, D2["X10"].value, 1), f"{D['D6'].value:,.0f} vs {D2['X10'].value:,.0f}")
 
 # ------------------------------------------------------------------ E. values present, no errors
 empty, errs, nform = [], [], 0
