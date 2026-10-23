@@ -38,12 +38,12 @@ python -I _build/build_v33.py ISZE_GPS_Extended_Target_FY27_V3.2.xlsx ^
 
 FY27 stretch EUR 1,230,452 against EUR 952,037 needed → EUR 278,415 buffer.
 
-Sensitivity on the FY28–31 input: 1.8% → +3.3 to +4.2M a year above budget, Iceland reaches 99.8%; 0.8% → FY31 only +0.2M.
+Sensitivity on the FY28–31 input (FY27 held at 1.8%): 1.8% → +3.3 to +4.2M a year above budget, Iceland reaches 99.8%; 0.8% → FY31 +0.7M.
 FY27 at 1.0% gives EUR 923K, EUR 29K short of EUR 952K — so FY27 stays 1.8%.
 
 ## Open points
 
-- Ireland is already at 117% on FY26 actual sales — the per-vehicle rate for Ireland is too low, not the sales too high.
+- Ireland is already at 117% on FY26 actual sales: the Irish rate or vehicle count looks too low (the pricing file already forces Ireland to a different vehicle count). Not fixed here.
 - Corrected CY2026 vehicle file (30-07, ~9% fewer LCV) not used: V20 is not adopted. If it is, every share goes up about 10%.
 - Belgium potential counts Belgian vehicles only (IBX also serves NL / PL / LU).
 - Price: plan bridge uses +2%, potential uses +5% — question 6 to Masumi-san still open.
