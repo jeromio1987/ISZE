@@ -11,7 +11,7 @@ Dear Masumi san,
 Following your summary of 22 October, please find attached the updated GPS model (V3.4). Below are all changes since the last version, the results, and the points where we need your view.
 
 1. Spend per vehicle
-   - Van (D-Max) rate is now EUR 250 per vehicle (FY2026, ISZE net), so EUR 262.50 in FY2027 with the +5% price increase. This replaces the 219.56 calculation, where exchange rate and margin were applied twice.
+   - Pick-up (D-Max) rate is now EUR 250 per vehicle (FY2026, ISZE net), so EUR 262.50 in FY2027 with the +5% price increase. This replaces the 219.56 calculation, where exchange rate and margin were applied twice.
    - Truck rates stay at 739 (light) and 887 (medium and F-Series), +5% in FY2027.
    - From FY2028 to FY2031 all rates go up 3% a year, as in the IML policy.
 
@@ -28,7 +28,7 @@ Following your summary of 22 October, please find attached the updated GPS model
    - Stretch total EUR 1,239,483, extended target EUR 34,461,845 for the 18 distributors.
    - In the waterfall the stretch replaces the remaining gap of EUR 952,037 between FY2026 actual plus the identified actions (EUR 34,332,407) and the FY2027 plan (EUR 35,284,444).
    - Against the EUR 952,037 we need for the FY2027 plan this leaves a buffer of EUR 287,446.
-   - Please note one correction to the summary document: the total maximum spend is EUR 60,153,415, not EUR 56,813,054. The old total still used the earlier van rate. GPS is therefore 55.2% on budget and 57.3% after the stretch. The stretch and target amounts do not change.
+   - Please note one correction to the summary document: the total maximum spend is EUR 60,153,415, not EUR 56,813,054. The old total still used the earlier pick-up rate. GPS is therefore 55.2% on budget and 57.3% after the stretch. The stretch and target amounts do not change.
 
 5. Distributors above 100%
    - Finland is at 104.9% on its budget already, and Ireland comes to 100.2% after the stretch.
@@ -45,7 +45,7 @@ Following your summary of 22 October, please find attached the updated GPS model
      FY2030 EUR 48.87M against plan EUR 46.39M (+2.48M)
      FY2031 EUR 53.60M against plan EUR 52.10M (+1.50M)
    - With 0.8 points a year FY2031 would be only EUR 0.84M above plan, so 1.0 point is our proposal.
-   - These figures use UIO V19. UIO V19 adds the forecast of new vans and trucks but lets only 3% of the fleet leave the road each year, so the fleet grows about 26% to FY2031. The UIO V20 spec keeps the same new vehicle forecast but lets vehicles leave on the normal age curve, so the fleet goes down about 6%.
+   - These figures use UIO V19. UIO V19 adds the forecast of new pick-ups and trucks but lets only 3% of the fleet leave the road each year, so the fleet grows about 26% to FY2031. The UIO V20 spec keeps the same new vehicle forecast but lets vehicles leave on the normal age curve, so the fleet goes down about 6%.
    - On the UIO V20 spec the same rule gives FY2028 EUR 0.73M above plan, then FY2029 EUR 1.39M, FY2030 EUR 4.11M and FY2031 EUR 7.40M below plan. Both are shown in the sheets UIO V19 and UIO V20. We think the real fleet is between the two, so we propose to fix FY2028 to FY2031 only after UIO V20 is approved.
 
 7. Distributor to dealer level
@@ -53,7 +53,7 @@ Following your summary of 22 October, please find attached the updated GPS model
    - We do not show a share at this level. The sales to dealers in the KPI file are 2.2 to 3.7 times our billing, so for Norway, Denmark, Belgium, Ireland and Iceland a share would read 108% to 184%. We would like to check with these distributors what their figure includes before we use it as a percentage.
 
 8. Corrections in the Japanese summary sheet
-   - Malta used the F-Series rate for its vans, Greece and Cyprus missed their medium trucks in the potential, and some cells still linked to the September file. All corrected.
+   - Malta used the F-Series rate for its pick-ups, Greece and Cyprus missed their medium trucks in the potential, and some cells still linked to the September file. All corrected.
    - All fixed numbers are now on one Inputs sheet, so any rate, price step or margin can be changed in one place. A Checks sheet confirms the totals agree across all sheets.
 
 9. Points where we need your view

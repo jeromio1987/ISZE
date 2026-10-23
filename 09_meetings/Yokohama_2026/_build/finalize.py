@@ -46,13 +46,13 @@ for t in TABS:
     ws["A26" if not mixed else "A32"] = "Source: ISZE billing to the distributor, GPS basis, lubricants included. FY2027 = budget reviewed April 2026."
     if not mixed:
         ws["A13"] = "Parts spend per vehicle (EUR)"
-        ws["A14"] = "ISZE net EUR per van"
-        ws["A15"] = ("Van rate EUR 250 per vehicle (FY2026, ISZE net), +5% in FY2027 = EUR 262.50, then + yearly price input "
+        ws["A14"] = "ISZE net EUR per pick-up"
+        ws["A15"] = ("Pick-up rate EUR 250 per vehicle (FY2026, ISZE net), +5% in FY2027 = EUR 262.50, then + yearly price input "
                      "(Dashboard (2) T1). Replaces the earlier EUR 219.56.")
     else:
         ws["A17"] = "Light truck (LD) rate"; ws["A18"] = "Medium truck (MD) rate"; ws["A19"] = "F-Series rate"
-        ws["A20"] = "Van (D-Max) rate, EUR 250 base"
-        ws["A21"] = ("Truck rates 739 / 887 and van rate EUR 250 per vehicle (FY2026, ISZE net), +5% in FY2027, "
+        ws["A20"] = "Pick-up (D-Max) rate, EUR 250 base"
+        ws["A21"] = ("Truck rates 739 / 887 and pick-up rate EUR 250 per vehicle (FY2026, ISZE net), +5% in FY2027, "
                      "then + yearly price input. All rates sit on the Inputs sheet.")
     hdr, act, mar, stc, note = (34, 36, 37, 38, 40) if mixed else (28, 30, 31, 32, 34)
     ws[f"A{hdr}"] = f"{t} to dealer level (distributor margin on the Inputs sheet... see B{mar})"
@@ -66,10 +66,10 @@ for t in TABS:
     gap = 43 if mixed else 37
     ws[f"A{gap}"] = "Notes"
     if mixed:
-        ws["A44"] = ("1. Truck rates 739 / 887 and van rate EUR 250 per vehicle (FY2026, ISZE net), +5% in FY2027, "
+        ws["A44"] = ("1. Truck rates 739 / 887 and pick-up rate EUR 250 per vehicle (FY2026, ISZE net), +5% in FY2027, "
                      "then + yearly price input.")
     else:
-        ws["A38"] = "1. Van rate EUR 250 per vehicle (FY2026, ISZE net), +5% in FY2027 = EUR 262.50. Replaces the earlier EUR 219.56."
+        ws["A38"] = "1. Pick-up rate EUR 250 per vehicle (FY2026, ISZE net), +5% in FY2027 = EUR 262.50. Replaces the earlier EUR 219.56."
 for t, cell in (("NORWAY", "A39"), ("ROMANIA", "A39"), ("GERMANY", "A45"), ("GREECE", "A45")):
     wb[t][cell] = None
 wb["UMI"]["A39"] = "2. UMI reports no sales to dealers, so the dealer target shows 'no KPI data'."
@@ -126,7 +126,7 @@ wb["Waterfall VP (original)"]["A1"] = "Original FY2027 plan waterfall (reference
 wb["Waterfall VP (original)"]["A2"] = "Reference copy of the original plan waterfall. Nothing added, nothing changed."
 
 # Inputs
-IN["C4"] = "van rate per vehicle"
+IN["C4"] = "pick-up rate per vehicle"
 IN["C5"] = "truck rates, unchanged"
 IN["A16"] = "GBP to EUR (as in the ITUK row)"
 IN["A18"] = "Distributor margin (dealer level = ISZE / (1 - margin))"
@@ -158,8 +158,8 @@ method = [
     ("Method and assumptions", "title"),
     ("", None),
     ("1. Parts spend per vehicle (ISZE net, FY2026 base)", "h"),
-    ("Van (D-Max) EUR 250. Light truck (LD) EUR 739. Medium truck and F-Series EUR 887. FY2027 +5%, FY2028 to FY2031 +3% a year.", None),
-    ("The van rate replaces the earlier EUR 219.56.", None),
+    ("Pick-up (D-Max) EUR 250. Light truck (LD) EUR 739. Medium truck and F-Series EUR 887. FY2027 +5%, FY2028 to FY2031 +3% a year.", None),
+    ("The pick-up rate replaces the earlier EUR 219.56.", None),
     ("", None),
     ("2. Vehicles in use", "h"),
     ("UIO V19, detail rows per distributor and segment. Fiscal year = calendar year + 1: FY2027 uses the fleet of calendar 2026, FY2031 the fleet of calendar 2030.", None),
@@ -181,7 +181,7 @@ method = [
     ("Network plan: FY2027 EUR 35.28M, FY2028 37.53M, FY2029 41.53M, FY2030 46.39M, FY2031 52.10M.", None),
     ("", None),
     ("6. Dealer level (販社)", "h"),
-    ("Dealer spend per vehicle as in the ITUK row: GBP 400 / 1,000 / 1,200 x 1.12 = EUR 448 (van), 1,120 (light truck), 1,344 (medium truck, F-Series).", None),
+    ("Dealer spend per vehicle as in the ITUK row: GBP 400 / 1,000 / 1,200 x 1.12 = EUR 448 (pick-up), 1,120 (light truck), 1,344 (medium truck, F-Series).", None),
     ("FY2026 actual = distributor KPI sales to dealers. FY2027 target = FY2026 + ISZE stretch / (1 - 35% distributor margin). FY2028 to FY2031 move with the ISZE target.", None),
     ("Amounts only: reported sales to dealers run 2.2 to 3.7 times ISZE billing, so a share would read above 100% for several distributors.", None),
     ("", None),
@@ -215,7 +215,7 @@ for r in csv.DictReader(open(UIO_CSV, encoding="utf-8-sig")):
         k = (r["distributor_code"], r["model_type"], int(r["year"]))
         uio[k] = uio.get(k, 0) + float(r["uio_units"] or 0)
 
-SEGNAME = {"LCV": "Van (D-Max)", "LD": "Light truck", "MD": "Medium truck", "F-Series": "F-Series"}
+SEGNAME = {"LCV": "Pick-up (D-Max)", "LD": "Light truck", "MD": "Medium truck", "F-Series": "F-Series"}
 RATE = {"LCV": "Inputs!$B$4", "LD": "Inputs!$B$5", "MD": "Inputs!$B$6", "F-Series": "Inputs!$B$7"}
 MIXROW = {"LD": 9, "MD": 10, "F-Series": 11, "LCV": 12}
 YEARS = list(range(2026, 2032))           # fiscal years
@@ -281,23 +281,23 @@ def build(version):
              "Fiscal year = calendar year + 1: FY2027 uses the fleet of calendar 2026, FY2031 the fleet of calendar 2030.", False),
             ("How UIO V19 builds the fleet", True),
             ("Up to 2025: registrations of each year, with an age curve for how many vehicles are still on the road. "
-             "On that curve a van stays on the road about 8 years on average and a truck about 10 years.", False),
-            ("From 2026: the forecast of new van and truck sales is added each year, and only 3% of the fleet leaves the road "
+             "On that curve a pick-up stays on the road about 8 years on average and a truck about 10 years.", False),
+            ("From 2026: the forecast of new pick-up and truck sales is added each year, and only 3% of the fleet leaves the road "
              "each year. 3% a year means a vehicle stays on the road about 33 years, so the fleet keeps growing.", False),
             ("Result: the fleet of these 18 distributors grows about 26% from FY2026 to FY2031, and the parts potential grows with it.", False),
         ]
     else:
         lines = [
             ("What is different in the UIO V20 spec", True),
-            ("Everything up to 2025 is the same as UIO V19, and the forecast of new van and truck sales is the same. "
+            ("Everything up to 2025 is the same as UIO V19, and the forecast of new pick-up and truck sales is the same. "
              "Only one thing changes: from 2026 vehicles leave the road on the same age curve as before 2026 "
-             "(van about 8 years, truck about 10 years) instead of 3% a year.", False),
-            ("Effect: each year about 10,000 new vans are added for these distributors, while about 13,000 to 15,000 older vans "
-             "leave the road. The van fleet therefore goes down instead of up.", False),
+             "(pick-up about 8 years, truck about 10 years) instead of 3% a year.", False),
+            ("Effect: each year about 10,000 new pick-ups are added for these distributors, while about 13,000 to 15,000 older pick-ups "
+             "leave the road. The pick-up fleet therefore goes down instead of up.", False),
             ("Medium trucks that UIO V19 shows from 2026 for Ireland, Portugal, Greece and Cyprus are planned vehicles, "
              "not registered vehicles; the UIO V20 spec leaves them out. ITUK and UTI are the same in both versions.", False),
-            ("Our reading: UIO V19 keeps vehicles too long (about 33 years); the UIO V20 curve takes vans off the road early "
-             "for pick-ups. The real fleet is most likely between the two. The UIO V20 spec is not yet approved, so this "
+            ("Our reading: UIO V19 keeps vehicles too long (about 33 years); the UIO V20 curve takes pick-ups off the road early "
+             "(almost all gone by year 12 to 13). The real fleet is most likely between the two. The UIO V20 spec is not yet approved, so this "
              "file uses UIO V19; this sheet shows what changes if UIO V20 is adopted.", False),
             ("Targets on this sheet: FY2027 stays the same amount (budget + stretch). From FY2028 the same rule as the model: "
              "GPS share + the yearly stretch, applied to the smaller UIO V20 potential.", False),
@@ -335,7 +335,7 @@ def build(version):
     ws[f"I{r}"] = f"=H{r}/C{r}-1"; ws[f"I{r}"].number_format = PCT; ws[f"I{r}"].font = B
     tot_row = r
     r += 1
-    ws.cell(r, 1, "of which vans")
+    ws.cell(r, 1, "of which pick-ups")
     for fy in YEARS:
         c = ws[f"{CYC[fy]}{r}"]; c.value = f'=SUMIF($B${first}:$B${last},"{SEGNAME["LCV"]}",{CYC[fy]}{first}:{CYC[fy]}{last})'; c.number_format = NUM
     van_row = r
@@ -345,25 +345,25 @@ def build(version):
         c = ws[f"{CYC[fy]}{r}"]; c.value = f"={CYC[fy]}{tot_row}-{CYC[fy]}{van_row}"; c.number_format = NUM
     r += 2
     if version == "V19":
-        ws.cell(r, 1, "New vans and vans leaving the road per year (16 distributors and UMI, UIO V19)").font = B
+        ws.cell(r, 1, "New pick-ups and pick-ups leaving the road per year (16 distributors and UMI, UIO V19)").font = B
         r += 1
         header(ws, r, "", [""] + YH + [""])
         r += 1
-        ws.cell(r, 1, "Vans in use"); van_ex = r
+        ws.cell(r, 1, "Pick-ups in use"); van_ex = r
         for fy in YEARS:
             ws[f"{CYC[fy]}{r}"] = f"={CYC[fy]}{van_row}"; ws[f"{CYC[fy]}{r}"].number_format = NUM
         r += 1
-        ws.cell(r, 1, "Vans leaving the road (3% a year)")
+        ws.cell(r, 1, "Pick-ups leaving the road (3% a year)")
         for fy in YEARS[1:]:
             p = L(CI(CYC[fy]) - 1)
             ws[f"{CYC[fy]}{r}"] = f"={p}{van_ex}*Inputs!$B$40"; ws[f"{CYC[fy]}{r}"].number_format = NUM
         leave = r
         r += 1
-        ws.cell(r, 1, "New vans in the forecast")
+        ws.cell(r, 1, "New pick-ups in the forecast")
         for fy in YEARS[1:]:
             p = L(CI(CYC[fy]) - 1)
             ws[f"{CYC[fy]}{r}"] = f"={CYC[fy]}{van_ex}-{p}{van_ex}+{CYC[fy]}{leave}"; ws[f"{CYC[fy]}{r}"].number_format = NUM
-        ws.cell(r + 1, 1, "New vans = change in vans in use + vans leaving the road. The UIO V20 spec uses the same new vans.").font = NOTE
+        ws.cell(r + 1, 1, "New pick-ups = change in pick-ups in use + pick-ups leaving the road. The UIO V20 spec uses the same new pick-ups.").font = NOTE
         r += 3
     else:
         ws.cell(r, 1, "Difference with UIO V19").font = B
