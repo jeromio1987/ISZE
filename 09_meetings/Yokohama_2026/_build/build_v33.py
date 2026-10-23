@@ -371,6 +371,70 @@ for fy in YEARS:
         fmt_from(f"{share}{r}", T_SHARE)
         fmt_from(f"{tgt}{r}", T_TGT)
 
+
+# 2b. Distributor (販社) level for the other 17: amounts, no share (Jerome, 23-10-2026).
+# Dealer spend per vehicle on the ITUK convention: GBP 400 / 1,000 / 1,200 x 1.12 = EUR 448 (LCV),
+# 1,120 (LD), 1,344 (MD, F-Series) in FY26; FY27 +5% like the ISZE side; FY28-31 + price input.
+# FY27 dealer target = FY26 KPI sales to dealer + ISZE stretch / 0.65 (MH method, 35% DB margin).
+# FY28-31 dealer target moves with the ISZE target of the same distributor.
+DRATE26 = {9: 1120, 10: 1344, 11: 1344, 12: 448}  # tab UIO row -> EUR (LD, MD, F, LCV)
+GREY_TXT = Font(color="808080", italic=True, size=9)
+
+
+def drate_expr(fy, base):
+    if fy == 2026:
+        return f"{base}"
+    e = f"{base}*1.05"
+    for _ in range(2028, fy + 1):
+        e += f"*(1+{PRICE})"
+    return e
+
+
+DTEMPL = {"rate": "AA6", "pot": "AB6", "tot": "AB9", "tgt": "AC9"}
+for fy in [2026, 2027] + YEARS:
+    uioc, drate, dpot, dact, dsh = off(fy, 2), off(fy, 6), off(fy, 7), off(fy, 8), off(fy, 9)
+    for t in LCV_TABS:
+        r = LCV_ROW[t]
+        D2[f"{drate}{r}"] = "=" + drate_expr(fy, 448)
+        D2[f"{dpot}{r}"] = f"={drate}{r}*{uioc}{r}"
+        fmt_from(f"{drate}{r}", DTEMPL["rate"]); D2[f"{drate}{r}"].number_format = "#,##0"
+        fmt_from(f"{dpot}{r}", DTEMPL["pot"])
+    for t, segs in SEG.items():
+        for r, parts in segs:
+            terms = "+".join(f"{drate_expr(fy, DRATE26[ur])}*{t}!{MIX_UIO[fy]}{ur}" for _, ur in parts)
+            D2[f"{dpot}{r}"] = f"={terms}"
+            D2[f"{drate}{r}"] = f"=IFERROR({dpot}{r}/{uioc}{r},0)"
+            fmt_from(f"{drate}{r}", DTEMPL["rate"]); D2[f"{drate}{r}"].number_format = "#,##0"
+            fmt_from(f"{dpot}{r}", DTEMPL["pot"])
+        tr = TOTAL_ROW[t]
+        D2[f"{dpot}{tr}"] = f"=SUM({dpot}{segs[0][0]}:{dpot}{segs[-1][0]})"
+        fmt_from(f"{dpot}{tr}", DTEMPL["tot"])
+    # UTI (row 10): LD + MD on its own fleet rows, CY = FY - 1
+    ld = int(round(uio.get(("UTI", None, "LD", fy - 1), 0))); md = int(round(uio.get(("UTI", None, "MD", fy - 1), 0)))
+    D2[f"{dpot}10"] = f"={drate_expr(fy, 1120)}*{ld}+{drate_expr(fy, 1344)}*{md}"
+    D2[f"{drate}10"] = f"=IFERROR({dpot}10/{ld + md},0)"
+    fmt_from(f"{drate}10", DTEMPL["rate"]); D2[f"{drate}10"].number_format = "#,##0"
+    fmt_from(f"{dpot}10", DTEMPL["pot"])
+
+# actual FY26 (S) and targets (AC, then FY28+) on the total-level row
+for t in LCV_TABS + MIX_TABS + ["UTI"]:
+    r = 10 if t == "UTI" else SHARE_ROW[t]
+    dr = DASH_ROW[t]
+    D2[f"S{r}"] = f'=IF(ISNUMBER(Dashboard!Q{dr}),Dashboard!Q{dr},"no KPI data")'
+    fmt_from(f"S{r}", "S9")
+    D2[f"T{r}"] = "n/a"; D2[f"T{r}"].font = GREY_TXT
+    D2[f"AC{r}"] = f'=IF(ISNUMBER(S{r}),S{r}+Dashboard!G{dr}/0.65,"no KPI data")'
+    fmt_from(f"AC{r}", "AC9")
+    D2[f"AD{r}"] = "n/a"; D2[f"AD{r}"].font = GREY_TXT
+    for fy in YEARS:
+        prev_t, cur_t = L(CI(BASE[fy - 1]) + 8), off(fy, 8)
+        zi_prev, zi_cur = L(CI(BASE[fy - 1]) + 5), off(fy, 5)
+        D2[f"{cur_t}{r}"] = f'=IF(ISNUMBER({prev_t}{r}),{prev_t}{r}*{zi_cur}{r}/{zi_prev}{r},"no KPI data")'
+        fmt_from(f"{cur_t}{r}", "AC9")
+        D2[f"{off(fy, 9)}{r}"] = "n/a"; D2[f"{off(fy, 9)}{r}"].font = GREY_TXT
+D2["Q3"] = "販社 = distributor sales to its dealers. Amounts only: KPI sales-to-dealer run 2.2-3.7x ISZE billing, so a share would read above 100%."
+D2["Q3"].font = Font(color="FFFFFF", italic=True, size=9)
+
 # 3. TOTAL row 44 + network BP comparison (rows 45-47) per year
 sum_rows = ALL_SHARE_ROWS
 BP_NET = {2027: 35284444.2378, 2028: 37530000, 2029: 41530410, 2030: 46385705, 2031: 52096000}
@@ -406,6 +470,14 @@ for fy in [2026, 2027] + YEARS:
         D2[f"{lab}{rr}"].font = NOTE if rr != 47 else Font(bold=True)
     D2[f"{tgt}47"].font = Font(bold=True)
 D2["N44"] = "=" + "+".join(f"N{r}" for r in sum_rows)
+for fy in [2026, 2027] + YEARS:
+    dpot, dact = off(fy, 7), off(fy, 8)
+    D2[f"{dpot}44"] = "=" + "+".join(f"{dpot}{r}" for r in sum_rows)
+    D2[f"{dact}44"] = "=" + "+".join(f"N({dact}{r})" for r in sum_rows)
+    for c in (dpot, dact):
+        fmt_from(f"{c}44", "AB9"); D2[f"{c}44"].font = Font(bold=True)
+D2["U48"] = "Dealer totals (row 44) add only the distributors with KPI sales-to-dealer data."
+D2["U48"].font = NOTE
 D2["M44"] = "=" + "+".join(f"M{r}" for r in sum_rows)
 
 # headers for FY28..31 blocks already exist (row 3-5); copy widths
@@ -440,7 +512,10 @@ lines = [
     "6. Dashboard (2): links to the old Sept workbook made internal; Malta LCV row used the F-Series rate (887) — fixed; "
     "Greece and Cyprus medium-duty vehicles were left out of the potential — added; FY2028-FY2031 filled; network BP comparison rows 45-47.",
     "7. Network BP FY28-FY31 = PL plan row 186: 37.53M / 41.53M / 46.39M / 52.10M. Customers outside the 18 (EUR 2.06M) held flat.",
-    "8. Dealer level (販社) only kept for ITUK, as before (dealer block dropped 17-07-2026).",
+    "8. Dealer level (販社), all distributors, AMOUNTS ONLY: dealer spend per vehicle on the ITUK convention (GBP 400 / 1,000 / 1,200 x 1.12 = "
+    "EUR 448 LCV, 1,120 LD, 1,344 MD/F in FY26; +5% FY27; + price after). FY26 actual = KPI sales to dealer (Dashboard col Q). "
+    "FY27 dealer target = FY26 + ISZE stretch / 0.65 (MH method). FY28-31 moves with the ISZE target. No dealer share %: "
+    "KPI sales to dealer run 2.2-3.7x ISZE billing and would read above 100% (Norway, Denmark, Belgium, Ireland, Iceland). ITUK keeps its share as presented.",
 ]
 start = M.max_row + 2
 for i, s in enumerate(lines):
