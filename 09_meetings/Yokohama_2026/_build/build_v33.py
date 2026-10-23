@@ -62,6 +62,59 @@ with open(BILL_CSV, encoding="utf-8-sig") as f:
 wb = openpyxl.load_workbook(SRC)
 log = []
 
+# ---------------------------------------------------------------- Inputs sheet (every constant used in a formula)
+IN = wb.create_sheet("Inputs", 1)
+FYC = {2026: "C", 2027: "D", 2028: "E", 2029: "F", 2030: "G", 2031: "H"}
+HDR = Font(bold=True, color="FFFFFF"); HDR_FILL = PatternFill("solid", fgColor="1F3864")
+IN["A1"] = "Inputs — every constant the formulas use. Blue/yellow = edit here; everything else follows."
+IN["A1"].font = Font(bold=True, size=12)
+
+
+def inp(cell, val, fmt="#,##0.00"):
+    IN[cell] = val; IN[cell].number_format = fmt
+    if not (isinstance(val, str) and val.startswith("=")):
+        IN[cell].font = BLUE; IN[cell].fill = INPUT_FILL
+
+
+IN["A3"] = "ISZE-net parts spend per vehicle per year, FY2026 base (EUR)"; IN["A3"].font = Font(bold=True)
+for r, lab, v in ((4, "LCV / D-Max", 250), (5, "CV LD (N75/N50/N62)", 739), (6, "CV MD", 887), (7, "CV F-Series", 887)):
+    IN[f"A{r}"] = lab; inp(f"B{r}", v, "#,##0")
+IN["C4"] = "fleet-study rate (Jerome 23-10-2026)"; IN["C5"] = "v9 rates, held (Jerome)"
+IN["A9"] = "Price increase FY2027"; inp("B9", 0.05, "0.0%")
+IN["A10"] = "Price increase FY2028-31 / yr"; inp("B10", "='Dashboard (2)'!T1", "0.0%"); IN["C10"] = "set on Dashboard (2) T1"
+IN["A12"] = "Dealer-level spend per vehicle (GBP, ITUK convention)"; IN["A12"].font = Font(bold=True)
+IN["C12"] = "EUR"; IN["C12"].font = Font(bold=True)
+for r, lab, v in ((13, "LCV / N35", 400), (14, "CV LD / N75", 1000), (15, "CV MD / F-Series", 1200)):
+    IN[f"A{r}"] = lab; inp(f"B{r}", v, "#,##0"); inp(f"C{r}", f"=B{r}*$B$16", "#,##0.00")
+IN["A16"] = "GBP -> EUR (as in Masumi-san's ITUK row)"; inp("B16", 1.12, "0.00")
+IN["A18"] = "Distributor margin (MH method: dealer = ISZE / (1 - margin))"; inp("B18", 0.35, "0%")
+IN["A20"] = "Fiscal year"; IN["A20"].font = Font(bold=True)
+for fy, c in FYC.items():
+    IN[f"{c}20"] = f"FY{fy}"; IN[f"{c}20"].font = HDR; IN[f"{c}20"].fill = HDR_FILL
+    IN[f"{c}24"] = f"CY{fy - 1}"; IN[f"{c}24"].font = Font(italic=True, color="595959")
+IN["A21"] = "Network BP, PL plan row 186 (EUR)"
+for fy, v in ((2027, 35284444.2378), (2028, 37530000), (2029, 41530410), (2030, 46385705), (2031, 52096000)):
+    inp(f"{FYC[fy]}21", v, "#,##0")
+IN["A22"] = "Sum of BP FY27, 18 distributors"; inp("D22", "=Dashboard!C23", "#,##0")
+IN["A23"] = "Customers outside the 18 (CIS, MIDI, KIMA, IMG), held flat"; inp("D23", "=D21-D22", "#,##0")
+IN["A24"] = "Fleet source year (V19, FY = CY + 1)"
+fleet_rows = ((26, "ITUK LD (N35 + N75)", "ITUK", "LD"), (27, "ITUK F-Series", "ITUK", "F-Series"),
+              (29, "UTI LD", "UTI", "LD"), (30, "UTI MD", "UTI", "MD"))
+for r, lab, code, m in fleet_rows:
+    IN[f"A{r}"] = lab
+    for fy, c in FYC.items():
+        inp(f"{c}{r}", int(round(uio.get((code, None, m, fy - 1), 0))), "#,##0")
+IN["A25"] = "Fleet for the two tailor-made customers (01_data/00_derived/uio_by_market_type_year.csv)"; IN["A25"].font = Font(bold=True)
+IN["A11"] = "Dealer price step FY27 (ITUK row as presented)"; inp("B11", 0.03, "0.0%")
+IN["A34"] = "ITUK sales to dealers FY26 (GBP, as presented)"; inp("B34", 12873997.67, "#,##0.00")
+IN["C34"] = "x GBP->EUR B16 = Dashboard (2) S9"
+IN["A32"] = ("Other inputs stay where they were: fleet per distributor and FY25/FY26 billing on each distributor tab (rows 9-12, 20/26), "
+             "stretch / ceiling / price on Dashboard (2) row 1-2, ITUK and UTI FY27 figures as presented (V4 basis).")
+IN["A32"].font = NOTE
+IN.column_dimensions["A"].width = 58
+for c in "BCDEFGH":
+    IN.column_dimensions[c].width = 14
+
 # ---------------------------------------------------------------- inputs (Dashboard (2) row 1)
 D2 = wb["Dashboard (2)"]
 INP = {"stretch": "N1", "ceiling": "Q1", "price": "T1"}
@@ -101,12 +154,12 @@ for t in LCV_TABS:
     # rate chain -> EUR 250 base
     ws["A14"] = "ISZE-net EUR/unit (= DB cost)"
     ws["B13"] = "FY26 base"
-    ws["B14"] = 250
+    ws["B14"] = "=Inputs!$B$4"
     ws["B14"].font = BLUE
     ws["C13"] = None; ws["C14"] = None
     ws["D13"] = "FY26"
     ws["D14"] = "=B14"
-    ws["E14"] = "=D14*1.05"
+    ws["E14"] = "=D14*(1+Inputs!$B$9)"
     for i, fy in enumerate(YEARS):
         c = YCOL[fy]; prev = L(CI(c) - 1)
         ws[f"{c}13"] = f"FY{fy % 100} (+price)"
@@ -151,7 +204,9 @@ for t in LCV_TABS:
 # ---------------------------------------------------------------- mixed tabs
 for t in MIX_TABS:
     ws = wb[t]
-    ws["C20"] = 250
+    for r, ic in ((17, "$B$5"), (18, "$B$6"), (19, "$B$7"), (20, "$B$4")):
+        ws[f"C{r}"] = f"=Inputs!{ic}"
+        ws[f"D{r}"] = f"=C{r}*(1+Inputs!$B$9)"
     ws["C20"].font = BLUE
     ws["A20"] = "LCV / D-Max  · EUR 250 ISZE-net base"
     ws["A21"] = ("CV rates held at v9 (739 / 887) +5% FY27, per Jerome. LCV: EUR 250 base +5% (262.50). "
@@ -313,6 +368,17 @@ for t in MIX_TABS:
 D2["O9"] = round(bill[(2026, "ITUK")], 2)
 D2["O10"] = round(bill[(2026, "UTI")], 2)
 D2["Z9"] = "=Dashboard!I5"
+# ITUK row (Masumi-san's): same values, now as formulas on Inputs
+for r, ic in ((6, "$C$13"), (7, "$C$14"), (8, "$C$15")):
+    D2[f"Q{r}"] = f"=Inputs!{ic}"
+    D2[f"AA{r}"] = f"=Q{r}*(1+Inputs!$B$11)"
+    D2[f"V{r}"] = f"=L{r}*(1+Inputs!$B$9)"
+D2["S9"] = "=Inputs!$B$34*Inputs!$B$16"
+for c in ("L6", "L7", "L8", "M6", "M7", "M8", "W6", "W7", "W8", "M10", "W10", "X10", "O9", "O10"):
+    D2[c].font = Font(color="0000FF")
+D2["A57"] = ("• Blue numbers on this sheet are inputs as presented for ITUK / UTI (V4 basis). Every other number is a formula; "
+             "constants live on the Inputs sheet or the distributor tabs.")
+D2["L10"] = "=V10/(1+Inputs!$B$9)"
 D2["Z10"] = "=Dashboard!I6"
 
 # ITUK (rows 6-8 N35/N75/F, total 9) and UTI (row 10): FY28+ on V4 basis, CY = FY-1
@@ -330,11 +396,11 @@ for fy in YEARS:
         D2[f"{lab}{r}"] = lbl
         D2[f"{rate}{r}"] = f"={pr}{r}*(1+{PRICE})"
         if r == 6:
-            D2[f"{uioc}{r}"] = f"=ROUND({ituk_ld[fy]}*{n35_share},0)"
+            D2[f"{uioc}{r}"] = f"=ROUND(Inputs!{FYC[fy]}26*{n35_share},0)"
         elif r == 7:
-            D2[f"{uioc}{r}"] = f"={ituk_ld[fy]}-{uioc}6"
+            D2[f"{uioc}{r}"] = f"=Inputs!{FYC[fy]}26-{uioc}6"
         else:
-            D2[f"{uioc}{r}"] = ituk_f[fy]
+            D2[f"{uioc}{r}"] = f"=Inputs!{FYC[fy]}27"
         D2[f"{pot}{r}"] = f"={rate}{r}*{uioc}{r}"
         D2[f"{drate}{r}"] = f"={pdrate}{r}*(1+{PRICE})"
         D2[f"{dpot}{r}"] = f"={drate}{r}*{uioc}{r}"
@@ -351,7 +417,7 @@ for fy in YEARS:
     # UTI single row
     D2[f"{lab}10"] = "CV"
     D2[f"{rate}10"] = f"={pr}10*(1+{PRICE})"
-    D2[f"{uioc}10"] = uti[fy]
+    D2[f"{uioc}10"] = f"=Inputs!{FYC[fy]}29+Inputs!{FYC[fy]}30"
     D2[f"{pot}10"] = f"={rate}10*{uioc}10"
     for c, tmpl in ((rate, "V10"), (uioc, "W10"), (pot, "X10")):
         fmt_from(f"{c}10", tmpl)
@@ -377,14 +443,14 @@ for fy in YEARS:
 # 1,120 (LD), 1,344 (MD, F-Series) in FY26; FY27 +5% like the ISZE side; FY28-31 + price input.
 # FY27 dealer target = FY26 KPI sales to dealer + ISZE stretch / 0.65 (MH method, 35% DB margin).
 # FY28-31 dealer target moves with the ISZE target of the same distributor.
-DRATE26 = {9: 1120, 10: 1344, 11: 1344, 12: 448}  # tab UIO row -> EUR (LD, MD, F, LCV)
+DRATE26 = {9: "Inputs!$C$14", 10: "Inputs!$C$15", 11: "Inputs!$C$15", 12: "Inputs!$C$13"}  # tab UIO row -> EUR (LD, MD, F, LCV)
 GREY_TXT = Font(color="808080", italic=True, size=9)
 
 
 def drate_expr(fy, base):
     if fy == 2026:
         return f"{base}"
-    e = f"{base}*1.05"
+    e = f"{base}*(1+Inputs!$B$9)"
     for _ in range(2028, fy + 1):
         e += f"*(1+{PRICE})"
     return e
@@ -395,7 +461,7 @@ for fy in [2026, 2027] + YEARS:
     uioc, drate, dpot, dact, dsh = off(fy, 2), off(fy, 6), off(fy, 7), off(fy, 8), off(fy, 9)
     for t in LCV_TABS:
         r = LCV_ROW[t]
-        D2[f"{drate}{r}"] = "=" + drate_expr(fy, 448)
+        D2[f"{drate}{r}"] = "=" + drate_expr(fy, "Inputs!$C$13")
         D2[f"{dpot}{r}"] = f"={drate}{r}*{uioc}{r}"
         fmt_from(f"{drate}{r}", DTEMPL["rate"]); D2[f"{drate}{r}"].number_format = "#,##0"
         fmt_from(f"{dpot}{r}", DTEMPL["pot"])
@@ -410,9 +476,8 @@ for fy in [2026, 2027] + YEARS:
         D2[f"{dpot}{tr}"] = f"=SUM({dpot}{segs[0][0]}:{dpot}{segs[-1][0]})"
         fmt_from(f"{dpot}{tr}", DTEMPL["tot"])
     # UTI (row 10): LD + MD on its own fleet rows, CY = FY - 1
-    ld = int(round(uio.get(("UTI", None, "LD", fy - 1), 0))); md = int(round(uio.get(("UTI", None, "MD", fy - 1), 0)))
-    D2[f"{dpot}10"] = f"={drate_expr(fy, 1120)}*{ld}+{drate_expr(fy, 1344)}*{md}"
-    D2[f"{drate}10"] = f"=IFERROR({dpot}10/{ld + md},0)"
+    D2[f"{dpot}10"] = f"={drate_expr(fy, 'Inputs!$C$14')}*Inputs!{FYC[fy]}29+{drate_expr(fy, 'Inputs!$C$15')}*Inputs!{FYC[fy]}30"
+    D2[f"{drate}10"] = f"=IFERROR({dpot}10/(Inputs!{FYC[fy]}29+Inputs!{FYC[fy]}30),0)"
     fmt_from(f"{drate}10", DTEMPL["rate"]); D2[f"{drate}10"].number_format = "#,##0"
     fmt_from(f"{dpot}10", DTEMPL["pot"])
 
@@ -423,7 +488,7 @@ for t in LCV_TABS + MIX_TABS + ["UTI"]:
     D2[f"S{r}"] = f'=IF(ISNUMBER(Dashboard!Q{dr}),Dashboard!Q{dr},"no KPI data")'
     fmt_from(f"S{r}", "S9")
     D2[f"T{r}"] = "n/a"; D2[f"T{r}"].font = GREY_TXT
-    D2[f"AC{r}"] = f'=IF(ISNUMBER(S{r}),S{r}+Dashboard!G{dr}/0.65,"no KPI data")'
+    D2[f"AC{r}"] = f'=IF(ISNUMBER(S{r}),S{r}+Dashboard!G{dr}/(1-Inputs!$B$18),"no KPI data")'
     fmt_from(f"AC{r}", "AC9")
     D2[f"AD{r}"] = "n/a"; D2[f"AD{r}"].font = GREY_TXT
     for fy in YEARS:
@@ -460,9 +525,9 @@ for fy in [2026, 2027] + YEARS:
     fmt_from(f"{share}44", T_SHARE); fmt_from(f"{tgt}44", T_TGT)
     D2[f"{share}44"].font = Font(bold=True); D2[f"{tgt}44"].font = Font(bold=True)
     D2[f"{lab}45"] = "+ outside 18 (CIS/MIDI/KIMA/IMG, flat)"
-    D2[f"{tgt}45"] = round(OUTSIDE, 2)
+    D2[f"{tgt}45"] = "=Inputs!$D$23"
     D2[f"{lab}46"] = "Network BP (PL plan row 186)"
-    D2[f"{tgt}46"] = BP_NET[fy]
+    D2[f"{tgt}46"] = f"=Inputs!{FYC[fy]}21"
     D2[f"{lab}47"] = "Gap: target - BP (+ = above plan)"
     D2[f"{tgt}47"] = f"={tgt}44+{tgt}45-{tgt}46"
     for rr in (45, 46, 47):

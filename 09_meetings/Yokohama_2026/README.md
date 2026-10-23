@@ -25,7 +25,8 @@ python -I _build/build_v33.py ISZE_GPS_Extended_Target_FY27_V3.2.xlsx ^
 5. **Two stretch inputs** on `Dashboard (2)`: FY27 1.8% (N1), FY28–FY31 1.0% a year (N2). Ceiling Q1, price T1.
 6. FY25/FY26 ISZE sales refreshed from the GPS-audited billing file.
 7. **Distributor level (販社) filled for all 18, amounts only.** Dealer spend per vehicle as in the ITUK row (£400 / £1,000 / £1,200 × 1.12 = €448 LCV, €1,120 LD, €1,344 MD/F). FY26 actual = KPI sales to dealer. FY27 target = FY26 + ISZE stretch ÷ 0.65. FY28–31 moves with the ISZE target. No dealer share %: KPI sales to dealer run 2.2–3.7× our billing, so Norway, Denmark, Belgium, Ireland and Iceland would read 108–184%.
-8. Fixes in `Dashboard (2)`: links to the old September file removed; Malta LCV row used the F-Series rate; Greece and Cyprus medium trucks were missing from the potential.
+8. **`Inputs` sheet.** Every constant a formula uses sits there (rates, +5%, dealer GBP spend and FX, 35% margin, network BP, ITUK/UTI fleet). No calculation has a number typed into it, except Masumi-san's ITUK/UTI FY27 inputs (blue) and two cells from V3.2 left as they were (`Dashboard` col L `=G*0.33/2`, `Waterfall VP` N7). Checked by `_build/scan.py`; totals re-computed independently by `_build/indep.py` (match within EUR 900 a year: one Danish truck the Denmark tab does not count).
+9. Fixes in `Dashboard (2)`: links to the old September file removed; Malta LCV row used the F-Series rate; Greece and Cyprus medium trucks were missing from the potential.
 
 ## Headline (FY27 1.8%, FY28–31 1.0%)
 
