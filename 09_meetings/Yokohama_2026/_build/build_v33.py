@@ -587,6 +587,88 @@ for i, s in enumerate(lines):
     M[f"A{start + i}"] = s
 M[f"A{start + 1}"].font = Font(bold=True)
 
+
+# ---------------------------------------------------------------- tab notes, widths, number formats (v3.3)
+TAB_A2 = ("ISZE->DB target is set here. Blue = input. FY28-FY31 in columns F:I. Dealer block at the bottom follows "
+          "Masumi-san's method (ISZE stretch / 0.65) and is used as an amount only — never as a share.")
+for t in LCV_TABS + MIX_TABS:
+    ws = wb[t]
+    ws["A2"] = TAB_A2
+    for c in "FGHI":
+        ws.column_dimensions[c].width = 15
+    rate_rows = [14] if t in LCV_TABS else [17, 18, 19, 20]
+    rate_cols = "BCDEFGHI"
+    for r in rate_rows:
+        for c in rate_cols:
+            if isinstance(ws[f"{c}{r}"].value, (int, float, str)) and str(ws[f"{c}{r}"].value)[:1] in "=0123456789":
+                ws[f"{c}{r}"].number_format = "#,##0.00"
+    gap = 38 if t in LCV_TABS else 44
+    if t in LCV_TABS:
+        ws[f"A{gap}"] = ("1. LCV rate (v3.3): EUR 250 ISZE-net FY26 (Inputs B4), +5% FY27 = 262.50. "
+                         "Replaces MH's 291.2 x 1.16 x 0.65 = 219.56 chain, which applied FX and margin twice.")
+    else:
+        ws[f"A{gap}"] = ("1. Rates (v3.3): CV 739 / 887 (v9, held) and LCV EUR 250, all on the Inputs sheet, +5% FY27, "
+                         "+ price input after. One convention for all segments.")
+for t in ("ICELAND",):
+    wb[t]["A39"] = None
+wb["UMI"]["A39"] = "2. Dealer-level data is 'Internal only' in the KPI Master: no sales-to-dealer figure, dealer target shows 'no KPI data'."
+wb["FINLAND"]["A39"] = ("2. GPS share is above 100% at BP (104.9% at the EUR 262.50 rate): no stretch, share held flat. "
+                        "Do not quote a GPS % to this DB — discuss the amount, or agree the per-unit rate first.")
+wb["IRELAND"]["A45"] = ("2. Share 98.4% at BP: stretch capped so the share stops at 100%. FY26 actual already reads 117% — "
+                        "the rate or the fleet for Ireland looks too low. Do not quote a GPS % to this DB.")
+wb["BELGIUM"]["A45"] = ("2. ISUZU BENELUX NV covers BE/NL/PL/LUX. This tab uses the BELGIUM fleet only — NL/PL/LUX are not in "
+                        "the max spend, so the GPS share is likely overstated.")
+DEALER_NOTE = ("• DEALER LEVEL (販社, v3.3): filled for all 18 as AMOUNTS ONLY. KPI 'Parts Sales DB to DLR' runs 2.2-3.7x ISZE "
+               "billing (IUK 3.58x, Denmark 3.67x, Romania 2.19x), so a dealer share would read above 100% for five distributors. "
+               "FY27 dealer target = FY26 KPI + ISZE stretch / 0.65; FY28-31 moves with the ISZE target.")
+wb["Dashboard"]["A30"] = DEALER_NOTE
+D2["A51"] = DEALER_NOTE
+
+# ---------------------------------------------------------------- Checks sheet (live)
+CK = wb.create_sheet("Checks", 2)
+CK["A1"] = "Live checks — every row must read OK. Recalculate (F9) after changing an input."
+CK["A1"].font = Font(bold=True, size=12)
+CK["A2"] = "Overall"; CK["A2"].font = Font(bold=True)
+CK["B2"] = '=IF(COUNTIF(F5:F200,"CHECK")=0,"ALL OK",COUNTIF(F5:F200,"CHECK")&" CHECK")'
+CK["B2"].font = Font(bold=True, size=12)
+for c, h in zip("ABCDEF", ["#", "Check", "Value A", "Value B", "Difference", "Status"]):
+    CK[f"{c}4"] = h; CK[f"{c}4"].font = HDR; CK[f"{c}4"].fill = HDR_FILL
+rows = [
+    ("Waterfall closes to the FY27 plan", "='Waterfall VP'!T5", "=Inputs!D21"),
+    ("Waterfall GPS step = stretch total on Dashboard", "='Waterfall VP'!P4", "=Dashboard!G23"),
+    ("Waterfall: required 952K minus GPS step = Q4", "='Waterfall VP'!Q4", "=Dashboard!C25-Dashboard!G23"),
+    ("BP 18 distributors + outside 18 = network plan FY27", "=Dashboard!C23+Inputs!D23", "=Inputs!D21"),
+    ("Japanese view FY27 target total = Dashboard extended target total", "='Dashboard (2)'!Z44", "=Dashboard!I23"),
+    ("Japanese view FY27 potential (16) = Dashboard max spend (16)",
+     "='Dashboard (2)'!X44-'Dashboard (2)'!X9-'Dashboard (2)'!X10", "=Dashboard!D23-Dashboard!D5-Dashboard!D6"),
+    ("Gap row FY31 = target + outside - BP", "='Dashboard (2)'!BN47", "='Dashboard (2)'!BN44+'Dashboard (2)'!BN45-'Dashboard (2)'!BN46"),
+    ("Error cells on Dashboard (2) (must be 0)", "=SUMPRODUCT(--ISERROR('Dashboard (2)'!A1:BR60))", "=0"),
+    ("Error cells on Dashboard (must be 0)", "=SUMPRODUCT(--ISERROR(Dashboard!A1:W40))", "=0"),
+]
+for t in LCV_TABS + MIX_TABS:
+    tr, sr = (24, 23) if t in LCV_TABS else (30, 29)
+    rows.append((f"{t}: tab extended target = Dashboard = Japanese view", f"={t}!E{tr}", f"=AVERAGE(Dashboard!I{DASH_ROW[t]},'Dashboard (2)'!Z{SHARE_ROW[t]})"))
+    rows.append((f"{t}: share after stretch within ceiling (or no stretch)",
+                 f"=IF(OR(Dashboard!H{DASH_ROW[t]}<={CEIL}+0.0000001,Dashboard!F{DASH_ROW[t]}=0),1,0)", "=1"))
+    rows.append((f"{t}: FY31 share within ceiling (or held flat)",
+                 f"=IF(OR('Dashboard (2)'!{off(2031, 4)}{SHARE_ROW[t]}<={CEIL}+0.0000001,'Dashboard (2)'!{off(2031, 4)}{SHARE_ROW[t]}='Dashboard (2)'!Y{SHARE_ROW[t]}),1,0)", "=1"))
+for i, (lab, a, b) in enumerate(rows, start=5):
+    CK[f"A{i}"] = i - 4; CK[f"B{i}"] = lab; CK[f"C{i}"] = a; CK[f"D{i}"] = b
+    CK[f"E{i}"] = f"=C{i}-D{i}"
+    CK[f"F{i}"] = f'=IF(ABS(E{i})<1,"OK","CHECK")'
+    for c in "CDE":
+        CK[f"{c}{i}"].number_format = "#,##0.00"
+n = len(rows) + 6
+CK[f"B{n}"] = ("Known, not an error: ITUK and UTI potential differ between Dashboard (V4 basis, 13.05M / 8.83M) and "
+               "Dashboard (2) (fleet 2026 by N35/N75/F, 12.54M / 8.49M). Both are as presented; targets agree.")
+CK[f"B{n}"].font = NOTE
+CK[f"B{n + 1}"] = ("Not verifiable inside the repo: KPI sales-to-dealer (Dashboard col Q, from KPI Master File June 2026), "
+                   "ITUK/UTI V4 figures, waterfall bars. They are carried from V3.2 unchanged.")
+CK[f"B{n + 1}"].font = NOTE
+CK.column_dimensions["A"].width = 5; CK.column_dimensions["B"].width = 70
+for c in "CDE":
+    CK.column_dimensions[c].width = 16
+CK.column_dimensions["F"].width = 10
 wb.calculation.fullCalcOnLoad = True
 wb.save(OUT)
 print("\n".join(log))

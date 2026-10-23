@@ -51,3 +51,19 @@ FY27 at 1.0% gives EUR 923K, EUR 29K short of EUR 952K — so FY27 stays 1.8%.
 - Price: plan bridge uses +2%, potential uses +5% — question 6 to Masumi-san still open.
 
 Note: the delivered V3.3 is saved after a full recalculation (LibreOffice), so every formula cell carries its value for previews. The builder output alone has formulas without values until Excel recalculates.
+
+## How the file is checked
+
+| Check | What | Result (23-10-2026) |
+|---|---|---|
+| `Checks` sheet (live, in Excel) | 57 formula checks: waterfall closes, totals tie across sheets, every distributor's target agrees on tab / Dashboard / Dashboard (2), no share above the ceiling, no error cells | ALL OK |
+| `_build/audit.py` A | 340 inputs against the repo sources: fleet V19 per segment and year, FY25/FY26 billing, BP FY27, ITUK/UTI fleet, network BP | 340 / 340 |
+| `_build/audit.py` B | Every formula on the 16 distributor tabs identical to IUK (LCV) or GERMANY (mixed) | 16 / 16 |
+| `_build/audit.py` C | 493 outputs recomputed independently in Python (potential, share, target, dealer potential and target, FY26–FY31) | 493 / 493 |
+| `_build/audit.py` E | Every formula cell carries a value, no error cells, no external links | OK |
+| Negative test | Broke a target cell and forced a stretch above the ceiling: the `Checks` sheet flagged both | Caught |
+
+Run: `python -I _build/audit.py <builder output.xlsx> <recalculated.xlsx> <ISZE root>` → `audit_result_V3.3.json`.
+
+**Not verifiable inside the repo** (source workbooks are not in git): KPI sales to dealer (Dashboard col Q), ITUK/UTI V4 figures, the waterfall bars. They are carried from V3.2 unchanged.
+**Known, not an error:** ITUK / UTI potential differs between `Dashboard` (V4: 13.05M / 8.83M) and `Dashboard (2)` (2026 fleet: 12.54M / 8.49M). Both as presented; the targets agree.
