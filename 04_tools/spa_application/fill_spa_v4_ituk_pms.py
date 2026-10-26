@@ -169,14 +169,32 @@ def build(args) -> Path:
     wo.cell(total, 2).value = f"{n} part numbers"
     extend_cf(wo, last, T_LAST)
     note_r = total + 7
-    wo.cell(note_r, 1).value = "NOT IN THIS SHEET"
+    derived = costed[costed["cost_from"] != "price file"]
+    if len(pending):
+        wo.cell(note_r, 1).value = "NOT IN THIS SHEET"
+        wo.cell(note_r, 2).value = (f"{len(pending)} part numbers in ITUK's request have no purchase price in our price files: "
+                                    + ", ".join(f"{p.pn} {p.desc}" for p in pending.itertuples())
+                                    + ". They are on the Customer View and the approval form, and left out of all profit figures here.")
+    else:
+        wo.cell(note_r, 1).value = "COST NOTE"
+        wo.cell(note_r, 2).value = (f"All {n} lines are costed. {len(derived)} purchase prices are not under their own number in the "
+                                    "price file and were taken as follows: "
+                                    + "; ".join(f"{p.pn} {p.desc.strip()}: {p.cost_from}" for p in derived.itertuples()) + ".")
     wo.cell(note_r, 1).font = Font(name="Arial", bold=True, size=10, color="C00000")
-    wo.cell(note_r, 2).value = (f"{len(pending)} part numbers in ITUK's request have no purchase price in our price files: "
-                                + ", ".join(f"{p.pn} {p.desc}" for p in pending.itertuples())
-                                + ". They are on the Customer View and the approval form, and left out of all profit figures here.")
     wo.merge_cells(start_row=note_r, start_column=2, end_row=note_r, end_column=28)
     wo.cell(note_r, 2).alignment = Alignment(wrap_text=True, vertical="top")
-    wo.row_dimensions[note_r].height = 30
+    wo.row_dimensions[note_r].height = 60
+    olds = costed[costed["l12_also_billed_as"].notna()]
+    if len(olds):
+        r2 = note_r + 1
+        wo.cell(r2, 1).value = "L12 NOTE"
+        wo.cell(r2, 1).font = Font(name="Arial", bold=True, size=10, color="C00000")
+        wo.cell(r2, 2).value = (f"L12 includes ITUK billing under older numbers of the same part on {len(olds)} lines: "
+                                + "; ".join(f"{p.pn} {p.desc.strip()} (also billed as {p.l12_also_billed_as})" for p in olds.itertuples())
+                                + ".")
+        wo.merge_cells(start_row=r2, start_column=2, end_row=r2, end_column=28)
+        wo.cell(r2, 2).alignment = Alignment(wrap_text=True, vertical="top")
+        wo.row_dimensions[r2].height = 45
     wo.cell(1, 1).value = "SPA OPTIMIZER  ·  ITUK  ·  ISZE"
     wo.freeze_panes = "C6"
 
@@ -315,8 +333,9 @@ def build(args) -> Path:
         f'&" (SPA). Gross profit "&TEXT(\'SPA Optimizer\'!Q{total},"+#,##0;-#,##0")&" € vs L12. No IML / IMIT purchase support is requested."&CHAR(10)'
         f'&"The gain depends on volume: if ITUK only buys its L12 quantities at SPA prices, gross profit is "'
         f'&TEXT(-\'Profit Bridge\'!B13,"#,##0")&" € below L12. Proposal: review volume at 6 months and withdraw SPA pricing on lines under L12."&CHAR(10)'
-        f'&"Not in the figures: {len(pending)} lines without a purchase price yet ({pend_txt}), SPA value "'
-        f'&TEXT(SUMPRODUCT(\'Customer View\'!H{CV_FIRST + n}:H{cv_total - 1}),"#,##0")&" €."'
+        + (f'&"Not in the figures: {len(pending)} lines without a purchase price yet ({pend_txt}), SPA value "'
+           f'&TEXT(SUMPRODUCT(\'Customer View\'!H{CV_FIRST + n}:H{cv_total - 1}),"#,##0")&" €."' if len(pending) else
+           f'&"All {n} lines are costed; {len(derived)} purchase prices come from the predecessor number or the yen base price (note under the SPA Optimizer totals)."')
     )
 
     # ---------- 7. SPA Rationale: the template's generic distributor text, written for ITUK
@@ -324,7 +343,7 @@ def build(args) -> Path:
     low = costed.assign(gm=1 - costed.purchase / costed.spa_price).nsmallest(12, "gm")
     txt = {
         "A1": "SPA APPROVAL REQUEST — MANAGEMENT APPROVER",
-        "A2": f"Customer: ITUK  ·  {n} part lines (+{len(pending)} pending cost)  ·  {date.today():%d-%b-%Y}  ·  Prepared by: {args.prepared_by}",
+        "A2": f"Customer: ITUK  ·  {n} part lines{f' (+{len(pending)} pending cost)' if len(pending) else ''}  ·  {date.today():%d-%b-%Y}  ·  Prepared by: {args.prepared_by}",
         "A5": ("This submission follows the agreed approval procedure:\n\n"
                "1.  ROI study completed in full on ITUK's own proposal (see Section C and the SPA Optimizer tab).\n"
                "2.  No price commitment made to ITUK pending your approval.\n"
@@ -354,7 +373,8 @@ def build(args) -> Path:
                 "DECISION:  Approve the SPA with ITUK at the prices and volumes in the SPA Optimizer tab, valid 1 Nov 2026 to "
                 "31 Oct 2027, with no IML / IMIT purchase support.\n\n"
                 "Bounded: 12-month SPA, volume reviewed at 6 months. On lines where ITUK stays under its L12 volume, ISZE "
-                "withdraws SPA pricing. The 5 lines without a purchase price are loaded only after IML confirms their cost."),
+                "withdraws SPA pricing."
+                + (f" The {len(pending)} lines without a purchase price are loaded only after IML confirms their cost." if len(pending) else "")),
         "A43": ("ITUK runs the UK Isuzu truck network. Its PMS campaign targets scheduled-service parts on the N75 fleet "
                 "(9,359 units, DVLA 2024), with brakes and filters as the core. ITUK's margin on N75 brake pads is about "
                 "18% after logistics, so it cannot fund the price gap alone (meeting of 18 August 2026)."),
@@ -370,7 +390,8 @@ def build(args) -> Path:
                 "3. Same structure can be reused for N35 (Phase 2)."),
         "A58": (f"• L12: SAP billing to sold-to 2575, Sep 2025–Aug 2026  •  Cost: price-file FOB at {fx_live} JPY/EUR and Japan "
                 f"discount {disc_j}  •  SPA prices: ITUK proposal rounded to the cent  •  IML cut: 0% (Assumptions C4)  •  "
-                f"{len(pending)} lines without purchase price excluded from figures"),
+                + (f"{len(pending)} lines without purchase price excluded from figures" if len(pending) else
+                 f"{len(derived)} costs via predecessor number or yen base price (see SPA Optimizer note)")),
     }
     for ref, v in txt.items():
         wr[ref] = v

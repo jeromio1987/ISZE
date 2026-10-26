@@ -141,21 +141,59 @@ def read_basket(path: Path) -> pd.DataFrame:
 
 
 def read_cost(df: pd.DataFrame) -> pd.DataFrame:
+    """Purchase cost per basket line, struck at the price-file vintage (FX 163.7, discount 0.620).
+
+    Looked up in this order, and the route is written to cost_from:
+      1. the price file, by part number;
+      2. the price file, where the basket PN is the newest number of an older row;
+      3. a sibling number (same first 9 digits, last digit differs) with the SAME selling
+         price as the basket line - the same part under a new suffix;
+      4. the yen base price in the 2026 pricing simulation:  FOB = BP_JPY / 163.7 x 0.620;
+      5. the PR00 selling price x the price-class factor (FOB = SP x class factor), with the
+         class taken from a sibling number. This is the price file's own identity.
+    """
     lp = pd.read_parquet(DERIVED / "pricing_list_pn.parquet",
-                         columns=["part_number", "newest_pn", "fob_eur", "sp_eur", "source"])
+                         columns=["part_number", "newest_pn", "fob_eur", "sp_eur", "source", "price_class"])
     lp["pn"] = lp["part_number"].map(norm_pn)
     lp["npn"] = lp["newest_pn"].map(norm_pn)
-    direct = lp.dropna(subset=["fob_eur"]).drop_duplicates("pn", keep="last").set_index("pn")
+    lpc = lp.dropna(subset=["fob_eur"])
+    direct = lpc.drop_duplicates("pn", keep="last").set_index("pn")
     # A basket PN can be the newest number of an older price-file row (fog lamps, 2026-10).
-    via_new = lp.dropna(subset=["fob_eur"]).drop_duplicates("npn", keep="last").set_index("npn")
+    via_new = lpc.drop_duplicates("npn", keep="last").set_index("npn")
+    lpc = lpc.assign(stem=lpc["pn"].str[:9])
+    sim = pd.read_parquet(DERIVED / "pricing_sim_pr00_l12m.parquet",
+                          columns=["part_number", "source", "price_class", "bp_jpy_2026"])
+    sim["pn"] = sim["part_number"].map(norm_pn)
+    sim = sim.dropna(subset=["bp_jpy_2026"]).drop_duplicates("pn", keep="last").set_index("pn")
+    pr00 = pd.read_parquet(DERIVED / "pricing_pr00_ie40.parquet", columns=["part_number", "sp_eur"])
+    pr00["pn"] = pr00["part_number"].map(norm_pn)
+    pr00 = pr00.dropna(subset=["sp_eur"]).drop_duplicates("pn", keep="last").set_index("pn")
+    cfg = yaml.safe_load(PRICING_CONFIG.read_text(encoding="utf-8"))["formula"]
+    class_factor = cfg["class_factor"]
+    file_disc = {"J": DISC_FILE_J, "T": float(cfg["source_discount"]["T"])}
     out = []
-    for pn in df["pn"]:
+    for pn, list_eur in zip(df["pn"], df["list_eur"]):
+        sib = lpc[(lpc["stem"] == pn[:9]) & (lpc["pn"] != pn)]
         if pn in direct.index:
             r = direct.loc[pn]
             out.append((r.fob_eur, r.source, r.sp_eur, "price file"))
         elif pn in via_new.index:
             r = via_new.loc[pn]
             out.append((r.fob_eur, r.source, r.sp_eur, f"price file via {r.part_number}"))
+        elif len(same := sib[(sib["sp_eur"] - float(list_eur)).abs() < 0.005]):
+            r = same.iloc[-1]
+            out.append((r.fob_eur, r.source, r.sp_eur,
+                        f"price file via {r.part_number} (same part, new suffix; same selling price)"))
+        elif pn in sim.index:
+            r = sim.loc[pn]
+            src = str(r.source).strip()
+            fob = round(float(r.bp_jpy_2026) / FX_FILE * file_disc.get(src, DISC_FILE_J), 2)
+            out.append((fob, src, None, f"yen base price {int(r.bp_jpy_2026)} (2026 pricing simulation) / {FX_FILE} x {file_disc.get(src)}"))
+        elif pn in pr00.index and len(sib) and str(sib.iloc[-1].price_class) in class_factor:
+            k = str(sib.iloc[-1].price_class)
+            sp = float(pr00.loc[pn].sp_eur)
+            out.append((round(sp * float(class_factor[k]), 2), sib.iloc[-1].source, sp,
+                        f"PR00 price {sp:.2f} x class {k} factor {class_factor[k]} (class from {sib.iloc[-1].part_number})"))
         else:
             out.append((None, None, None, "no purchase price in any price file"))
     df[["fob_file", "source", "sp_file", "cost_from"]] = pd.DataFrame(out, index=df.index)
@@ -169,7 +207,26 @@ def read_l12(df: pd.DataFrame) -> pd.DataFrame:
         raise SystemExit(f"ABORTED - sales_fact ends {sf['billing_date'].max()}, before the window end {WINDOW[1]}")
     sf = sf[(sf["sold_to_sap"] == SOLD_TO) & (sf["billing_date"] >= WINDOW[0]) & (sf["billing_date"] <= WINDOW[1])]
     sf["pn"] = sf["part_number"].map(norm_pn)
+    # Billing under an older number of the same part counts toward that basket line: the
+    # price file's supersession chain (same newest number) and same-stem suffix variants.
+    # Without this the EGR cooler, DEF sensor, urea kit etc. show no L12 and their whole SPA
+    # profit reads as gain (EUR 176K of ITUK billing in the 2026-10 basket).
+    lp = pd.read_parquet(DERIVED / "pricing_list_pn.parquet", columns=["part_number", "newest_pn"])
+    lp["pn"], lp["npn"] = lp["part_number"].map(norm_pn), lp["newest_pn"].map(norm_pn)
+    basket = set(df["pn"])
+    alias: dict[str, set] = {}
+    for b in basket:
+        news = set(lp.loc[lp["pn"] == b, "npn"]) | {b}
+        olds = set(lp.loc[lp["npn"].isin(news), "pn"]) | set(lp.loc[lp["pn"].str[:9] == b[:9], "pn"])
+        for o in olds - basket:
+            alias.setdefault(o, set()).add(b)
+    alias1 = {o: next(iter(bs)) for o, bs in alias.items() if len(bs) == 1}
+    sf["billed_as"] = sf["pn"]
+    sf["pn"] = sf["pn"].map(lambda p: alias1.get(p, p))
+    old_nums = (sf[sf["pn"] != sf["billed_as"]].groupby("pn")["billed_as"]
+                .apply(lambda x: ", ".join(sorted(set(x)))).rename("l12_also_billed_as"))
     g = sf.groupby("pn").agg(l12_qty=("billed_qty", "sum"), l12_rev=("net_sales_value", "sum")).reset_index()
+    g = g.merge(old_nums, on="pn", how="left")
     df = df.merge(g, on="pn", how="left")
     df[["l12_qty", "l12_rev"]] = df[["l12_qty", "l12_rev"]].fillna(0.0)
     pc = pd.read_parquet(DERIVED / "parts_catalog_dimension.parquet", columns=["part_number", "pr00_group"])
