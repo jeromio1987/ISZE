@@ -27,7 +27,7 @@ from pptx.enum.shapes import MSO_SHAPE, MSO_CONNECTOR
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.util import Inches, Pt
 
-NAMED = False   # other markets in the ranking slides: False = anonymous (distributor-facing), True = country names
+NAMED = True    # other markets in the ranking slides: False = anonymous, True = country names (Jerome, 26 Oct 2026: name all DBs)
 
 R = pathlib.Path(r"C:\Users\jerom\Desktop\claude\ISZE")
 DER = R / "01_data" / "00_derived"
@@ -603,26 +603,24 @@ col_fill(ch.plots[0].series[0], "5A5A5A"); labels(ch.plots[0].series[0], '0.0%',
 for i, r_ in nk.iterrows():
     if r_.distributor_code == "DENMARK":
         pt = ch.plots[0].series[0].points[i]; pt.format.fill.solid(); pt.format.fill.fore_color.rgb = rgb(RED)
-cols = [(6.2, 1.5), (7.7, 0.95), (8.65, 0.95)]
+cols = [(6.2, 2.0), (8.3, 1.3)]
 y = 1.85
-for (x, w), h in zip(cols, ["Market", "Fleet 2025", "Share"]):
+for (x, w), h in zip(cols, ["Market", "Genuine parts share"]):
     rect(s, x, y, w, 0.38, RED); txt(s, x + 0.08, y, w - 0.14, 0.38, h, 8, WHITE, True, PP_ALIGN.LEFT if x == 6.2 else PP_ALIGN.CENTER, MSO_ANCHOR.MIDDLE)
 y += 0.42
 for i, r_ in nord.iterrows():
     nm = "Denmark" if r_.distributor_code == "DENMARK" else (str(r_.country) if NAMED else f"Nordic market {chr(65 + i)}")
     fillc = ROW2 if i % 2 == 0 else PANEL; hl = r_.distributor_code == "DENMARK"
-    for (x, w), v in zip(cols, [nm, f"{r_.uio_units:,.0f}", pct(float(r_.gps_capture_vs_max))]):
+    for (x, w), v in zip(cols, [nm, pct(float(r_.gps_capture_vs_max))]):
         rect(s, x, y, w, 0.44, fillc)
         txt(s, x + 0.08, y, w - 0.14, 0.44, v, 9, RED if hl else WHITE, hl, PP_ALIGN.LEFT if x == 6.2 else PP_ALIGN.CENTER, MSO_ANCHOR.MIDDLE)
     y += 0.47
-txt(s, 6.2, y + 0.1, 3.4, 1.2, f"Denmark has the second-smallest Nordic fleet. With few vehicles, one large fleet customer or one bulk order moves the share by several points.", 8, MUTED)
 rect(s, 0.4, 6.25, 9.2, 0.75, PANEL, BORDER)
 gap_next = float(nord.gps_capture_vs_max.iloc[dk_nrank - 2]) - gps25 if dk_nrank > 1 else 0
 txt(s, 0.65, 6.25, 8.8, 0.75, f"Denmark {pct(gps25)}   |   next place up: {pct(float(nord.gps_capture_vs_max.iloc[dk_nrank - 2]))} (+{gap_next * 100:.1f} points ≈ {k(gap_next * WALLET)} a year of extra billing)", 10.5, WHITE, True, anchor=MSO_ANCHOR.MIDDLE)
 panel(s, [
     f"Denmark is #{dk_nrank} of {len(nord)} Nordic markets, close behind the market in third place and well ahead of the last.",
     f"Moving up one place takes {gap_next * 100:.1f} points of share, about {k(gap_next * WALLET)} of additional parts a year on today's fleet base.",
-    f"The two leaders have fleets of {nord.uio_units.iloc[0]:,.0f} and {nord.uio_units.iloc[1]:,.0f} vehicles, the same size class as Denmark, so they are a fair benchmark.",
     "Question: what would Isuzu Danmark need from ISZE (stock list, pricing on competitive parts, fill rate) to close that gap?"])
 
 # ======================================================================= 17 the ask: part-level sales to dealer
