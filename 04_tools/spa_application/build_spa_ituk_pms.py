@@ -470,7 +470,7 @@ def build(args) -> Path:
     sc = [
         (4, "L12 baseline (actual)", f"={n}", f"={O}F{tot}", f"={O}H{tot}", "=0", "=0",
          "What ITUK bought from us on these lines in the last 12 months."),
-        (5, "★ Full basket, no Japan cut (recommended)", f"={n}", f"={O}L{tot}", f"={O}N{tot}", f"=D5-D4", "=0",
+        (5, "★ Full basket, no Japan cut (recommended)", f"={n}", f"={O}L{tot}", f"={O}N{tot}", "=D5-D4", "=0",
          "ITUK's proposal as sent, at the committed volume. ISZE carries the discount alone."),
         (6, "Partial — SPA only on lines that beat L12, rest at L12", f'=COUNTIF({R},"▲ BETTER")',
          f'=SUMIF({R},"▲ BETTER",{L})+SUMIF({R},"▼ WORSE",{O}F{first}:F{last})',
@@ -565,7 +565,7 @@ def build(args) -> Path:
         (18, "Revenue", f"={O}F{tot}", f"={O}L{tot}", f"={O}L{tot}"),
         (19, "Purchase cost", f"={O}G{tot}", f"={O}L{tot}-{O}N{tot}", f"={O}L{tot}-'Profit Bridge'!B9"),
         (20, "Gross profit", f"={O}H{tot}", f"={O}N{tot}", "='Profit Bridge'!B9"),
-        (21, "Gross margin %", f"={O}I{tot}", f"={O}O{tot}", f"=IFERROR(L20/L18,0)"),
+        (21, "Gross margin %", f"={O}I{tot}", f"={O}O{tot}", "=IFERROR(L20/L18,0)"),
         (22, "Units", f"={O}E{tot}", f"={O}K{tot}", f"={O}K{tot}"),
     ]
     for r, lab, d, f_, l_ in imp:
