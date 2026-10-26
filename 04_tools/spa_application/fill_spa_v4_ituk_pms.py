@@ -228,10 +228,11 @@ def build(args) -> Path:
     wa["B28"] = f'=COUNTIF({AB},"▲ BETTER")&" of {n}"'
     wa["C28"] = (f'=IF(COUNTIF({AB},"▲ BETTER")>={most},"✔  SPA approvable with IML support",'
                  f'IF(COUNTIF({AB},"▲ BETTER")>={half},"⚠  Partial approval possible — review weak lines","✖  Not viable even with IML — renegotiate"))')
-    wa["C31"] = (f'=IF(\'SPA Optimizer\'!Y{total}>=0,IF(COUNTIF({AB},"▲ BETTER")>={most},'
-                 f'"✔  APPROVABLE — all key metrics within range.",'
-                 f'"✔  APPROVABLE AS A BASKET — total profit above L12; weak lines shown openly."),'
-                 f'"✖  NOT READY — basket profit below L12. Revise prices or volumes.")')
+    # Approval basis agreed with Jerome 2026-10-26: turnover above L12 (PMS market-share project).
+    wa["C31"] = (f'=IF(\'SPA Optimizer\'!L{total}>\'SPA Optimizer\'!F{total},IF(\'SPA Optimizer\'!Y{total}>=0,'
+                 f'"✔  APPROVABLE — turnover and gross profit above L12.",'
+                 f'"⚠  APPROVABLE ON TURNOVER — turnover above L12, gross profit "&TEXT(-\'SPA Optimizer\'!Y{total},"#,##0")&" € below L12. PMS market-share investment, MD decision."),'
+                 f'"✖  NOT READY — turnover below L12.")')
 
     # ---------- 4. Customer View and IML brief: per-line blocks
     def relink(ws, first, total_row, tail_rows: range, max_col, extra=None):
@@ -282,7 +283,7 @@ def build(args) -> Path:
     im_text = {
         1: ("ITUK runs the UK Isuzu truck network. N75 fleet in operation: 9,359 units (DVLA 2024). ITUK's PMS campaign "
             "(Phase 1 N75, launch autumn 2026) was agreed with ISZJ in the meeting of 18 August 2026."),
-        2: ("Not requested for this SPA. The basket is above L12 gross profit on ISZE margin alone (Assumptions C4 = 0%). "
+        2: ("Not requested for this SPA (Assumptions C4 = 0%). ISZE carries the discount as an investment in the PMS market-share project. "
             "Column H shows, per line, the cut that would make that line profit-neutral; it is for reference only."),
         3: ("ITUK commits more units than its L12 purchases in total (column L vs column K), so IML / IMIT volume grows "
             "with no price sacrifice. Net IML revenue upside per line is in column M."),
@@ -306,7 +307,7 @@ def build(args) -> Path:
     for r in (13, 14, 15):
         wsp[f"B{r}"] = f'="{n} of {n}"'
     wsp["A13"] = f"Full — All {n} lines (no IML cut)"
-    wsp["G13"] = "★ RECOMMENDED — ITUK's proposal in full. No IML / IMIT cut asked: the basket is above L12 profit on ISZE margin alone."
+    wsp["G13"] = "★ RECOMMENDED — ITUK's proposal in full, approved on turnover growth for the PMS market-share project. No IML / IMIT cut asked."
     wsp["A14"] = "Full + IML support (cut in Assumptions C4)"
     wsp["G14"] = "Only differs from Full when an IML cut is entered in Assumptions C4. Base case: 0%, not asked."
     wsp["C15"] = f"={O}L{total}*(1+Assumptions!B19)"
@@ -330,9 +331,12 @@ def build(args) -> Path:
         f'&"This SPA covers "&COUNTA(\'SPA Optimizer\'!A6:A{last})&" part lines with a total SPA revenue commitment of "'
         f'&TEXT(\'SPA Optimizer\'!L{total},"#,##0")&" € vs a L12 baseline of "&TEXT(\'SPA Optimizer\'!F{total},"#,##0")&" €."&CHAR(10)'
         f'&"Gross margin moves from "&TEXT(\'SPA Optimizer\'!I{total},"0.0%")&" (L12) to "&TEXT(\'SPA Optimizer\'!O{total},"0.0%")'
-        f'&" (SPA). Gross profit "&TEXT(\'SPA Optimizer\'!Q{total},"+#,##0;-#,##0")&" € vs L12. No IML / IMIT purchase support is requested."&CHAR(10)'
-        f'&"The gain depends on volume: if ITUK only buys its L12 quantities at SPA prices, gross profit is "'
-        f'&TEXT(-\'Profit Bridge\'!B13,"#,##0")&" € below L12. Proposal: review volume at 6 months and withdraw SPA pricing on lines under L12."&CHAR(10)'
+        f'&" (SPA). Turnover "&TEXT(\'SPA Optimizer\'!P{total},"+#,##0;-#,##0")&" € ("&TEXT(\'SPA Optimizer\'!L{total}/\'SPA Optimizer\'!F{total}-1,"+0.0%;-0.0%")&"), gross profit "'
+        f'&TEXT(\'SPA Optimizer\'!Q{total},"+#,##0;-#,##0")&" € vs L12. No IML / IMIT purchase support is requested."&CHAR(10)&CHAR(10)'
+        f'&"Motivation: this SPA supports the ITUK PMS project (Phase 1 N75) to increase genuine market share on scheduled-maintenance parts '
+        f'(target +1% PMS share by value, agreed with ITUK and ISZJ on 18 Aug 2026). ITUK commits "&TEXT(\'SPA Optimizer\'!K{total},"#,##0")'
+        f'&" units vs "&TEXT(\'SPA Optimizer\'!E{total},"#,##0")&" in L12. We ask approval on the turnover growth; the margin given is the investment in share."&CHAR(10)'
+        f'&"Risk: at L12 volume the SPA costs "&TEXT(-\'Profit Bridge\'!B13,"#,##0")&" € gross profit. Control: volume review at 6 months, SPA price withdrawn on lines under L12."&CHAR(10)'
         + (f'&"Not in the figures: {len(pending)} lines without a purchase price yet ({pend_txt}), SPA value "'
            f'&TEXT(SUMPRODUCT(\'Customer View\'!H{CV_FIRST + n}:H{cv_total - 1}),"#,##0")&" €."' if len(pending) else
            f'&"All {n} lines are costed; {len(derived)} purchase prices come from the predecessor number or the yen base price (note under the SPA Optimizer totals)."')
@@ -347,9 +351,10 @@ def build(args) -> Path:
         "A5": ("This submission follows the agreed approval procedure:\n\n"
                "1.  ROI study completed in full on ITUK's own proposal (see Section C and the SPA Optimizer tab).\n"
                "2.  No price commitment made to ITUK pending your approval.\n"
-               "3.  No IML / IMIT purchase support is requested: the basket is above L12 gross profit on ISZE margin alone.\n\n"
+               "3.  No IML / IMIT purchase support is requested. Approval is asked on turnover growth, as an investment in PMS market share.\n\n"
                "We are presenting this to you first."),
-        "A10": (f"Price support on {n} part lines for ITUK's PMS campaign (Phase 1 N75, launch autumn 2026), agreed in the "
+        "A10": (f"Price support on {n} part lines for ITUK's PMS project, to increase genuine market share on scheduled-maintenance "
+                "parts (Phase 1 N75, launch autumn 2026; target +1% PMS share by value), agreed in the "
                 "ITUK / ISZE / ISZJ meeting of 18 August 2026. Brake price is ITUK dealers' first complaint "
                 "(April 2026 trip: one aftermarket brand's brake parts were 60–75% below ITUK wholesale). Price relief is linked to ITUK's committed "
                 "volume and limited to 12 months."),
@@ -357,9 +362,9 @@ def build(args) -> Path:
                + ",\"#,##0 €\")&\" | GM \"&TEXT('SPA Optimizer'!I" + str(total) + ",\"0.0%\")&CHAR(10)"
                "&\"• SPA at committed volume, no IML support: gross profit \"&TEXT('SPA Optimizer'!N" + str(total)
                + ",\"#,##0 €\")&\" | GM \"&TEXT('SPA Optimizer'!O" + str(total) + ",\"0.0%\")&CHAR(10)"
-               "&\"• Delta: \"&TEXT('SPA Optimizer'!Q" + str(total) + ",\"+#,##0 €;-#,##0 €\")"
+               "&\"• Delta: turnover \"&TEXT('SPA Optimizer'!P" + str(total) + ",\"+#,##0 €;-#,##0 €\")&\", gross profit \"&TEXT('SPA Optimizer'!Q" + str(total) + ",\"+#,##0 €;-#,##0 €\")"
                "&CHAR(10)&CHAR(10)&\"GM% floor compliance per line is in Section D and the Assumptions tab.\"",
-        "A14": "=\"No IML / IMIT purchase price reduction is requested. For reference, a 7% IML cut would add \"&TEXT('Profit Bridge'!B9,\"#,##0 €\")&\" to ISZE gross profit. The SPA is approvable without it.\"",
+        "A14": "=\"No IML / IMIT purchase price reduction is requested. For reference, a 7% IML cut would add \"&TEXT('Profit Bridge'!B9,\"#,##0 €\")&\" to ISZE gross profit. ISZE carries the discount itself as an investment in PMS market share; approval is asked on the turnover growth.\"",
         "A19": "→ No IML sacrifice requested (0 €)",
         "C19": f"='SPA Optimizer'!N{total}",
         "F19": "Not applicable — no IML investment",
@@ -371,7 +376,8 @@ def build(args) -> Path:
         "A23": "All lines are checked in the Assumptions tab (GM% Floor Check) against a 25% floor. The 12 lowest SPA margins are below; none is under 30%.",
         "A39": ("We are requesting one approval:\n\n"
                 "DECISION:  Approve the SPA with ITUK at the prices and volumes in the SPA Optimizer tab, valid 1 Nov 2026 to "
-                "31 Oct 2027, with no IML / IMIT purchase support.\n\n"
+                "31 Oct 2027, with no IML / IMIT purchase support, on the basis that turnover grows above L12. The gross profit "
+                "difference vs L12 is accepted as the investment in PMS market share.\n\n"
                 "Bounded: 12-month SPA, volume reviewed at 6 months. On lines where ITUK stays under its L12 volume, ISZE "
                 "withdraws SPA pricing."
                 + (f" The {len(pending)} lines without a purchase price are loaded only after IML confirms their cost." if len(pending) else "")),
@@ -385,7 +391,7 @@ def build(args) -> Path:
         "A52": ("=\"ISZE stays at current prices. ITUK's PMS campaign runs without price support on genuine parts. The "
                 "L12 revenue on these lines is \"&TEXT('SPA Optimizer'!F" + str(total) + ",\"#,##0 €\")&\"; the downside "
                 "case (ITUK takes the SPA prices but only buys its L12 volume) is \"&TEXT('Profit Bridge'!B13,\"+#,##0 €;-#,##0 €\")&\" gross profit vs L12.\""),
-        "A55": ("1. Supports the PMS campaign agreed with ITUK and ISZJ, and the +1% PMS share target.\n"
+        "A55": ("1. Increases genuine market share on PMS parts in the UK, in line with the +1% PMS share target agreed with ITUK and ISZJ.\n"
                 "2. Volume commitments per part number improve ISZE forecast and stock planning.\n"
                 "3. Same structure can be reused for N35 (Phase 2)."),
         "A58": (f"• L12: SAP billing to sold-to 2575, Sep 2025–Aug 2026  •  Cost: price-file FOB at {fx_live} JPY/EUR and Japan "
