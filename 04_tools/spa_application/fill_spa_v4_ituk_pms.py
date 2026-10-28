@@ -100,6 +100,14 @@ def move_block(ws, rows: range, offset: int, max_col: int):
                        end_row=m.max_row + offset, end_column=m.max_col)
 
 
+def clear_rows(ws, first: int, last: int, max_col: int):
+    """Blank template rows a smaller basket no longer uses (values and styles)."""
+    for r in range(first, last + 1):
+        for c in range(1, max_col + 1):
+            ws.cell(r, c).value = None
+            ws.cell(r, c).style = "Normal"
+
+
 def extend_cf(ws, new_last: int, old_last: int, first_rows=(T_FIRST, GM_FIRST)):
     """Stretch conditional formatting ranges that end on the template's last data row."""
     cf = ws.conditional_formatting
@@ -118,12 +126,37 @@ def extend_cf(ws, new_last: int, old_last: int, first_rows=(T_FIRST, GM_FIRST)):
             cf.add(sq, r)
 
 
+PMS_SCOPE = {  # PMS campaign scope agreed with ITUK / ISZJ on 18 Aug 2026 -> family
+    "oil_filter": "Filters", "fuel_filter": "Filters", "air_filter": "Filters", "blower_filter": "Filters",
+    "urea_filter": "Filters", "brake_pad": "Brakes", "brake_rotor": "Brakes", "clutch_kit": "Clutch",
+    "clutch_disc": "Clutch", "clutch_pressure_plate": "Clutch", "release_bearing": "Clutch",
+}
+
+
+def pms_category(df):
+    """PMS category per line: parts catalogue, then BVP dimension; an untagged caliper pad kit is a brake pad.
+    King pins, shock absorbers, water pump and bushings carry catalogue tags but are outside the PMS scope."""
+    import pandas as pd
+    from build_spa_ituk_pms import DERIVED, norm_pn
+    pc = pd.read_parquet(DERIVED / "parts_catalog_dimension.parquet", columns=["part_number", "pms_category"])
+    bv = pd.read_parquet(DERIVED / "bvp_pn_dimension.parquet", columns=["part_number", "pms_category"])
+    for d in (pc, bv):
+        d["pn"] = d["part_number"].map(norm_pn)
+    cat = df["pn"].map(pc.dropna().drop_duplicates("pn").set_index("pn")["pms_category"])
+    cat = cat.fillna(df["pn"].map(bv.dropna().drop_duplicates("pn").set_index("pn")["pms_category"]))
+    cat = cat.where(cat.notna() | ~df["desc"].str.contains("PAD KIT; CALIPER", regex=False), "brake_pad")
+    return cat.where(cat.isin(PMS_SCOPE.keys()))
+
+
 def build(args) -> Path:
     cfg = yaml.safe_load(PRICING_CONFIG.read_text(encoding="utf-8"))["formula"]
     fx_live = float(cfg["fx_rate"])
     disc_j = float(cfg["source_discount"]["J"])
 
     df = read_l12(read_cost(read_basket(Path(args.basket))))
+    n_basket = len(df)
+    if args.pms_only:
+        df = df[pms_category(df).notna()].reset_index(drop=True)
     costed = df[df["fob_file"].notna()].reset_index(drop=True)
     pending = df[df["fob_file"].isna()].reset_index(drop=True)
     factor = costed["source"].map(lambda s: (FX_FILE / fx_live) * (disc_j / DISC_FILE_J) if s == "J" else FX_FILE / fx_live)
@@ -145,6 +178,8 @@ def build(args) -> Path:
     wo = wb["SPA Optimizer"]
     style_row = {c: copy(wo.cell(T_FIRST, c)._style) for c in range(1, 29)}
     tpl_formula = {c: wo.cell(T_FIRST, c).value for c in range(1, 29)}
+    if n < T_LINES:
+        clear_rows(wo, T_FIRST + n, T_LAST, 28)
     move_block(wo, range(T_TOTAL - 1, 67), shift, 28)          # blank, total, notes
     for i, rec in costed.iterrows():
         r = T_FIRST + i
@@ -213,6 +248,8 @@ def build(args) -> Path:
             wa.cell(r, 2).number_format = "dd-mmm-yyyy"
     gm_style = {c: copy(wa.cell(GM_FIRST, c)._style) for c in range(1, 5)}
     gm_tpl = {c: wa.cell(GM_FIRST, c).value for c in range(1, 5)}
+    if n < T_LINES:
+        clear_rows(wa, GM_FIRST + n, GM_FIRST + T_LINES - 1, 4)
     for i in range(n):
         r, opt = GM_FIRST + i, T_FIRST + i
         for c in range(1, 5):
@@ -242,6 +279,8 @@ def build(args) -> Path:
             ws.unmerge_cells(str(m))
         n_rows = n + (len(extra) if extra is not None else 0)
         new_total = first + n_rows
+        if new_total < total_row:
+            clear_rows(ws, new_total, total_row - 1, max_col)
         move_block(ws, tail_rows, new_total - total_row, max_col)
         for c in range(1, max_col + 1):                      # totals: SUM(x5:x57) -> new range
             v = ws.cell(new_total, c).value
@@ -497,6 +536,8 @@ def build(args) -> Path:
     wb_.page_setup.fitToWidth, wb_.page_setup.fitToHeight = 1, 1
     wb_.print_area = "A1:H32"
 
+    if args.pms_only:
+        pms_extract_text(wb, n, n_basket, total, last)
     wb.active = wb.sheetnames.index("MD Approval Request")
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -518,6 +559,40 @@ def build(args) -> Path:
     return out
 
 
+def pms_extract_text(wb, n, n_basket, total, last):
+    """PMS-only extract: neutral, figure-driven wording. The approval wording ('approval asked on turnover
+    growth') is true for the full basket, not for the PMS subset, so it is replaced here."""
+    O = "'SPA Optimizer'!"
+    tag = f"PMS PARTS ONLY — {n} of {n_basket} part numbers in the ITUK SPA request. Analysis extract, not the approval request."
+    wb["SPA Optimizer"]["A1"] = "SPA OPTIMIZER  ·  ITUK  ·  ISZE  ·  PMS PARTS ONLY"
+    wb["SPA Optimizer"]["A2"] = tag
+    wb["How to Use"]["A2"] = tag
+    wb["MD Approval Request"]["B7"] = "Promotional Parts Price Change Request — PMS parts extract (for information)"
+    wb["MD Approval Request"]["B26"] = (
+        '="Special Pricing Agreement — "&Assumptions!B9&" | Market: "&Assumptions!B10&" | PMS parts only"&CHAR(10)&CHAR(10)'
+        f'&"PMS parts in the ITUK SPA: "&COUNTA({O}A6:A{last})&" of {n_basket} part numbers (filters, brakes, clutch)."&CHAR(10)'
+        f'&"Turnover: target "&TEXT({O}L{total},"#,##0")&" € vs "&TEXT({O}F{total},"#,##0")&" € in L12 ("&TEXT({O}P{total},"+#,##0;-#,##0")&" €, "'
+        f'&TEXT({O}L{total}/{O}F{total}-1,"+0.0%;-0.0%")&"). Units: "&TEXT({O}K{total},"#,##0")&" vs "&TEXT({O}E{total},"#,##0")&"."&CHAR(10)'
+        f'&"Gross profit: "&TEXT({O}N{total},"#,##0")&" € vs "&TEXT({O}H{total},"#,##0")&" € in L12 ("&TEXT({O}Q{total},"+#,##0;-#,##0")&" €). '
+        f'Margin "&TEXT({O}I{total},"0.0%")&" → "&TEXT({O}O{total},"0.0%")&". No IML / IMIT support applied."&CHAR(10)'
+        '&"L12 = SAP billing to ITUK, 1 Sep 2025 – 31 Aug 2026 (last 12 complete months available)."')
+    wa = wb["Assumptions"]
+    wa["C31"] = (f'=IF({O}L{total}>{O}F{total},"Turnover above L12","Turnover below L12")&", gross profit "'
+                 f'&IF({O}Y{total}>=0,"above","below")&" L12 — PMS parts only, for information."')
+    wsp = wb["Scenario Planner"]
+    wsp["G13"] = "PMS parts only, ITUK's proposal as sent. For information."
+    wr = wb["SPA Rationale"]
+    wr["A1"] = "SPA ANALYSIS — PMS PARTS ONLY (for information)"
+    wr["A5"] = (f"This sheet covers the {n} PMS part numbers of the ITUK SPA request ({n_basket} part numbers in total), "
+                "for the PMS review requested by management. The approval request itself is the full-basket file.")
+    wr["A12"] = (f"=\"• L12 (Sep 2025 – Aug 2026): turnover \"&TEXT({O}F{total},\"#,##0 €\")&\", gross profit \"&TEXT({O}H{total},\"#,##0 €\")"
+                 f"&CHAR(10)&\"• SPA target: turnover \"&TEXT({O}L{total},\"#,##0 €\")&\", gross profit \"&TEXT({O}N{total},\"#,##0 €\")"
+                 f"&CHAR(10)&\"• Delta: turnover \"&TEXT({O}P{total},\"+#,##0 €;-#,##0 €\")&\", gross profit \"&TEXT({O}Q{total},\"+#,##0 €;-#,##0 €\")")
+    wr["A14"] = "=\"No IML / IMIT purchase support applied. For reference, a 7% IML cut on these parts would add \"&TEXT('Profit Bridge'!B9,\"#,##0 €\")&\" gross profit.\""
+    wr["A39"] = "Not an approval request. Figures for information on the PMS part of the ITUK SPA."
+    wr["A52"] = ""
+
+
 def main() -> int:
     stamp = date.today().strftime("%Y%m%d")
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
@@ -526,6 +601,7 @@ def main() -> int:
                                          / f"SPA_Optimizer_V4_ITUK_2026_PMS_{stamp}.xlsx"))
     ap.add_argument("--prepared-by", default="Jerome Van der Pluym")
     ap.add_argument("--manager", default="Hadewijch Tibos")
+    ap.add_argument("--pms-only", action="store_true", help="keep only the PMS parts (filters, brakes, clutch)")
     build(ap.parse_args())
     return 0
 
