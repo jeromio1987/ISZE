@@ -33,7 +33,7 @@ DER = ROOT / "01_data" / "00_derived"
 PRISM = ROOT / "03_analytics" / "Isuzu" / "prism"
 PDATA = PRISM / "data"
 sys.path.insert(0, str(PRISM))
-OUT = Path(__file__).resolve().parent / (sys.argv[1] if len(sys.argv) > 1 else "ISZE_CV_PMS_Coverage_trucks_2026-10-30_v2.xlsx")
+OUT = Path(__file__).resolve().parent / (sys.argv[1] if len(sys.argv) > 1 else "ISZE_CV_PMS_Coverage_trucks_2026-10-30_v3.xlsx")
 
 MIN_CV_UIO = 10  # Denmark has 1 truck in service: left out
 UIO_YEARS = [2024, 2025, 2026]
@@ -406,14 +406,17 @@ for i, c in enumerate(cust_order):
         note += " For IML / ITUK use the IML service schedule (Model B) figures below, not this row."
     put(wa, rr_, 7, note)
 CK1 = CK0 + NC - 1
-for col, w in zip("ABCDEFGH", [44, 14, 14, 11, 12, 12, 12, 100]):
+for col, w in zip("ABCDEFGHIJ", [44, 14, 14, 11, 12, 12, 12, 100, 12, 12]):
     wa.column_dimensions[col].width = w
 
 PI0 = CK1 + 4
 text(wa, PI0 - 2, 1, "Replacement interval per part (km)", BIG)
-header(wa, PI0 - 1, ["Part", "Part code", "Group", "N35 km", "N75 km", "F-series km", "Every … N75 services", "Based on"], freeze=False, filt=False)
-ibasis = {"oil_filter": "Every service — Isuzu GIDSS.", "fuel_filter": "Every service — Isuzu GIDSS.",
-          "air_filter": "Every 2nd service — PMS model, provisional.", "blower_filter": "Every service — PMS model (Jerome 2026-07-26).",
+header(wa, PI0 - 1, ["Part", "Part code", "Group", "N35 km", "N75 km", "F-series km", "Every … N75 services", "Based on",
+                     "Pieces per change — N-series", "Pieces per change — F-series"], freeze=False, filt=False)
+N35_GIDSS = {"fuel_filter": 40_000, "air_filter": 60_000}  # GIDSS NLR87 / RZ4E replace intervals (the PMS model uses 20,000 / 40,000)
+PCS_PER_CHANGE = {"fuel_filter": (2, 2), "air_filter": (1, 2)}  # main + pre-fuel filter; F-series air outer + inner
+ibasis = {"oil_filter": "Every service — Isuzu GIDSS (N35 RZ4E 20,000 km, N75 4HK1 40,000 km).", "fuel_filter": "Isuzu GIDSS: fuel filter element AND pre-fuel filter, both every 40,000 km on N35 (RZ4E); N75 element every 40,000 km, pre-filter on the indicator — counted as 2 per change. N35 40,000 km per GIDSS (PMS model: 20,000).",
+          "air_filter": "N35: replace every 60,000 km (GIDSS RZ4E; PMS model 40,000). N75: on the indicator — every 2nd service (PMS model, provisional). F-series: outer + inner element = 2 per change (part numbers 1876101132 + 1876101141).", "blower_filter": "Every service — PMS model (Jerome 2026-07-26).",
           "urea_filter": "Isuzu GIDSS: 200,000 km N-series (NPR75), 80,000 km F-series (4HK1-TCH).",
           "brake_pad": "Every 2nd service — PMS model, not confirmed by IML.",
           "brake_shoe": "Every 2nd service — PMS model, not confirmed by IML.", "brake_rotor": "Every 2nd pad change — PMS model, provisional."}
@@ -427,11 +430,14 @@ for i, (cat, lab) in enumerate(CATS.items()):
     put(wa, rr_, 1, lab)
     put(wa, rr_, 2, cat)
     put(wa, rr_, 3, GROUP_OF[cat])
-    put(wa, rr_, 4, round(SVC_KM["N35"] / fN), BLUE, PCS, IN_FILL)
+    put(wa, rr_, 4, N35_GIDSS.get(cat, round(SVC_KM["N35"] / fN)), BLUE, PCS, IN_FILL)
     put(wa, rr_, 5, round(SVC_KM["N75"] / fN), BLUE, PCS, IN_FILL)
     put(wa, rr_, 6, round(SVC_KM["F"] / fF), BLUE, PCS, IN_FILL)
     put(wa, rr_, 7, f"=E{rr_}/$B$7", fmt="0.0")
     put(wa, rr_, 8, ibasis.get(cat, "PMS model assumption, not confirmed by IML."))
+    pn_, pf_ = PCS_PER_CHANGE.get(cat, (1, 1))
+    put(wa, rr_, 9, pn_, BLUE, None, IN_FILL)
+    put(wa, rr_, 10, pf_, BLUE, None, IN_FILL)
 PI1 = PI0 + len(CATS) - 1
 
 OI0 = PI1 + 4
@@ -563,7 +569,8 @@ for c in cust_order:
             put(wc, r, 16, "=" + ivl("D", "D", r), GREEN, PCS)
             put(wc, r, 17, "=" + ivl("E", "E", r), GREEN, PCS)
             put(wc, r, 18, "=" + ivl("F", "F", r), GREEN, PCS)
-            put(wc, r, 19, f"=I{r}*(L{r}*M{r}/P{r}+(1-L{r})*M{r}/Q{r})+J{r}*N{r}/R{r}", fmt=PCS)
+            pc_ = f"MATCH(G{r},{A}$B${PI0}:$B${PI1},0)"
+            put(wc, r, 19, f"=I{r}*(L{r}*M{r}/P{r}+(1-L{r})*M{r}/Q{r})*INDEX({A}$I${PI0}:$I${PI1},{pc_})+J{r}*N{r}/R{r}*INDEX({A}$J${PI0}:$J${PI1},{pc_})", fmt=PCS)
             put(wc, r, 20, tq_, BLUE, PCS, IN_FILL)
             put(wc, r, 21, mq_, BLUE, PCS, IN_FILL)
             put(wc, r, 22, f"=T{r}+U{r}*K{r}", fmt=PCS)
@@ -894,14 +901,15 @@ lines = [
              "Part numbers — every PMS part number billed, per customer, with genuine/BVP and its BVP partner.\n"
              "Assumptions — the km per customer and truck model, the replacement interval per part, and what each number is based on.\n"
              "UIO and Calculation — the inputs and the arithmetic."),
-    ("Formula", "Pieces needed = trucks × km a year ÷ replacement interval km (N-series split N35 / N75, and F-series).  Coverage = billed truck parts ÷ pieces needed.  "
+    ("Formula", "Pieces needed = trucks × km a year ÷ replacement interval km × pieces per change (N-series split N35 / N75, and F-series). Fuel filter = 2 per change (main + pre-filter); "
+                "F-series air filter = 2 (outer + inner); N35 fuel 40,000 km and air 60,000 km per Isuzu GIDSS.  Coverage = billed truck parts ÷ pieces needed.  "
                 "Gap € (mix price) = missing pieces × what we billed per truck piece, genuine and BVP together (headline). "
                 "Gap € at BVP price = the same missing pieces at this customer's own BVP price — what a BVP campaign could realistically win; where the customer sold no BVP for that part, the genuine price. "
                 "Prices are averages over the part numbers sold, not like-for-like: a BVP average can be above the genuine one when the mix differs (e.g. Isuzu Truck UK oil filter). "
                 "Gap € at genuine price is on the Calculation tab (the maximum)."),
     ("Standard", "The agreed PMS coverage standard (the PMS coverage model, network lane): 20,000 km a year for every vehicle, UTI N-series 50,000 km (confirmed); "
                  "intervals from the Isuzu GIDSS service schedule where it exists, otherwise the model's assumption; Isuzu Truck UK brakes every 100,000 km. "
-                 "FY2026 pieces needed are exactly the model's truck figures. Full list with sources on the Assumptions tab.\n"
+                 "Deviations from the PMS model, per Isuzu GIDSS: N35 fuel filter every 40,000 km and air filter every 60,000 km; fuel filter counted as 2 per change (main + pre-filter), F-series air filter as 2 (outer + inner). Full list with sources on the Assumptions tab.\n"
                  "Isuzu Truck UK with IML / ITUK: use the IML service schedule (Model B, agreed 2 Jul 2026): oil filter 35.1%, gap €2.04M (CY2025) — on the Assumptions tab. "
                  "That standard uses 22,389 trucks at 50,000 km a year and its own part scope, so it differs from this file's ITUK row."),
     ("Billed", "ISZE parts billing, genuine + BVP, credit notes and returns removed. One rule for every customer: parts that fit only trucks count in full; "
