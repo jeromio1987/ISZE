@@ -33,7 +33,7 @@ DER = ROOT / "01_data" / "00_derived"
 PRISM = ROOT / "03_analytics" / "Isuzu" / "prism"
 PDATA = PRISM / "data"
 sys.path.insert(0, str(PRISM))
-OUT = Path(__file__).resolve().parent / (sys.argv[1] if len(sys.argv) > 1 else "ISZE_CV_PMS_Coverage_trucks_2026-10-30.xlsx")
+OUT = Path(__file__).resolve().parent / (sys.argv[1] if len(sys.argv) > 1 else "ISZE_CV_PMS_Coverage_trucks_2026-10-30_v2.xlsx")
 
 MIN_CV_UIO = 10  # Denmark has 1 truck in service: left out
 UIO_YEARS = [2024, 2025, 2026]
@@ -307,6 +307,46 @@ for key_, _t, st_, en_, *_ in PERIODS:
     for (d_, c_, t_), r_ in x_.groupby(["distributor_code", "cat", "tclass"]).agg(q=("billed_qty", "sum"), e=("net_sales_value", "sum")).iterrows():
         tsplit[(d_, key_, c_, t_)] = (float(r_.q), float(r_.e))
 
+
+def _tshare(c, y):
+    if (c, y) not in piv.index:
+        return 0.0
+    p_ = piv.loc[(c, y)]
+    tr_ = float(p_.LD + p_.MD + p_["F-Series"])
+    return tr_ / (tr_ + float(p_.LCV)) if tr_ + float(p_.LCV) > 0 else 0.0
+
+
+# Truck-basis billing (pieces and euros, genuine / BVP split): truck parts x 1, parts also fitting D-Max x truck share,
+# D-Max-only parts x 0. Same weights as the pieces counted for coverage, so billed €, price and gap share one base.
+s["is_bvp_any"] = s.is_bvp | s.part_number.astype(str).str[:4].isin(["5876", "1876"])
+tw = {}
+tw_frames = []
+for key_, _t, st_, en_, *_ in PERIODS:
+    x_ = s[(s.bd >= st_) & (s.bd < en_) & s.distributor_code.isin(cv_codes)].copy()
+    sh_ = x_.distributor_code.map(lambda d: _tshare(d, UIO_YEAR[key_]))
+    w_ = sh_.where(x_.tclass == "mixed", (x_.tclass == "truck").astype(float))
+    x_ = x_.assign(wq=x_.billed_qty * w_, we=x_.net_sales_value * w_, period=key_)
+    x_ = x_.assign(gq=x_.wq.where(~x_.is_bvp_any, 0), ge=x_.we.where(~x_.is_bvp_any, 0),
+                   bq=x_.wq.where(x_.is_bvp_any, 0), be=x_.we.where(x_.is_bvp_any, 0), ne=x_.we.where(x_.no_bvp, 0))
+    tw_frames.append(x_)
+    for (d_, c_), r_ in x_.groupby(["distributor_code", "cat"])[["wq", "we", "gq", "ge", "bq", "be", "ne"]].sum().iterrows():
+        tw[(d_, key_, c_)] = {k__: float(v__) for k__, v__ in r_.items()}
+_twall = pd.concat(tw_frames)
+_pc = _twall.groupby(["distributor_code", "cat"])[["wq", "we", "gq", "ge", "bq", "be"]].sum()
+_pn = _twall.groupby("cat")[["wq", "we", "gq", "ge", "bq", "be"]].sum()
+
+
+def _price(d, k, cat, qcol, ecol, network=True):
+    """(price, source): this customer and FY, then the customer over both FY, then the network; trucks basis."""
+    t_ = tw.get((d, k, cat), {})
+    if t_.get(qcol, 0) > 0:
+        return t_[ecol] / t_[qcol], "customer, this FY"
+    if (d, cat) in _pc.index and _pc.loc[(d, cat), qcol] > 0:
+        return _pc.loc[(d, cat), ecol] / _pc.loc[(d, cat), qcol], "customer, FY2025+FY2026"
+    if network and cat in _pn.index and _pn.loc[cat, qcol] > 0:
+        return _pn.loc[cat, ecol] / _pn.loc[cat, qcol], "network"
+    return None, "none"
+
 wb = Workbook()
 rd = wb.active
 rd.title = "Read me"
@@ -473,8 +513,9 @@ ccols = ["Key", "Customer code", "Customer", "Country", "FY", "Part", "Part code
          "N35 share", "Km N-series", "Km F-series", "(not used)", "Interval N35", "Interval N75", "Interval F", "Pieces needed",
          "Billed pieces — truck-only parts", "Billed pieces — parts also fitting D-Max / no vehicle ref.", "Billed pieces counted", "Average price €",
          "Expected €", "Coverage %", "Gap €", "Genuine €", "BVP €", "BVP share of €", "Genuine € with no BVP", "No-BVP share of genuine €",
-         "Action", "Rank helper"]
-header(wc, 4, ccols, [24, 10, 26, 13, 8, 20, 18, 9, 9, 9, 9, 8, 9, 9, 9, 9, 9, 9, 10, 9, 10, 10, 9, 11, 9, 11, 11, 11, 9, 11, 9, 30, 9])
+         "Action", "Rank helper", "Billed € (trucks)", "Genuine price €", "BVP price €", "Gap € at genuine price", "Gap € at BVP price", "BVP price from"]
+header(wc, 4, ccols, [24, 10, 26, 13, 8, 20, 18, 9, 9, 9, 9, 8, 9, 9, 9, 9, 9, 9, 10, 9, 10, 10, 9, 11, 9, 11, 11, 11, 9, 11, 9, 30, 9,
+                      11, 9, 9, 11, 11, 22])
 asp_p = {}
 for (d, k, c_, f_), (q_, e_) in agg.items():
     a0 = asp_p.setdefault((d, k, c_), [0.0, 0.0])
@@ -495,9 +536,13 @@ for c in cust_order:
         for cat, lab in CATS.items():
             tq_ = tsplit.get((c, k, cat, "truck"), (0.0, 0.0))[0]
             mq_ = tsplit.get((c, k, cat, "mixed"), (0.0, 0.0))[0]
-            q_, e_ = asp_p.get((c, k, cat), (0.0, 0.0))
-            asp = e_ / q_ if q_ > 0 else asp_cust.get((c, cat), asp_net.get(cat))
-            mx = mix.get((c, k, cat), dict(gen_eur=0, bvp_eur=0, nobvp_eur=0))
+            t_ = tw.get((c, k, cat), {})
+            asp, _src = _price(c, k, cat, "wq", "we")
+            gprice, _gs = _price(c, k, cat, "gq", "ge")
+            bprice, bsrc = _price(c, k, cat, "bq", "be", network=False)
+            if bprice is None:  # this customer sold no BVP for this part on trucks: no BVP price to assume
+                bprice, bsrc = gprice, "no BVP sold — genuine price"
+            mx = dict(gen_eur=t_.get("ge", 0.0), bvp_eur=t_.get("be", 0.0), nobvp_eur=t_.get("ne", 0.0))
             key = f'B{r}&"|"&{UIO_YEAR[k]}'
             ck = f"MATCH(B{r},{A}$B${CK0}:$B${CK1},0)"
             put(wc, r, 1, f"{c}|{k}|{cat}")
@@ -534,12 +579,18 @@ for c in cust_order:
             put(wc, r, 32, action(f"X{r}", f"Y{r}", f"AA{r}", f"AB{r}", f"AC{r}", f"AE{r}"))
             put(wc, r, 33, f'=IF(AND(E{r}={RKS}$B$3,OR({RKS}$B$4="All",{RKS}$B$4=D{r}),OR({RKS}$D$4="All",{RKS}$D$4=F{r})),Z{r}+ROW()/1000000,-1)',
                 fmt="0.00", fill=GREY)
+            put(wc, r, 34, t_.get("we", 0.0), BLUE, EUR, IN_FILL)
+            put(wc, r, 35, round(gprice, 4) if gprice else None, BLUE, EUR2, IN_FILL)
+            put(wc, r, 36, round(bprice, 4) if bprice else None, BLUE, EUR2, IN_FILL)
+            put(wc, r, 37, f"=MAX(0,S{r}-V{r})*N(AI{r})", fmt=EUR)
+            put(wc, r, 38, f"=MAX(0,S{r}-V{r})*N(AJ{r})", fmt=EUR)
+            put(wc, r, 39, bsrc)
             r += 1
 C1 = r - 1
 C = "Calculation!"
 wc.conditional_formatting.add(f"Y5:Y{C1}", ColorScaleRule(**RED_GREEN))
-wc.cell(row=4, column=23).comment = Comment("Billed € ÷ billed pieces for this customer, part and FY (whole customer); if nothing billed, the customer's average "
-                                            "for the part, else the network average.", "ISZE")
+wc.cell(row=4, column=23).comment = Comment("Mix price: truck billed € ÷ truck billed pieces (genuine + BVP) for this customer, part and FY; "
+                                            "else the customer over both FY, else the network.", "ISZE")
 ACTION_NOTE = ("Small: expected under €1,000. Covered: coverage 80%+. Hardly billed: billed under 3% of expected € — check the km interval first. "
                "Develop BVP: half or more of genuine € is on parts with no BVP. Push existing BVP / price: BVP exists but under 20% of €. "
                "Otherwise BVP already sells: look at price and availability.")
@@ -555,10 +606,11 @@ def km_line(code_ref):
 # ---------- Part numbers ----------
 wl = wb.create_sheet("Part numbers")
 text(wl, 1, 1, "PMS part numbers billed to the truck customers — per customer, FY2025 and FY2026", TITLE)
-text(wl, 2, 1, "Genuine and BVP, credit notes and returns removed. Whole customer (trucks and D-Max). Use the filters; the totals row follows them. Column Fits shows truck or D-Max.")
+text(wl, 2, 1, "Genuine and BVP, credit notes and returns removed. Whole customer; the columns 'Counted for trucks' give the share that goes into the truck coverage. Use the filters; the totals row follows them.")
 lcols = ["Part number", "Description", "Part", "Group", "Genuine / BVP", "BVP alternative?", "BVP / genuine partner", "Fits", "Country", "Customer", "Check",
-         "FY2025 pieces", "FY2025 €", "FY2026 pieces", "FY2026 €", "FY2026 average price €", "Tree: pieces", "Tree: €"]
-header(wl, 5, lcols, [13, 32, 20, 9, 16, 11, 24, 22, 13, 26, 30, 10, 12, 10, 12, 11, 10, 11])
+         "FY2025 pieces", "FY2025 €", "FY2026 pieces", "FY2026 €", "FY2026 average price €", "Counted for trucks FY2025", "Counted for trucks FY2026",
+         "Tree: pieces", "Tree: €"]
+header(wl, 5, lcols, [13, 32, 20, 9, 16, 11, 24, 22, 13, 26, 30, 10, 12, 10, 12, 11, 10, 10, 10, 11])
 g2b, b2g = {}, {}
 for r_ in cx.itertuples():
     g2b.setdefault(norm(r_.genuine_pn), set()).add(r_.bvp_pn)
@@ -608,15 +660,20 @@ for pn in order_pn:
             put(wl, r, 13 + 2 * j, float(row.get(("eur", f_), 0.0)), BLUE, EUR)
         put(wl, r, 16, f'=IF(N{r}>0,O{r}/N{r},"")', fmt=EUR2)
         sel = f'OR({TS}$B$3="All",{TS}$B$3=I{r})'
-        put(wl, r, 17, f'=IF({sel},IF({TS}$B$4="FY2025",L{r},N{r}),0)', fmt=PCS, fill=GREY)
-        put(wl, r, 18, f'=IF({sel},IF({TS}$B$4="FY2025",M{r},O{r}),0)', fmt=EUR, fill=GREY)
+        tc_ = _truck_class(pn)
+        for j, f_ in enumerate(PER):
+            fac = 1.0 if tc_ == "truck" else 0.0 if tc_ == "dmax" else round(_tshare(d, UIO_YEAR[f_]), 4)
+            put(wl, r, 17 + j, fac, BLUE, PCT, IN_FILL)
+        put(wl, r, 19, f'=IF({sel},IF({TS}$B$4="FY2025",L{r}*Q{r},N{r}*R{r}),0)', fmt=PCS, fill=GREY)
+        put(wl, r, 20, f'=IF({sel},IF({TS}$B$4="FY2025",M{r}*Q{r},O{r}*R{r}),0)', fmt=EUR, fill=GREY)
         r += 1
 L1 = r - 1
 text(wl, 4, 11, "Total of visible rows", BOLD)
 for ci in range(12, 16):
     col = get_column_letter(ci)
     put(wl, 4, ci, f"=SUBTOTAL(9,{col}6:{col}{L1})", BOLD, PCS if ci % 2 == 0 else EUR, SUB_FILL)
-wl.auto_filter.ref = f"A5:P{L1}"
+wl.auto_filter.ref = f"A5:R{L1}"
+wl.cell(row=5, column=17).comment = Comment("Share counted for the truck coverage: 100% for parts that fit only trucks, 0% for D-Max-only parts, the customer's truck share of the fleet for parts that fit both (or have no vehicle reference).", "ISZE")
 wl.freeze_panes = "B6"
 wl.conditional_formatting.add(f"F6:F{L1}", FormulaRule(formula=['$F6="No"'], **DEVELOP))
 wl.conditional_formatting.add(f"K6:K{L1}", FormulaRule(formula=['$K6<>""'], fill=PatternFill("solid", fgColor="FCE4D6")))
@@ -627,13 +684,13 @@ wt = wb.create_sheet("PMS coverage")
 text(wt, 1, 1, "PMS coverage — group › part › part number (click + / − on the left, or the 1 2 3 buttons top left)", TITLE)
 TC = selector(wt, 3, 1, "Country", "All", COUNTRY_LIST)
 TP = selector(wt, 4, 1, "FY", "FY2026", PLIST)
-text(wt, 3, 4, "Coverage = billed truck parts ÷ pieces the trucks need (Assumptions tab). Part-number lines: billed to the whole customer.", NOTE)
+text(wt, 3, 4, "Coverage = billed truck parts ÷ pieces the trucks need. Billed € and part-number lines on the same truck basis (D-Max excluded).", NOTE)
 put(wt, 5, 1, f'=IF($B$3="All","Trucks only. Agreed standard (PMS coverage model): 20,000 km a year (UTI N-series 50,000). Parts that also fit D-Max count by the truck share of the fleet. For IML / ITUK use the IML service schedule (Model B) — see Assumptions.",'
               + km_line(f'INDEX(Lists!$C$1:$C${NC},MATCH($B$3,Lists!$A$2:$A${NC + 1},0))') + ")", Font(name=F, size=10, bold=True, color="C00000"), box=False)
 TH = 7
 header(wt, TH, ["Group › part › part number", "Part number", "Description", "Genuine / BVP", "BVP alternative?", "Pieces needed (trucks)",
-                "Billed pieces", "Coverage %", "Billed €", "Share of part €", "Gap €", "Check"],
-       [34, 13, 32, 16, 11, 12, 11, 10, 13, 9, 13, 30], freeze=False, filt=False)
+                "Billed pieces", "Coverage %", "Billed € (trucks)", "Share of part €", "Gap € (mix price)", "Gap € at BVP price", "Check"],
+       [34, 13, 32, 16, 11, 12, 11, 10, 13, 9, 13, 13, 30], freeze=False, filt=False)
 wt.freeze_panes = f"B{TH + 1}"
 wt.sheet_properties.outlinePr = Outline(summaryBelow=False, summaryRight=False)
 ccrit = 'IF($B$3="All","*",$B$3)'
@@ -653,12 +710,14 @@ for gname, gcats in GROUPS.items():
         put(wt, tr, 6, f"=SUMIFS({C}$S$5:$S${C1},{crit})", GREEN, PCS)
         put(wt, tr, 7, f"=SUMIFS({C}$V$5:$V${C1},{crit})", GREEN, PCS)
         put(wt, tr, 8, f'=IF(F{tr}>0,G{tr}/F{tr},"")', fmt=PCT)
+        put(wt, tr, 9, f"=SUMIFS({C}$AH$5:$AH${C1},{crit})", GREEN, EUR)
         put(wt, tr, 11, f"=SUMIFS({C}$Z$5:$Z${C1},{crit})", GREEN, EUR)
+        put(wt, tr, 12, f"=SUMIFS({C}$AL$5:$AL${C1},{crit})", GREEN, EUR)
         wt.row_dimensions[tr].outline_level = 1
         r += 1
         first = r
         for pn in order_pn:
-            if PNCAT.get(pn) != cat:
+            if PNCAT.get(pn) != cat or _truck_class(pn) == "dmax":
                 continue
             raw, kind, alt, _p = kind_of(pn)
             put(wt, r, 1, "      " + raw)
@@ -666,17 +725,17 @@ for gname, gcats in GROUPS.items():
             put(wt, r, 3, desc.get(pn, ""))
             put(wt, r, 4, kind)
             put(wt, r, 5, alt)
-            put(wt, r, 7, f"=SUMPRODUCT(--({PL}$A$6:$A${L1}=B{r}),{PL}$Q$6:$Q${L1})", fmt=PCS)
-            put(wt, r, 9, f"=SUMPRODUCT(--({PL}$A$6:$A${L1}=B{r}),{PL}$R$6:$R${L1})", fmt=EUR)
+            put(wt, r, 7, f"=SUMPRODUCT(--({PL}$A$6:$A${L1}=B{r}),{PL}$S$6:$S${L1})", fmt=PCS)
+            put(wt, r, 9, f"=SUMPRODUCT(--({PL}$A$6:$A${L1}=B{r}),{PL}$T$6:$T${L1})", fmt=EUR)
             put(wt, r, 10, f'=IF(I{tr}>0,I{r}/I{tr},"")', fmt=PCT)
-            put(wt, r, 12, part_check(desc.get(pn, "")))
+            put(wt, r, 13, part_check(desc.get(pn, "")))
             wt.row_dimensions[r].outline_level = 2
             wt.row_dimensions[r].hidden = True
             r += 1
-        put(wt, tr, 9, f"=SUM(I{first}:I{r - 1})" if r > first else 0, BOLD, EUR)
     put(wt, gr, 9, "=" + "+".join(f"I{t}" for t in trs), BIG, EUR, SUB_FILL)
     put(wt, gr, 11, "=" + "+".join(f"K{t}" for t in trs), BIG, EUR, SUB_FILL)
-    for cc_ in (2, 3, 4, 5, 6, 7, 8, 10, 12):
+    put(wt, gr, 12, "=" + "+".join(f"L{t}" for t in trs), BIG, EUR, SUB_FILL)
+    for cc_ in (2, 3, 4, 5, 6, 7, 8, 10, 13):
         put(wt, gr, cc_, None, fill=SUB_FILL)
     for t in trs:
         put(wt, t, 10, f'=IF(I{gr}>0,I{t}/I{gr},"")', fmt=PCT)
@@ -684,6 +743,7 @@ T1 = r - 1
 put(wt, r + 1, 1, "All PMS parts", BIG, fill=SUB_FILL)
 put(wt, r + 1, 9, "=" + "+".join(f"I{g}" for g in grp_rows), BIG, EUR, SUB_FILL)
 put(wt, r + 1, 11, "=" + "+".join(f"K{g}" for g in grp_rows), BIG, EUR, SUB_FILL)
+put(wt, r + 1, 12, "=" + "+".join(f"L{g}" for g in grp_rows), BIG, EUR, SUB_FILL)
 wt.conditional_formatting.add(f"H{TH + 1}:H{T1}", ColorScaleRule(**RED_GREEN))
 wt.conditional_formatting.add(f"E{TH + 1}:E{T1}", FormulaRule(formula=[f'$E{TH + 1}="No"'], **DEVELOP))
 
@@ -693,8 +753,8 @@ text(wo, 1, 1, "PMS coverage per country — all parts", TITLE)
 OP = selector(wo, 3, 1, "FY", "FY2026", PLIST)
 text(wo, 4, 1, "Trucks only. Agreed standard (PMS coverage model): 20,000 km a year (UTI N-series 50,000). Parts that also fit D-Max count by the truck share of the fleet. For IML / ITUK use the IML service schedule (Model B) — see Assumptions.", Font(name=F, size=10, bold=True, color="C00000"))
 cats = list(CATS.items())
-header(wo, 6, ["Country", "Customer", "Trucks in service"] + [lab for _, lab in cats] + ["Expected €", "Gap €"],
-       [15, 28, 11] + [10] * len(cats) + [13, 13], freeze=False, filt=False)
+header(wo, 6, ["Country", "Customer", "Trucks in service"] + [lab for _, lab in cats] + ["Expected €", "Gap € (mix price)", "Gap € at BVP price"],
+       [15, 28, 11] + [10] * len(cats) + [13, 13, 13], freeze=False, filt=False)
 wo.freeze_panes = "C7"
 r = 7
 for c in cust_order:
@@ -707,6 +767,7 @@ for c in cust_order:
     critc = f'{C}$B$5:$B${C1},"{c}",{C}$E$5:$E${C1},{OP}'
     put(wo, r, 4 + len(cats), f"=SUMIFS({C}$X$5:$X${C1},{critc})", GREEN, EUR)
     put(wo, r, 5 + len(cats), f"=SUMIFS({C}$Z$5:$Z${C1},{critc})", GREEN, EUR)
+    put(wo, r, 6 + len(cats), f"=SUMIFS({C}$AL$5:$AL${C1},{critc})", GREEN, EUR)
     r += 1
 put(wo, r, 1, "All customers", BOLD, fill=SUB_FILL)
 put(wo, r, 2, "", BOLD, fill=SUB_FILL)
@@ -714,11 +775,11 @@ put(wo, r, 3, f"=SUM(C7:C{r - 1})", BOLD, PCS, SUB_FILL)
 for j, (cat, lab) in enumerate(cats):
     crit = f'{C}$E$5:$E${C1},{OP},{C}$G$5:$G${C1},"{cat}"'
     put(wo, r, 4 + j, f'=IFERROR(SUMIFS({C}$V$5:$V${C1},{crit})/SUMIFS({C}$S$5:$S${C1},{crit}),"")', BOLD, PCT, SUB_FILL)
-for cc_ in (4 + len(cats), 5 + len(cats)):
+for cc_ in (4 + len(cats), 5 + len(cats), 6 + len(cats)):
     col = get_column_letter(cc_)
     put(wo, r, cc_, f"=SUM({col}7:{col}{r - 1})", BOLD, EUR, SUB_FILL)
 wo.conditional_formatting.add(f"D7:{get_column_letter(3 + len(cats))}{r}", ColorScaleRule(**RED_GREEN))
-for row in wo.iter_rows(min_row=7, max_row=r, min_col=3, max_col=5 + len(cats)):
+for row in wo.iter_rows(min_row=7, max_row=r, min_col=3, max_col=6 + len(cats)):
     for cell in row:
         cell.alignment = Alignment(horizontal="right", wrap_text=True)
 text(wo, r + 2, 1, "Above 100% is possible: parts also go to vehicles outside the truck count (for mixed customers, pickups using the same part).", NOTE)
@@ -737,7 +798,7 @@ text(w1, 3, 7, "Truck share of fleet", BOLD)
 put(w1, 3, 8, "=" + uio("I", f'{CODE}&"|"&IF({PP}="FY2025",2024,2025)'), GREEN, PCT)
 put(w1, 5, 1, "=" + km_line(CODE), Font(name=F, size=10, bold=True, color="C00000"), box=False)
 header(w1, 7, ["Part", "Pieces needed", "Billed pieces", "Coverage %", "Gap €", "Expected €", "Genuine €", "BVP €", "BVP share of €",
-               "Genuine € with no BVP", "No-BVP share", "Action"], [24, 12, 12, 10, 12, 12, 12, 12, 10, 12, 10, 36], freeze=False, filt=False)
+               "Genuine € with no BVP", "No-BVP share", "Action", "Gap € at BVP price"], [24, 12, 12, 10, 12, 12, 12, 12, 10, 12, 10, 36, 13], freeze=False, filt=False)
 w1.column_dimensions["B"].width = 28
 w1.column_dimensions["G"].width = 20
 for i, (cat, lab) in enumerate(cats):
@@ -756,11 +817,12 @@ for i, (cat, lab) in enumerate(cats):
     put(w1, r, 10, f"={g('AD')}", GREEN, EUR)
     put(w1, r, 11, f'=IF(G{r}>0,J{r}/G{r},"")', fmt=PCT)
     put(w1, r, 12, f"={g('AF')}", GREEN)
+    put(w1, r, 13, f"={g('AL')}", GREEN, EUR)
 T_ = 8 + len(cats)
 put(w1, T_, 1, "All PMS parts (€)", BOLD, fill=SUB_FILL)
-for ci in range(2, 13):
+for ci in range(2, 14):
     col = get_column_letter(ci)
-    if col in "EFGHJ":
+    if col in "EFGHJM":
         put(w1, T_, ci, f"=SUM({col}8:{col}{T_ - 1})", BOLD, EUR, SUB_FILL)
     elif col == "I":
         put(w1, T_, ci, f'=IF(G{T_}+H{T_}>0,H{T_}/(G{T_}+H{T_}),"")', BOLD, PCT, SUB_FILL)
@@ -802,8 +864,8 @@ selector(wk2, 4, 1, "Country", "All", COUNTRY_LIST)
 selector(wk2, 4, 3, "Part", "All", PART_LIST)
 text(wk2, 5, 1, "Top 40 by gap €. " + "Trucks only. Agreed standard (PMS coverage model): 20,000 km a year (UTI N-series 50,000). Parts that also fit D-Max count by the truck share of the fleet. For IML / ITUK use the IML service schedule (Model B) — see Assumptions.",
      Font(name=F, size=10, bold=True, color="C00000"))
-header(wk2, 7, ["Rank", "Country", "Customer", "Part", "Pieces needed", "Coverage %", "Gap €", "Genuine €", "BVP €", "BVP share of €",
-                "Genuine € with no BVP", "Action"], [11, 15, 28, 22, 11, 10, 12, 12, 12, 10, 12, 36], freeze=False, filt=False)
+header(wk2, 7, ["Rank", "Country", "Customer", "Part", "Pieces needed", "Coverage %", "Gap € (mix price)", "Genuine €", "BVP €", "BVP share of €",
+                "Genuine € with no BVP", "Action", "Gap € at BVP price"], [11, 15, 28, 22, 11, 10, 12, 12, 12, 10, 12, 36, 13], freeze=False, filt=False)
 wk2.freeze_panes = "A8"
 wk2.cell(row=7, column=12).comment = Comment(ACTION_NOTE, "ISZE")
 SORT = f"{C}$AG$5:$AG${C1}"
@@ -813,7 +875,7 @@ for k in range(1, 41):
     ok = f"LARGE({SORT},{k})>0"
     put(wk2, r, 1, f'=IF({ok},{k},"")')
     for col, src, fmt in [(2, "D", None), (3, "C", None), (4, "F", None), (5, "S", PCS), (6, "Y", PCT), (7, "Z", EUR),
-                          (8, "AA", EUR), (9, "AB", EUR), (10, "AC", PCT), (11, "AD", EUR), (12, "AF", None)]:
+                          (8, "AA", EUR), (9, "AB", EUR), (10, "AC", PCT), (11, "AD", EUR), (12, "AF", None), (13, "AL", EUR)]:
         put(wk2, r, col, f'=IF({ok},INDEX({C}${src}$5:${src}${C1},{m}),"")', fmt=fmt)
 wk2.conditional_formatting.add("F8:F47", ColorScaleRule(**RED_GREEN))
 wk2.conditional_formatting.add("L8:L47", FormulaRule(formula=['$L8="Develop BVP"'], **DEVELOP))
@@ -833,7 +895,10 @@ lines = [
              "Assumptions — the km per customer and truck model, the replacement interval per part, and what each number is based on.\n"
              "UIO and Calculation — the inputs and the arithmetic."),
     ("Formula", "Pieces needed = trucks × km a year ÷ replacement interval km (N-series split N35 / N75, and F-series).  Coverage = billed truck parts ÷ pieces needed.  "
-                "Gap € = missing pieces × the average price billed."),
+                "Gap € (mix price) = missing pieces × what we billed per truck piece, genuine and BVP together (headline). "
+                "Gap € at BVP price = the same missing pieces at this customer's own BVP price — what a BVP campaign could realistically win; where the customer sold no BVP for that part, the genuine price. "
+                "Prices are averages over the part numbers sold, not like-for-like: a BVP average can be above the genuine one when the mix differs (e.g. Isuzu Truck UK oil filter). "
+                "Gap € at genuine price is on the Calculation tab (the maximum)."),
     ("Standard", "The agreed PMS coverage standard (the PMS coverage model, network lane): 20,000 km a year for every vehicle, UTI N-series 50,000 km (confirmed); "
                  "intervals from the Isuzu GIDSS service schedule where it exists, otherwise the model's assumption; Isuzu Truck UK brakes every 100,000 km. "
                  "FY2026 pieces needed are exactly the model's truck figures. Full list with sources on the Assumptions tab.\n"
@@ -841,7 +906,7 @@ lines = [
                  "That standard uses 22,389 trucks at 50,000 km a year and its own part scope, so it differs from this file's ITUK row."),
     ("Billed", "ISZE parts billing, genuine + BVP, credit notes and returns removed. One rule for every customer: parts that fit only trucks count in full; "
                "parts that also fit a D-Max, or have no vehicle reference, count by the customer's truck share of the fleet (Isuzu Truck UK and UTI 100%, Benelux about 1%). "
-               "FY figures are rebuilt from the billing with the model's own part list."),
+               "Billed €, prices and genuine / BVP € use the same weights, so D-Max is excluded everywhere. FY figures are rebuilt from the billing with the model's own part list."),
     ("Actions", ACTION_NOTE),
     ("Watch out", "• Brake, clutch and air-filter intervals are provisional, not confirmed by IML — use gap € to rank, not to quote.\n"
                   "• Isuzu Truck UK with IML / ITUK: use the IML service schedule (Model B) figures on the Assumptions tab, not this file's ITUK row.\n"
@@ -867,7 +932,7 @@ for ws in wb.worksheets:
     ws.sheet_view.showGridLines = False
     if ws.title != "Lists" and (ws.column_dimensions["B"].width or 0) < 28:
         ws.column_dimensions["B"].width = 28
-for ws, r0, r1, c1 in ((wk2, 8, 47, 12), (w1, 8, T_, 12), (w1, TB + 2, TB + 11, 8)):
+for ws, r0, r1, c1 in ((wk2, 8, 47, 13), (w1, 8, T_, 13), (w1, TB + 2, TB + 11, 8)):
     for row in ws.iter_rows(min_row=r0, max_row=r1, min_col=1, max_col=c1):
         for cell in row:
             if cell.value is not None:
