@@ -1,13 +1,13 @@
 """Build the simple CV PMS coverage workbook: truck customers by country, FY2025 and FY2026.
 
-Pieces needed = trucks in service (UIO) x km a year / replacement interval km (N-series split N35 / N75).
-Km a year: 20,000 for every truck, except Isuzu Truck UK (N35 18,630 from the Apr 2026 trip report, N75 50,000 from
-ITUK via IML) and UTI (50,000, confirmed). Intervals: Isuzu GIDSS where it exists, otherwise the PMS model's
-assumption; ITUK brakes 100,000 km (IML slide), Israel N75 oil and fuel filter 22,500 km (GIDSS).
-Billed: rebuilt from sales_fact.parquet with the PMS model's own part list and tagging (FY periods).
+Agreed standard = the PMS coverage model (network lane): pieces needed = vehicles in service x km a year / replacement
+interval km for the whole fleet (N-series split N35 / N75, F-series, D-Max), against everything billed. 20,000 km a year,
+UTI N-series 50,000 km; ITUK brakes 100,000 km. Isuzu Truck UK's IML service schedule (Model B, decision 2026-07-02) is
+shown as a fixed reference for IML / ITUK use. FY billed is rebuilt from sales_fact.parquet with the model's own part
+list and tagging; FY2026 pieces needed equal the model's CY2025 expected demand (same UIO year).
 
 Tabs: Overview per country, Customer one-pager, PMS coverage (expandable group > part > part number),
-Ranking, Part numbers, Assumptions, UIO, Calculation. Earlier, fuller versions (v2-v5) are in git history.
+Ranking, Part numbers, Assumptions, UIO, Calculation. Earlier versions are in git history.
 
 Run:  python build_cv_pms_coverage_workbook.py [output.xlsx]   then recalculate before reading values.
 Rebuild notes: pms_capture_supplement.csv is not in git (part type read from the description for those parts);
@@ -32,7 +32,7 @@ DER = ROOT / "01_data" / "00_derived"
 PRISM = ROOT / "03_analytics" / "Isuzu" / "prism"
 PDATA = PRISM / "data"
 sys.path.insert(0, str(PRISM))
-OUT = Path(__file__).resolve().parent / (sys.argv[1] if len(sys.argv) > 1 else "ISZE_CV_PMS_Coverage_simple_2026-10-30.xlsx")
+OUT = Path(__file__).resolve().parent / (sys.argv[1] if len(sys.argv) > 1 else "ISZE_CV_PMS_Coverage_standard_2026-10-30.xlsx")
 
 MIN_CV_UIO = 10  # Denmark has 1 truck in service: left out
 UIO_YEARS = [2024, 2025, 2026]
@@ -275,18 +275,15 @@ GROUPS = {"Filters": ["oil_filter", "fuel_filter", "air_filter", "blower_filter"
           "Clutch": ["clutch_kit", "clutch_disc", "clutch_pressure_plate", "release_bearing", "pilot_bearing", "clutch_booster"]}
 GROUP_OF = {c: g for g, cs in GROUPS.items() for c in cs}
 UIO_YEAR = {"FY2025": 2024, "FY2026": 2025}
-SVC_KM = {"N35": 20_000, "N75": 40_000, "F": 30_000}
+SVC_KM = {"N35": 20_000, "N75": 40_000, "F": 30_000, "L": 20_000}
 GEN_KM = 20_000
-DEV_KM = {  # customer -> {model: (km, source)}: the only deviations from the general km a year
-    "ITUK": {"N35": (18_630, "ITUK trip report Apr 2026: N35 11,576 miles a year (MOT-date recalc)"),
-             "N75": (50_000, "ITUK, via IML market-research slide 2026-07-14")},
-    "UTI": {"N35": (50_000, "Confirmed by Jerome 2026-07-10 (IML CV study) — Israel has no N35 trucks"),
-            "N75": (50_000, "Confirmed by Jerome 2026-07-10 (IML CV study)")},
-}
+# Inside the agreed PMS network model, UTI's N-series runs 50,000 km a year (confirmed). Nothing else deviates.
+KM_N = {"UTI": (50_000, "50,000 km a year, confirmed by Jerome 2026-07-10 (IML CV study) — in the PMS model")}
 NAME_TO_CODE = {NAMES.get(c, c): c for c in cust_order}
-COUNTRY_OF = {c: country[c] for c in cust_order}
 PER = ["FY2025", "FY2026"]
 PLIST = '"FY2025,FY2026"'
+MODEL_B = [("Oil filter", "35.1%", 140_602), ("Fuel filter", "65.1%", 127_440), ("Air filter", "13.2%", 736_037),
+           ("Clutch", "7.8%", 392_559), ("Brake", "35.3%", 641_833)]
 
 wb = Workbook()
 rd = wb.active
@@ -312,117 +309,120 @@ wls.column_dimensions["B"].width = 30
 
 # ---------- Assumptions (km) ----------
 wa = wb.create_sheet("Assumptions")
-text(wa, 1, 1, "Assumptions — how many PMS parts a truck needs a year, in kilometres", TITLE)
-text(wa, 2, 1, "Parts needed a year per truck = km driven a year ÷ replacement interval km. Blue cells are inputs: change one and the whole file follows.")
+text(wa, 1, 1, "Assumptions — the agreed PMS coverage standard, in kilometres", TITLE)
+text(wa, 2, 1, "Parts needed a year = vehicles in service × km driven a year ÷ replacement interval km — for the whole fleet: N-series and F-series trucks AND D-Max. "
+               "Coverage = everything billed ÷ that need. Blue cells are inputs.")
 header(wa, 4, ["General", "Value", "Based on"], [44, 14, 110], freeze=False, filt=False)
-put(wa, 5, 1, "Km driven a year per truck — all customers", BOLD)
-put(wa, 5, 2, GEN_KM, BLUE, PCS, IN_FILL)
-put(wa, 5, 3, "PMS coverage model default. Not measured for any market. Only Isuzu Truck UK and UTI deviate (table below), because we have their data.")
-put(wa, 6, 1, "Service interval N35 (NLR, 3.5 t, RZ4E)")
-put(wa, 6, 2, SVC_KM["N35"], BLUE, PCS, IN_FILL)
-put(wa, 6, 3, "Isuzu service schedule GIDSS N_MY24 (NLR87) / Duncan deck slide 14")
-put(wa, 7, 1, "Service interval N75 (NPR, 7.5 t, 4HK1)")
-put(wa, 7, 2, SVC_KM["N75"], BLUE, PCS, IN_FILL)
-put(wa, 7, 3, "Isuzu service schedule GIDSS N_MY24 (NPR75) / Duncan deck slide 14")
-put(wa, 8, 1, "Service interval F-series")
-put(wa, 8, 2, SVC_KM["F"], BLUE, PCS, IN_FILL)
-put(wa, 8, 3, "Isuzu Truck UK service book — provisional, no F-series schedule checked")
+gen_rows = [("Km driven a year per vehicle — all customers", GEN_KM, "PMS coverage model (network standard). Not measured. Only exception: UTI N-series 50,000 km (table below)."),
+            ("Service interval N35 (NLR, 3.5 t, RZ4E)", SVC_KM["N35"], "Isuzu service schedule GIDSS N_MY24 (NLR87) / Duncan deck slide 14"),
+            ("Service interval N75 (NPR, 7.5 t, 4HK1)", SVC_KM["N75"], "Isuzu service schedule GIDSS N_MY24 (NPR75) / Duncan deck slide 14"),
+            ("Service interval F-series", SVC_KM["F"], "Isuzu Truck UK service book — provisional"),
+            ("Service interval D-Max", SVC_KM["L"], "D-Max owner's handbook (20,000 km / 24 months)")]
+for i, (a_, b_, c_) in enumerate(gen_rows):
+    put(wa, 5 + i, 1, a_, BOLD if i == 0 else BLACK)
+    put(wa, 5 + i, 2, b_, BLUE, PCS, IN_FILL)
+    put(wa, 5 + i, 3, c_)
 
-# km a year per customer and model
-CK0 = 12
-text(wa, CK0 - 2, 1, "Km driven a year per truck, per customer and truck model", BIG)
-header(wa, CK0 - 1, ["Customer", "Customer code", "Country", "N35 share of N-series", "Km a year — N35", "Km a year — N75", "Km a year — F-series", "Based on"],
+CK0 = 13
+text(wa, CK0 - 2, 1, "Km driven a year per vehicle, per customer", BIG)
+header(wa, CK0 - 1, ["Customer", "Customer code", "Country", "N35 share of N-series", "Km a year — N-series", "Km a year — F-series", "Km a year — D-Max", "Based on"],
        freeze=False, filt=False)
-share_of = {}
 for i, c in enumerate(cust_order):
     rr_ = CK0 + i
     v = float(visits.get((c, "n_series_truck"), 0.5))
     share = 0.0 if c == "UTI" else max(0.0, round(v / 0.5 - 1, 4))
-    share_of[c] = share
-    put(wa, rr_, 1, NAMES.get(c, c), BOLD if c in DEV_KM else BLACK)
+    put(wa, rr_, 1, NAMES.get(c, c), BOLD if c in KM_N else BLACK)
     put(wa, rr_, 2, c)
     put(wa, rr_, 3, country[c])
     put(wa, rr_, 4, share, BLUE, PCT, IN_FILL)
-    dv_ = DEV_KM.get(c, {})
-    for j, m_ in enumerate(("N35", "N75", "F")):
-        if m_ in dv_:
-            put(wa, rr_, 5 + j, dv_[m_][0], BLUE, PCS, IN_FILL)
-        else:
-            put(wa, rr_, 5 + j, "=$B$5", GREEN, PCS)
-    if dv_:
-        note = " · ".join(f"{m_} {k_:,} km: {src_}" for m_, (k_, src_) in dv_.items())
-        if c == "ITUK":
-            note += " · F-series: general 20,000 km. Note: the IML deck uses 50,000 km for ALL ITUK trucks, N35 included."
+    if c in KM_N:
+        put(wa, rr_, 5, KM_N[c][0], BLUE, PCS, IN_FILL)
     else:
-        note = "General 20,000 km (not measured)."
-    note += f" N35 share {share:.0%} from the PMS model."
-    if c in ("MALTA", "CYPRUS"):
-        note += " The UIO file estimates more N35 trucks (Malta 37%, Cyprus 5%) — not used, as in the PMS model."
+        put(wa, rr_, 5, "=$B$5", GREEN, PCS)
+    put(wa, rr_, 6, "=$B$5", GREEN, PCS)
+    put(wa, rr_, 7, "=$B$5", GREEN, PCS)
+    note = (KM_N[c][1] + "; F-series and D-Max 20,000 km.") if c in KM_N else "20,000 km a year (PMS model, not measured)."
+    note += f" N35 share {share:.0%} (PMS model; an N35 is serviced every 20,000 km, an N75 every 40,000 km)."
+    if c == "ITUK":
+        note += " For IML / ITUK use the IML service schedule (Model B) figures below, not this row."
     put(wa, rr_, 8, note)
 CK1 = CK0 + NC - 1
-for col, w in zip("ABCDEFGH", [44, 14, 14, 11, 12, 12, 12, 110]):
+for col, w in zip("ABCDEFGHI", [44, 14, 14, 11, 12, 12, 12, 12, 100]):
     wa.column_dimensions[col].width = w
 
-# part replacement intervals
 PI0 = CK1 + 4
 text(wa, PI0 - 2, 1, "Replacement interval per part (km)", BIG)
-header(wa, PI0 - 1, ["Part", "Part code", "Group", "N35 km", "N75 km", "F-series km", "Every … N75 services", "Based on"], freeze=False, filt=False)
+header(wa, PI0 - 1, ["Part", "Part code", "Group", "N35 km", "N75 km", "F-series km", "D-Max km", "Every … N75 services", "Based on"], freeze=False, filt=False)
 ibasis = {"oil_filter": "Every service — Isuzu GIDSS.", "fuel_filter": "Every service — Isuzu GIDSS.",
-          "air_filter": "Every 2nd service — PMS model, provisional (GIDSS N75: when the air-cleaner indicator lights).",
-          "blower_filter": "Every service — PMS model (Jerome 2026-07-26).",
+          "air_filter": "Every 2nd service — PMS model, provisional.", "blower_filter": "Every service — PMS model (Jerome 2026-07-26).",
           "urea_filter": "Isuzu GIDSS: 200,000 km N-series (NPR75), 80,000 km F-series (4HK1-TCH).",
-          "brake_pad": "Every 2nd service — PMS model, not confirmed by IML.", "brake_shoe": "Every 2nd service — PMS model, not confirmed by IML.",
-          "brake_rotor": "Every 2nd pad change — PMS model, provisional."}
+          "brake_pad": "Every 2nd service (D-Max 50,000 km) — PMS model, not confirmed by IML.",
+          "brake_shoe": "Every 2nd service — PMS model, not confirmed by IML.", "brake_rotor": "Every 2nd pad change — PMS model, provisional."}
 non_ituk = rates.drop("ITUK", level=0, errors="ignore")
+lcv_rates = pubfam[(pubfam.family == "light_vehicle") & (pubfam.distributor_code != "ITUK")].groupby("pms_category").category_factor.agg(lambda x: x.mode().iloc[0])
 for i, (cat, lab) in enumerate(CATS.items()):
     rr_ = PI0 + i
     fN = non_ituk.xs((cat, "n_series_truck"), level=(1, 2)).mode().iloc[0]
     fF = non_ituk.xs((cat, "heavy_truck"), level=(1, 2)).mode().iloc[0]
+    fL = float(lcv_rates.get(cat, fN))
     put(wa, rr_, 1, lab)
     put(wa, rr_, 2, cat)
     put(wa, rr_, 3, GROUP_OF[cat])
     put(wa, rr_, 4, round(SVC_KM["N35"] / fN), BLUE, PCS, IN_FILL)
     put(wa, rr_, 5, round(SVC_KM["N75"] / fN), BLUE, PCS, IN_FILL)
     put(wa, rr_, 6, round(SVC_KM["F"] / fF), BLUE, PCS, IN_FILL)
-    put(wa, rr_, 7, f"=E{rr_}/$B$7", fmt="0.0")
-    put(wa, rr_, 8, ibasis.get(cat, "PMS model assumption, not confirmed by IML."))
+    put(wa, rr_, 7, round(SVC_KM["L"] / fL), BLUE, PCS, IN_FILL)
+    put(wa, rr_, 8, f"=E{rr_}/$B$7", fmt="0.0")
+    put(wa, rr_, 9, ibasis.get(cat, "PMS model assumption, not confirmed by IML."))
 PI1 = PI0 + len(CATS) - 1
 
-# customer-specific intervals
 OI0 = PI1 + 4
-text(wa, OI0 - 2, 1, "Customer-specific replacement intervals (replace the interval above for that customer only)", BIG)
-header(wa, OI0 - 1, ["Customer", "Key", "Part code", "N35 km", "N75 km", "F-series km", "", "Based on"], freeze=False, filt=False)
-OVR = [("ITUK", "brake_pad", 50_000, 100_000, 75_000, "IML market-research slide 2026-07-14: brakes every 100,000 km on N75, front and rear together (UK O-licence inspections)."),
-       ("ITUK", "brake_shoe", 50_000, 100_000, 75_000, "Same IML slide as brake pads."),
-       ("UTI", "oil_filter", None, 22_500, None, "Isuzu GIDSS N_MY24 'Engine oil (Israel)': NPR75 / 4HK1 every 22,500 km in Israel."),
-       ("UTI", "fuel_filter", None, 22_500, None, "Isuzu GIDSS: fuel filter follows the Israel oil interval (22,500 km).")]
-for i, (c, cat, a_, b_, f_, src_) in enumerate(OVR):
+text(wa, OI0 - 2, 1, "Customer-specific replacement intervals (in the PMS model)", BIG)
+header(wa, OI0 - 1, ["Customer", "Key", "Part code", "N35 km", "N75 km", "F-series km", "D-Max km", "", "Based on"], freeze=False, filt=False)
+OVR = [("ITUK", "brake_pad", 50_000, 100_000, 75_000, None, "IML market-research slide 2026-07-14: brakes every 100,000 km on N75, front and rear together (in the PMS model)."),
+       ("ITUK", "brake_shoe", 50_000, 100_000, 75_000, None, "Same IML slide (in the PMS model).")]
+for i, (c, cat, a_, b_, f_, l_, src_) in enumerate(OVR):
     rr_ = OI0 + i
     put(wa, rr_, 1, NAMES.get(c, c))
     put(wa, rr_, 2, f"{c}|{cat}")
     put(wa, rr_, 3, cat)
-    put(wa, rr_, 4, a_, BLUE, PCS, IN_FILL)
-    put(wa, rr_, 5, b_, BLUE, PCS, IN_FILL)
-    put(wa, rr_, 6, f_, BLUE, PCS, IN_FILL)
-    put(wa, rr_, 8, src_)
+    for j, v_ in enumerate((a_, b_, f_, l_)):
+        put(wa, rr_, 4 + j, v_, BLUE, PCS, IN_FILL)
+    put(wa, rr_, 9, src_)
 OI1 = OI0 + len(OVR) - 1
 
-NT0 = OI1 + 3
+MB0 = OI1 + 4
+text(wa, MB0 - 2, 1, "Isuzu Truck UK — IML service schedule (Model B), the agreed standard for IML / ITUK (decision 2 Jul 2026)", BIG)
+header(wa, MB0 - 1, ["Category (CY2025, ISZE → ITUK)", "Cover", "Gap €", "", "", "", "", "", "Basis"], freeze=False, filt=False)
+for i, (lab, cov, gap) in enumerate(MODEL_B):
+    rr_ = MB0 + i
+    put(wa, rr_, 1, lab)
+    put(wa, rr_, 2, cov)
+    put(wa, rr_, 3, gap, fmt=EUR)
+put(wa, MB0, 9, "UIO 22,389 (full DVLA, Mar 2026) · 50,000 km a year for all ITUK trucks · oil, fuel, air filter every 40,000 km (1.25 a year) · "
+                "clutch and brake 0.5 a year · 100% addressable · own part scope (v7 workbook). Total gap €2,038,471, weighted cover 35.9%.")
+put(wa, MB0 + 1, 9, "Source: FACTS.md §1 / iml_v7_ituk_cy2025.yaml. Fixed figures — not recalculated in this file. Use these with IML and ITUK; "
+                    "use the rest of this file for comparing customers.")
+MB1 = MB0 + len(MODEL_B) - 1
+put(wa, MB1 + 1, 1, "Total (5 categories)", BOLD)
+put(wa, MB1 + 1, 2, "35.9%", BOLD)
+put(wa, MB1 + 1, 3, 2_038_471, BOLD, EUR)
+
+NT0 = MB1 + 4
 text(wa, NT0, 1, "Not used, on purpose", BIG)
 for i, t in enumerate([
-        "• Isuzu GIDSS 'or every 12 months, whichever comes first' (oil and fuel filter 12 months, air filter 24 months): not applied — km only, as in the PMS model. Applying it would roughly double the oil-filter need for trucks driving 20,000 km a year.",
-        "• Odometer readings from warranty claims: not used. They show km driven, not whether a filter was changed, and only cover young trucks that came in for a claim.",
-        "• Isuzu Truck UK coverage here is not the IML headline (35.1% oil filter): the IML deck uses its own part scope and 50,000 km for every truck. Do not use this file's ITUK figures with IML.",
-        "• Example: oil filter, N75, 40,000 km interval: 20,000 km a year → 0.5 filters a truck a year; 50,000 km a year (ITUK N75) → 1.25."]):
+        "• Isuzu GIDSS 'or every 12 months, whichever comes first': not applied — km only, as in the PMS model.",
+        "• Odometer readings from warranty claims: not used (they show km driven, not whether a filter was changed).",
+        "• Example: oil filter N75 every 40,000 km at 20,000 km a year → 0.5 filters a truck a year; D-Max every 20,000 km → 1.0 a year."]):
     text(wa, NT0 + 1 + i, 1, t)
 wa.freeze_panes = "A4"
 A = "Assumptions!"
 
 # ---------- UIO ----------
 wu = wb.create_sheet("UIO")
-text(wu, 1, 1, "Trucks in service (UIO) per customer", TITLE)
+text(wu, 1, 1, "Vehicles in service (UIO) per customer", TITLE)
 text(wu, 2, 1, "Source: Isuzu UIO Overview 2026 (by market and model type). FY2025 uses the 2024 count, FY2026 the 2025 count. Blue = input.")
-header(wu, 4, ["Key", "Customer", "Country", "UIO year", "N-series trucks", "F-series trucks", "Trucks total", "Pickups (info)", "Truck share of fleet"],
+header(wu, 4, ["Key", "Customer", "Country", "UIO year", "N-series trucks", "F-series trucks", "Trucks total", "D-Max", "Truck share of fleet"],
        [16, 28, 15, 9, 12, 12, 12, 12, 11])
 r = 5
 for c in cust_order:
@@ -447,15 +447,15 @@ def uio(col, key_expr):
 
 # ---------- Calculation (one row per customer x FY x part) ----------
 wc = wb.create_sheet("Calculation")
-text(wc, 1, 1, "Calculation — expected PMS need vs billed, per customer, FY and part (trucks)", TITLE)
-text(wc, 2, 1, "Expected pieces = N-series trucks × (N35 share × km N35 ÷ interval N35 + N75 share × km N75 ÷ interval N75) + F-series trucks × km F ÷ interval F. "
-               "Billed counted = truck-only parts; for Isuzu Truck UK and UTI (trucks only) also parts shared with other vehicles.")
-ccols = ["Key", "Customer code", "Customer", "Country", "FY", "Part", "Part code", "Group", "N-series trucks", "F-series trucks", "Truck share",
-         "N35 share", "Km N35", "Km N75", "Km F", "Interval N35", "Interval N75", "Interval F", "Expected pieces",
-         "Billed pieces — truck-only parts", "Billed pieces — shared / no vehicle ref.", "Billed pieces counted", "Average price €",
+text(wc, 1, 1, "Calculation — PMS need vs billed, per customer, FY and part (whole fleet: trucks and D-Max)", TITLE)
+text(wc, 2, 1, "Pieces needed = N-series × (N35 share × km ÷ interval N35 + N75 share × km ÷ interval N75) + F-series × km ÷ interval F + D-Max × km ÷ interval D-Max. "
+               "Billed = every PMS part billed to the customer. This is the PMS coverage model's method.")
+ccols = ["Key", "Customer code", "Customer", "Country", "FY", "Part", "Part code", "Group", "N-series trucks", "F-series trucks", "D-Max",
+         "N35 share", "Km N-series", "Km F-series", "Km D-Max", "Interval N35", "Interval N75", "Interval F", "Pieces needed",
+         "Interval D-Max", "Billed pieces (all)", "Billed pieces counted", "Average price €",
          "Expected €", "Coverage %", "Gap €", "Genuine €", "BVP €", "BVP share of €", "Genuine € with no BVP", "No-BVP share of genuine €",
          "Action", "Rank helper"]
-header(wc, 4, ccols, [24, 10, 26, 13, 8, 20, 18, 9, 9, 9, 8, 8, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 9, 11, 9, 11, 11, 11, 9, 11, 9, 30, 9])
+header(wc, 4, ccols, [24, 10, 26, 13, 8, 20, 18, 9, 9, 9, 9, 8, 9, 9, 9, 9, 9, 9, 10, 9, 10, 10, 9, 11, 9, 11, 11, 11, 9, 11, 9, 30, 9])
 asp_p = {}
 for (d, k, c_, f_), (q_, e_) in agg.items():
     a0 = asp_p.setdefault((d, k, c_), [0.0, 0.0])
@@ -474,8 +474,7 @@ def ivl(model_col, ovr_col, r):
 for c in cust_order:
     for k in PER:
         for cat, lab in CATS.items():
-            tq = sum(agg.get((c, k, cat, f_), (0, 0))[0] for f_ in FAMILIES)
-            sq = sum(agg.get((c, k, cat, f_), (0, 0))[0] for f_ in ("shared_across_families", "unattributed"))
+            allq = asp_p.get((c, k, cat), (0.0, 0.0))[0]
             q_, e_ = asp_p.get((c, k, cat), (0.0, 0.0))
             asp = e_ / q_ if q_ > 0 else asp_cust.get((c, cat), asp_net.get(cat))
             mx = mix.get((c, k, cat), dict(gen_eur=0, bvp_eur=0, nobvp_eur=0))
@@ -491,7 +490,7 @@ for c in cust_order:
             put(wc, r, 8, GROUP_OF[cat])
             put(wc, r, 9, "=" + uio("E", key), GREEN, PCS)
             put(wc, r, 10, "=" + uio("F", key), GREEN, PCS)
-            put(wc, r, 11, "=" + uio("I", key), GREEN, PCT)
+            put(wc, r, 11, "=" + uio("H", key), GREEN, PCS)
             put(wc, r, 12, f"=INDEX({A}$D${CK0}:$D${CK1},{ck})", GREEN, PCT)
             put(wc, r, 13, f"=INDEX({A}$E${CK0}:$E${CK1},{ck})", GREEN, PCS)
             put(wc, r, 14, f"=INDEX({A}$F${CK0}:$F${CK1},{ck})", GREEN, PCS)
@@ -499,10 +498,10 @@ for c in cust_order:
             put(wc, r, 16, "=" + ivl("D", "D", r), GREEN, PCS)
             put(wc, r, 17, "=" + ivl("E", "E", r), GREEN, PCS)
             put(wc, r, 18, "=" + ivl("F", "F", r), GREEN, PCS)
-            put(wc, r, 19, f"=I{r}*(L{r}*M{r}/P{r}+(1-L{r})*N{r}/Q{r})+J{r}*O{r}/R{r}", fmt=PCS)
-            put(wc, r, 20, tq, BLUE, PCS, IN_FILL)
-            put(wc, r, 21, sq, BLUE, PCS, IN_FILL)
-            put(wc, r, 22, f"=IF(K{r}>=0.9,T{r}+U{r},T{r})", fmt=PCS)
+            put(wc, r, 19, f"=I{r}*(L{r}*M{r}/P{r}+(1-L{r})*M{r}/Q{r})+J{r}*N{r}/R{r}+K{r}*O{r}/T{r}", fmt=PCS)
+            put(wc, r, 20, "=" + ivl("G", "G", r), GREEN, PCS)
+            put(wc, r, 21, allq, BLUE, PCS, IN_FILL)
+            put(wc, r, 22, f"=U{r}", fmt=PCS)
             put(wc, r, 23, round(float(asp), 4) if asp else None, BLUE, EUR2, IN_FILL)
             put(wc, r, 24, f"=S{r}*N(W{r})", fmt=EUR)
             put(wc, r, 25, f'=IF(S{r}>0,V{r}/S{r},"")', fmt=PCT)
@@ -529,15 +528,15 @@ wc.cell(row=4, column=32).comment = Comment(ACTION_NOTE, "ISZE")
 
 def km_line(code_ref):
     ck = f"MATCH({code_ref},{A}$B${CK0}:$B${CK1},0)"
-    return ('"Km a year per truck: N35 "&TEXT(INDEX(' + f"{A}$E${CK0}:$E${CK1},{ck}" + '),"#,##0")&" · N75 "&TEXT(INDEX('
-            + f"{A}$F${CK0}:$F${CK1},{ck}" + '),"#,##0")&" · F-series "&TEXT(INDEX(' + f"{A}$G${CK0}:$G${CK1},{ck}"
+    return ('"Agreed standard (PMS coverage model). Km a year: N-series "&TEXT(INDEX(' + f"{A}$E${CK0}:$E${CK1},{ck}" + '),"#,##0")&" · F-series "&TEXT(INDEX('
+            + f"{A}$F${CK0}:$F${CK1},{ck}" + '),"#,##0")&" · D-Max "&TEXT(INDEX(' + f"{A}$G${CK0}:$G${CK1},{ck}"
             + '),"#,##0")&" — "&INDEX(' + f"{A}$H${CK0}:$H${CK1},{ck}" + ')')
 
 
 # ---------- Part numbers ----------
 wl = wb.create_sheet("Part numbers")
 text(wl, 1, 1, "PMS part numbers billed to the truck customers — per customer, FY2025 and FY2026", TITLE)
-text(wl, 2, 1, "Genuine and BVP, credit notes and returns removed. Whole customer (trucks and pickups). Use the filters; the totals row follows them.")
+text(wl, 2, 1, "Genuine and BVP, credit notes and returns removed. Whole customer (trucks and D-Max). Use the filters; the totals row follows them.")
 lcols = ["Part number", "Description", "Part", "Group", "Genuine / BVP", "BVP alternative?", "BVP / genuine partner", "Fits", "Country", "Customer", "Check",
          "FY2025 pieces", "FY2025 €", "FY2026 pieces", "FY2026 €", "FY2026 average price €", "Tree: pieces", "Tree: €"]
 header(wl, 5, lcols, [13, 32, 20, 9, 16, 11, 24, 22, 13, 26, 30, 10, 12, 10, 12, 11, 10, 11])
@@ -609,11 +608,11 @@ wt = wb.create_sheet("PMS coverage")
 text(wt, 1, 1, "PMS coverage — group › part › part number (click + / − on the left, or the 1 2 3 buttons top left)", TITLE)
 TC = selector(wt, 3, 1, "Country", "All", COUNTRY_LIST)
 TP = selector(wt, 4, 1, "FY", "FY2026", PLIST)
-text(wt, 3, 4, "Coverage = billed pieces ÷ pieces the trucks need (Assumptions tab). Part-number lines: billed for the whole customer (trucks and pickups).", NOTE)
-put(wt, 5, 1, f'=IF($B$3="All","Km a year: 20,000 for all trucks, except Isuzu Truck UK (N35 18,630 · N75 50,000) and UTI (50,000) — see Assumptions",'
+text(wt, 3, 4, "Coverage = everything billed ÷ pieces the whole fleet needs (trucks and D-Max, Assumptions tab).", NOTE)
+put(wt, 5, 1, f'=IF($B$3="All","Agreed standard (PMS coverage model): whole fleet — trucks and D-Max — at 20,000 km a year (UTI N-series 50,000). For IML / ITUK use the IML service schedule (Model B) — see Assumptions.",'
               + km_line(f'INDEX(Lists!$C$1:$C${NC},MATCH($B$3,Lists!$A$2:$A${NC + 1},0))') + ")", Font(name=F, size=10, bold=True, color="C00000"), box=False)
 TH = 7
-header(wt, TH, ["Group › part › part number", "Part number", "Description", "Genuine / BVP", "BVP alternative?", "Pieces needed (trucks)",
+header(wt, TH, ["Group › part › part number", "Part number", "Description", "Genuine / BVP", "BVP alternative?", "Pieces needed (trucks + D-Max)",
                 "Billed pieces", "Coverage %", "Billed €", "Share of part €", "Gap €", "Check"],
        [34, 13, 32, 16, 11, 12, 11, 10, 13, 9, 13, 30], freeze=False, filt=False)
 wt.freeze_panes = f"B{TH + 1}"
@@ -673,17 +672,16 @@ wt.conditional_formatting.add(f"E{TH + 1}:E{T1}", FormulaRule(formula=[f'$E{TH +
 wo = wb.create_sheet("Overview per country")
 text(wo, 1, 1, "PMS coverage per country — all parts", TITLE)
 OP = selector(wo, 3, 1, "FY", "FY2026", PLIST)
-text(wo, 4, 1, "Coverage = billed pieces ÷ pieces the trucks need. Km a year: 20,000 for all trucks, except Isuzu Truck UK (N35 18,630 · N75 50,000) "
-               "and UTI (50,000) — see Assumptions.", Font(name=F, size=10, bold=True, color="C00000"))
+text(wo, 4, 1, "Agreed standard (PMS coverage model): whole fleet — trucks and D-Max — at 20,000 km a year (UTI N-series 50,000). For IML / ITUK use the IML service schedule (Model B) — see Assumptions.", Font(name=F, size=10, bold=True, color="C00000"))
 cats = list(CATS.items())
-header(wo, 6, ["Country", "Customer", "Trucks in service"] + [lab for _, lab in cats] + ["Expected € (trucks)", "Gap €"],
+header(wo, 6, ["Country", "Customer", "Trucks + D-Max in service"] + [lab for _, lab in cats] + ["Expected €", "Gap €"],
        [15, 28, 11] + [10] * len(cats) + [13, 13], freeze=False, filt=False)
 wo.freeze_panes = "C7"
 r = 7
 for c in cust_order:
     put(wo, r, 1, country[c])
     put(wo, r, 2, NAMES.get(c, c))
-    put(wo, r, 3, "=" + uio("G", f'"{c}|"&IF({OP}="FY2025",2024,2025)'), GREEN, PCS)
+    put(wo, r, 3, "=" + uio("G", f'"{c}|"&IF({OP}="FY2025",2024,2025)') + "+" + uio("H", f'"{c}|"&IF({OP}="FY2025",2024,2025)'), GREEN, PCS)
     for j, (cat, lab) in enumerate(cats):
         crit = f'{C}$B$5:$B${C1},"{c}",{C}$E$5:$E${C1},{OP},{C}$G$5:$G${C1},"{cat}"'
         put(wo, r, 4 + j, f'=IFERROR(SUMIFS({C}$V$5:$V${C1},{crit})/SUMIFS({C}$S$5:$S${C1},{crit}),"")', GREEN, PCT)
@@ -691,7 +689,7 @@ for c in cust_order:
     put(wo, r, 4 + len(cats), f"=SUMIFS({C}$X$5:$X${C1},{critc})", GREEN, EUR)
     put(wo, r, 5 + len(cats), f"=SUMIFS({C}$Z$5:$Z${C1},{critc})", GREEN, EUR)
     r += 1
-put(wo, r, 1, "All truck customers", BOLD, fill=SUB_FILL)
+put(wo, r, 1, "All customers", BOLD, fill=SUB_FILL)
 put(wo, r, 2, "", BOLD, fill=SUB_FILL)
 put(wo, r, 3, f"=SUM(C7:C{r - 1})", BOLD, PCS, SUB_FILL)
 for j, (cat, lab) in enumerate(cats):
@@ -714,8 +712,8 @@ PP = selector(w1, 4, 1, "FY", "FY2026", PLIST)
 CODE = f"INDEX(Lists!$C$1:$C${NC},MATCH({CU},{CUST_LIST},0))"
 text(w1, 3, 4, "Country", BOLD)
 put(w1, 3, 5, f"=INDEX(Lists!$A$2:$A${NC + 1},MATCH({CU},{CUST_LIST},0))", GREEN)
-text(w1, 4, 4, "Trucks in service", BOLD)
-put(w1, 4, 5, "=" + uio("G", f'{CODE}&"|"&IF({PP}="FY2025",2024,2025)'), GREEN, PCS)
+text(w1, 4, 4, "Trucks + D-Max in service", BOLD)
+put(w1, 4, 5, "=" + uio("G", f'{CODE}&"|"&IF({PP}="FY2025",2024,2025)') + "+" + uio("H", f'{CODE}&"|"&IF({PP}="FY2025",2024,2025)'), GREEN, PCS)
 text(w1, 3, 7, "Truck share of fleet", BOLD)
 put(w1, 3, 8, "=" + uio("I", f'{CODE}&"|"&IF({PP}="FY2025",2024,2025)'), GREEN, PCT)
 put(w1, 5, 1, "=" + km_line(CODE), Font(name=F, size=10, bold=True, color="C00000"), box=False)
@@ -783,7 +781,7 @@ text(wk2, 1, 1, "Ranking — customer × part by gap €", TITLE)
 selector(wk2, 3, 1, "FY", "FY2026", PLIST)
 selector(wk2, 4, 1, "Country", "All", COUNTRY_LIST)
 selector(wk2, 4, 3, "Part", "All", PART_LIST)
-text(wk2, 5, 1, "Top 40 by gap €. Km a year: 20,000 for all trucks, except Isuzu Truck UK (N35 18,630 · N75 50,000) and UTI (50,000) — see Assumptions.",
+text(wk2, 5, 1, "Top 40 by gap €. " + "Agreed standard (PMS coverage model): whole fleet — trucks and D-Max — at 20,000 km a year (UTI N-series 50,000). For IML / ITUK use the IML service schedule (Model B) — see Assumptions.",
      Font(name=F, size=10, bold=True, color="C00000"))
 header(wk2, 7, ["Rank", "Country", "Customer", "Part", "Pieces needed", "Coverage %", "Gap €", "Genuine €", "BVP €", "BVP share of €",
                 "Genuine € with no BVP", "Action"], [11, 15, 28, 22, 11, 10, 12, 12, 12, 10, 12, 36], freeze=False, filt=False)
@@ -805,9 +803,9 @@ wk2.conditional_formatting.add("L8:L47", FormulaRule(formula=['$L8="Develop BVP"
 rd.column_dimensions["A"].width = 26
 rd.column_dimensions["B"].width = 120
 lines = [
-    ("PMS coverage — truck customers", None),
+    ("PMS coverage — customers with trucks (whole fleet)", None),
     ("", None),
-    ("What it shows", "How many PMS parts the trucks in service need a year (from the km they drive), against what ISZE billed. Per country, customer, part and part number. FY2025 and FY2026."),
+    ("What it shows", "How many PMS parts the vehicles in service need a year (trucks and D-Max, from the km they drive), against everything ISZE billed. Per country, customer, part and part number. FY2025 and FY2026."),
     ("Tabs", "Overview per country — all countries × all parts, coverage % and gap €.\n"
              "Customer one-pager — pick a customer: coverage, gap €, genuine vs BVP per part, action, top 10 genuine parts with no BVP.\n"
              "PMS coverage — expandable: Filters › Oil filter › part number. Pick a country (or All) and the FY.\n"
@@ -815,16 +813,18 @@ lines = [
              "Part numbers — every PMS part number billed, per customer, with genuine/BVP and its BVP partner.\n"
              "Assumptions — the km per customer and truck model, the replacement interval per part, and what each number is based on.\n"
              "UIO and Calculation — the inputs and the arithmetic."),
-    ("Formula", "Pieces needed = trucks × km a year ÷ replacement interval km (N-series split into N35 and N75).  Coverage = billed pieces ÷ pieces needed.  "
+    ("Formula", "Pieces needed = vehicles × km a year ÷ replacement interval km, for N-series (split N35 / N75), F-series and D-Max.  Coverage = everything billed ÷ pieces needed.  "
                 "Gap € = missing pieces × the average price billed."),
-    ("Assumptions", "20,000 km a year for every truck, except Isuzu Truck UK (N35 18,630 km from the Apr 2026 trip report; N75 50,000 km from ITUK via IML) "
-                    "and UTI (50,000 km, confirmed). Intervals from the Isuzu GIDSS service schedule where it exists, otherwise the PMS model assumption. "
-                    "Full list with sources on the Assumptions tab."),
-    ("Billed", "ISZE parts billing, genuine + BVP, credit notes and returns removed. Counted for coverage: parts that fit only trucks; for Isuzu Truck UK and UTI "
-               "(truck-only fleets) also parts that fit more vehicles. Genuine / BVP € are the whole customer."),
+    ("Standard", "The agreed PMS coverage standard (the PMS coverage model, network lane): 20,000 km a year for every vehicle, UTI N-series 50,000 km (confirmed); "
+                 "intervals from the Isuzu GIDSS service schedule where it exists, otherwise the model's assumption; Isuzu Truck UK brakes every 100,000 km. "
+                 "FY2026 pieces needed are exactly the model's figures. Full list with sources on the Assumptions tab.\n"
+                 "Isuzu Truck UK with IML / ITUK: use the IML service schedule (Model B, agreed 2 Jul 2026): oil filter 35.1%, gap €2.04M (CY2025) — on the Assumptions tab. "
+                 "That standard uses 22,389 trucks at 50,000 km a year and its own part scope, so it differs from this file's ITUK row."),
+    ("Billed", "ISZE parts billing, genuine + BVP, credit notes and returns removed — everything billed per customer, because the need includes D-Max. "
+               "FY figures are rebuilt from the billing with the model's own part list."),
     ("Actions", ACTION_NOTE),
     ("Watch out", "• Brake, clutch and air-filter intervals are provisional, not confirmed by IML — use gap € to rank, not to quote.\n"
-                  "• Isuzu Truck UK figures here are not the IML headline (different part scope and km). Do not use them with IML.\n"
+                  "• Isuzu Truck UK with IML / ITUK: use the IML service schedule (Model B) figures on the Assumptions tab, not this file's ITUK row.\n"
                   "• The PMS part list contains some non-wear parts (return springs, ABS sensor rings counted as brake discs) — marked 'Check' on Part numbers.\n"
                   "• Small truck fleets (Benelux, Greece, Cyprus) give unstable percentages.\n"
                   "• SAP customer 92 is I Motors Portugal; it was missing from the customer mapping in git and is included here."),
